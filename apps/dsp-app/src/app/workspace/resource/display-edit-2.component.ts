@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder } from '@angular/forms';
 import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { finalize, take } from 'rxjs/operators';
@@ -22,7 +23,7 @@ import { finalize, take } from 'rxjs/operators';
         [formArray]="formArray"
         (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
     </ng-template>
-    <button (click)="displayMode = !displayMode">TOGGLE</button>
+    <button (click)="toggleDisplayMode()">TOGGLE</button>
     <ng-template #loadingTemplate>
       <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
     </ng-template>
@@ -34,7 +35,7 @@ export class DisplayEdit2Component {
   displayMode = true;
   loading = false;
 
-  formArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
+  formArray: FormValueArray;
 
   constructor(
     private _fb: FormBuilder,
@@ -42,6 +43,24 @@ export class DisplayEdit2Component {
     private _dspApiConnection: KnoraApiConnection,
     private _cdr: ChangeDetectorRef
   ) {}
+
+  toggleDisplayMode() {
+    if (!this.displayMode) {
+      this.displayMode = true;
+      return;
+    }
+
+    this.formArray = this._fb.array([
+      this._fb.group({
+        item: propertiesTypeMapping
+          .get(this.prop.propDef.objectType)
+          .control(this.prop.values[0].strval) as AbstractControl,
+        comment: this._fb.control(''),
+      }),
+    ]);
+
+    this.displayMode = false;
+  }
 
   updatedIndex(index: number) {
     const group = this.formArray.at(index);

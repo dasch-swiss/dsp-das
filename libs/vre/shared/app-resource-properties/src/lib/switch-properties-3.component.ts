@@ -148,6 +148,11 @@ export class SwitchProperties3Component implements AfterViewInit {
   }
 
   private getTemplate(newValue?: unknown): { template: TemplateRef<any>; newValue: AbstractControl } {
+    const mapping = new Map<string, (value?: any) => AbstractControl>([
+      [Constants.IntValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
+      [Constants.DecimalValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
+      [Constants.BooleanValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
+    ]);
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
         return { template: this.intTpl, newValue: this._fb.control(newValue ?? 0, Validators.required) };

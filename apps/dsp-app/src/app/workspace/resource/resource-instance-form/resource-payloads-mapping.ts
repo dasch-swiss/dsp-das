@@ -1,3 +1,4 @@
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Constants,
   CreateBooleanValue,
@@ -27,12 +28,14 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 
 export const propertiesTypeMapping = new Map<
   string,
   {
     newValue: any;
+    control: (value?: any) => AbstractControl;
     mapping: (value: any) => CreateValue;
     updateMapping: (id: string, value: any) => UpdateValue;
   }
@@ -41,6 +44,7 @@ export const propertiesTypeMapping = new Map<
     Constants.IntValue,
     {
       newValue: null,
+      control: (value: number) => new FormControl(value ?? 0, Validators.required),
       mapping: (value: number) => {
         const newIntValue = new CreateIntValue();
         newIntValue.int = value;
@@ -58,6 +62,8 @@ export const propertiesTypeMapping = new Map<
     Constants.DecimalValue,
     {
       newValue: null,
+      control: (value: number) => new FormControl(value ?? 0, Validators.required),
+
       mapping: (value: number) => {
         const newDecimalValue = new CreateDecimalValue();
         newDecimalValue.decimal = value;
@@ -75,6 +81,8 @@ export const propertiesTypeMapping = new Map<
     Constants.BooleanValue,
     {
       newValue: null,
+      control: (value: boolean) => new FormControl(value ?? false, Validators.required),
+
       mapping: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();
         newBooleanValue.bool = value;
@@ -92,6 +100,8 @@ export const propertiesTypeMapping = new Map<
     Constants.TextValue,
     {
       newValue: null,
+      control: (value: string) => new FormControl(value ?? '', Validators.required),
+
       mapping: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
         newTextValue.text = value;
@@ -109,6 +119,7 @@ export const propertiesTypeMapping = new Map<
     Constants.DateValue,
     {
       newValue: null,
+      control: (value: string) => new FormControl(value ?? '', Validators.required),
       mapping: (value: any) => {
         const newDateValue = new CreateDateValue();
         populateValue(newDateValue, value);
@@ -126,6 +137,14 @@ export const propertiesTypeMapping = new Map<
     Constants.TimeValue,
     {
       newValue: null,
+      control: (value: { date: FormControl<string>; time: FormControl<string> }) =>
+        new FormGroup(
+          value ?? {
+            date: new FormControl(null, Validators.required),
+            time: new FormControl(null, Validators.required),
+          }
+        ),
+
       mapping: (value: any) => {
         const newTimeValue = new CreateTimeValue();
         newTimeValue.time = value;
@@ -143,6 +162,13 @@ export const propertiesTypeMapping = new Map<
     Constants.IntervalValue,
     {
       newValue: null,
+      control: (value: { start: FormControl<string>; end: FormControl<string> }) =>
+        new FormGroup(
+          value ?? {
+            start: new FormControl(null, Validators.required),
+            end: new FormControl(null, Validators.required),
+          }
+        ),
       mapping: (value: { start: number; end: number }) => {
         const newIntervalValue = new CreateIntervalValue();
         newIntervalValue.start = value.start;
@@ -162,6 +188,7 @@ export const propertiesTypeMapping = new Map<
     Constants.ColorValue,
     {
       newValue: null,
+      control: (value: string) => new FormControl(value ?? '#000000'),
       mapping: (value: string) => {
         const newColorValue = new CreateColorValue();
         newColorValue.color = value;
@@ -179,6 +206,7 @@ export const propertiesTypeMapping = new Map<
     Constants.ListValue,
     {
       newValue: null,
+      control: (value: string) => new FormControl(value ?? null, Validators.required),
       mapping: (value: string) => {
         const newListValue = new CreateListValue();
         newListValue.listNode = value;
@@ -196,6 +224,8 @@ export const propertiesTypeMapping = new Map<
     Constants.GeonameValue,
     {
       newValue: null,
+      control: (value: string) => new FormControl(value ?? '', Validators.required),
+
       mapping: (value: string) => {
         const newGeonameValue = new CreateGeonameValue();
         newGeonameValue.geoname = value;
@@ -213,6 +243,8 @@ export const propertiesTypeMapping = new Map<
     Constants.LinkValue,
     {
       newValue: null,
+      control: (value: string) =>
+        new FormControl(value ?? '', [Validators.required, Validators.pattern(/http:\/\/rdfh.ch\/.*/)]),
       mapping: (value: string) => {
         const newLinkValue = new CreateLinkValue();
         newLinkValue.linkedResourceIri = value;
@@ -230,6 +262,8 @@ export const propertiesTypeMapping = new Map<
     Constants.UriValue,
     {
       newValue: null,
+      control: (value: string) =>
+        new FormControl(value ?? '', [Validators.required, Validators.pattern(CustomRegex.URI_REGEX)]),
       mapping: (value: string) => {
         const newUriValue = new CreateUriValue();
         newUriValue.uri = value;
