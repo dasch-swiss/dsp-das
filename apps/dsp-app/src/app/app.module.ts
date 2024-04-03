@@ -27,6 +27,7 @@ import {
   CenteredLayoutComponent,
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import {
   BooleanValue2Component,
   ColorValue2Component,
@@ -52,10 +53,13 @@ import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-re
 import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
 import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
+import { DisplayEdit2Component } from '@dsp-app/src/app/workspace/resource/display-edit-2.component';
+import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
 import { PropertyItemComponent } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/property-item.component';
 import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
+import { SwitchValuesComponent } from '@dsp-app/src/app/workspace/resource/switch-values.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -64,6 +68,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NuListActionBubbleComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nu-list-action-bubble.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -203,10 +208,6 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
-import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
-import { SwitchValuesComponent } from '@dsp-app/src/app/workspace/resource/switch-values.component';
-import { DisplayEdit2Component } from '@dsp-app/src/app/workspace/resource/display-edit-2.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -377,6 +378,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TimeValue2Component,
     UriValue2Component,
     NuListComponent,
+    NuListActionBubbleComponent,
   ],
   imports: [
     AngularSplitModule,

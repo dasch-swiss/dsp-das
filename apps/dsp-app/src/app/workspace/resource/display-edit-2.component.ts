@@ -13,6 +13,9 @@ import { finalize, take } from 'rxjs/operators';
     <ng-container *ngIf="displayMode; else editMode">
       <app-switch-values *ngFor="let val of prop.values" [value]="val"></app-switch-values>
     </ng-container>
+
+    <app-nu-list-action-bubble [editMode]="!displayMode" (editAction)="toggleDisplayMode()"></app-nu-list-action-bubble>
+
     <ng-template #editMode>
       <app-switch-properties-3
         *ngIf="!loading; else loadingTemplate"
@@ -23,11 +26,12 @@ import { finalize, take } from 'rxjs/operators';
         [formArray]="formArray"
         (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
     </ng-template>
-    <button (click)="toggleDisplayMode()">TOGGLE</button>
+
     <ng-template #loadingTemplate>
       <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
     </ng-template>
   `,
+  styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class DisplayEdit2Component {
   @Input() prop: PropertyInfoValues;
