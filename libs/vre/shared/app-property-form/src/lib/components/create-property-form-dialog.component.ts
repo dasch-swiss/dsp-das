@@ -18,6 +18,7 @@ export interface CreatePropertyFormDialogProps {
   ontologyId: string;
   lastModificationDate: string;
   propertyInfo: PropertyInfoObject;
+  maxGuiOrderProperty: number;
   resClassIri?: string;
 }
 
@@ -93,7 +94,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     const propCard: IHasProperty = {
       propertyIndex: prop.id,
       cardinality: this.form.controls.cardinality.value,
-      guiOrder: 0, // TODO it was: this.guiOrder, // add new property to the end of current list of properties
+      guiOrder: this.data.maxGuiOrderProperty + 1,
     };
 
     addCard.cardinalities.push(propCard);

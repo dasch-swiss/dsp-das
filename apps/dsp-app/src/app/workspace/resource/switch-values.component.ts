@@ -6,7 +6,9 @@ import { Constants, ReadValue } from '@dasch-swiss/dsp-js';
   template: ` <ng-container [ngSwitch]="value.type">
     <ng-container *ngSwitchCase="constants.IntValue">{{ value.strval }}</ng-container>
     <ng-container *ngSwitchCase="constants.DecimalValue">{{ value.strval }}</ng-container>
-    <ng-container *ngSwitchCase="constants.BooleanValue">{{ value.strval }}</ng-container>
+    <ng-container *ngSwitchCase="constants.BooleanValue">
+      <mat-slide-toggle [checked]="true"></mat-slide-toggle>
+    </ng-container>
     <ng-container *ngSwitchCase="constants.ColorValue">{{ value.strval }}</ng-container>
     <ng-container *ngSwitchCase="constants.TextValue">{{ value.strval }}</ng-container>
     <ng-container *ngSwitchCase="constants.DateValue">{{ value.strval }}</ng-container>

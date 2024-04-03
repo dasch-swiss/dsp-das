@@ -144,6 +144,7 @@ export class ResourceInstanceFormComponent implements OnInit {
         readResource.entityInfo = this.ontologyInfo;
         this._tempLinkValueService.parentResource = readResource;
 
+        console.log('zz');
         this.properties = onto.classes[resourceClassIri]
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)

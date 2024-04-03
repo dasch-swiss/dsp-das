@@ -9,6 +9,12 @@ import {
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
+  AssignPropertyDialogComponent,
+  AssignPropertyDialogProps,
+  CreatePropertyFormDialogComponent,
+  CreatePropertyFormDialogProps,
+} from '@dasch-swiss/vre/shared/app-property-form';
+import {
   OntologiesSelectors,
   OntologyProperties,
   PropertyAssignment,
@@ -18,12 +24,6 @@ import {
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import {
-  AssignPropertyDialogComponent,
-  AssignPropertyDialogProps,
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
-} from '@dasch-swiss/vre/shared/app-property-form';
 
 @Component({
   selector: 'app-add-property-menu',
@@ -140,6 +140,11 @@ export class AddPropertyMenuComponent {
   }
 
   addNewProperty(propType: DefaultProperty) {
+    const maxGuiOrderProperty = this.resourceClass.propertiesList.reduce(
+      (prev, current) => Math.max(prev, current.guiOrder ?? 0),
+      0
+    );
+
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
       CreatePropertyFormDialogComponent,
@@ -149,6 +154,7 @@ export class AddPropertyMenuComponent {
           lastModificationDate: ontology.lastModificationDate,
           propertyInfo: { propType },
           resClassIri: this.resourceClass.id,
+          maxGuiOrderProperty,
         },
       }
     );
