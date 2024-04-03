@@ -33,6 +33,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         mat-button
         type="button"
         matPrefix
+        tabIndex="-1"
         [matMenuTriggerFor]="selectLanguage"
         #btnToSelectLanguage="matMenuTrigger">
         <span
