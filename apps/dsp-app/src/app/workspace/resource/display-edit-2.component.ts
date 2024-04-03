@@ -1,11 +1,11 @@
-import { Component, Inject, Input } from '@angular/core';
-import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
+import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { KnoraApiConnection, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
-import { take } from 'rxjs/operators';
+import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
+import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
+import { finalize, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-display-edit-2',
@@ -15,56 +15,72 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
     </ng-container>
     <ng-template #editMode>
       <app-switch-properties-3
+        *ngIf="!loading; else loadingTemplate"
         [propertyDefinition]="prop.propDef"
         [property]="prop.guiDef"
         [cardinality]="prop.guiDef.cardinality"
-        [formArray]="formArray"></app-switch-properties-3>
-      <button (click)="submitData()">Edit</button>
+        [canUpdateForm]="true"
+        [formArray]="formArray"
+        (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
     </ng-template>
     <button (click)="displayMode = !displayMode">TOGGLE</button>
+    <ng-template #loadingTemplate>
+      <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
+    </ng-template>
   `,
 })
 export class DisplayEdit2Component {
   @Input() prop: PropertyInfoValues;
+  @Input() resource: ReadResource;
   displayMode = true;
+  loading = false;
 
   formArray: FormValueArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
 
   constructor(
     private _fb: FormBuilder,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _cdr: ChangeDetectorRef
   ) {}
 
-  submitData() {
-    if (this.formArray.invalid) return;
+  updatedIndex(index: number) {
+    const group = this.formArray.at(index);
+    if (group.invalid) return;
 
-    const z = this._getPayload();
-    console.log(z, 'ss', this);
+    this.loading = true;
+
     this._dspApiConnection.v2.values
-      .updateValue(z)
-      .pipe(take(1))
+      .updateValue(this._getPayload(index))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe((res: WriteValueResponse) => {
-        console.log(res);
+        this.displayMode = true;
+        this._cdr.detectChanges();
+        console.log(this, 'a');
       });
   }
 
-  private getValue(iri: string) {
-    return this.formArray.controls.map(group => {
-      const entity = propertiesTypeMapping.get(this.prop.propDef.objectType).mapping(group.controls.item.value);
-      if (group.controls.comment.value) {
-        entity.valueHasComment = group.controls.comment.value;
-      }
-      return entity;
-    });
+  private _getUpdatedValue(index: number) {
+    const group = this.formArray.at(index);
+    const id = this.prop.values[index].id;
+    const entity = propertiesTypeMapping.get(this.prop.propDef.objectType).updateMapping(id, group.controls.item.value);
+    if (group.controls.comment.value) {
+      entity.valueHasComment = group.controls.comment.value;
+    }
+    return entity;
   }
 
-  private _getPayload() {
+  private _getPayload(index: number) {
     const updateResource = new UpdateResource<UpdateValue>();
-    updateResource.id = this.prop.guiDef.propertyDefinition.id;
-    updateResource.property = this.prop.propDef.objectType;
-    updateResource.type = this.prop.propDef.objectType;
-    updateResource.value = this.formArray.controls[0].value.item;
+    updateResource.id = this.resource.id;
+    updateResource.property = this.prop.values[index].property;
+    updateResource.type = this.resource.type;
+    updateResource.value = this._getUpdatedValue(index);
     return updateResource;
   }
 }

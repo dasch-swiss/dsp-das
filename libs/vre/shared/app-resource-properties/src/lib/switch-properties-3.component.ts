@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import {
   Cardinality,
@@ -17,7 +26,9 @@ import { FormValueArray } from './form-value-array.type';
       [itemTpl]="itemTpl"
       [formArray]="formArray"
       [cardinality]="cardinality"
-      (addItem)="addItem()"></app-nu-list>
+      [canUpdateForm]="canUpdateForm"
+      (addItem)="addItem()"
+      (updatedIndex)="updatedIndex.emit($event)"></app-nu-list>
 
     <ng-template let-item #intTpl>
       <mat-form-field>
@@ -89,6 +100,8 @@ export class SwitchProperties3Component implements AfterViewInit {
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
+  @Input() canUpdateForm = false;
+  @Output() updatedIndex = new EventEmitter<number>();
 
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;

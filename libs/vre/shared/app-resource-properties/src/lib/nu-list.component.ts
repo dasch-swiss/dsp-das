@@ -11,6 +11,10 @@ import { FormValueArray } from './form-value-array.type';
           <textarea matInput rows="9" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
         </mat-form-field>
       </div>
+
+      <button (click)="updatedIndex.emit(index)" mat-icon-button *ngIf="canUpdateForm">
+        <mat-icon>edit</mat-icon>
+      </button>
       <button
         (click)="formArray.removeAt(index)"
         mat-icon-button
@@ -29,6 +33,8 @@ export class NuListComponent {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() formArray!: FormValueArray;
   @Input() cardinality!: Cardinality;
+  @Input() canUpdateForm!: boolean;
+  @Output() updatedIndex = new EventEmitter<number>();
   @Output() addItem = new EventEmitter();
 
   protected readonly Cardinality = Cardinality;
