@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Constants,
   CreateFileValue,
@@ -163,7 +163,7 @@ export class ResourceInstanceFormComponent implements OnInit {
         prop.propertyDefinition.id,
         this._fb.array([
           this._fb.group({
-            item: null,
+            item: propertiesTypeMapping.get(prop.propertyDefinition.objectType).control() as AbstractControl,
             comment: '',
           }) as unknown as FormValueGroup,
         ])

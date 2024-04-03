@@ -16,6 +16,7 @@ import {
   PropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { FormValueArray } from './form-value-array.type';
 
@@ -141,8 +142,8 @@ export class SwitchProperties3Component implements AfterViewInit {
     const data = this.getTemplate();
     this.formArray.push(
       this._fb.group({
-        item: data.newValue,
-        comment: new FormControl(''),
+        item: propertiesTypeMapping.get(this.propertyDefinition.objectType).control() as AbstractControl,
+        comment: this._fb.control(''),
       })
     );
   }
