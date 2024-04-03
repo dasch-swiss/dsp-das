@@ -1,30 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray } from './form-value-array.type';
 
 @Component({
   selector: 'app-nu-list',
   template: ` <div *ngFor="let group of formArray.controls; let index = index" style="display: flex">
-      <div>
-        <ng-container *ngTemplateOutlet="itemTpl; context: { $implicit: group.controls.item }"></ng-container>
-        <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
-          <textarea matInput rows="9" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
-        </mat-form-field>
-      </div>
-
-      <button
-        (click)="updatedIndex.emit(index)"
-        mat-icon-button
-        *ngIf="canUpdateForm"
-        [disabled]="initialFormValue[index].item === formArray.at(index).value.item">
-        <mat-icon>save</mat-icon>
-      </button>
-      <button
-        (click)="formArray.removeAt(index)"
-        mat-icon-button
-        *ngIf="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(cardinality)">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <app-nu-list-child
+        style="width: 100%"
+        [itemTpl]="itemTpl"
+        [index]="index"
+        [formArray]="formArray"
+        [canUpdateForm]="canUpdateForm"
+        [cardinality]="cardinality"
+        (updatedIndex)="updatedIndex.emit($event)"></app-nu-list-child>
     </div>
     <button
       mat-raised-button
@@ -33,7 +21,7 @@ import { FormValueArray } from './form-value-array.type';
       Add
     </button>`,
 })
-export class NuListComponent implements OnInit {
+export class NuListComponent implements OnInit, AfterViewInit {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() formArray!: FormValueArray;
   @Input() cardinality!: Cardinality;
@@ -44,7 +32,11 @@ export class NuListComponent implements OnInit {
   initialFormValue: any;
   protected readonly Cardinality = Cardinality;
 
-  ngOnInit() {
-    this.initialFormValue = this.formArray.value;
+  displayMode = true;
+
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    console.log(this, 'afterview');
   }
 }

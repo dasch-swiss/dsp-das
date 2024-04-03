@@ -50,8 +50,8 @@ import { FormValueArray } from './form-value-array.type';
       <app-color-value-2 [control]="item" style="flex: 1"></app-color-value-2>
     </ng-template>
 
-    <ng-template let-item #textTpl>
-      <app-common-input [control]="item" style="width: 100%"></app-common-input>
+    <ng-template let-item="item" let-displayMode="displayMode" #textTpl>
+      <app-text-switch [control]="item" [displayMode]="displayMode"></app-text-switch>
     </ng-template>
 
     <ng-template let-item #dateTpl>

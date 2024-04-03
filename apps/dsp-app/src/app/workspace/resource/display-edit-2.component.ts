@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -13,8 +13,6 @@ import { finalize, take } from 'rxjs/operators';
     <ng-container *ngIf="displayMode; else editMode">
       <app-switch-values *ngFor="let val of prop.values" [value]="val"></app-switch-values>
     </ng-container>
-
-    <app-nu-list-action-bubble [editMode]="!displayMode" (editAction)="toggleDisplayMode()"></app-nu-list-action-bubble>
 
     <ng-template #editMode>
       <app-switch-properties-3
@@ -33,10 +31,10 @@ import { finalize, take } from 'rxjs/operators';
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
-export class DisplayEdit2Component {
+export class DisplayEdit2Component implements OnInit {
   @Input() prop: PropertyInfoValues;
   @Input() resource: ReadResource;
-  displayMode = true;
+  displayMode = false;
   loading = false;
 
   formArray: FormValueArray;
@@ -48,12 +46,7 @@ export class DisplayEdit2Component {
     private _cdr: ChangeDetectorRef
   ) {}
 
-  toggleDisplayMode() {
-    if (!this.displayMode) {
-      this.displayMode = true;
-      return;
-    }
-
+  ngOnInit() {
     this.formArray = this._fb.array(
       this.prop.values.map(value =>
         this._fb.group({
@@ -62,8 +55,6 @@ export class DisplayEdit2Component {
         })
       )
     );
-
-    this.displayMode = false;
   }
 
   updatedIndex(index: number) {
