@@ -11,7 +11,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
           <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); editAction.emit()">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-button class="edit" matTooltip="info" (click)="$event.stopPropagation(); editAction.emit()">
+          <button mat-button class="edit" [matTooltip]="'date'" (click)="$event.stopPropagation()">
             <mat-icon>info</mat-icon>
           </button>
           <button
@@ -45,6 +45,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class NuListActionBubbleComponent {
   @Input() editMode!: boolean;
   @Input() showDelete!: boolean;
+  @Input() date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
 }

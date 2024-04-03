@@ -10,20 +10,14 @@ import { finalize, take } from 'rxjs/operators';
 @Component({
   selector: 'app-display-edit-2',
   template: `
-    <ng-container *ngIf="displayMode; else editMode">
-      <app-switch-values *ngFor="let val of prop.values" [value]="val"></app-switch-values>
-    </ng-container>
-
-    <ng-template #editMode>
-      <app-switch-properties-3
-        *ngIf="!loading; else loadingTemplate"
-        [propertyDefinition]="prop.propDef"
-        [property]="prop.guiDef"
-        [cardinality]="prop.guiDef.cardinality"
-        [canUpdateForm]="true"
-        [formArray]="formArray"
-        (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
-    </ng-template>
+    <app-switch-properties-3
+      *ngIf="!loading; else loadingTemplate"
+      [propertyDefinition]="prop.propDef"
+      [property]="prop.guiDef"
+      [cardinality]="prop.guiDef.cardinality"
+      [canUpdateForm]="true"
+      [formArray]="formArray"
+      (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
 
     <ng-template #loadingTemplate>
       <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
@@ -74,7 +68,6 @@ export class DisplayEdit2Component implements OnInit {
       .subscribe((res: WriteValueResponse) => {
         this.displayMode = true;
         this._cdr.detectChanges();
-        console.log(this, 'a');
       });
   }
 
