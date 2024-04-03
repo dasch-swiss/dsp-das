@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import {
   Cardinality,
   Constants,
@@ -17,7 +17,6 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
 import { FormValueArray } from './form-value-array.type';
 
 @Component({
@@ -101,7 +100,6 @@ export class SwitchProperties3Component implements AfterViewInit {
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
-  @Input() defaultControlValue: unknown;
   @Input() canUpdateForm = false;
   @Output() updatedIndex = new EventEmitter<number>();
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
@@ -119,7 +117,6 @@ export class SwitchProperties3Component implements AfterViewInit {
   @ViewChild('defaultTpl') defaultTpl!: TemplateRef<any>;
 
   itemTpl!: TemplateRef<any>;
-  newControl: any;
   validators: ValidatorFn[] | undefined;
 
   get resPropDef() {
@@ -132,14 +129,11 @@ export class SwitchProperties3Component implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    const data = this.getTemplate(this.defaultControlValue);
-    this.itemTpl = data.template;
-    this.newControl = data.newValue;
+    this.itemTpl = this._getTemplate();
     this._cd.detectChanges();
   }
 
   addItem() {
-    const data = this.getTemplate();
     this.formArray.push(
       this._fb.group({
         item: propertiesTypeMapping.get(this.propertyDefinition.objectType).control() as AbstractControl,
@@ -148,55 +142,32 @@ export class SwitchProperties3Component implements AfterViewInit {
     );
   }
 
-  private getTemplate(newValue?: unknown): { template: TemplateRef<any>; newValue: AbstractControl } {
-    const mapping = new Map<string, (value?: any) => AbstractControl>([
-      [Constants.IntValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
-      [Constants.DecimalValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
-      [Constants.BooleanValue, (value: number) => new FormControl(value ?? 0, Validators.required)],
-    ]);
+  private _getTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return { template: this.intTpl, newValue: this._fb.control(newValue ?? 0, Validators.required) };
+        return this.intTpl;
       case Constants.DecimalValue:
-        return { template: this.decimalTpl, newValue: this._fb.control(0, Validators.required) };
+        return this.decimalTpl;
       case Constants.BooleanValue:
-        return { template: this.booleanTpl, newValue: this._fb.control(false, Validators.required) };
+        return this.booleanTpl;
       case Constants.ColorValue:
-        return { template: this.colorTpl, newValue: this._fb.control('#000000', Validators.required) };
+        return this.colorTpl;
       case Constants.TextValue:
-        return { template: this.textTpl, newValue: this._fb.control(newValue ?? '', Validators.required) };
+        return this.textTpl;
       case Constants.DateValue:
-        return { template: this.dateTpl, newValue: this._fb.control('', Validators.required) };
+        return this.dateTpl;
       case Constants.TimeValue:
-        return {
-          template: this.timeTpl,
-          newValue: this._fb.group({
-            date: this._fb.control(null, Validators.required),
-            time: this._fb.control(null, Validators.required),
-          }),
-        };
+        return this.timeTpl;
       case Constants.IntervalValue:
-        return {
-          template: this.intervalTpl,
-          newValue: this._fb.group({
-            start: this._fb.control(0, Validators.required),
-            end: this._fb.control(0, Validators.required),
-          }),
-        };
+        return this.intervalTpl;
       case Constants.ListValue:
-        return { template: this.listTpl, newValue: this._fb.control(null, Validators.required) };
+        return this.listTpl;
       case Constants.GeonameValue:
-        return { template: this.geoNameTpl, newValue: this._fb.control('', Validators.required) };
+        return this.geoNameTpl;
       case Constants.LinkValue:
-        return {
-          template: this.linkTpl,
-          newValue: this._fb.control(null, [Validators.required, Validators.pattern(/http:\/\/rdfh.ch\/.*/)]),
-        };
+        return this.linkTpl;
       case Constants.UriValue:
-        return {
-          template: this.uriTpl,
-          newValue: this._fb.control('', [Validators.required, Validators.pattern(CustomRegex.URI_REGEX)]),
-        };
+        return this.uriTpl;
       default:
         throw Error('Unrecognized property');
     }
