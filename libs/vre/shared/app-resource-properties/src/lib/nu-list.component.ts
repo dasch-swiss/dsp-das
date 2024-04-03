@@ -12,8 +12,12 @@ import { FormValueArray } from './form-value-array.type';
         </mat-form-field>
       </div>
 
-      <button (click)="updatedIndex.emit(index)" mat-icon-button *ngIf="canUpdateForm">
-        <mat-icon>edit</mat-icon>
+      <button
+        (click)="updatedIndex.emit(index)"
+        mat-icon-button
+        *ngIf="canUpdateForm"
+        [disabled]="initialFormValue[index].item === formArray.at(index).value.item">
+        <mat-icon>save</mat-icon>
       </button>
       <button
         (click)="formArray.removeAt(index)"
@@ -37,5 +41,10 @@ export class NuListComponent {
   @Output() updatedIndex = new EventEmitter<number>();
   @Output() addItem = new EventEmitter();
 
+  initialFormValue: any;
   protected readonly Cardinality = Cardinality;
+
+  ngOnInit() {
+    this.initialFormValue = this.formArray.value;
+  }
 }
