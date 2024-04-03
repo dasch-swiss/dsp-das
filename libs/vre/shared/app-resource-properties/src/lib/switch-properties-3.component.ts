@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import {
   Cardinality,
   Constants,
@@ -100,9 +100,9 @@ export class SwitchProperties3Component implements AfterViewInit {
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
+  @Input() defaultControlValue: unknown;
   @Input() canUpdateForm = false;
   @Output() updatedIndex = new EventEmitter<number>();
-
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
@@ -131,20 +131,26 @@ export class SwitchProperties3Component implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    const data = this.getTemplate();
+    const data = this.getTemplate(this.defaultControlValue);
     this.itemTpl = data.template;
     this.newControl = data.newValue;
     this._cd.detectChanges();
   }
 
   addItem() {
-    this.formArray.push(this._fb.group({ item: this.newControl, comment: new FormControl('') }));
+    const data = this.getTemplate();
+    this.formArray.push(
+      this._fb.group({
+        item: data.newValue,
+        comment: new FormControl(''),
+      })
+    );
   }
 
-  private getTemplate(): { template: TemplateRef<any>; newValue: any } {
+  private getTemplate(newValue?: unknown): { template: TemplateRef<any>; newValue: AbstractControl } {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return { template: this.intTpl, newValue: this._fb.control(0, Validators.required) };
+        return { template: this.intTpl, newValue: this._fb.control(newValue ?? 0, Validators.required) };
       case Constants.DecimalValue:
         return { template: this.decimalTpl, newValue: this._fb.control(0, Validators.required) };
       case Constants.BooleanValue:
@@ -152,7 +158,7 @@ export class SwitchProperties3Component implements AfterViewInit {
       case Constants.ColorValue:
         return { template: this.colorTpl, newValue: this._fb.control('#000000', Validators.required) };
       case Constants.TextValue:
-        return { template: this.textTpl, newValue: this._fb.control('', Validators.required) };
+        return { template: this.textTpl, newValue: this._fb.control(newValue ?? '', Validators.required) };
       case Constants.DateValue:
         return { template: this.dateTpl, newValue: this._fb.control('', Validators.required) };
       case Constants.TimeValue:

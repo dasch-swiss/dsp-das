@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { finalize, take } from 'rxjs/operators';
@@ -35,7 +34,7 @@ export class DisplayEdit2Component {
   displayMode = true;
   loading = false;
 
-  formArray: FormValueArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
+  formArray = this._fb.array([this._fb.group({ item: null, comment: '' })]);
 
   constructor(
     private _fb: FormBuilder,

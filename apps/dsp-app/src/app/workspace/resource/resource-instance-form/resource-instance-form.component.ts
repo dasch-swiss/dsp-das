@@ -11,7 +11,7 @@ import {
   ResourceClassDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FormValueArray, TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { FormValueArray, FormValueGroup, TempLinkValueService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
@@ -164,8 +164,8 @@ export class ResourceInstanceFormComponent implements OnInit {
         this._fb.array([
           this._fb.group({
             item: null,
-            comment: this._fb.control(''),
-          }),
+            comment: '',
+          }) as unknown as FormValueGroup,
         ])
       );
       this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
