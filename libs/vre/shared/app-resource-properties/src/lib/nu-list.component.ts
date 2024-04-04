@@ -5,7 +5,6 @@ import { NuListService } from './nu-list.service';
 
 @Component({
   selector: 'app-nu-list',
-  providers: [NuListService],
   template: ` <div *ngFor="let group of formArray.controls; let index = index" style="display: flex">
       <app-nu-list-child
         style="width: 100%"

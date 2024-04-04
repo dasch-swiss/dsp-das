@@ -17,6 +17,7 @@ import { finalize, take } from 'rxjs/operators';
       [cardinality]="prop.guiDef.cardinality"
       [canUpdateForm]="true"
       [formArray]="formArray"
+      [keepEditMode]="false"
       (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
 
     <ng-template #loadingTemplate>

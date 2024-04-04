@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -18,9 +19,11 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { FormValueArray } from './form-value-array.type';
+import { NuListService } from './nu-list.service';
 
 @Component({
   selector: 'app-switch-properties-3',
+  providers: [NuListService],
   template: `
     <app-nu-list
       [itemTpl]="itemTpl"
@@ -95,12 +98,13 @@ import { FormValueArray } from './form-value-array.type';
     `,
   ],
 })
-export class SwitchProperties3Component implements AfterViewInit {
+export class SwitchProperties3Component implements OnInit, AfterViewInit {
   @Input() propertyDefinition!: PropertyDefinition;
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() canUpdateForm = false;
+  @Input() keepEditMode!: boolean;
   @Output() updatedIndex = new EventEmitter<number>();
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
@@ -125,8 +129,13 @@ export class SwitchProperties3Component implements AfterViewInit {
 
   constructor(
     private _cd: ChangeDetectorRef,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _nuListService: NuListService
   ) {}
+
+  ngOnInit() {
+    this._nuListService.keepEditMode = this.keepEditMode;
+  }
 
   ngAfterViewInit() {
     this.itemTpl = this._getTemplate();
@@ -140,6 +149,7 @@ export class SwitchProperties3Component implements AfterViewInit {
         comment: this._fb.control(''),
       })
     );
+    this._nuListService.toggle(this.formArray.length - 1);
   }
 
   private _getTemplate(): TemplateRef<any> {

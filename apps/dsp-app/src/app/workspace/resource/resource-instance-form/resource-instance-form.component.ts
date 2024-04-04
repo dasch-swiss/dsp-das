@@ -46,6 +46,7 @@ import { switchMap, take } from 'rxjs/operators';
             <app-switch-properties-3
               [propertyDefinition]="prop.propertyDefinition"
               [property]="prop"
+              [keepEditMode]="true"
               [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
               [cardinality]="prop.cardinality"></app-switch-properties-3>
           </div>

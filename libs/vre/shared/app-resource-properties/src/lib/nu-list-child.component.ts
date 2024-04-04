@@ -5,9 +5,10 @@ import { NuListService } from './nu-list.service';
 
 @Component({
   selector: 'app-nu-list-child',
-  template: ` <div style="position: relative; min-height: 200px; width: 100%">
+  template: ` <div style="position: relative; min-height: 40px; width: 100%">
     <app-nu-list-action-bubble
       [editMode]="!displayMode"
+      *ngIf="!nuListService.keepEditMode"
       [date]="'date'"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(cardinality)"
       (editAction)="nuListService.toggle(index)"></app-nu-list-action-bubble>
@@ -51,7 +52,13 @@ export class NuListChildComponent implements OnInit {
 
   ngOnInit() {
     this.initialFormValue = this.formArray.value;
-
+    this._setupDisplayMode();
+  }
+  private _setupDisplayMode() {
+    if (this.nuListService.keepEditMode) {
+      this.displayMode = false;
+      return;
+    }
     this.nuListService.lastOpenedItem$.subscribe(value => {
       this.displayMode = this.index !== value;
     });

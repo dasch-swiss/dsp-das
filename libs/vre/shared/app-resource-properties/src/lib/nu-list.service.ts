@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class NuListService {
+  keepEditMode = false;
   lastOpenedItem$ = new BehaviorSubject<number | null>(null);
 
   toggle(index: number) {
