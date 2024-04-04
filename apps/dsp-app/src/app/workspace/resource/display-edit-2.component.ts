@@ -17,8 +17,7 @@ import { finalize, take } from 'rxjs/operators';
       [cardinality]="prop.guiDef.cardinality"
       [canUpdateForm]="true"
       [formArray]="formArray"
-      [keepEditMode]="false"
-      (updatedIndex)="updatedIndex($event)"></app-switch-properties-3>
+      [editModeData]="{ resource, prop }"></app-switch-properties-3>
 
     <ng-template #loadingTemplate>
       <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
@@ -50,44 +49,5 @@ export class DisplayEdit2Component implements OnInit {
         })
       )
     );
-  }
-
-  updatedIndex(index: number) {
-    const group = this.formArray.at(index);
-    if (group.invalid) return;
-
-    this.loading = true;
-
-    this._dspApiConnection.v2.values
-      .updateValue(this._getPayload(index))
-      .pipe(
-        take(1),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe((res: WriteValueResponse) => {
-        this.displayMode = true;
-        this._cdr.detectChanges();
-      });
-  }
-
-  private _getUpdatedValue(index: number) {
-    const group = this.formArray.at(index);
-    const id = this.prop.values[index].id;
-    const entity = propertiesTypeMapping.get(this.prop.propDef.objectType).updateMapping(id, group.controls.item.value);
-    if (group.controls.comment.value) {
-      entity.valueHasComment = group.controls.comment.value;
-    }
-    return entity;
-  }
-
-  private _getPayload(index: number) {
-    const updateResource = new UpdateResource<UpdateValue>();
-    updateResource.id = this.resource.id;
-    updateResource.property = this.prop.values[index].property;
-    updateResource.type = this.resource.type;
-    updateResource.value = this._getUpdatedValue(index);
-    return updateResource;
   }
 }

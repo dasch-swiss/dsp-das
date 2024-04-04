@@ -30,8 +30,7 @@ import { NuListService } from './nu-list.service';
       [formArray]="formArray"
       [cardinality]="cardinality"
       [canUpdateForm]="canUpdateForm"
-      (addItem)="addItem()"
-      (updatedIndex)="updatedIndex.emit($event)"></app-nu-list>
+      (addItem)="addItem()"></app-nu-list>
 
     <ng-template let-item #intTpl>
       <mat-form-field>
@@ -104,8 +103,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() canUpdateForm = false;
-  @Input() keepEditMode!: boolean;
-  @Output() updatedIndex = new EventEmitter<number>();
+  @Input() editModeData: { resource: any; prop: any } | null = null;
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
@@ -134,7 +132,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this._nuListService.keepEditMode = this.keepEditMode;
+    this._nuListService._editModeData = this.editModeData;
   }
 
   ngAfterViewInit() {

@@ -12,8 +12,7 @@ import { NuListService } from './nu-list.service';
         [index]="index"
         [formArray]="formArray"
         [canUpdateForm]="canUpdateForm"
-        [cardinality]="cardinality"
-        (updatedIndex)="updatedIndex.emit($event)"></app-nu-list-child>
+        [cardinality]="cardinality"></app-nu-list-child>
     </div>
     <button
       mat-raised-button
@@ -30,7 +29,6 @@ export class NuListComponent implements OnInit, AfterViewInit {
   @Input() formArray!: FormValueArray;
   @Input() cardinality!: Cardinality;
   @Input() canUpdateForm!: boolean;
-  @Output() updatedIndex = new EventEmitter<number>();
   @Output() addItem = new EventEmitter();
 
   initialFormValue: any;
