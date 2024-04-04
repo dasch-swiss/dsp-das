@@ -42,7 +42,7 @@ export class NuListChildComponent implements OnInit {
 
   initialFormValue: any;
 
-  displayMode!: boolean;
+  displayMode: boolean | undefined;
 
   get group() {
     return this.formArray.at(this.index);
@@ -60,6 +60,12 @@ export class NuListChildComponent implements OnInit {
       return;
     }
     this.nuListService.lastOpenedItem$.subscribe(value => {
+      if (this.nuListService.currentlyAdding && this.displayMode === false) {
+        this.formArray.removeAt(this.formArray.length - 1);
+        this.nuListService.currentlyAdding = false;
+        return;
+      }
+
       this.displayMode = this.index !== value;
     });
   }

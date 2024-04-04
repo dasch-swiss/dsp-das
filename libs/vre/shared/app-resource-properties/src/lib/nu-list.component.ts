@@ -18,7 +18,10 @@ import { NuListService } from './nu-list.service';
     <button
       mat-raised-button
       (click)="addItem.emit()"
-      *ngIf="formArray.controls.length === 0 || [Cardinality._0_n, Cardinality._1_n].includes(cardinality)">
+      *ngIf="
+        !nuListService.currentlyAdding &&
+        (formArray.controls.length === 0 || [Cardinality._0_n, Cardinality._1_n].includes(cardinality))
+      ">
       Add
     </button>`,
 })
@@ -35,6 +38,7 @@ export class NuListComponent implements OnInit, AfterViewInit {
 
   displayMode = true;
 
+  constructor(public nuListService: NuListService) {}
   ngOnInit() {}
 
   ngAfterViewInit() {

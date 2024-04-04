@@ -150,6 +150,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
       })
     );
     this._nuListService.toggle(this.formArray.length - 1);
+    this._nuListService.currentlyAdding = true;
   }
 
   private _getTemplate(): TemplateRef<any> {
