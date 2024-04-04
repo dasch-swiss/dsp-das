@@ -14,7 +14,7 @@ import { NuListService } from './nu-list.service';
       *ngIf="!nuListService.keepEditMode"
       [date]="'date'"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(cardinality)"
-      (editAction)="nuListService.toggle(index)"></app-nu-list-action-bubble>
+      (editAction)="nuListService.toggleOpenedValue(index)"></app-nu-list-action-bubble>
 
     <div style="display: flex">
       <div>

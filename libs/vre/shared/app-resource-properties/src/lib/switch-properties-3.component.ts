@@ -147,7 +147,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
         comment: this._fb.control(''),
       })
     );
-    this._nuListService.toggle(this.formArray.length - 1);
+    this._nuListService.toggleOpenedValue(this.formArray.length - 1);
     this._nuListService.currentlyAdding = true;
   }
 
