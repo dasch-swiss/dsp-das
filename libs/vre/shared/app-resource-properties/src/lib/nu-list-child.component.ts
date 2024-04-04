@@ -1,5 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { Cardinality, KnoraApiConnection, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
+import {
+  Cardinality,
+  KnoraApiConnection,
+  ReadResource,
+  ReadValue,
+  UpdateResource,
+  UpdateValue,
+  WriteValueResponse,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { finalize, take } from 'rxjs/operators';
@@ -13,7 +21,7 @@ import { NuListService } from './nu-list.service';
       [editMode]="!displayMode"
       *ngIf="!nuListService.keepEditMode"
       [date]="'date'"
-      [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(cardinality)"
+      [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(nuListService.cardinality)"
       (editAction)="nuListService.toggleOpenedValue(index)"></app-nu-list-action-bubble>
 
     <div style="display: flex">
@@ -25,9 +33,9 @@ import { NuListService } from './nu-list.service';
         </mat-form-field>
       </div>
       <button
-        (click)="updatedIndex(index)"
+        (click)="update()"
         mat-icon-button
-        *ngIf="!displayMode && canUpdateForm && !loading"
+        *ngIf="!displayMode && !nuListService.keepEditMode && !loading"
         [disabled]="initialFormValue[index].item === group.value.item">
         <mat-icon>save</mat-icon>
       </button>
@@ -38,9 +46,6 @@ import { NuListService } from './nu-list.service';
 export class NuListChildComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() index!: number;
-  @Input() formArray!: FormValueArray;
-  @Input() canUpdateForm!: boolean;
-  @Input() cardinality!: Cardinality;
   protected readonly Cardinality = Cardinality;
 
   initialFormValue: any;
@@ -49,7 +54,7 @@ export class NuListChildComponent implements OnInit {
   loading = false;
 
   get group() {
-    return this.formArray.at(this.index);
+    return this.nuListService.formArray.at(this.index);
   }
 
   constructor(
@@ -60,7 +65,7 @@ export class NuListChildComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initialFormValue = this.formArray.value;
+    this.initialFormValue = this.nuListService.formArray.value;
     this._setupDisplayMode();
   }
   private _setupDisplayMode() {
@@ -70,7 +75,7 @@ export class NuListChildComponent implements OnInit {
     }
     this.nuListService.lastOpenedItem$.subscribe(value => {
       if (this.nuListService.currentlyAdding && this.displayMode === false) {
-        this.formArray.removeAt(this.formArray.length - 1);
+        this.nuListService.formArray.removeAt(this.nuListService.formArray.length - 1);
         this.nuListService.currentlyAdding = false;
         return;
       }
@@ -79,14 +84,14 @@ export class NuListChildComponent implements OnInit {
     });
   }
 
-  updatedIndex(index: number) {
-    const group = this.formArray.at(index);
+  update() {
+    const group = this.nuListService.formArray.at(this.index);
     if (group.invalid) return;
 
     this.loading = true;
 
     this._dspApiConnection.v2.values
-      .updateValue(this._getPayload(index))
+      .updateValue(this._getPayload(this.index))
       .pipe(
         take(1),
         finalize(() => {
@@ -100,10 +105,12 @@ export class NuListChildComponent implements OnInit {
   }
 
   private _getUpdatedValue(index: number) {
-    const group = this.formArray.at(index);
-    const prop = this.nuListService._editModeData?.prop;
-    const id = prop.values[index].id;
-    const entity = propertiesTypeMapping.get(prop.propDef.objectType).updateMapping(id, group.controls.item.value);
+    const group = this.nuListService.formArray.at(index);
+    const values = this.nuListService._editModeData?.values as ReadValue[];
+    const id = values[index].id;
+    const entity = propertiesTypeMapping
+      .get(this.nuListService.propertyDefinition.objectType)
+      .updateMapping(id, group.controls.item.value);
     if (group.controls.comment.value) {
       entity.valueHasComment = group.controls.comment.value;
     }
@@ -112,9 +119,9 @@ export class NuListChildComponent implements OnInit {
 
   private _getPayload(index: number) {
     const updateResource = new UpdateResource<UpdateValue>();
-    const { resource, prop } = this.nuListService._editModeData as { resource: any; prop: any };
+    const { resource, values } = this.nuListService._editModeData as { resource: ReadResource; values: ReadValue[] };
     updateResource.id = resource.id;
-    updateResource.property = prop.values[index].property;
+    updateResource.property = values[index].property;
     updateResource.type = resource.type;
     updateResource.value = this._getUpdatedValue(index);
     return updateResource;

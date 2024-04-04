@@ -11,34 +11,21 @@ import { finalize, take } from 'rxjs/operators';
   selector: 'app-display-edit-2',
   template: `
     <app-switch-properties-3
-      *ngIf="!loading; else loadingTemplate"
       [propertyDefinition]="prop.propDef"
       [property]="prop.guiDef"
       [cardinality]="prop.guiDef.cardinality"
-      [canUpdateForm]="true"
       [formArray]="formArray"
-      [editModeData]="{ resource, prop }"></app-switch-properties-3>
-
-    <ng-template #loadingTemplate>
-      <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
-    </ng-template>
+      [editModeData]="{ resource, values: prop.values }"></app-switch-properties-3>
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class DisplayEdit2Component implements OnInit {
   @Input() prop: PropertyInfoValues;
   @Input() resource: ReadResource;
-  displayMode = false;
-  loading = false;
 
   formArray: FormValueArray;
 
-  constructor(
-    private _fb: FormBuilder,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _cdr: ChangeDetectorRef
-  ) {}
+  constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
     this.formArray = this._fb.array(

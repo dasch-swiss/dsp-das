@@ -1,23 +1,14 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, ValidatorFn } from '@angular/forms';
 import {
   Cardinality,
   Constants,
   IHasPropertyWithPropertyDefinition,
   PropertyDefinition,
+  ReadResource,
+  ReadValue,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { FormValueArray } from './form-value-array.type';
 import { NuListService } from './nu-list.service';
 
@@ -25,12 +16,7 @@ import { NuListService } from './nu-list.service';
   selector: 'app-switch-properties-3',
   providers: [NuListService],
   template: `
-    <app-nu-list
-      [itemTpl]="itemTpl"
-      [formArray]="formArray"
-      [cardinality]="cardinality"
-      [canUpdateForm]="canUpdateForm"
-      (addItem)="addItem()"></app-nu-list>
+    <app-nu-list [itemTpl]="itemTpl"></app-nu-list>
 
     <ng-template let-item #intTpl>
       <mat-form-field>
@@ -102,8 +88,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
-  @Input() canUpdateForm = false;
-  @Input() editModeData: { resource: any; prop: any } | null = null;
+  @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
@@ -127,28 +112,19 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
 
   constructor(
     private _cd: ChangeDetectorRef,
-    private _fb: FormBuilder,
     private _nuListService: NuListService
   ) {}
 
   ngOnInit() {
     this._nuListService._editModeData = this.editModeData;
+    this._nuListService.propertyDefinition = this.propertyDefinition;
+    this._nuListService.formArray = this.formArray;
+    this._nuListService.cardinality = this.cardinality;
   }
 
   ngAfterViewInit() {
     this.itemTpl = this._getTemplate();
     this._cd.detectChanges();
-  }
-
-  addItem() {
-    this.formArray.push(
-      this._fb.group({
-        item: propertiesTypeMapping.get(this.propertyDefinition.objectType).control() as AbstractControl,
-        comment: this._fb.control(''),
-      })
-    );
-    this._nuListService.toggleOpenedValue(this.formArray.length - 1);
-    this._nuListService.currentlyAdding = true;
   }
 
   private _getTemplate(): TemplateRef<any> {
