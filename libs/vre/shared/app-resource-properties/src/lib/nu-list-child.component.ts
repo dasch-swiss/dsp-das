@@ -85,26 +85,18 @@ export class NuListChildComponent implements OnInit {
   }
 
   private _addItem() {
-    const createVal = this.createValueComponent.getNewValue();
+    const createVal = propertiesTypeMapping
+      .get(this.nuListService.propertyDefinition.objectType)
+      .mapping(this.group.controls.item.value);
 
-    // create a new UpdateResource with the same properties as the parent resource
+    const resource = this.nuListService._editModeData?.resource as ReadResource;
     const updateRes = new UpdateResource();
-    updateRes.id = this.parentResource.id;
-    updateRes.type = this.parentResource.type;
-    updateRes.property = this.resourcePropertyDefinition.id;
-
-    // assign the new value to the UpdateResource value
+    updateRes.id = resource.id;
+    updateRes.type = resource.type;
+    updateRes.property = this.nuListService.propertyDefinition.id;
     updateRes.value = createVal;
 
-    this._dspApiConnection.v2.values
-      .createValue(updateRes as UpdateResource<CreateValue>)
-      .pipe(
-        mergeMap((res: WriteValueResponse) =>
-          // if successful, get the newly created value
-          this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
-        )
-      )
-      .subscribe((res2: ReadResource) => {});
+    this._dspApiConnection.v2.values.createValue(updateRes as UpdateResource<CreateValue>).subscribe();
   }
 
   private _setupDisplayMode() {
