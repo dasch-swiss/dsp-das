@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef } from '@angular/core';
 import {
   Cardinality,
   KnoraApiConnection,
@@ -11,7 +11,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { finalize, take } from 'rxjs/operators';
-import { FormValueArray } from './form-value-array.type';
 import { NuListService } from './nu-list.service';
 
 @Component({
@@ -68,6 +67,7 @@ export class NuListChildComponent implements OnInit {
     this.initialFormValue = this.nuListService.formArray.value;
     this._setupDisplayMode();
   }
+
   private _setupDisplayMode() {
     if (this.nuListService.keepEditMode) {
       this.displayMode = false;
