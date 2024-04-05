@@ -11,7 +11,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
           <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); editAction.emit()">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-button class="edit" [matTooltip]="'date'" (click)="$event.stopPropagation()">
+          <button mat-button class="edit" [matTooltip]="date" (click)="$event.stopPropagation()">
             <mat-icon>info</mat-icon>
           </button>
           <button
@@ -33,7 +33,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     </ng-template>
   `,
   animations: [
-    // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
     trigger('simpleFadeAnimation', [
       state('in', style({ opacity: 1 })),
       transition(':enter', [style({ opacity: 0 }), animate(150)]),

@@ -13,12 +13,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import {
-  AddedEventValue,
-  EmitEvent,
-  Events,
-} from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
-import { finalize, mergeMap, take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { NuListService } from './nu-list.service';
 
 @Component({
@@ -27,7 +22,7 @@ import { NuListService } from './nu-list.service';
     <app-nu-list-action-bubble
       [editMode]="!displayMode"
       *ngIf="!nuListService.keepEditMode"
-      [date]="'date'"
+      [date]="nuListService._editModeData?.values[index].valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(nuListService.cardinality)"
       (editAction)="nuListService.toggleOpenedValue(index)"></app-nu-list-action-bubble>
 
