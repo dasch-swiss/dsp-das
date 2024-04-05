@@ -11,6 +11,7 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import {
   AddedEventValue,
@@ -68,7 +69,8 @@ export class NuListChildComponent implements OnInit {
     public nuListService: NuListService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _notification: NotificationService
   ) {}
 
   ngOnInit() {
@@ -85,6 +87,9 @@ export class NuListChildComponent implements OnInit {
   }
 
   private _addItem() {
+    if (this.group.invalid) return;
+
+    this.loading = true;
     const createVal = propertiesTypeMapping
       .get(this.nuListService.propertyDefinition.objectType)
       .mapping(this.group.controls.item.value);
@@ -96,7 +101,27 @@ export class NuListChildComponent implements OnInit {
     updateRes.property = this.nuListService.propertyDefinition.id;
     updateRes.value = createVal;
 
-    this._dspApiConnection.v2.values.createValue(updateRes as UpdateResource<CreateValue>).subscribe();
+    this._dspApiConnection.v2.values
+      .createValue(updateRes as UpdateResource<CreateValue>)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.loading = false;
+          this._cdr.detectChanges();
+        })
+      )
+      .subscribe(
+        () => {
+          this.nuListService.toggleOpenedValue(this.index);
+        },
+        (e: ApiResponseError) => {
+          if (e.status === 400) {
+            this._notification.openSnackBar('The value entered already exists.');
+            return;
+          }
+          throw e;
+        }
+      );
   }
 
   private _setupDisplayMode() {
@@ -116,8 +141,7 @@ export class NuListChildComponent implements OnInit {
   }
 
   _update() {
-    const group = this.nuListService.formArray.at(this.index);
-    if (group.invalid) return;
+    if (this.group.invalid) return;
 
     this.loading = true;
 
@@ -130,7 +154,7 @@ export class NuListChildComponent implements OnInit {
         })
       )
       .subscribe((res: WriteValueResponse) => {
-        this.displayMode = true;
+        this.nuListService.toggleOpenedValue(this.index);
         this._cdr.detectChanges();
       });
   }
