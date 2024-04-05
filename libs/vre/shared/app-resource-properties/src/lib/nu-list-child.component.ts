@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef } from '@angular/core';
 import {
+  ApiResponseError,
   Cardinality,
+  CreateValue,
   KnoraApiConnection,
   ReadResource,
   ReadValue,
@@ -10,7 +12,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { finalize, take } from 'rxjs/operators';
+import {
+  AddedEventValue,
+  EmitEvent,
+  Events,
+} from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
+import { finalize, mergeMap, take } from 'rxjs/operators';
 import { NuListService } from './nu-list.service';
 
 @Component({
@@ -27,12 +34,13 @@ import { NuListService } from './nu-list.service';
       <div>
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
+
         <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
           <textarea matInput rows="9" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
         </mat-form-field>
       </div>
       <button
-        (click)="update()"
+        (click)="onSave()"
         mat-icon-button
         *ngIf="!displayMode && !nuListService.keepEditMode && !loading"
         [disabled]="initialFormValue[index].item === group.value.item">
@@ -68,6 +76,37 @@ export class NuListChildComponent implements OnInit {
     this._setupDisplayMode();
   }
 
+  onSave() {
+    if (this.nuListService.currentlyAdding && this.index === this.nuListService.formArray.length - 1) {
+      this._addItem();
+    } else {
+      this._update();
+    }
+  }
+
+  private _addItem() {
+    const createVal = this.createValueComponent.getNewValue();
+
+    // create a new UpdateResource with the same properties as the parent resource
+    const updateRes = new UpdateResource();
+    updateRes.id = this.parentResource.id;
+    updateRes.type = this.parentResource.type;
+    updateRes.property = this.resourcePropertyDefinition.id;
+
+    // assign the new value to the UpdateResource value
+    updateRes.value = createVal;
+
+    this._dspApiConnection.v2.values
+      .createValue(updateRes as UpdateResource<CreateValue>)
+      .pipe(
+        mergeMap((res: WriteValueResponse) =>
+          // if successful, get the newly created value
+          this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
+        )
+      )
+      .subscribe((res2: ReadResource) => {});
+  }
+
   private _setupDisplayMode() {
     if (this.nuListService.keepEditMode) {
       this.displayMode = false;
@@ -84,7 +123,7 @@ export class NuListChildComponent implements OnInit {
     });
   }
 
-  update() {
+  _update() {
     const group = this.nuListService.formArray.at(this.index);
     if (group.invalid) return;
 
