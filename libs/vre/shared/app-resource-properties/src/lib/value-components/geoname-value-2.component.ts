@@ -25,6 +25,18 @@ export class GeonameValue2Component implements OnInit {
   constructor(private _geonameService: GeonameService) {}
 
   ngOnInit() {
+    if (this.control.value) {
+      this._geonameService.resolveGeonameID(this.control.value).subscribe(place => {
+        this.places = [
+          {
+            ...place,
+            id: this.control.value,
+            locationType: '',
+          },
+        ];
+      });
+    }
+
     this.control.valueChanges
       .pipe(
         filter(searchTerm => searchTerm.length >= 3),
