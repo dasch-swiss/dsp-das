@@ -173,7 +173,6 @@ import { TextValueAsHtmlComponent } from './workspace/resource/values/text-value
 import { TextValueAsStringComponent } from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
 import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
-import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
@@ -302,7 +301,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TextValueHtmlLinkDirective,
     TimeInputComponent,
     TimePipe,
-    TimeValueComponent,
     TitleFromCamelCasePipe,
     TruncatePipe,
     UploadComponent,
