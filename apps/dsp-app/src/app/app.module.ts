@@ -377,8 +377,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TimeValue2Component,
     UriValue2Component,
     NuListComponent,
-    NuListActionBubbleComponent,
     NuListChildComponent,
+    NuListActionBubbleComponent,
   ],
   imports: [
     AngularSplitModule,

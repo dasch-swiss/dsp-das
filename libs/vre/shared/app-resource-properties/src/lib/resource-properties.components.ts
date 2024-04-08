@@ -32,10 +32,9 @@ export const ResourcePropertiesComponents = [
   NuListComponent,
   SwitchProperties3Component,
   /*
-      NuListChildComponent,
-          NuListActionBusbbleComponent,
+          NuListChildComponent,
 
-                       */
+                           */
 ];
 
 export const ZComponents = [];
