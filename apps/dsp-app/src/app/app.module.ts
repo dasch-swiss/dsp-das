@@ -70,7 +70,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { NuListChildComponent } from '../../../../libs/vre/shared/app-resource-properties/src/lib/nu-list-child.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -376,7 +375,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TimeValue2Component,
     UriValue2Component,
     NuListComponent,
-    NuListChildComponent,
   ],
   imports: [
     AngularSplitModule,
