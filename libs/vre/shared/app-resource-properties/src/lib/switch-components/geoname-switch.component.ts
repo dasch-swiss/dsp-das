@@ -24,6 +24,8 @@ export class GeonameSwitchComponent implements SwitchComponent, OnInit {
   constructor(private _geonameService: GeonameService) {}
 
   ngOnInit() {
-    this.geonameLabel$ = this._geonameService.resolveGeonameID(this.control.value);
+    if (this.displayMode) {
+      this.geonameLabel$ = this._geonameService.resolveGeonameID(this.control.value);
+    }
   }
 }

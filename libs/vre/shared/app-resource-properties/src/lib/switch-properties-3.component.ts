@@ -60,8 +60,8 @@ import { NuListService } from './nu-list.service';
       <app-interval-switch [control]="item" [displayMode]="displayMode"></app-interval-switch>
     </ng-template>
 
-    <ng-template #geoNameTpl let-item let-displayMode="displayMode">
-      <app-geoname-switch [control]="item"></app-geoname-switch>
+    <ng-template #geoNameTpl let-item="item" let-displayMode="displayMode">
+      <app-geoname-switch [control]="item" [displayMode]="displayMode"></app-geoname-switch>
     </ng-template>
 
     <ng-template #linkTpl let-item let-displayMode="displayMode">
