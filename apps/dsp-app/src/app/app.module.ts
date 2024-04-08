@@ -164,7 +164,6 @@ import { DecimalValueComponent } from './workspace/resource/values/decimal-value
 import { GeonameValueComponent } from './workspace/resource/values/geoname-value/geoname-value.component';
 import { IntValueComponent } from './workspace/resource/values/int-value/int-value.component';
 import { IntervalInputComponent } from './workspace/resource/values/interval-value/interval-input/interval-input.component';
-import { IntervalValueComponent } from './workspace/resource/values/interval-value/interval-value.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
@@ -240,7 +239,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ImageDisplayRatioComponent,
     IntermediateComponent,
     IntervalInputComponent,
-    IntervalValueComponent,
     IntValueComponent,
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
