@@ -112,7 +112,8 @@
                             displayValue.property
                         ]
                     )
-                "></app-list-value>
+                ">
+      </app-list-value>
       <span *ngSwitchDefault>{{ displayValue.strval }}</span>
     </span>
     <div class="action-bubble" *ngIf="showActionBubble && !editModeActive" [@simpleFadeAnimation]="'in'">
@@ -122,11 +123,11 @@
           class="edit"
           [matTooltip]="'edit'"
           *ngIf="
-                        !readOnlyValue &&
-                        canModify &&
-                        !editModeActive &&
-                        projectStatus
-                    "
+                  !readOnlyValue &&
+                  canModify &&
+                  !editModeActive &&
+                  projectStatus
+              "
           (click)="activateEditMode()">
           <mat-icon>edit</mat-icon>
         </button>
@@ -164,7 +165,7 @@
       *ngIf="editModeActive"
       class="value-action save"
       title="save"
-      [disabled]="!displayValueComponent.form.valid"
+      [disabled]="!displayValueComponent?.form.valid"
       (click)="saveEditValue()">
       <mat-icon>save</mat-icon>
     </button>

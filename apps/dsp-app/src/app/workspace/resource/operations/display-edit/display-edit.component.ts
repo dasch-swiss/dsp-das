@@ -187,9 +187,6 @@ export class DisplayEditComponent implements OnInit {
     this.editModeActive = true;
     this.valueHovered = false;
     this.mode = 'update';
-
-    // hide read mode comment when switching to edit mode
-    this.displayValueComponent.shouldShowComment = false;
   }
 
   /**
@@ -229,9 +226,6 @@ export class DisplayEditComponent implements OnInit {
 
             this.displayValue = res2.getValues(this.displayValue.property)[0];
             this.mode = 'read';
-
-            // hide comment once back in read mode
-            this.displayValueComponent.updateCommentVisibility();
 
             // hide the progress indicator
             this.submittingValue = false;
@@ -321,9 +315,6 @@ export class DisplayEditComponent implements OnInit {
     this.editModeActive = false;
     this.showActionBubble = false;
     this.mode = 'read';
-
-    // hide comment once back in read mode
-    this.displayValueComponent.updateCommentVisibility();
   }
 
   /**

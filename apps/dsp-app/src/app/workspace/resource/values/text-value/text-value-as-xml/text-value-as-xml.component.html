@@ -10,7 +10,7 @@
     <ng-template #sourceMode>
       <span class="rm-value">{{ displayValue?.xml }}</span>
     </ng-template>
-    <span class="rm-comment" *ngIf="showAllComments$ | async"> {{ commentFormControl.value }} </span>
+    <span class="rm-comment" *ngIf="commentIsVisible$ | async"> {{ commentFormControl.value }} </span>
   </div>
 </span>
 <ng-template #showForm>

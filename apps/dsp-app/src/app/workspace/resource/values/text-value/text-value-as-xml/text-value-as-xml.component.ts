@@ -12,10 +12,8 @@ import {
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Constants, CreateTextValueAsXml, ReadTextValueAsXml, UpdateTextValueAsXml } from '@dasch-swiss/dsp-js';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import * as Editor from 'ckeditor5-custom-build';
-import { Observable } from 'rxjs';
 import { BaseValueDirective } from '../../../../../main/directive/base-value.directive';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 import { ckEditor } from '../ck-editor';
@@ -52,13 +50,12 @@ export class TextValueAsXMLComponent extends BaseValueDirective implements OnIni
     '<br>': '<br/>',
   };
 
-  @Select(ResourceSelectors.showAllComments) showAllComments$: Observable<boolean>;
-
   constructor(
+    _store: Store,
     @Inject(FormBuilder) protected _fb: FormBuilder,
     private _cd: ChangeDetectorRef
   ) {
-    super();
+    super(_store, _fb);
   }
 
   standardValueComparisonFunc(initValue: any, curValue: any): boolean {
