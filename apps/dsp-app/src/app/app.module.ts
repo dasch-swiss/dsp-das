@@ -157,7 +157,6 @@ import { VideoPreviewComponent } from './workspace/resource/representation/video
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
-import { SwitchPropertiesComponent } from './workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
@@ -306,7 +305,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StillImageComponent,
     StringifyStringLiteralPipe,
     SublistValueComponent,
-    SwitchPropertiesComponent,
     SwitchProperties2Component,
     SystemComponent,
     TextValueAsHtmlComponent,
