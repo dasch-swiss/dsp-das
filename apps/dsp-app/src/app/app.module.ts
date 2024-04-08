@@ -162,7 +162,6 @@ import { DateValueHandlerComponent } from './workspace/resource/values/date-valu
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
-import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
 import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
 import { TextValueAsHtmlComponent } from './workspace/resource/values/text-value/text-value-as-html/text-value-as-html.component';
@@ -239,7 +238,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     KnoraDatePipe,
     LoadingButtonDirective,
     LinkifyPipe,
-    LinkValueComponent,
     ListComponent,
     EditListInfoDialogComponent,
     EditListItemDialogComponent,
