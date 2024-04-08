@@ -11,7 +11,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
           <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); editAction.emit()">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-button class="edit" [matTooltip]="date" (click)="$event.stopPropagation()">
+          <button mat-button class="edit" *ngIf="date" [matTooltip]="date" (click)="$event.stopPropagation()">
             <mat-icon>info</mat-icon>
           </button>
           <button

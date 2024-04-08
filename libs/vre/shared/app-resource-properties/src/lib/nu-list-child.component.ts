@@ -22,7 +22,7 @@ import { NuListService } from './nu-list.service';
     <app-nu-list-action-bubble
       [editMode]="!displayMode"
       *ngIf="!nuListService.keepEditMode"
-      [date]="nuListService._editModeData?.values[index].valueCreationDate"
+      [date]="nuListService._editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(nuListService.cardinality)"
       (editAction)="nuListService.toggleOpenedValue(index)"></app-nu-list-action-bubble>
 
@@ -169,7 +169,10 @@ export class NuListChildComponent implements OnInit {
 
   private _getPayload(index: number) {
     const updateResource = new UpdateResource<UpdateValue>();
-    const { resource, values } = this.nuListService._editModeData as { resource: ReadResource; values: ReadValue[] };
+    const { resource, values } = this.nuListService._editModeData as {
+      resource: ReadResource;
+      values: ReadValue[];
+    };
     updateResource.id = resource.id;
     updateResource.property = values[index].property;
     updateResource.type = resource.type;
