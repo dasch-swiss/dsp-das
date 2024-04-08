@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SwitchComponent } from '../switch-components/switch-component.interface';
+import { SwitchComponent } from './switch-component.interface';
 
 @Component({
   selector: 'app-base-switch',
@@ -9,7 +9,7 @@ import { SwitchComponent } from '../switch-components/switch-component.interface
       <ng-content></ng-content>
     </ng-template>`,
 })
-export class BaseSwitchComponent implements SwitchComponent {
+export class DefaultSwitchComponent implements SwitchComponent {
   @Input() control!: FormControl<number>;
   @Input() displayMode = true;
 }
