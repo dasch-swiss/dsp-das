@@ -165,7 +165,6 @@ import { AddValueComponent } from './workspace/resource/operations/add-value/add
 import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
-import { PropertiesComponent } from './workspace/resource/properties/properties.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
@@ -314,7 +313,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ImageSettingsComponent,
     ProjectsComponent,
     ProjectsListComponent,
-    PropertiesComponent,
     PropertyInfoComponent,
     ReplaceFileFormComponent,
     ResourceClassFormComponent,
