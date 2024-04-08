@@ -38,7 +38,7 @@ import { NuListService } from './nu-list.service';
       <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
     </ng-template>
 
-    <ng-template let-item #colorTpl let-displayMode="displayMode">
+    <ng-template #colorTpl let-item="item" let-displayMode="displayMode">
       <app-color-switch [control]="item" style="flex: 1" [displayMode]="displayMode"></app-color-switch>
     </ng-template>
 
