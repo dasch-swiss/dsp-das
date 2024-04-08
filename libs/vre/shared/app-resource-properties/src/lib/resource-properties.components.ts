@@ -8,7 +8,7 @@ import { SwitchProperties3Component } from './switch-properties-3.component';
 import { BaseSwitchComponent } from './value-components/base-switch.component';
 import { ColorSwitchComponent } from './value-components/color-switch.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
-import { IntervalValue2Component } from './value-components/interval-value-2.component';
+import { IntervalSwitchComponent } from './value-components/interval-switch.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
@@ -16,14 +16,13 @@ import { UriValue2Component } from './value-components/uri-value-2.component';
 
 const valueComponents = [
   GeonameValue2Component,
-  IntervalValue2Component,
   LinkValue2Component,
   ListValue2Component,
   NestedMenuComponent,
   UriValue2Component,
 ];
 
-const switchComponents = [TimeSwitchComponent, ColorSwitchComponent];
+const switchComponents = [TimeSwitchComponent, ColorSwitchComponent, IntervalSwitchComponent];
 export const ResourcePropertiesComponents = [
   ...switchComponents,
   ...valueComponents,

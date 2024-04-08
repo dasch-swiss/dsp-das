@@ -50,8 +50,8 @@ import { NuListService } from './nu-list.service';
       <app-time-switch [control]="item" [displayMode]="displayMode"></app-time-switch>
     </ng-template>
 
-    <ng-template let-item #intervalTpl>
-      <app-interval-value-2 [control]="item"></app-interval-value-2>
+    <ng-template #intervalTpl let-item let-displayMode="displayMode">
+      <app-interval-switch [control]="item"></app-interval-switch>
     </ng-template>
 
     <ng-template let-item #listTpl>
