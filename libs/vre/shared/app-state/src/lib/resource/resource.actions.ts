@@ -19,12 +19,8 @@ export class GetAttachedProjectAction {
 
 export class ToggleShowAllPropsAction {
   static readonly type = '[Resource] Toggle Show All Properties';
-
-  constructor() {}
 }
 
 export class ToggleShowAllCommentsAction {
   static readonly type = '[Resource] Toggle Show All Comments';
-
-  constructor() {}
 }
