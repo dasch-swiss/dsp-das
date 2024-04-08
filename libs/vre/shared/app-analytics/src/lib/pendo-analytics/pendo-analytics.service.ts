@@ -12,7 +12,7 @@ export class PendoAnalyticsService {
   private _accessTokenService: AccessTokenService = inject(AccessTokenService);
   private environment: string = this.config.environment;
 
-  constructor() {
+  setup() {
     this.authService
       .isCredentialsValid$()
       .pipe(takeUntilDestroyed())
