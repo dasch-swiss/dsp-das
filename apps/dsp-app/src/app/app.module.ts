@@ -54,7 +54,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
-import { ConfirmationDialogComponent } from './main/action/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationMessageComponent } from './main/action/confirmation-dialog/confirmation-message/confirmation-message.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
@@ -194,7 +193,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ColorPickerComponent,
     CommonInputComponent,
     ComparisonComponent,
-    ConfirmationDialogComponent,
     ConfirmDialogComponent,
     ConfirmationMessageComponent,
     CookiePolicyComponent,
