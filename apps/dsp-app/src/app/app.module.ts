@@ -35,7 +35,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { CreateRessourceDialogComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { CreateRessourceFormComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-form.component';
 import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
@@ -51,6 +50,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ResourceFormComponents } from '../../../../libs/vre/shared/app-resource-form/src/lib/resource-form.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -175,6 +175,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
+    ...ResourceFormComponents,
     PropertiesDisplayComponent,
     AccountComponent,
     ActionBubbleComponent,
@@ -198,7 +199,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CreateResourceClassDialogComponent,
     CreateRessourcePageComponent,
     CreateRessourceFormComponent,
-    CreateRessourceDialogComponent,
     DateValueHandlerComponent,
     DialogComponent,
     DialogHeaderComponent,

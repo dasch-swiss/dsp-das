@@ -1,1 +1,1 @@
-export * from './lib/vre-shared-app-resource-form.module';
+export * from './lib/create-ressource-dialog.component';

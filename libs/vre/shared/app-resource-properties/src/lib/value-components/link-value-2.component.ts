@@ -4,11 +4,8 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadProject, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { CreateResourceDialogProps, CreateRessourceDialogComponent } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  CreateResourceDialogProps,
-  CreateRessourceDialogComponent,
-} from '@dsp-app/src/app/project/create-ressource-page/create-ressource-dialog.component';
 import { Store } from '@ngxs/store';
 import { filter, switchMap } from 'rxjs/operators';
 import { LinkValue2DataService } from './link-value-2-data.service';
