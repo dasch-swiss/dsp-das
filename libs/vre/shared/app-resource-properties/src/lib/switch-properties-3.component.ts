@@ -18,6 +18,14 @@ import { NuListService } from './nu-list.service';
   template: `
     <app-nu-list [itemTpl]="itemTpl"></app-nu-list>
 
+    <ng-template #intTpl let-item="item" let-displayMode="displayMode">
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <mat-form-field style="width: 100%">
+          <input matInput [formControl]="item" type="number" />
+        </mat-form-field>
+      </app-base-switch>
+    </ng-template>
+
     <ng-template let-item #intTpl let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <app-common-input type="number" [control]="item"></app-common-input>
