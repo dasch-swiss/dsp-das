@@ -14,7 +14,5 @@ export class TextSwitchComponent implements OnInit {
   @Input() control: FormControl<string>;
   @Input() displayMode = true;
 
-  ngOnInit() {
-    console.log('textswitch', this);
-  }
+  ngOnInit() {}
 }

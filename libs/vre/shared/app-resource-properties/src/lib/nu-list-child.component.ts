@@ -102,12 +102,13 @@ export class NuListChildComponent implements OnInit {
         take(1),
         finalize(() => {
           this.loading = false;
-          this._cdr.detectChanges();
         })
       )
       .subscribe(
         () => {
+          this.nuListService.currentlyAdding = false;
           this.nuListService.toggleOpenedValue(this.index);
+          this._cdr.detectChanges();
         },
         (e: ApiResponseError) => {
           if (e.status === 400) {
