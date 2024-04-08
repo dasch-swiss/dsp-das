@@ -161,7 +161,6 @@ import { CommentFormComponent } from './workspace/resource/values/comment-form/c
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { DecimalValueComponent } from './workspace/resource/values/decimal-value/decimal-value.component';
-import { IntValueComponent } from './workspace/resource/values/int-value/int-value.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { LinkValueComponent } from './workspace/resource/values/link-value/link-value.component';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
@@ -235,7 +234,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HelpComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
-    IntValueComponent,
     InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,
