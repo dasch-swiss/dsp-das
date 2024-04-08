@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { SwitchComponent } from '../switch-components/switch-component.interface';
+import { SwitchComponent } from './switch-component.interface';
 
 @Component({
   selector: 'app-interval-switch',
