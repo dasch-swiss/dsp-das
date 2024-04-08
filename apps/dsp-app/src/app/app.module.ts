@@ -163,7 +163,6 @@ import { DragDropDirective } from './workspace/resource/directives/drag-drop.dir
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
 import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
-import { DisplayEditComponent } from './workspace/resource/operations/display-edit/display-edit.component';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
@@ -259,7 +258,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DialogComponent,
     DialogHeaderComponent,
     DisableContextMenuDirective,
-    DisplayEditComponent,
     DocumentComponent,
     DragDropDirective,
     EditResourceClassDialogComponent,
