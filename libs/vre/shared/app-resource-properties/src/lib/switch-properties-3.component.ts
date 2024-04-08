@@ -70,7 +70,7 @@ import { NuListService } from './nu-list.service';
     </ng-template>
 
     <ng-template let-item #uriTpl>
-      <app-uri-value-2 [control]="item" style="width: 100%"></app-uri-value-2>
+      <app-uri-switch [control]="item" style="width: 100%"></app-uri-switch>
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
