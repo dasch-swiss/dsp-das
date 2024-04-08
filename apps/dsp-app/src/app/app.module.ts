@@ -43,7 +43,6 @@ import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/onto
 import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
 import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
-import { SwitchValuesComponent } from '@dsp-app/src/app/workspace/resource/switch-values.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -179,7 +178,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     PropertiesDisplayComponent,
-    SwitchValuesComponent,
     AccountComponent,
     ActionBubbleComponent,
     AddRegionFormComponent,
