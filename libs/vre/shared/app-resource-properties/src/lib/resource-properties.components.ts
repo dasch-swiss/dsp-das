@@ -7,6 +7,7 @@ import { DefaultSwitchComponent } from './switch-components/default-switch.compo
 import { GeonameSwitchComponent } from './switch-components/geoname-switch.component';
 import { IntervalSwitchComponent } from './switch-components/interval-switch.component';
 import { LinkSwitchComponent } from './switch-components/link-switch.component';
+import { ListSwitchComponent } from './switch-components/list-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
@@ -25,6 +26,7 @@ const switchComponents = [
   LinkSwitchComponent,
   UriSwitchComponent,
   GeonameSwitchComponent,
+  ListSwitchComponent,
   DefaultSwitchComponent,
 ];
 
