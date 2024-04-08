@@ -163,7 +163,6 @@ import { DateValueComponent } from './workspace/resource/values/date-value/date-
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { ListValueComponent } from './workspace/resource/values/list-value/list-value.component';
 import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
-import { TextValueAsStringComponent } from './workspace/resource/values/text-value/text-value-as-string/text-value-as-string.component';
 import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
@@ -282,7 +281,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StringifyStringLiteralPipe,
     SublistValueComponent,
     SystemComponent,
-    TextValueAsStringComponent,
     TextValueAsXMLComponent,
     TextValueHtmlLinkDirective,
     TimeInputComponent,
