@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/property-info-values.interface';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
+import { FormValueArray } from './form-value-array.type';
 
 @Component({
   selector: 'app-display-edit-2',
