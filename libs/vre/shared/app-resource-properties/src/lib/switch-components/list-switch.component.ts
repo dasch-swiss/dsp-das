@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { KnoraApiConnection, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { SwitchComponent } from './switch-component.interface';
 
@@ -16,13 +16,14 @@ import { SwitchComponent } from './switch-component.interface';
       </span>
     </ng-container>
     <ng-template #editMode>
-      <app-list-value-2 [control]="control"></app-list-value-2>
+      <app-list-value-2 [control]="control" [propertyDef]="propertyDef"></app-list-value-2>
     </ng-template>
   `,
 })
 export class ListSwitchComponent implements SwitchComponent {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
+  @Input() propertyDef!: ResourcePropertyDefinition;
 
   selectedNodeHierarchy: string[] = [];
 

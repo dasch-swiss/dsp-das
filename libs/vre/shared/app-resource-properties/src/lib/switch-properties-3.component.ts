@@ -54,8 +54,8 @@ import { NuListService } from './nu-list.service';
       <app-interval-switch [control]="item"></app-interval-switch>
     </ng-template>
 
-    <ng-template let-item #listTpl>
-      <app-list-value-2 [propertyDef]="resPropDef" [control]="item" style="flex: 1"></app-list-value-2>
+    <ng-template #listTpl let-item let-displayMode>
+      <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
     </ng-template>
 
     <ng-template #geoNameTpl let-item let-displayMode="displayMode">
