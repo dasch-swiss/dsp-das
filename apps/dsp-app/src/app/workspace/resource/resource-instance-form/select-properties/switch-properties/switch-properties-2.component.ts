@@ -6,7 +6,7 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
   selector: 'app-switch-properties-2',
   template: `
     <span [ngSwitch]="property.objectType">
-      <app-int-value-2 *ngSwitchCase="constants.IntValue" [control]="control"></app-int-value-2>
+      <app-int-switch *ngSwitchCase="constants.IntValue" [control]="control"></app-int-switch>
 
       <span *ngSwitchDefault>
         <p>

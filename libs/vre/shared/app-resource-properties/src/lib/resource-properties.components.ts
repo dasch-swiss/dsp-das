@@ -8,7 +8,7 @@ import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
 import { ColorValue2Component } from './value-components/color-value-2.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
-import { IntValue2Component } from './value-components/int-value-2.component';
+import { IntSwitchComponent } from './value-components/int-switch.component';
 import { IntervalValue2Component } from './value-components/interval-value-2.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
@@ -19,7 +19,6 @@ import { UriValue2Component } from './value-components/uri-value-2.component';
 const valueComponents = [
   ColorValue2Component,
   GeonameValue2Component,
-  IntValue2Component,
   IntervalValue2Component,
   LinkValue2Component,
   ListValue2Component,
@@ -28,7 +27,7 @@ const valueComponents = [
   UriValue2Component,
 ];
 
-const switchComponents = [TextSwitchComponent, BooleanSwitchComponent];
+const switchComponents = [TextSwitchComponent, IntSwitchComponent, BooleanSwitchComponent];
 export const ResourcePropertiesComponents = [
   ...switchComponents,
   ...valueComponents,
