@@ -26,6 +26,14 @@ import { NuListService } from './nu-list.service';
       </app-base-switch>
     </ng-template>
 
+    <ng-template #decimalTpl let-item="item" let-displayMode="displayMode">
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <mat-form-field style="width: 100%">
+          <input matInput [formControl]="item" type="number" step="0.05" />
+        </mat-form-field>
+      </app-base-switch>
+    </ng-template>
+
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <div>
@@ -89,6 +97,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
+  @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
   @ViewChild('colorTpl') colorTpl!: TemplateRef<any>;
   @ViewChild('textTpl') textTpl!: TemplateRef<any>;
@@ -127,8 +136,9 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   private _getTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-      case Constants.DecimalValue:
         return this.intTpl;
+      case Constants.DecimalValue:
+        return this.decimalTpl;
       case Constants.BooleanValue:
         return this.booleanTpl;
       case Constants.ColorValue:
