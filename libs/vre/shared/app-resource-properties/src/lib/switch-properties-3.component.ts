@@ -48,10 +48,8 @@ import { NuListService } from './nu-list.service';
       </app-base-switch>
     </ng-template>
 
-    <ng-template #dateTpl let-item let-displayMode="displayMode">
-      <app-base-switch [control]="item" [displayMode]="displayMode">
-        <app-date-value-handler [formControl]="item"></app-date-value-handler>
-      </app-base-switch>
+    <ng-template #dateTpl let-item="item" let-displayMode="displayMode">
+      <app-date-switch [control]="item" [displayMode]="displayMode"></app-date-switch>
     </ng-template>
 
     <ng-template #timeTpl let-item let-displayMode="displayMode">

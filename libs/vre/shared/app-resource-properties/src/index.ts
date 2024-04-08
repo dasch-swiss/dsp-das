@@ -17,6 +17,7 @@ export * from './lib/value-components/temp-link-value.service';
 export * from './lib/switch-components/geoname-switch.component';
 export * from './lib/switch-components/link-switch.component';
 export * from './lib/switch-components/list-switch.component';
+export * from './lib/switch-components/date-switch.component';
 
 export * from './lib/form-value-array.type';
 export * from './lib/resource-properties.components';

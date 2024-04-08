@@ -3,6 +3,7 @@ import { DisplayEdit2Component } from './display-edit-2.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
 import { NuListChildComponent } from './nu-list-child.component';
 import { NuListComponent } from './nu-list.component';
+import { DateSwitchComponent } from './switch-components/date-switch.component';
 import { DefaultSwitchComponent } from './switch-components/default-switch.component';
 import { GeonameSwitchComponent } from './switch-components/geoname-switch.component';
 import { IntervalSwitchComponent } from './switch-components/interval-switch.component';
@@ -27,6 +28,7 @@ const switchComponents = [
   UriSwitchComponent,
   GeonameSwitchComponent,
   ListSwitchComponent,
+  DateSwitchComponent,
   DefaultSwitchComponent,
 ];
 
