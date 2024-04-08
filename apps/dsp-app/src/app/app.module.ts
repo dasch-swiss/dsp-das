@@ -40,8 +40,8 @@ import {
   ListValue2Component,
   NestedMenuComponent,
   NuListComponent,
+  ResourcePropertiesComponents,
   SwitchProperties3Component,
-  TextSwitchComponent,
   TimeValue2Component,
   UriValue2Component,
 } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -217,6 +217,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     ...PropertyFormComponents,
+    ...ResourcePropertiesComponents,
     PropertiesDisplayComponent,
     SwitchValuesComponent,
     DisplayEdit2Component,
@@ -377,7 +378,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     UriValue2Component,
     NuListComponent,
     NuListActionBubbleComponent,
-    TextSwitchComponent,
     NuListChildComponent,
   ],
   imports: [

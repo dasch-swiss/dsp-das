@@ -1,7 +1,6 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
-import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
-import { NuListChildComponent } from './nu-list-child.component';
 import { NuListComponent } from './nu-list.component';
+import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
 import { BooleanValue2Component } from './value-components/boolean-value-2.component';
 import { ColorValue2Component } from './value-components/color-value-2.component';
@@ -25,15 +24,18 @@ const valueComponents = [
   UriValue2Component,
 ];
 
-const switchComponents = [];
+const switchComponents = [TextSwitchComponent];
 export const ResourcePropertiesComponents = [
-  ...valueComponents,
   ...switchComponents,
+  ...valueComponents,
   DeleteValueDialogComponent,
   NuListComponent,
-  NuListActionBubbleComponent,
-  NuListChildComponent,
   SwitchProperties3Component,
+  /*
+      NuListChildComponent,
+          NuListActionBusbbleComponent,
+
+                       */
 ];
 
 export const ZComponents = [];
