@@ -13,7 +13,6 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ApiResponseError,
   Constants,
   CountQueryResponse,
   IHasPropertyWithPropertyDefinition,
@@ -39,7 +38,7 @@ import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
-import { PropertyInfoValues } from './properties/properties.component';
+import { PropertyInfoValues } from './properties/property-info-values.interface';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { IncomingService } from './services/incoming.service';

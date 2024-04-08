@@ -25,7 +25,7 @@ import {
   ConfirmationDialogValueDeletionPayload,
 } from '../../../../main/action/confirmation-dialog/confirmation-dialog.component';
 import { BaseValueDirective } from '../../../../main/directive/base-value.directive';
-import { PropertyInfoValues } from '../../properties/properties.component';
+import { PropertyInfoValues } from '../../properties/property-info-values.interface';
 import {
   DeletedEventValue,
   EmitEvent,

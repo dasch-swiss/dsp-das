@@ -1,11 +1,9 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
-import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue, WriteValueResponse } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { FormValueArray } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
+import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/property-info-values.interface';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { finalize, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-display-edit-2',

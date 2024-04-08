@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cardinality, ReadResource, PropertyDefinition, ReadValue } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
+import { Cardinality, PropertyDefinition, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject } from 'rxjs';
 import { FormValueArray } from './form-value-array.type';
 
@@ -12,6 +11,7 @@ export class NuListService {
   cardinality!: Cardinality;
   currentlyAdding = false;
   lastOpenedItem$ = new BehaviorSubject<number | null>(null);
+
   get keepEditMode() {
     return this._editModeData === null;
   }
