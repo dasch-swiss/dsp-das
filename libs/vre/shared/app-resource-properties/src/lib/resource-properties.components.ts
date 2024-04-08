@@ -1,4 +1,5 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
+import { DisplayEdit2Component } from './display-edit-2.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
 import { NuListChildComponent } from './nu-list-child.component';
 import { NuListComponent } from './nu-list.component';
@@ -8,6 +9,7 @@ import { BooleanValue2Component } from './value-components/boolean-value-2.compo
 import { ColorValue2Component } from './value-components/color-value-2.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
 import { IntValue2Component } from './value-components/int-value-2.component';
+import { IntervalValue2Component } from './value-components/interval-value-2.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
@@ -19,6 +21,7 @@ const valueComponents = [
   ColorValue2Component,
   GeonameValue2Component,
   IntValue2Component,
+  IntervalValue2Component,
   LinkValue2Component,
   ListValue2Component,
   NestedMenuComponent,
@@ -35,9 +38,5 @@ export const ResourcePropertiesComponents = [
   SwitchProperties3Component,
   NuListActionBubbleComponent,
   NuListChildComponent,
-  /*
-
-                               */
+  DisplayEdit2Component,
 ];
-
-export const ZComponents = [];
