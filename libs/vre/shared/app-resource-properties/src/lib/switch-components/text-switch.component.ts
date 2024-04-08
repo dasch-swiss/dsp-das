@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { SwitchComponent } from './switch-component.interface';
 
 @Component({
   selector: 'app-text-switch',
@@ -10,9 +11,7 @@ import { FormControl } from '@angular/forms';
     </ng-template>
   `,
 })
-export class TextSwitchComponent implements OnInit {
-  @Input() control: FormControl<string>;
+export class TextSwitchComponent implements SwitchComponent {
+  @Input() control!: FormControl<string>;
   @Input() displayMode = true;
-
-  ngOnInit() {}
 }

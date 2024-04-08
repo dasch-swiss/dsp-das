@@ -30,8 +30,8 @@ import { NuListService } from './nu-list.service';
       </mat-form-field>
     </ng-template>
 
-    <ng-template let-item #booleanTpl>
-      <mat-slide-toggle [formControl]="item" style="width: 100%; align-self: center"></mat-slide-toggle>
+    <ng-template let-item #booleanTpl let-displayMode="displayMode">
+      <app-boolean-switch [control]="item" [displayMode]="displayMode"></app-boolean-switch>
     </ng-template>
 
     <ng-template let-item #colorTpl>
