@@ -14,6 +14,7 @@ export * from './lib/value-components/uri-switch.component';
 export * from './lib/value-components/geoname-value-2.component';
 export * from './lib/value-components/link-value-2.component';
 export * from './lib/value-components/temp-link-value.service';
+export * from './lib/switch-components/geoname-switch.component';
 
 export * from './lib/form-value-array.type';
 export * from './lib/resource-properties.components';
