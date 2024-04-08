@@ -174,7 +174,6 @@ import { TextValueAsStringComponent } from './workspace/resource/values/text-val
 import { TextValueAsXMLComponent } from './workspace/resource/values/text-value/text-value-as-xml/text-value-as-xml.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { TimeValueComponent } from './workspace/resource/values/time-value/time-value.component';
-import { UriValueComponent } from './workspace/resource/values/uri-value/uri-value.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
@@ -308,7 +307,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TruncatePipe,
     UploadComponent,
     Upload2Component,
-    UriValueComponent,
     UserComponent,
     UserFormComponent,
     UserMenuComponent,
