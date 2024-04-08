@@ -42,7 +42,6 @@ import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/reso
 import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
 import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
 import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
-import { SwitchProperties2Component } from '@dsp-app/src/app/workspace/resource/resource-instance-form/select-properties/switch-properties/switch-properties-2.component';
 import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { SwitchValuesComponent } from '@dsp-app/src/app/workspace/resource/switch-values.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -303,7 +302,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StillImageComponent,
     StringifyStringLiteralPipe,
     SublistValueComponent,
-    SwitchProperties2Component,
     SystemComponent,
     TextValueAsHtmlComponent,
     TextValueAsStringComponent,
