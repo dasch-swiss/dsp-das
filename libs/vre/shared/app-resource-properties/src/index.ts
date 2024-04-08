@@ -1,6 +1,6 @@
 export * from './lib/switch-properties-3.component';
 export * from './lib/switch-components/boolean-switch.component';
-export * from './lib/value-components/color-value-2.component';
+export * from './lib/value-components/color-switch.component';
 export * from './lib/value-components/interval-value-2.component';
 export * from './lib/value-components/list-value-2.component';
 export * from './lib/value-components/nested-menu.component';

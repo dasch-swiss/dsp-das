@@ -26,8 +26,8 @@ import { NuListService } from './nu-list.service';
       <app-boolean-switch [control]="item" [displayMode]="displayMode"></app-boolean-switch>
     </ng-template>
 
-    <ng-template let-item #colorTpl>
-      <app-color-value-2 [control]="item" style="flex: 1"></app-color-value-2>
+    <ng-template let-item #colorTpl let-displayMode="displayMode">
+      <app-color-switch [control]="item" style="flex: 1" [displayMode]="displayMode"></app-color-switch>
     </ng-template>
 
     <ng-template let-item="item" let-displayMode="displayMode" #textTpl>

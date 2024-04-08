@@ -6,7 +6,7 @@ import { NuListComponent } from './nu-list.component';
 import { BooleanSwitchComponent } from './switch-components/boolean-switch.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
-import { ColorValue2Component } from './value-components/color-value-2.component';
+import { ColorSwitchComponent } from './value-components/color-switch.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
 import { IntSwitchComponent } from './value-components/int-switch.component';
 import { IntervalValue2Component } from './value-components/interval-value-2.component';
@@ -17,7 +17,7 @@ import { TimeValue2Component } from './value-components/time-value-2.component';
 import { UriValue2Component } from './value-components/uri-value-2.component';
 
 const valueComponents = [
-  ColorValue2Component,
+  ColorSwitchComponent,
   GeonameValue2Component,
   IntervalValue2Component,
   LinkValue2Component,
