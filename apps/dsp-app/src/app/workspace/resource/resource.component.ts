@@ -459,7 +459,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
 
   resourceLabel = (incomingResource: DspResource, resource: DspResource): string =>
-    incomingResource ? resource.res.label + ': ' + incomingResource.res.label : resource.res.label;
+    incomingResource ? `${resource.res.label}: ${incomingResource.res.label}` : resource.res.label;
 
   openProject(project: ReadProject) {
     window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');

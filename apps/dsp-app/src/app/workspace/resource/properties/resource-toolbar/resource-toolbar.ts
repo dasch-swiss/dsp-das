@@ -35,9 +35,9 @@ import {
   ToggleShowAllCommentsAction,
   ToggleShowAllPropsAction,
 } from '@dasch-swiss/vre/shared/app-state';
-import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
 import { DspResource } from '../../dsp-resource';
 import { ResourceService } from '../../services/resource.service';
 
