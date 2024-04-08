@@ -147,7 +147,6 @@ import { TextComponent } from './workspace/resource/representation/text/text.com
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
-import { ResourceInstanceFormComponent } from './workspace/resource/resource-instance-form/resource-instance-form.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
@@ -247,7 +246,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceClassInfoComponent,
     ResourceClassPropertyInfoComponent,
     ResourceComponent,
-    ResourceInstanceFormComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResourcePageComponent,
