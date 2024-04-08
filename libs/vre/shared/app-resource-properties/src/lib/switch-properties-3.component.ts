@@ -26,18 +26,16 @@ import { NuListService } from './nu-list.service';
       </app-base-switch>
     </ng-template>
 
-    <ng-template let-item #intTpl let-displayMode="displayMode">
-      <app-base-switch [control]="item" [displayMode]="displayMode">
-        <app-common-input type="number" [control]="item"></app-common-input>
-      </app-base-switch>
-    </ng-template>
-
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <div>
           <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
         </div>
       </app-base-switch>
+    </ng-template>
+
+    <ng-template #listTpl let-item="item" let-displayMode="displayMode">
+      <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
     </ng-template>
 
     <ng-template let-item #colorTpl let-displayMode="displayMode">
@@ -62,10 +60,6 @@ import { NuListService } from './nu-list.service';
 
     <ng-template #intervalTpl let-item let-displayMode="displayMode">
       <app-interval-switch [control]="item" [displayMode]="displayMode"></app-interval-switch>
-    </ng-template>
-
-    <ng-template #listTpl let-item let-displayMode="displayMode">
-      <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
     </ng-template>
 
     <ng-template #geoNameTpl let-item let-displayMode="displayMode">
