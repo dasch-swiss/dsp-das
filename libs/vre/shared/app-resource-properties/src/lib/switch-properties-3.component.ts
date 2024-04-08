@@ -62,11 +62,8 @@ import { NuListService } from './nu-list.service';
       <app-geoname-switch [control]="item"></app-geoname-switch>
     </ng-template>
 
-    <ng-template let-item #linkTpl>
-      <app-link-value-2
-        [control]="item"
-        style="width: 100%"
-        [propIri]="property.propertyDefinition.id"></app-link-value-2>
+    <ng-template #linkTpl let-item let-displayMode="displayMode">
+      <app-link-switch [control]="item" [displayMode]="displayMode"></app-link-switch>
     </ng-template>
 
     <ng-template let-item #uriTpl>

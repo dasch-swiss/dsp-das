@@ -6,6 +6,7 @@ import { NuListComponent } from './nu-list.component';
 import { DefaultSwitchComponent } from './switch-components/default-switch.component';
 import { GeonameSwitchComponent } from './switch-components/geoname-switch.component';
 import { IntervalSwitchComponent } from './switch-components/interval-switch.component';
+import { LinkSwitchComponent } from './switch-components/link-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
@@ -21,6 +22,7 @@ const switchComponents = [
   TimeSwitchComponent,
   ColorSwitchComponent,
   IntervalSwitchComponent,
+  LinkSwitchComponent,
   UriSwitchComponent,
   GeonameSwitchComponent,
   DefaultSwitchComponent,
