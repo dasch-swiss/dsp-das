@@ -161,7 +161,6 @@ import { CommentFormComponent } from './workspace/resource/values/comment-form/c
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
-import { SublistValueComponent } from './workspace/resource/values/list-value/subList-value/sublist-value.component';
 import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
@@ -276,7 +275,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StatusComponent,
     StillImageComponent,
     StringifyStringLiteralPipe,
-    SublistValueComponent,
     SystemComponent,
     TextValueHtmlLinkDirective,
     TimeInputComponent,
