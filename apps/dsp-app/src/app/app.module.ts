@@ -161,7 +161,6 @@ import { ComparisonComponent } from './workspace/comparison/comparison.component
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
-import { AddValueComponent } from './workspace/resource/operations/add-value/add-value.component';
 import { CreateLinkResourceComponent } from './workspace/resource/operations/create-link-resource/create-link-resource.component';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
@@ -225,7 +224,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ActionBubbleComponent,
     AddRegionFormComponent,
     AddUserComponent,
-    AddValueComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
     AppComponent,
