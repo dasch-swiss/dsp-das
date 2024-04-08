@@ -1,4 +1,5 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
+import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
 import { NuListComponent } from './nu-list.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
@@ -31,10 +32,11 @@ export const ResourcePropertiesComponents = [
   DeleteValueDialogComponent,
   NuListComponent,
   SwitchProperties3Component,
+  NuListActionBubbleComponent,
   /*
-          NuListChildComponent,
+            NuListChildComponent,
 
-                           */
+                             */
 ];
 
 export const ZComponents = [];
