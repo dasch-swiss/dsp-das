@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
   Cardinality,
@@ -14,6 +15,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
 import { finalize, take } from 'rxjs/operators';
+import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { NuListService } from './nu-list.service';
 
 @Component({
@@ -24,7 +26,8 @@ import { NuListService } from './nu-list.service';
       *ngIf="!nuListService.keepEditMode"
       [date]="nuListService._editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(nuListService.cardinality)"
-      (editAction)="nuListService.toggleOpenedValue(index)"></app-nu-list-action-bubble>
+      (editAction)="nuListService.toggleOpenedValue(index)"
+      (deleteAction)="askToDelete()"></app-nu-list-action-bubble>
 
     <div style="display: flex">
       <div>
@@ -65,7 +68,9 @@ export class NuListChildComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _cdr: ChangeDetectorRef,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
@@ -79,6 +84,13 @@ export class NuListChildComponent implements OnInit {
     } else {
       this._update();
     }
+  }
+
+  askToDelete() {
+    this._dialog.open<DeleteValueDialogComponent, DeleteValueDialogProps>(DeleteValueDialogComponent, {
+      data: { index: this.index },
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   private _addItem() {

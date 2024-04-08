@@ -31,6 +31,7 @@ import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-for
 import {
   BooleanValue2Component,
   ColorValue2Component,
+  DeleteValueDialogComponent,
   GeonameValue2Component,
   IntervalValue2Component,
   IntValue2Component,
@@ -255,6 +256,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DateValueComponent,
     DateValueHandlerComponent,
     DecimalValueComponent,
+    DeleteValueDialogComponent,
     DialogComponent,
     DialogHeaderComponent,
     DisableContextMenuDirective,
