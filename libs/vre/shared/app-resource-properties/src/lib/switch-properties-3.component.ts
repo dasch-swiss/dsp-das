@@ -51,10 +51,10 @@ import { NuListService } from './nu-list.service';
     </ng-template>
 
     <ng-template #intervalTpl let-item let-displayMode="displayMode">
-      <app-interval-switch [control]="item"></app-interval-switch>
+      <app-interval-switch [control]="item" [displayMode]="displayMode"></app-interval-switch>
     </ng-template>
 
-    <ng-template #listTpl let-item let-displayMode>
+    <ng-template #listTpl let-item let-displayMode="displayMode">
       <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
     </ng-template>
 
