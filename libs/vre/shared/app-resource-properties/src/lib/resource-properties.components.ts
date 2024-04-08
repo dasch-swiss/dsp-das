@@ -3,12 +3,10 @@ import { DisplayEdit2Component } from './display-edit-2.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
 import { NuListChildComponent } from './nu-list-child.component';
 import { NuListComponent } from './nu-list.component';
-import { BooleanSwitchComponent } from './switch-components/boolean-switch.component';
-import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
+import { BaseSwitchComponent } from './value-components/base-switch.component';
 import { ColorSwitchComponent } from './value-components/color-switch.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
-import { IntSwitchComponent } from './value-components/int-switch.component';
 import { IntervalValue2Component } from './value-components/interval-value-2.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
@@ -27,10 +25,11 @@ const valueComponents = [
   UriValue2Component,
 ];
 
-const switchComponents = [TextSwitchComponent, IntSwitchComponent, BooleanSwitchComponent];
+const switchComponents = [];
 export const ResourcePropertiesComponents = [
   ...switchComponents,
   ...valueComponents,
+  BaseSwitchComponent,
   DeleteValueDialogComponent,
   NuListComponent,
   SwitchProperties3Component,

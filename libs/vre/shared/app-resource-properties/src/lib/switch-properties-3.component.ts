@@ -19,11 +19,15 @@ import { NuListService } from './nu-list.service';
     <app-nu-list [itemTpl]="itemTpl"></app-nu-list>
 
     <ng-template let-item #intTpl let-displayMode="displayMode">
-      <app-int-switch [control]="item" [displayMode]="displayMode"></app-int-switch>
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <app-common-input type="number" [control]="item"></app-common-input>
+      </app-base-switch>
     </ng-template>
 
     <ng-template let-item #booleanTpl let-displayMode="displayMode">
-      <app-boolean-switch [control]="item" [displayMode]="displayMode"></app-boolean-switch>
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
+      </app-base-switch>
     </ng-template>
 
     <ng-template let-item #colorTpl let-displayMode="displayMode">
@@ -31,11 +35,15 @@ import { NuListService } from './nu-list.service';
     </ng-template>
 
     <ng-template let-item="item" let-displayMode="displayMode" #textTpl>
-      <app-text-switch [control]="item" [displayMode]="displayMode"></app-text-switch>
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <app-common-input [control]="item" style="width: 100%"></app-common-input>
+      </app-base-switch>
     </ng-template>
 
-    <ng-template let-item #dateTpl>
-      <app-date-value-handler [formControl]="item"></app-date-value-handler>
+    <ng-template #dateTpl let-item let-displayMode="displayMode">
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        <app-date-value-handler [formControl]="item"></app-date-value-handler>
+      </app-base-switch>
     </ng-template>
 
     <ng-template let-item #timeTpl>

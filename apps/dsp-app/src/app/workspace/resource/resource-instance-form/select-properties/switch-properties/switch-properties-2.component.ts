@@ -6,8 +6,6 @@ import { Constants, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
   selector: 'app-switch-properties-2',
   template: `
     <span [ngSwitch]="property.objectType">
-      <app-int-switch *ngSwitchCase="constants.IntValue" [control]="control"></app-int-switch>
-
       <span *ngSwitchDefault>
         <p>
           Cannot match any value component for
