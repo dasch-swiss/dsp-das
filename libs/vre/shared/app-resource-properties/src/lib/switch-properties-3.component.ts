@@ -24,9 +24,11 @@ import { NuListService } from './nu-list.service';
       </app-base-switch>
     </ng-template>
 
-    <ng-template let-item #booleanTpl let-displayMode="displayMode">
+    <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
-        <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
+        <div>
+          <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
+        </div>
       </app-base-switch>
     </ng-template>
 
@@ -34,7 +36,7 @@ import { NuListService } from './nu-list.service';
       <app-color-switch [control]="item" style="flex: 1" [displayMode]="displayMode"></app-color-switch>
     </ng-template>
 
-    <ng-template let-item="item" let-displayMode="displayMode" #textTpl>
+    <ng-template #textTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <app-common-input [control]="item" style="width: 100%"></app-common-input>
       </app-base-switch>
@@ -120,7 +122,6 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.itemTpl = this._getTemplate();
-    this._cd.detectChanges();
   }
 
   private _getTemplate(): TemplateRef<any> {
