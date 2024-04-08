@@ -156,7 +156,6 @@ import { ResourceInstanceFormComponent } from './workspace/resource/resource-ins
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
-import { BooleanValueComponent } from './workspace/resource/values/boolean-value/boolean-value.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
 import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
@@ -207,7 +206,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AudioComponent,
     AvTimelineComponent,
     DescriptionComponent,
-    BooleanValueComponent,
     CenteredLayoutComponent,
     ChipListInputComponent,
     CollaborationComponent,
