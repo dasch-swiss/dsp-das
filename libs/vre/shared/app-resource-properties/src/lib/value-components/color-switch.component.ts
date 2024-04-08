@@ -5,7 +5,9 @@ import { SwitchComponent } from '../switch-components/switch-component.interface
 @Component({
   selector: 'app-color-switch',
   template: `
-    <ng-container *ngIf="displayMode; else editMode">{{ control.value }}</ng-container>
+    <ng-container *ngIf="displayMode; else editMode">
+      <div style="width: 50px; height: 20px" [style.background-color]="control.value"></div>
+    </ng-container>
     <ng-template #editMode>
       <mat-form-field appearance="outline" style="cursor: pointer">
         <mat-label>{{ control.value }}</mat-label>

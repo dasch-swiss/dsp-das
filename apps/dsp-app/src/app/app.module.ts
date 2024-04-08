@@ -157,7 +157,6 @@ import { SelectProjectComponent } from './workspace/resource/resource-instance-f
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
-import { ColorValueComponent } from './workspace/resource/values/color-value/color-value.component';
 import { CommentFormComponent } from './workspace/resource/values/comment-form/comment-form.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { DateValueComponent } from './workspace/resource/values/date-value/date-value.component';
@@ -210,7 +209,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ChipListInputComponent,
     CollaborationComponent,
     ColorPickerComponent,
-    ColorValueComponent,
     CommentFormComponent,
     CommonInputComponent,
     ComparisonComponent,
