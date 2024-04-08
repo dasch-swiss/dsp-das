@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
+import { CreateRessourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-form';
 import { OntologyClassInstanceComponent } from '@dsp-app/src/app/project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';

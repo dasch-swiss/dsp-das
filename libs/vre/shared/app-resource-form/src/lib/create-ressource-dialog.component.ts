@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 
 export interface CreateResourceDialogProps {
   resourceType: string;
@@ -21,7 +20,7 @@ export interface CreateResourceDialogProps {
 export class CreateRessourceDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateResourceDialogProps,
-    private _dialogRef: MatDialogRef<CreateRessourcePageComponent>
+    private _dialogRef: MatDialogRef<CreateRessourceDialogComponent>
   ) {}
 
   onCreatedResource(resourceIri: string) {

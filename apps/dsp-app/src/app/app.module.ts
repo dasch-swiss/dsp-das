@@ -28,6 +28,7 @@ import {
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
+import { ResourceFormComponents } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
@@ -35,7 +36,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { CreateRessourcePageComponent } from '@dsp-app/src/app/project/create-ressource-page/create-ressource-page.component';
 import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
 import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
 import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
@@ -49,7 +49,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ResourceFormComponents } from '../../../../libs/vre/shared/app-resource-form/src/lib/resource-form.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -173,8 +172,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     ...PropertyFormComponents,
-    ...ResourcePropertiesComponents,
     ...ResourceFormComponents,
+    ...ResourcePropertiesComponents,
     PropertiesDisplayComponent,
     AccountComponent,
     ActionBubbleComponent,
@@ -196,7 +195,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ConfirmDialogComponent,
     CookiePolicyComponent,
     CreateResourceClassDialogComponent,
-    CreateRessourcePageComponent,
     DateValueHandlerComponent,
     DialogComponent,
     DialogHeaderComponent,
