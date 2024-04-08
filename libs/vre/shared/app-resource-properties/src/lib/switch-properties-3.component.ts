@@ -52,7 +52,7 @@ import { NuListService } from './nu-list.service';
       <app-date-switch [control]="item" [displayMode]="displayMode"></app-date-switch>
     </ng-template>
 
-    <ng-template #timeTpl let-item let-displayMode="displayMode">
+    <ng-template #timeTpl let-item="item" let-displayMode="displayMode">
       <app-time-switch [control]="item" [displayMode]="displayMode"></app-time-switch>
     </ng-template>
 

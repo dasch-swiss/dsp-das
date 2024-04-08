@@ -8,7 +8,7 @@ import { SwitchComponent } from './switch-component.interface';
       >{{ control.value.date }} - {{ control.value.time }}
     </ng-container>
     <ng-template #editMode>
-      <app-time-input #timeInput [formControl]="control"></app-time-input>
+      <app-time-input [formControl]="control"></app-time-input>
     </ng-template>`,
 })
 export class TimeSwitchComponent implements SwitchComponent {
