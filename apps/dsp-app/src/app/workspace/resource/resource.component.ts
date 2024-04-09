@@ -337,11 +337,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     });
   }
 
-  // return whether the main resource
-  get isMainResourceToDisplay() {
-    return this.resource.res.id === this.resourceIri;
-  }
-
   renderRegion(iri) {
     // display the corresponding still-image resource instance
     // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
