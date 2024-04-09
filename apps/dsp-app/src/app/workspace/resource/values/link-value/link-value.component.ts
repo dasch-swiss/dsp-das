@@ -137,6 +137,10 @@ export class LinkValueComponent extends BaseValueDirective implements OnInit, On
   }
 
   standardValueComparisonFunc(initValue: ReadResource, curValue: ReadResource | string | null): boolean {
+    if (initValue === undefined) {
+      return curValue === undefined;
+    }
+
     return curValue instanceof ReadResource && initValue.id === curValue.id;
   }
 

@@ -100,6 +100,13 @@ export class DisplayEditComponent implements OnInit {
   dateFormat: string;
   ontoIri: string;
 
+  get hasValue(): boolean {
+    return (
+      this.displayValue.strval &&
+      this.displayValue.strval.replace((this.displayValue as any).linkedResourceIri, '').length > 0
+    );
+  }
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
