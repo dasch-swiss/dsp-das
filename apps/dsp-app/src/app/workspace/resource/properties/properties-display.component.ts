@@ -36,38 +36,33 @@ import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/rep
         </div>
       </div>
 
-      <!-- deleted resource or resource without any defined properties -->
-              <ng-template #noProperties>
-                <div *ngIf="resource.res.isDeleted" class="properties">
-                  <div class="property border-bottom">
-                    <div class="property-label">
-                      <!-- delete date -->
-                      <h3 class="label mat-subtitle-2">Deleted on</h3>
-                    </div>
-                    <div class="property-value">{{ resource.res.deleteDate | date }}</div>
-                  </div>
-                  <div class="property">
-                    <div class="property-label">
-                      <!-- Delete comment -->
-                      <h3 class="label mat-subtitle-2">Comment</h3>
-                    </div>
-                    <div class="property-value">{{ resource.res.deleteComment }}</div>
-                  </div>
-                </div>
-                <!-- no defined property -->
-                <div *ngIf="!resource.res.isDeleted" class="properties">
-                  <div class="property border-bottom">
-                    <div class="property-label">
-                      <h3 class="label mat-subtitle-2">Info</h3>
-                    </div>
-                    <div class="property-value">This resource has no defined properties.</div>
-                  </div>
-                </div>
-              </ng-template>
+      <ng-template #noProperties>
+        <div *ngIf="resource.res.isDeleted" class="properties">
+          <div class="property border-bottom">
+            <div class="property-label">
+              <!-- delete date -->
+              <h3 class="label mat-subtitle-2">Deleted on</h3>
             </div>
+            <div class="property-value">{{ resource.res.deleteDate | date }}</div>
+          </div>
+          <div class="property">
+            <div class="property-label">
+              <!-- Delete comment -->
+              <h3 class="label mat-subtitle-2">Comment</h3>
+            </div>
+            <div class="property-value">{{ resource.res.deleteComment }}</div>
           </div>
         </div>
-      </div>
+        <!-- no defined property -->
+        <div *ngIf="!resource.res.isDeleted" class="properties">
+          <div class="property border-bottom">
+            <div class="property-label">
+              <h3 class="label mat-subtitle-2">Info</h3>
+            </div>
+            <div class="property-value">This resource has no defined properties.</div>
+          </div>
+        </div>
+      </ng-template>
     </div>
   `,
 })
