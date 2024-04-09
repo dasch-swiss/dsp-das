@@ -269,14 +269,14 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       // itself can not be displayed without an image it is annotating
       this._renderAsRegion(resource);
     } else {
-      this.renderAsMainResource(resource);
+      this._renderAsMainResource(resource);
     }
 
     this.attachedToProjectResource = resource.res.attachedToProject;
     this._cdr.markForCheck();
   }
 
-  renderAsMainResource(resource: DspResource) {
+  private _renderAsMainResource(resource: DspResource) {
     this.resource = resource;
     this.oldResourceIri = this.resourceIri;
 
@@ -325,7 +325,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     // get the annotated main resource
     this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
       this.resource = dspResource;
-      this.renderAsMainResource(dspResource);
+      this._renderAsMainResource(dspResource);
 
       // open annotation`s tab and highlight region
       this.selectedTabLabel = 'annotations';
