@@ -42,7 +42,10 @@ import { NuListService } from './nu-list.service';
         (click)="onSave()"
         mat-icon-button
         *ngIf="!displayMode && !nuListService.keepEditMode && !loading"
-        [disabled]="initialFormValue[index].item === group.value.item">
+        [disabled]="
+          (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
+          (initialFormValue.comment === null && group.value.comment === '')
+        ">
         <mat-icon>save</mat-icon>
       </button>
       <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
@@ -54,7 +57,7 @@ export class NuListChildComponent implements OnInit {
   @Input() index!: number;
   protected readonly Cardinality = Cardinality;
 
-  initialFormValue: any;
+  initialFormValue!: { item: any; comment: string | null };
 
   displayMode: boolean | undefined;
   loading = false;
@@ -74,7 +77,7 @@ export class NuListChildComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initialFormValue = this.nuListService.formArray.value;
+    this.initialFormValue = this.group.getRawValue();
     this._setupDisplayMode();
   }
 
