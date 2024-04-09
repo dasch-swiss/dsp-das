@@ -51,6 +51,25 @@ import { map, takeUntil } from 'rxjs/operators';
       </span>
     </mat-list-item>
   </div>`,
+  styles: [
+    `
+      :host:hover {
+        .hide-on-hover {
+          display: none;
+        }
+        .display-on-hover {
+          display: block;
+        }
+      }
+      .display-on-hover {
+        display: none;
+      }
+      .drag-n-drop-handle {
+        cursor: move;
+        color: black;
+      }
+    `,
+  ],
 })
 export class ResourceClassInfoElementComponent implements OnInit {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
