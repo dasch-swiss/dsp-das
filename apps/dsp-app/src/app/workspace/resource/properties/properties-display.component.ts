@@ -20,7 +20,7 @@ import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/rep
           <div [class.border-bottom]="prop.values && !last" class="property" style="display: flex">
             <h3
               class="label mat-subtitle-2"
-              style="width: 200px"
+              style="min-width: 150px"
               [class.label-info]="prop.propDef.comment"
               [matTooltip]="prop.propDef.comment"
               matTooltipPosition="above">
@@ -29,76 +29,45 @@ import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/rep
             <div style="flex: 1">
               <!-- the value(s) of the property -->
               <app-display-edit-2 [prop]="prop" [resource]="resource.res"></app-display-edit-2>
-              <!-- Add value form -->
-              <!--<div *ngIf="addValueFormIsVisible && propID === prop.propDef.id && project?.status">
-                                                                                                                                                                                                                                                              <app-add-value
-                                                                                                                                                                                                                                                                #addValue
-                                                                                                                                                                                                                                                                class="add-value"
-                                                                                                                                                                                                                                                                [parentResource]="resource.res"
-                                                                                                                                                                                                                                                                [resourcePropertyDefinition]="$any(resource.res.entityInfo.properties[prop.propDef.id])"
-                                                                                                                                                                                                                                                                (operationCancelled)="hideAddValueForm()">
-                                                                                                                                                                                                                                                              </app-add-value>
-                                                                                                                                                                                                                                                            </div>-->
-
               <!-- in case of incoming links we have to display them here -->
-              <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">
-                                                                                                                                                                                                                                                              <div>
-                                                                                                                                                                                                                                                                <a
-                                                                                                                                                                                                                                                                  class="link link-value"
-                                                                                                                                                                                                                                                                  *ngFor="let inRes of displayedIncomingLinkResources; trackBy: trackByFn"
-                                                                                                                                                                                                                                                                  (click)="openResource(inRes.id)"
-                                                                                                                                                                                                                                                                  >{{ inRes.resourceClassLabel }}: <strong>{{ inRes.label }}</strong></a
-                                                                                                                                                                                                                                                                >
-                                                                                                                                                                                                                                                                <mat-paginator *ngIf="numberOffAllIncomingLinkRes > amount_resources" [length]=numberOffAllIncomingLinkRes
-                                                                                                                                                                                                                                                                                                                                                                                                                           [pageSize]="amount_resources" [hidePageSize]="true" [pageIndex]="pageEvent.pageIndex"
-                                                                                                                                                                                                                                                                                                                                                                                                                           (page)="goToPage($event)">
-                                                                                                                                                                                                                                                                                                                                                                                                            </mat-paginator>
-                                                                                                                                                                                                                                                                <div class="pagination" *ngIf="allIncomingLinkResources.length > amount_resources">
-                                                                                                                                                                                                                                                                  <p>Show more</p>
-                                                                                                                                                                                                                                                                  <button [disabled]="pageEvent.pageIndex < 1" (click)="handleIncomingLinkBackward()">
-                                                                                                                                                                                                                                                                    <mat-icon>chevron_left</mat-icon>
-                                                                                                                                                                                                                                                                  </button>
-                                                                                                                                                                                                                                                                  <button
-                                                                                                                                                                                                                                                                    [disabled]="allIncomingLinkResources.length / amount_resources <= pageEvent.pageIndex + 1"
-                                                                                                                                                                                                                                                                    (click)="handleIncomingLinkForward()">
-                                                                                                                                                                                                                                                                    <mat-icon>chevron_right</mat-icon>
-                                                                                                                                                                                                                                                                  </button>
-                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                            </div>-->
+              <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
             </div>
           </div>
         </div>
       </div>
 
       <!-- deleted resource or resource without any defined properties -->
-      <ng-template #noProperties>
-        <div *ngIf="resource.res.isDeleted" class="properties">
-          <div class="property border-bottom">
-            <div class="property-label">
-              <!-- delete date -->
-              <h3 class="label mat-subtitle-2">Deleted on</h3>
+              <ng-template #noProperties>
+                <div *ngIf="resource.res.isDeleted" class="properties">
+                  <div class="property border-bottom">
+                    <div class="property-label">
+                      <!-- delete date -->
+                      <h3 class="label mat-subtitle-2">Deleted on</h3>
+                    </div>
+                    <div class="property-value">{{ resource.res.deleteDate | date }}</div>
+                  </div>
+                  <div class="property">
+                    <div class="property-label">
+                      <!-- Delete comment -->
+                      <h3 class="label mat-subtitle-2">Comment</h3>
+                    </div>
+                    <div class="property-value">{{ resource.res.deleteComment }}</div>
+                  </div>
+                </div>
+                <!-- no defined property -->
+                <div *ngIf="!resource.res.isDeleted" class="properties">
+                  <div class="property border-bottom">
+                    <div class="property-label">
+                      <h3 class="label mat-subtitle-2">Info</h3>
+                    </div>
+                    <div class="property-value">This resource has no defined properties.</div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-            <div class="property-value">{{ resource.res.deleteDate | date }}</div>
-          </div>
-          <div class="property">
-            <div class="property-label">
-              <!-- Delete comment -->
-              <h3 class="label mat-subtitle-2">Comment</h3>
-            </div>
-            <div class="property-value">{{ resource.res.deleteComment }}</div>
           </div>
         </div>
-        <!-- no defined property -->
-        <div *ngIf="!resource.res.isDeleted" class="properties">
-          <div class="property border-bottom">
-            <div class="property-label">
-              <h3 class="label mat-subtitle-2">Info</h3>
-            </div>
-            <div class="property-value">This resource has no defined properties.</div>
-          </div>
-        </div>
-      </ng-template>
+      </div>
     </div>
   `,
 })
