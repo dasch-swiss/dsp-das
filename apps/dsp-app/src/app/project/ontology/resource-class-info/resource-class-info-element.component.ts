@@ -68,6 +68,12 @@ import { map, takeUntil } from 'rxjs/operators';
         cursor: move;
         color: black;
       }
+      .cdk-drag-handle {
+        margin-right: 8px !important;
+      }
+      .hide-on-hover {
+        color: black;
+      }
     `,
   ],
 })
