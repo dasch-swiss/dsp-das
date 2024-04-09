@@ -12,59 +12,40 @@ import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/rep
     <!-- additional line with project and user information -->
 
     <!-- list of properties -->
-    <div class="properties-container">
-      <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
-        <!-- list of properties -->
-        <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
-          <!-- show property; all in case of showAll === true or only the ones with prop.values -->
-          <div [class.border-bottom]="prop.values && !last" class="property" style="display: flex">
-            <h3
-              class="label mat-subtitle-2"
-              style="min-width: 150px"
-              [class.label-info]="prop.propDef.comment"
-              [matTooltip]="prop.propDef.comment"
-              matTooltipPosition="above">
-              {{ prop.propDef.label }}
-            </h3>
-            <div style="flex: 1">
-              <!-- the value(s) of the property -->
-              <app-display-edit-2 [prop]="prop" [resource]="resource.res"></app-display-edit-2>
-              <!-- in case of incoming links we have to display them here -->
-              <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
-            </div>
+    <ng-container *ngIf="resource.resProps.length > 0; else noProperties">
+      <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
+        <div [class.border-bottom]="prop.values && !last" style="display: flex">
+          <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+            {{ prop.propDef.label }}
+          </h3>
+          <div style="flex: 1">
+            <app-display-edit-2 [prop]="prop" [resource]="resource.res"></app-display-edit-2>
+            <!-- in case of incoming links we have to display them here -->
+            <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
           </div>
         </div>
       </div>
+    </ng-container>
 
-      <ng-template #noProperties>
-        <div *ngIf="resource.res.isDeleted" class="properties">
-          <div class="property border-bottom">
-            <div class="property-label">
-              <!-- delete date -->
-              <h3 class="label mat-subtitle-2">Deleted on</h3>
-            </div>
-            <div class="property-value">{{ resource.res.deleteDate | date }}</div>
-          </div>
-          <div class="property">
-            <div class="property-label">
-              <!-- Delete comment -->
-              <h3 class="label mat-subtitle-2">Comment</h3>
-            </div>
-            <div class="property-value">{{ resource.res.deleteComment }}</div>
-          </div>
+    <ng-template #noProperties>
+      <div *ngIf="resource.res.isDeleted; else noDefinedProperties">
+        <div>
+          <h3 class="label mat-subtitle-2">Deleted on</h3>
+          <div>{{ resource.res.deleteDate | date }}</div>
         </div>
-        <!-- no defined property -->
-        <div *ngIf="!resource.res.isDeleted" class="properties">
-          <div class="property border-bottom">
-            <div class="property-label">
-              <h3 class="label mat-subtitle-2">Info</h3>
-            </div>
-            <div class="property-value">This resource has no defined properties.</div>
-          </div>
+        <div>
+          <h3 class="label mat-subtitle-2">Comment</h3>
+          <div>{{ resource.res.deleteComment }}</div>
         </div>
-      </ng-template>
-    </div>
+      </div>
+    </ng-template>
+
+    <ng-template #noDefinedProperties>
+      <h3 class="label mat-subtitle-2">Info</h3>
+      <div class="property-value">This resource has no defined properties.</div>
+    </ng-template>
   `,
+  styles: ['.label {min-width: 150px}'],
 })
 export class PropertiesDisplayComponent {
   @Input() resource: DspResource;
