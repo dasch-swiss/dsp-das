@@ -6,10 +6,10 @@ import { KnoraApiConnection, ReadProject, ReadResource, ReadResourceSequence } f
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { CreateResourceDialogProps, CreateRessourceDialogComponent } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { filter, switchMap } from 'rxjs/operators';
 import { LinkValue2DataService } from './link-value-2-data.service';
-import { TempLinkValueService } from './temp-link-value.service';
 
 @Component({
   selector: 'app-link-value-2',
