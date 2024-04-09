@@ -150,7 +150,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       if (this.projectCode && this.resourceUuid) {
         this.resourceIri = this._resourceService.getResourceIri(this.projectCode, this.resourceUuid);
         this.oldResourceIri = this.resourceIri;
-        this.initResource(this.resourceIri);
+        this._initResource(this.resourceIri);
       }
     });
 
@@ -162,7 +162,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       this._valueOperationEventService.on(Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
         if (newFileValue) {
           if (this.resourceIri) {
-            this.initResource(this.resourceIri);
+            this._initResource(this.resourceIri);
           }
         }
       })
@@ -184,7 +184,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     // get resource with all necessary information
     // incl. incoming resources and annotations
     if (this.resourceIri) {
-      this.initResource(this.resourceIri);
+      this._initResource(this.resourceIri);
     }
   }
 
@@ -232,34 +232,34 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     // get incoming still image representations, if the offset changed
     if (offset !== this.compoundPosition.offset) {
       this.compoundPosition.offset = offset;
-      this.getIncomingStillImageRepresentations(offset);
+      this._getIncomingStillImageRepresentations(offset);
     } else {
       // get incoming resource, if the offset is the same but page changed
-      this.getIncomingResource(this.resource.incomingRepresentations[position].id);
+      this._getIncomingResource(this.resource.incomingRepresentations[position].id);
     }
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
-    this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
   }
 
   // ------------------------------------------------------------------------
   // ------------------------------------------------------------------------
   // get and display resource
   // ------------------------------------------------------------------------
-  initResource(iri) {
+  private _initResource(iri) {
     this.oldResourceIri = this.resourceIri;
-    this.getResource(iri).subscribe(dspResource => {
-      this.renderResource(dspResource);
+    this._getResource(iri).subscribe(dspResource => {
+      this._renderResource(dspResource);
     });
   }
 
-  getResource(iri: string): Observable<DspResource> {
+  private _getResource(iri: string): Observable<DspResource> {
     return this._dspApiConnection.v2.res
       .getResource(iri)
       .pipe(map((response: ReadResource) => new DspResource(response)));
   }
 
-  renderResource(resource: DspResource) {
+  private _renderResource(resource: DspResource) {
     if (resource.res.isDeleted) {
       // guard; not yet implemented
       return;
@@ -267,7 +267,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     if (resource.isRegion) {
       // render the image onto which the region is pointing; a region
       // itself can not be displayed without an image it is annotating
-      this.renderAsRegion(resource);
+      this._renderAsRegion(resource);
     } else {
       this.renderAsMainResource(resource);
     }
@@ -280,7 +280,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     this.resource = resource;
     this.oldResourceIri = this.resourceIri;
 
-    this.representationsToDisplay = this.collectRepresentationsAndAnnotations(resource);
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
     if (!this.representationsToDisplay.length && !this.compoundPosition) {
       // the resource could be a compound object
       if (this.stillImageRepresentationsForCompoundResourceSub) {
@@ -307,23 +307,23 @@ export class ResourceComponent implements OnChanges, OnDestroy {
           this._cdr.markForCheck();
         });
     } else {
-      this.requestIncomingResources(resource);
+      this._requestIncomingResources(resource);
     }
 
     // gather resource property information
-    this.resource.resProps = this.initProps(this.resource.res);
+    this.resource.resProps = this._initProps(this.resource.res);
 
     // gather system property information
     this.resource.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
   }
 
-  renderAsRegion(region: DspResource) {
+  private _renderAsRegion(region: DspResource) {
     // display the corresponding still-image resource instance
     // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
     const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
       .linkedResourceIri;
     // get the annotated main resource
-    this.getResource(annotatedRepresentationIri).subscribe(dspResource => {
+    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
       this.resource = dspResource;
       this.renderAsMainResource(dspResource);
 
@@ -349,7 +349,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       .linkedResourceIri;
 
     // get the parent resource to display
-    this.getResource(annotationOfIri);
+    this._getResource(annotationOfIri);
 
     // open annotation`s tab and highlight region
     this.selectedTabLabel = 'annotations';
@@ -360,7 +360,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     this.resourceIsAnnotation = this.resource.res.entityInfo.classes[Constants.Region] ? 'region' : 'sequence';
   }
 
-  getIncomingResource(iri: string) {
+  private _getIncomingResource(iri: string) {
     if (this.incomingResourceSub) {
       this.incomingResourceSub.unsubscribe();
     }
@@ -368,13 +368,13 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       const res = new DspResource(response);
 
       this.incomingResource = res;
-      this.incomingResource.resProps = this.initProps(response);
+      this.incomingResource.resProps = this._initProps(response);
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-      this.representationsToDisplay = this.collectRepresentationsAndAnnotations(this.incomingResource);
+      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
       if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
-        this.getIncomingRegions(this.incomingResource, 0);
+        this._getIncomingRegions(this.incomingResource, 0);
       }
 
       this._cdr.markForCheck();
@@ -398,7 +398,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   /**
    * gather resource property information
    */
-  protected initProps(resource: ReadResource): PropertyInfoValues[] {
+  private _initProps(resource: ReadResource): PropertyInfoValues[] {
     let props = resource.entityInfo.classes[resource.type]
       .getResourcePropertiesList()
       .map((prop: IHasPropertyWithPropertyDefinition) => {
@@ -459,7 +459,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    * @param resource The resource to get the images for.
    * @returns A collection of images for the given resource.
    */
-  protected collectRepresentationsAndAnnotations(resource: DspResource): FileRepresentation[] {
+  private _collectRepresentationsAndAnnotations(resource: DspResource): FileRepresentation[] {
     if (!resource) {
       return;
     }
@@ -487,7 +487,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
           const annotation = new DspResource(incomingRegion);
 
           // gather region property information
-          annotation.resProps = this.initProps(incomingRegion);
+          annotation.resProps = this._initProps(incomingRegion);
 
           // gather system property information
           annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
@@ -542,7 +542,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
    * It takes the number of images returned as an argument.
    */
-  protected getIncomingStillImageRepresentations(offset: number): void {
+  private _getIncomingStillImageRepresentations(offset: number): void {
     // make sure that this.resource has been initialized correctly
     if (this.resource === undefined) {
       return;
@@ -566,7 +566,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         if (incomingImageRepresentations.resources.length > 0) {
           // set the incoming representations for the current offset only
           this.resource.incomingRepresentations = incomingImageRepresentations.resources;
-          this.getIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
+          this._getIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
         } else {
           this.loading = false;
           this.representationsToDisplay = [];
@@ -579,7 +579,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    * requests incoming resources for [[this.resource]].
    * Incoming resources are: regions, representations, and incoming links.
    */
-  protected requestIncomingResources(resource: DspResource): void {
+  private _requestIncomingResources(resource: DspResource): void {
     // make sure that this resource has been initialized correctly
     if (resource === undefined) {
       return;
@@ -590,18 +590,18 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
       // the resource is a StillImageRepresentation, check if there are regions pointing to it
 
-      this.getIncomingRegions(resource, 0);
+      this._getIncomingRegions(resource, 0);
     } else if (this.compoundPosition) {
       // this resource is not a StillImageRepresentation
       // check if there are StillImageRepresentations pointing to this resource
 
       // this gets the first page of incoming StillImageRepresentations
       // more pages may be requested by [[this.viewer]].
-      this.getIncomingStillImageRepresentations(this.compoundPosition.offset);
+      this._getIncomingStillImageRepresentations(this.compoundPosition.offset);
     }
 
     // check for incoming links for the current resource
-    this.getIncomingLinks(0);
+    this._getIncomingLinks(0);
   }
 
   /**
@@ -609,7 +609,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    *
    * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
    */
-  protected getIncomingRegions(resource: DspResource, offset: number): void {
+  private _getIncomingRegions(resource: DspResource, offset: number): void {
     if (this.incomingRegionsSub) {
       this.incomingRegionsSub.unsubscribe();
     }
@@ -623,7 +623,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
         // prepare regions to be displayed
         // triggers ngOnChanges of StillImageComponent
-        this.representationsToDisplay = this.collectRepresentationsAndAnnotations(resource);
+        this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
         this._cdr.markForCheck();
       });
   }
@@ -634,7 +634,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
    * It takes the number of images returned as an argument.
    */
-  protected getIncomingLinks(offset: number): void {
+  private _getIncomingLinks(offset: number): void {
     this._incomingService
       .getIncomingLinksForResource(this.resource?.res.id, offset)
       .subscribe((incomingResources: ReadResourceSequence) => {
@@ -670,7 +670,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     } else {
       this.resource.incomingAnnotations = [];
     }
-    this.getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
+    this._getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
     this.openRegion(iri);
   }
 
