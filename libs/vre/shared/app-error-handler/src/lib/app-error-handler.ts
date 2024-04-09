@@ -4,7 +4,6 @@ import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as Sentry from '@sentry/angular-ivy';
-import { SentryErrorHandler } from '@sentry/angular-ivy';
 import { AjaxError } from 'rxjs/ajax';
 import { AppError } from './app-error';
 
@@ -38,13 +37,7 @@ export class AppErrorHandler implements ErrorHandler {
   private handleHttpErrorResponse(error: HttpErrorResponse) {
     if (error.status === 400) {
       if (error.error?.error) {
-        const badRequestRegexMatch = error.error.error.match(/dsp\.errors\.BadRequestException:(.*)$/);
-
-        if (badRequestRegexMatch) {
-          this.displayNotification(badRequestRegexMatch[1]);
-        }
-
-        this.testInvalidRequest(error.error.error);
+        this.displayBadRequestNotification(error.error.error);
       } else if (typeof error.error === 'string') {
         this.testInvalidRequest(error.error);
       } else if (error.error.message) {
@@ -58,6 +51,10 @@ export class AppErrorHandler implements ErrorHandler {
 
   private handleGenericError(error: HttpErrorResponse | AjaxError, url: string | null): void {
     let message: string;
+    if (error.status === 400) {
+      this.displayBadRequestNotification((error as AjaxError).response['knora-api:error']);
+      return;
+    }
 
     if (error.status === 0) {
       message = 'It seems that you are not connected to internet.';
@@ -74,6 +71,16 @@ export class AppErrorHandler implements ErrorHandler {
     }
 
     this.displayNotification(message);
+  }
+
+  private displayBadRequestNotification(error: any) {
+    const badRequestRegexMatch = error.match(/dsp\.errors\.BadRequestException:(.*)$/);
+
+    if (badRequestRegexMatch) {
+      this.displayNotification(badRequestRegexMatch[1]);
+    }
+
+    this.testInvalidRequest(error);
   }
 
   private displayNotification(message: string) {
