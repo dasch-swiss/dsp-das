@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
-import { DialogConfigUtil } from '../../providers/drawer-config-util';
 import { EditUserPageComponent } from '../edit-user-page/edit-user-page.component';
 
 @Component({
@@ -26,8 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private _dialog: MatDialog,
-    private _titleService: Title,
-    private _store: Store
+    private _titleService: Title
   ) {}
 
   ngOnInit() {
@@ -44,8 +43,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  editProfile(userId) {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(userId);
+  editProfile(user: ReadUser) {
+    const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user);
     this._dialog.open(EditUserPageComponent, dialogConfig);
   }
 }

@@ -33,7 +33,7 @@
       <mat-divider></mat-divider>
       <br />
       <!-- edit button -->
-      <button mat-button [color]="'primary'" (click)="editProfile(user.id)" style="width: 100%">Edit my profile</button>
+      <button mat-button [color]="'primary'" (click)="editProfile(user)" style="width: 100%">Edit my profile</button>
     </div>
 
     <!-- phone view -->
@@ -60,7 +60,7 @@
         </div>
 
         <!-- edit button -->
-        <button mat-button class="user-profile-edit" [color]="'primary'" (click)="editProfile(user.id)">
+        <button mat-button class="user-profile-edit" [color]="'primary'" (click)="editProfile(user)">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
