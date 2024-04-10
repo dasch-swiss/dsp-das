@@ -48,36 +48,6 @@
       (closeDialog)="dialogRef.close($event)"></app-ontology-form>
   </div>
 
-  <!-- all about RESOURCE -->
-  <div *ngSwitchCase="'editResource'">
-    <app-dialog-header [title]="data.title" [subtitle]="'Edit resource\'s label'"></app-dialog-header>
-    <mat-dialog-content class="form-content">
-      <mat-form-field class="large-field">
-        <input matInput placeholder="Label" [value]="data.title" (keyup)="onKey($event)" />
-      </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button
-        mat-button
-        color="primary"
-        mat-dialog-close
-        class="cancel-button center"
-        [mat-dialog-close]="{ confirmed: false, comment: comment }">
-        Cancel
-      </button>
-      <span class="fill-remaining-space"></span>
-      <button
-        mat-button
-        mat-raised-button
-        [color]="'primary'"
-        class="confirm-button center"
-        [mat-dialog-close]="{ confirmed: true, comment: comment }"
-        [disabled]="!comment">
-        Update
-      </button>
-    </mat-dialog-actions>
-  </div>
-
   <div *ngSwitchCase="'addRegion'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
     <app-add-region-form [resourceIri]="data.id"></app-add-region-form>
