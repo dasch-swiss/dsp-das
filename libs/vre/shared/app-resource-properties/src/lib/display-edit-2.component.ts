@@ -18,8 +18,8 @@ import { FormValueArray } from './form-value-array.type';
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class DisplayEdit2Component implements OnInit {
-  @Input() prop: PropertyInfoValues;
-  @Input() resource: ReadResource;
+  @Input() prop!: PropertyInfoValues;
+  @Input() resource!: ReadResource;
 
   formArray!: FormValueArray;
 
@@ -27,12 +27,16 @@ export class DisplayEdit2Component implements OnInit {
 
   ngOnInit() {
     this.formArray = this._fb.array(
-      this.prop.values.map(value =>
-        this._fb.group({
-          item: propertiesTypeMapping.get(this.prop.propDef.objectType).control(value) as AbstractControl,
+      this.prop.values.map(value => {
+        const property = propertiesTypeMapping.get(this.prop.propDef.objectType);
+        if (property === undefined) {
+          throw new Error(`The property of type ${this.prop.propDef.objectType} is unknown`);
+        }
+        return this._fb.group({
+          item: property.control(value) as AbstractControl,
           comment: this._fb.control(value.valueHasComment),
-        })
-      )
+        });
+      })
     );
   }
 }
