@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/property-info-values.interface';
@@ -47,10 +47,14 @@ import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/rep
   `,
   styles: ['.label {min-width: 150px}'],
 })
-export class PropertiesDisplayComponent {
+export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;
 
-  get myProperties() {
+  myProperties: PropertyInfoValues[];
+  ngOnInit() {
+    this.myProperties = this._getMyProperties();
+  }
+  _getMyProperties() {
     const representationConstants = RepresentationConstants;
     const hasIncomingLinkIri = Constants.HasIncomingLinkValue;
 
