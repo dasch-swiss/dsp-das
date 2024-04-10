@@ -3,9 +3,8 @@ import { MatDialogConfig } from '@angular/material/dialog';
 export class DspDialogConfig {
   static dialogDrawerConfig<T = any>(dialogData?: T): MatDialogConfig<T> {
     return {
-      height: 'calc(100vh - 72px)', // 72px == height of the header
+      height: 'calc(100vh)',
       position: {
-        top: '72px', // same as the header
         right: '0px',
       },
       autoFocus: true,
