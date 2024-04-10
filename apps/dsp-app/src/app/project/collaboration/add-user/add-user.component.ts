@@ -9,7 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseData,
   ApiResponseError,
@@ -18,15 +18,13 @@ import {
   UserResponse,
   UsersResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
-import { DialogConfigUtil } from '../../../providers/drawer-config-util';
 import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
@@ -308,29 +306,8 @@ export class AddUserComponent implements OnInit {
     );
   }
 
-  openDialog(mode: string): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        project: this.projectUuid,
-        name: this.selectUserForm.controls['username'].value,
-        mode,
-      },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(() => {
-      // update the view
-      this.refreshParent.emit();
-    });
-  }
-
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(this.projectUuid);
+    const dialogConfig = DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid);
     this._dialog.open(CreateUserPageComponent, dialogConfig);
   }
 
