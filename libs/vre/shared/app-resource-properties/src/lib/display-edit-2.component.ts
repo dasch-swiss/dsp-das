@@ -21,7 +21,7 @@ export class DisplayEdit2Component implements OnInit {
   @Input() prop: PropertyInfoValues;
   @Input() resource: ReadResource;
 
-  formArray: FormValueArray;
+  formArray!: FormValueArray;
 
   constructor(private _fb: FormBuilder) {}
 
