@@ -29,6 +29,7 @@ import {
   ReadUser,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -42,7 +43,6 @@ import { PropertyInfoValues } from './properties/property-info-values.interface'
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { IncomingService } from './services/incoming.service';
-import { ResourceService } from './services/resource.service';
 import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
 
 @Component({
