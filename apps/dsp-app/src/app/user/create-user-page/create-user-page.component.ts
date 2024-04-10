@@ -45,7 +45,7 @@ export class CreateUserPageComponent {
     this._actions$.pipe(ofActionSuccessful(CreateUserAction), take(1)).subscribe(() => {
       this._dialogRef.close();
       const enrolled = this.projectUuId ? ' and added the user to the project' : '';
-      this._notification.openSnackBar(`You have successfully user's profile${enrolled}.`);
+      this._notification.openSnackBar(`You have successfully created a user's profile${enrolled}.`);
     });
   }
 }

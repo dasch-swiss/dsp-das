@@ -37,7 +37,7 @@ export class UserFormComponent implements OnInit {
 
   readonly usernamePatternErrorMsg = {
     errorKey: 'pattern',
-    message: 'Spaces and special characters are not allowed in username',
+    message: 'Spaces and special characters are not allowed in the username',
   };
 
   editExistingUser: boolean;
