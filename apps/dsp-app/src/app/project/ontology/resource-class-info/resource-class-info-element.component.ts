@@ -14,10 +14,10 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
-import { GuiCardinality } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { GuiCardinality } from './resource-class-property-info/resource-class-property-info.component';
 
 @Component({
   selector: 'app-resource-class-info-element',

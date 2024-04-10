@@ -36,11 +36,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { AddPropertyMenuComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/add-property-menu.component';
-import { ResourceClassInfoElementComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-info-element.component';
-import { PropertiesDisplayComponent } from '@dsp-app/src/app/workspace/resource/properties/properties-display.component';
-import { Upload2Component } from '@dsp-app/src/app/workspace/resource/representation/upload/upload2.component';
-import { ResourcePageComponent } from '@dsp-app/src/app/workspace/resource/resource-page.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -109,6 +104,8 @@ import { OntologyFormComponent } from './project/ontology/ontology-form/ontology
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
 import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
+import { AddPropertyMenuComponent } from './project/ontology/resource-class-info/add-property-menu.component';
+import { ResourceClassInfoElementComponent } from './project/ontology/resource-class-info/resource-class-info-element.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
 import { ResourceClassPropertyInfoComponent } from './project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
@@ -136,6 +133,7 @@ import { ComparisonComponent } from './workspace/comparison/comparison.component
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
+import { PropertiesDisplayComponent } from './workspace/resource/properties/properties-display.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
@@ -145,10 +143,12 @@ import { ReplaceFileFormComponent } from './workspace/resource/representation/re
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
 import { TextComponent } from './workspace/resource/representation/text/text.component';
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
+import { Upload2Component } from './workspace/resource/representation/upload/upload2.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
+import { ResourcePageComponent } from './workspace/resource/resource-page.component';
 import { ResourceComponent } from './workspace/resource/resource.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';

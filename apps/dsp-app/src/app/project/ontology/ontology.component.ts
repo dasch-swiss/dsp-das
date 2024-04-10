@@ -34,6 +34,10 @@ import {
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
+  EditPropertyFormDialogComponent,
+  EditPropertyFormDialogProps,
+} from '@dasch-swiss/vre/shared/app-property-form';
+import {
   ClearCurrentOntologyAction,
   ClearProjectOntologiesAction,
   CurrentOntologyCanBeDeletedAction,
@@ -62,10 +66,6 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from './edit-resource-class-dialog/edit-resource-class-dialog.component';
-import {
-  EditPropertyFormDialogComponent,
-  EditPropertyFormDialogProps,
-} from '@dasch-swiss/vre/shared/app-property-form';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
