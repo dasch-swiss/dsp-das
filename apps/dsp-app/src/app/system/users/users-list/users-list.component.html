@@ -1,4 +1,4 @@
-<div *ngIf="list && (((isUsersLoading$ | async) === false))">
+<div *ngIf="list">
   <!-- header toolbar -->
   <div class="app-toolbar" *ngIf="list.length > 0">
     <div class="app-toolbar-row">
@@ -101,7 +101,6 @@
             mat-menu-item
             *ngIf="
                             !projectUuid &&
-                            (user$ | async)?.status &&
                             (isSysAdmin$ | async) &&
                             user.username !== (username$ | async)
                         "

@@ -9,9 +9,10 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Constants, Permissions, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   LoadProjectMembersAction,
@@ -27,7 +28,6 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { DialogService } from '../../../main/services/dialog.service';
-import { DialogConfigUtil } from '../../../providers/drawer-config-util';
 import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
 import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
@@ -114,9 +114,7 @@ export class UsersListComponent implements OnInit {
   );
 
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.username) username$: Observable<string>;
-  @Select(UserSelectors.userProjectAdminGroups) userProjectAdminGroups$: Observable<string[]>;
   @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
   @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
@@ -158,7 +156,7 @@ export class UsersListComponent implements OnInit {
    * @param  [permissions] user's permissions
    * @returns boolean
    */
-  userIsProjectAdmin(permissions?: Permissions): boolean {
+  userIsProjectAdmin(permissions?: PermissionsData): boolean {
     if (!this.project) {
       return false;
     }
@@ -171,7 +169,7 @@ export class UsersListComponent implements OnInit {
    *
    * @param permissions PermissionData from user profile
    */
-  userIsSystemAdmin(permissions: Permissions): boolean {
+  userIsSystemAdmin(permissions: PermissionsData): boolean {
     let admin = false;
     const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
 
@@ -233,7 +231,7 @@ export class UsersListComponent implements OnInit {
   /**
    * update user's admin-group membership
    */
-  updateProjectAdminMembership(id: string, permissions: Permissions): void {
+  updateProjectAdminMembership(id: string, permissions: PermissionsData): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     const userIsProjectAdmin = this.userIsProjectAdmin(permissions);
     if (userIsProjectAdmin) {
@@ -329,13 +327,18 @@ export class UsersListComponent implements OnInit {
   }
 
   createUser() {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig();
-    this._matDialog.open(CreateUserPageComponent, dialogConfig);
+    const dialogRef = this._matDialog.open(CreateUserPageComponent, DspDialogConfig.dialogDrawerConfig());
+    dialogRef.afterClosed().subscribe(() => {
+      this.refreshParent.emit();
+    });
   }
 
-  editUser(userId) {
-    const dialogConfig = DialogConfigUtil.dialogDrawerConfig<string>(userId);
-    this._matDialog.open(EditUserPageComponent, dialogConfig);
+  editUser(user: ReadUser) {
+    const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user);
+    const dialogRef = this._matDialog.open(EditUserPageComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(() => {
+      this.refreshParent.emit();
+    });
   }
 
   /**
