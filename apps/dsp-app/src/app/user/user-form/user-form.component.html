@@ -25,9 +25,8 @@
     *ngIf="!editExistingUser"
     (password)="this.userForm.controls.password.setValue($event)"></app-password-form>
   <mat-form-field class="large-field">
-    <mat-select
-      [formControl]="userForm.controls.lang"
-      [placeholder]="'appLabels.form.user.general.language' | translate">
+    <mat-label>{{'appLabels.form.user.general.language' | translate}}</mat-label>
+    <mat-select [formControl]="userForm.controls.lang">
       <mat-option *ngFor="let lang of languagesList" [value]="lang.language"> {{ lang.value }} </mat-option>
     </mat-select>
   </mat-form-field>
