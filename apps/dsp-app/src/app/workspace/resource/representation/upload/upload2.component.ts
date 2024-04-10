@@ -3,12 +3,9 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
-import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
-import {
-  UploadedFileResponse,
-  UploadFileService,
-} from '@dsp-app/src/app/workspace/resource/representation/upload/upload-file.service';
+import { fileValueMapping } from './file-mappings';
+import { FileRepresentationType } from './file-representation.type';
+import { UploadFileService, UploadedFileResponse } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
@@ -62,8 +59,8 @@ export class Upload2Component implements ControlValueAccessor {
   previewUrl: SafeUrl | null = null;
   fileToUpload: File;
 
-  onChange: Function;
-  onTouched: Function;
+  onChange: (value: any) => void;
+  onTouched: () => void;
 
   get allowedFileTypes() {
     return fileValueMapping.get(this.representation).fileTypes;
@@ -129,6 +126,7 @@ export class Upload2Component implements ControlValueAccessor {
           break;
       }
 
+      // eslint-disable-next-line new-cap
       const fileResponse = new (fileValueMapping.get(this.representation).uploadClass)();
       fileResponse.filename = res.uploadedFiles[0].internalFilename;
       this.onChange(fileResponse);
