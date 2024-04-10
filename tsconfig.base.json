@@ -44,6 +44,9 @@
       "@dasch-swiss/vre/shared/app-api": [
         "libs/vre/shared/app-api/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/app-common": [
+        "libs/vre/shared/app-common/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-config": [
         "libs/vre/shared/app-config/src/index.ts"
       ],
