@@ -115,7 +115,7 @@
             <span>as system admin</span>
           </button>
           <!-- update user's profile data; only for system admin -->
-          <button mat-menu-item *ngIf="(isSysAdmin$ | async) && user.status" (click)="editUser(user.id)">
+          <button mat-menu-item *ngIf="(isSysAdmin$ | async) && user.status" (click)="editUser(user)">
             {{ projectUuid ? 'Edit member' : 'Edit user' }}
           </button>
           <button mat-menu-item *ngIf="(isSysAdmin$ | async) && user.status" (click)="openDialog('editPassword', user)">
