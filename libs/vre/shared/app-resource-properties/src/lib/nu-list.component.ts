@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
@@ -20,7 +20,7 @@ import { NuListService } from './nu-list.service';
       Add
     </button>`,
 })
-export class NuListComponent {
+export class NuListComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
 
   protected readonly Cardinality = Cardinality;
@@ -29,6 +29,12 @@ export class NuListComponent {
     public nuListService: NuListService,
     private _fb: FormBuilder
   ) {}
+
+  ngOnInit() {
+    if (!this.nuListService.formArray || this.nuListService.formArray.length === 0) {
+      throw new Error('The form array should not be empty.');
+    }
+  }
 
   addItem() {
     this.nuListService.formArray.push(
