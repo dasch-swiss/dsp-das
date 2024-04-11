@@ -106,7 +106,7 @@
         <mat-tab
           *ngIf="incomingResource"
           [label]="incomingResource.res.entityInfo?.classes[incomingResource.res.type].label">
-          <!--<app-properties-display [resource]="incomingResource"></app-properties-display>-->
+          <app-properties-display [resource]="incomingResource"></app-properties-display>
           <!--<app-properties
                     *ngIf="incomingResource.res"
                     [resource]="incomingResource"
@@ -117,24 +117,24 @@
         </mat-tab>
 
         <!-- annotations -->
-        <!--<mat-tab
-                  label="annotations"
-                  *ngIf="representationsToDisplay?.length && representationsToDisplay[0].fileValue && representationsToDisplay[0].fileValue.type === representationConstants.stillImage">
-                  <ng-template matTabLabel class="annotations">
-                    <span
-                      [matBadge]="representationsToDisplay[0]?.annotations.length"
-                      [matBadgeHidden]="representationsToDisplay[0]?.annotations.length === 0"
-                      matBadgeColor="primary"
-                      matBadgeOverlap="false">
-                      Annotations
-                    </span>
-                  </ng-template>
-                  <div
-                    class="region-property"
-                    *ngFor="let annotation of annotationResources"
-                    [id]="annotation.res.id"
-                    [class.active]="annotation.res.id === selectedRegion">
-                    <app-properties
+        <mat-tab
+          label="annotations"
+          *ngIf="representationsToDisplay?.length && representationsToDisplay[0].fileValue && representationsToDisplay[0].fileValue.type === representationConstants.stillImage">
+          <ng-template matTabLabel class="annotations">
+            <span
+              [matBadge]="representationsToDisplay[0]?.annotations.length"
+              [matBadgeHidden]="representationsToDisplay[0]?.annotations.length === 0"
+              matBadgeColor="primary"
+              matBadgeOverlap="false">
+              Annotations
+            </span>
+          </ng-template>
+          <div
+            class="region-property"
+            *ngFor="let annotation of annotationResources"
+            [id]="annotation.res.id"
+            [class.active]="annotation.res.id === selectedRegion">
+            <!--<app-properties
                       [resource]="annotation"
                       [displayProjectInfo]="false"
                       [isAnnotation]="true"
@@ -142,9 +142,10 @@
                       [valueUuidToHighlight]="valueUuid"
                       (regionChanged)="updateRegion()"
                       (regionDeleted)="reloadWithResource()">
-                    </app-properties>
-                  </div>
-                </mat-tab>-->
+                    </app-properties>-->
+            <app-properties-display [resource]="annotation"></app-properties-display>
+          </div>
+        </mat-tab>
       </mat-tab-group>
       <ng-template #deletedResource>
         <!--<app-properties
