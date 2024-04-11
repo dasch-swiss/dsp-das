@@ -12,7 +12,7 @@ import { PropertyInfoValues } from './property-info-values.interface';
     <!-- additional line with project and user information -->
 
     <!-- list of properties -->
-    <ng-container *ngIf="resource.resProps.length > 0; else noProperties">
+    <ng-container *ngIf="myProperties.length > 0; else noProperties">
       <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
         <div [class.border-bottom]="prop.values && !last" style="display: flex">
           <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
