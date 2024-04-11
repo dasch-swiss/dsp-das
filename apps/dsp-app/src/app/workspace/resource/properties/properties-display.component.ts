@@ -45,7 +45,9 @@ import { PropertyInfoValues } from './property-info-values.interface';
       <div class="property-value">This resource has no defined properties.</div>
     </ng-template>
   `,
-  styles: ['.label {min-width: 150px; margin-top: 0px;}'],
+  styles: [
+    '.label {color: rgb(107, 114, 128); min-width: 150px; margin-top: 0px; text-align: right; padding-right: 24px}',
+  ],
 })
 export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;
