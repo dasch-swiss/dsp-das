@@ -14,7 +14,7 @@ import { PropertyInfoValues } from './property-info-values.interface';
     <!-- list of properties -->
     <ng-container *ngIf="myProperties.length > 0; else noProperties">
       <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
-        <div [class.border-bottom]="prop.values && !last" style="display: flex">
+        <div [class.border-bottom]="prop.values && !last" style="display: flex; padding-top: 8px;">
           <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
             {{ prop.propDef.label }}
           </h3>
@@ -45,7 +45,7 @@ import { PropertyInfoValues } from './property-info-values.interface';
       <div class="property-value">This resource has no defined properties.</div>
     </ng-template>
   `,
-  styles: ['.label {min-width: 150px}'],
+  styles: ['.label {min-width: 150px; margin-top: 0px;}'],
 })
 export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;

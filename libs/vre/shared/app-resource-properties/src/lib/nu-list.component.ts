@@ -10,14 +10,14 @@ import { NuListService } from './nu-list.service';
       <app-nu-list-child style="width: 100%" [itemTpl]="itemTpl" [index]="index"></app-nu-list-child>
     </div>
     <button
-      mat-raised-button
+      mat-icon-button
       (click)="addItem()"
       *ngIf="
         !nuListService.currentlyAdding &&
         (nuListService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(nuListService.cardinality))
       ">
-      Add
+      <mat-icon>add_box</mat-icon>
     </button>`,
 })
 export class NuListComponent implements OnInit {
