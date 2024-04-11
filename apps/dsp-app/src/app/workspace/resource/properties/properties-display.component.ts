@@ -14,7 +14,7 @@ import { PropertyInfoValues } from './property-info-values.interface';
     <!-- list of properties -->
     <ng-container *ngIf="myProperties.length > 0; else noProperties">
       <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
-        <div [class.border-bottom]="prop.values && !last" style="display: flex; padding-top: 8px;">
+        <div [class.border-bottom]="prop.values && !last" style="display: flex; padding: 8px 0;">
           <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
             {{ prop.propDef.label }}
           </h3>
