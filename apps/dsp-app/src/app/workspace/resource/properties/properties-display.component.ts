@@ -61,7 +61,7 @@ export class PropertiesDisplayComponent implements OnInit {
     return this.resource.resProps
       .filter(prop => {
         return (
-          (prop.values && prop.values.length > 0) ||
+          (prop.values && prop.values.length > 0 && prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
           (prop.propDef.id === hasIncomingLinkIri &&
             //   numberOffAllIncomingLinkRes > 0 &&
             !prop.propDef['isLinkProperty'] &&
