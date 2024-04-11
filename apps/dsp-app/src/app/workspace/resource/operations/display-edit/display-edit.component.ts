@@ -100,10 +100,11 @@ export class DisplayEditComponent implements OnInit {
   dateFormat: string;
   ontoIri: string;
 
-  get hasValue(): boolean {
+  get emptyReadLinkValue(): boolean {
     return (
+      this.displayValue instanceof ReadLinkValue &&
       this.displayValue.strval &&
-      this.displayValue.strval.replace((this.displayValue as any).linkedResourceIri, '').length > 0
+      this.displayValue.strval.replace((this.displayValue as ReadLinkValue).linkedResourceIri, '').length === 0
     );
   }
 

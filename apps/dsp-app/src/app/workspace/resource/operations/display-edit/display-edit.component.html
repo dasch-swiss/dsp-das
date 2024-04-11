@@ -149,7 +149,7 @@
                             !editModeActive &&
                             projectStatus
                         "
-            [disabled]="!canDelete || !hasValue"
+            [disabled]="!canDelete || emptyReadLinkValue"
             (click)="openDialog()">
             <mat-icon>delete</mat-icon>
           </button>
