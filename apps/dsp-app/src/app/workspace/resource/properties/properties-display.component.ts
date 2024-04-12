@@ -60,12 +60,11 @@ export class PropertiesDisplayComponent implements OnInit {
     const representationConstants = RepresentationConstants;
 
     return this.resource.resProps
+      .filter(prop => prop.guiDef.guiOrder !== undefined)
       .filter(prop => {
         return (
-          (prop.guiDef.guiOrder !== undefined && // TODO julien change
-            prop.values &&
-            prop.values.length > 0 &&
-            prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
+          (prop.values && prop.values.length > 0) ||
+          // prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
           (prop.propDef.id === Constants.HasIncomingLinkValue &&
             //   numberOffAllIncomingLinkRes > 0 &&
             !prop.propDef['isLinkProperty'] &&
@@ -83,8 +82,7 @@ export class PropertiesDisplayComponent implements OnInit {
               )
             ))
         );
-      })
-      .filter(prop => prop.propDef.objectType !== Constants.LinkValue); // TODO check this condition with backend
+      });
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
