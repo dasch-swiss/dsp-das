@@ -50,6 +50,14 @@ import { NuListService } from './nu-list.service';
       <app-color-switch [control]="item" style="flex: 1" [displayMode]="displayMode"></app-color-switch>
     </ng-template>
 
+    <ng-template #richTextTpl let-item="item" let-displayMode="displayMode">
+      <app-base-switch [control]="item" [displayMode]="displayMode">
+        RICH
+        <app-common-input [control]="item" style="width: 100%"></app-common-input>
+        TEXT
+      </app-base-switch>
+    </ng-template>
+
     <ng-template #textTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <app-common-input [control]="item" style="width: 100%"></app-common-input>
@@ -95,7 +103,7 @@ import { NuListService } from './nu-list.service';
   ],
 })
 export class SwitchProperties3Component implements OnInit, AfterViewInit {
-  @Input() propertyDefinition!: PropertyDefinition;
+  @Input() propertyDefinition!: ResourcePropertyDefinition;
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
@@ -105,6 +113,7 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
   @ViewChild('colorTpl') colorTpl!: TemplateRef<any>;
   @ViewChild('textTpl') textTpl!: TemplateRef<any>;
+  @ViewChild('richTextTpl') richTextTpl!: TemplateRef<any>;
   @ViewChild('dateTpl') dateTpl!: TemplateRef<any>;
   @ViewChild('timeTpl') timeTpl!: TemplateRef<any>;
   @ViewChild('intervalTpl') intervalTpl!: TemplateRef<any>;
@@ -148,6 +157,9 @@ export class SwitchProperties3Component implements OnInit, AfterViewInit {
       case Constants.ColorValue:
         return this.colorTpl;
       case Constants.TextValue:
+        if (this.propertyDefinition.guiElement === Constants.GuiRichText) {
+          return this.richTextTpl;
+        }
         return this.textTpl;
       case Constants.DateValue:
         return this.dateTpl;
