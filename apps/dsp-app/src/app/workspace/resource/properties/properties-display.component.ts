@@ -59,28 +59,33 @@ export class PropertiesDisplayComponent implements OnInit {
   _getMyProperties() {
     const representationConstants = RepresentationConstants;
 
+    const condition = (prop: PropertyInfoValues) =>
+      prop.propDef.id === Constants.HasIncomingLinkValue &&
+      //   numberOffAllIncomingLinkRes > 0 &&
+      !prop.propDef['isLinkProperty'] &&
+      ![
+        RepresentationConstants.stillImage,
+        RepresentationConstants.movingImage,
+        RepresentationConstants.audio,
+        RepresentationConstants.document,
+        RepresentationConstants.text,
+        RepresentationConstants.archive,
+      ].includes(prop.propDef.objectType) &&
+      !(
+        //         isAnnotation &&
+        (
+          prop.propDef.subjectType === representationConstants.region &&
+          prop.propDef.objectType !== representationConstants.color
+        )
+      );
+
     return this.resource.resProps
       .filter(prop => prop.guiDef.guiOrder !== undefined)
       .filter(prop => {
         return (
           (prop.values && prop.values.length > 0) ||
           // prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
-          (prop.propDef.id === Constants.HasIncomingLinkValue &&
-            //   numberOffAllIncomingLinkRes > 0 &&
-            !prop.propDef['isLinkProperty'] &&
-            prop.propDef.objectType !== representationConstants.stillImage &&
-            prop.propDef.objectType !== representationConstants.movingImage &&
-            prop.propDef.objectType !== representationConstants.audio &&
-            prop.propDef.objectType !== representationConstants.document &&
-            prop.propDef.objectType !== representationConstants.text &&
-            prop.propDef.objectType !== representationConstants.archive &&
-            !(
-              //         isAnnotation &&
-              (
-                prop.propDef.subjectType === representationConstants.region &&
-                prop.propDef.objectType !== representationConstants.color
-              )
-            ))
+          condition(prop)
         );
       });
   }
