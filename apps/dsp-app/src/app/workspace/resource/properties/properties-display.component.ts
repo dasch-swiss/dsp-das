@@ -58,7 +58,6 @@ export class PropertiesDisplayComponent implements OnInit {
   }
   _getMyProperties() {
     const representationConstants = RepresentationConstants;
-    const hasIncomingLinkIri = Constants.HasIncomingLinkValue;
 
     return this.resource.resProps
       .filter(prop => {
@@ -67,7 +66,7 @@ export class PropertiesDisplayComponent implements OnInit {
             prop.values &&
             prop.values.length > 0 &&
             prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
-          (prop.propDef.id === hasIncomingLinkIri &&
+          (prop.propDef.id === Constants.HasIncomingLinkValue &&
             //   numberOffAllIncomingLinkRes > 0 &&
             !prop.propDef['isLinkProperty'] &&
             prop.propDef.objectType !== representationConstants.stillImage &&
