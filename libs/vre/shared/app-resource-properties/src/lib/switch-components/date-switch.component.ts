@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { KnoraPeriod } from '@dasch-swiss/dsp-js';
+import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { SwitchComponent } from './switch-component.interface';
 
 @Component({
@@ -17,13 +17,13 @@ import { SwitchComponent } from './switch-component.interface';
 })
 export class DateSwitchComponent implements SwitchComponent {
   get start() {
-    return this.control.value.start;
+    return this.control.value;
   }
 
   get end() {
-    return this.control.value.end;
+    return this.control.value;
   }
 
-  @Input() control!: FormControl<KnoraPeriod>;
+  @Input() control!: FormControl<KnoraDate>;
   @Input() displayMode = true;
 }
