@@ -73,7 +73,11 @@ import { NuListService } from './nu-list.service';
     </ng-template>
 
     <ng-template #linkTpl let-item="item" let-displayMode="displayMode">
-      <app-link-switch [control]="item" [displayMode]="displayMode" [propIri]="propertyDefinition.id"></app-link-switch>
+      <app-link-switch
+        [control]="item"
+        [displayMode]="displayMode"
+        [propIri]="propertyDefinition.id"
+        [values]="editModeData?.values"></app-link-switch>
     </ng-template>
 
     <ng-template #uriTpl let-item="item" let-displayMode="displayMode">
