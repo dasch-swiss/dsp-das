@@ -2,7 +2,7 @@
   [title]="editExistingUser ? userForm.controls.username.value : ('appLabels.form.user.title.profile' | translate)"
   [subtitle]="editExistingUser ? ('appLabels.form.user.title.edit' | translate) : ('appLabels.form.user.title.new' | translate)">
 </app-dialog-header>
-<form [formGroup]="userForm" class="form-content">
+<form [formGroup]="userForm" class="form-content user-form">
   <app-common-input
     [class]="editExistingUser ? 'small-field' : 'large-field' "
     [control]="userForm.controls.username"
