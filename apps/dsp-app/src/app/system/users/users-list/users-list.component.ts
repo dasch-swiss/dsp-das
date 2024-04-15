@@ -4,8 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -37,7 +38,7 @@ import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-pa
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
 })
-export class UsersListComponent implements OnInit {
+export class UsersListComponent implements OnChanges {
   // list of users: status active or inactive (deleted)
   @Input() status: boolean;
 
@@ -136,12 +137,10 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // sort list by defined key
-    if (localStorage.getItem('sortUsersBy')) {
-      this.sortBy = localStorage.getItem('sortUsersBy');
-    } else {
-      localStorage.setItem('sortUsersBy', this.sortBy);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.list && changes.list.currentValue) {
+      const sortBy = localStorage.getItem('sortUsersBy') || 'username' || this.sortBy;
+      this.list = this._sortingService.keySortByAlphabetical(this.list, sortBy as keyof ReadUser);
     }
   }
 
