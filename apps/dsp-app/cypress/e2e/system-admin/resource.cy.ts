@@ -1,40 +1,8 @@
 import { faker } from '@faker-js/faker';
+import { ResourceCreationPayloads } from '../../fixtures/resource-creation-payloads';
+import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
-const short = (label: string, lastModificationDate: string) => {
-  return {
-    '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-    '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-    'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-      '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-      '@value': lastModificationDate,
-    },
-    '@graph': [
-      {
-        'http://api.knora.org/ontology/knora-api/v2#objectType': {
-          '@id': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-        },
-        'http://www.w3.org/2000/01/rdf-schema#label': {
-          '@language': 'de',
-          '@value': 'property',
-        },
-        'http://www.w3.org/2000/01/rdf-schema#comment': {
-          '@language': 'de',
-          '@value': 'property',
-        },
-        'http://www.w3.org/2000/01/rdf-schema#subPropertyOf': {
-          '@id': 'http://api.knora.org/ontology/knora-api/v2#hasValue',
-        },
-        'http://api.knora.org/ontology/salsah-gui/v2#guiElement': {
-          '@id': 'http://api.knora.org/ontology/salsah-gui/v2#SimpleText',
-        },
-        '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
-        '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
-      },
-    ],
-  };
-};
-
-const cardinality = (propertyId: string, lastModificationDate: string) => {
+const cardinality = (lastModificationDate: string) => {
   return {
     '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
     '@type': 'http://www.w3.org/2002/07/owl#Ontology',
@@ -88,48 +56,86 @@ describe('Resource', () => {
     });
   });
 
-  const add = (text: string) => {
-    cy.get('[data-cy=label-input]').type('label');
-    cy.get('[data-cy=text-input]').type(text);
-  };
-
-  const edit = (text: string) => {
-    cy.get('[data-cy=text-input] input').clear().type(text);
-  };
-
   const createHTTP = (payload: any) => {
     cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/properties`, payload).then(response => {
       cy.request(
         'POST',
         `${Cypress.env('apiUrl')}/v2/ontologies/cardinalities`,
-        cardinality('yolo2', lastModificationDate(response))
+        cardinality(lastModificationDate(response))
       );
     });
   };
 
-  it('can add an instance, edit, and delete for a text property', () => {
-    const text1 = faker.lorem.word();
-    const text2 = faker.lorem.word();
+  describe('can add an instance, edit, and delete for a property', () => {
+    let po: AddResourceInstancePage;
 
-    createHTTP(short('v', finalLastModificationDate));
+    beforeEach(() => {
+      po = new AddResourceInstancePage();
+    });
+    it('text', () => {
+      const initialValue = faker.lorem.word();
+      const editedValue = faker.lorem.word();
 
-    // create
-    cy.visit('/project/00FF/ontology/images/datamodelclass/add');
-    add(text1);
-    cy.get('[data-cy=submit-button]').click();
-    cy.contains(text1);
+      createHTTP(ResourceCreationPayloads.textShort(finalLastModificationDate));
+      po.visitAddPage();
 
-    // edit
-    cy.get('app-base-switch').trigger('mouseenter');
-    cy.get('[data-cy=edit-button]').click();
-    edit(text2);
-    cy.get('[data-cy=save-button]').click();
-    cy.contains(text2);
+      // create
+      po.addInitialLabel();
+      cy.get('[data-cy=text-input]').type(initialValue);
+      po.addSubmit();
+      cy.contains(initialValue);
 
-    // delete
-    cy.reload(); // TODO shouldnt reload
-    cy.get('app-base-switch').trigger('mouseenter');
-    cy.get('[data-cy=delete-button]').click();
-    cy.get('[data-cy=confirm-button]').click();
+      // edit
+      po.setupEdit();
+      cy.get('[data-cy=text-input] input').clear().type(editedValue);
+      po.saveEdit();
+      cy.contains(editedValue);
+
+      // delete
+      po.delete();
+    });
+
+    it('number', () => {
+      const intInput = () => cy.get('[data-cy=int-input]');
+      const initialValue = faker.number.int({ min: 0, max: 100 });
+      const editedValue = faker.number.int({ min: 0, max: 100 });
+
+      createHTTP(ResourceCreationPayloads.number(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      intInput().type(initialValue.toString());
+      po.addSubmit();
+      cy.contains(initialValue.toString());
+
+      // edit
+      po.setupEdit();
+      intInput().clear().type(editedValue.toString());
+      po.saveEdit();
+      cy.contains(editedValue);
+
+      // delete
+      po.delete();
+    });
+
+    it('boolean', () => {
+      const boolToggle = () => cy.get('[data-cy=bool-toggle]');
+      createHTTP(ResourceCreationPayloads.boolean(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      boolToggle().click();
+      po.addSubmit();
+
+      // edit
+      po.setupEdit();
+      boolToggle().click();
+      po.saveEdit();
+
+      // delete
+      po.delete();
+    });
   });
 });

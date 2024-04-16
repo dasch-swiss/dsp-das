@@ -20,7 +20,7 @@ import { NuListService } from './nu-list.service';
     <ng-template #intTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <mat-form-field style="width: 100%">
-          <input matInput [formControl]="item" type="number" />
+          <input matInput [formControl]="item" type="number" data-cy="int-input" />
         </mat-form-field>
       </app-base-switch>
     </ng-template>
@@ -36,7 +36,7 @@ import { NuListService } from './nu-list.service';
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <div>
-          <mat-slide-toggle [formControl]="item"></mat-slide-toggle>
+          <mat-slide-toggle [formControl]="item" data-cy="bool-toggle"></mat-slide-toggle>
         </div>
       </app-base-switch>
     </ng-template>
