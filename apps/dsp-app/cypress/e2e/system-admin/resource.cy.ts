@@ -140,7 +140,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it.only('color', () => {
+    it('color', () => {
       const color = { hex: '#02A2A2', rgb: 'rgb(2, 162, 162)' };
       const editedColor = { hex: '#A3B3F3', rgb: 'rgb(163, 179, 243)' };
 
@@ -166,6 +166,35 @@ describe('Resource', () => {
       enterNewValue(editedColor.hex);
       po.saveEdit();
       checkColor(editedColor.rgb);
+
+      // delete
+      po.delete();
+    });
+
+    it.only('place', () => {
+      const initialValue = 'Basel';
+      const editedValue = 'Allschwil';
+
+      const enterAutocomplete = (value: string) => {
+        cy.get('[data-cy=geoname-autocomplete]').type(value).click();
+        cy.wait(2000);
+        cy.get('[data-cy=geoname-autocomplete]').type('{downarrow}{enter}');
+      };
+
+      createHTTP(ResourceCreationPayloads.place(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      enterAutocomplete(initialValue);
+      po.addSubmit();
+      cy.contains(initialValue);
+
+      // edit
+      po.setupEdit();
+      enterAutocomplete(editedValue);
+      po.saveEdit();
+      cy.contains(editedValue);
 
       // delete
       po.delete();

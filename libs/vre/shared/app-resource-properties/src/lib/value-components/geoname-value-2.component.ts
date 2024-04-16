@@ -12,6 +12,7 @@ import { filter, switchMap } from 'rxjs/operators';
       type="text"
       placeholder="Geoname value"
       aria-label="geoname"
+      data-cy="geoname-autocomplete"
       [matAutocomplete]="auto" />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
       <mat-option *ngFor="let place of places" [value]="place.id"> {{ place?.displayName }}</mat-option>
