@@ -4,7 +4,7 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 @Component({
   selector: 'app-nested-menu',
   template: `
-    <button *ngIf="data.isRootNode" mat-button [matMenuTriggerFor]="menu">
+    <button *ngIf="data.isRootNode" mat-button [matMenuTriggerFor]="menu" data-cy="select-list-button">
       {{ selection ?? 'Select a list in "' + data.label + '"' }}
     </button>
     <div *ngIf="!data.isRootNode" mat-menu-item [matMenuTriggerFor]="menu" style="width: 100%">
@@ -16,7 +16,9 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
           <app-nested-menu [data]="node" (selectedNode)="selectedNode.emit($event)"></app-nested-menu>
         </button>
         <ng-template #menuItem>
-          <button mat-menu-item (click)="selectedNode.emit(node)" style="padding: 0 16px">{{ node.label }}</button>
+          <button mat-menu-item (click)="selectedNode.emit(node)" style="padding: 0 16px" data-cy="list-item-button">
+            {{ node.label }}
+          </button>
         </ng-template>
       </ng-container>
     </mat-menu>

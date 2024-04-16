@@ -206,33 +206,59 @@ describe('Resource', () => {
         ],
       };
     };
-    it.only('list', () => {
+    it('list', () => {
       let listId: string;
-      let listUrl: string;
+      const item1Name = faker.lorem.word();
+      const item2Name = faker.lorem.word();
+
+      const sendCreateListItemRequest = (_listId: string, name: string) => {
+        return cy.request('POST', `${Cypress.env('apiUrl')}/admin/lists/${encodeURIComponent(_listId)}`, {
+          parentNodeIri: listId,
+          projectIri: 'http://rdfh.ch/projects/00FF',
+          labels: [
+            {
+              language: 'de',
+              value: name,
+            },
+          ],
+          name: `RandomName${name}`,
+        });
+      };
+
+      const clickOnListElement = (index: number) => {
+        cy.get('[data-cy=select-list-button]').click();
+        cy.get('[data-cy=list-item-button]').eq(index).click();
+      };
       cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
         comments: [{ language: 'de', value: faker.lorem.words(2) }],
         labels: [{ language: 'de', value: faker.lorem.words(2) }],
         projectIri: 'http://rdfh.ch/projects/00FF',
       })
         .then(response => {
-          listId = response.body.list.listinfo.id;
           console.log(response, 'j');
-          createHTTP(propertyListPayload(finalLastModificationDate, listId));
+          listId = response.body.list.listinfo.id;
+          sendCreateListItemRequest(listId, item1Name);
         })
-        .then(() => {});
+        .then(() => sendCreateListItemRequest(listId, item2Name))
+        .then(() => createHTTP(propertyListPayload(finalLastModificationDate, listId)))
+        .then(() => {
+          po.visitAddPage();
 
-      po.visitAddPage();
+          // create
+          po.addInitialLabel();
+          clickOnListElement(0);
+          po.addSubmit();
+          cy.contains(item1Name);
 
-      // create
-      po.addInitialLabel();
-      po.addSubmit();
+          // edit
+          po.setupEdit();
+          clickOnListElement(1);
+          po.saveEdit();
+          cy.contains(item2Name);
 
-      // edit
-      po.setupEdit();
-      po.saveEdit();
-
-      // delete
-      po.delete();
+          // delete
+          po.delete();
+        });
     });
   });
 });
