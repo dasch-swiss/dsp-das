@@ -1,31 +1,7 @@
 import { faker } from '@faker-js/faker';
+import { ListGetResponseADM } from '../../../../../libs/vre/open-api/src';
 import { ResourceCreationPayloads } from '../../fixtures/resource-creation-payloads';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
-
-const cardinality = (lastModificationDate: string) => {
-  return {
-    '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-    '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-    'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-      '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-      '@value': lastModificationDate,
-    },
-    '@graph': [
-      {
-        '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
-        '@type': 'http://www.w3.org/2002/07/owl#Class',
-        'http://www.w3.org/2000/01/rdf-schema#subClassOf': {
-          '@type': 'http://www.w3.org/2002/07/owl#Restriction',
-          'http://www.w3.org/2002/07/owl#onProperty': {
-            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
-          },
-          'http://www.w3.org/2002/07/owl#maxCardinality': 1,
-          'http://api.knora.org/ontology/salsah-gui/v2#guiOrder': 1,
-        },
-      },
-    ],
-  };
-};
 
 const lastModificationDate = response => response.body['knora-api:lastModificationDate']['@value'];
 describe('Resource', () => {
@@ -61,7 +37,7 @@ describe('Resource', () => {
       cy.request(
         'POST',
         `${Cypress.env('apiUrl')}/v2/ontologies/cardinalities`,
-        cardinality(lastModificationDate(response))
+        ResourceCreationPayloads.cardinality(lastModificationDate(response))
       );
     });
   };
@@ -171,7 +147,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it.only('place', () => {
+    it('place', () => {
       const initialValue = 'Basel';
       const editedValue = 'Allschwil';
 
@@ -195,6 +171,65 @@ describe('Resource', () => {
       enterAutocomplete(editedValue);
       po.saveEdit();
       cy.contains(editedValue);
+
+      // delete
+      po.delete();
+    });
+
+    const propertyListPayload = (lastModificationDate: string, listId: string) => {
+      return {
+        '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
+        '@type': 'http://www.w3.org/2002/07/owl#Ontology',
+        'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
+          '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
+          '@value': lastModificationDate,
+        },
+        '@graph': [
+          {
+            'http://api.knora.org/ontology/knora-api/v2#objectType': {
+              '@id': 'http://api.knora.org/ontology/knora-api/v2#ListValue',
+            },
+            'http://www.w3.org/2000/01/rdf-schema#label': {
+              '@language': 'de',
+              '@value': 'property',
+            },
+            'http://www.w3.org/2000/01/rdf-schema#subPropertyOf': {
+              '@id': 'http://api.knora.org/ontology/knora-api/v2#hasValue',
+            },
+            'http://api.knora.org/ontology/salsah-gui/v2#guiElement': {
+              '@id': 'http://api.knora.org/ontology/salsah-gui/v2#Pulldown',
+            },
+            'http://api.knora.org/ontology/salsah-gui/v2#guiAttribute': [`hlist=<${listId}>`],
+            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+            '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
+          },
+        ],
+      };
+    };
+    it.only('list', () => {
+      let listId: string;
+      let listUrl: string;
+      cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
+        comments: [{ language: 'de', value: faker.lorem.words(2) }],
+        labels: [{ language: 'de', value: faker.lorem.words(2) }],
+        projectIri: 'http://rdfh.ch/projects/00FF',
+      })
+        .then(response => {
+          listId = response.body.list.listinfo.id;
+          console.log(response, 'j');
+          createHTTP(propertyListPayload(finalLastModificationDate, listId));
+        })
+        .then(() => {});
+
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      po.addSubmit();
+
+      // edit
+      po.setupEdit();
+      po.saveEdit();
 
       // delete
       po.delete();
