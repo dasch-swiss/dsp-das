@@ -30,13 +30,16 @@ import { PropertyForm } from '../property-form.type';
     </mat-form-field>
     <app-common-input
       placeholder="Property name *"
+      data-cy="name-input"
       prefixIcon="fingerprint"
       [control]="form.controls.name"></app-common-input>
     <dasch-swiss-multi-language-input
       [formArray]="form.controls.labels"
+      data-cy="label-input"
       placeholder="Property label*"></dasch-swiss-multi-language-input>
     <dasch-swiss-multi-language-textarea
       [formArray]="form.controls.comments"
+      data-cy="comment-textarea"
       placeholder="Comment"></dasch-swiss-multi-language-textarea>
 
     <app-gui-attr-list
@@ -50,10 +53,12 @@ import { PropertyForm } from '../property-form.type';
     <div style="display: flex; justify-content: center; gap: 16px">
       <app-multiple-slide-toggle
         [control]="form.controls.cardinality"
+        data-cy="multiple-toggle"
         [label]="'Multiple values ?'"></app-multiple-slide-toggle>
 
       <app-required-slide-toggle
         [control]="form.controls.cardinality"
+        data-cy="required-toggle"
         [label]="'Required value ?'"></app-required-slide-toggle>
     </div>
   </form>`,

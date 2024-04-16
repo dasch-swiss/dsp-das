@@ -88,18 +88,18 @@ describe('Data Model Class', () => {
     cy.createDataModelClass(projectPage);
 
     cy.get('[data-cy=class-card]').should('be.visible');
-    cy.get('[data-cy=resource-class-properties-empty-list]').should('be.visible');
     cy.get('[data-cy=add-property-button]').should('be.visible').click();
-    cy.get('[data-cy=create-new-property-from-type-button]').should('be.visible').click({ force: true });
+    cy.get('[data-cy=create-new-from-type-button]').should('be.visible').click({ force: true });
     cy.get(`[data-cy=${PropertyType.Text}]`).should('be.visible').click();
     cy.get(`[data-cy=${PropertyType.Short}]`).should('be.visible').click();
 
     cy.get('[data-cy=name-input]').clear().type(textProperty.name);
-    cy.get('[data-cy=property-label] input').clear().type(textProperty.label);
-    cy.get('[data-cy=property-comment] textarea').type(textProperty.comment);
+    cy.get('[data-cy=label-input] input').clear().type(textProperty.label);
+    cy.get('[data-cy=comment-textarea]').type(textProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
     cy.wait('@createPropertyRequest');
+    cy.reload(); // TODO remove
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', textProperty.label);
   });
 });

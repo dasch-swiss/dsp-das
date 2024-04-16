@@ -33,6 +33,7 @@ import { map, takeUntil } from 'rxjs/operators';
       <mat-list-item
         *ngIf="(lastModificationDate$ | async) && projectStatus && userCanEdit"
         class="property link"
+        data-cy="add-property-button"
         [matMenuTriggerFor]="addPropertyMenu">
         <mat-icon matListItemIcon class="list-icon">add</mat-icon>
         <span matListItemTitle>Add property</span>
@@ -40,8 +41,12 @@ import { map, takeUntil } from 'rxjs/operators';
     </mat-list>
 
     <mat-menu #addPropertyMenu="matMenu" xPosition="after">
-      <button mat-menu-item [matMenuTriggerFor]="newFromPropType">Create new from type</button>
-      <button mat-menu-item [matMenuTriggerFor]="addExistingProp">Add existing property</button>
+      <button data-cy="create-new-from-type-button" mat-menu-item [matMenuTriggerFor]="newFromPropType">
+        Create new from type
+      </button>
+      <button data-cy="add-existing-property-button" mat-menu-item [matMenuTriggerFor]="addExistingProp">
+        Add existing property
+      </button>
     </mat-menu>
 
     <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
@@ -65,12 +70,13 @@ import { map, takeUntil } from 'rxjs/operators';
 
     <mat-menu #newFromPropType="matMenu">
       <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
-        <button mat-menu-item [matMenuTriggerFor]="sub_menu">{{ type.group }}</button>
+        <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
         <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
           <button
             mat-menu-item
             *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
             [value]="ele"
+            [attr.data-cy]="ele.label"
             [matTooltip]="ele.description"
             matTooltipPosition="after"
             (click)="addNewProperty(ele)">

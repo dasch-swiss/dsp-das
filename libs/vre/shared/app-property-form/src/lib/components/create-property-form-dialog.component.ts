@@ -36,6 +36,7 @@ export interface CreatePropertyFormDialogProps {
       <button
         mat-raised-button
         color="primary"
+        data-cy="submit-button"
         appLoadingButton
         [isLoading]="loading"
         [disabled]="form?.invalid"
