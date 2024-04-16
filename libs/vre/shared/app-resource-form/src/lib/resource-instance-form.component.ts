@@ -37,7 +37,7 @@ import { switchMap, take } from 'rxjs/operators';
           matTooltipPosition="above">
           Resource label *
         </h3>
-        <app-common-input [control]="form.controls.label"></app-common-input>
+        <app-common-input [control]="form.controls.label" data-cy="label-input"></app-common-input>
       </div>
 
       <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
@@ -58,6 +58,7 @@ import { switchMap, take } from 'rxjs/operators';
         type="submit"
         color="primary"
         appLoadingButton
+        data-cy="submit-button"
         [isLoading]="loading"
         (click)="submitData()">
         {{ 'appLabels.form.action.submit' | translate }}

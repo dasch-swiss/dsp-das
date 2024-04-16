@@ -99,6 +99,11 @@ describe('Resource', () => {
       });
   });
   it('test', () => {
-    console.log('coucou');
+    cy.visit('/project/00FF/ontology/images/datamodelclass/add');
+    cy.get('[data-cy=label-input]').type('label');
+    cy.get('[data-cy=text-input]').type('text');
+    cy.get('[data-cy=submit-button]').click();
+    cy.get('app-base-switch').trigger('mouseenter');
+    cy.get('[data-cy=edit-button]').click();
   });
 });

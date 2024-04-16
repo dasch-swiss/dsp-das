@@ -9,7 +9,7 @@ import { SwitchComponent } from './switch-component.interface';
       <ng-content></ng-content>
     </ng-template>`,
 })
-export class DefaultSwitchComponent implements SwitchComponent {
+export class BaseSwitchComponent implements SwitchComponent {
   @Input() control!: FormControl<number>;
   @Input() displayMode = true;
 }

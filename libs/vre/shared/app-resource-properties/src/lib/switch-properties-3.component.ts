@@ -4,7 +4,6 @@ import {
   Cardinality,
   Constants,
   IHasPropertyWithPropertyDefinition,
-  PropertyDefinition,
   ReadResource,
   ReadValue,
   ResourcePropertyDefinition,
@@ -60,7 +59,7 @@ import { NuListService } from './nu-list.service';
 
     <ng-template #textTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
-        <app-common-input [control]="item" style="width: 100%"></app-common-input>
+        <app-common-input [control]="item" style="width: 100%" data-cy="text-input"></app-common-input>
       </app-base-switch>
     </ng-template>
 

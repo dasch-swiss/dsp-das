@@ -8,7 +8,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     <div class="action-bubble">
       <div class="button-container d-flex">
         <ng-container *ngIf="!editMode; else editTemplate">
-          <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); editAction.emit()">
+          <button
+            mat-button
+            class="edit"
+            matTooltip="edit"
+            (click)="$event.stopPropagation(); editAction.emit()"
+            data-cy="edit-button">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-button class="edit" *ngIf="date" [matTooltip]="date" (click)="$event.stopPropagation()">
