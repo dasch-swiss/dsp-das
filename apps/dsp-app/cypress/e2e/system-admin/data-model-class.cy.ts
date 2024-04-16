@@ -77,7 +77,7 @@ describe('Data Model Class', () => {
     cy.get('.mat-mdc-dialog-container').should('not.exist');
   });
 
-  it.only('should add property to a data model class', () => {
+  it('should add property to a data model class', () => {
     const textProperty = <DataModelClassProperty>{
       name: faker.lorem.word(),
       label: faker.lorem.words(5),
