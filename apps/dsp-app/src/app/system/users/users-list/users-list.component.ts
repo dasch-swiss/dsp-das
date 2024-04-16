@@ -1,19 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { RouteConstants, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   LoadProjectMembersAction,
@@ -38,12 +29,18 @@ import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-pa
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
 })
-export class UsersListComponent implements OnChanges {
+export class UsersListComponent {
   // list of users: status active or inactive (deleted)
   @Input() status: boolean;
 
   // list of users: depending on the parent
-  @Input() list: ReadUser[];
+  _list: ReadUser[];
+  get list(): ReadUser[] {
+    return this._list;
+  }
+  @Input() set list(value: ReadUser[]) {
+    this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
+  }
 
   // enable the button to create new user
   @Input() createNew = false;
@@ -98,7 +95,7 @@ export class UsersListComponent implements OnChanges {
   ];
 
   // ... and sort by 'username'
-  sortBy = 'username';
+  sortBy = localStorage.getItem('sortUsersBy') || 'username';
 
   disableMenu$: Observable<boolean> = combineLatest([
     this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin),
@@ -135,13 +132,6 @@ export class UsersListComponent implements OnChanges {
     this._route.parent.parent.paramMap.subscribe((params: Params) => {
       this.projectUuid = params.get('uuid');
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.list && changes.list.currentValue) {
-      const sortBy = localStorage.getItem('sortUsersBy') || 'username' || this.sortBy;
-      this.list = this._sortingService.keySortByAlphabetical(this.list, sortBy as keyof ReadUser);
-    }
   }
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
