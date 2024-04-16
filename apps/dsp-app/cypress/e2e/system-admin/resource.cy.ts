@@ -128,11 +128,44 @@ describe('Resource', () => {
       po.addInitialLabel();
       boolToggle().click();
       po.addSubmit();
+      cy.get('app-base-switch').contains('true');
 
       // edit
       po.setupEdit();
       boolToggle().click();
       po.saveEdit();
+      cy.get('app-base-switch').contains('false');
+
+      // delete
+      po.delete();
+    });
+
+    it.only('color', () => {
+      const color = { hex: '#02A2A2', rgb: 'rgb(2, 162, 162)' };
+      const editedColor = { hex: '#A3B3F3', rgb: 'rgb(163, 179, 243)' };
+
+      const enterNewValue = (value: string) => {
+        cy.get('[data-cy=color-picker-input]').click();
+        cy.get('.color-picker .hex-text .box input').clear().type(value);
+      };
+
+      const checkColor = (rgb: string) => {
+        cy.get('[data-cy=color-box]').should('have.css', 'background-color').and('eq', rgb);
+      };
+
+      createHTTP(ResourceCreationPayloads.color(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      enterNewValue(color.hex);
+      po.addSubmit();
+      checkColor(color.rgb);
+      // edit
+      po.setupEdit();
+      enterNewValue(editedColor.hex);
+      po.saveEdit();
+      checkColor(editedColor.rgb);
 
       // delete
       po.delete();

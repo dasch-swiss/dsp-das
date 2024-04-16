@@ -21,6 +21,7 @@ import { NuListService } from './nu-list.service';
 @Component({
   selector: 'app-nu-list-child',
   template: ` <div
+    data-cy="property-value"
     style="position: relative; min-height: 40px; width: 100%"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">

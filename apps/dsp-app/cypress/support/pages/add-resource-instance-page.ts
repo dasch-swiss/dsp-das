@@ -7,8 +7,11 @@ export class AddResourceInstancePage {
     cy.get('[data-cy=submit-button]').click();
   };
 
+  mouseHover = () => {
+    cy.get('[data-cy=property-value]').trigger('mouseenter');
+  };
   setupEdit = () => {
-    cy.get('app-base-switch').trigger('mouseenter');
+    this.mouseHover();
     cy.get('[data-cy=edit-button]').click();
   };
 
@@ -18,7 +21,7 @@ export class AddResourceInstancePage {
 
   delete() {
     cy.reload(); // TODO shouldnt reload
-    cy.get('app-base-switch').trigger('mouseenter');
+    this.mouseHover();
     cy.get('[data-cy=delete-button]').click();
     cy.get('[data-cy=confirm-button]').click();
     cy.reload(); // TODO shouldnt reload
