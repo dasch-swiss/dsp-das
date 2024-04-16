@@ -23,6 +23,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
             mat-button
             class="delete"
             matTooltip="delete"
+            data-cy="delete-button"
             *ngIf="showDelete"
             (click)="$event.stopPropagation(); deleteAction.emit()">
             <mat-icon>delete</mat-icon>

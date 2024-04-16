@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 const short = (label: string, lastModificationDate: string) => {
   return {
     '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
@@ -59,8 +61,8 @@ const cardinality = (propertyId: string, lastModificationDate: string) => {
 
 const lastModificationDate = response => response.body['knora-api:lastModificationDate']['@value'];
 describe('Resource', () => {
-  let listUrl: string;
-  let listId: string;
+  let finalLastModificationDate: string;
+
   beforeEach(() => {
     console.log('start of test');
     cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/classes`, {
@@ -81,29 +83,53 @@ describe('Resource', () => {
           '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
         },
       ],
-    })
-      .then(response => {
-        cy.request(
-          'POST',
-          `${Cypress.env('apiUrl')}/v2/ontologies/properties`,
-          short('v', lastModificationDate(response))
-        );
-      })
-      .then(response => {
-        console.log('received', response);
-        cy.request(
-          'POST',
-          `${Cypress.env('apiUrl')}/v2/ontologies/cardinalities`,
-          cardinality('yolo2', lastModificationDate(response))
-        );
-      });
+    }).then(response => {
+      finalLastModificationDate = lastModificationDate(response);
+    });
   });
-  it('test', () => {
-    cy.visit('/project/00FF/ontology/images/datamodelclass/add');
+
+  const add = (text: string) => {
     cy.get('[data-cy=label-input]').type('label');
-    cy.get('[data-cy=text-input]').type('text');
+    cy.get('[data-cy=text-input]').type(text);
+  };
+
+  const edit = (text: string) => {
+    cy.get('[data-cy=text-input] input').clear().type(text);
+  };
+
+  const createHTTP = (payload: any) => {
+    cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/properties`, payload).then(response => {
+      cy.request(
+        'POST',
+        `${Cypress.env('apiUrl')}/v2/ontologies/cardinalities`,
+        cardinality('yolo2', lastModificationDate(response))
+      );
+    });
+  };
+
+  it('can add an instance, edit, and delete for a text property', () => {
+    const text1 = faker.lorem.word();
+    const text2 = faker.lorem.word();
+
+    createHTTP(short('v', finalLastModificationDate));
+
+    // create
+    cy.visit('/project/00FF/ontology/images/datamodelclass/add');
+    add(text1);
     cy.get('[data-cy=submit-button]').click();
+    cy.contains(text1);
+
+    // edit
     cy.get('app-base-switch').trigger('mouseenter');
     cy.get('[data-cy=edit-button]').click();
+    edit(text2);
+    cy.get('[data-cy=save-button]').click();
+    cy.contains(text2);
+
+    // delete
+    cy.reload(); // TODO shouldnt reload
+    cy.get('app-base-switch').trigger('mouseenter');
+    cy.get('[data-cy=delete-button]').click();
+    cy.get('[data-cy=confirm-button]').click();
   });
 });

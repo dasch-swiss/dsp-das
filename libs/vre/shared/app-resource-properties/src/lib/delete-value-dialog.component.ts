@@ -29,7 +29,13 @@ export interface DeleteValueDialogProps {
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close (click)="onCancel()">No, keep the value</button>
-      <button mat-raised-button color="primary" appLoadingButton [isLoading]="loading" (click)="deleteValue()">
+      <button
+        mat-raised-button
+        color="primary"
+        appLoadingButton
+        [isLoading]="loading"
+        (click)="deleteValue()"
+        data-cy="confirm-button">
         Yes, delete the value
       </button>
     </div>
@@ -71,6 +77,7 @@ export class DeleteValueDialogComponent implements OnInit {
     updateRes.property = this.nuListService.propertyDefinition.id;
     updateRes.value = deleteVal;
 
+    console.log('in app', updateRes);
     this._dspApiConnection.v2.values.deleteValue(updateRes as UpdateResource<DeleteValue>).subscribe(() => {
       this.dialogRef.close();
     });

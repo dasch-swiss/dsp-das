@@ -44,6 +44,7 @@ import { NuListService } from './nu-list.service';
       <button
         (click)="onSave()"
         mat-icon-button
+        data-cy="save-button"
         *ngIf="!displayMode && !nuListService.keepEditMode && !loading"
         [disabled]="
           (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
