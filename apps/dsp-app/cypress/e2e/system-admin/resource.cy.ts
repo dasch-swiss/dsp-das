@@ -261,7 +261,7 @@ describe('Resource', () => {
         });
     });
 
-    it.only('link BUGS BECAUSE OF DISPLAY EDIT 2 TEMPLINK SERVICE', () => {
+    it('link BUGS BECAUSE OF DISPLAY EDIT 2 TEMPLINK SERVICE', () => {
       // create John Smith person
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
@@ -299,6 +299,25 @@ describe('Resource', () => {
           // delete
           po.delete();
         });
+    });
+    it.only('date', () => {
+      createHTTP(ResourceCreationPayloads.date(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      cy.get('.mat-mdc-form-field-icon-suffix > .mat-icon').click();
+      cy.get('#mat-input-6').clear().type('2023');
+      cy.get(':nth-child(4) > :nth-child(4) > .selectable').click();
+      po.addSubmit();
+
+      // edit
+      po.setupEdit();
+      cy.get('.date-form-grid > .mat-mdc-tooltip-trigger > .mat-mdc-button-touch-target').click();
+      po.saveEdit();
+
+      // delete
+      po.delete();
     });
   });
 
