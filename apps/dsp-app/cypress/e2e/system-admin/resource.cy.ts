@@ -384,8 +384,4 @@ describe('Resource', () => {
       });
     });
   });
-
-  it.only('test', () => {
-    console.log('test');
-  });
 });

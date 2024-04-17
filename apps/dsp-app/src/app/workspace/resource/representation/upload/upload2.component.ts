@@ -5,7 +5,7 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { fileValueMapping } from './file-mappings';
 import { FileRepresentationType } from './file-representation.type';
-import { UploadFileService, UploadedFileResponse } from './upload-file.service';
+import { UploadedFileResponse, UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
@@ -15,20 +15,28 @@ import { UploadFileService, UploadedFileResponse } from './upload-file.service';
       appDragDrop
       (click)="fileInput.click()"
       (fileDropped)="addFile($event.item(0))"
-      style="text-align: center;
-    padding: 16px; cursor: pointer">
-      <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
-      <mat-icon>cloud_upload</mat-icon>
-      <div>Drag and drop or click to upload</div>
-      <div class="mat-subtitle-2">The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}</div>
+      style="cursor: pointer">
+      <div
+        style="text-align: center;
+    padding: 16px; border: 1px solid black">
+        <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
+        <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
+        <div>Upload file</div>
+        <div class="mat-subtitle-2">
+          The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}
+        </div>
+      </div>
+      <div class="mat-subtitle-2" style="background: black; color: white; text-align: center; padding: 8px">
+        Drag and drop or click to upload
+      </div>
     </div>
     <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
 
     <ng-template #showFileTemplate>
-      <div *ngIf="previewUrl">
-        <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px;" />
+      <div *ngIf="previewUrl" style="display: flex; justify-content: center">
+        <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px; margin-bottom: 16px" />
       </div>
-      <table style="border: 1px solid; width: 100%">
+      <table style="text-align: center; width: 100%; border: 1px solid lightgray">
         <tr style="background: lightblue">
           <th>Name</th>
           <th>Size</th>

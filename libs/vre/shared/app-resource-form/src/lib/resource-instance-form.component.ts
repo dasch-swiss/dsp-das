@@ -29,7 +29,7 @@ import { switchMap, take } from 'rxjs/operators';
         *ngIf="form.controls.file"
         [formControl]="form.controls.file"
         [representation]="fileRepresentation"
-        style="display: block; margin-bottom: 16px"></app-upload-2>
+        style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
 
       <div class="my-grid">
         <h3
