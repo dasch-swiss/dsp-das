@@ -13,7 +13,7 @@ import { NuListService } from './nu-list.service';
       mat-icon-button
       (click)="addItem()"
       *ngIf="
-        !nuListService.currentlyAdding &&
+        (!nuListService.currentlyAdding || nuListService.keepEditMode) &&
         (nuListService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(nuListService.cardinality))
       ">
