@@ -1,5 +1,5 @@
 export class ResourceCreationPayloads {
-  static cardinality(lastModificationDate: string) {
+  private static baseData(lastModificationDate: string) {
     return {
       '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
       '@type': 'http://www.w3.org/2002/07/owl#Ontology',
@@ -7,6 +7,12 @@ export class ResourceCreationPayloads {
         '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
         '@value': lastModificationDate,
       },
+    };
+  }
+
+  static cardinality(lastModificationDate: string) {
+    return {
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
@@ -26,12 +32,7 @@ export class ResourceCreationPayloads {
 
   static textShort(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -56,12 +57,7 @@ export class ResourceCreationPayloads {
 
   static number(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -86,12 +82,7 @@ export class ResourceCreationPayloads {
 
   static boolean(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -116,12 +107,7 @@ export class ResourceCreationPayloads {
 
   static color(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -146,12 +132,7 @@ export class ResourceCreationPayloads {
 
   static place(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -176,12 +157,7 @@ export class ResourceCreationPayloads {
 
   static link(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#subjectType': {
@@ -191,10 +167,6 @@ export class ResourceCreationPayloads {
             '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
           },
           'http://www.w3.org/2000/01/rdf-schema#label': {
-            '@language': 'de',
-            '@value': 'property',
-          },
-          'http://www.w3.org/2000/01/rdf-schema#comment': {
             '@language': 'de',
             '@value': 'property',
           },
@@ -213,12 +185,7 @@ export class ResourceCreationPayloads {
 
   static date(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -243,12 +210,7 @@ export class ResourceCreationPayloads {
 
   static timestamp(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
@@ -273,12 +235,7 @@ export class ResourceCreationPayloads {
 
   static timesequence(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
-      '@type': 'http://www.w3.org/2002/07/owl#Ontology',
-      'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
-        '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
-        '@value': lastModificationDate,
-      },
+      ...this.baseData(lastModificationDate),
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
