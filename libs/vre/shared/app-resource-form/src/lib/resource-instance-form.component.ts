@@ -201,9 +201,11 @@ export class ResourceInstanceFormComponent implements OnInit {
   private _getPropertiesObj() {
     const propertiesObj = {};
 
-    Object.keys(this.form.controls.properties.controls).forEach(iri => {
-      propertiesObj[iri] = this.getValue(iri);
-    });
+    Object.keys(this.form.controls.properties.controls)
+      .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
+      .forEach(iri => {
+        propertiesObj[iri] = this.getValue(iri);
+      });
 
     if (this.form.controls.file) {
       propertiesObj[this.fileRepresentation] = [this._getFileValue()];

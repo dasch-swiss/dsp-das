@@ -113,6 +113,7 @@ export const propertiesTypeMapping = new Map<
       mapping: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
         newTextValue.text = value;
+        console.log(newTextValue, 'a');
         return newTextValue;
       },
       updateMapping: (id: string, value: string) => {
