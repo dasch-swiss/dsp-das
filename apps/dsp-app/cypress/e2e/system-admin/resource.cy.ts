@@ -229,13 +229,13 @@ describe('Resource', () => {
         cy.get('[data-cy=select-list-button]').click();
         cy.get('[data-cy=list-item-button]').eq(index).click();
       };
+
       cy.request<ListGetResponseADM>('POST', `${Cypress.env('apiUrl')}/admin/lists`, {
         comments: [{ language: 'de', value: faker.lorem.words(2) }],
         labels: [{ language: 'de', value: faker.lorem.words(2) }],
         projectIri: 'http://rdfh.ch/projects/00FF',
       })
         .then(response => {
-          console.log(response, 'j');
           listId = response.body.list.listinfo.id;
           sendCreateListItemRequest(listId, item1Name);
         })
