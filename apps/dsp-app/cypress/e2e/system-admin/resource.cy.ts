@@ -261,6 +261,47 @@ describe('Resource', () => {
         });
     });
 
-    it.only('link', () => {});
+    it.only('link BUGS BECAUSE OF DISPLAY EDIT 2 TEMPLINK SERVICE', () => {
+      // create John Smith person
+      cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
+        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
+        'http://www.w3.org/2000/01/rdf-schema#label': 'john',
+        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+          '@id': 'http://rdfh.ch/projects/00FF',
+        },
+        'http://0.0.0.0:3333/ontology/00FF/images/v2#lastname': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'john',
+        },
+        'http://0.0.0.0:3333/ontology/00FF/images/v2#firstname': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'smith',
+        },
+      })
+        .then(response => {
+          createHTTP(ResourceCreationPayloads.link(finalLastModificationDate));
+        })
+        .then(() => {
+          po.visitAddPage();
+          const input = cy.get('[data-cy=link-input]');
+
+          // create
+          po.addInitialLabel();
+          input.type('John').click();
+          cy.wait(2000);
+          input.type('{downarrow}{downarrow}{enter}');
+          po.addSubmit();
+
+          // edit
+          po.setupEdit();
+          po.saveEdit();
+
+          // delete
+          po.delete();
+        });
+    });
   });
+
+  it('can add a string value multiple with empty data');
+  it('can add an empty value when it is not required');
 });
