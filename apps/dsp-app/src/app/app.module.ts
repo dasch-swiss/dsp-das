@@ -36,6 +36,8 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { PermissionInfoComponent } from '@dsp-app/src/app/workspace/resource/permission-info/permission-info.component';
+import { ResourceToolbarComponent } from '@dsp-app/src/app/workspace/resource/properties/resource-toolbar/resource-toolbar';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -242,6 +244,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ReusableProjectFormComponent,
     EditProjectFormPageComponent,
     ImageSettingsComponent,
+    PermissionInfoComponent,
     ProjectsComponent,
     ProjectsListComponent,
     PropertyInfoComponent,
@@ -253,6 +256,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResourcePageComponent,
+    ResourceToolbarComponent,
     ResultsComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
