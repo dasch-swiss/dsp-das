@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+  Cardinality,
   Constants,
   CreateFileValue,
   CreateResource,
@@ -162,11 +163,16 @@ export class ResourceInstanceFormComponent implements OnInit {
     }
 
     this.properties.forEach((prop, index) => {
+      const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType).control() as AbstractControl;
+      if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
+        control.addValidators(Validators.required);
+      }
+
       this.form.controls.properties.addControl(
         prop.propertyDefinition.id,
         this._fb.array([
           this._fb.group({
-            item: propertiesTypeMapping.get(prop.propertyDefinition.objectType).control() as AbstractControl,
+            item: control,
             comment: '',
           }) as unknown as FormValueGroup,
         ])

@@ -26,7 +26,6 @@ export class DisplayEdit2Component implements OnInit {
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    console.log('display edit array', this.prop.values);
     this.formArray = this._fb.array(
       this.prop.values.map(value => {
         const property = propertiesTypeMapping.get(this.prop.propDef.objectType);
