@@ -71,7 +71,7 @@ import { switchMap, take } from 'rxjs/operators';
     </ng-template>
   `,
   styles: [
-    '.my-grid {display: grid; grid-template-columns: 140px 400px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
+    '.my-grid {display: grid; grid-template-columns: 140px 470px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
   ],
   providers: [TempLinkValueService],
 })

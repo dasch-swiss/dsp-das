@@ -14,7 +14,8 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { finalize, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { finalize, startWith, take } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { NuListService } from './nu-list.service';
 
@@ -39,7 +40,7 @@ import { NuListService } from './nu-list.service';
           *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
 
         <mat-form-field style="flex: 1; width: 100%" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
-          <mat-icon matPrefix style="color: #808080">lock</mat-icon>
+          <mat-icon matPrefix style="color: #808080" *ngIf="group.controls.comment.disabled">lock </mat-icon>
           <textarea matInput rows="1" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
         </mat-form-field>
       </div>
@@ -69,6 +70,8 @@ export class NuListChildComponent implements OnInit {
   displayMode: boolean | undefined;
   loading = false;
 
+  subscription!: Subscription;
+
   get group() {
     return this.nuListService.formArray.at(this.index);
   }
@@ -86,6 +89,7 @@ export class NuListChildComponent implements OnInit {
   ngOnInit() {
     this.initialFormValue = this.group.getRawValue();
     this._setupDisplayMode();
+    this._watchAndSetupCommentStatus();
   }
 
   onSave() {
@@ -100,6 +104,16 @@ export class NuListChildComponent implements OnInit {
     this._dialog.open<DeleteValueDialogComponent, DeleteValueDialogProps>(DeleteValueDialogComponent, {
       data: { index: this.index },
       viewContainerRef: this._viewContainerRef,
+    });
+  }
+
+  private _watchAndSetupCommentStatus() {
+    this.subscription = this.group.controls.item.statusChanges.pipe(startWith(null)).subscribe(status => {
+      if (status === 'INVALID' || this.group.controls.item.value === null) {
+        this.group.controls.comment.disable();
+      } else if (status === 'VALID') {
+        this.group.controls.comment.enable();
+      }
     });
   }
 
