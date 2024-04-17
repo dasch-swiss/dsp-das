@@ -6,9 +6,11 @@ import { AddResourceInstancePage } from '../../support/pages/add-resource-instan
 const lastModificationDate = response => response.body['knora-api:lastModificationDate']['@value'];
 describe('Resource', () => {
   let finalLastModificationDate: string;
+  let po: AddResourceInstancePage;
 
   beforeEach(() => {
-    console.log('start of test');
+    po = new AddResourceInstancePage();
+
     cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/classes`, {
       '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
       '@type': 'http://www.w3.org/2002/07/owl#Ontology',
@@ -32,23 +34,18 @@ describe('Resource', () => {
     });
   });
 
-  const createHTTP = (payload: any) => {
+  const createHTTP = (payload: any, required = false) => {
     cy.request('POST', `${Cypress.env('apiUrl')}/v2/ontologies/properties`, payload).then(response => {
       cy.request(
         'POST',
         `${Cypress.env('apiUrl')}/v2/ontologies/cardinalities`,
-        ResourceCreationPayloads.cardinality(lastModificationDate(response))
+        ResourceCreationPayloads.cardinality(lastModificationDate(response), required)
       );
     });
   };
 
   describe('can add an instance, edit, and delete for a property', () => {
-    let po: AddResourceInstancePage;
-
-    beforeEach(() => {
-      po = new AddResourceInstancePage();
-    });
-    it.only('text', () => {
+    it('text', () => {
       const initialValue = faker.lorem.word();
       const editedValue = faker.lorem.word();
 
@@ -58,7 +55,7 @@ describe('Resource', () => {
       // create
       po.addInitialLabel();
       cy.get('[data-cy=text-input]').type(initialValue);
-      po.addSubmit();
+      po.clickOnSubmit();
       cy.contains(initialValue);
 
       // edit
@@ -84,7 +81,7 @@ describe('Resource', () => {
       // create
       po.addInitialLabel();
       intInput().type(initialValue.toString());
-      po.addSubmit();
+      po.clickOnSubmit();
       cy.contains(initialValue.toString());
 
       // edit
@@ -105,7 +102,7 @@ describe('Resource', () => {
       // create
       po.addInitialLabel();
       boolToggle().click();
-      po.addSubmit();
+      po.clickOnSubmit();
       cy.get('app-base-switch').contains('true');
 
       // edit
@@ -137,7 +134,7 @@ describe('Resource', () => {
       // create
       po.addInitialLabel();
       enterNewValue(color.hex);
-      po.addSubmit();
+      po.clickOnSubmit();
       checkColor(color.rgb);
       // edit
       po.setupEdit();
@@ -165,7 +162,7 @@ describe('Resource', () => {
       // create
       po.addInitialLabel();
       enterAutocomplete(initialValue);
-      po.addSubmit();
+      po.clickOnSubmit();
       cy.contains(initialValue);
 
       // edit
@@ -249,7 +246,7 @@ describe('Resource', () => {
           // create
           po.addInitialLabel();
           clickOnListElement(0);
-          po.addSubmit();
+          po.clickOnSubmit();
           cy.contains(item1Name);
 
           // edit
@@ -292,7 +289,7 @@ describe('Resource', () => {
           input.type('John').click();
           cy.wait(2000);
           input.type('{downarrow}{downarrow}{enter}');
-          po.addSubmit();
+          po.clickOnSubmit();
 
           // edit
           po.setupEdit();
@@ -311,7 +308,7 @@ describe('Resource', () => {
       cy.get('.mat-mdc-form-field-icon-suffix > .mat-icon').click();
       cy.get('#mat-input-6').clear().type('2023');
       cy.get(':nth-child(4) > :nth-child(4) > .selectable').click();
-      po.addSubmit();
+      po.clickOnSubmit();
 
       // edit
       po.setupEdit();
@@ -333,7 +330,7 @@ describe('Resource', () => {
         '{enter}'
       );
       cy.get('[data-cy=time-input]').clear().type('00:00');
-      po.addSubmit();
+      po.clickOnSubmit();
 
       // edit
       po.setupEdit();
@@ -355,7 +352,7 @@ describe('Resource', () => {
       po.addInitialLabel();
       start().type(randomFloat());
       end().type(randomFloat());
-      po.addSubmit();
+      po.clickOnSubmit();
 
       // edit
       po.setupEdit();
@@ -368,6 +365,20 @@ describe('Resource', () => {
     });
   });
 
-  it('can add a string value multiple with empty data');
-  it('can add an empty value when it is not required');
+  describe.only('can not add an empty value when it is required', () => {
+    const types = new Map<string, any>([
+      ['text', () => ResourceCreationPayloads.textShort(finalLastModificationDate)],
+      ['number', () => ResourceCreationPayloads.number(finalLastModificationDate)],
+    ]);
+
+    types.forEach((value, name) => {
+      it(name, () => {
+        createHTTP(value(), true);
+        po.visitAddPage();
+        po.addInitialLabel();
+        po.clickOnSubmit();
+        cy.contains('This field is required');
+      });
+    });
+  });
 });

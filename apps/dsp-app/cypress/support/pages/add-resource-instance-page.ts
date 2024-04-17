@@ -3,8 +3,10 @@ export class AddResourceInstancePage {
     cy.visit('/project/00FF/ontology/images/datamodelclass/add');
   };
 
-  addSubmit = () => {
-    cy.get('[data-cy=submit-button]').click();
+  getSubmitButton = () => cy.get('[data-cy=submit-button]');
+
+  clickOnSubmit = () => {
+    this.getSubmitButton().click();
   };
 
   mouseHover = () => {

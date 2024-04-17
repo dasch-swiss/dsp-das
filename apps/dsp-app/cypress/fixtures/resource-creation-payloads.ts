@@ -25,7 +25,7 @@ export class ResourceCreationPayloads {
     },
   };
 
-  static cardinality(lastModificationDate: string) {
+  static cardinality(lastModificationDate: string, required: boolean) {
     return {
       ...this.baseData(lastModificationDate),
       '@graph': [
@@ -37,8 +37,10 @@ export class ResourceCreationPayloads {
             'http://www.w3.org/2002/07/owl#onProperty': {
               '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
             },
-            'http://www.w3.org/2002/07/owl#maxCardinality': 1,
             'http://api.knora.org/ontology/salsah-gui/v2#guiOrder': 1,
+            ...(required
+              ? { 'http://www.w3.org/2002/07/owl#cardinality': 1 }
+              : { 'http://www.w3.org/2002/07/owl#maxCardinality': 1 }),
           },
         },
       ],
