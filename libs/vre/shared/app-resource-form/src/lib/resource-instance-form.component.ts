@@ -84,7 +84,6 @@ export class ResourceInstanceFormComponent implements OnInit {
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
   resourceClass: ResourceClassDefinition;
-  ontologyInfo: ResourceClassAndPropertyDefinitions;
   fileRepresentation: FileRepresentationType;
   properties: IHasPropertyWithPropertyDefinition[];
   loading = false;
@@ -137,14 +136,13 @@ export class ResourceInstanceFormComponent implements OnInit {
       .reloadCachedItem(this.ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-        this.ontologyInfo = onto;
         this.resourceClass = onto.classes[resourceClassIri];
         this._tempLinkValueService.currentOntoIri = this.ontologyIri;
 
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         const readResource = new ReadResource();
-        readResource.entityInfo = this.ontologyInfo;
+        readResource.entityInfo = onto;
         this._tempLinkValueService.parentResource = readResource;
 
         console.log('zz');
