@@ -31,9 +31,9 @@ import { switchMap, take } from 'rxjs/operators';
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 16px"></app-upload-2>
 
-      <div style="display: flex">
+      <div class="my-grid">
         <h3
-          class="mat-subtitle-2"
+          class="mat-subtitle-2 my-h3"
           matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
           matTooltipPosition="above">
           Resource label *
@@ -41,9 +41,9 @@ import { switchMap, take } from 'rxjs/operators';
         <app-common-input [control]="form.controls.label" data-cy="label-input"></app-common-input>
       </div>
 
-      <div style="display: grid; grid-template-columns: 100px 400px; grid-gap: 10px">
+      <div class="my-grid">
         <ng-container *ngFor="let prop of properties">
-          <div style="padding-top: 16px">{{ prop.propertyDefinition.label }}</div>
+          <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propertyDefinition.label }}</div>
           <div>
             <app-switch-properties-3
               [propertyDefinition]="prop.propertyDefinition"
@@ -70,6 +70,9 @@ import { switchMap, take } from 'rxjs/operators';
       <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
     </ng-template>
   `,
+  styles: [
+    '.my-grid {display: grid; grid-template-columns: 140px 400px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
+  ],
   providers: [TempLinkValueService],
 })
 export class ResourceInstanceFormComponent implements OnInit {

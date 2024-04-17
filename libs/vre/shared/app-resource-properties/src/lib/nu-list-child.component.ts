@@ -34,12 +34,13 @@ import { NuListService } from './nu-list.service';
       (deleteAction)="askToDelete()"></app-nu-list-action-bubble>
 
     <div style="display: flex">
-      <div>
+      <div style="flex: 1">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
 
-        <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
-          <textarea matInput rows="9" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
+        <mat-form-field style="flex: 1; width: 100%" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
+          <mat-icon matPrefix style="color: #808080">lock</mat-icon>
+          <textarea matInput rows="1" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
         </mat-form-field>
       </div>
       <button
