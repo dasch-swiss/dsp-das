@@ -215,13 +215,15 @@ export class ResourceInstanceFormComponent implements OnInit {
 
   private getValue(iri: string) {
     const controls = this.form.controls.properties.controls[iri].controls;
-    return controls.map(group => {
-      const entity = propertiesTypeMapping.get(this.mapping.get(iri)).mapping(group.controls.item.value);
-      if (group.controls.comment.value) {
-        entity.valueHasComment = group.controls.comment.value;
-      }
-      return entity;
-    });
+    return controls
+      .filter(group => group.value.item !== null)
+      .map(group => {
+        const entity = propertiesTypeMapping.get(this.mapping.get(iri)).mapping(group.controls.item.value);
+        if (group.controls.comment.value) {
+          entity.valueHasComment = group.controls.comment.value;
+        }
+        return entity;
+      });
   }
 
   private _getFileValue() {

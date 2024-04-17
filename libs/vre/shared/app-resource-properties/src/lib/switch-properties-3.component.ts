@@ -58,9 +58,7 @@ import { NuListService } from './nu-list.service';
     </ng-template>
 
     <ng-template #textTpl let-item="item" let-displayMode="displayMode">
-      <app-base-switch [control]="item" [displayMode]="displayMode">
-        <app-common-input [control]="item" style="width: 100%" data-cy="text-input"></app-common-input>
-      </app-base-switch>
+      <app-text-switch [control]="item" [displayMode]="displayMode"></app-text-switch>
     </ng-template>
 
     <ng-template #dateTpl let-item="item" let-displayMode="displayMode">

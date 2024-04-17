@@ -10,6 +10,6 @@ import { SwitchComponent } from './switch-component.interface';
     </ng-template>`,
 })
 export class BaseSwitchComponent implements SwitchComponent {
-  @Input() control!: FormControl<number>;
+  @Input() control!: FormControl<any>;
   @Input() displayMode = true;
 }

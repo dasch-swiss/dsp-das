@@ -9,6 +9,7 @@ import { GeonameSwitchComponent } from './switch-components/geoname-switch.compo
 import { IntervalSwitchComponent } from './switch-components/interval-switch.component';
 import { LinkSwitchComponent } from './switch-components/link-switch.component';
 import { ListSwitchComponent } from './switch-components/list-switch.component';
+import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchProperties3Component } from './switch-properties-3.component';
@@ -30,6 +31,7 @@ const switchComponents = [
   ListSwitchComponent,
   DateSwitchComponent,
   BaseSwitchComponent,
+  TextSwitchComponent,
 ];
 
 export const ResourcePropertiesComponents = [
