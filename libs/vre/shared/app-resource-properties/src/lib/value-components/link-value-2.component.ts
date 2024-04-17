@@ -20,6 +20,7 @@ import { LinkValue2DataService } from './link-value-2-data.service';
         [formControl]="control"
         aria-label="resource"
         placeholder="Name of an existing resource"
+        data-cy="link-input"
         [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
