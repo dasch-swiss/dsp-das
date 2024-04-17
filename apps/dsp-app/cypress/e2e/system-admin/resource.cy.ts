@@ -48,7 +48,7 @@ describe('Resource', () => {
     beforeEach(() => {
       po = new AddResourceInstancePage();
     });
-    it('text', () => {
+    it.only('text', () => {
       const initialValue = faker.lorem.word();
       const editedValue = faker.lorem.word();
 
