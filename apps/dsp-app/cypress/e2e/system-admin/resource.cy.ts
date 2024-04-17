@@ -260,5 +260,7 @@ describe('Resource', () => {
           po.delete();
         });
     });
+
+    it.only('link', () => {});
   });
 });
