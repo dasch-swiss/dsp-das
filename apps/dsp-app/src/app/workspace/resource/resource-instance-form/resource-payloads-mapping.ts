@@ -171,10 +171,10 @@ export const propertiesTypeMapping = new Map<
           start: new FormControl(value?.start, Validators.required),
           end: new FormControl(value?.end, Validators.required),
         }),
-      mapping: (value: { start: number; end: number }) => {
+      mapping: (value: { start: string; end: string }) => {
         const newIntervalValue = new CreateIntervalValue();
-        newIntervalValue.start = value.start;
-        newIntervalValue.end = value.end;
+        newIntervalValue.start = parseFloat(value.start);
+        newIntervalValue.end = parseFloat(value.end);
         return newIntervalValue;
       },
       updateMapping: (id: string, value: { start: number; end: number }) => {

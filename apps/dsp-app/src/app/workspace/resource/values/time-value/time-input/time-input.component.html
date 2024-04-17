@@ -24,6 +24,7 @@
         aria-label="Time"
         (input)="_handleInput()"
         [placeholder]="timeLabel"
+        data-cy="time-input"
         [errorStateMatcher]="matcher" />
       <mat-error *ngIf="form.controls.time.hasError('required')">
         A time value in precision HH:MM is <strong>required</strong>.

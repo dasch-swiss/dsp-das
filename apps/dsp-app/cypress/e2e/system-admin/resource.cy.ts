@@ -71,6 +71,8 @@ describe('Resource', () => {
       po.delete();
     });
 
+    it('rich text BUGS');
+
     it('number', () => {
       const intInput = () => cy.get('[data-cy=int-input]');
       const initialValue = faker.number.int({ min: 0, max: 100 });
@@ -300,7 +302,7 @@ describe('Resource', () => {
           po.delete();
         });
     });
-    it.only('date', () => {
+    it('date', () => {
       createHTTP(ResourceCreationPayloads.date(finalLastModificationDate));
       po.visitAddPage();
 
@@ -314,6 +316,51 @@ describe('Resource', () => {
       // edit
       po.setupEdit();
       cy.get('.date-form-grid > .mat-mdc-tooltip-trigger > .mat-mdc-button-touch-target').click();
+      po.saveEdit();
+
+      // delete
+      po.delete();
+    });
+
+    it('timestamp BUGS', () => {
+      createHTTP(ResourceCreationPayloads.timestamp(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+      cy.get('.mat-datepicker-toggle > .mdc-icon-button > .mat-mdc-button-touch-target').click();
+      cy.get(':nth-child(4) > [data-mat-col="3"] > .mat-calendar-body-cell > .mat-calendar-body-cell-content').type(
+        '{enter}'
+      );
+      cy.get('[data-cy=time-input]').clear().type('00:00');
+      po.addSubmit();
+
+      // edit
+      po.setupEdit();
+      cy.get('[data-cy=time-input]').clear().type('09:40');
+      po.saveEdit();
+
+      // delete
+      po.delete();
+    });
+
+    it('time sequence', () => {
+      createHTTP(ResourceCreationPayloads.timesequence(finalLastModificationDate));
+      po.visitAddPage();
+      const start = () => cy.get('[data-cy=start-input] input');
+      const end = () => cy.get('[data-cy=end-input] input');
+
+      const randomFloat = () => faker.number.float({ min: 0, max: 10, precision: 2 }).toString();
+      // create
+      po.addInitialLabel();
+      start().type(randomFloat());
+      end().type(randomFloat());
+      po.addSubmit();
+
+      // edit
+      po.setupEdit();
+      start().clear().type(randomFloat());
+      end().clear().type(randomFloat());
       po.saveEdit();
 
       // delete
