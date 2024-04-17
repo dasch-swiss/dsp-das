@@ -116,6 +116,52 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   attachedToProjectResource = '';
 
+  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
+    takeWhile(attachedProjects => this.resource !== undefined && attachedProjects[this.resource.res.id] !== undefined),
+    takeUntil(this.ngUnsubscribe),
+    map(attachedProjects =>
+      attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
+    )
+  );
+
+  resourceAttachedUser: ReadUser;
+
+  notification = this._notification;
+
+  get userCanEdit(): boolean {
+    if (!this.resource.res) {
+      return false;
+    }
+
+    const allPermissions = PermissionUtil.allUserPermissions(
+      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
+    );
+    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
+  }
+
+  isAdmin$: Observable<boolean> = combineLatest([
+    this._store.select(UserSelectors.user),
+    this._store.select(UserSelectors.userProjectAdminGroups),
+  ]).pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(([user, userProjectGroups]) => {
+      return this.attachedToProjectResource
+        ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
+        : false;
+    })
+  );
+
+  isEditor$: Observable<boolean> = combineLatest([
+    this._store.select(UserSelectors.user),
+    this._store.select(UserSelectors.userProjectAdminGroups),
+  ]).pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(([user, userProjectGroups]) => {
+      return this.attachedToProjectResource
+        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
+        : false;
+    })
+  );
   get isAdmin$(): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this.ngUnsubscribe),
@@ -130,6 +176,10 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   @Select(UserSelectors.user) user$: Observable<ReadUser>;
   @Select(UserSelectors.userProjectAdminGroups)
   userProjectAdminGroups$: Observable<string[]>;
+
+  get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
+    return this.resource.res.entityInfo.classes[this.resource.res.type];
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
