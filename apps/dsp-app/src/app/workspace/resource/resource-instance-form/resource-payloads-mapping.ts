@@ -55,7 +55,7 @@ export const propertiesTypeMapping = new Map<
   [
     Constants.IntValue,
     {
-      control: (value?: ReadIntValue) => new FormControl(value?.int ?? 0),
+      control: (value?: ReadIntValue) => new FormControl(value?.int),
       mapping: (value: number) => {
         const newIntValue = new CreateIntValue();
         newIntValue.int = value;

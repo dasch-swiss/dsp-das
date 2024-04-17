@@ -21,6 +21,9 @@ import { NuListService } from './nu-list.service';
       <app-base-switch [control]="item" [displayMode]="displayMode">
         <mat-form-field style="width: 100%">
           <input matInput [formControl]="item" type="number" data-cy="int-input" />
+          <mat-error *ngIf="item.errors as errors">
+            {{ errors | humanReadableError }}
+          </mat-error>
         </mat-form-field>
       </app-base-switch>
     </ng-template>

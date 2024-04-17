@@ -17,6 +17,9 @@ import { filter, switchMap } from 'rxjs/operators';
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
       <mat-option *ngFor="let place of places" [value]="place.id"> {{ place?.displayName }}</mat-option>
     </mat-autocomplete>
+    <mat-error *ngIf="control.errors as errors">
+      {{ errors | humanReadableError }}
+    </mat-error>
   </mat-form-field>`,
 })
 export class GeonameValue2Component implements OnInit {

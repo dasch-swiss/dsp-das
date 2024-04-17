@@ -365,10 +365,13 @@ describe('Resource', () => {
     });
   });
 
-  describe.only('can not add an empty value when it is required', () => {
+  describe('can not add an empty value when it is required', () => {
     const types = new Map<string, any>([
       ['text', () => ResourceCreationPayloads.textShort(finalLastModificationDate)],
       ['number', () => ResourceCreationPayloads.number(finalLastModificationDate)],
+      ['place', () => ResourceCreationPayloads.place(finalLastModificationDate)],
+      ['time sequence', () => ResourceCreationPayloads.timesequence(finalLastModificationDate)],
+      ['link', () => ResourceCreationPayloads.link(finalLastModificationDate)],
     ]);
 
     types.forEach((value, name) => {
