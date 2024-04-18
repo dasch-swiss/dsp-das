@@ -26,13 +26,13 @@ import { PropertyValueService } from './property-value.service';
     style="position: relative; min-height: 40px; width: 100%"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
-    <app-nu-list-action-bubble
+    <app-property-value-action-bubble
       [editMode]="!displayMode"
       *ngIf="!propertyValueService.keepEditMode && showBubble"
       [date]="propertyValueService._editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
       (editAction)="propertyValueService.toggleOpenedValue(index)"
-      (deleteAction)="askToDelete()"></app-nu-list-action-bubble>
+      (deleteAction)="askToDelete()"></app-property-value-action-bubble>
 
     <div style="display: flex">
       <div style="flex: 1">

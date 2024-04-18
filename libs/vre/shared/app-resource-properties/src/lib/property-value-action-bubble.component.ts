@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
-  selector: 'app-nu-list-action-bubble',
+  selector: 'app-property-value-action-bubble',
   template: `
     <div class="action-bubble">
       <div class="button-container d-flex">
@@ -45,9 +45,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       transition(':leave', animate(150, style({ opacity: 0 }))),
     ]),
   ],
-  styleUrls: ['./nu-list-action-bubble.component.scss'],
+  styleUrls: ['./property-value-action-bubble.component.scss'],
 })
-export class NuListActionBubbleComponent {
+export class PropertyValueActionBubble {
   @Input() editMode!: boolean;
   @Input() showDelete!: boolean;
   @Input() date!: string;

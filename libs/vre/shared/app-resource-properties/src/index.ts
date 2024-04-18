@@ -6,7 +6,7 @@ export * from './lib/value-components/nested-menu.component';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/property-values.component';
 export * from './lib/existing-property-value.component';
-export * from './lib/nu-list-action-bubble.component';
+export * from './lib/property-value-action-bubble.component';
 export * from './lib/property-value.component';
 export * from './lib/switch-components/base-switch.component';
 export * from './lib/switch-components/time-switch.component';
