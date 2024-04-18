@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+// @ts-ignore
+import * as Editor from 'ckeditor5-custom-build';
+import { ckEditor } from '../ck-editor';
 
 @Component({
   selector: 'app-rich-text-value',
@@ -7,7 +10,7 @@ import { Component } from '@angular/core';
   `,
 })
 export class RichTextValueComponent {
-  editorConfig = {};
-  editor = {};
+  editorConfig = ckEditor.config;
+  editor = Editor;
   onChange = () => {};
 }
