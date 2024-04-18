@@ -113,7 +113,26 @@ export const propertiesTypeMapping = new Map<
       mapping: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
         newTextValue.text = value;
-        console.log(newTextValue, 'a');
+        console.log(newTextValue, 'text value as string');
+        return newTextValue;
+      },
+      updateMapping: (id: string, value: string) => {
+        const newTextValue = new UpdateTextValueAsString();
+        newTextValue.id = id;
+        newTextValue.text = value;
+        return newTextValue;
+      },
+    },
+  ],
+  [
+    Constants.TextValueAsXml, // TODO
+    {
+      control: (value?: ReadTextValue) => new FormControl(value?.strval),
+
+      mapping: (value: string) => {
+        const newTextValue = new CreateTextValueAsString();
+        newTextValue.text = value;
+        console.log(newTextValue, 'text value as xml');
         return newTextValue;
       },
       updateMapping: (id: string, value: string) => {

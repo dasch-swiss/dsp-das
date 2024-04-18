@@ -13,6 +13,7 @@ import { LinkSwitchComponent } from './switch-components/link-switch.component';
 import { ListSwitchComponent } from './switch-components/list-switch.component';
 import { RichTextSwitchComponent } from './switch-components/rich-text-switch.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
+import { TextTypesSelectorComponent } from './switch-components/text-types-selector.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { GeonameValueComponent } from './value-components/geoname-value.component';
@@ -46,6 +47,7 @@ const switchComponents = [
 export const ResourcePropertiesComponents = [
   ...switchComponents,
   ...valueComponents,
+  TextTypesSelectorComponent,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
   PropertyValueSwitcherComponent,
