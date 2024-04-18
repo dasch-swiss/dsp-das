@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,8 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from '@dasch
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
-import { filter, switchMap } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
@@ -22,13 +23,19 @@ import { LinkValueDataService } from './link-value-data.service';
   template: `
     <mat-form-field style="width: 100%">
       <input
+        #input
         matInput
         [formControl]="control"
         aria-label="resource"
         placeholder="Name of an existing resource"
         data-cy="link-input"
+        (input)="search()"
         [matAutocomplete]="auto" />
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        requireSelection
+        [displayWith]="displayResource.bind(this)"
+        (closed)="onClose()">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <mat-option
           *ngFor="let rc of _linkValueDataService.resourceClasses"
@@ -43,14 +50,18 @@ import { LinkValueDataService } from './link-value-data.service';
   `,
   providers: [LinkValueDataService],
 })
-export class LinkValueComponent implements OnInit {
+export class LinkValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control: FormControl<string>;
   @Input() propIri: string;
   @Input({ required: true }) resourceClassIri!: string;
 
   @ViewChild(MatAutocompleteTrigger) autoComplete: MatAutocompleteTrigger;
+  @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
   resources: ReadResource[] = [];
+
+  readResource: ReadResource | undefined;
+  subscription: Subscription | undefined;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -66,11 +77,21 @@ export class LinkValueComponent implements OnInit {
     this._getResourceProperties();
   }
 
-  private _setupControl(readResource: ReadResource) {
-    this.control.valueChanges
+  onClose() {
+    console.log('on close');
+    const text = this.input.nativeElement.value.toLowerCase();
+    if (text !== this.displayResource(this.control.value)) {
+      this.input.nativeElement.value = '';
+    }
+  }
+
+  search() {
+    const text = this.input.nativeElement.value.toLowerCase();
+    const readResource = this.readResource as ReadResource;
+    this.subscription = of(text)
       .pipe(
+        tap(v => console.log('value changes', v)),
         filter(searchTerm => searchTerm?.length >= 3),
-        filter(searchTerm => !searchTerm.startsWith('http')),
         switchMap((searchTerm: string) =>
           this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, 0, {
             limitToResourceClass: this._getRestrictToResourceClass(readResource),
@@ -131,7 +152,11 @@ export class LinkValueComponent implements OnInit {
         readResource.entityInfo = onto;
 
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
-        this._setupControl(readResource);
+        this.readResource = readResource;
       });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 }
