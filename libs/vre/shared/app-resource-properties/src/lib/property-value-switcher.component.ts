@@ -88,7 +88,8 @@ import { PropertyValueService } from './property-value.service';
         [control]="item"
         [displayMode]="displayMode"
         [propIri]="propertyDefinition.id"
-        [values]="editModeData?.values"></app-link-switch>
+        [values]="editModeData?.values"
+        [resourceClassIri]="resourceClassIri"></app-link-switch>
     </ng-template>
 
     <ng-template #uriTpl let-item="item" let-displayMode="displayMode">
@@ -111,7 +112,7 @@ export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
-  @Input({ required: true }) resClassIri!: string;
+  @Input({ required: true }) resourceClassIri!: string;
 
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;

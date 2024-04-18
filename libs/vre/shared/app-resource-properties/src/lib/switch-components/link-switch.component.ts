@@ -9,7 +9,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       ><a [href]="control.value">{{ value }}</a>
     </ng-container>
     <ng-template #editMode>
-      <app-link-value [control]="control" [propIri]="propIri"></app-link-value>
+      <app-link-value [control]="control" [propIri]="propIri" [resourceClassIri]="resourceClassIri"></app-link-value>
     </ng-template>`,
 })
 export class LinkSwitchComponent implements IsSwitchComponent {
@@ -17,6 +17,7 @@ export class LinkSwitchComponent implements IsSwitchComponent {
   @Input() displayMode = true;
   @Input() propIri!: string;
   @Input() values: ReadValue[] | undefined;
+  @Input({ required: true }) resourceClassIri!: string;
 
   get value() {
     return (this.values as ReadValue[])[0].strval;

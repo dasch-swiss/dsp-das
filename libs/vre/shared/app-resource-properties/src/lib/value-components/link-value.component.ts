@@ -2,7 +2,13 @@ import { ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadProject, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import {
+  KnoraApiConnection,
+  ReadProject,
+  ReadResource,
+  ReadResourceSequence,
+  ResourceClassAndPropertyDefinitions,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -40,6 +46,7 @@ import { LinkValueDataService } from './link-value-data.service';
 export class LinkValueComponent implements OnInit {
   @Input({ required: true }) control: FormControl<string>;
   @Input() propIri: string;
+  @Input({ required: true }) resourceClassIri!: string;
 
   @ViewChild(MatAutocompleteTrigger) autoComplete: MatAutocompleteTrigger;
 
@@ -71,11 +78,7 @@ export class LinkValueComponent implements OnInit {
         this._cd.detectChanges();
       });
 
-    this._linkValueDataService.onInit(
-      this._tempLinkValueService.currentOntoIri,
-      this._tempLinkValueService.parentResource,
-      this.propIri
-    );
+    this._getResourceProperties();
   }
 
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
@@ -114,5 +117,18 @@ export class LinkValueComponent implements OnInit {
   displayResource(resId: string | null): string {
     if (!this.resources || resId === null) return '';
     return this.resources.find(res => res.id === resId)?.label ?? '';
+  }
+
+  private _getResourceProperties() {
+    const ontologyIri = this.resourceClassIri.split('#')[0];
+    this._dspApiConnection.v2.ontologyCache
+      .reloadCachedItem(ontologyIri)
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
+      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+        const readResource = new ReadResource();
+        readResource.entityInfo = onto;
+
+        this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
+      });
   }
 }

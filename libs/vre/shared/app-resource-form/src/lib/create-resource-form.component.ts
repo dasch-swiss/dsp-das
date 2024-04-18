@@ -50,7 +50,8 @@ import { switchMap, take } from 'rxjs/operators';
               [propertyDefinition]="prop.propertyDefinition"
               [property]="prop"
               [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
-              [cardinality]="prop.cardinality"></app-property-value-switcher>
+              [cardinality]="prop.cardinality"
+              [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
           </div>
         </ng-container>
       </div>

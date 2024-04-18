@@ -15,7 +15,7 @@ import { FormValueArray } from './form-value-array.type';
       [property]="prop.guiDef"
       [cardinality]="prop.guiDef.cardinality"
       [formArray]="formArray"
-      [resClassIri]="resClassIri"
+      [resourceClassIri]="resClassIri"
       [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
