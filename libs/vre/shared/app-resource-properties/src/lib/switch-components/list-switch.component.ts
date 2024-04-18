@@ -4,7 +4,7 @@ import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@das
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-list-switch',
@@ -17,7 +17,7 @@ import { SwitchComponent } from './switch-component.interface';
     </ng-template>
   `,
 })
-export class ListSwitchComponent implements SwitchComponent, OnInit {
+export class ListSwitchComponent implements IsSwitchComponent, OnInit {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
   @Input() propertyDef!: ResourcePropertyDefinition;

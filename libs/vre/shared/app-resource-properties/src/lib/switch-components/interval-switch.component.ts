@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-interval-switch',
@@ -20,7 +20,7 @@ import { SwitchComponent } from './switch-component.interface';
     </ng-template>
   `,
 })
-export class IntervalSwitchComponent implements SwitchComponent {
+export class IntervalSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormGroup<{ start: FormControl<number>; end: FormControl<number> }>;
   @Input() displayMode = true;
 }

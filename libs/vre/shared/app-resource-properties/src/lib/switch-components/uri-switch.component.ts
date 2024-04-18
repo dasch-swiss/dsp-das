@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-uri-switch',
@@ -14,7 +14,7 @@ import { SwitchComponent } from './switch-component.interface';
     </ng-template>
   `,
 })
-export class UriSwitchComponent implements SwitchComponent {
+export class UriSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
 

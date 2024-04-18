@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-time-switch',
@@ -11,7 +11,7 @@ import { SwitchComponent } from './switch-component.interface';
       <app-time-input [formControl]="control"></app-time-input>
     </ng-template>`,
 })
-export class TimeSwitchComponent implements SwitchComponent {
+export class TimeSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<{ date: any; time: any }>;
   @Input() displayMode = true;
 }

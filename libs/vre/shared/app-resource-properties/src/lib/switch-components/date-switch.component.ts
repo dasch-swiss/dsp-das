@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-date-switch',
@@ -20,7 +20,7 @@ import { SwitchComponent } from './switch-component.interface';
     </ng-template>
   `,
 })
-export class DateSwitchComponent implements SwitchComponent {
+export class DateSwitchComponent implements IsSwitchComponent {
   get start() {
     return (this.control.value as KnoraPeriod).start;
   }

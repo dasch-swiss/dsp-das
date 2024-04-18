@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ReadValue } from '@dasch-swiss/dsp-js';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-link-switch',
@@ -12,7 +12,7 @@ import { SwitchComponent } from './switch-component.interface';
       <app-link-value [control]="control" [propIri]="propIri"></app-link-value>
     </ng-template>`,
 })
-export class LinkSwitchComponent implements SwitchComponent {
+export class LinkSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
   @Input() propIri!: string;

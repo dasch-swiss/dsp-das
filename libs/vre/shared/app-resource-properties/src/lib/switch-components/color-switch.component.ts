@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-color-switch',
@@ -32,7 +32,7 @@ import { SwitchComponent } from './switch-component.interface';
   `,
   styles: [':host { z-index: 1}'], // for color picker popup z-index
 })
-export class ColorSwitchComponent implements SwitchComponent {
+export class ColorSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
 }

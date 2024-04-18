@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DisplayPlace, GeonameService } from '@dsp-app/src/app/workspace/resource/services/geoname.service';
 import { Observable } from 'rxjs';
-import { SwitchComponent } from './switch-component.interface';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-geoname-switch',
@@ -15,7 +15,7 @@ import { SwitchComponent } from './switch-component.interface';
       <app-geoname-value [control]="control"></app-geoname-value>
     </ng-template>`,
 })
-export class GeonameSwitchComponent implements SwitchComponent, OnInit {
+export class GeonameSwitchComponent implements IsSwitchComponent, OnInit {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
 
