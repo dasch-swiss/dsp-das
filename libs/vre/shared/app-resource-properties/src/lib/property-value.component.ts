@@ -17,7 +17,7 @@ import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resou
 import { Subscription } from 'rxjs';
 import { finalize, startWith, take } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
-import { NuListService } from './nu-list.service';
+import { PropertyValueService } from './property-value.service';
 
 @Component({
   selector: 'app-property-value',
@@ -28,10 +28,10 @@ import { NuListService } from './nu-list.service';
     (mouseleave)="showBubble = false">
     <app-nu-list-action-bubble
       [editMode]="!displayMode"
-      *ngIf="!nuListService.keepEditMode && showBubble"
-      [date]="nuListService._editModeData?.values[index]?.valueCreationDate"
-      [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(nuListService.cardinality)"
-      (editAction)="nuListService.toggleOpenedValue(index)"
+      *ngIf="!propertyValueService.keepEditMode && showBubble"
+      [date]="propertyValueService._editModeData?.values[index]?.valueCreationDate"
+      [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
+      (editAction)="propertyValueService.toggleOpenedValue(index)"
       (deleteAction)="askToDelete()"></app-nu-list-action-bubble>
 
     <div style="display: flex">
@@ -48,7 +48,7 @@ import { NuListService } from './nu-list.service';
         (click)="onSave()"
         mat-icon-button
         data-cy="save-button"
-        *ngIf="!displayMode && !nuListService.keepEditMode && !loading"
+        *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
         [disabled]="
           (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
           (initialFormValue.comment === null && group.value.comment === '')
@@ -73,11 +73,11 @@ export class PropertyValueComponent implements OnInit {
   subscription!: Subscription;
 
   get group() {
-    return this.nuListService.formArray.at(this.index);
+    return this.propertyValueService.formArray.at(this.index);
   }
 
   constructor(
-    public nuListService: NuListService,
+    public propertyValueService: PropertyValueService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _cdr: ChangeDetectorRef,
@@ -93,7 +93,7 @@ export class PropertyValueComponent implements OnInit {
   }
 
   onSave() {
-    if (this.nuListService.currentlyAdding && this.index === this.nuListService.formArray.length - 1) {
+    if (this.propertyValueService.currentlyAdding && this.index === this.propertyValueService.formArray.length - 1) {
       this._addItem();
     } else {
       this._update();
@@ -122,14 +122,14 @@ export class PropertyValueComponent implements OnInit {
 
     this.loading = true;
     const createVal = propertiesTypeMapping
-      .get(this.nuListService.propertyDefinition.objectType)
+      .get(this.propertyValueService.propertyDefinition.objectType)
       .mapping(this.group.controls.item.value);
 
-    const resource = this.nuListService._editModeData?.resource as ReadResource;
+    const resource = this.propertyValueService._editModeData?.resource as ReadResource;
     const updateRes = new UpdateResource();
     updateRes.id = resource.id;
     updateRes.type = resource.type;
-    updateRes.property = this.nuListService.propertyDefinition.id;
+    updateRes.property = this.propertyValueService.propertyDefinition.id;
     updateRes.value = createVal;
 
     this._dspApiConnection.v2.values
@@ -142,8 +142,8 @@ export class PropertyValueComponent implements OnInit {
       )
       .subscribe(
         () => {
-          this.nuListService.currentlyAdding = false;
-          this.nuListService.toggleOpenedValue(this.index);
+          this.propertyValueService.currentlyAdding = false;
+          this.propertyValueService.toggleOpenedValue(this.index);
           this._cdr.detectChanges();
         },
         (e: ApiResponseError) => {
@@ -157,14 +157,14 @@ export class PropertyValueComponent implements OnInit {
   }
 
   private _setupDisplayMode() {
-    if (this.nuListService.keepEditMode) {
+    if (this.propertyValueService.keepEditMode) {
       this.displayMode = false;
       return;
     }
-    this.nuListService.lastOpenedItem$.subscribe(value => {
-      if (this.nuListService.currentlyAdding && this.displayMode === false) {
-        this.nuListService.formArray.removeAt(this.nuListService.formArray.length - 1);
-        this.nuListService.currentlyAdding = false;
+    this.propertyValueService.lastOpenedItem$.subscribe(value => {
+      if (this.propertyValueService.currentlyAdding && this.displayMode === false) {
+        this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
+        this.propertyValueService.currentlyAdding = false;
         return;
       }
 
@@ -186,17 +186,17 @@ export class PropertyValueComponent implements OnInit {
         })
       )
       .subscribe((res: WriteValueResponse) => {
-        this.nuListService.toggleOpenedValue(this.index);
+        this.propertyValueService.toggleOpenedValue(this.index);
         this._cdr.detectChanges();
       });
   }
 
   private _getUpdatedValue(index: number) {
-    const group = this.nuListService.formArray.at(index);
-    const values = this.nuListService._editModeData?.values as ReadValue[];
+    const group = this.propertyValueService.formArray.at(index);
+    const values = this.propertyValueService._editModeData?.values as ReadValue[];
     const id = values[index].id;
     const entity = propertiesTypeMapping
-      .get(this.nuListService.propertyDefinition.objectType)
+      .get(this.propertyValueService.propertyDefinition.objectType)
       .updateMapping(id, group.controls.item.value);
     if (group.controls.comment.value) {
       entity.valueHasComment = group.controls.comment.value;
@@ -206,7 +206,7 @@ export class PropertyValueComponent implements OnInit {
 
   private _getPayload(index: number) {
     const updateResource = new UpdateResource<UpdateValue>();
-    const { resource, values } = this.nuListService._editModeData as {
+    const { resource, values } = this.propertyValueService._editModeData as {
       resource: ReadResource;
       values: ReadValue[];
     };

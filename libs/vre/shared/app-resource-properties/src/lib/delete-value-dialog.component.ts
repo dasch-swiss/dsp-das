@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { NuListService } from './nu-list.service';
+import { PropertyValueService } from './property-value.service';
 
 export interface DeleteValueDialogProps {
   index: number;
@@ -13,7 +13,7 @@ export interface DeleteValueDialogProps {
   template: `
     <app-dialog-header
       [title]="
-        'Are you sure you want to delete this value from ' + nuListService.propertyDefinition.label + '?'
+        'Are you sure you want to delete this value from ' + propertyValueService.propertyDefinition.label + '?'
       "></app-dialog-header>
     <div mat-dialog-content>
       You can leave a comment to explain your choice.
@@ -51,7 +51,7 @@ export class DeleteValueDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: DeleteValueDialogProps,
     public dialogRef: MatDialogRef<DeleteValueDialogComponent, boolean>,
-    public nuListService: NuListService
+    public propertyValueService: PropertyValueService
   ) {}
 
   ngOnInit() {
@@ -63,9 +63,9 @@ export class DeleteValueDialogComponent implements OnInit {
   }
 
   deleteValue() {
-    const resource = this.nuListService._editModeData?.resource as ReadResource;
+    const resource = this.propertyValueService._editModeData?.resource as ReadResource;
 
-    const value = this.nuListService._editModeData?.values[this.data.index] as unknown as ReadResource;
+    const value = this.propertyValueService._editModeData?.values[this.data.index] as unknown as ReadResource;
     const deleteVal = new DeleteValue();
     deleteVal.id = value.id;
     deleteVal.type = value.type;
@@ -74,7 +74,7 @@ export class DeleteValueDialogComponent implements OnInit {
     const updateRes = new UpdateResource();
     updateRes.type = resource.type;
     updateRes.id = resource.id;
-    updateRes.property = this.nuListService.propertyDefinition.id;
+    updateRes.property = this.propertyValueService.propertyDefinition.id;
     updateRes.value = deleteVal;
 
     console.log('in app', updateRes);

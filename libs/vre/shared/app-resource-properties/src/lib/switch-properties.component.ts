@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import {
   Cardinality,
@@ -9,11 +9,11 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { FormValueArray } from './form-value-array.type';
-import { NuListService } from './nu-list.service';
+import { PropertyValueService } from './property-value.service';
 
 @Component({
   selector: 'app-switch-properties',
-  providers: [NuListService],
+  providers: [PropertyValueService],
   template: `
     <app-property-values [itemTpl]="itemTpl"></app-property-values>
 
@@ -130,16 +130,13 @@ export class SwitchPropertiesComponent implements OnInit, AfterViewInit {
     return this.propertyDefinition as ResourcePropertyDefinition;
   }
 
-  constructor(
-    private _cd: ChangeDetectorRef,
-    private _nuListService: NuListService
-  ) {}
+  constructor(private _propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
-    this._nuListService._editModeData = this.editModeData;
-    this._nuListService.propertyDefinition = this.propertyDefinition;
-    this._nuListService.formArray = this.formArray;
-    this._nuListService.cardinality = this.cardinality;
+    this._propertyValueService._editModeData = this.editModeData;
+    this._propertyValueService.propertyDefinition = this.propertyDefinition;
+    this._propertyValueService.formArray = this.formArray;
+    this._propertyValueService.cardinality = this.cardinality;
   }
 
   ngAfterViewInit() {

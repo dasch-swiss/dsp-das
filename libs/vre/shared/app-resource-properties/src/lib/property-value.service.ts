@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FormValueArray } from './form-value-array.type';
 
 @Injectable()
-export class NuListService {
+export class PropertyValueService {
   _editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
   propertyDefinition!: PropertyDefinition;
   formArray!: FormValueArray;
