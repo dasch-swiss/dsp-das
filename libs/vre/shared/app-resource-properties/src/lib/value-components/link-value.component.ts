@@ -12,7 +12,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { of, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
@@ -35,7 +34,7 @@ import { LinkValueDataService } from './link-value-data.service';
         #auto="matAutocomplete"
         requireSelection
         [displayWith]="displayResource.bind(this)"
-        (closed)="onClose()">
+        (closed)="handleNonSelectedValues()">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <mat-option
           *ngFor="let rc of _linkValueDataService.resourceClasses"
@@ -51,12 +50,12 @@ import { LinkValueDataService } from './link-value-data.service';
   providers: [LinkValueDataService],
 })
 export class LinkValueComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) control: FormControl<string>;
-  @Input() propIri: string;
+  @Input({ required: true }) control!: FormControl<string>;
+  @Input({ required: true }) propIri!: string;
   @Input({ required: true }) resourceClassIri!: string;
 
-  @ViewChild(MatAutocompleteTrigger) autoComplete: MatAutocompleteTrigger;
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocompleteTrigger) autoComplete!: MatAutocompleteTrigger;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   resources: ReadResource[] = [];
 
@@ -66,7 +65,6 @@ export class LinkValueComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _tempLinkValueService: TempLinkValueService,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef,
     public _linkValueDataService: LinkValueDataService,
@@ -77,18 +75,16 @@ export class LinkValueComponent implements OnInit, OnDestroy {
     this._getResourceProperties();
   }
 
-  onClose() {
-    console.log('on close');
-    const text = this.input.nativeElement.value.toLowerCase();
+  handleNonSelectedValues() {
+    const text = this._getTextInput();
     if (text !== this.displayResource(this.control.value)) {
       this.input.nativeElement.value = '';
     }
   }
 
   search() {
-    const text = this.input.nativeElement.value.toLowerCase();
     const readResource = this.readResource as ReadResource;
-    this.subscription = of(text)
+    this.subscription = of(this._getTextInput())
       .pipe(
         tap(v => console.log('value changes', v)),
         filter(searchTerm => searchTerm?.length >= 3),
@@ -154,6 +150,10 @@ export class LinkValueComponent implements OnInit, OnDestroy {
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.readResource = readResource;
       });
+  }
+
+  private _getTextInput() {
+    return this.input.nativeElement.value;
   }
 
   ngOnDestroy() {
