@@ -1,9 +1,9 @@
 import { CreateResourceDialogComponent } from './create-resource-dialog.component';
 import { CreateResourceFormComponent } from './create-resource-form.component';
-import { CreateRessourcePageComponent } from './create-ressource-page.component';
+import { CreateResourcePageComponent } from './create-resource-page.component';
 
 export const ResourceFormComponents = [
   CreateResourceDialogComponent,
-  CreateRessourcePageComponent,
+  CreateResourcePageComponent,
   CreateResourceFormComponent,
 ];

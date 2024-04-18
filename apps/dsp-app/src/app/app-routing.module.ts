@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { CreateRessourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-form';
+import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-form';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { HelpComponent } from './main/help/help.component';
@@ -76,7 +76,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.OntologyClassAddRelative,
-        component: CreateRessourcePageComponent,
+        component: CreateResourcePageComponent,
       },
       {
         path: RouteConstants.JulienOntologyClassRelative,

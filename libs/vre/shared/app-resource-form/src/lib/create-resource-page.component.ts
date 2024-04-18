@@ -11,7 +11,7 @@ import { combineLatest } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-create-ressource-page',
+  selector: 'app-create-resource-page',
   template: ` <app-create-resource-form
     *ngIf="classIri$ | async as classIri"
     [resourceType]="(resClass$ | async)?.label"
@@ -19,7 +19,7 @@ import { filter, map } from 'rxjs/operators';
     [projectIri]="projectIri"
     (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
 })
-export class CreateRessourcePageComponent {
+export class CreateResourcePageComponent {
   projectOntologies$ = this._store.select(OntologiesSelectors.projectOntologies);
   project$ = this._store.select(ProjectsSelectors.currentProject);
   projectUuid = this._route.snapshot.params.uuid ?? this._route.parent.snapshot.params.uuid;
