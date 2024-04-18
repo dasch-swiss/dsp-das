@@ -39,6 +39,7 @@ import {
   UpdateLinkValue,
   UpdateListValue,
   UpdateTextValueAsString,
+  UpdateTextValueAsXml,
   UpdateTimeValue,
   UpdateUriValue,
   UpdateValue,
@@ -52,7 +53,7 @@ export const propertiesTypeMapping = new Map<
   {
     control: (value?: ReadValue) => AbstractControl;
     mapping: (value: any, propertyDefinition?: ResourcePropertyDefinition) => CreateValue;
-    updateMapping: (id: string, value: any) => UpdateValue;
+    updateMapping: (id: string, value: any, propertyDefinition?: ResourcePropertyDefinition) => UpdateValue;
   }
 >([
   [
@@ -126,11 +127,20 @@ export const propertiesTypeMapping = new Map<
             return newTextValueXml;
         }
       },
-      updateMapping: (id: string, value: string) => {
-        const newTextValue = new UpdateTextValueAsString();
-        newTextValue.id = id;
-        newTextValue.text = value;
-        return newTextValue;
+      updateMapping: (id: string, value: string, propertyDefinition: ResourcePropertyDefinition) => {
+        switch (propertyDefinition.guiElement) {
+          case Constants.GuiSimpleText:
+            const newTextValue = new UpdateTextValueAsString();
+            newTextValue.id = id;
+            newTextValue.text = value;
+            return newTextValue;
+          case Constants.GuiRichText:
+            const newTextValueXml = new UpdateTextValueAsXml();
+            newTextValueXml.id = id;
+            newTextValueXml.xml = handleXML(value, false);
+            newTextValueXml.mapping = Constants.StandardMapping;
+            return newTextValueXml;
+        }
       },
     },
   ],

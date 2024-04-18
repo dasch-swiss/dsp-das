@@ -213,6 +213,7 @@ export class CreateResourceFormComponent implements OnInit {
     const foundProperty = this.properties.find(property => property.propertyIndex === iri);
     if (!foundProperty) throw new Error(`Property ${iri} not found`);
     const propertyDefinition = foundProperty.propertyDefinition as ResourcePropertyDefinition;
+
     const controls = this.form.controls.properties.controls[iri].controls;
     return controls
       .filter(group => group.value.item !== null)
