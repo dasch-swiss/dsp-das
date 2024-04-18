@@ -13,7 +13,7 @@ import { SwitchComponent } from './switch-component.interface';
       {{ label$ | async }}
     </ng-container>
     <ng-template #editMode>
-      <app-list-value-2 [control]="control" [propertyDef]="propertyDef"></app-list-value-2>
+      <app-list-value [control]="control" [propertyDef]="propertyDef"></app-list-value>
     </ng-template>
   `,
 })
@@ -23,6 +23,7 @@ export class ListSwitchComponent implements SwitchComponent, OnInit {
   @Input() propertyDef!: ResourcePropertyDefinition;
 
   label$!: Observable<string>;
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection

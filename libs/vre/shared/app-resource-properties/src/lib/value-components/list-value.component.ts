@@ -4,7 +4,7 @@ import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@das
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 @Component({
-  selector: 'app-list-value-2',
+  selector: 'app-list-value',
   template: `
     <div>
       <app-nested-menu
@@ -19,7 +19,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
   `,
   styles: [':host {display: flex; align-items: center}'],
 })
-export class ListValue2Component implements OnInit {
+export class ListValueComponent implements OnInit {
   @Input() propertyDef: ResourcePropertyDefinition;
   @Input() control: FormControl<string>;
   listRootNode: ListNodeV2;

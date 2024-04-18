@@ -16,10 +16,10 @@ import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchPropertiesComponent } from './switch-properties.component';
 import { GeonameValueComponent } from './value-components/geoname-value.component';
 import { LinkValueComponent } from './value-components/link-value.component';
-import { ListValue2Component } from './value-components/list-value-2.component';
+import { ListValueComponent } from './value-components/list-value.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
 
-const valueComponents = [GeonameValueComponent, LinkValueComponent, ListValue2Component, NestedMenuComponent];
+const valueComponents = [GeonameValueComponent, LinkValueComponent, ListValueComponent, NestedMenuComponent];
 
 const switchComponents = [
   TimeSwitchComponent,
