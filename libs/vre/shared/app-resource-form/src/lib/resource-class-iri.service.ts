@@ -6,7 +6,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { filter, map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ResourceClassIriService {
   project$ = this._store.select(ProjectsSelectors.currentProject);
 

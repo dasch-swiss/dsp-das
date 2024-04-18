@@ -18,6 +18,7 @@ import { ResourceClassIriService } from './resource-class-iri.service';
     [resourceClassIri]="classIri"
     [projectIri]="projectIri"
     (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
+  providers: [ResourceClassIriService],
 })
 export class CreateResourcePageComponent {
   projectOntologies$ = this._store.select(OntologiesSelectors.projectOntologies);

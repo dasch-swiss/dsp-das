@@ -18,6 +18,7 @@ import { FormValueArray } from './form-value-array.type';
       [resourceClassIri]="resClassIri"
       [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>
   `,
+  providers: [ResourceClassIriService],
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class ExistingPropertyValueComponent implements OnInit {
