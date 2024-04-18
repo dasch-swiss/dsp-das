@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Cardinality, PropertyDefinition, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject } from 'rxjs';
 import { FormValueArray } from './form-value-array.type';
 
 @Injectable()
 export class PropertyValueService {
   _editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
-  propertyDefinition!: PropertyDefinition;
+  propertyDefinition!: ResourcePropertyDefinition;
   formArray!: FormValueArray;
   cardinality!: Cardinality;
   currentlyAdding = false;

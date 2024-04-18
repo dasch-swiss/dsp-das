@@ -10,6 +10,7 @@ import {
   ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinitionWithPropertyDefinition,
+  ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FormValueArray, FormValueGroup } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -209,11 +210,16 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private getValue(iri: string) {
+    const foundProperty = this.properties.find(property => property.propertyIndex === iri);
+    if (!foundProperty) throw new Error(`Property ${iri} not found`);
+    const propertyDefinition = foundProperty.propertyDefinition as ResourcePropertyDefinition;
     const controls = this.form.controls.properties.controls[iri].controls;
     return controls
       .filter(group => group.value.item !== null)
       .map(group => {
-        const entity = propertiesTypeMapping.get(this.mapping.get(iri)).mapping(group.controls.item.value);
+        const entity = propertiesTypeMapping
+          .get(this.mapping.get(iri))
+          .mapping(group.controls.item.value, propertyDefinition);
         if (group.controls.comment.value) {
           entity.valueHasComment = group.controls.comment.value;
         }

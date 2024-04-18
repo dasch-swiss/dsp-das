@@ -115,15 +115,12 @@ export const propertiesTypeMapping = new Map<
 
       mapping: (value: string, propertyDefinition: ResourcePropertyDefinition) => {
         switch (propertyDefinition.guiElement) {
-          case Constants.TextValue:
+          case Constants.GuiSimpleText:
             const newTextValue = new CreateTextValueAsString();
             newTextValue.text = value;
-            console.log(newTextValue, 'text value as string');
             return newTextValue;
-          case Constants.TextValueAsXml:
-            console.log(newTextValue, 'text value as xml');
+          case Constants.GuiRichText:
             const newTextValueXml = new CreateTextValueAsXml();
-
             newTextValueXml.xml = handleXML(value, false);
             newTextValueXml.mapping = Constants.StandardMapping;
             return newTextValueXml;
