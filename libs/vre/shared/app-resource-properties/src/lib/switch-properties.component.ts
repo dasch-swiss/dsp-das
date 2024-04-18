@@ -12,7 +12,7 @@ import { FormValueArray } from './form-value-array.type';
 import { NuListService } from './nu-list.service';
 
 @Component({
-  selector: 'app-switch-properties-3',
+  selector: 'app-switch-properties',
   providers: [NuListService],
   template: `
     <app-nu-list [itemTpl]="itemTpl"></app-nu-list>
@@ -102,7 +102,7 @@ import { NuListService } from './nu-list.service';
     `,
   ],
 })
-export class SwitchProperties3Component implements OnInit, AfterViewInit {
+export class SwitchPropertiesComponent implements OnInit, AfterViewInit {
   @Input() propertyDefinition!: ResourcePropertyDefinition;
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;

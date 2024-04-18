@@ -8,12 +8,12 @@ import { FormValueArray } from './form-value-array.type';
 @Component({
   selector: 'app-display-edit-2',
   template: `
-    <app-switch-properties-3
+    <app-switch-properties
       [propertyDefinition]="prop.propDef"
       [property]="prop.guiDef"
       [cardinality]="prop.guiDef.cardinality"
       [formArray]="formArray"
-      [editModeData]="{ resource, values: prop.values }"></app-switch-properties-3>
+      [editModeData]="{ resource, values: prop.values }"></app-switch-properties>
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })

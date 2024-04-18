@@ -12,7 +12,7 @@ import { ListSwitchComponent } from './switch-components/list-switch.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
-import { SwitchProperties3Component } from './switch-properties-3.component';
+import { SwitchPropertiesComponent } from './switch-properties.component';
 import { ColorSwitchComponent } from './value-components/color-switch.component';
 import { GeonameValue2Component } from './value-components/geoname-value-2.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
@@ -39,7 +39,7 @@ export const ResourcePropertiesComponents = [
   ...valueComponents,
   DeleteValueDialogComponent,
   NuListComponent,
-  SwitchProperties3Component,
+  SwitchPropertiesComponent,
   NuListActionBubbleComponent,
   NuListChildComponent,
   DisplayEdit2Component,

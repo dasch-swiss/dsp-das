@@ -45,11 +45,11 @@ import { switchMap, take } from 'rxjs/operators';
         <ng-container *ngFor="let prop of properties">
           <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propertyDefinition.label }}</div>
           <div>
-            <app-switch-properties-3
+            <app-switch-properties
               [propertyDefinition]="prop.propertyDefinition"
               [property]="prop"
               [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
-              [cardinality]="prop.cardinality"></app-switch-properties-3>
+              [cardinality]="prop.cardinality"></app-switch-properties>
           </div>
         </ng-container>
       </div>
