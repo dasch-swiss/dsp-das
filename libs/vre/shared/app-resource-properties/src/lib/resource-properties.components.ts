@@ -14,12 +14,12 @@ import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchPropertiesComponent } from './switch-properties.component';
-import { GeonameValue2Component } from './value-components/geoname-value-2.component';
+import { GeonameValueComponent } from './value-components/geoname-value.component';
 import { LinkValue2Component } from './value-components/link-value-2.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
 
-const valueComponents = [GeonameValue2Component, LinkValue2Component, ListValue2Component, NestedMenuComponent];
+const valueComponents = [GeonameValueComponent, LinkValue2Component, ListValue2Component, NestedMenuComponent];
 
 const switchComponents = [
   TimeSwitchComponent,

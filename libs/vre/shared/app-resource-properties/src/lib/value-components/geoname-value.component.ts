@@ -4,7 +4,7 @@ import { GeonameService, SearchPlace } from '@dsp-app/src/app/workspace/resource
 import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-geoname-value-2',
+  selector: 'app-geoname-value',
   template: ` <mat-form-field style="width: 100%">
     <input
       matInput
@@ -22,7 +22,7 @@ import { filter, switchMap } from 'rxjs/operators';
     </mat-error>
   </mat-form-field>`,
 })
-export class GeonameValue2Component implements OnInit {
+export class GeonameValueComponent implements OnInit {
   @Input() control: FormControl<string>;
   places: SearchPlace[];
 

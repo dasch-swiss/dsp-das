@@ -11,7 +11,7 @@ export * from './lib/property-value.component';
 export * from './lib/switch-components/base-switch.component';
 export * from './lib/switch-components/time-switch.component';
 export * from './lib/switch-components/uri-switch.component';
-export * from './lib/value-components/geoname-value-2.component';
+export * from './lib/value-components/geoname-value.component';
 export * from './lib/value-components/link-value-2.component';
 export * from './lib/switch-components/geoname-switch.component';
 export * from './lib/switch-components/link-switch.component';

@@ -12,7 +12,7 @@ import { SwitchComponent } from './switch-component.interface';
       }}</a></ng-container
     >
     <ng-template #editMode>
-      <app-geoname-value-2 [control]="control"></app-geoname-value-2>
+      <app-geoname-value [control]="control"></app-geoname-value>
     </ng-template>`,
 })
 export class GeonameSwitchComponent implements SwitchComponent, OnInit {
