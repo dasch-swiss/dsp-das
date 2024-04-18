@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { ResourceClassIriService } from '@dasch-swiss/vre/shared/app-resource-form';
 import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/property-info-values.interface';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { ResourceClassIriService } from '../../../app-resource-form/src/lib/resource-class-iri.service';
 import { FormValueArray } from './form-value-array.type';
 
 @Component({

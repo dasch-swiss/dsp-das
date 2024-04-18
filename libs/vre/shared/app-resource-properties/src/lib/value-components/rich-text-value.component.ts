@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-// @ts-ignore
 import { FormControl } from '@angular/forms';
 import * as Editor from 'ckeditor5-custom-build';
 import { ckEditor } from '../ck-editor';

@@ -47,7 +47,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
-export class PropertyValueActionBubble {
+export class PropertyValueActionBubbleComponent {
   @Input() editMode!: boolean;
   @Input() showDelete!: boolean;
   @Input() date!: string;
