@@ -1,7 +1,7 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
 import { DisplayEdit2Component } from './display-edit-2.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
-import { NuListChildComponent } from './nu-list-child.component';
+import { PropertyValueComponent } from './property-value.component';
 import { PropertyValuesComponent } from './property-values.component';
 import { BaseSwitchComponent } from './switch-components/base-switch.component';
 import { DateSwitchComponent } from './switch-components/date-switch.component';
@@ -41,6 +41,6 @@ export const ResourcePropertiesComponents = [
   PropertyValuesComponent,
   SwitchPropertiesComponent,
   NuListActionBubbleComponent,
-  NuListChildComponent,
+  PropertyValueComponent,
   DisplayEdit2Component,
 ];

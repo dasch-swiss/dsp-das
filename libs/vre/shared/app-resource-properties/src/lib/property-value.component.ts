@@ -20,7 +20,7 @@ import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-val
 import { NuListService } from './nu-list.service';
 
 @Component({
-  selector: 'app-nu-list-child',
+  selector: 'app-property-value',
   template: ` <div
     data-cy="property-value"
     style="position: relative; min-height: 40px; width: 100%"
@@ -59,7 +59,7 @@ import { NuListService } from './nu-list.service';
     </div>
   </div>`,
 })
-export class NuListChildComponent implements OnInit {
+export class PropertyValueComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() index!: number;
   protected readonly Cardinality = Cardinality;

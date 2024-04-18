@@ -7,7 +7,7 @@ import { NuListService } from './nu-list.service';
 @Component({
   selector: 'app-property-values',
   template: ` <div *ngFor="let group of nuListService.formArray.controls; let index = index" style="display: flex">
-      <app-nu-list-child style="width: 100%" [itemTpl]="itemTpl" [index]="index"></app-nu-list-child>
+      <app-property-value style="width: 100%" [itemTpl]="itemTpl" [index]="index"></app-property-value>
     </div>
     <button
       mat-icon-button
