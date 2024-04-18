@@ -11,6 +11,7 @@ import {
   CreateLinkValue,
   CreateListValue,
   CreateTextValueAsString,
+  CreateTextValueAsXml,
   CreateTimeValue,
   CreateUriValue,
   CreateValue,
@@ -27,6 +28,7 @@ import {
   ReadTimeValue,
   ReadUriValue,
   ReadValue,
+  ResourcePropertyDefinition,
   UpdateBooleanValue,
   UpdateColorValue,
   UpdateDateValue,
@@ -41,6 +43,7 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
+import { handleXML } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/handle-xml';
 import { CustomRegex } from '../values/custom-regex';
 import { populateValue } from '../values/date-value/populate-value-method';
 
@@ -48,7 +51,7 @@ export const propertiesTypeMapping = new Map<
   string,
   {
     control: (value?: ReadValue) => AbstractControl;
-    mapping: (value: any) => CreateValue;
+    mapping: (value: any, propertyDefinition?: ResourcePropertyDefinition) => CreateValue;
     updateMapping: (id: string, value: any) => UpdateValue;
   }
 >([
@@ -110,11 +113,21 @@ export const propertiesTypeMapping = new Map<
     {
       control: (value?: ReadTextValue) => new FormControl(value?.strval),
 
-      mapping: (value: string) => {
-        const newTextValue = new CreateTextValueAsString();
-        newTextValue.text = value;
-        console.log(newTextValue, 'text value as string');
-        return newTextValue;
+      mapping: (value: string, propertyDefinition: ResourcePropertyDefinition) => {
+        switch (propertyDefinition.guiElement) {
+          case Constants.TextValue:
+            const newTextValue = new CreateTextValueAsString();
+            newTextValue.text = value;
+            console.log(newTextValue, 'text value as string');
+            return newTextValue;
+          case Constants.TextValueAsXml:
+            console.log(newTextValue, 'text value as xml');
+            const newTextValueXml = new CreateTextValueAsXml();
+
+            newTextValueXml.xml = handleXML(value, false);
+            newTextValueXml.mapping = Constants.StandardMapping;
+            return newTextValueXml;
+        }
       },
       updateMapping: (id: string, value: string) => {
         const newTextValue = new UpdateTextValueAsString();
