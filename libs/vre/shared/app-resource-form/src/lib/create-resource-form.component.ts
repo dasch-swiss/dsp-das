@@ -90,8 +90,8 @@ export class CreateResourceFormComponent implements OnInit {
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
   resourceClass: ResourceClassDefinitionWithPropertyDefinition | undefined;
-  fileRepresentation: FileRepresentationType;
-  properties: IHasPropertyWithPropertyDefinition[];
+  fileRepresentation: FileRepresentationType | undefined;
+  properties: IHasPropertyWithPropertyDefinition[] | undefined;
   loading = false;
 
   mapping = new Map<string, string>();
@@ -118,7 +118,7 @@ export class CreateResourceFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._getResourceProperties(this.resourceClassIri);
+    this._getResourceProperties();
   }
 
   submitData() {
@@ -137,10 +137,10 @@ export class CreateResourceFormComponent implements OnInit {
       });
   }
 
-  private _getResourceProperties(resourceClassIri: string) {
+  private _getResourceProperties() {
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(this.ontologyIri)
-      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this._tempLinkValueService.currentOntoIri = this.ontologyIri;
 
@@ -150,7 +150,7 @@ export class CreateResourceFormComponent implements OnInit {
         readResource.entityInfo = onto;
         this._tempLinkValueService.parentResource = readResource;
 
-        this.resourceClass = onto.classes[resourceClassIri];
+        this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
