@@ -15,7 +15,7 @@ import { NuListService } from './nu-list.service';
   selector: 'app-switch-properties',
   providers: [NuListService],
   template: `
-    <app-nu-list [itemTpl]="itemTpl"></app-nu-list>
+    <app-property-values [itemTpl]="itemTpl"></app-property-values>
 
     <ng-template #intTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">

@@ -5,7 +5,7 @@ import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resou
 import { NuListService } from './nu-list.service';
 
 @Component({
-  selector: 'app-nu-list',
+  selector: 'app-property-values',
   template: ` <div *ngFor="let group of nuListService.formArray.controls; let index = index" style="display: flex">
       <app-nu-list-child style="width: 100%" [itemTpl]="itemTpl" [index]="index"></app-nu-list-child>
     </div>
@@ -20,7 +20,7 @@ import { NuListService } from './nu-list.service';
       <mat-icon>add_box</mat-icon>
     </button>`,
 })
-export class NuListComponent implements OnInit {
+export class PropertyValuesComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
 
   protected readonly Cardinality = Cardinality;

@@ -4,7 +4,7 @@ export * from './lib/switch-components/interval-switch.component';
 export * from './lib/value-components/list-value-2.component';
 export * from './lib/value-components/nested-menu.component';
 export * from './lib/delete-value-dialog.component';
-export * from './lib/nu-list.component';
+export * from './lib/property-values.component';
 export * from './lib/display-edit-2.component';
 export * from './lib/nu-list-action-bubble.component';
 export * from './lib/nu-list-child.component';
