@@ -1,4 +1,4 @@
-export * from './lib/switch-properties.component';
+export * from './lib/property-value-switcher.component';
 export * from './lib/switch-components/color-switch.component';
 export * from './lib/switch-components/interval-switch.component';
 export * from './lib/value-components/list-value.component';

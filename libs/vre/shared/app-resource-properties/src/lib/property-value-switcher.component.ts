@@ -12,7 +12,7 @@ import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
-  selector: 'app-switch-properties',
+  selector: 'app-property-value-switcher',
   providers: [PropertyValueService],
   template: `
     <app-property-values [itemTpl]="itemTpl"></app-property-values>
@@ -102,7 +102,7 @@ import { PropertyValueService } from './property-value.service';
     `,
   ],
 })
-export class SwitchPropertiesComponent implements OnInit, AfterViewInit {
+export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
   @Input() propertyDefinition!: ResourcePropertyDefinition;
   @Input() cardinality!: Cardinality;
   @Input() formArray!: FormValueArray;

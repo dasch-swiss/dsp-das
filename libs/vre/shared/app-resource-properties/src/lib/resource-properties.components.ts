@@ -1,6 +1,7 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
 import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
+import { PropertyValueSwitcherComponent } from './property-value-switcher.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValuesComponent } from './property-values.component';
 import { BaseSwitchComponent } from './switch-components/base-switch.component';
@@ -13,7 +14,6 @@ import { ListSwitchComponent } from './switch-components/list-switch.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
-import { SwitchPropertiesComponent } from './switch-properties.component';
 import { GeonameValueComponent } from './value-components/geoname-value.component';
 import { LinkValueComponent } from './value-components/link-value.component';
 import { ListValueComponent } from './value-components/list-value.component';
@@ -39,7 +39,7 @@ export const ResourcePropertiesComponents = [
   ...valueComponents,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
-  SwitchPropertiesComponent,
+  PropertyValueSwitcherComponent,
   NuListActionBubbleComponent,
   PropertyValueComponent,
   ExistingPropertyValueComponent,

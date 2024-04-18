@@ -8,12 +8,12 @@ import { FormValueArray } from './form-value-array.type';
 @Component({
   selector: 'app-existing-property-value',
   template: `
-    <app-switch-properties
+    <app-property-value-switcher
       [propertyDefinition]="prop.propDef"
       [property]="prop.guiDef"
       [cardinality]="prop.guiDef.cardinality"
       [formArray]="formArray"
-      [editModeData]="{ resource, values: prop.values }"></app-switch-properties>
+      [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
