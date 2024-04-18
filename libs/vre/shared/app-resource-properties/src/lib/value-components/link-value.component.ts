@@ -63,13 +63,17 @@ export class LinkValueComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this._getResourceProperties();
+  }
+
+  private _setupControl(readResource: ReadResource) {
     this.control.valueChanges
       .pipe(
         filter(searchTerm => searchTerm?.length >= 3),
         filter(searchTerm => !searchTerm.startsWith('http')),
         switchMap((searchTerm: string) =>
           this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, 0, {
-            limitToResourceClass: this._getRestrictToResourceClass(),
+            limitToResourceClass: this._getRestrictToResourceClass(readResource),
           })
         )
       )
@@ -77,8 +81,6 @@ export class LinkValueComponent implements OnInit {
         this.resources = response.resources;
         this._cd.detectChanges();
       });
-
-    this._getResourceProperties();
   }
 
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
@@ -109,9 +111,9 @@ export class LinkValueComponent implements OnInit {
       });
   }
 
-  private _getRestrictToResourceClass() {
-    const linkType = this._tempLinkValueService.parentResource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
-    return this._tempLinkValueService.parentResource.entityInfo.properties[linkType].objectType;
+  private _getRestrictToResourceClass(resource: ReadResource) {
+    const linkType = resource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
+    return resource.entityInfo.properties[linkType].objectType;
   }
 
   displayResource(resId: string | null): string {
@@ -129,6 +131,7 @@ export class LinkValueComponent implements OnInit {
         readResource.entityInfo = onto;
 
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
+        this._setupControl(readResource);
       });
   }
 }
