@@ -11,6 +11,7 @@ import { GeonameSwitchComponent } from './switch-components/geoname-switch.compo
 import { IntervalSwitchComponent } from './switch-components/interval-switch.component';
 import { LinkSwitchComponent } from './switch-components/link-switch.component';
 import { ListSwitchComponent } from './switch-components/list-switch.component';
+import { RichTextSwitchComponent } from './switch-components/rich-text-switch.component';
 import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
@@ -18,8 +19,15 @@ import { GeonameValueComponent } from './value-components/geoname-value.componen
 import { LinkValueComponent } from './value-components/link-value.component';
 import { ListValueComponent } from './value-components/list-value.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
+import { RichTextValueComponent } from './value-components/rich-text-value.component';
 
-const valueComponents = [GeonameValueComponent, LinkValueComponent, ListValueComponent, NestedMenuComponent];
+const valueComponents = [
+  GeonameValueComponent,
+  LinkValueComponent,
+  ListValueComponent,
+  NestedMenuComponent,
+  RichTextValueComponent,
+];
 
 const switchComponents = [
   TimeSwitchComponent,
@@ -31,6 +39,7 @@ const switchComponents = [
   ListSwitchComponent,
   DateSwitchComponent,
   BaseSwitchComponent,
+  RichTextSwitchComponent,
   TextSwitchComponent,
 ];
 

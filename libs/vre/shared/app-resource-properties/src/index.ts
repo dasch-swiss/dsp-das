@@ -2,6 +2,7 @@ export * from './lib/property-value-switcher.component';
 export * from './lib/switch-components/color-switch.component';
 export * from './lib/switch-components/interval-switch.component';
 export * from './lib/value-components/list-value.component';
+export * from './lib/value-components/rich-text-value.component';
 export * from './lib/value-components/nested-menu.component';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/property-values.component';
@@ -17,6 +18,7 @@ export * from './lib/switch-components/geoname-switch.component';
 export * from './lib/switch-components/link-switch.component';
 export * from './lib/switch-components/list-switch.component';
 export * from './lib/switch-components/date-switch.component';
+export * from './lib/switch-components/rich-text-switch.component';
 export * from './lib/switch-components/text-switch.component';
 
 export * from './lib/form-value-array.type';

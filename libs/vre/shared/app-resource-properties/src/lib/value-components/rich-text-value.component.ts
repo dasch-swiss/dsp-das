@@ -6,4 +6,8 @@ import { Component } from '@angular/core';
     <ckeditor [formControlName]="'value'" [config]="editorConfig" [editor]="editor" (change)="onChange()"></ckeditor>
   `,
 })
-export class RichTextValueComponent {}
+export class RichTextValueComponent {
+  editorConfig = {};
+  editor = {};
+  onChange = () => {};
+}

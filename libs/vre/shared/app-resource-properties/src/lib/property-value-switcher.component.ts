@@ -56,11 +56,7 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #richTextTpl let-item="item" let-displayMode="displayMode">
-      <app-base-switch [control]="item" [displayMode]="displayMode">
-        RICH
-        <app-common-input [control]="item" style="width: 100%"></app-common-input>
-        TEXT
-      </app-base-switch>
+      <app-rich-text-switch [control]="item" [displayMode]="displayMode"></app-rich-text-switch>
     </ng-template>
 
     <ng-template #textTpl let-item="item" let-displayMode="displayMode">
