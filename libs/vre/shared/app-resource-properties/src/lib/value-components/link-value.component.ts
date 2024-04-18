@@ -4,7 +4,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadProject, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { CreateResourceDialogProps, CreateRessourceDialogComponent } from '@dasch-swiss/vre/shared/app-resource-form';
+import { CreateResourceDialogComponent, CreateResourceDialogProps } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
@@ -84,7 +84,7 @@ export class LinkValueComponent implements OnInit {
     event.stopPropagation();
     const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject).id;
     this._dialog
-      .open<CreateRessourceDialogComponent, CreateResourceDialogProps, string>(CreateRessourceDialogComponent, {
+      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         data: {
           resourceType,
           resourceClassIri,

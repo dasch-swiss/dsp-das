@@ -12,12 +12,12 @@ import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-ressource-page',
-  template: ` <app-create-ressource-form
+  template: ` <app-create-resource-form
     *ngIf="classIri$ | async as classIri"
     [resourceType]="(resClass$ | async)?.label"
     [resourceClassIri]="classIri"
     [projectIri]="projectIri"
-    (createdResourceIri)="afterCreation($event)"></app-create-ressource-form>`,
+    (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
 })
 export class CreateRessourcePageComponent {
   projectOntologies$ = this._store.select(OntologiesSelectors.projectOntologies);

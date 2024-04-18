@@ -22,8 +22,9 @@ import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-resource-instance-form',
+  selector: 'app-create-resource-form',
   template: `
+    <h3>Create new resource of type: {{ resourceType }}</h3>
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <app-upload-2
         *ngIf="form.controls.file"
@@ -75,9 +76,11 @@ import { switchMap, take } from 'rxjs/operators';
   ],
   providers: [TempLinkValueService],
 })
-export class ResourceInstanceFormComponent implements OnInit {
+export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) resourceType!: string;
+
   @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<{

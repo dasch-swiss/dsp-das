@@ -8,19 +8,19 @@ export interface CreateResourceDialogProps {
 }
 
 @Component({
-  selector: 'app-create-ressource-dialog',
+  selector: 'app-create-resource-dialog',
   template: `
-    <app-create-ressource-form
+    <app-create-resource-form
       [resourceType]="data.resourceType"
       [resourceClassIri]="data.resourceClassIri"
       [projectIri]="data.projectIri"
-      (createdResourceIri)="onCreatedResource($event)"></app-create-ressource-form>
+      (createdResourceIri)="onCreatedResource($event)"></app-create-resource-form>
   `,
 })
-export class CreateRessourceDialogComponent {
+export class CreateResourceDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateResourceDialogProps,
-    private _dialogRef: MatDialogRef<CreateRessourceDialogComponent>
+    private _dialogRef: MatDialogRef<CreateResourceDialogComponent>
   ) {}
 
   onCreatedResource(resourceIri: string) {
