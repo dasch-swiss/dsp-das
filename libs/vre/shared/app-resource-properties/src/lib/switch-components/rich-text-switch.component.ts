@@ -7,7 +7,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   selector: 'app-rich-text-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode">{{ control.value }}</ng-container>
     <ng-template #editMode>
-      <app-rich-text-value></app-rich-text-value>
+      <app-rich-text-value [control]="myControl"></app-rich-text-value>
     </ng-template>`,
 })
 export class RichTextSwitchComponent implements IsSwitchComponent, OnInit, OnDestroy {
