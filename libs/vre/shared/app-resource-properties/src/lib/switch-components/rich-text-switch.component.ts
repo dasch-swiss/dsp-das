@@ -1,16 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-rich-text-switch',
-  template: ` <ng-container *ngIf="displayMode; else editMode">{{ control.value }}</ng-container>
+  template: ` <div *ngIf="displayMode; else editMode" [innerHTML]="control.value"></div>
     <ng-template #editMode>
       <app-rich-text-value [control]="myControl"></app-rich-text-value>
     </ng-template>`,
 })
-export class RichTextSwitchComponent implements IsSwitchComponent, OnInit, OnDestroy {
+export class RichTextSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string | null>;
   @Input() displayMode = true;
 
@@ -18,17 +17,47 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnInit, OnDes
     return this.control as FormControl<string>;
   }
 
-  subscription!: Subscription;
+  private static _handleXML(xml: string, fromKnora: boolean, addXMLDocType = true) {
+    const xmlTransform = {
+      '<hr>': '<hr/>',
+      '<s>': '<strike>',
+      '</s>': '</strike>',
+      '<i>': '<em>',
+      '</i>': '</em>',
+      '<figure class="table">': '',
+      '</figure>': '',
+      '<br>': '<br/>',
+    };
+    const doctype = '<?xml version="1.0" encoding="UTF-8"?>';
+    const textTag = 'text';
+    const openingTextTag = `<${textTag}>`;
+    const closingTextTag = `</${textTag}>`;
 
-  ngOnInit() {
-    this.subscription = this.control.valueChanges.subscribe(value => {
-      if (value === '') {
-        this.control.patchValue(null);
+    // check if xml is a string
+    if (typeof xml !== 'string') {
+      return xml;
+    }
+
+    if (fromKnora) {
+      // cKEditor accepts tags from version 4
+      // see 4 to 5 migration, see https://ckeditor.com/docs/ckeditor5/latest/builds/guides/migrate.html
+      return xml.replace(doctype, '').replace(openingTextTag, '').replace(closingTextTag, '');
+    } else {
+      // replace &nbsp; entity
+      xml = xml.replace(/&nbsp;/g, String.fromCharCode(160));
+
+      // get XML transform config
+      const keys = Object.keys(xmlTransform);
+      for (const key of keys) {
+        // replace tags defined in config
+        xml = xml.replace(new RegExp(key, 'g'), xmlTransform[key]);
       }
-    });
-  }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+      if (addXMLDocType) {
+        return doctype + openingTextTag + xml + closingTextTag;
+      } else {
+        return xml;
+      }
+    }
   }
 }
