@@ -19,7 +19,7 @@ import { PropertyInfoValues } from './property-info-values.interface';
             {{ prop.propDef.label }}
           </h3>
           <div style="flex: 1">
-            <app-display-edit-2 [prop]="prop" [resource]="resource.res"></app-display-edit-2>
+            <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
             <!-- in case of incoming links we have to display them here -->
             <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
           </div>
@@ -51,9 +51,11 @@ export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;
 
   myProperties: PropertyInfoValues[];
+
   ngOnInit() {
     this.myProperties = this._getMyProperties();
   }
+
   _getMyProperties() {
     const representationConstants = RepresentationConstants;
 

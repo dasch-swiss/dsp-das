@@ -6,7 +6,7 @@ import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resou
 import { FormValueArray } from './form-value-array.type';
 
 @Component({
-  selector: 'app-display-edit-2',
+  selector: 'app-existing-property-value',
   template: `
     <app-switch-properties
       [propertyDefinition]="prop.propDef"
@@ -17,7 +17,7 @@ import { FormValueArray } from './form-value-array.type';
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
-export class DisplayEdit2Component implements OnInit {
+export class ExistingPropertyValueComponent implements OnInit {
   @Input() prop!: PropertyInfoValues;
   @Input() resource!: ReadResource;
 

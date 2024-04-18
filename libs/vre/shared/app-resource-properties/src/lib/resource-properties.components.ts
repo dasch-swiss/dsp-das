@@ -1,5 +1,5 @@
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
-import { DisplayEdit2Component } from './display-edit-2.component';
+import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { NuListActionBubbleComponent } from './nu-list-action-bubble.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValuesComponent } from './property-values.component';
@@ -42,5 +42,5 @@ export const ResourcePropertiesComponents = [
   SwitchPropertiesComponent,
   NuListActionBubbleComponent,
   PropertyValueComponent,
-  DisplayEdit2Component,
+  ExistingPropertyValueComponent,
 ];
