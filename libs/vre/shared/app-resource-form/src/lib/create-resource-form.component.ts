@@ -17,7 +17,6 @@ import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
-import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 
@@ -75,7 +74,6 @@ import { switchMap, take } from 'rxjs/operators';
   styles: [
     '.my-grid {display: grid; grid-template-columns: 140px 470px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
   ],
-  providers: [TempLinkValueService],
 })
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
@@ -114,8 +112,7 @@ export class CreateResourceFormComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
     private _store: Store,
-    private _cd: ChangeDetectorRef,
-    private _tempLinkValueService: TempLinkValueService
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -143,13 +140,7 @@ export class CreateResourceFormComponent implements OnInit {
       .reloadCachedItem(this.ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-        this._tempLinkValueService.currentOntoIri = this.ontologyIri;
-
         this.fileRepresentation = this._getFileRepresentation(onto);
-
-        const readResource = new ReadResource();
-        readResource.entityInfo = onto;
-        this._tempLinkValueService.parentResource = readResource;
 
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
