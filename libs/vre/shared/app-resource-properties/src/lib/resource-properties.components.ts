@@ -15,11 +15,11 @@ import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
 import { SwitchPropertiesComponent } from './switch-properties.component';
 import { GeonameValueComponent } from './value-components/geoname-value.component';
-import { LinkValue2Component } from './value-components/link-value-2.component';
+import { LinkValueComponent } from './value-components/link-value.component';
 import { ListValue2Component } from './value-components/list-value-2.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
 
-const valueComponents = [GeonameValueComponent, LinkValue2Component, ListValue2Component, NestedMenuComponent];
+const valueComponents = [GeonameValueComponent, LinkValueComponent, ListValue2Component, NestedMenuComponent];
 
 const switchComponents = [
   TimeSwitchComponent,

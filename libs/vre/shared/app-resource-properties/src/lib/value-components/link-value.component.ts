@@ -9,10 +9,10 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { TempLinkValueService } from '@dsp-app/src/app/workspace/resource/temp-link-value.service';
 import { Store } from '@ngxs/store';
 import { filter, switchMap } from 'rxjs/operators';
-import { LinkValue2DataService } from './link-value-2-data.service';
+import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
-  selector: 'app-link-value-2',
+  selector: 'app-link-value',
   template: `
     <mat-form-field style="width: 100%">
       <input
@@ -25,7 +25,7 @@ import { LinkValue2DataService } from './link-value-2-data.service';
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResource.bind(this)">
         <mat-option *ngIf="resources.length === 0" [disabled]="true"> No results were found.</mat-option>
         <mat-option
-          *ngFor="let rc of _linkValue2DataService.resourceClasses"
+          *ngFor="let rc of _linkValueDataService.resourceClasses"
           (click)="openCreateResourceDialog($event, rc.id, rc.label)">
           Create New: {{ rc?.label }}
         </mat-option>
@@ -35,9 +35,9 @@ import { LinkValue2DataService } from './link-value-2-data.service';
       <mat-error *ngIf="control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </mat-form-field>
   `,
-  providers: [LinkValue2DataService],
+  providers: [LinkValueDataService],
 })
-export class LinkValue2Component implements OnInit {
+export class LinkValueComponent implements OnInit {
   @Input({ required: true }) control: FormControl<string>;
   @Input() propIri: string;
 
@@ -51,7 +51,7 @@ export class LinkValue2Component implements OnInit {
     private _tempLinkValueService: TempLinkValueService,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef,
-    public _linkValue2DataService: LinkValue2DataService,
+    public _linkValueDataService: LinkValueDataService,
     private _store: Store
   ) {}
 
@@ -71,7 +71,7 @@ export class LinkValue2Component implements OnInit {
         this._cd.detectChanges();
       });
 
-    this._linkValue2DataService.onInit(
+    this._linkValueDataService.onInit(
       this._tempLinkValueService.currentOntoIri,
       this._tempLinkValueService.parentResource,
       this.propIri

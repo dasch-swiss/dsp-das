@@ -15,7 +15,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
  * TODO: Refactor and remove this service.
  */
 @Injectable()
-export class LinkValue2DataService {
+export class LinkValueDataService {
   resourceClasses!: ResourceClassDefinition[];
   subClasses: ResourceClassDefinition[] = [];
   properties!: ResourcePropertyDefinition[];

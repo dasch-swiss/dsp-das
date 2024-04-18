@@ -9,7 +9,7 @@ import { SwitchComponent } from './switch-component.interface';
       ><a [href]="control.value">{{ value }}</a>
     </ng-container>
     <ng-template #editMode>
-      <app-link-value-2 [control]="control" [propIri]="propIri"></app-link-value-2>
+      <app-link-value [control]="control" [propIri]="propIri"></app-link-value>
     </ng-template>`,
 })
 export class LinkSwitchComponent implements SwitchComponent {
@@ -17,6 +17,7 @@ export class LinkSwitchComponent implements SwitchComponent {
   @Input() displayMode = true;
   @Input() propIri!: string;
   @Input() values: ReadValue[] | undefined;
+
   get value() {
     return (this.values as ReadValue[])[0].strval;
   }
