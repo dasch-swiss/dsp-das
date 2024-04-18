@@ -111,6 +111,8 @@ export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
   @Input() formArray!: FormValueArray;
   @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
+  @Input({ required: true }) resClassIri!: string;
+
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
