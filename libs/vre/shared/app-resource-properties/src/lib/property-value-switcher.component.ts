@@ -45,7 +45,10 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #listTpl let-item="item" let-displayMode="displayMode">
-      <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="resPropDef"></app-list-switch>
+      <app-list-switch
+        [control]="item"
+        [displayMode]="displayMode"
+        [propertyDef]="propertyDefinition"></app-list-switch>
     </ng-template>
 
     <ng-template #colorTpl let-item="item" let-displayMode="displayMode">
@@ -125,10 +128,6 @@ export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
 
   itemTpl!: TemplateRef<any>;
   validators: ValidatorFn[] | undefined;
-
-  get resPropDef() {
-    return this.propertyDefinition as ResourcePropertyDefinition;
-  }
 
   constructor(private _propertyValueService: PropertyValueService) {}
 

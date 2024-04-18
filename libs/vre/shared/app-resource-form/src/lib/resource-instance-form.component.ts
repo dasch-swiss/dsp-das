@@ -9,7 +9,7 @@ import {
   KnoraApiConnection,
   ReadResource,
   ResourceClassAndPropertyDefinitions,
-  ResourceClassDefinition,
+  ResourceClassDefinitionWithPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FormValueArray, FormValueGroup } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -76,8 +76,8 @@ import { switchMap, take } from 'rxjs/operators';
   providers: [TempLinkValueService],
 })
 export class ResourceInstanceFormComponent implements OnInit {
-  @Input({ required: true }) resourceClassIri: string;
-  @Input({ required: true }) projectIri: string;
+  @Input({ required: true }) resourceClassIri!: string;
+  @Input({ required: true }) projectIri!: string;
   @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<{
@@ -86,7 +86,7 @@ export class ResourceInstanceFormComponent implements OnInit {
     file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
-  resourceClass: ResourceClassDefinition;
+  resourceClass: ResourceClassDefinitionWithPropertyDefinition | undefined;
   fileRepresentation: FileRepresentationType;
   properties: IHasPropertyWithPropertyDefinition[];
   loading = false;
@@ -139,7 +139,6 @@ export class ResourceInstanceFormComponent implements OnInit {
       .reloadCachedItem(this.ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri)))
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
-        this.resourceClass = onto.classes[resourceClassIri];
         this._tempLinkValueService.currentOntoIri = this.ontologyIri;
 
         this.fileRepresentation = this._getFileRepresentation(onto);
@@ -148,7 +147,8 @@ export class ResourceInstanceFormComponent implements OnInit {
         readResource.entityInfo = onto;
         this._tempLinkValueService.parentResource = readResource;
 
-        this.properties = onto.classes[resourceClassIri]
+        this.resourceClass = onto.classes[resourceClassIri];
+        this.properties = this.resourceClass
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
           .filter(v => v.propertyDefinition['isLinkProperty'] === false);
