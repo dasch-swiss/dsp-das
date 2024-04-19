@@ -35,8 +35,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { PermissionInfoComponent } from '@dsp-app/src/app/workspace/resource/permission-info/permission-info.component';
-import { ResourceToolbarComponent } from '@dsp-app/src/app/workspace/resource/properties/resource-toolbar/resource-toolbar';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -116,6 +114,7 @@ import { ProjectComponent } from './project/project.component';
 import { ReusableProjectFormComponent } from './project/reusable-project-form/reusable-project-form.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
+import { PermissionInfoComponent } from './resource/permission-info/permission-info.component';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
@@ -137,6 +136,7 @@ import { IntermediateComponent } from './workspace/intermediate/intermediate.com
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { PropertiesDisplayComponent } from './workspace/resource/properties/properties-display.component';
+import { ResourceToolbarComponent } from './workspace/resource/properties/resource-toolbar/resource-toolbar';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
@@ -173,7 +173,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     ...PropertyFormComponents,
-    ...ResourceFormComponents,
     ...ResourcePropertiesComponents,
     PropertiesDisplayComponent,
     AccountComponent,

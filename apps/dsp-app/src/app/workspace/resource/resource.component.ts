@@ -48,10 +48,10 @@ import {
   ResourceSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { ConfirmationWithComment, DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { ConfirmationWithComment, DialogComponent } from '../../main/dialog/dialog.component';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
