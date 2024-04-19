@@ -7,26 +7,26 @@ import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, 
 import {
   AbstractControl,
   ControlValueAccessor,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
   FormGroupDirective,
   NgControl,
   NgForm,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
+  _AbstractConstructor,
+  _Constructor,
   CanUpdateErrorState,
   ErrorStateMatcher,
   mixinErrorState,
-  _AbstractConstructor,
-  _Constructor,
 } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
+import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { Subject } from 'rxjs';
-import { CustomRegex } from '../../custom-regex';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 
 /** a valid time value must have both a date and a time, or both inputs must be null */
@@ -53,6 +53,7 @@ class MatInputBase {
     public stateChanges: Subject<void>
   ) {}
 }
+
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 export class DateTime {

@@ -1,5 +1,5 @@
 import { Constants, ReadResource, ReadValue, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/property-info-values.interface';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-resource-properties';
 
 export class DspResource {
   res: ReadResource;

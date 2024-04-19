@@ -45,7 +45,7 @@ import {
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
 import { handleXML } from './handle-xml';
-import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { CustomRegex } from "@dasch-swiss/vre/shared/app-common";
 import { populateValue } from './populate-value-method';
 
 export const propertiesTypeMapping = new Map<
