@@ -8,7 +8,7 @@ import {
   CreateStillImageFileValue,
   CreateTextFileValue,
 } from '@dasch-swiss/dsp-js';
-import { FileRepresentationType } from './file-representation.type';
+import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 
 export const fileValueMapping = new Map<
   FileRepresentationType,

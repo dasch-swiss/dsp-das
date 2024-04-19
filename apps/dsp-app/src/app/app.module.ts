@@ -146,7 +146,6 @@ import { ReplaceFileFormComponent } from './workspace/resource/representation/re
 import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
 import { TextComponent } from './workspace/resource/representation/text/text.component';
 import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
-import { Upload2Component } from './workspace/resource/representation/upload/upload2.component';
 import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
@@ -275,7 +274,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TitleFromCamelCasePipe,
     TruncatePipe,
     UploadComponent,
-    Upload2Component,
     UserComponent,
     UserFormComponent,
     UserMenuComponent,

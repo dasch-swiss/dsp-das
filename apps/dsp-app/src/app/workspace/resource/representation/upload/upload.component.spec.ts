@@ -10,7 +10,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { of } from 'rxjs';
-import { UploadFileService } from './upload-file.service';
+import { UploadFileService } from '../../../../../../../../libs/vre/shared/app-resource-properties/src/lib/upload-file.service';
 import { UploadComponent } from './upload.component';
 
 /**

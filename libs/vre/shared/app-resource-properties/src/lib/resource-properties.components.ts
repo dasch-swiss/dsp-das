@@ -24,6 +24,7 @@ import { RichTextValueComponent } from './value-components/rich-text-value.compo
 import { CreateResourceDialogComponent } from './create-resource-dialog.component';
 import { CreateResourcePageComponent } from "./create-resource-page.component";
 import { CreateResourceFormComponent } from "./create-resource-form.component";
+import { Upload2Component } from "./upload2.component";
 
 const valueComponents = [
   GeonameValueComponent,
@@ -60,4 +61,5 @@ export const ResourcePropertiesComponents = [
   CreateResourceDialogComponent,
     CreateResourcePageComponent,
     CreateResourceFormComponent,
+    Upload2Component
 ];

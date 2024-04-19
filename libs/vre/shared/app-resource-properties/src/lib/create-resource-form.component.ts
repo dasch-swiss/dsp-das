@@ -13,12 +13,13 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FormValueArray, FormValueGroup, propertiesTypeMapping } from "@dasch-swiss/vre/shared/app-resource-properties";
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
-import { fileValueMapping } from '@dsp-app/src/app/workspace/resource/representation/upload/file-mappings';
+import { fileValueMapping } from './file-value-mapping';
 import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
+import { FormValueArray, FormValueGroup } from "./form-value-array.type";
+import { propertiesTypeMapping } from "./resource-payloads-mapping";
 
 @Component({
   selector: 'app-create-resource-form',
