@@ -29,3 +29,4 @@ export * from './lib/create-resource-dialog.component';
 export * from './lib/create-resource-form.component';
 export * from './lib/create-resource-page.component';
 export * from './lib/upload2.component';
+export * from './lib/upload-file.service';
