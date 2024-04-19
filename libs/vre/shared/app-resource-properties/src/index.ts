@@ -25,3 +25,6 @@ export * from './lib/switch-components/text-types-selector.component';
 export * from './lib/form-value-array.type';
 export * from './lib/resource-properties.components';
 export * from './lib/resource-payloads-mapping';
+export * from './lib/create-resource-dialog.component';
+export * from './lib/create-resource-form.component';
+export * from './lib/create-resource-page.component';

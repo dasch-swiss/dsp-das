@@ -21,6 +21,9 @@ import { LinkValueComponent } from './value-components/link-value.component';
 import { ListValueComponent } from './value-components/list-value.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
 import { RichTextValueComponent } from './value-components/rich-text-value.component';
+import { CreateResourceDialogComponent } from './create-resource-dialog.component';
+import { CreateResourcePageComponent } from "./create-resource-page.component";
+import { CreateResourceFormComponent } from "./create-resource-form.component";
 
 const valueComponents = [
   GeonameValueComponent,
@@ -54,4 +57,7 @@ export const ResourcePropertiesComponents = [
   PropertyValueActionBubbleComponent,
   PropertyValueComponent,
   ExistingPropertyValueComponent,
+  CreateResourceDialogComponent,
+    CreateResourcePageComponent,
+    CreateResourceFormComponent,
 ];

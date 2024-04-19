@@ -10,12 +10,12 @@ import {
   ResourceClassAndPropertyDefinitions,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { CreateResourceDialogComponent, CreateResourceDialogProps } from '@dasch-swiss/vre/shared/app-resource-form';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { of, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { LinkValueDataService } from './link-value-data.service';
+import { CreateResourceDialogComponent, CreateResourceDialogProps } from "../create-resource-dialog.component";
 
 @Component({
   selector: 'app-link-value',
