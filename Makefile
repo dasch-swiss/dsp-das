@@ -35,7 +35,7 @@ docs-clean: ## cleans the project directory
 
 .PHONY: docs-lint
 docs-lint: ## runs the markdownlint linter on the docs
-	docker run -v $PWD:/workdir ghcr.io/igorshubovych/markdownlint-cli:latest --config .markdownlint.json -i docs/contribution/release-notes.md -i docs/index.md --disable MD033 -- "docs/**/*.md"  
+	docker run -v $$(pwd):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest --config .markdownlint.json -i docs/contribution/release-notes.md -i docs/index.md --disable MD033 -- "docs/**/*.md"
 
 #################################
 # Build and publish targets
