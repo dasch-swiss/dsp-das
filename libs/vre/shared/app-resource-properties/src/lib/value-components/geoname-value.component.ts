@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { GeonameService, SearchPlace } from '../geoname.service';
 import { filter, switchMap } from 'rxjs/operators';
+import { GeonameService, SearchPlace } from '../geoname.service';
 
 @Component({
   selector: 'app-geoname-value',

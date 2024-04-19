@@ -1,3 +1,6 @@
+import { CreateResourceDialogComponent } from './create-resource-dialog.component';
+import { CreateResourceFormComponent } from './create-resource-form.component';
+import { CreateResourcePageComponent } from './create-resource-page.component';
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
 import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
@@ -16,15 +19,12 @@ import { TextSwitchComponent } from './switch-components/text-switch.component';
 import { TextTypesSelectorComponent } from './switch-components/text-types-selector.component';
 import { TimeSwitchComponent } from './switch-components/time-switch.component';
 import { UriSwitchComponent } from './switch-components/uri-switch.component';
+import { Upload2Component } from './upload2.component';
 import { GeonameValueComponent } from './value-components/geoname-value.component';
 import { LinkValueComponent } from './value-components/link-value.component';
 import { ListValueComponent } from './value-components/list-value.component';
 import { NestedMenuComponent } from './value-components/nested-menu.component';
 import { RichTextValueComponent } from './value-components/rich-text-value.component';
-import { CreateResourceDialogComponent } from './create-resource-dialog.component';
-import { CreateResourcePageComponent } from "./create-resource-page.component";
-import { CreateResourceFormComponent } from "./create-resource-form.component";
-import { Upload2Component } from "./upload2.component";
 
 const valueComponents = [
   GeonameValueComponent,
@@ -59,7 +59,7 @@ export const ResourcePropertiesComponents = [
   PropertyValueComponent,
   ExistingPropertyValueComponent,
   CreateResourceDialogComponent,
-    CreateResourcePageComponent,
-    CreateResourceFormComponent,
-    Upload2Component
+  CreateResourcePageComponent,
+  CreateResourceFormComponent,
+  Upload2Component,
 ];

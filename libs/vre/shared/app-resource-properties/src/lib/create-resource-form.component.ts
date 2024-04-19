@@ -14,12 +14,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
-import { fileValueMapping } from './file-value-mapping';
-import { FileRepresentationType } from './file-representation.type';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
-import { FormValueArray, FormValueGroup } from "./form-value-array.type";
-import { propertiesTypeMapping } from "./resource-payloads-mapping";
+import { FileRepresentationType } from './file-representation.type';
+import { fileValueMapping } from './file-value-mapping';
+import { FormValueArray, FormValueGroup } from './form-value-array.type';
+import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-create-resource-form',
@@ -229,8 +229,12 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getFileValue() {
-    const fileValue = new (fileValueMapping.get(this.fileRepresentation).uploadClass)();
-    fileValue.filename = this.form.controls.file.value.filename;
-    return fileValue;
+    const MyClass = fileValueMapping.get(this.fileRepresentation);
+    if (MyClass === undefined) {
+      throw new Error('Mapping is undefined');
+    }
+    const FileValue = new MyClass.uploadClass();
+    FileValue.filename = this.form.controls.file.value.filename;
+    return FileValue;
   }
 }

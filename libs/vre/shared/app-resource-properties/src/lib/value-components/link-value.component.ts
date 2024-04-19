@@ -14,8 +14,8 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { of, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
+import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
-import { CreateResourceDialogComponent, CreateResourceDialogProps } from "../create-resource-dialog.component";
 
 @Component({
   selector: 'app-link-value',

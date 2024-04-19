@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DisplayPlace, GeonameService } from '../geoname.service';
 import { Observable } from 'rxjs';
+import { DisplayPlace, GeonameService } from '../geoname.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
