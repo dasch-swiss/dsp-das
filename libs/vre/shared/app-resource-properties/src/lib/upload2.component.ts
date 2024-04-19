@@ -4,7 +4,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { fileValueMapping } from './file-value-mapping';
-import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
+import { FileRepresentationType } from './file-representation.type';
 import { UploadedFileResponse, UploadFileService } from './upload-file.service';
 
 @Component({

@@ -15,7 +15,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { fileValueMapping } from './file-value-mapping';
-import { FileRepresentationType } from '@dsp-app/src/app/workspace/resource/representation/upload/file-representation.type';
+import { FileRepresentationType } from './file-representation.type';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
 import { FormValueArray, FormValueGroup } from "./form-value-array.type";
