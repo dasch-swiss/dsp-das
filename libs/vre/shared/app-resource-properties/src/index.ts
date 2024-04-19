@@ -24,3 +24,4 @@ export * from './lib/switch-components/text-types-selector.component';
 
 export * from './lib/form-value-array.type';
 export * from './lib/resource-properties.components';
+export * from './lib/resource-payloads-mapping';

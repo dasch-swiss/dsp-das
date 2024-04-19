@@ -44,9 +44,9 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
-import { handleXML } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/handle-xml';
-import { CustomRegex } from '../values/custom-regex';
-import { populateValue } from '../values/date-value/populate-value-method';
+import { handleXML } from './handle-xml';
+import { CustomRegex } from '@dsp-app/src/app/workspace/resource/values/custom-regex';
+import { populateValue } from '@dsp-app/src/app/workspace/resource/values/date-value/populate-value-method';
 
 export const propertiesTypeMapping = new Map<
   string,

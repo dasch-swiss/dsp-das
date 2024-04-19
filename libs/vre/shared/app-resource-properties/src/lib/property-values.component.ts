@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
-import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
+import { propertiesTypeMapping } from './resource-payloads-mapping';
 import { PropertyValueService } from './property-value.service';
 
 @Component({

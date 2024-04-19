@@ -13,7 +13,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { propertiesTypeMapping } from '@dsp-app/src/app/workspace/resource/resource-instance-form/resource-payloads-mapping';
+import { propertiesTypeMapping } from './resource-payloads-mapping';
 import { Subscription } from 'rxjs';
 import { finalize, startWith, take } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
