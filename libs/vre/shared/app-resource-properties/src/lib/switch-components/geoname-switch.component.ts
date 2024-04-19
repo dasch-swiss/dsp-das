@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DisplayPlace, GeonameService } from '@dsp-app/src/app/workspace/resource/services/geoname.service';
+import { DisplayPlace, GeonameService } from '../geoname.service';
 import { Observable } from 'rxjs';
 import { IsSwitchComponent } from './is-switch-component.interface';
 

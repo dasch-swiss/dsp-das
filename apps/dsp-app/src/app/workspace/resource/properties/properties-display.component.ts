@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
-import { PropertyInfoValues } from './property-info-values.interface';
+import { PropertyInfoValues } from '../../../../../../../libs/vre/shared/app-resource-properties/src/lib/property-info-values.interface';
 
 @Component({
   selector: 'app-properties-display',

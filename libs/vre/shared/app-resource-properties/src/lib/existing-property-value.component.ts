@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceClassIriService } from '@dasch-swiss/vre/shared/app-resource-form';
-import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/property-info-values.interface';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 import { FormValueArray } from './form-value-array.type';
+import { ResourceClassIriService } from "./resource-class-iri.service";
+import { PropertyInfoValues } from "./property-info-values.interface";
 
 @Component({
   selector: 'app-existing-property-value',
