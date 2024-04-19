@@ -29,8 +29,8 @@
       ],
       "options": {
         "lintFilePatterns": [
-          "libs/vre-shared-resource-properties/**/*.ts",
-          "libs/vre-shared-resource-properties/**/*.html"
+          "libs/vre/shared/app-resource-properties/**/*.ts",
+          "libs/vre/shared/app-resource-properties/**/*.html"
         ]
       }
     }
