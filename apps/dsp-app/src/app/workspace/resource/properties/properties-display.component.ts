@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 
@@ -12,19 +16,24 @@ import { RepresentationConstants } from '../representation/file-representation';
     <!-- additional line with project and user information -->
 
     <!-- list of properties -->
-    <ng-container *ngIf="myProperties.length > 0; else noProperties">
-      <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
-        <div [class.border-bottom]="prop.values && !last" style="display: flex; padding: 8px 0;">
-          <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-            {{ prop.propDef.label }}
-          </h3>
-          <div style="flex: 1">
-            <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
-            <!-- in case of incoming links we have to display them here -->
-            <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
+    <ng-container *ngIf="myProperties$ | async as myProperties">
+      <ng-container *ngIf="myProperties.length > 0; else noProperties">
+        <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
+          <div [class.border-bottom]="prop.values && !last" style="display: flex; padding: 8px 0;">
+            <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+              {{ prop.propDef.label }}
+            </h3>
+            <div style="flex: 1">
+              <app-existing-property-value
+                [prop]="prop"
+                [resource]="resource.res"
+                *ngIf="prop.values && prop.values.length > 0"></app-existing-property-value>
+              <!-- in case of incoming links we have to display them here -->
+              <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </ng-container>
 
     <ng-template #noProperties>
@@ -50,13 +59,17 @@ import { RepresentationConstants } from '../representation/file-representation';
 export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;
 
-  myProperties: PropertyInfoValues[];
+  myProperties$!: Observable<PropertyInfoValues[]>;
+
+  showAllProperties$ = this._store.select(ResourceSelectors.showAllProps);
+
+  constructor(private _store: Store) {}
 
   ngOnInit() {
-    this.myProperties = this._getMyProperties();
+    this.myProperties$ = this.showAllProperties$.pipe(map(showAllProps => this._getMyProperties(showAllProps)));
   }
 
-  _getMyProperties() {
+  private _getMyProperties(showAllProperties: boolean) {
     const representationConstants = RepresentationConstants;
 
     const condition = (prop: PropertyInfoValues) =>
@@ -83,6 +96,7 @@ export class PropertiesDisplayComponent implements OnInit {
       .filter(prop => prop.guiDef.guiOrder !== undefined)
       .filter(prop => {
         return (
+          showAllProperties ||
           (prop.values && prop.values.length > 0) ||
           // prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
           condition(prop)
