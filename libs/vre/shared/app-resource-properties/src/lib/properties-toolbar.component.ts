@@ -30,7 +30,7 @@ import { Store } from '@ngxs/store';
         matTooltipPosition="above"
         (click)="toggleShowAllProps()">
         <mat-icon>{{ (showAllProps$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
-        Show all properties
+        {{ (showAllProps$ | async) ? 'Hide empty' : 'Show all' }} properties
       </button>
     </div>
   `,

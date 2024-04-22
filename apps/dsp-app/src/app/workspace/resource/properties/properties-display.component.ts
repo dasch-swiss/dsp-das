@@ -24,10 +24,7 @@ import { RepresentationConstants } from '../representation/file-representation';
               {{ prop.propDef.label }}
             </h3>
             <div style="flex: 1">
-              <app-existing-property-value
-                [prop]="prop"
-                [resource]="resource.res"
-                *ngIf="prop.values && prop.values.length > 0"></app-existing-property-value>
+              <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
               <!-- in case of incoming links we have to display them here -->
               <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
             </div>

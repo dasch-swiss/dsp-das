@@ -33,7 +33,7 @@ export class PropertyValuesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!this.propertyValueService.formArray || this.propertyValueService.formArray.length === 0) {
+    if (!this.propertyValueService.formArray) {
       throw new Error('The form array should not be empty.');
     }
   }
