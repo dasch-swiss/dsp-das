@@ -88,11 +88,14 @@ export class CreateResourceFormComponent implements OnInit {
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
     file?: FormControl<CreateFileValue>;
-  }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
+  }> = this._fb.group({
+    label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    properties: this._fb.group({}),
+  });
 
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
-  properties: IHasPropertyWithPropertyDefinition[] | undefined;
+  properties!: IHasPropertyWithPropertyDefinition[];
   loading = false;
 
   mapping = new Map<string, string>();
@@ -150,6 +153,7 @@ export class CreateResourceFormComponent implements OnInit {
           .getResourcePropertiesList()
           .filter(v => v.guiOrder !== undefined)
           .filter(v => v.propertyDefinition['isLinkProperty'] === false);
+
         this._buildForm();
         this._cd.detectChanges();
       });
@@ -161,7 +165,7 @@ export class CreateResourceFormComponent implements OnInit {
     }
 
     this.properties.forEach((prop, index) => {
-      const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType).control() as AbstractControl;
+      const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType!)!.control() as AbstractControl;
       if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
         control.addValidators(Validators.required);
       }
@@ -175,7 +179,7 @@ export class CreateResourceFormComponent implements OnInit {
           }) as unknown as FormValueGroup,
         ])
       );
-      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType);
+      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType!);
     });
   }
 
@@ -203,7 +207,7 @@ export class CreateResourceFormComponent implements OnInit {
     Object.keys(this.form.controls.properties.controls)
       .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
       .forEach(iri => {
-        propertiesObj[iri] = this.getValue(iri);
+        propertiesObj[iri] = this._getValue(iri);
       });
 
     if (this.fileRepresentation) {
@@ -212,7 +216,7 @@ export class CreateResourceFormComponent implements OnInit {
     return propertiesObj;
   }
 
-  private getValue(iri: string) {
+  private _getValue(iri: string) {
     const foundProperty = this.properties.find(property => property.propertyIndex === iri);
     if (!foundProperty) throw new Error(`Property ${iri} not found`);
     const propertyDefinition = foundProperty.propertyDefinition as ResourcePropertyDefinition;
@@ -222,7 +226,7 @@ export class CreateResourceFormComponent implements OnInit {
       .filter(group => group.value.item !== null)
       .map(group => {
         const entity = propertiesTypeMapping
-          .get(this.mapping.get(iri))
+          .get(this.mapping.get(iri)!)!
           .mapping(group.controls.item.value, propertyDefinition);
         if (group.controls.comment.value) {
           entity.valueHasComment = group.controls.comment.value;
@@ -232,15 +236,8 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getFileValue(fileRepresentation: FileRepresentationType) {
-    if (!this.form.controls.file) {
-      throw new Error('Form file is undefined');
-    }
-    const myClass = fileValueMapping.get(fileRepresentation);
-    if (myClass === undefined) {
-      throw new Error('Mapping is undefined');
-    }
-    const FileValue = new myClass.UploadClass();
-    FileValue.filename = this.form.controls.file.value.filename;
+    const FileValue = new (fileValueMapping.get(fileRepresentation)!.UploadClass)();
+    FileValue.filename = this.form.controls.file!.value.filename;
     return FileValue;
   }
 }
