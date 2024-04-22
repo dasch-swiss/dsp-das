@@ -6,6 +6,7 @@ import {
   Constants,
   CreateFileValue,
   CreateResource,
+  CreateValue,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ResourceClassAndPropertyDefinitions,
@@ -197,7 +198,7 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getPropertiesObj() {
-    const propertiesObj = {};
+    const propertiesObj: { [index: string]: CreateValue[] } = {};
 
     Object.keys(this.form.controls.properties.controls)
       .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
@@ -205,7 +206,7 @@ export class CreateResourceFormComponent implements OnInit {
         propertiesObj[iri] = this.getValue(iri);
       });
 
-    if (this.form.controls.file) {
+    if (this.fileRepresentation) {
       propertiesObj[this.fileRepresentation] = [this._getFileValue()];
     }
     return propertiesObj;
