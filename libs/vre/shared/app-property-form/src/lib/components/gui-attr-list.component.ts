@@ -22,10 +22,8 @@ import { PropertyForm } from '../property-form.type';
   styles: ['.large-field {width: 100%}'],
 })
 export class GuiAttrListComponent {
-  @Input() control: PropertyForm['controls']['guiAttr'];
+  @Input() control!: PropertyForm['controls']['guiAttr'];
   lists$ = this._store.select(ListsSelectors.listsInProject);
-
-  // gui attribute value for lists looks as follows: hlist=<http://rdfh.ch/lists/00FF/73d0ec0302>
 
   constructor(private _store: Store) {}
 }

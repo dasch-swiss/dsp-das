@@ -61,8 +61,8 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   }
 
   onFormInit(form: PropertyForm) {
+    form.controls.propType.disable();
     this.form = form;
-    this.form.controls.propType.disable();
   }
 
   onSubmit() {
