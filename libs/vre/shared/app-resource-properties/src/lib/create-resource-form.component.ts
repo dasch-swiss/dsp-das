@@ -149,10 +149,7 @@ export class CreateResourceFormComponent implements OnInit {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         this.resourceClass = onto.classes[this.resourceClassIri];
-        this.properties = this.resourceClass
-          .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined)
-          .filter(v => v.propertyDefinition['isLinkProperty'] === false);
+        this.properties = this.resourceClass.getResourcePropertiesList().filter(v => v.guiOrder !== undefined);
 
         this._buildForm();
         this._cd.detectChanges();
