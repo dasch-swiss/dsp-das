@@ -23,7 +23,7 @@ import { GeonameService, SearchPlace } from '../geoname.service';
   </mat-form-field>`,
 })
 export class GeonameValueComponent implements OnInit {
-  @Input() control: FormControl<string>;
+  @Input() control!: FormControl<string>;
   places: SearchPlace[];
 
   constructor(private _geonameService: GeonameService) {}

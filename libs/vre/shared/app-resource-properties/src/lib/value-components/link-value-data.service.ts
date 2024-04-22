@@ -19,7 +19,7 @@ export class LinkValueDataService {
   resourceClasses!: ResourceClassDefinition[];
   subClasses: ResourceClassDefinition[] = [];
   properties!: ResourcePropertyDefinition[];
-  restrictToResourceClass: string;
+  restrictToResourceClass!: string;
 
   currentOntoIri!: string; // For resourceClasses
   constructor(
