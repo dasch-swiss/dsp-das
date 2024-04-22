@@ -125,6 +125,8 @@ export const propertiesTypeMapping = new Map<
             newTextValueXml.xml = handleXML(value, false);
             newTextValueXml.mapping = Constants.StandardMapping;
             return newTextValueXml;
+          default:
+            throw new Error('No default value for text');
         }
       },
       updateMapping: (id: string, value: string, propertyDefinition: ResourcePropertyDefinition) => {
@@ -140,6 +142,8 @@ export const propertiesTypeMapping = new Map<
             newTextValueXml.xml = handleXML(value, false);
             newTextValueXml.mapping = Constants.StandardMapping;
             return newTextValueXml;
+          default:
+            throw new Error('No default value for text');
         }
       },
     },
