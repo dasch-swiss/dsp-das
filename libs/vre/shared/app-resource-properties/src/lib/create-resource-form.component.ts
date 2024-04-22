@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+  ApiResponseError,
   Cardinality,
   Constants,
   CreateFileValue,
   CreateResource,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
-  ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
@@ -86,7 +86,7 @@ export class CreateResourceFormComponent implements OnInit {
   form: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file?: FormControl<CreateFileValue>;
+    file?: FormControl<CreateFileValue | null>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
   resourceClass: ResourceClassDefinitionWithPropertyDefinition | undefined;
@@ -130,7 +130,8 @@ export class CreateResourceFormComponent implements OnInit {
     this._dspApiConnection.v2.res
       .createResource(this._getPayload())
       .pipe(take(1))
-      .subscribe((res: ReadResource) => {
+      .subscribe(res => {
+        if (res instanceof ApiResponseError) return;
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
         this.createdResourceIri.emit(res.id);
       });
@@ -183,6 +184,7 @@ export class CreateResourceFormComponent implements OnInit {
         return item as FileRepresentationType;
       }
     }
+    return undefined;
   }
 
   private _getPayload() {
@@ -229,11 +231,11 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getFileValue() {
-    const MyClass = fileValueMapping.get(this.fileRepresentation);
-    if (MyClass === undefined) {
+    const myClass = fileValueMapping.get(this.fileRepresentation);
+    if (myClass === undefined) {
       throw new Error('Mapping is undefined');
     }
-    const FileValue = new MyClass.uploadClass();
+    const FileValue = new myClass.UploadClass();
     FileValue.filename = this.form.controls.file.value.filename;
     return FileValue;
   }

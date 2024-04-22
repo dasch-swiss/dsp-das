@@ -14,49 +14,49 @@ export const fileValueMapping = new Map<
   FileRepresentationType,
   {
     fileTypes: string[];
-    uploadClass: new () => CreateFileValue;
+    UploadClass: new () => CreateFileValue;
   }
 >([
   [
     Constants.HasStillImageFileValue as FileRepresentationType,
     {
       fileTypes: ['jp2', 'jpg', 'jpeg', 'png', 'tif', 'tiff'],
-      uploadClass: CreateStillImageFileValue,
+      UploadClass: CreateStillImageFileValue,
     },
   ],
   [
     Constants.HasMovingImageFileValue as FileRepresentationType,
     {
       fileTypes: ['mp4'],
-      uploadClass: CreateMovingImageFileValue,
+      UploadClass: CreateMovingImageFileValue,
     },
   ],
   [
     Constants.HasAudioFileValue as FileRepresentationType,
     {
       fileTypes: ['mp3', 'wav'],
-      uploadClass: CreateAudioFileValue,
+      UploadClass: CreateAudioFileValue,
     },
   ],
   [
     Constants.HasDocumentFileValue as FileRepresentationType,
     {
       fileTypes: ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'],
-      uploadClass: CreateDocumentFileValue,
+      UploadClass: CreateDocumentFileValue,
     },
   ],
   [
     Constants.HasTextFileValue as FileRepresentationType,
     {
       fileTypes: ['csv', 'odd', 'rng', 'txt', 'xml', 'xsd', 'xsl'],
-      uploadClass: CreateTextFileValue,
+      UploadClass: CreateTextFileValue,
     },
   ],
   [
     Constants.HasArchiveFileValue as FileRepresentationType,
     {
       fileTypes: ['7z', 'gz', 'gzip', 'tar', 'tgz', 'z', 'zip'],
-      uploadClass: CreateArchiveFileValue,
+      UploadClass: CreateArchiveFileValue,
     },
   ],
 ]);

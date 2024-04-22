@@ -135,7 +135,7 @@ export class Upload2Component implements ControlValueAccessor {
       }
 
       // eslint-disable-next-line new-cap
-      const fileResponse = new (fileValueMapping.get(this.representation).uploadClass)();
+      const fileResponse = new (fileValueMapping.get(this.representation).UploadClass)();
       fileResponse.filename = res.uploadedFiles[0].internalFilename;
       this.onChange(fileResponse);
       this._cdr.detectChanges();
