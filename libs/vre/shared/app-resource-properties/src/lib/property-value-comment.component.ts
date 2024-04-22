@@ -7,7 +7,11 @@ import { FormValueGroup } from './form-value-array.type';
   selector: 'app-property-value-comment',
   template: `
     <div *ngIf="displayMode; else editMode">
-      <div *ngIf="showAllComments$ | async">{{ control.value }}</div>
+      <div
+        *ngIf="(showAllComments$ | async) && control.value !== null"
+        style="border-top: 1px solid #ebebeb; margin-top: 8px; margin-bottom: 16px; padding-top: 4px; font-size: small">
+        {{ control.value }}
+      </div>
     </div>
 
     <ng-template #editMode>

@@ -53,7 +53,9 @@ import { RepresentationConstants } from '../representation/file-representation';
       <div class="property-value">This resource has no defined properties.</div>
     </ng-template>
   `,
-  styles: ['.label {color: rgb(107, 114, 128); width: 150px; margin-top: 0px; text-align: right; padding-right: 24px}'],
+  styles: [
+    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; width: 150px; margin-top: 0px; text-align: right; padding-right: 24px; flex-shrink: 0}',
+  ],
 })
 export class PropertiesDisplayComponent implements OnInit {
   @Input() resource: DspResource;

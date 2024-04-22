@@ -1,5 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
@@ -16,18 +18,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
             data-cy="edit-button">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-button class="edit" *ngIf="date" [matTooltip]="date" (click)="$event.stopPropagation()">
+          <button mat-button class="edit" *ngIf="date" [matTooltip]="infoTooltip" (click)="$event.stopPropagation()">
             <mat-icon>info</mat-icon>
           </button>
-          <button
-            mat-button
-            class="delete"
-            matTooltip="delete"
-            data-cy="delete-button"
-            *ngIf="showDelete"
-            (click)="$event.stopPropagation(); deleteAction.emit()">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
+            <button
+              mat-button
+              class="delete"
+              data-cy="delete-button"
+              [disabled]="!showDelete"
+              (click)="$event.stopPropagation(); deleteAction.emit()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
         </ng-container>
       </div>
     </div>
@@ -47,10 +50,23 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
-export class PropertyValueActionBubbleComponent {
+export class PropertyValueActionBubbleComponent implements OnInit {
   @Input() editMode!: boolean;
   @Input() showDelete!: boolean;
   @Input() date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
+
+  infoTooltip!: string;
+
+  constructor(private _store: Store) {}
+
+  ngOnInit() {
+    this.infoTooltip = this._getInfoToolTip();
+  }
+
+  private _getInfoToolTip() {
+    const creator = Object.values(this._store.selectSnapshot(ResourceSelectors.attachedUsers))[0].value[0]!.username;
+    return `Creation date: ${this.date}. Value creator: ${creator}`;
+  }
 }
