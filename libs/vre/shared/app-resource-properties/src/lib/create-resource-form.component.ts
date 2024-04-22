@@ -45,7 +45,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       </div>
 
       <div class="my-grid">
-        <ng-container *ngFor="let prop of properties">
+        <ng-container *ngFor="let prop of myProperties">
           <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propertyDefinition.label }}</div>
           <div>
             <app-property-value-switcher
@@ -116,6 +116,10 @@ export class CreateResourceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
+  get myProperties() {
+    return this.properties?.filter(prop => propertiesTypeMapping.has(prop.propertyDefinition.objectType!)) ?? [];
+  }
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -165,23 +169,25 @@ export class CreateResourceFormComponent implements OnInit {
       this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
-    this.properties.forEach(prop => {
-      const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType!)!.control() as AbstractControl;
-      if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
-        control.addValidators(Validators.required);
-      }
+    this.properties
+      .filter(prop => propertiesTypeMapping.has(prop.propertyDefinition.objectType!))
+      .forEach(prop => {
+        const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType!)!.control() as AbstractControl;
+        if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
+          control.addValidators(Validators.required);
+        }
 
-      this.form.controls.properties.addControl(
-        prop.propertyDefinition.id,
-        this._fb.array([
-          this._fb.group({
-            item: control,
-            comment: '',
-          }) as unknown as FormValueGroup,
-        ])
-      );
-      this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType!);
-    });
+        this.form.controls.properties.addControl(
+          prop.propertyDefinition.id,
+          this._fb.array([
+            this._fb.group({
+              item: control,
+              comment: '',
+            }) as unknown as FormValueGroup,
+          ])
+        );
+        this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType!);
+      });
   }
 
   private _getFileRepresentation(onto: ResourceClassAndPropertyDefinitions) {

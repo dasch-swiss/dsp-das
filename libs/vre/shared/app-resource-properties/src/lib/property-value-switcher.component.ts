@@ -103,10 +103,10 @@ import { PropertyValueService } from './property-value.service';
   ],
 })
 export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
-  @Input() propertyDefinition!: ResourcePropertyDefinition;
-  @Input() cardinality!: Cardinality;
-  @Input() formArray!: FormValueArray;
-  @Input() property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
+  @Input({ required: true }) propertyDefinition!: ResourcePropertyDefinition;
+  @Input({ required: true }) cardinality!: Cardinality;
+  @Input({ required: true }) formArray!: FormValueArray;
+  @Input({ required: true }) property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
   @Input({ required: true }) resourceClassIri!: string;
 
