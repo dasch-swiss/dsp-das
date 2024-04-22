@@ -94,8 +94,8 @@ export class LinkValueComponent implements OnInit, OnDestroy {
           })
         )
       )
-      .subscribe((response: ReadResourceSequence) => {
-        this.resources = response.resources;
+      .subscribe(response => {
+        this.resources = (response as ReadResourceSequence).resources;
         this._cd.detectChanges();
       });
   }
@@ -120,8 +120,8 @@ export class LinkValueComponent implements OnInit, OnDestroy {
           return this._dspApiConnection.v2.res.getResource(myResourceId);
         })
       )
-      .subscribe((res: ReadResource) => {
-        this.resources.push(res);
+      .subscribe(res => {
+        this.resources.push(res as ReadResource);
         this.control.setValue(myResourceId);
         this.autoComplete.closePanel();
         this._cd.detectChanges();

@@ -9,7 +9,6 @@ import {
   ReadValue,
   UpdateResource,
   UpdateValue,
-  WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -186,7 +185,7 @@ export class PropertyValueComponent implements OnInit {
           this.loading = false;
         })
       )
-      .subscribe((res: WriteValueResponse) => {
+      .subscribe(() => {
         this.propertyValueService.toggleOpenedValue(this.index);
         this._cdr.detectChanges();
       });

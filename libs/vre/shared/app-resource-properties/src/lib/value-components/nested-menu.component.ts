@@ -32,7 +32,7 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
   ],
 })
 export class NestedMenuComponent {
-  @Input() data: ListNodeV2;
-  @Input() selection: string;
+  @Input() data!: ListNodeV2;
+  @Input() selection!: string;
   @Output() selectedNode = new EventEmitter<ListNodeV2>();
 }

@@ -1,5 +1,5 @@
 export function handleXML(xml: string, fromKnora: boolean, addXMLDocType = true) {
-  const xmlTransform = {
+  const xmlTransform: { [index: string]: string } = {
     '<hr>': '<hr/>',
     '<s>': '<strike>',
     '</s>': '</strike>',
