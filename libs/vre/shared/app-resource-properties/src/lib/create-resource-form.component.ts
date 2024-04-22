@@ -88,10 +88,11 @@ export class CreateResourceFormComponent implements OnInit {
   form: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file?: FormControl<CreateFileValue>;
+    file: FormControl<CreateFileValue | null>;
   }> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
     properties: this._fb.group({}),
+    file: null as CreateFileValue | null,
   });
 
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
@@ -237,7 +238,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _getFileValue(fileRepresentation: FileRepresentationType) {
     const FileValue = new (fileValueMapping.get(fileRepresentation)!.UploadClass)();
-    FileValue.filename = this.form.controls.file!.value.filename;
+    FileValue.filename = this.form.controls.file!.value!.filename;
     return FileValue;
   }
 }
