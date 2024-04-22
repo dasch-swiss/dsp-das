@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
 import { PropertyInfoValues } from './property-info-values.interface';
 import { ResourceClassIriService } from './resource-class-iri.service';
@@ -11,7 +12,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-property-value-switcher
       *ngIf="resourceClassIriService.resourceClassIri$ | async as resClassIri"
-      [propertyDefinition]="prop.propDef"
+      [propertyDefinition]="JsLibPotentialError.setAs(prop.propDef)"
       [property]="prop.guiDef"
       [cardinality]="prop.guiDef.cardinality"
       [formArray]="formArray"
@@ -31,6 +32,8 @@ export class ExistingPropertyValueComponent implements OnInit {
     private _fb: FormBuilder,
     public resourceClassIriService: ResourceClassIriService
   ) {}
+
+  JsLibPotentialError = JsLibPotentialError;
 
   ngOnInit() {
     this.formArray = this._fb.array(

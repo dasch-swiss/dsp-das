@@ -17,6 +17,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
+import { JsLibPotentialError } from './JsLibPotentialError';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
@@ -48,7 +49,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propertyDefinition.label }}</div>
           <div>
             <app-property-value-switcher
-              [propertyDefinition]="prop.propertyDefinition"
+              [propertyDefinition]="JsLibPotentialError.setAs(prop.propertyDefinition)"
               [property]="prop"
               [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
               [cardinality]="prop.cardinality"
@@ -108,6 +109,8 @@ export class CreateResourceFormComponent implements OnInit {
     Constants.HasTextFileValue,
   ];
 
+  JsLibPotentialError = JsLibPotentialError;
+
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
   }
@@ -161,7 +164,7 @@ export class CreateResourceFormComponent implements OnInit {
       this.form.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
-    this.properties.forEach((prop, index) => {
+    this.properties.forEach(prop => {
       const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType!)!.control() as AbstractControl;
       if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
         control.addValidators(Validators.required);
