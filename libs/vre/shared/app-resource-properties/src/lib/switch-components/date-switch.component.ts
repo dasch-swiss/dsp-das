@@ -7,16 +7,24 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   selector: 'app-date-switch',
   template: `
     <ng-container *ngIf="displayMode; else editMode">
-      <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl"
-        >{{ start.day }}.{{ start.month }}.{{ start.year }}
+      <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl">
+        <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
+        {{ start.day }}.{{ start.month }}.{{ start.year }}
         <span>- {{ end.day }}.{{ end.month }}.{{ end.year }}</span>
       </ng-container>
     </ng-container>
 
-    <ng-template #knoraDateTpl>{{ knoraDate.day }}.{{ knoraDate.month }}.{{ knoraDate.year }}</ng-template>
+    <ng-template #knoraDateTpl>
+      <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
+      {{ knoraDate.day }}.{{ knoraDate.month }}.{{ knoraDate.year }}
+    </ng-template>
 
     <ng-template #editMode>
       <app-date-value-handler [formControl]="control"></app-date-value-handler>
+    </ng-template>
+
+    <ng-template #calendarType let-date="date">
+      <div class="mat-body-2" style="font-size: 12px">{{ date | knoraDate: 'dd.MM.YYYY' : 'calendarOnly' }}</div>
     </ng-template>
   `,
 })
