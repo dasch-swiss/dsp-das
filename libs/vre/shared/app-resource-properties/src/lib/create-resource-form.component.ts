@@ -28,7 +28,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <h3>Create new resource of type: {{ resourceType }}</h3>
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <app-upload-2
-        *ngIf="form.controls.file"
+        *ngIf="form.controls.file && fileRepresentation"
         [formControl]="form.controls.file"
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
@@ -87,10 +87,10 @@ export class CreateResourceFormComponent implements OnInit {
   form: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file?: FormControl<CreateFileValue | null>;
+    file?: FormControl<CreateFileValue>;
   }> = this._fb.group({ label: this._fb.control('', [Validators.required]), properties: this._fb.group({}) });
 
-  resourceClass: ResourceClassDefinitionWithPropertyDefinition | undefined;
+  resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
   properties: IHasPropertyWithPropertyDefinition[] | undefined;
   loading = false;
@@ -207,7 +207,7 @@ export class CreateResourceFormComponent implements OnInit {
       });
 
     if (this.fileRepresentation) {
-      propertiesObj[this.fileRepresentation] = [this._getFileValue()];
+      propertiesObj[this.fileRepresentation] = [this._getFileValue(this.fileRepresentation)];
     }
     return propertiesObj;
   }
@@ -231,8 +231,11 @@ export class CreateResourceFormComponent implements OnInit {
       });
   }
 
-  private _getFileValue() {
-    const myClass = fileValueMapping.get(this.fileRepresentation);
+  private _getFileValue(fileRepresentation: FileRepresentationType) {
+    if (!this.form.controls.file) {
+      throw new Error('Form file is undefined');
+    }
+    const myClass = fileValueMapping.get(fileRepresentation);
     if (myClass === undefined) {
       throw new Error('Mapping is undefined');
     }
