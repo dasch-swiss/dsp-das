@@ -33,3 +33,4 @@ export * from './lib/upload-file.service';
 export * from './lib/file-representation.type';
 export * from './lib/property-info-values.interface';
 export * from './lib/properties-toolbar.component';
+export * from './lib/property-value-comment.component';

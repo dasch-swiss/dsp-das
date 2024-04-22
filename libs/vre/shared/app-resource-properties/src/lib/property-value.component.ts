@@ -38,10 +38,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
 
-        <mat-form-field style="flex: 1; width: 100%" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
-          <mat-icon matPrefix style="color: #808080" *ngIf="group.controls.comment.disabled">lock </mat-icon>
-          <textarea matInput rows="1" [placeholder]="'Comment'" [formControl]="group.controls.comment"></textarea>
-        </mat-form-field>
+        <app-property-value-comment
+          [displayMode]="displayMode"
+          [control]="group.controls.comment"></app-property-value-comment>
       </div>
       <button
         (click)="onSave()"
@@ -66,7 +65,7 @@ export class PropertyValueComponent implements OnInit {
   initialFormValue!: { item: any; comment: string | null };
 
   showBubble = false;
-  displayMode: boolean | undefined;
+  displayMode = true;
   loading = false;
 
   subscription!: Subscription;

@@ -5,6 +5,7 @@ import { DeleteValueDialogComponent } from './delete-value-dialog.component';
 import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { PropertiesToolbarComponent } from './properties-toolbar.component';
 import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
+import { PropertyValueCommentComponent } from './property-value-comment.component';
 import { PropertyValueSwitcherComponent } from './property-value-switcher.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValuesComponent } from './property-values.component';
@@ -64,4 +65,5 @@ export const ResourcePropertiesComponents = [
   CreateResourceFormComponent,
   Upload2Component,
   PropertiesToolbarComponent,
+  PropertyValueCommentComponent,
 ];
