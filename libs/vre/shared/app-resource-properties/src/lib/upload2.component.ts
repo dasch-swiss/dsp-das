@@ -14,7 +14,7 @@ import { UploadedFileResponse, UploadFileService } from './upload-file.service';
       *ngIf="ngControl.value === null; else showFileTemplate"
       appDragDrop
       (click)="fileInput.click()"
-      (fileDropped)="addFile($event.item(0))"
+      (fileDropped)="_addFile($event.item(0))"
       style="cursor: pointer">
       <div
         style="text-align: center;
@@ -36,7 +36,7 @@ import { UploadedFileResponse, UploadFileService } from './upload-file.service';
       <div *ngIf="previewUrl" style="display: flex; justify-content: center">
         <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px; margin-bottom: 16px" />
       </div>
-      <table style="text-align: center; width: 100%; border: 1px solid lightgray">
+      <table *ngIf="fileToUpload" style="text-align: center; width: 100%; border: 1px solid lightgray">
         <tr style="background: lightblue">
           <th>Name</th>
           <th>Size</th>
@@ -59,19 +59,19 @@ import { UploadedFileResponse, UploadFileService } from './upload-file.service';
   styles: ['td {padding: 8px; text-align: center}'],
 })
 export class Upload2Component implements ControlValueAccessor {
-  @Input({ required: true }) representation: FileRepresentationType;
-  @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
+  @Input({ required: true }) representation!: FileRepresentationType;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly Math = Math;
 
   previewUrl: SafeUrl | null = null;
-  fileToUpload: File;
+  fileToUpload: File | undefined;
 
-  onChange: (value: any) => void;
-  onTouched: () => void;
+  onChange!: (value: any) => void;
+  onTouched!: () => void;
 
   get allowedFileTypes() {
-    return fileValueMapping.get(this.representation).fileTypes;
+    return fileValueMapping.get(this.representation)!.fileTypes;
   }
 
   constructor(
@@ -95,15 +95,15 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   addFileFromClick(event: any) {
-    this.addFile(event.target.files[0]);
+    this._addFile(event.target.files[0]);
   }
 
-  addFile(file: File) {
+  _addFile(file: File) {
     this.onTouched();
 
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
     const match = file.name.match(regex);
-    const fileExtension = match[1];
+    const fileExtension = match![1];
     if (!match || !this.allowedFileTypes.some(allowedFileExtension => fileExtension === allowedFileExtension)) {
       this._notification.openSnackBar(`The extension ${fileExtension} is not supported`);
       return;
@@ -114,8 +114,8 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   removeFile() {
-    this.ngControl.control.setValue(null);
-    this.ngControl.control.markAsUntouched();
+    this.ngControl.control!.setValue(null);
+    this.ngControl.control!.markAsUntouched();
   }
 
   private _uploadFile(file: File): void {
@@ -135,12 +135,12 @@ export class Upload2Component implements ControlValueAccessor {
       }
 
       // eslint-disable-next-line new-cap
-      const fileResponse = new (fileValueMapping.get(this.representation).UploadClass)();
+      const fileResponse = new (fileValueMapping.get(this.representation)!.UploadClass)();
       fileResponse.filename = res.uploadedFiles[0].internalFilename;
       this.onChange(fileResponse);
       this._cdr.detectChanges();
     });
 
-    this.fileInput.nativeElement.value = null;
+    this.fileInput.nativeElement.value = '';
   }
 }
