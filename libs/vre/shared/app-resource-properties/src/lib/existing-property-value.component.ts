@@ -38,7 +38,7 @@ export class ExistingPropertyValueComponent implements OnInit {
   ngOnInit() {
     this.formArray = this._fb.array(
       this.prop.values.map(value => {
-        const property = propertiesTypeMapping.get(this.prop.propDef.objectType);
+        const property = propertiesTypeMapping.get(this.prop.propDef.objectType!);
         if (property === undefined) {
           throw new Error(`The property of type ${this.prop.propDef.objectType} is unknown`);
         }

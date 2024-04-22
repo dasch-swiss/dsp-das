@@ -20,10 +20,10 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
   styles: [':host {display: flex; align-items: center}'],
 })
 export class ListValueComponent implements OnInit {
-  @Input() propertyDef: ResourcePropertyDefinition;
-  @Input() control: FormControl<string>;
-  listRootNode: ListNodeV2;
-  mySelectedNode: ListNodeV2;
+  @Input() propertyDef!: ResourcePropertyDefinition;
+  @Input() control!: FormControl<string>;
+  listRootNode: ListNodeV2 | undefined;
+  mySelectedNode: ListNodeV2 | undefined;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -37,7 +37,7 @@ export class ListValueComponent implements OnInit {
 
   resetNode() {
     this.mySelectedNode = undefined;
-    this.control.patchValue(undefined);
+    this.control.patchValue('');
   }
 
   selectedNode(node: ListNodeV2) {
@@ -49,11 +49,11 @@ export class ListValueComponent implements OnInit {
     const rootNodeIris = this.propertyDef.guiAttributes;
     for (const rootNodeIri of rootNodeIris) {
       const trimmedRootNodeIRI = rootNodeIri.substring(7, rootNodeIri.length - 1);
-      this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe((response: ListNodeV2) => {
+      this._dspApiConnection.v2.list.getList(trimmedRootNodeIRI).subscribe(response => {
         // TODO weird to have n subscribes inside ngFors
-        this.listRootNode = response;
+        this.listRootNode = response as ListNodeV2;
 
-        this._lookForNode(response);
+        this._lookForNode(response as ListNodeV2);
         this._cd.detectChanges();
       });
     }

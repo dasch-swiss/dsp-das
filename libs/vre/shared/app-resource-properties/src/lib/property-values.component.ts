@@ -42,7 +42,7 @@ export class PropertyValuesComponent implements OnInit {
     this.propertyValueService.formArray.push(
       this._fb.group({
         item: propertiesTypeMapping
-          .get(this.propertyValueService.propertyDefinition.objectType)
+          .get(this.propertyValueService.propertyDefinition.objectType!)!
           .control() as AbstractControl,
         comment: this._fb.control(''),
       })

@@ -22,7 +22,7 @@ import { ResourceClassIriService } from './resource-class-iri.service';
 })
 export class CreateResourcePageComponent {
   projectOntologies$ = this._store.select(OntologiesSelectors.projectOntologies);
-  projectUuid = this._route.snapshot.params.uuid ?? this._route.parent.snapshot.params.uuid;
+  projectUuid = this._route.snapshot.params['uuid'] ?? this._route.parent!.snapshot.params['uuid'];
 
   constructor(
     private _route: ActivatedRoute,

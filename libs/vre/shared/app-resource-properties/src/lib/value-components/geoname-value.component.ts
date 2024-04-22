@@ -24,7 +24,7 @@ import { GeonameService, SearchPlace } from '../geoname.service';
 })
 export class GeonameValueComponent implements OnInit {
   @Input() control!: FormControl<string>;
-  places: SearchPlace[];
+  places: SearchPlace[] = [];
 
   constructor(private _geonameService: GeonameService) {}
 
@@ -52,6 +52,6 @@ export class GeonameValueComponent implements OnInit {
   }
 
   displayPlaceInSearch(placeId: string) {
-    return this.places?.find(place => place.id === placeId).displayName;
+    return this.places.find(place => place.id === placeId)!.displayName;
   }
 }

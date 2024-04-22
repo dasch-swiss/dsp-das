@@ -122,7 +122,7 @@ export class PropertyValueComponent implements OnInit {
 
     this.loading = true;
     const createVal = propertiesTypeMapping
-      .get(this.propertyValueService.propertyDefinition.objectType)
+      .get(this.propertyValueService.propertyDefinition.objectType!)!
       .mapping(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
 
     const resource = this.propertyValueService._editModeData?.resource as ReadResource;
