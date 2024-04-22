@@ -57,41 +57,39 @@ export class GeonameService {
    */
   resolveGeonameID(id: string): Observable<DisplayPlace> {
     return this._http
-      .get<object>(
+      .get<{
+        name: string;
+        countryName: string;
+        adminName1?: string;
+        wikipediaURL?: string;
+        lat: number;
+        lng: number;
+      }>(
         `https://ws.geonames.net/getJSON?geonameId=${id}&username=${this._appConfigService.dspAppConfig.geonameToken}&style=short`
       )
       .pipe(
-        map(
-          (geo: {
-            name: string;
-            countryName: string;
-            adminName1?: string;
-            wikipediaURL?: string;
-            lat: number;
-            lng: number;
-          }) => {
-            // assertions for TS compiler
+        map(geo => {
+          // assertions for TS compiler
 
-            if (!('name' in geo && 'countryName' in geo && 'lat' in geo && 'lng' in geo)) {
-              // at least one of the expected properties is not present
-              throw new Error('required property missing in geonames response');
-            }
-
-            return {
-              displayName: `${geo.name + (geo.adminName1 !== undefined ? `, ${geo.adminName1}` : '')}, ${
-                geo.countryName
-              }`,
-              name: geo.name,
-              administrativeName: geo.adminName1,
-              country: geo.countryName,
-              wikipediaUrl: geo.wikipediaURL,
-              location: {
-                longitude: geo.lng,
-                latitude: geo.lat,
-              },
-            };
+          if (!('name' in geo && 'countryName' in geo && 'lat' in geo && 'lng' in geo)) {
+            // at least one of the expected properties is not present
+            throw new Error('required property missing in geonames response');
           }
-        ),
+
+          return {
+            displayName: `${geo.name + (geo.adminName1 !== undefined ? `, ${geo.adminName1}` : '')}, ${
+              geo.countryName
+            }`,
+            name: geo.name,
+            administrativeName: geo.adminName1,
+            country: geo.countryName,
+            wikipediaUrl: geo.wikipediaURL,
+            location: {
+              longitude: geo.lng,
+              latitude: geo.lat,
+            },
+          };
+        }),
         shareReplay({ refCount: false, bufferSize: 1 }), // several subscribers may use the same source Observable (one HTTP request to geonames)
         catchError(error =>
           // an error occurred

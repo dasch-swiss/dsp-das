@@ -44,11 +44,10 @@ export class CreateResourcePageComponent {
   ]).pipe(
     map(([projectOntologies, classId, ontoId]) => {
       const ontology = projectOntologies[this.projectIri].readOntologies.find(onto => onto.id === ontoId);
-      if (ontology) {
-        // find ontology of current resource class to get the class label
-        const classes = getAllEntityDefinitionsAsArray(ontology.classes);
-        return <ResourceClassDefinition>classes[classes.findIndex(res => res.id === classId)];
-      }
+      if (!ontology) return undefined;
+      // find ontology of current resource class to get the class label
+      const classes = getAllEntityDefinitionsAsArray(ontology.classes);
+      return <ResourceClassDefinition>classes[classes.findIndex(res => res.id === classId)];
     })
   );
 

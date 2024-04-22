@@ -196,7 +196,7 @@ export class PropertyValueComponent implements OnInit {
     const values = this.propertyValueService._editModeData?.values as ReadValue[];
     const id = values[index].id;
     const entity = propertiesTypeMapping
-      .get(this.propertyValueService.propertyDefinition.objectType)
+      .get(this.propertyValueService.propertyDefinition.objectType!)!
       .updateMapping(id, group.controls.item.value, this.propertyValueService.propertyDefinition);
     if (group.controls.comment.value) {
       entity.valueHasComment = group.controls.comment.value;
