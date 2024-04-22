@@ -11,9 +11,11 @@ import { RepresentationConstants } from '../representation/file-representation';
 @Component({
   selector: 'app-properties-display',
   template: `
-    <!-- toolbar -->
-    <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
-    <!-- additional line with project and user information -->
+    <app-properties-toolbar
+      [showToggleProperties]="true"
+      style="
+    display: block;
+    margin-bottom: 8px"></app-properties-toolbar>
 
     <!-- list of properties -->
     <ng-container *ngIf="myProperties$ | async as myProperties">

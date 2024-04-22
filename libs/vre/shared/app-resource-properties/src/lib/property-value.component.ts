@@ -34,7 +34,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()"></app-property-value-action-bubble>
 
     <div style="display: flex">
-      <div style="flex: 1">
+      <div class="item">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
 
@@ -56,6 +56,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
     </div>
   </div>`,
+  styles: ['.item {flex: 1; &:hover{background: #f5f5f5}}'],
 })
 export class PropertyValueComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
