@@ -312,6 +312,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     this.oldResourceIri = this.resourceIri;
     this._getResource(iri).subscribe(dspResource => {
       this._renderResource(dspResource);
+      this._getResourceAttachedData(dspResource);
     });
   }
 
