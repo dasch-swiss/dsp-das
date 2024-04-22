@@ -128,9 +128,9 @@ export class PropertyFormComponent implements OnInit {
           value: this.formData.guiAttribute!,
           disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType!),
         },
-        [Validators.required]
+        { nonNullable: true, validators: [Validators.required] }
       ),
-      cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1),
+      cardinality: this._fb.control(this.formData.cardinality ?? Cardinality._0_1, { nonNullable: true }),
     });
 
     this.afterFormInit.emit(this.form);
