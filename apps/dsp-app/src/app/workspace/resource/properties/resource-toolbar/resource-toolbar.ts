@@ -30,14 +30,8 @@ import {
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  LoadClassItemsCountAction,
-  ResourceSelectors,
-  ToggleShowAllCommentsAction,
-  ToggleShowAllPropsAction,
-} from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
 import { DspResource } from '../../dsp-resource';
 
@@ -76,13 +70,6 @@ export class ResourceToolbarComponent implements OnInit {
 
   canReadComments: boolean;
 
-  get hasIconButtonActions() {
-    return this.isAnnotation || !this.showToggleProperties;
-  }
-
-  @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
-  @Select(ResourceSelectors.showAllComments) showAllComments$: Observable<boolean>;
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -117,14 +104,6 @@ export class ResourceToolbarComponent implements OnInit {
     const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
     const path = this._resourceService.getResourcePath(iri);
     window.open(`/resource${path}`, '_blank');
-  }
-
-  toggleShowAllProps() {
-    this._store.dispatch(new ToggleShowAllPropsAction());
-  }
-
-  toggleShowAllComments() {
-    this._store.dispatch(new ToggleShowAllCommentsAction());
   }
 
   openDialog(type: 'delete' | 'erase' | 'edit') {

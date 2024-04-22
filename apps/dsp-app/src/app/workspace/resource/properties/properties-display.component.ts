@@ -8,7 +8,7 @@ import { RepresentationConstants } from '../representation/file-representation';
   selector: 'app-properties-display',
   template: `
     <!-- toolbar -->
-
+    <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
     <!-- additional line with project and user information -->
 
     <!-- list of properties -->
