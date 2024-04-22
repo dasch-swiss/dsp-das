@@ -18,7 +18,7 @@ export interface AssignPropertyDialogProps {
   template: ` <app-dialog-header
       title="Assign a property to a resource"
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
-    <app-property-form-2
+    <app-property-form
       mat-dialog-content
       (afterFormInit)="getForm($event)"
       [formData]="{
@@ -31,7 +31,7 @@ export interface AssignPropertyDialogProps {
             ? data.propertyInfo.propDef.comments
             : [{ language: 'de', value: '' }],
         guiAttribute: data.propertyInfo.propDef.guiAttributes[0]
-      }"></app-property-form-2>
+      }"></app-property-form>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button

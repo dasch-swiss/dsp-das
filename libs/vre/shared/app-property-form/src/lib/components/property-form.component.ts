@@ -7,7 +7,7 @@ import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-l
 import { PropertyForm } from '../property-form.type';
 
 @Component({
-  selector: 'app-property-form-2',
+  selector: 'app-property-form',
   template: ` <form [formGroup]="form">
     <mat-form-field style="width: 100%">
       <span matPrefix>
@@ -63,8 +63,8 @@ import { PropertyForm } from '../property-form.type';
     </div>
   </form>`,
 })
-export class PropertyForm2Component implements OnInit {
-  @Input() formData: {
+export class PropertyFormComponent implements OnInit {
+  @Input() formData!: {
     property: PropertyInfoObject;
     resourceClassId: string;
     name?: string;
@@ -78,13 +78,13 @@ export class PropertyForm2Component implements OnInit {
   readonly Constants = Constants;
   readonly defaultProperties = DefaultProperties.data;
 
-  form: PropertyForm;
+  form!: PropertyForm;
+
+  filteredProperties!: PropertyCategory[];
 
   get selectedProperty() {
     return this.defaultProperties.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
   }
-
-  filteredProperties: PropertyCategory[];
 
   constructor(private _fb: FormBuilder) {}
 
@@ -94,11 +94,17 @@ export class PropertyForm2Component implements OnInit {
     );
 
     this.form = this._fb.group({
-      propType: this._fb.control({
-        value: this.formData.property.propType.guiEle,
-        disabled: this.filteredProperties[0].elements.length === 1,
+      propType: this._fb.control(
+        {
+          value: this.formData.property.propType.guiEle!,
+          disabled: this.filteredProperties[0].elements.length === 1,
+        },
+        { nonNullable: true }
+      ),
+      name: this._fb.control<string>(this.formData.name ?? '', {
+        nonNullable: true,
+        validators: [Validators.required],
       }),
-      name: this._fb.control<string>(this.formData.name ?? '', [Validators.required]),
       labels: DEFAULT_MULTILANGUAGE_FORM(
         this.formData.labels ?? [
           {
@@ -119,8 +125,8 @@ export class PropertyForm2Component implements OnInit {
       ),
       guiAttr: this._fb.control<string>(
         {
-          value: this.formData.guiAttribute,
-          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType),
+          value: this.formData.guiAttribute!,
+          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType!),
         },
         [Validators.required]
       ),

@@ -27,10 +27,10 @@ export interface CreatePropertyFormDialogProps {
   template: ` <app-dialog-header
       title="Create a new property"
       [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label"></app-dialog-header>
-    <app-property-form-2
+    <app-property-form
       mat-dialog-content
       (afterFormInit)="onFormInit($event)"
-      [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"></app-property-form-2>
+      [formData]="{ resourceClassId: data.resClassIri, property: data.propertyInfo }"></app-property-form>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
