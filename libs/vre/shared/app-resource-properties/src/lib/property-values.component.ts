@@ -19,7 +19,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         (propertyValueService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality))
       ">
-      <mat-icon>add_box</mat-icon>
+      <mat-icon style="font-size: 18px; width: 18px; height: 18px">add_box</mat-icon>
     </button>`,
 })
 export class PropertyValuesComponent implements OnInit {
