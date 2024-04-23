@@ -25,6 +25,7 @@ import {
   OntologiesSelectors,
   OntologyProperties,
   PropToDisplay,
+  RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
@@ -238,6 +239,21 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
           );
         });
     }
+  }
+
+  removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
+    // TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after following subscription is triggered
+    this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
+
+    this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
+    this._actions$
+      .pipe(ofActionSuccessful(RemovePropertyAction))
+      .pipe(take(1))
+      .subscribe(res => {
+        // TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
+        // this.lastModificationDate = res.lastModificationDate;
+        this.updatePropertyAssignment.emit(this.ontology.id);
+      });
   }
 
   /**

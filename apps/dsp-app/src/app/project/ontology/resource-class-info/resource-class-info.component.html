@@ -48,7 +48,8 @@
         [props]="currentOntologyPropertiesToDisplay"
         [resourceClass]="resourceClass"
         [userCanEdit]="userCanEdit"
-        [i]="i">
+        [i]="i"
+        (removePropertyFromClass)="removeProperty($event)">
         >
       </app-resource-class-info-element>
     </mat-list>

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import {
   Cardinality,
   ClassDefinition,
@@ -11,7 +11,7 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultClass, DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
@@ -35,7 +35,7 @@ import { GuiCardinality } from './resource-class-property-info/resource-class-pr
         </span>
       </span>
       <!-- display only properties if they exist in list of properties;
-                                                                                                                                                                                                                         objectType is not a linkValue (otherwise we have the property twice) -->
+                                                                                                                                                                                                                                             objectType is not a linkValue (otherwise we have the property twice) -->
       <span matListItemTitle>
         <app-resource-class-property-info
           class="property-info"
@@ -46,6 +46,7 @@ import { GuiCardinality } from './resource-class-property-info/resource-class-pr
           [lastModificationDate]="lastModificationDate$ | async"
           [userCanEdit]="userCanEdit"
           [resourceClass]="resourceClass"
+          (removePropertyFromClass)="removePropertyFromClass.emit($event)"
           (changeCardinalities)="newChangeCardinalities($event, props)">
         </app-resource-class-property-info>
       </span>
@@ -57,20 +58,25 @@ import { GuiCardinality } from './resource-class-property-info/resource-class-pr
         .hide-on-hover {
           display: none;
         }
+
         .display-on-hover {
           display: block;
         }
       }
+
       .display-on-hover {
         display: none;
       }
+
       .drag-n-drop-handle {
         cursor: move;
         color: black;
       }
+
       .cdk-drag-handle {
         margin-right: 8px !important;
       }
+
       .hide-on-hover {
         color: black;
       }
@@ -86,6 +92,7 @@ export class ResourceClassInfoElementComponent implements OnInit {
   @Input() prop: PropToDisplay;
   @Input() props: PropToDisplay[];
   @Input() i: number; // index
+  @Output() removePropertyFromClass = new EventEmitter<DefaultClass>();
 
   @Select(OntologiesSelectors.currentProjectOntologyProperties)
   currentProjectOntologyProperties$: Observable<OntologyProperties[]>;

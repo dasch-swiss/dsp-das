@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, UpdateOntology, UpdateResourceClassCardinality } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Store } from '@ngxs/store';
 import { finalize } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
 
@@ -53,7 +54,8 @@ export class AssignPropertyDialogComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private dialogRef: MatDialogRef<AssignPropertyDialogComponent, boolean>,
-    @Inject(MAT_DIALOG_DATA) public data: AssignPropertyDialogProps
+    @Inject(MAT_DIALOG_DATA) public data: AssignPropertyDialogProps,
+    private _store: Store
   ) {}
 
   ngOnInit() {
@@ -100,6 +102,7 @@ export class AssignPropertyDialogComponent implements OnInit {
         })
       )
       .subscribe(() => {
+        // this._store.dispatch(new )
         this.dialogRef.close();
       });
   }
