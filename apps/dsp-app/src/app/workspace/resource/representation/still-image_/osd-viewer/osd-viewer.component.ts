@@ -1,9 +1,11 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   Renderer2,
@@ -14,6 +16,8 @@ import { ReadFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/value
 import { RegionService } from '@dsp-app/src/app/workspace/resource/representation/still-image_/region.service';
 import * as OpenSeadragon from 'openseadragon';
 import { Options, Rect } from 'openseadragon';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 export interface ReadStillImageExternalFileValue extends ReadFileValue {
   dimX: number;
@@ -76,7 +80,7 @@ export class RegionElement {
   templateUrl: './osd-viewer.component.html',
   styleUrls: ['./osd-viewer.component.scss'],
 })
-export class OsdViewerComponent implements OnInit, OnChanges {
+export class OsdViewerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() image: ReadStillImageFileValue | ReadStillImageExternalFileValue;
 
   @Input() draw: boolean = false;
@@ -90,6 +94,8 @@ export class OsdViewerComponent implements OnInit, OnChanges {
   private _selectedRegion: RegionElement | undefined = undefined;
 
   private _viewer: OpenSeadragon.Viewer;
+
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   private readonly osdOptions: Options = {
     gestureSettingsMouse: {
@@ -110,30 +116,36 @@ export class OsdViewerComponent implements OnInit, OnChanges {
   };
 
   constructor(
+    private _cdr: ChangeDetectorRef,
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
     private _regionService: RegionService
   ) {}
 
   ngOnInit() {
-    this._initOsdViewer();
+    this.osdOptions.element = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
+    this._viewer = new OpenSeadragon.Viewer(this.osdOptions);
     this._addFullscreenHandler();
     this._addRegionHandlers();
+    this._viewer.open(`${this.image.iiifBaseUrl}/${this.image.filename}/info.json`);
+
+    this._regionService.isDrawing$.pipe(takeUntil(this.ngUnsubscribe), distinctUntilChanged()).subscribe(isDrawing => {
+      this._viewer.setMouseNavEnabled(!isDrawing);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['draw']) {
-      this._viewer.setMouseNavEnabled(this.draw);
+      this._viewer.setMouseNavEnabled(!this.draw);
     }
 
     if (changes['selectedRegion']) {
       this._selectedRegion = this.regions.find(r => r.overlay.id === this.selectedRegion);
     }
-  }
 
-  private _initOsdViewer(): void {
-    this.osdOptions.element = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
-    this._viewer = new OpenSeadragon.Viewer(this.osdOptions);
+    if (changes['image']) {
+      this._viewer.open(`${this.image.iiifBaseUrl}/${this.image.filename}/info.json`);
+    }
   }
 
   private _addFullscreenHandler() {
@@ -196,5 +208,13 @@ export class OsdViewerComponent implements OnInit, OnChanges {
       Math.abs(diffX),
       Math.abs(diffY)
     );
+  }
+
+  ngOnDestroy() {
+    this._viewer.destroy();
+    this._viewer = null;
+
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

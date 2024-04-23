@@ -13,7 +13,10 @@
   <div class="resource-view" *ngIf="resource">
     <div class="representation-container center" *ngIf="resource?.readFileValueType">
       <ng-container [ngSwitch]="resource?.readFileValueType?.constructor.name">
-        <app-still-image_ *ngSwitchCase="'ReadStillImageFileValue'" [resource]="resource"></app-still-image_>
+        <app-still-image_
+          *ngSwitchCase="'ReadStillImageFileValue'"
+          [resource]="resource"
+          class="dsp-representation"></app-still-image_>
         <app-document
           #document
           class="dsp-representation document"

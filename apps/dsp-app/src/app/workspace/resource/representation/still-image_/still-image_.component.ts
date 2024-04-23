@@ -1,12 +1,5 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  Constants,
-  IHasPropertyWithPropertyDefinition,
-  KnoraApiConnection,
-  ReadResource,
-  ReadResourceSequence,
-  ReadUser,
-} from '@dasch-swiss/dsp-js';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { KnoraApiConnection, ReadResource, ReadResourceSequence, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -44,7 +37,6 @@ export class StillImageDsComponent implements OnInit, OnDestroy {
 
   activeRegion$: Observable<string | null> = this._regionService.activeRegion$;
 
-  annotations: DspResource[] = [];
   annotations$: Observable<DspResource[]>;
 
   region: DspResource;
@@ -55,7 +47,8 @@ export class StillImageDsComponent implements OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
-    private _regionService: RegionService
+    private _regionService: RegionService,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -63,24 +56,22 @@ export class StillImageDsComponent implements OnInit, OnDestroy {
       // As the selected resource "is" a region set the region and get the still image resource onto which the region is the region is pointing to
       this.region = this.resource;
       this._dspApiConnection.v2.res.getResource(this.resource.isRegionOf.id).subscribe((res: ReadResource) => {
-        this.setResource(new DspResource(res));
+        this.resource = new DspResource(res);
+        this.setAnnotations();
         this.selectRegion(this.region);
+        this._cdr.markForCheck();
       });
     } else {
-      this.setResource(this.resource);
+      this.setAnnotations();
     }
   }
 
-  setResource(resource: DspResource) {
-    this.resource = resource;
-    this.annotations$ = this._incomingService.getIncomingRegions(resource.id, 0).pipe(
+  setAnnotations() {
+    this.annotations$ = this._incomingService.getIncomingRegions(this.resource.id, 0).pipe(
       map((regions: ReadResourceSequence) => {
         return regions.resources.map((res: ReadResource) => new DspResource(res));
       })
     );
-    this._incomingService.getIncomingRegions(resource.id, 0).subscribe((regions: ReadResourceSequence) => {
-      this.annotations = regions.resources.map((res: ReadResource) => new DspResource(res));
-    });
   }
 
   selectRegion(region: DspResource) {
