@@ -77,8 +77,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        // TODO HERE: STATE MANAGEMENT SHOULD RELOAD ONTOLOGY
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       });
   }
 

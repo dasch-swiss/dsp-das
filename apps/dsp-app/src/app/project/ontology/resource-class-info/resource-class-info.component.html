@@ -58,7 +58,8 @@
       [resourceClass]="resourceClass"
       [currentOntologyPropertiesToDisplay]="currentOntologyPropertiesToDisplay$ | async"
       [userCanEdit]="userCanEdit"
-      [projectStatus]="projectStatus"></app-add-property-menu>
+      [projectStatus]="projectStatus"
+      (updatePropertyAssignment)="updatePropertyAssignment.emit($event)"></app-add-property-menu>
   </mat-card-content>
 </mat-card>
 

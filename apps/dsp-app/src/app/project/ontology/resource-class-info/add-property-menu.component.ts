@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import {
@@ -23,7 +23,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-property-menu',
@@ -93,6 +93,7 @@ export class AddPropertyMenuComponent {
   @Input() resourceClass: ClassDefinition;
   @Input() projectStatus: boolean;
   @Input() userCanEdit: boolean; // is user a project admin or sys admin?
+  @Output() updatePropertyAssignment = new EventEmitter<string>();
 
   private ngUnsubscribe = new Subject<void>();
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
@@ -152,18 +153,24 @@ export class AddPropertyMenuComponent {
     );
 
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog.open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps>(
-      CreatePropertyFormDialogComponent,
-      {
-        data: {
-          ontologyId: ontology.id,
-          lastModificationDate: ontology.lastModificationDate,
-          propertyInfo: { propType },
-          resClassIri: this.resourceClass.id,
-          maxGuiOrderProperty,
-        },
-      }
-    );
+    this._dialog
+      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps, boolean>(
+        CreatePropertyFormDialogComponent,
+        {
+          data: {
+            ontologyId: ontology.id,
+            lastModificationDate: ontology.lastModificationDate,
+            propertyInfo: { propType },
+            resClassIri: this.resourceClass.id,
+            maxGuiOrderProperty,
+          },
+        }
+      )
+      .afterClosed()
+      .pipe(filter(res => res === true))
+      .subscribe(res => {
+        this.updatePropertyAssignment.emit(ontology.id);
+      });
   }
 
   private getExistingProperties(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToAdd[] {
