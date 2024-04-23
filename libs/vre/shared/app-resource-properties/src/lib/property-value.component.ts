@@ -89,9 +89,13 @@ export class PropertyValueComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initialFormValue = this.group.getRawValue();
+    this._setInitialValue();
     this._setupDisplayMode();
     this._watchAndSetupCommentStatus();
+  }
+
+  private _setInitialValue() {
+    this.initialFormValue = this.group.getRawValue();
   }
 
   onSave() {
@@ -194,6 +198,7 @@ export class PropertyValueComponent implements OnInit {
       )
       .subscribe(() => {
         this.propertyValueService.toggleOpenedValue(this.index);
+        this._setInitialValue();
         this._cdr.detectChanges();
       });
   }
