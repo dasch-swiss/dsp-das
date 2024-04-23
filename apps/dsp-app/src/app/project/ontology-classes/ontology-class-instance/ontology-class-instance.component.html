@@ -33,6 +33,6 @@
   </as-split>
 </div>
 
-<div class="single-instance">
+<div class="single-instance" *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
   <app-resource [resourceIri]="resourceIri$ | async"></app-resource>
 </div>

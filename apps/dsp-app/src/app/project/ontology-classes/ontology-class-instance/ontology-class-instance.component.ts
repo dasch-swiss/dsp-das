@@ -91,6 +91,8 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
 
   splitSizeChanged: SplitSize;
 
+  routeConstants = RouteConstants;
+
   @Select(OntologiesSelectors.projectOntologies)
   projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
