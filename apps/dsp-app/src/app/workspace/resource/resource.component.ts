@@ -217,7 +217,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       }
     });
 
-    this._router.events.subscribe(event => {
+    this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');
     });
 
@@ -270,12 +270,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  // reload the page with the same resource
-  reloadWithResource() {
-    this.oldResourceIri = undefined;
-    this.ngOnChanges();
   }
 
   // ------------------------------------------------------------------------
@@ -401,32 +395,12 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     });
   }
 
-  renderRegion(iri) {
-    // display the corresponding still-image resource instance
-    // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
-    const annotationOfIri = (this.resource.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-      .linkedResourceIri;
-
-    // get the parent resource to display
-    this._getResource(annotationOfIri);
-
-    // open annotation`s tab and highlight region
-    this.selectedTabLabel = 'annotations';
-    this.openRegion(iri);
-
-    this.selectedRegion = iri;
-    // define resource as annotation of type region
-    this.resourceIsAnnotation = this.resource.res.entityInfo.classes[Constants.Region] ? 'region' : 'sequence';
-  }
-
   private _getIncomingResource(iri: string) {
     if (this.incomingResourceSub) {
       this.incomingResourceSub.unsubscribe();
     }
     this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
-      const res = new DspResource(response);
-
-      this.incomingResource = res;
+      this.incomingResource = new DspResource(response);
       this.incomingResource.resProps = this._initProps(response);
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
@@ -456,8 +430,9 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
 
-  resourceLabel = (incomingResource: DspResource, resource: DspResource): string =>
-    incomingResource ? `${resource.res.label}: ${incomingResource.res.label}` : resource.res.label;
+  resourceLabel = (incomingResource: DspResource, resource: DspResource) => {
+    return incomingResource ? `${resource.res.label}: ${incomingResource.res.label}` : resource.res.label;
+  };
 
   openProject(project: ReadProject) {
     window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
@@ -744,12 +719,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
     this._getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
     this.openRegion(iri);
-  }
-
-  updateRegion() {
-    if (this.stillImageComponent !== undefined) {
-      this.stillImageComponent.updateRegions();
-    }
   }
 
   openEditLabelDialog() {
