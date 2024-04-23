@@ -161,26 +161,9 @@ export class ResourceToolbarComponent implements OnInit {
 
             case 'erase':
               // erase the resource and refresh the view
-              this._dspApiConnection.v2.res.eraseResource(payload).subscribe(
-                response => {
-                  this._onResourceDeleted(response as DeleteResourceResponse);
-                },
-                error => {
-                  const apiError = (
-                    error.error as {
-                      response: { 'knora-api:error': string };
-                    }
-                  )?.response['knora-api:error'];
-
-                  if (apiError?.includes('cannot be erased, because it is referred to by another resource')) {
-                    this._notification.openSnackBar(
-                      'The resource cannot be erased, because it is referred to by another resource.'
-                    );
-                  } else {
-                    throw error;
-                  }
-                }
-              );
+              this._dspApiConnection.v2.res.eraseResource(payload).subscribe((response: DeleteResourceResponse) => {
+                this._onResourceDeleted(response);
+              });
               break;
           }
         } else if (this.resource.res.label !== answer.comment) {
