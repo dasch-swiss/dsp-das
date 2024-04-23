@@ -106,11 +106,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     this.stillImageRepresentationsAsPartOfSequenceCount$ = this.getStillImageRepresentationsAsPartOfSequenceCount$(iri);
     this.getResource(iri).subscribe(dspResource => {
       this.resource = dspResource;
-
-      if (!this.resource.readFileValueType) {
-        this.requestIncomingResources(dspResource);
-      }
-
       this.loading = false;
       this.oldResourceIri = this.resource.id;
       this._cdr.markForCheck();
@@ -134,111 +129,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   representationLoaded(e: boolean) {
     // this.loading = !e;
     // this._cdr.detectChanges();
-  }
-
-  /**
-   * gather resource property information
-   */
-  protected initProps(resource: ReadResource): PropertyInfoValues[] {
-    let props = resource.entityInfo.classes[resource.type]
-      .getResourcePropertiesList()
-      .map((prop: IHasPropertyWithPropertyDefinition) => {
-        // the object type is none from above
-        return {
-          propDef: prop.propertyDefinition,
-          guiDef: prop,
-          values: resource.getValues(prop.propertyIndex),
-        };
-      });
-
-    // sort properties by guiOrder
-    props = props
-      .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-      .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
-      // to get equal results on all browser engines which implements sorting in different way
-      // properties list has to be sorted again, pushing all "has..." properties to the bottom
-      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
-      // eslint-disable-next-line array-callback-return
-      .sort(a => {
-        if (a.guiDef.guiOrder === undefined) {
-          return 1;
-        }
-      });
-
-    return props;
-  }
-
-  /**
-   * requests incoming resources for [[this.resource]].
-   * Incoming resources are: regions, representations, and incoming links.
-   */
-  protected requestIncomingResources(resource: DspResource): void {
-    // make sure that this resource has been initialized correctly
-    if (resource === undefined) {
-      return;
-    }
-
-    // check for incoming links for the current resource
-    this.getIncomingLinks(0);
-  }
-
-  /**
-   * gets the incoming regions for [[this.resource]].
-   *
-   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-   */
-  protected getIncomingRegions(resource: DspResource, offset: number): void {
-    if (this.incomingRegionsSub) {
-      this.incomingRegionsSub.unsubscribe();
-    }
-    this.incomingRegionsSub = this._incomingService
-      .getIncomingRegions(resource.id, offset)
-      .subscribe((regions: ReadResourceSequence) => {
-        // append elements of regions.resources to resource.incoming
-        Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
-
-        // this.annotationResources.push(regions.resources)
-
-        // prepare regions to be displayed
-        // triggers ngOnChanges of StillImageComponent
-        this._cdr.markForCheck();
-      });
-  }
-
-  openRegion(iri: string) {
-    // open annotation tab
-    this.selectedTab = this.incomingResource ? 2 : 1;
-
-    // activate the selected region
-    this.selectedRegion = iri;
-
-    // and scroll to region with this id
-    const region = document.getElementById(iri);
-    if (region) {
-      region.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }
-
-  /**
-   * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
-   *
-   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-   * It takes the number of images returned as an argument.
-   */
-  protected getIncomingLinks(offset: number): void {
-    this._incomingService
-      .getIncomingLinksForResource(this.resource?.id, offset)
-      .subscribe((incomingResources: ReadResourceSequence) => {
-        // Check if incomingReferences is initialized, if not, initialize it as an empty array
-        if (!this.resource?.incomingReferences) {
-          this.resource.incomingReferences = [];
-        }
-        // append elements incomingResources to this.resource.incomingLinks
-        Array.prototype.push.apply(this.resource?.incomingReferences, incomingResources.resources);
-      });
   }
 
   ngOnDestroy() {
