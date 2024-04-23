@@ -2,6 +2,7 @@ import { CreateResourceDialogComponent } from './create-resource-dialog.componen
 import { CreateResourceFormComponent } from './create-resource-form.component';
 import { CreateResourcePageComponent } from './create-resource-page.component';
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
+import { EditResourceLabelDialogComponent } from './edit-resource-label-dialog.component';
 import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { PropertiesToolbarComponent } from './properties-toolbar.component';
 import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
@@ -66,4 +67,5 @@ export const ResourcePropertiesComponents = [
   Upload2Component,
   PropertiesToolbarComponent,
   PropertyValueCommentComponent,
+  EditResourceLabelDialogComponent,
 ];

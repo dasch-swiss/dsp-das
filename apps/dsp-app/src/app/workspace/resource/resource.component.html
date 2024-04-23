@@ -26,7 +26,12 @@
       </div>
       <div class="resource-label">
         <h4>{{ resourceLabel(incomingResource, resource) }}</h4>
-        <button mat-icon-button color="primary" matTooltip="Edit label" (click)="openEditDialog()" *ngIf="userCanEdit">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="Edit label"
+          (click)="openEditLabelDialog()"
+          *ngIf="userCanEdit">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
@@ -163,12 +168,12 @@
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                          *ngIf="resource.res"
-                                                                          [resource]="resource"
-                                                                          [displayProjectInfo]="true"
-                                                                          [adminPermissions]="isAdmin$ | async"
-                                                                          [valueUuidToHighlight]="valueUuid">
-                                                                        </app-properties>-->
+                                                                                  *ngIf="resource.res"
+                                                                                  [resource]="resource"
+                                                                                  [displayProjectInfo]="true"
+                                                                                  [adminPermissions]="isAdmin$ | async"
+                                                                                  [valueUuidToHighlight]="valueUuid">
+                                                                                </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->

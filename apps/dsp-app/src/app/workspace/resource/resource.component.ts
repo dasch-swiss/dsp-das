@@ -34,14 +34,16 @@ import {
   ReadValue,
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
-  UpdateResourceMetadata,
-  UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-resource-properties';
+import {
+  EditResourceLabelDialogComponent,
+  EditResourceLabelDialogProps,
+  PropertyInfoValues,
+} from '@dasch-swiss/vre/shared/app-resource-properties';
 import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
@@ -51,7 +53,6 @@ import {
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { ConfirmationWithComment, DialogComponent } from '../../main/dialog/dialog.component';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
@@ -751,36 +752,22 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
   }
 
-  openEditDialog() {
-    const dialogRef = this._dialog.open(DialogComponent, {
-      data: { mode: 'editResource', title: this.resource.res.label },
-    });
-    dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
-      if (answer.confirmed === true && this.resource.res.label !== answer.comment) {
-        // update resource's label if it has changed
-        // get the correct lastModificationDate from the resource
-        this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
-          const payload = new UpdateResourceMetadata();
-          payload.id = this.resource.res.id;
-          payload.type = this.resource.res.type;
-          payload.lastModificationDate = res.lastModificationDate;
-          payload.label = answer.comment;
+  openEditLabelDialog() {
+    this._dialog
+      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
+        data: { resource: this.resource.res },
+        minWidth: 300,
+      })
+      .afterClosed()
+      .subscribe(response => {
+        if (!response) return;
 
-          this._dspApiConnection.v2.res
-            .updateResourceMetadata(payload)
-            .subscribe((response: UpdateResourceMetadataResponse) => {
-              this.resource.res.label = payload.label;
-              this.resource.res.lastModificationDate = response.lastModificationDate;
-              // if annotations tab is active; a label of a region has been changed --> update regions
-              this._componentCommsService.emit(new EmitEvent(Events.ValueUpdated)); // TODO I have made changes here (it was new EmitEvent(Events.resourceChanged))
-              if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
-                this.regionChanged.emit();
-              }
-              this._cdr.markForCheck();
-            });
-        });
-      }
-    });
+        this._componentCommsService.emit(new EmitEvent(Events.ValueUpdated)); // TODO I have made changes here (it was new EmitEvent(Events.resourceChanged))
+        if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
+          this.regionChanged.emit();
+        }
+        this._cdr.markForCheck();
+      });
   }
 
   private _getResourceAttachedData(resource: DspResource): void {
