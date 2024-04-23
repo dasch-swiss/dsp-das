@@ -12,8 +12,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { LoadResourceAction } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
-import { finalize, startWith, take } from 'rxjs/operators';
+import { finalize, startWith, switchMap, take } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -82,7 +84,8 @@ export class PropertyValueComponent implements OnInit {
     private _cdr: ChangeDetectorRef,
     private _notification: NotificationService,
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _store: Store
   ) {}
 
   ngOnInit() {
@@ -135,6 +138,7 @@ export class PropertyValueComponent implements OnInit {
       .createValue(updateRes as UpdateResource<CreateValue>)
       .pipe(
         take(1),
+        switchMap(() => this._store.dispatch(new LoadResourceAction(resource.id))),
         finalize(() => {
           this.loading = false;
         })
@@ -181,6 +185,9 @@ export class PropertyValueComponent implements OnInit {
       .updateValue(this._getPayload(this.index))
       .pipe(
         take(1),
+        switchMap(() =>
+          this._store.dispatch(new LoadResourceAction(this.propertyValueService._editModeData!.resource.id))
+        ),
         finalize(() => {
           this.loading = false;
         })

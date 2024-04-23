@@ -66,7 +66,8 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   }
 
   private _getInfoToolTip() {
-    const creator = Object.values(this._store.selectSnapshot(ResourceSelectors.attachedUsers))[0].value[0]!.username;
+    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
+    const creator = resource!.res!.attachedToUser;
     return `Creation date: ${this.date}. Value creator: ${creator}`;
   }
 }
