@@ -34,11 +34,11 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CompoundNavOverlayComponent } from '@dsp-app/src/app/workspace/resource/representation/compound-still-image/compound-nav-overlay/compound-nav-overlay.component';
+import { CompoundNavPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/compound-still-image/compound-nav-panel/compound-nav-panel.component';
+import { CompoundNavSliderComponent } from '@dsp-app/src/app/workspace/resource/representation/compound-still-image/compound-nav-slider/compound-nav-slider.component';
 import { CompoundStillImageComponent } from '@dsp-app/src/app/workspace/resource/representation/compound-still-image/compound-still-image.component';
 import { RepresentationComponent } from '@dsp-app/src/app/workspace/resource/representation/representation.component';
-import { CompoundNavOverlayComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-overlay/compound-nav-overlay.component';
-import { CompoundNavPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-panel/compound-nav-panel.component';
-import { CompoundNavSliderComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-slider/compound-nav-slider.component';
 import { OsdViewerComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/osd-viewer/osd-viewer.component';
 import { OsdZoomPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/osd-zoom-panel/osd-zoom-panel.component';
 import { StillImageActionPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/still-image-action-panel/still-image-action-panel.component';
