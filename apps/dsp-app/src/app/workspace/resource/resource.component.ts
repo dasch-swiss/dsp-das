@@ -7,6 +7,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -73,7 +74,7 @@ import {
   styleUrls: ['./resource.component.scss'],
   providers: [ValueOperationEventService], // provide service on the component level so that each implementation of this component has its own instance.
 })
-export class ResourceComponent implements OnChanges, OnDestroy {
+export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @ViewChild('stillImage') stillImageComponent: StillImageComponent;
@@ -207,15 +208,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     private _dialog: MatDialog,
     private _componentCommsService: ComponentCommunicationEventService
   ) {
-    this._store
-      .select(ResourceSelectors.resource)
-      .pipe(filter(resource => resource !== null))
-      .subscribe(res => {
-        this.resource = res;
-        this.loading = false;
-        this._cdr.detectChanges();
-      });
-
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
       this.resourceUuid = params.resource;
@@ -240,6 +232,17 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         }
       })
     );
+  }
+
+  ngOnInit() {
+    this._store
+      .select(ResourceSelectors.resource)
+      .pipe(filter(resource => resource !== null))
+      .subscribe(res => {
+        this.resource = res;
+        this.loading = false;
+        this._cdr.detectChanges();
+      });
   }
 
   ngOnChanges() {
@@ -462,17 +465,17 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             };
 
             /*
-                                                                                    TODO Julien: I removed this part
-                                                                                    const stillImageRepresentations = [
-                                                                                      new FileRepresentation(
-                                                                                        resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                                        []
-                                                                                      ),
-                                                                                    ];
+                                                                                                TODO Julien: I removed this part
+                                                                                                const stillImageRepresentations = [
+                                                                                                  new FileRepresentation(
+                                                                                                    resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
+                                                                                                    []
+                                                                                                  ),
+                                                                                                ];
 
-                                                                                    this.representationsToDisplay = stillImageRepresentations;
+                                                                                                this.representationsToDisplay = stillImageRepresentations;
 
-                                                                                    */
+                                                                                                */
             // --> TODO: get regions here
 
             break;
