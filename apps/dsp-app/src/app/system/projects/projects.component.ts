@@ -37,7 +37,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$]).pipe(
       takeUntil(this.ngUnsubscribe),
       map(([userInactiveProjects, allInactiveProjects]) =>
-        (this.usersProjects ? userInactiveProjects : allInactiveProjects)
+        this.usersProjects ? userInactiveProjects : allInactiveProjects
       )
     );
   }
