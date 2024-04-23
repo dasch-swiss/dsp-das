@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -57,17 +57,13 @@ import { RepresentationConstants } from '../representation/file-representation';
     '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; width: 150px; margin-top: 0px; text-align: right; padding-right: 24px; flex-shrink: 0}',
   ],
 })
-export class PropertiesDisplayComponent implements OnInit, OnChanges {
+export class PropertiesDisplayComponent implements OnChanges {
   @Input() resource: DspResource;
 
   myProperties$!: Observable<PropertyInfoValues[]>;
   showAllProperties$ = this._store.select(ResourceSelectors.showAllProps);
 
   constructor(private _store: Store) {}
-
-  ngOnInit() {
-    this._setupProperties();
-  }
 
   ngOnChanges() {
     this._setupProperties();
