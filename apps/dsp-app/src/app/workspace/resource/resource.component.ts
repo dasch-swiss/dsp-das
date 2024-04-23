@@ -377,7 +377,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
 
     // gather resource property information
-    this.resource.resProps = this._initProps(this.resource.res);
+    this.resource.resProps = ResourceComponent.initProps(this.resource.res);
 
     // gather system property information
     this.resource.systemProps = this.resource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
@@ -409,7 +409,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     }
     this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
       this.incomingResource = new DspResource(response);
-      this.incomingResource.resProps = this._initProps(response);
+      this.incomingResource.resProps = ResourceComponent.initProps(response);
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
@@ -453,7 +453,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   /**
    * gather resource property information
    */
-  private _initProps(resource: ReadResource): PropertyInfoValues[] {
+  public static initProps(resource: ReadResource): PropertyInfoValues[] {
     let props = resource.entityInfo.classes[resource.type]
       .getResourcePropertiesList()
       .map((prop: IHasPropertyWithPropertyDefinition) => {
@@ -467,14 +467,18 @@ export class ResourceComponent implements OnChanges, OnDestroy {
               values: resource.getValuesAs(prop.propertyIndex, ReadStillImageFileValue),
             };
 
-            const stillImageRepresentations = [
-              new FileRepresentation(
-                resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                []
-              ),
-            ];
+            /*
+                                                TODO Julien: I removed this part
+                                                const stillImageRepresentations = [
+                                                  new FileRepresentation(
+                                                    resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
+                                                    []
+                                                  ),
+                                                ];
 
-            this.representationsToDisplay = stillImageRepresentations;
+                                                this.representationsToDisplay = stillImageRepresentations;
+
+                                                */
             // --> TODO: get regions here
 
             break;
@@ -542,7 +546,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
           const annotation = new DspResource(incomingRegion);
 
           // gather region property information
-          annotation.resProps = this._initProps(incomingRegion);
+          annotation.resProps = ResourceComponent.initProps(incomingRegion);
 
           // gather system property information
           annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);

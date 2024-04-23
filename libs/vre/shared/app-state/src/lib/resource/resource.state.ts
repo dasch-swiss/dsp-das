@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadProject, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
+import { ResourceComponent } from '@dsp-app/src/app/workspace/resource/resource.component';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { map, take, tap } from 'rxjs/operators';
 import { ProjectsSelectors } from '../projects/projects.selectors';
@@ -132,9 +133,14 @@ export class ResourceState {
     return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
       tap(response => {
         const state = ctx.getState();
+        const res = new DspResource(response as ReadResource);
+        res.resProps = ResourceComponent.initProps(res.res);
+
+        // gather system property information
+        res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
         ctx.setState({
           ...state,
-          resource: new DspResource(response as ReadResource),
+          resource: res,
         });
       })
     );
