@@ -11,7 +11,6 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
-import { PropertyInfoValues } from '@dsp-app/src/app/workspace/resource/properties/properties.component';
 import { RegionService } from '@dsp-app/src/app/workspace/resource/representation/still-image_/region.service';
 import { IncomingService } from '@dsp-app/src/app/workspace/resource/services/incoming.service';
 import { Select } from '@ngxs/store';
@@ -61,7 +60,7 @@ export class StillImageDsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.resource.hasRegion) {
-      // set region and get the stillimage resource onto which the region is the region of
+      // As the selected resource "is" a region set the region and get the still image resource onto which the region is the region is pointing to
       this.region = this.resource;
       this._dspApiConnection.v2.res.getResource(this.resource.isRegionOf.id).subscribe((res: ReadResource) => {
         this.setResource(new DspResource(res));
@@ -84,48 +83,11 @@ export class StillImageDsComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * gather resource property information
-   */
-  private initProps(resource: ReadResource): PropertyInfoValues[] {
-    let props = resource.entityInfo.classes[resource.type]
-      .getResourcePropertiesList()
-      .map((prop: IHasPropertyWithPropertyDefinition) => {
-        // the object type is none from above
-        const propInfoAndValues = {
-          propDef: prop.propertyDefinition,
-          guiDef: prop,
-          values: resource.getValues(prop.propertyIndex),
-        };
-        return propInfoAndValues;
-      });
-
-    // sort properties by guiOrder
-    props = props
-      .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-      .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
-      // to get equal results on all browser engines which implements sorting in different way
-      // properties list has to be sorted again, pushing all "has..." properties to the bottom
-      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
-      // eslint-disable-next-line array-callback-return
-      .sort(a => {
-        if (a.guiDef.guiOrder === undefined) {
-          return 1;
-        }
-      });
-
-    return props;
-  }
-
   selectRegion(region: DspResource) {
     // load region
     this.selectedTab = 1; // change to region tab?
     this._regionService.setActiveRegion(region.id);
   }
-
-  // get reprepseantations of the resource
-
-  // project : not needed. Only for attaching a new region to.
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

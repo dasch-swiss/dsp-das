@@ -94,16 +94,5 @@
         </div>
     </mat-tab>
 </mat-tab-group>
-<ng-template #deletedResource>
-    <app-properties
-        *ngIf="resource"
-        [resource]="resource"
-        [displayProjectInfo]="true"
-        [adminPermissions]="isAdmin$ | async"
-        [valueUuidToHighlight]="valueUuid">
-    </app-properties>
-</ng-template>
-</div>
-<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
 
  -->
