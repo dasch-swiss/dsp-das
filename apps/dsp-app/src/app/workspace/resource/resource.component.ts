@@ -315,7 +315,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   private _initResource(iri) {
     this.oldResourceIri = this.resourceIri;
     this._getResource(iri).subscribe(dspResource => {
-      return;
       this._renderResource(dspResource);
       this._getResourceAttachedData(dspResource);
     });
@@ -462,17 +461,17 @@ export class ResourceComponent implements OnChanges, OnDestroy {
             };
 
             /*
-                                                            TODO Julien: I removed this part
-                                                            const stillImageRepresentations = [
-                                                              new FileRepresentation(
-                                                                resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                []
-                                                              ),
-                                                            ];
+                                                                        TODO Julien: I removed this part
+                                                                        const stillImageRepresentations = [
+                                                                          new FileRepresentation(
+                                                                            resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
+                                                                            []
+                                                                          ),
+                                                                        ];
 
-                                                            this.representationsToDisplay = stillImageRepresentations;
+                                                                        this.representationsToDisplay = stillImageRepresentations;
 
-                                                            */
+                                                                        */
             // --> TODO: get regions here
 
             break;
