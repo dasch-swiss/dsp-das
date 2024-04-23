@@ -6,18 +6,14 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 @Component({
   selector: 'app-list-value',
   template: `
-    <div>
-      <app-nested-menu
-        style="flex: 1"
-        *ngIf="listRootNode"
-        [data]="listRootNode"
-        [selection]="mySelectedNode?.label"
-        (selectedNode)="selectedNode($event)"></app-nested-menu>
-      <mat-error *ngIf="control.touched && control.errors">{{ control.errors | humanReadableError }}</mat-error>
-    </div>
-    <button mat-flat-button (click)="resetNode()" *ngIf="mySelectedNode">Reset</button>
+    <app-nested-menu
+      style="flex: 1"
+      *ngIf="listRootNode"
+      [data]="listRootNode"
+      [selection]="mySelectedNode?.label"
+      (selectedNode)="selectedNode($event)"></app-nested-menu>
+    <mat-error *ngIf="control.touched && control.errors">{{ control.errors | humanReadableError }}</mat-error>
   `,
-  styles: [':host {display: flex; align-items: center}'],
 })
 export class ListValueComponent implements OnInit {
   @Input() propertyDef!: ResourcePropertyDefinition;
@@ -33,11 +29,6 @@ export class ListValueComponent implements OnInit {
 
   ngOnInit() {
     this._loadRootNodes();
-  }
-
-  resetNode() {
-    this.mySelectedNode = undefined;
-    this.control.patchValue('');
   }
 
   selectedNode(node: ListNodeV2) {
