@@ -1,0 +1,24 @@
+<app-osd-viewer />
+<app-compound-nav-overlay />
+
+<div class="toolbar">
+  <app-compound-nav-slider />
+  <div class="toolbar-bottom">
+    <app-still-image-action-panel
+      [editorPermissions]="isAdmin$ | async"
+      [fileValue]="resource.stillImageRepresentations[0]"></app-still-image-action-panel>
+    <app-compound-nav-panel />
+    <app-osd-zoom-panel />
+  </div>
+</div>
+<div class="data-container">
+  <!-- tabs -->
+  <mat-tab-group>
+    <mat-tab [label]="resource.entityInfo?.classes[resource.type].label">
+      <app-resource-metadata *ngIf="resource" [resource]="resource" [displayProjectInfo]="true">
+      </app-resource-metadata>
+      <app-properties *ngIf="resource" [resource]="resource" [adminPermissions]="isAdmin$ | async"> </app-properties>
+    </mat-tab>
+    <mat-tab> </mat-tab>
+  </mat-tab-group>
+</div>

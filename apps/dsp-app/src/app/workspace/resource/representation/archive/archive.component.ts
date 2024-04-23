@@ -28,7 +28,7 @@ import { RepresentationService } from '../representation.service';
   styleUrls: ['./archive.component.scss'],
 })
 export class ArchiveComponent implements OnInit, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input() src: ReadArchiveFileValue;
 
   @Input() parentResource: ReadResource;
 
@@ -47,7 +47,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
+    this._rs.getFileInfo(this.src.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
       },
@@ -107,15 +107,11 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         )
       )
       .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (
-          res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue
-        ).fileUrl;
-        this.src.fileValue.filename = (
-          res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue
-        ).filename;
-        this.src.fileValue.strval = (res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue).strval;
+        this.src.fileUrl = (res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue).fileUrl;
+        this.src.filename = (res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue).filename;
+        this.src.strval = (res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue).strval;
 
-        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+        this._rs.getFileInfo(this.src.fileUrl).subscribe(res => {
           this.originalFilename = res['originalFilename'];
 
           this._valueOperationEventService.emit(

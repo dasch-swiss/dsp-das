@@ -1,8 +1,7 @@
 <div class="player" appDisableContextMenu [class.cinema]="cinemaMode">
   <div class="container">
     <!-- in case of an error -->
-    <app-status [comment]="videoError" [url]="src.fileValue.fileUrl" [representation]="'video'" *ngIf="videoError">
-    </app-status>
+    <app-status [comment]="videoError" [url]="src.fileUrl" [representation]="'video'" *ngIf="videoError"> </app-status>
 
     <div class="video-container">
       <video
@@ -64,19 +63,17 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #more="matMenu" class="representation-menu">
-        <button mat-menu-item class="menu-content" (click)="openVideoInNewTab(this.src.fileValue.fileUrl)">
+        <button mat-menu-item class="menu-content" (click)="openVideoInNewTab(this.src.fileUrl)">
           Open video in new tab
         </button>
         <button
           mat-menu-item
           class="menu-content"
-          [cdkCopyToClipboard]="this.src.fileValue.fileUrl"
+          [cdkCopyToClipboard]="this.src.fileUrl"
           (click)="openSnackBar('URL copied to clipboard!')">
           Copy video URL to clipboard
         </button>
-        <button mat-menu-item class="menu-content" (click)="downloadVideo(this.src.fileValue.fileUrl)">
-          Download video
-        </button>
+        <button mat-menu-item class="menu-content" (click)="downloadVideo(this.src.fileUrl)">Download video</button>
         <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">Replace file</button>
       </mat-menu>
       <button

@@ -1,0 +1,10 @@
+<div class="data-container">
+  <!-- tabs -->
+  <mat-tab-group>
+    <mat-tab [label]="resource.entityInfo?.classes[resource.type].label">
+      <app-resource-metadata *ngIf="resource" [resource]="resource" [displayProjectInfo]="true">
+      </app-resource-metadata>
+      <app-properties *ngIf="resource" [resource]="resource" [adminPermissions]="isAdmin$ | async"> </app-properties>
+    </mat-tab>
+  </mat-tab-group>
+</div>

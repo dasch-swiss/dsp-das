@@ -1,0 +1,16 @@
+<div class="navigation vertical previous">
+  <button mat-button [disabled]="(currentPage$ | async) === 0" (click)="previousPage()" class="full-size">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+</div>
+<div class="navigation vertical next">
+  <button
+    mat-button
+    class="full-size"
+    [disabled]="
+                (currentPage$ | async) === (totalPages$ | async) - 1
+            "
+    (click)="nextPage()">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>

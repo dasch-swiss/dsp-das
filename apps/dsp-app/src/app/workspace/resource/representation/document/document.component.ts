@@ -21,7 +21,6 @@ import {
   UpdatedFileEventValue,
   ValueOperationEventService,
 } from '../../services/value-operation-event.service';
-import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 
 @Component({
@@ -30,7 +29,7 @@ import { RepresentationService } from '../representation.service';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent implements OnInit, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input() src: ReadDocumentFileValue;
 
   @Input() parentResource: ReadResource;
 
@@ -60,9 +59,9 @@ export class DocumentComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.fileType = this._getFileType(this.src.fileValue.filename);
+    this.fileType = this._getFileType(this.src.filename);
 
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
+    this._rs.getFileInfo(this.src.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
       },
@@ -181,25 +180,19 @@ export class DocumentComponent implements OnInit, AfterViewInit {
         )
       )
       .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (
-          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-        ).fileUrl;
-        this.src.fileValue.filename = (
-          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-        ).filename;
-        this.src.fileValue.strval = (
-          res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
-        ).strval;
-        this.src.fileValue.valueCreationDate = (
+        this.src.fileUrl = (res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue).fileUrl;
+        this.src.filename = (res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue).filename;
+        this.src.strval = (res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue).strval;
+        this.src.valueCreationDate = (
           res2.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue
         ).valueCreationDate;
 
-        this.fileType = this._getFileType(this.src.fileValue.filename);
+        this.fileType = this._getFileType(this.src.filename);
         if (this.fileType === 'pdf') {
           this.elem = document.getElementsByClassName('pdf-viewer')[0];
         }
 
-        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+        this._rs.getFileInfo(this.src.fileUrl).subscribe(res => {
           this.originalFilename = res['originalFilename'];
         });
 

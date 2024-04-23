@@ -1,0 +1,17 @@
+<div>
+  <mat-slider [color]="'primary'" [max]="(totalPages$ | async) -1" [min]="1" [step]="1" showTickMarks discrete #ngSlider
+    ><input
+      matSliderThumb
+      value="currentPage"
+      (change)="
+                    goToPage(
+                        {
+                            source: ngSliderThumb,
+                            parent: ngSlider,
+                            value: ngSliderThumb.value
+                        }.value
+                    )
+                "
+      #ngSliderThumb="matSliderThumb" />
+  </mat-slider>
+</div>

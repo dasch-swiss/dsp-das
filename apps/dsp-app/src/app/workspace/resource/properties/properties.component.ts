@@ -93,12 +93,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   @Input() resource: DspResource;
 
   /**
-   * input `displayProjectInfo` of properties component:
-   * display project info or not; "This resource belongs to project XYZ"
-   */
-  @Input() displayProjectInfo = false;
-
-  /**
    * does the logged-in user has system or project admin permissions?
    */
   @Input() adminPermissions = false;
@@ -193,14 +187,14 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
 
     this._getAllIncomingLinkRes();
 
-    if (this.resource.res) {
+    if (this.resource) {
       // get user permissions
       const allPermissions = PermissionUtil.allUserPermissions(
-        this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
+        this.resource.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
       );
 
       // get last modification date
-      this.lastModificationDate = this.resource.res.lastModificationDate;
+      this.lastModificationDate = this.resource.lastModificationDate;
 
       // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
       this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
@@ -236,7 +230,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       this._valueOperationEventService.on(Events.ValueDeleted, (deletedValue: DeletedEventValue) => {
         // the DeletedEventValue does not contain a creation or last modification date
         // so, we have to grab it from res info
-        this._getLastModificationDate(this.resource.res.id);
+        this._getLastModificationDate(this.resource.id);
         this.deleteValueFromResource(deletedValue.deletedValue);
       })
     );
@@ -247,8 +241,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
     }
-
-    this._getResourceAttachedData();
   }
 
   ngOnChanges(): void {
@@ -268,19 +260,6 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   trackByFn = (index: number, item: ReadResource) => `${index}-${item.id}`;
   trackByValuesFn = (index: number, item: any) => `${index}-${item}`;
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
-
-  /**
-   * opens project
-   * @param project
-   */
-  openProject(project: ReadProject | StoredProject) {
-    const uuid = ProjectService.IriToUuid(project.id);
-    window.open(`/project/${uuid}`, '_blank');
-  }
-
-  previewProject() {
-    // --> TODO: pop up project preview on hover
-  }
 
   /**
    * goes to the next page of the incoming link pagination
@@ -328,7 +307,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       position: {
         top: '112px',
       },
-      data: { mode: `${type}Resource`, title: this.resource.res.label },
+      data: { mode: `${type}Resource`, title: this.resource.label },
     };
 
     const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
@@ -341,8 +320,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       if (answer.confirmed === true) {
         if (type !== 'edit') {
           const payload = new DeleteResource();
-          payload.id = this.resource.res.id;
-          payload.type = this.resource.res.type;
+          payload.id = this.resource.id;
+          payload.type = this.resource.type;
           payload.deleteComment = answer.comment ? answer.comment : undefined;
           payload.lastModificationDate = this.lastModificationDate;
           switch (type) {
@@ -360,20 +339,20 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
               });
               break;
           }
-        } else if (this.resource.res.label !== answer.comment) {
+        } else if (this.resource.label !== answer.comment) {
           // update resource's label if it has changed
           // get the correct lastModificationDate from the resource
-          this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
+          this._dspApiConnection.v2.res.getResource(this.resource.id).subscribe((res: ReadResource) => {
             const payload = new UpdateResourceMetadata();
-            payload.id = this.resource.res.id;
-            payload.type = this.resource.res.type;
+            payload.id = this.resource.id;
+            payload.type = this.resource.type;
             payload.lastModificationDate = res.lastModificationDate;
             payload.label = answer.comment;
 
             this._dspApiConnection.v2.res
               .updateResourceMetadata(payload)
               .subscribe((response: UpdateResourceMetadataResponse) => {
-                this.resource.res.label = payload.label;
+                this.resource.label = payload.label;
                 this.lastModificationDate = response.lastModificationDate;
                 // if annotations tab is active; a label of a region has been changed --> update regions
                 this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
@@ -427,7 +406,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     const isAllowed = CardinalityUtil.createValueForPropertyAllowed(
       prop.propDef.id,
       prop.values.length,
-      this.resource.res.entityInfo.classes[this.resource.res.type]
+      this.resource.entityInfo.classes[this.resource.type]
     );
 
     // check if:
@@ -443,7 +422,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    * @param valueToAdd the value to add to the end of the values array of the filtered property
    */
   addValueToResource(valueToAdd: ReadValue): void {
-    if (!valueToAdd.id.includes(this.resource.res.id)) {
+    if (!valueToAdd.id.includes(this.resource.id)) {
       return;
     }
 
@@ -503,7 +482,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     const card = CardinalityUtil.deleteValueForPropertyAllowed(
       prop.propDef.id,
       prop.values.length,
-      this.resource.res.entityInfo.classes[this.resource.res.type]
+      this.resource.entityInfo.classes[this.resource.type]
     );
     if (!card) {
       this.cantDeleteReason = 'This value can not be deleted because it is required.';
@@ -553,42 +532,14 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     localStorage.setItem('showAllProps', JSON.stringify(this.showAllProps));
   }
 
-  private _getResourceAttachedData() {
-    this._store.dispatch([
-      new GetAttachedUserAction(this.resource.res.id, this.resource.res.attachedToUser),
-      new GetAttachedProjectAction(this.resource.res.id, this.resource.res.attachedToProject),
-    ]);
-
-    this.project = this._store
-      .selectSnapshot(ProjectsSelectors.allProjects)
-      .find(p => p.id === this.resource.res.attachedToProject);
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedProjectAction))
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        const attachedProjects = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-        this.project = attachedProjects[this.resource.res.id].value.find(
-          u => u.id === this.resource.res.attachedToProject
-        );
-      });
-
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.user = attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser);
-      });
-  }
-
   private _onResourceDeleted(response: DeleteResourceResponse) {
     // display notification and mark resource as 'erased'
-    this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
+    this._notification.openSnackBar(`${response.result}: ${this.resource.label}`);
     this.deletedResource = true;
     const attachedProject = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const project = attachedProject[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject);
+    const project = attachedProject[this.resource.id].value.find(u => u.id === this.resource.attachedToProject);
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(project?.shortcode);
-    const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
+    const classId = this.resource.entityInfo.classes[this.resource.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
     // if it is an Annotation/Region which has been erases, we emit the
@@ -607,7 +558,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   private _getAllIncomingLinkRes() {
     if (this.pageEvent) {
       this.loading = true;
-      this._incomingService.getIncomingLinks(this.resource.res.id, 0, true).subscribe(
+      this._incomingService.getIncomingLinks(this.resource.id, 0, true).subscribe(
         (response: CountQueryResponse) => {
           this.numberOffAllIncomingLinkRes = response.numberOfResults;
           const round =
@@ -618,7 +569,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
           const arr = new Array<Observable<ReadResourceSequence | CountQueryResponse | ApiResponseError>>(round);
 
           for (let i = 0; i < round; i++) {
-            arr[i] = this._incomingService.getIncomingLinks(this.resource.res.id, i);
+            arr[i] = this._incomingService.getIncomingLinks(this.resource.id, i);
           }
 
           forkJoin(arr).subscribe(
@@ -659,7 +610,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
    *
    */
   private _updateStandoffLinkValue(): void {
-    if (this.resource.res === undefined) {
+    if (this.resource === undefined) {
       // this should never happen:
       // if the user was able to click on a standoff link,
       // then the resource must have been initialised before.
@@ -672,7 +623,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
          ?res knora-api:isMainResource true .
          ?res knora-api:hasStandoffLinkTo ?target .
      } WHERE {
-         BIND(<${this.resource.res.id}> as ?res) .
+         BIND(<${this.resource.id}> as ?res) .
          OPTIONAL {
              ?res knora-api:hasStandoffLinkTo ?target .
          }

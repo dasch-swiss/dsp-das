@@ -1,0 +1,45 @@
+<button mat-icon-button [matMenuTriggerFor]="more" matTooltip="More" matTooltipPosition="above">
+  <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #more="matMenu" class="representation-menu">
+  <button class="menu-content" mat-menu-item (click)="openImageInNewTab(fileValue.fileUrl)">
+    Open IIIF URL in new tab
+  </button>
+  <button class="menu-content" mat-menu-item [disabled]="!editorPermissions" (click)="replaceFile.emit()">
+    Replace file
+  </button>
+</mat-menu>
+
+<span class="action-buttons">
+  <button mat-icon-button [matMenuTriggerFor]="share" matTooltip="Share" matTooltipPosition="above">
+    <mat-icon>share</mat-icon>
+  </button>
+  <mat-menu #share="matMenu" class="res-share-menu">
+    <button
+      mat-menu-item
+      (click)="openSnackBar('IIIF URL copied to clipboard!')"
+      [cdkCopyToClipboard]="fileValue.fileUrl">
+      <mat-icon>content_copy</mat-icon>
+      Copy IIIF URL to clipboard
+    </button>
+    <button
+      mat-menu-item
+      [cdkCopyToClipboard]="fileValue.arkUrl"
+      (click)="openSnackBar('ARK URL copied to clipboard!')">
+      <mat-icon>content_copy</mat-icon>
+      Copy ARK url to clipboard
+    </button>
+  </mat-menu>
+  <button mat-icon-button matTooltip="Download" (click)="download(fileValue.fileUrl)">
+    <mat-icon>download</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    id="DSP_OSD_DRAW_REGION"
+    matTooltip="Draw Region"
+    [disabled]="!fileValue || !editorPermissions"
+    (click)="drawRegion()"
+    [class.active]="isDrawing$ | async">
+    <mat-icon svgIcon="draw_region_icon"></mat-icon>
+  </button>
+</span>

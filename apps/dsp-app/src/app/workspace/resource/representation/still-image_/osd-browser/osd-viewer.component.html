@@ -1,0 +1,22 @@
+<div class="osd-container" [class.drawing]="draw">
+  <div class="navigation vertical previous" *ngIf="compoundPosition">
+    <button
+      mat-button
+      [disabled]="compoundPosition.page <= 1"
+      (click)="page.emit(compoundPosition.page - 1)"
+      class="full-size">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+  </div>
+  <div class="navigation vertical next" *ngIf="compoundPosition">
+    <button
+      mat-button
+      class="full-size"
+      [disabled]="
+                compoundPosition.page >= compoundPosition.totalPages
+            "
+      (click)="page.emit(compoundPosition.page + 1)">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>

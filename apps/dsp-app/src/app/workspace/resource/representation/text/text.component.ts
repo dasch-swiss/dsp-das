@@ -28,7 +28,7 @@ import { RepresentationService } from '../representation.service';
   styleUrls: ['./text.component.scss'],
 })
 export class TextComponent implements OnInit, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input() src: ReadTextFileValue;
 
   @Input() parentResource: ReadResource;
 
@@ -47,7 +47,7 @@ export class TextComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
+    this._rs.getFileInfo(this.src.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
       },
@@ -107,11 +107,11 @@ export class TextComponent implements OnInit, AfterViewInit {
         )
       )
       .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).fileUrl;
-        this.src.fileValue.filename = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).filename;
-        this.src.fileValue.strval = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).strval;
+        this.src.fileUrl = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).fileUrl;
+        this.src.filename = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).filename;
+        this.src.strval = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).strval;
 
-        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+        this._rs.getFileInfo(this.src.fileUrl).subscribe(res => {
           this.originalFilename = res['originalFilename'];
         });
 

@@ -1,7 +1,7 @@
 <!-- toolbar -->
-<div class="toolbar" *ngIf="project" [class.deleted]="deletedResource || resource.res.isDeleted">
+<div class="toolbar" *ngIf="project" [class.deleted]="deletedResource || resource.isDeleted">
   <!-- resource info -->
-  <h3 class="label mat-headline-6">{{resource.res.label}} <span *ngIf="deletedResource">(deleted)</span></h3>
+  <h3 class="label mat-headline-6">{{resource.label}} <span *ngIf="deletedResource">(deleted)</span></h3>
 
   <span class="fill-remaining-space"></span>
 
@@ -12,7 +12,7 @@
       color="primary"
       mat-icon-button
       class="toggle-props"
-      *ngIf="!resource.res.isDeleted"
+      *ngIf="!resource.isDeleted"
       [matTooltip]="(showAllProps ? 'Hide empty' : 'Show all')+' properties'"
       matTooltipPosition="above"
       (click)="toggleAllProps(showAllProps)">
@@ -25,7 +25,7 @@
       color="primary"
       mat-icon-button
       class="share-res"
-      matTooltip="Share resource: {{resource.res.versionArkUrl}}"
+      matTooltip="Share resource: {{resource.versionArkUrl}}"
       matTooltipPosition="above"
       [disabled]="deletedResource"
       [matMenuTriggerFor]="share">
@@ -37,7 +37,7 @@
         mat-menu-item
         matTooltip="Copy ARK url"
         matTooltipPosition="above"
-        [cdkCopyToClipboard]="resource.res.versionArkUrl"
+        [cdkCopyToClipboard]="resource.versionArkUrl"
         (click)="openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
@@ -46,16 +46,12 @@
         mat-menu-item
         matTooltip="Copy internal link"
         matTooltipPosition="above"
-        [cdkCopyToClipboard]="resource.res.id"
+        [cdkCopyToClipboard]="resource.id"
         (click)="openSnackBar('Internal link copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy internal link to clipboard
       </button>
-      <button
-        mat-menu-item
-        matTooltip="Open in new tab"
-        matTooltipPosition="above"
-        (click)="openResource(resource.res.id)">
+      <button mat-menu-item matTooltip="Open in new tab" matTooltipPosition="above" (click)="openResource(resource.id)">
         <mat-icon>open_in_new</mat-icon>
         Open resource in new tab
       </button>
@@ -70,11 +66,11 @@
     <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
     <app-permission-info
       *ngIf="adminPermissions"
-      [hasPermissions]="resource.res.hasPermissions"
-      [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+      [hasPermissions]="resource.hasPermissions"
+      [userHasPermission]="resource.userHasPermission"></app-permission-info>
     <app-permission-info
       *ngIf="!adminPermissions"
-      [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+      [userHasPermission]="resource.userHasPermission"></app-permission-info>
     <!-- more menu with: delete, erase resource -->
     <button
       color="primary"
@@ -119,26 +115,9 @@
   </span>
 </div>
 
-<!-- additional line with project and user information -->
-<div class="infobar mat-caption" *ngIf="project">
-  <span *ngIf="displayProjectInfo"
-    >This resource {{ resource.res.isDeleted ? 'belonged' : 'belongs' }} to the project
-    <span class="project link" (click)="openProject(project)" (mouseover)="previewProject()">
-      <strong>{{project?.shortname}}</strong>
-      <mat-icon inline>open_in_new</mat-icon>
-    </span>
-  </span>
-  <span class="fill-remaining-space desktop-only"></span>
-  <span *ngIf="user || resource.res.creationDate">
-    Created
-    <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
-    <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
-  </span>
-</div>
-
 <!-- list of properties -->
-<div class="properties-container">
-  <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
+<div class="properties-container" *ngIf="resource">
+  <div class="properties" *ngIf="resource.resProps && resource.resProps.length > 0">
     <!-- list of properties -->
     <div *ngFor="let prop of resource.resProps; let last = last; trackBy: trackByPropertyInfoFn">
       <!-- show property; all in case of showAll === true or only the ones with prop.values -->
@@ -174,7 +153,7 @@
             <app-display-edit
               *ngIf="val"
               #displayEdit
-              [parentResource]="resource.res"
+              [parentResource]="resource"
               [displayValue]="val"
               [propArray]="resource.resProps"
               [canDelete]="deleteValueIsAllowed(prop)"
@@ -191,8 +170,8 @@
             <app-add-value
               #addValue
               class="add-value"
-              [parentResource]="resource.res"
-              [resourcePropertyDefinition]="$any(resource.res.entityInfo.properties[prop.propDef.id])"
+              [parentResource]="resource"
+              [resourcePropertyDefinition]="$any(resource.entityInfo.properties[prop.propDef.id])"
               (operationCancelled)="hideAddValueForm()">
             </app-add-value>
           </div>
@@ -241,25 +220,25 @@
   </div>
 
   <!-- deleted resource or resource without any defined properties -->
-  <ng-template #noProperties>
-    <div *ngIf="resource.res.isDeleted" class="properties">
+  <ng-template *ngIf="resource.resProps && resource.resProps.length === 0">
+    <div *ngIf="resource.isDeleted" class="properties">
       <div class="property border-bottom">
         <div class="property-label">
           <!-- delete date -->
           <h3 class="label mat-subtitle-2">Deleted on</h3>
         </div>
-        <div class="property-value">{{ resource.res.deleteDate | date }}</div>
+        <div class="property-value">{{ resource.deleteDate | date }}</div>
       </div>
       <div class="property">
         <div class="property-label">
           <!-- Delete comment -->
           <h3 class="label mat-subtitle-2">Comment</h3>
         </div>
-        <div class="property-value">{{ resource.res.deleteComment }}</div>
+        <div class="property-value">{{ resource.deleteComment }}</div>
       </div>
     </div>
     <!-- no defined property -->
-    <div *ngIf="!resource.res.isDeleted" class="properties">
+    <div *ngIf="!resource.isDeleted" class="properties">
       <div class="property border-bottom">
         <div class="property-label">
           <h3 class="label mat-subtitle-2">Info</h3>

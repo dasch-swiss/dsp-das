@@ -45,7 +45,7 @@ import { MovingImageSidecar } from './video-preview/video-preview.component';
   styleUrls: ['./video.component.scss'],
 })
 export class VideoComponent implements OnChanges, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input() src: ReadMovingImageFileValue;
 
   @Input() start? = 0;
 
@@ -134,11 +134,11 @@ export class VideoComponent implements OnChanges, AfterViewInit {
     this.videoError = '';
     // set the file info first bc. browsers might queue and block requests
     // if there are already six ongoing requests
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe((file: MovingImageSidecar) => {
+    this._rs.getFileInfo(this.src.fileUrl).subscribe((file: MovingImageSidecar) => {
       this.fileInfo = file;
     });
 
-    this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+    this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileUrl);
   }
 
   ngAfterViewInit() {
@@ -408,15 +408,11 @@ export class VideoComponent implements OnChanges, AfterViewInit {
         )
       )
       .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (
-          res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
-        ).fileUrl;
-        this.src.fileValue.filename = (
+        this.src.fileUrl = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).fileUrl;
+        this.src.filename = (
           res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
         ).filename;
-        this.src.fileValue.strval = (
-          res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
-        ).strval;
+        this.src.strval = (res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue).strval;
 
         this.ngOnChanges();
 

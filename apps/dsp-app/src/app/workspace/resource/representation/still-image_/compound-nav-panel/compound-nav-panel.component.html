@@ -1,0 +1,24 @@
+<!-- navigation in case of compound object: first page and previous page -->
+<span class="compound-nav">
+  <button mat-icon-button [disabled]="(currentPage$ | async) === 0" matTooltip="First page" (click)="goToFirstPage()">
+    <mat-icon>first_page</mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="(currentPage$ | async) === 0" matTooltip="Previous page" (click)="previousPage()">
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+  <span class="range">{{(currentPage$ | async)+1}} of {{(totalPages$ | async)}}</span>
+  <button
+    mat-icon-button
+    [disabled]="(currentPage$ | async) === (totalPages$ | async) -1"
+    matTooltip="Next page"
+    (click)="nextPage()">
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [disabled]="(currentPage$ | async) === (totalPages$ | async) -1"
+    matTooltip="Last page"
+    (click)="goToLastPage()">
+    <mat-icon>last_page</mat-icon>
+  </button>
+</span>

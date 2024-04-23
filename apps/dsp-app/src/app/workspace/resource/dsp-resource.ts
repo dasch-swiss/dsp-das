@@ -1,30 +1,95 @@
-import { Constants, ReadResource, ReadValue, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+  Constants,
+  ReadArchiveFileValue,
+  ReadAudioFileValue,
+  ReadDocumentFileValue,
+  ReadLinkValue,
+  ReadMovingImageFileValue,
+  ReadResource,
+  ReadStillImageFileValue,
+  ReadTextFileValue,
+  ReadValue,
+  SystemPropertyDefinition,
+} from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from './properties/properties.component';
 
-export class DspResource {
-  res: ReadResource;
+export type ReadFileValueType =
+  | ReadAudioFileValue
+  | ReadDocumentFileValue
+  | ReadMovingImageFileValue
+  | ReadStillImageFileValue
+  | ReadArchiveFileValue
+  | ReadTextFileValue;
 
-  resProps: PropertyInfoValues[] = []; // array of resource properties
-
-  systemProps: SystemPropertyDefinition[] = []; // array of system properties
-
-  // regions or sequences
-  incomingAnnotations: ReadResource[] = [];
-
-  // incoming stillImages, movingImages, audio etc.
-  incomingRepresentations: ReadResource[] = [];
+export class DspResource extends ReadResource {
+  resProps: PropertyInfoValues[] = [];
+  incomingAnnotations: ReadResource[] = []; // Todo delete this property
+  incomingRepresentations: ReadResource[] = []; // Todo delete this property
 
   constructor(resource: ReadResource) {
-    this.res = resource;
+    super();
+    Object.assign(this, resource);
   }
 
-  // return whether the main resource is a region;
-  get isRegion() {
-    return this.res.entityInfo.classes[Constants.Region];
+  get systemProps(): SystemPropertyDefinition[] {
+    return this.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
   }
 
-  get hasOutgoingReferences() {
-    return this.res.outgoingReferences.length > 0;
+  get hasRegion(): boolean {
+    return !!this.entityInfo.classes[Constants.Region];
+  }
+
+  get hasOutgoingReferences(): boolean {
+    return this.outgoingReferences.length > 0;
+  }
+
+  get isRegionOf(): ReadLinkValue {
+    return (this.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0];
+  }
+
+  get stillImageRepresentations(): ReadStillImageFileValue[] {
+    return this.getFileRepresentations<ReadStillImageFileValue>(Constants.HasStillImageFileValue);
+  }
+
+  get documentRepresentations(): ReadDocumentFileValue[] {
+    return this.getFileRepresentations<ReadDocumentFileValue>(Constants.HasDocumentFileValue);
+  }
+
+  get audioRepresentations(): ReadAudioFileValue[] {
+    return this.getFileRepresentations<ReadAudioFileValue>(Constants.HasAudioFileValue);
+  }
+
+  get movingImageRepresentations(): ReadMovingImageFileValue[] {
+    return this.getFileRepresentations<ReadMovingImageFileValue>(Constants.HasMovingImageFileValue);
+  }
+
+  get archiveRepresentations(): ReadArchiveFileValue[] {
+    return this.getFileRepresentations<ReadArchiveFileValue>(Constants.HasArchiveFileValue);
+  }
+
+  get textFileRepresentations(): ReadTextFileValue[] {
+    return this.getFileRepresentations<ReadTextFileValue>(Constants.HasTextFileValue);
+  }
+
+  get readFileValueType(): ReadFileValueType {
+    if (this.stillImageRepresentations.length > 0) {
+      return this.stillImageRepresentations[0];
+    } else if (this.documentRepresentations.length > 0) {
+      return this.documentRepresentations[0];
+    } else if (this.audioRepresentations.length > 0) {
+      return this.audioRepresentations[0];
+    } else if (this.movingImageRepresentations.length > 0) {
+      return this.movingImageRepresentations[0];
+    } else if (this.archiveRepresentations.length > 0) {
+      return this.archiveRepresentations[0];
+    } else if (this.textFileRepresentations.length > 0) {
+      return this.textFileRepresentations[0];
+    }
+    return null;
+  }
+
+  private getFileRepresentations<T extends ReadFileValueType>(propertyKey: string): T[] {
+    return (this.properties[propertyKey] as T[]) || [];
   }
 }
 

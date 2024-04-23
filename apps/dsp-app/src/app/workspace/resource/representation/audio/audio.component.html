@@ -1,7 +1,6 @@
 <div class="controls">
   <!-- in case of an error -->
-  <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'audio'" *ngIf="failedToLoad">
-  </app-status>
+  <app-status [status]="404" [url]="src.fileUrl" [representation]="'audio'" *ngIf="failedToLoad"> </app-status>
 
   <div class="file-representation">
     <div class="container">
@@ -26,10 +25,10 @@
         </button>
         <mat-menu #more="matMenu" class="representation-menu">
           <button class="menu-content" mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
-          <button class="menu-content" mat-menu-item [cdkCopyToClipboard]="src.fileValue.fileUrl">
+          <button class="menu-content" mat-menu-item [cdkCopyToClipboard]="src.fileUrl">
             Copy audio URL to clipboard
           </button>
-          <button class="menu-content" mat-menu-item (click)="download(src.fileValue.fileUrl)">Download audio</button>
+          <button class="menu-content" mat-menu-item (click)="download(src.fileUrl)">Download audio</button>
           <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">Replace file</button>
         </mat-menu>
         <button mat-icon-button (click)="togglePlay()" *ngIf="isPaused()">

@@ -29,7 +29,7 @@ import { RepresentationService } from '../representation.service';
   styleUrls: ['./audio.component.scss'],
 })
 export class AudioComponent implements OnInit, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input() src: ReadAudioFileValue;
 
   @Input() parentResource: ReadResource;
 
@@ -50,7 +50,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
+    this._rs.getFileInfo(this.src.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
       },
@@ -58,7 +58,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
         this.failedToLoad = true;
       }
     );
-    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileUrl);
   }
 
   ngAfterViewInit() {
@@ -128,7 +128,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
   }
 
   openIIIFnewTab() {
-    window.open(this.src.fileValue.fileUrl, '_blank');
+    window.open(this.src.fileUrl, '_blank');
   }
 
   download(url: string) {
@@ -170,16 +170,16 @@ export class AudioComponent implements OnInit, AfterViewInit {
         )
       )
       .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).fileUrl;
-        this.src.fileValue.filename = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).filename;
-        this.src.fileValue.strval = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).strval;
-        this.src.fileValue.valueCreationDate = (
+        this.src.fileUrl = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).fileUrl;
+        this.src.filename = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).filename;
+        this.src.strval = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).strval;
+        this.src.valueCreationDate = (
           res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue
         ).valueCreationDate;
 
-        this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+        this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileUrl);
 
-        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
+        this._rs.getFileInfo(this.src.fileUrl).subscribe(res => {
           this.originalFilename = res['originalFilename'];
         });
 

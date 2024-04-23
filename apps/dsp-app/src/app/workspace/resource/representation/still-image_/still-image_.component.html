@@ -1,0 +1,87 @@
+<app-osd-viewer />
+<div class="toolbar">
+  <div class="toolbar-bottom">
+    <app-still-image-action-panel
+      [editorPermissions]="isAdmin$ | async"
+      [fileValue]="resource.stillImageRepresentations[0]"></app-still-image-action-panel>
+    <app-osd-zoom-panel />
+  </div>
+</div>
+<div class="data-container">
+  <!-- tabs -->
+  <mat-tab-group>
+    <mat-tab [label]="resource.entityInfo?.classes[resource.type].label">
+      <app-resource-metadata *ngIf="resource" [resource]="resource" [displayProjectInfo]="true">
+      </app-resource-metadata>
+      <app-properties *ngIf="resource" [resource]="resource" [adminPermissions]="isAdmin$ | async"> </app-properties>
+    </mat-tab>
+
+    <!-- incoming resource -->
+    <mat-tab> </mat-tab>
+  </mat-tab-group>
+</div>
+
+<!--
+ <div class="data-container" *ngIf="!loading">
+
+<mat-tab-group
+    *ngIf="!resource.isDeleted; else deletedResource"
+    animationDuration="0ms"
+    [(selectedIndex)]="selectedTab"
+    (selectedTabChange)="tabChanged($event)">
+    <mat-tab [label]="resource.entityInfo?.classes[resource.type].label">
+        <app-properties
+            *ngIf="resource"
+            [resource]="resource"
+            [displayProjectInfo]="true"
+            [adminPermissions]="isAdmin$ | async"
+            [valueUuidToHighlight]="valueUuid">
+        </app-properties>
+    </mat-tab>
+
+    <mat-tab *ngIf="incomingResource" [label]="incomingResource.entityInfo?.classes[incomingResource.type].label">
+        <app-properties
+            *ngIf="incomingResource"
+            [resource]="incomingResource"
+            [displayProjectInfo]="false"
+            [adminPermissions]="isAdmin$ | async"
+            [valueUuidToHighlight]="valueUuid">
+        </app-properties>
+    </mat-tab>
+
+    <mat-tab
+        label="annotations"
+        *ngIf="resource.readFileValueType && resource.stillImageRepresentations?.length > 0">
+        <ng-template matTabLabel class="annotations">
+            <span matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
+        </ng-template>
+        <div
+            class="region-property"
+            *ngFor="let annotation of annotationResources"
+            [id]="annotation.id"
+            [class.active]="annotation.id === selectedRegion">
+            <app-properties
+                [resource]="annotation"
+                [displayProjectInfo]="false"
+                [isAnnotation]="true"
+                [adminPermissions]="isAdmin$ | async"
+                [valueUuidToHighlight]="valueUuid"
+                (regionChanged)="updateRegion()"
+                (regionDeleted)="reloadWithResource()">
+            </app-properties>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+<ng-template #deletedResource>
+    <app-properties
+        *ngIf="resource"
+        [resource]="resource"
+        [displayProjectInfo]="true"
+        [adminPermissions]="isAdmin$ | async"
+        [valueUuidToHighlight]="valueUuid">
+    </app-properties>
+</ng-template>
+</div>
+<dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+
+ -->

@@ -1,0 +1,16 @@
+<!-- additional line with project and user information -->
+<div class="infobar mat-caption" *ngIf="project">
+  <span *ngIf="displayProjectInfo"
+    >This resource {{ resource.isDeleted ? 'belonged' : 'belongs' }} to the project
+    <span class="project link" (click)="openProject(project)">
+      <strong>{{project?.shortname}}</strong>
+      <mat-icon inline>open_in_new</mat-icon>
+    </span>
+  </span>
+  <span class="fill-remaining-space desktop-only"></span>
+  <span *ngIf="user || resource.creationDate">
+    Created
+    <span *ngIf="user">by {{(user.username ? user.username : user.givenName + ' ' + user.familyName)}}</span>
+    <span *ngIf="resource.creationDate"> on {{resource.creationDate | date}}</span>
+  </span>
+</div>

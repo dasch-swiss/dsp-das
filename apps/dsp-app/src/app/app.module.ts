@@ -34,6 +34,17 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { CompoundStillImageComponent } from '@dsp-app/src/app/workspace/resource/representation/compound-still-image/compound-still-image.component';
+import { RepresentationComponent } from '@dsp-app/src/app/workspace/resource/representation/representation.component';
+import { CompoundNavOverlayComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-overlay/compound-nav-overlay.component';
+import { CompoundNavPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-panel/compound-nav-panel.component';
+import { CompoundNavSliderComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/compound-nav-slider/compound-nav-slider.component';
+import { OsdViewerComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/osd-viewer/osd-viewer.component';
+import { OsdZoomPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/osd-zoom-panel/osd-zoom-panel.component';
+import { StillImageActionPanelComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/still-image-action-panel/still-image-action-panel.component';
+import { StillImageDsComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image_/still-image_.component';
+import { ResourceMetadataComponent } from '@dsp-app/src/app/workspace/resource/resource-metadata/resource-metadata.component';
+import { ResourceWithoutRepresentationComponent } from '@dsp-app/src/app/workspace/resource/resource-without-representation/resource-without-representation.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -214,6 +225,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CommentFormComponent,
     CommonInputComponent,
     ComparisonComponent,
+    CompoundNavPanelComponent,
+    CompoundNavOverlayComponent,
+    CompoundNavSliderComponent,
     ConfirmationDialogComponent,
     ConfirmDialogComponent,
     ConfirmationMessageComponent,
@@ -264,6 +278,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MembershipComponent,
     OntologyComponent,
     OntologyFormComponent,
+    OsdViewerComponent,
+    OsdZoomPanelComponent,
     PasswordFormComponent,
     PermissionInfoComponent,
     ProfileComponent,
@@ -278,6 +294,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PropertyFormComponent,
     PropertyInfoComponent,
     ReplaceFileFormComponent,
+    RepresentationComponent,
     ResourceClassFormComponent,
     ResourceClassInfoComponent,
     ResourceClassPropertyInfoComponent,
@@ -285,6 +302,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceInstanceFormComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
+    ResourceMetadataComponent,
+    ResourceWithoutRepresentationComponent,
     ResultsComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
@@ -298,6 +317,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SplitPipe,
     StatusComponent,
     StillImageComponent,
+    StillImageDsComponent,
+    CompoundStillImageComponent,
     StringifyStringLiteralPipe,
     SublistValueComponent,
     SwitchPropertiesComponent,
@@ -322,6 +343,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     VideoComponent,
     VideoPreviewComponent,
     HintComponent,
+    StillImageDsComponent,
+    StillImageActionPanelComponent,
     TextComponent,
     OntologyClassesComponent,
     OntologyClassItemComponent,
