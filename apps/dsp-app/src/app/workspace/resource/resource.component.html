@@ -20,16 +20,14 @@
           *ngSwitchCase="'ReadDocumentFileValue'"
           [class.pdf]="resource.documentRepresentations[0].filename.split('.').pop() === 'pdf'"
           [src]="resource.documentRepresentations[0]"
-          [parentResource]="resource"
-          (loaded)="representationLoaded($event)">
+          [parentResource]="resource">
         </app-document>
 
         <app-audio
           *ngSwitchCase="'ReadAudioFileValue'"
           class="dsp-representation audio"
           [src]="resource.audioRepresentations[0]"
-          [parentResource]="resource"
-          (loaded)="representationLoaded($event)">
+          [parentResource]="resource">
         </app-audio>
 
         <app-video
@@ -37,8 +35,7 @@
           class="dsp-representation video"
           [src]="resource.movingImageRepresentations[0]"
           [parentResource]="resource"
-          [splitSizeChanged]="splitSizeChanged"
-          (loaded)="representationLoaded($event)">
+          [splitSizeChanged]="splitSizeChanged">
         </app-video>
 
         <app-archive
@@ -46,8 +43,7 @@
           class="dsp-representation archive"
           *ngSwitchCase="'ReadArchiveFileValue'"
           [src]="resource.archiveRepresentations[0]"
-          [parentResource]="resource"
-          (loaded)="representationLoaded($event)">
+          [parentResource]="resource">
         </app-archive>
 
         <app-text
@@ -55,8 +51,7 @@
           #text
           class="dsp-representation text"
           [src]="resource.textFileRepresentations[0]"
-          [parentResource]="resource"
-          (loaded)="representationLoaded($event)">
+          [parentResource]="resource">
         </app-text>
       </ng-container>
     </div>
