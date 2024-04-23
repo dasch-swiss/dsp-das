@@ -1,14 +1,18 @@
-import { AfterViewInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ValidatorFn } from '@angular/forms';
 import {
-  Cardinality,
-  Constants,
-  IHasPropertyWithPropertyDefinition,
-  ReadResource,
-  ReadValue,
-  ResourcePropertyDefinition,
-} from '@dasch-swiss/dsp-js';
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
+import { Constants, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
+import { PropertyInfoValues } from './property-info-values.interface';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -102,13 +106,24 @@ import { PropertyValueService } from './property-value.service';
     `,
   ],
 })
-export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
-  @Input({ required: true }) propertyDefinition!: ResourcePropertyDefinition;
-  @Input({ required: true }) cardinality!: Cardinality;
+export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterViewInit {
   @Input({ required: true }) formArray!: FormValueArray;
-  @Input({ required: true }) property!: IHasPropertyWithPropertyDefinition; // TODO remove later ?
   @Input() editModeData: { resource: ReadResource; values: ReadValue[] } | null = null;
   @Input({ required: true }) resourceClassIri!: string;
+
+  @Input({ required: true }) myProperty!: PropertyInfoValues;
+
+  get property() {
+    return this.myProperty.guiDef;
+  }
+
+  get cardinality() {
+    return this.myProperty.guiDef.cardinality;
+  }
+
+  get propertyDefinition() {
+    return JsLibPotentialError.setAs(this.myProperty.propDef);
+  }
 
   @ViewChild('intTpl') intTpl!: TemplateRef<any>;
   @ViewChild('decimalTpl') decimalTpl!: TemplateRef<any>;
@@ -131,10 +146,20 @@ export class PropertyValueSwitcherComponent implements OnInit, AfterViewInit {
   constructor(private _propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
+    this._setupData();
+  }
+
+  _setupData() {
     this._propertyValueService._editModeData = this.editModeData;
     this._propertyValueService.propertyDefinition = this.propertyDefinition;
     this._propertyValueService.formArray = this.formArray;
     this._propertyValueService.cardinality = this.cardinality;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['editModeData']) {
+      this._setupData();
+    }
   }
 
   ngAfterViewInit() {

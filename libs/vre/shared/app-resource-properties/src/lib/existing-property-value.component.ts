@@ -12,9 +12,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-property-value-switcher
       *ngIf="resourceClassIriService.resourceClassIri$ | async as resClassIri"
-      [propertyDefinition]="JsLibPotentialError.setAs(prop.propDef)"
-      [property]="prop.guiDef"
-      [cardinality]="prop.guiDef.cardinality"
+      [myProperty]="prop"
       [formArray]="formArray"
       [resourceClassIri]="resClassIri"
       [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>

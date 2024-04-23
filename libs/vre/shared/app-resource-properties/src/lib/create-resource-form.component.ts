@@ -7,7 +7,6 @@ import {
   CreateFileValue,
   CreateResource,
   CreateValue,
-  IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinitionWithPropertyDefinition,
@@ -21,6 +20,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
+import { PropertyInfoValues } from './property-info-values.interface';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
@@ -46,13 +46,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
       <div class="my-grid">
         <ng-container *ngFor="let prop of myProperties">
-          <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propertyDefinition.label }}</div>
+          <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propDef.label }}</div>
           <div>
             <app-property-value-switcher
-              [propertyDefinition]="JsLibPotentialError.setAs(prop.propertyDefinition)"
-              [property]="prop"
-              [formArray]="form.controls.properties.controls[prop.propertyDefinition.id]"
-              [cardinality]="prop.cardinality"
+              [myProperty]="prop"
+              [formArray]="form.controls.properties.controls[prop.propDef.id]"
               [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
           </div>
         </ng-container>
@@ -97,7 +95,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
-  properties!: IHasPropertyWithPropertyDefinition[];
+  properties!: PropertyInfoValues[];
   loading = false;
 
   mapping = new Map<string, string>();
@@ -117,7 +115,7 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   get myProperties() {
-    return this.properties?.filter(prop => propertiesTypeMapping.has(prop.propertyDefinition.objectType!)) ?? [];
+    return this.properties?.filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!)) ?? [];
   }
 
   constructor(
@@ -157,7 +155,12 @@ export class CreateResourceFormComponent implements OnInit {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         this.resourceClass = onto.classes[this.resourceClassIri];
-        this.properties = this.resourceClass.getResourcePropertiesList().filter(v => v.guiOrder !== undefined);
+        this.properties = this.resourceClass
+          .getResourcePropertiesList()
+          .filter(v => v.guiOrder !== undefined)
+          .map(v => {
+            return { guiDef: v, propDef: v.propertyDefinition, values: [] };
+          });
 
         this._buildForm();
         this._cd.detectChanges();
@@ -170,15 +173,15 @@ export class CreateResourceFormComponent implements OnInit {
     }
 
     this.properties
-      .filter(prop => propertiesTypeMapping.has(prop.propertyDefinition.objectType!))
+      .filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!))
       .forEach(prop => {
-        const control = propertiesTypeMapping.get(prop.propertyDefinition.objectType!)!.control() as AbstractControl;
-        if (prop.cardinality === Cardinality._1 || prop.cardinality === Cardinality._1_n) {
+        const control = propertiesTypeMapping.get(prop.propDef.objectType!)!.control() as AbstractControl;
+        if (prop.guiDef.cardinality === Cardinality._1 || prop.guiDef.cardinality === Cardinality._1_n) {
           control.addValidators(Validators.required);
         }
 
         this.form.controls.properties.addControl(
-          prop.propertyDefinition.id,
+          prop.propDef.id,
           this._fb.array([
             this._fb.group({
               item: control,
@@ -186,7 +189,7 @@ export class CreateResourceFormComponent implements OnInit {
             }) as unknown as FormValueGroup,
           ])
         );
-        this.mapping.set(prop.propertyDefinition.id, prop.propertyDefinition.objectType!);
+        this.mapping.set(prop.propDef.id, prop.propDef.objectType!);
       });
   }
 
@@ -224,9 +227,9 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getValue(iri: string) {
-    const foundProperty = this.properties.find(property => property.propertyIndex === iri);
+    const foundProperty = this.properties.find(property => property.guiDef.propertyIndex === iri);
     if (!foundProperty) throw new Error(`Property ${iri} not found`);
-    const propertyDefinition = foundProperty.propertyDefinition as ResourcePropertyDefinition;
+    const propertyDefinition = foundProperty.propDef as ResourcePropertyDefinition;
 
     const controls = this.form.controls.properties.controls[iri].controls;
     return controls

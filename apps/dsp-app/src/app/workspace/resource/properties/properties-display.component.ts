@@ -67,10 +67,12 @@ export class PropertiesDisplayComponent implements OnInit {
   constructor(private _store: Store) {}
 
   ngOnInit() {
-    this.myProperties$ = this.showAllProperties$.pipe(map(showAllProps => this._getMyProperties(showAllProps)));
+    this.myProperties$ = this.showAllProperties$.pipe(
+      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.resource))
+    );
   }
 
-  private _getMyProperties(showAllProperties: boolean) {
+  static getMyProperties(showAllProperties: boolean, resource: DspResource) {
     const representationConstants = RepresentationConstants;
 
     const condition = (prop: PropertyInfoValues) =>
@@ -93,7 +95,7 @@ export class PropertiesDisplayComponent implements OnInit {
         )
       );
 
-    return this.resource.resProps
+    return resource.resProps
       .filter(prop => prop.guiDef.guiOrder !== undefined)
       .filter(prop => {
         return (
