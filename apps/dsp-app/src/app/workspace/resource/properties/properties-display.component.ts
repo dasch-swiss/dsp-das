@@ -61,7 +61,6 @@ export class PropertiesDisplayComponent implements OnInit, OnChanges {
   @Input() resource: DspResource;
 
   myProperties$!: Observable<PropertyInfoValues[]>;
-
   showAllProperties$ = this._store.select(ResourceSelectors.showAllProps);
 
   constructor(private _store: Store) {}
@@ -116,5 +115,4 @@ export class PropertiesDisplayComponent implements OnInit, OnChanges {
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
-  trackByValuesFn = (index: number, item: any) => `${index}-${item}`;
 }
