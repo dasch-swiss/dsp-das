@@ -7,6 +7,7 @@
     <app-osd-zoom-panel />
   </div>
 </div>
+
 <div class="data-container">
   <!-- tabs -->
   <mat-tab-group>
@@ -16,8 +17,29 @@
       <app-properties *ngIf="resource" [resource]="resource" [adminPermissions]="isAdmin$ | async"> </app-properties>
     </mat-tab>
 
-    <!-- incoming resource -->
-    <mat-tab> </mat-tab>
+    <mat-tab #matTabAnnotations label="annotations">
+      <ng-template matTabLabel class="annotations">
+        <span
+          [matBadge]="(annotations$ |async)?.length"
+          [matBadgeHidden]="(annotations$ |async)?.length === 0"
+          matBadgeColor="primary"
+          matBadgeOverlap="false">
+          Annotations
+        </span>
+      </ng-template>
+      <div
+        class="region-property"
+        *ngFor="let annotation of (annotations$ |async)"
+        [id]="annotation.id"
+        [class.active]="annotation.id === (activeRegion$ | async)">
+        <app-properties
+          [resource]="annotation"
+          [isAnnotation]="true"
+          [adminPermissions]="isAdmin$ | async"
+          [valueUuidToHighlight]="activeRegion$ | async">
+        </app-properties>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </div>
 

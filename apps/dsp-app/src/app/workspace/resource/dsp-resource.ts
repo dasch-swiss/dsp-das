@@ -1,5 +1,6 @@
 import {
   Constants,
+  IHasPropertyWithPropertyDefinition,
   ReadArchiveFileValue,
   ReadAudioFileValue,
   ReadDocumentFileValue,
@@ -22,9 +23,7 @@ export type ReadFileValueType =
   | ReadTextFileValue;
 
 export class DspResource extends ReadResource {
-  resProps: PropertyInfoValues[] = [];
   incomingAnnotations: ReadResource[] = []; // Todo delete this property
-  incomingRepresentations: ReadResource[] = []; // Todo delete this property
 
   constructor(resource: ReadResource) {
     super();
@@ -33,6 +32,32 @@ export class DspResource extends ReadResource {
 
   get systemProps(): SystemPropertyDefinition[] {
     return this.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+  }
+
+  get resProps(): PropertyInfoValues[] {
+    const props = this.entityInfo.classes[this.type]
+      .getResourcePropertiesList()
+      .map((prop: IHasPropertyWithPropertyDefinition) => {
+        // the object type is none from above
+        return {
+          propDef: prop.propertyDefinition,
+          guiDef: prop,
+          values: this.getValues(prop.propertyIndex),
+        };
+      });
+
+    // sort properties by guiOrder
+    return (
+      props
+        .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
+        .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
+        // eslint-disable-next-line array-callback-return
+        .sort(a => {
+          if (a.guiDef.guiOrder === undefined) {
+            return 1;
+          }
+        })
+    );
   }
 
   get hasRegion(): boolean {

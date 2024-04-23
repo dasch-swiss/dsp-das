@@ -7,10 +7,8 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -18,33 +16,19 @@ import {
   CountQueryResponse,
   IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
-  ReadArchiveFileValue,
-  ReadAudioFileValue,
-  ReadDocumentFileValue,
-  ReadLinkValue,
-  ReadMovingImageFileValue,
   ReadResource,
   ReadResourceSequence,
-  ReadStillImageFileValue,
-  ReadTextFileValue,
-  ReadUser,
-  SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
-import { DspCompoundPosition, DspResource } from './dsp-resource';
+import { DspResource } from './dsp-resource';
 import { PropertyInfoValues } from './properties/properties.component';
-import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
-import { Region, StillImageComponent } from './representation/still-image/still-image.component';
+import { StillImageComponent } from './representation/still-image/still-image.component';
 import { IncomingService } from './services/incoming.service';
 import { ResourceService } from './services/resource.service';
-import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
+import { ValueOperationEventService } from './services/value-operation-event.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -127,8 +111,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         this.requestIncomingResources(dspResource);
       }
 
-      // gather resource property information
-      this.resource.resProps = this.initProps(this.resource);
       this.loading = false;
       this.oldResourceIri = this.resource.id;
       this._cdr.markForCheck();
@@ -162,12 +144,11 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       .getResourcePropertiesList()
       .map((prop: IHasPropertyWithPropertyDefinition) => {
         // the object type is none from above
-        const propInfoAndValues = {
+        return {
           propDef: prop.propertyDefinition,
           guiDef: prop,
           values: resource.getValues(prop.propertyIndex),
         };
-        return propInfoAndValues;
       });
 
     // sort properties by guiOrder

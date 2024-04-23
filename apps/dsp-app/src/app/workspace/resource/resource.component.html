@@ -5,17 +5,15 @@
 </div>
 <div class="content large middle">
   <div
-    *ngIf="(stillImageRepresentationsAsPartOfSequenceCount$ | async) && (stillImageRepresentationsAsPartOfSequenceCount$ | async) > 0">
+    *ngIf="resource && !resource?.readFileValueType && (stillImageRepresentationsAsPartOfSequenceCount$ | async) && (stillImageRepresentationsAsPartOfSequenceCount$ | async) > 0">
     <app-compound-still-image
       [resource]="resource"
       [totalPages$]="stillImageRepresentationsAsPartOfSequenceCount$ |async"></app-compound-still-image>
   </div>
   <div class="resource-view" *ngIf="resource">
     <div class="representation-container center" *ngIf="resource?.readFileValueType">
-      <div>{{resource.readFileValueType.constructor.name}}</div>
       <ng-container [ngSwitch]="resource?.readFileValueType?.constructor.name">
-        <app-still-image_ [resource]="resource"></app-still-image_>
-
+        <app-still-image_ *ngSwitchCase="'ReadStillImageFileValue'" [resource]="resource"></app-still-image_>
         <app-document
           #document
           class="dsp-representation document"
@@ -62,9 +60,7 @@
         </app-text>
       </ng-container>
     </div>
-    <div
-      class="resource-view"
-      *ngIf="!resource.readFileValueType || resource?.readFileValueType !== 'ReadStillImageFileValue'">
+    <div class="resource-view" *ngIf="resource && !resource.readFileValueType && !resource.hasRegion">
       <app-resource-without-representation [resource]="resource"></app-resource-without-representation>
     </div>
   </div>
