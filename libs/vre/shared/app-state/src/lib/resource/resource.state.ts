@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
+import { Inject, Injectable } from '@angular/core';
+import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { UserSelectors } from '../user/user.selectors';
 import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
+  LoadResourceAction,
   ToggleShowAllCommentsAction,
   ToggleShowAllPropsAction,
 } from './resource.actions';
@@ -19,6 +22,7 @@ const defaults = <ReourceStateModel>{
   isLoading: false,
   attachedProjects: {},
   attachedUsers: {},
+  resource: null,
 };
 
 @State<ReourceStateModel>({
@@ -30,6 +34,8 @@ export class ResourceState {
   constructor(
     private store: Store,
     private _userApiService: UserApiService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
     private _projectApiService: ProjectApiService
   ) {}
 
@@ -117,6 +123,19 @@ export class ResourceState {
         });
 
         return response.project;
+      })
+    );
+  }
+
+  @Action(LoadResourceAction)
+  loadResource(ctx: StateContext<ReourceStateModel>, { resourceIri }: LoadResourceAction) {
+    return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
+      tap(response => {
+        const state = ctx.getState();
+        ctx.setState({
+          ...state,
+          resource: new DspResource(response as ReadResource),
+        });
       })
     );
   }

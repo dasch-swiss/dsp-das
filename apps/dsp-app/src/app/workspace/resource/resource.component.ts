@@ -47,12 +47,13 @@ import {
 import {
   GetAttachedProjectAction,
   GetAttachedUserAction,
+  LoadResourceAction,
   ResourceSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { filter, map, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
@@ -206,6 +207,15 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     private _dialog: MatDialog,
     private _componentCommsService: ComponentCommunicationEventService
   ) {
+    this._store
+      .select(ResourceSelectors.resource)
+      .pipe(filter(resource => resource !== null))
+      .subscribe(res => {
+        this.resource = res;
+        this.loading = false;
+        this._cdr.detectChanges();
+      });
+
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
       this.resourceUuid = params.resource;
@@ -240,7 +250,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     this.loading = true;
     // reset all resources
-    this.resource = undefined;
     this.incomingResource = undefined;
     this.compoundPosition = undefined;
     this.showRestrictedMessage = true;
@@ -306,15 +315,14 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   private _initResource(iri) {
     this.oldResourceIri = this.resourceIri;
     this._getResource(iri).subscribe(dspResource => {
+      return;
       this._renderResource(dspResource);
       this._getResourceAttachedData(dspResource);
     });
   }
 
   private _getResource(iri: string): Observable<DspResource> {
-    return this._dspApiConnection.v2.res
-      .getResource(iri)
-      .pipe(map((response: ReadResource) => new DspResource(response)));
+    return this._store.dispatch(new LoadResourceAction(iri));
   }
 
   private _renderResource(resource: DspResource) {
