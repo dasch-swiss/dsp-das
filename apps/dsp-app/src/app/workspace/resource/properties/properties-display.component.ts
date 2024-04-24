@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';

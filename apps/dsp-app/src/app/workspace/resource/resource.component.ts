@@ -42,7 +42,6 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   EditResourceLabelDialogComponent,
   EditResourceLabelDialogProps,
-  PropertyInfoValues,
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import {
   GetAttachedProjectAction,
