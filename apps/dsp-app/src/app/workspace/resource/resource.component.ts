@@ -18,7 +18,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CountQueryResponse,
-  IHasPropertyWithPropertyDefinition,
   KnoraApiConnection,
   PermissionUtil,
   ReadArchiveFileValue,
@@ -36,7 +35,7 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { ResourceService, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Common, DspCompoundPosition, DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -406,7 +405,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     }
     this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
       this.incomingResource = new DspResource(response);
-      this.incomingResource.resProps = ResourceComponent.initProps(response);
+      this.incomingResource.resProps = Common.initProps(response);
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
@@ -448,67 +447,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   /**
-   * gather resource property information
-   */
-  public static initProps(resource: ReadResource): PropertyInfoValues[] {
-    let props = resource.entityInfo.classes[resource.type]
-      .getResourcePropertiesList()
-      .map((prop: IHasPropertyWithPropertyDefinition) => {
-        let propInfoAndValues: PropertyInfoValues;
-
-        switch (prop.propertyDefinition.objectType) {
-          case Constants.StillImageFileValue:
-            propInfoAndValues = {
-              propDef: prop.propertyDefinition,
-              guiDef: prop,
-              values: resource.getValuesAs(prop.propertyIndex, ReadStillImageFileValue),
-            };
-
-            /*
-                                                                                                                                                                        TODO Julien: I removed this part
-                                                                                                                                                                        const stillImageRepresentations = [
-                                                                                                                                                                          new FileRepresentation(
-                                                                                                                                                                            resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                                                                                                                            []
-                                                                                                                                                                          ),
-                                                                                                                                                                        ];
-
-                                                                                                                                                                        this.representationsToDisplay = stillImageRepresentations;
-
-                                                                                                                                                                        */
-            // --> TODO: get regions here
-
-            break;
-
-          default:
-            // the object type is none from above
-            propInfoAndValues = {
-              propDef: prop.propertyDefinition,
-              guiDef: prop,
-              values: resource.getValues(prop.propertyIndex),
-            };
-        }
-        return propInfoAndValues;
-      });
-
-    // sort properties by guiOrder
-    props = props
-      .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-      .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
-      // to get equal results on all browser engines which implements sorting in different way
-      // properties list has to be sorted again, pushing all "has..." properties to the bottom
-      // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
-      // eslint-disable-next-line array-callback-return
-      .sort(a => {
-        if (a.guiDef.guiOrder === undefined) {
-          return 1;
-        }
-      });
-
-    return props;
-  }
-
-  /**
    * creates a collection of [[StillImageRepresentation]] belonging to the given resource and assigns it to it.
    * each [[StillImageRepresentation]] represents an image including regions.
    *
@@ -543,7 +481,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
           const annotation = new DspResource(incomingRegion);
 
           // gather region property information
-          annotation.resProps = ResourceComponent.initProps(incomingRegion);
+          annotation.resProps = Common.initProps(incomingRegion);
 
           // gather system property information
           annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
