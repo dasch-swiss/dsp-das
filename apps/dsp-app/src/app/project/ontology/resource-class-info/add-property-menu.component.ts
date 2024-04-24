@@ -29,7 +29,7 @@ import { filter, map, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-add-property-menu',
   template: `
-    <mat-list>
+    <mat-list style="border-top: 1px solid rgba(0, 0, 0, .12);">
       <!-- here we have to know if the class has values or not -->
       <mat-list-item
         *ngIf="(lastModificationDate$ | async) && projectStatus && userCanEdit"
