@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import {
   DefaultProperties,
   DefaultProperty,
@@ -136,14 +137,15 @@ export class AddPropertyMenuComponent {
     };
 
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog.open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(AssignPropertyDialogComponent, {
-      data: {
+    this._dialog.open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(
+      AssignPropertyDialogComponent,
+      DspDialogConfig.mediumDialog({
         ontologyId: ontology.id,
         lastModificationDate: ontology.lastModificationDate,
         propertyInfo: propertyAssignment.property,
         resClassIri: this.resourceClass.id,
-      },
-    });
+      })
+    );
   }
 
   addNewProperty(propType: DefaultProperty) {

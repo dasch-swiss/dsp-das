@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, UpdateOntology, UpdateResourceClassCardinality } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -46,7 +46,7 @@ export interface AssignPropertyDialogProps {
       </button>
     </div>`,
 })
-export class AssignPropertyDialogComponent implements OnInit {
+export class AssignPropertyDialogComponent {
   loading = false;
   form: PropertyForm;
 
@@ -57,10 +57,6 @@ export class AssignPropertyDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AssignPropertyDialogProps,
     private _store: Store
   ) {}
-
-  ngOnInit() {
-    this.dialogRef.updateSize('800px', '');
-  }
 
   getForm(form: PropertyForm) {
     this.form = form;

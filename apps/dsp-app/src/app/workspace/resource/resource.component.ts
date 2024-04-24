@@ -37,7 +37,7 @@ import {
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
@@ -465,17 +465,17 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
             };
 
             /*
-                                                                                                TODO Julien: I removed this part
-                                                                                                const stillImageRepresentations = [
-                                                                                                  new FileRepresentation(
-                                                                                                    resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                                                    []
-                                                                                                  ),
-                                                                                                ];
+                                                                                                            TODO Julien: I removed this part
+                                                                                                            const stillImageRepresentations = [
+                                                                                                              new FileRepresentation(
+                                                                                                                resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
+                                                                                                                []
+                                                                                                              ),
+                                                                                                            ];
 
-                                                                                                this.representationsToDisplay = stillImageRepresentations;
+                                                                                                            this.representationsToDisplay = stillImageRepresentations;
 
-                                                                                                */
+                                                                                                            */
             // --> TODO: get regions here
 
             break;
@@ -732,10 +732,10 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   openEditLabelDialog() {
     this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
-        data: { resource: this.resource.res },
-        minWidth: 300,
-      })
+      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
+        EditResourceLabelDialogComponent,
+        DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res })
+      )
       .afterClosed()
       .subscribe(response => {
         if (!response) return;
