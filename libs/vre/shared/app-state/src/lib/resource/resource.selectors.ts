@@ -1,5 +1,5 @@
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Selector } from '@ngxs/store';
 import { IKeyValuePairs } from '../model-interfaces';
 import { ResourceState } from './resource.state';

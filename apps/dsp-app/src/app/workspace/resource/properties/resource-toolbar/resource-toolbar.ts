@@ -21,7 +21,7 @@ import {
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceService, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ComponentCommunicationEventService,
@@ -33,7 +33,6 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
-import { DspResource } from '../../dsp-resource';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

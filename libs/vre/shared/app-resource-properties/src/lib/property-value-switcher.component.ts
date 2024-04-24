@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Constants, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
-import { PropertyInfoValues } from './property-info-values.interface';
 import { PropertyValueService } from './property-value.service';
 
 @Component({

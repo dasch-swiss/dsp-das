@@ -12,6 +12,7 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -20,7 +21,6 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
-import { PropertyInfoValues } from './property-info-values.interface';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({

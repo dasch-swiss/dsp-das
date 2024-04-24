@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadProject, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { DspResource } from '@dsp-app/src/app/workspace/resource/dsp-resource';
 import { ResourceComponent } from '@dsp-app/src/app/workspace/resource/resource.component';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { map, take, tap } from 'rxjs/operators';

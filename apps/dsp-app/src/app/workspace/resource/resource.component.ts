@@ -36,7 +36,7 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceService, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -56,7 +56,6 @@ import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
-import { DspCompoundPosition, DspResource } from './dsp-resource';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { IncomingService } from './services/incoming.service';
@@ -466,17 +465,17 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
             };
 
             /*
-                                                                                                                                                            TODO Julien: I removed this part
-                                                                                                                                                            const stillImageRepresentations = [
-                                                                                                                                                              new FileRepresentation(
-                                                                                                                                                                resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                                                                                                                []
-                                                                                                                                                              ),
-                                                                                                                                                            ];
+                                                                                                                                                                        TODO Julien: I removed this part
+                                                                                                                                                                        const stillImageRepresentations = [
+                                                                                                                                                                          new FileRepresentation(
+                                                                                                                                                                            resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
+                                                                                                                                                                            []
+                                                                                                                                                                          ),
+                                                                                                                                                                        ];
 
-                                                                                                                                                            this.representationsToDisplay = stillImageRepresentations;
+                                                                                                                                                                        this.representationsToDisplay = stillImageRepresentations;
 
-                                                                                                                                                            */
+                                                                                                                                                                        */
             // --> TODO: get regions here
 
             break;

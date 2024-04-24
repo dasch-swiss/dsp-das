@@ -31,7 +31,6 @@ export * from './lib/create-resource-page.component';
 export * from './lib/upload2.component';
 export * from './lib/upload-file.service';
 export * from './lib/file-representation.type';
-export * from './lib/property-info-values.interface';
 export * from './lib/properties-toolbar.component';
 export * from './lib/property-value-comment.component';
 export * from './lib/edit-resource-label-dialog.component';

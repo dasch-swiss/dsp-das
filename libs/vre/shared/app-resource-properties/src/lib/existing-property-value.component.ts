@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { FormValueArray } from './form-value-array.type';
-import { PropertyInfoValues } from './property-info-values.interface';
 import { ResourceClassIriService } from './resource-class-iri.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
