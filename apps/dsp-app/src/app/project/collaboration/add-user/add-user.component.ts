@@ -25,7 +25,35 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
-import { AutocompleteItem } from './../../../workspace/search/operator';
+import { AutocompleteItem } from '../../../workspace/search/operator';
+
+/**
+ * validation of existing name values. Array method (list of values)
+ * Use it in a "formbuilder" group as a validator property
+ *
+ * @param {RegExp} valArrayRegexp List of regular expression values
+ * @returns ValidatorFn
+ */
+function existingUserNamesValidator(valArrayRegexp: [RegExp]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } => {
+    let name: string;
+
+    if (control.value?.iri) {
+      name = control.value.name.toLowerCase();
+    } else if (control.value) {
+      name = control.value.toLowerCase();
+    }
+
+    let no: boolean;
+    for (const existing of valArrayRegexp) {
+      no = existing.test(name);
+      if (no) {
+        return no ? { existingName: { name } } : null;
+      }
+    }
+    return no ? { existingName: { name } } : null;
+  };
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -203,7 +231,7 @@ export class AddUserComponent implements OnInit {
   trackByFn = (index: number, item: AutocompleteItem) => `${index}-${item.label}`;
 
   private setSelectUserForm(users: ReadUser[]) {
-    let existingNameInProject: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
+    const existingNameInProject: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
     const members: string[] = [];
     const projectMembers = this._store.selectSnapshot(ProjectsSelectors.projectMembers);
     if (projectMembers[this.projectIri]) {
@@ -283,32 +311,4 @@ export class AddUserComponent implements OnInit {
 
     return `${usernameLabel} ${emailLabel} ${user.givenName} ${user.familyName}`;
   }
-}
-
-/**
- * validation of existing name values. Array method (list of values)
- * Use it in a "formbuilder" group as a validator property
- *
- * @param {RegExp} valArrayRegexp List of regular expression values
- * @returns ValidatorFn
- */
-export function existingUserNamesValidator(valArrayRegexp: [RegExp], isCaseSensitive = false): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } => {
-    let name: string;
-
-    if (control.value?.iri) {
-      name = isCaseSensitive ? control.value.name : control.value.name.toLowerCase();
-    } else if (control.value) {
-      name = isCaseSensitive ? control.value : control.value.toLowerCase();
-    }
-
-    let no: boolean;
-    for (const existing of valArrayRegexp) {
-      no = existing.test(name);
-      if (no) {
-        return no ? { existingName: { name } } : null;
-      }
-    }
-    return no ? { existingName: { name } } : null;
-  };
 }
