@@ -88,6 +88,14 @@ import { filter, map, takeUntil } from 'rxjs/operators';
       </ng-container>
     </mat-menu>
   `,
+  styles: [
+    `
+      .property:hover {
+        background: #d7e1e9;
+        cursor: pointer;
+      }
+    `,
+  ],
 })
 export class AddPropertyMenuComponent {
   @Input() currentOntologyPropertiesToDisplay: PropToDisplay[];
