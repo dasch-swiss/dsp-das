@@ -35,7 +35,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { PermissionInfoComponent } from '@dsp-app/src/app/workspace/resource/permission-info/permission-info.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -135,6 +134,7 @@ import { ComparisonComponent } from './workspace/comparison/comparison.component
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
+import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { PropertiesDisplayComponent } from './workspace/resource/properties/properties-display.component';
 import { ResourceToolbarComponent } from './workspace/resource/properties/resource-toolbar/resource-toolbar';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
