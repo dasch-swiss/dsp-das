@@ -32,9 +32,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select } from '@ngxs/store';
+import { GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DspResource } from '../dsp-resource';
 import { RepresentationConstants } from '../representation/file-representation';
 import { IncomingService } from '../services/incoming.service';
@@ -135,6 +136,7 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
   hasIncomingLinkIri = Constants.HasIncomingLinkValue;
   pageEvent: PageEvent;
   loading = false;
+  resourceAttachedUser: ReadUser;
 
   @Select(ResourceSelectors.showAllProps) showAllProps$: Observable<boolean>;
 
@@ -146,7 +148,9 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
     private _valueOperationEventService: ValueOperationEventService,
     private _valueService: ValueService,
     private _sortingService: SortingService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _store: Store,
+    private _actions$: Actions
   ) {}
 
   ngOnInit(): void {
@@ -203,6 +207,8 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
         this.deleteValueFromResource(deletedValue.deletedValue);
       })
     );
+
+    this._getResourceAttachedData(this.resource);
   }
 
   ngOnChanges(): void {
@@ -527,5 +533,18 @@ export class PropertiesComponent implements OnInit, OnChanges, OnDestroy {
       this.lastModificationDate = res.lastModificationDate;
       this._cd.markForCheck();
     });
+  }
+
+  private _getResourceAttachedData(resource: DspResource): void {
+    this._actions$
+      .pipe(ofActionSuccessful(GetAttachedUserAction))
+      .pipe(take(1))
+      .subscribe(() => {
+        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
+        this.resourceAttachedUser = attachedUsers[resource.res.id].value.find(
+          u => u.id === resource.res.attachedToUser
+        );
+      });
+    this._store.dispatch(new GetAttachedUserAction(resource.res.id, resource.res.attachedToUser));
   }
 }

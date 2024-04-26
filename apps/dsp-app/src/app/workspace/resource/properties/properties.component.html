@@ -18,7 +18,14 @@
     (regionDeleted)="regionDeleted.emit()">
   </app-resource-toolbar>
 </div>
-
+<div class="infobar mat-caption" *ngIf="isAnnotation && (resourceAttachedUser || resource.res.creationDate)">
+  Created
+  <span *ngIf="resourceAttachedUser">
+    by {{(resourceAttachedUser.username ? resourceAttachedUser.username : resourceAttachedUser.givenName + ' ' +
+    resourceAttachedUser.familyName)}}
+  </span>
+  <span *ngIf="resource.res.creationDate"> on {{resource.res.creationDate | date}}</span>
+</div>
 <!-- list of properties -->
 <div class="properties-container">
   <div class="properties" *ngIf="resource.resProps.length > 0; else noProperties">
