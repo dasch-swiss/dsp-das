@@ -6,7 +6,14 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   selector: 'app-color-switch',
   template: `
     <ng-container *ngIf="displayMode; else editMode">
-      <div style="width: 50px; height: 20px" data-cy="color-box" [style.background-color]="control.value"></div>
+      <div
+        style="width: 100px;
+    border-radius: 4px;
+    height: 15px;
+    margin: 4px 0;
+    border: 1px solid;"
+        data-cy="color-box"
+        [style.background-color]="control.value"></div>
     </ng-container>
     <ng-template #editMode>
       <mat-form-field appearance="outline" style="cursor: pointer">
@@ -30,7 +37,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       </mat-form-field>
     </ng-template>
   `,
-  styles: [':host { z-index: 1}'], // for color picker popup z-index
+  styles: [':host { z-index: 1; position: relative}'], // for color picker popup z-index
 })
 export class ColorSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string>;
