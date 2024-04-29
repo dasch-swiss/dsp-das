@@ -12,12 +12,13 @@ import { ResourceClassIriService } from './resource-class-iri.service';
 
 @Component({
   selector: 'app-create-resource-page',
-  template: ` <app-create-resource-form
-    *ngIf="resourceClassIriService.resourceClassIri$ | async as classIri"
-    [resourceType]="(resClass$ | async)?.label"
-    [resourceClassIri]="classIri"
-    [projectIri]="projectIri"
-    (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
+  template: ` <h3>Create new resource of type: {{ (resClass$ | async)?.label }}</h3>
+    <app-create-resource-form
+      *ngIf="resourceClassIriService.resourceClassIri$ | async as classIri"
+      [resourceType]="(resClass$ | async)?.label"
+      [resourceClassIri]="classIri"
+      [projectIri]="projectIri"
+      (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
   providers: [ResourceClassIriService],
 })
 export class CreateResourcePageComponent {

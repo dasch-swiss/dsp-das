@@ -25,7 +25,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-create-resource-form',
   template: `
-    <h3>Create new resource of type: {{ resourceType }}</h3>
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <app-upload-2
         *ngIf="form.controls.file && fileRepresentation"
