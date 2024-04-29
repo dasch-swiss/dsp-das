@@ -1,9 +1,6 @@
 import { Component, Input } from '@angular/core';
-import {
-  ResourceSelectors,
-  ToggleShowAllCommentsAction,
-  ToggleShowAllPropsAction,
-} from '@dasch-swiss/vre/shared/app-state';
+import { ResourceSelectors, ToggleShowAllCommentsAction } from '@dasch-swiss/vre/shared/app-state';
+import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
 import { Store } from '@ngxs/store';
 
 @Component({
@@ -26,11 +23,13 @@ import { Store } from '@ngxs/store';
         color="primary"
         class="toggle-props"
         *ngIf="showToggleProperties"
-        [matTooltip]="((showAllProps$ | async) ? 'Hide empty' : 'Show all') + ' properties'"
+        [matTooltip]="
+          ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
+        "
         matTooltipPosition="above"
         (click)="toggleShowAllProps()">
-        <mat-icon>{{ (showAllProps$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
-        {{ (showAllProps$ | async) ? 'Hide empty' : 'Show all' }} properties
+        <mat-icon>{{ (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+        {{ (propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all' }} properties
       </button>
     </div>
   `,
@@ -39,13 +38,15 @@ import { Store } from '@ngxs/store';
 export class PropertiesToolbarComponent {
   @Input({ required: true }) showToggleProperties!: boolean;
 
-  showAllProps$ = this._store.select(ResourceSelectors.showAllProps);
   showAllComments$ = this._store.select(ResourceSelectors.showAllComments);
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _store: Store,
+    public propertiesDisplayService: PropertiesDisplayService
+  ) {}
 
   toggleShowAllProps() {
-    this._store.dispatch(new ToggleShowAllPropsAction());
+    this.propertiesDisplayService.toggleShowProperties();
   }
 
   toggleShowAllComments() {

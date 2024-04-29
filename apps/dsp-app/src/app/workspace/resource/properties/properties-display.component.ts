@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -55,22 +55,25 @@ import { RepresentationConstants } from '../representation/file-representation';
   styles: [
     '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; width: 150px; margin-top: 0px; text-align: right; padding-right: 24px; flex-shrink: 0}',
   ],
+  providers: [PropertiesDisplayService],
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input() resource: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
 
   myProperties$!: Observable<PropertyInfoValues[]>;
-  showAllProperties$ = this._store.select(ResourceSelectors.showAllProps);
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _store: Store,
+    private _propertiesDisplayService: PropertiesDisplayService
+  ) {}
 
   ngOnChanges() {
     this._setupProperties();
   }
 
   private _setupProperties() {
-    this.myProperties$ = this.showAllProperties$.pipe(
+    this.myProperties$ = this._propertiesDisplayService.showAllProperties$.pipe(
       tap(v => console.log('input', this.properties)),
       map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties)),
       tap(v => console.log('output', v))
