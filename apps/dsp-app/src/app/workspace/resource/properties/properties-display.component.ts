@@ -4,7 +4,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
 
 @Component({
@@ -58,6 +58,7 @@ import { RepresentationConstants } from '../representation/file-representation';
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input() resource: DspResource;
+  @Input({ required: true }) properties!: PropertyInfoValues[];
 
   myProperties$!: Observable<PropertyInfoValues[]>;
   showAllProperties$ = this._store.select(ResourceSelectors.showAllProps);
@@ -70,11 +71,13 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   private _setupProperties() {
     this.myProperties$ = this.showAllProperties$.pipe(
-      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.resource))
+      tap(v => console.log('input', this.resource)),
+      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties)),
+      tap(v => console.log('output', v))
     );
   }
 
-  static getMyProperties(showAllProperties: boolean, resource: DspResource) {
+  static getMyProperties(showAllProperties: boolean, properties: PropertyInfoValues[]) {
     const representationConstants = RepresentationConstants;
 
     const condition = (prop: PropertyInfoValues) =>
@@ -96,7 +99,7 @@ export class PropertiesDisplayComponent implements OnChanges {
         )
       );
 
-    return resource.resProps
+    return properties
       .filter(prop => prop.guiDef.guiOrder !== undefined)
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => {

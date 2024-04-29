@@ -135,12 +135,14 @@
         (selectedTabChange)="tabChanged($event)">
         <!-- first tab for the main resource e.g. book -->
         <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
-          <app-properties-display [resource]="resource"></app-properties-display>
+          <app-properties-display [resource]="resource" [properties]="resource.resProps"></app-properties-display>
         </mat-tab>
 
         <!-- incoming resource -->
         <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
-          <app-properties-display [resource]="incomingResource"></app-properties-display>
+          <app-properties-display
+            [resource]="incomingResource"
+            [properties]="resource.resProps"></app-properties-display>
         </mat-tab>
 
         <!-- annotations -->
@@ -161,19 +163,19 @@
             *ngFor="let annotation of annotationResources"
             [id]="annotation.res.id"
             [class.active]="annotation.res.id === selectedRegion">
-            <app-properties-display [resource]="annotation"></app-properties-display>
+            <app-properties-display [resource]="annotation" [properties]="annotation.resProps"></app-properties-display>
           </div>
         </mat-tab>
       </mat-tab-group>
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                  *ngIf="resource.res"
-                                                                                                                  [resource]="resource"
-                                                                                                                  [displayProjectInfo]="true"
-                                                                                                                  [adminPermissions]="isAdmin$ | async"
-                                                                                                                  [valueUuidToHighlight]="valueUuid">
-                                                                                                                </app-properties>-->
+                                                                                                                                  *ngIf="resource.res"
+                                                                                                                                  [resource]="resource"
+                                                                                                                                  [displayProjectInfo]="true"
+                                                                                                                                  [adminPermissions]="isAdmin$ | async"
+                                                                                                                                  [valueUuidToHighlight]="valueUuid">
+                                                                                                                                </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->
