@@ -163,13 +163,10 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
   }
 
   ngAfterViewInit() {
-    const template = this._getTemplate();
-    if (template) {
-      this.itemTpl = template;
-    }
+    this.itemTpl = this._getTemplate();
   }
 
-  private _getTemplate(): TemplateRef<any> | null {
+  private _getTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
         return this.intTpl;
@@ -199,7 +196,7 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
       case Constants.UriValue:
         return this.uriTpl;
       default:
-        return null; // throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
+        throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
     }
   }
 }
