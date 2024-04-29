@@ -44,7 +44,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
       <div class="my-grid">
         <ng-container *ngFor="let prop of myProperties">
-          <div style="padding-top: 16px" class="mat-subtitle-2 my-h3">{{ prop.propDef.label }}</div>
+          <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+            {{ prop.propDef.label }}
+          </h3>
           <div>
             <app-property-value-switcher
               [myProperty]="prop"
@@ -72,6 +74,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   `,
   styles: [
     '.my-grid {display: grid; grid-template-columns: 140px 470px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
+    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {
