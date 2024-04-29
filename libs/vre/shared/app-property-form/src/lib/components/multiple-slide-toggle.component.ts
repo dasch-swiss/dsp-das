@@ -13,7 +13,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
   </mat-slide-toggle>`,
 })
 export class MultipleSlideToggleComponent {
-  @Input() control: FormControl<Cardinality>;
+  @Input() control!: FormControl<Cardinality>;
   @Input() label?: string;
   protected readonly Cardinality = Cardinality;
 
@@ -28,6 +28,6 @@ export class MultipleSlideToggleComponent {
       [Cardinality._0_n, Cardinality._0_1],
       [Cardinality._1_n, Cardinality._1],
     ]);
-    this.control.patchValue(multipleToggle.get(this.control.value));
+    this.control.patchValue(multipleToggle.get(this.control.getRawValue())!);
   }
 }
