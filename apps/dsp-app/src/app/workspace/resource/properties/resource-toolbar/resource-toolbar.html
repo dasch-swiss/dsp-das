@@ -72,7 +72,7 @@
     mat-menu-item
     matTooltip="Edit the label of this resource"
     matTooltipPosition="above"
-    (click)="openDialog('edit')">
+    (click)="editDialog()">
     <mat-icon>edit</mat-icon>
     Edit label
   </button>
@@ -90,7 +90,7 @@
     mat-menu-item
     matTooltip="Erase resource forever. This cannot be undone."
     matTooltipPosition="above"
-    (click)="openDialog('erase')">
+    (click)="eraseResource()">
     <mat-icon>delete_forever</mat-icon>
     Erase resource
   </button>

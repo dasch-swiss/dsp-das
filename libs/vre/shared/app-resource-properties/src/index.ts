@@ -35,3 +35,4 @@ export * from './lib/properties-toolbar.component';
 export * from './lib/property-value-comment.component';
 export * from './lib/edit-resource-label-dialog.component';
 export * from './lib/delete-resource-dialog.component';
+export * from './lib/erase-resource-dialog.component';

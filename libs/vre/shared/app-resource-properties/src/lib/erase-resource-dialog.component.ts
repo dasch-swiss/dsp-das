@@ -4,44 +4,36 @@ import { DeleteResource, DeleteResourceResponse, KnoraApiConnection } from '@das
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
-export interface DeleteResourceDialogProps {
+export interface EraseResourceDialogProps {
   resource: DspResource;
   lastModificationDate: string;
 }
 
 @Component({
-  selector: 'app-delete-resource-dialog',
+  selector: 'app-erase-resource-dialog',
   template: ` <app-dialog-header
-      title="Do you want to delete this resource ?"
-      [subtitle]="data.resource.res.label"></app-dialog-header>
+      title="Do you want to erase this resource forever ?"
+      [subtitle]="'Erase resource instance'"></app-dialog-header>
     <mat-dialog-content class="form-content">
-      <mat-form-field class="large-field">
-        <mat-label>Comment why resource is being deleted</mat-label>
-        <textarea
-          matInput
-          class="deletion-comment"
-          type="text"
-          [(ngModel)]="comment"
-          [placeholder]="'Ex. Resource was created by mistake...'"></textarea>
-      </mat-form-field>
+      <br />WARNING: This action cannot be undone, so use it with care.
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
       <span class="fill-remaining-space"></span>
       <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" (click)="submit()">
-        Yes, delete
+        Yes, erase
       </button>
     </mat-dialog-actions>`,
 })
-export class DeleteResourceDialogComponent {
+export class EraseResourceDialogComponent {
   comment: string | undefined;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA)
-    public data: DeleteResourceDialogProps,
-    private _dialogRef: MatDialogRef<DeleteResourceDialogComponent>
+    public data: EraseResourceDialogProps,
+    private _dialogRef: MatDialogRef<EraseResourceDialogComponent>
   ) {}
 
   submit() {
@@ -50,7 +42,8 @@ export class DeleteResourceDialogComponent {
     payload.type = this.data.resource.res.type;
     payload.deleteComment = this.comment ?? '';
     payload.lastModificationDate = this.data.lastModificationDate;
-    this._dspApiConnection.v2.res.deleteResource(payload).subscribe(response => {
+
+    this._dspApiConnection.v2.res.eraseResource(payload).subscribe(response => {
       this._dialogRef.close(response as DeleteResourceResponse);
     });
   }

@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
-  DeleteResource,
   DeleteResourceResponse,
   KnoraApiConnection,
   PermissionUtil,
@@ -30,9 +29,15 @@ import {
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
+import {
+  DeleteResourceDialogComponent,
+  DeleteResourceDialogProps,
+  EraseResourceDialogComponent,
+  EraseResourceDialogProps,
+} from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
+import { filter } from 'rxjs/operators';
 import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
 
 @Component({
@@ -107,14 +112,14 @@ export class ResourceToolbarComponent implements OnInit {
     window.open(`/resource${path}`, '_blank');
   }
 
-  openDialog(type: 'delete' | 'erase' | 'edit') {
+  editDialog() {
     const dialogConfig: MatDialogConfig = {
       width: '560px',
       maxHeight: '80vh',
       position: {
         top: '112px',
       },
-      data: { mode: `${type}Resource`, title: this.resource.res.label },
+      data: { mode: 'editResource', title: this.resource.res.label },
     };
 
     const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
@@ -125,28 +130,7 @@ export class ResourceToolbarComponent implements OnInit {
         return;
       }
       if (answer.confirmed === true) {
-        if (type !== 'edit') {
-          const payload = new DeleteResource();
-          payload.id = this.resource.res.id;
-          payload.type = this.resource.res.type;
-          payload.deleteComment = answer.comment ? answer.comment : undefined;
-          payload.lastModificationDate = this.lastModificationDate;
-          switch (type) {
-            case 'delete':
-              // delete the resource and refresh the view
-              this._dspApiConnection.v2.res.deleteResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
-
-            case 'erase':
-              // erase the resource and refresh the view
-              this._dspApiConnection.v2.res.eraseResource(payload).subscribe((response: DeleteResourceResponse) => {
-                this._onResourceDeleted(response);
-              });
-              break;
-          }
-        } else if (this.resource.res.label !== answer.comment) {
+        if (this.resource.res.label !== answer.comment) {
           // update resource's label if it has changed
           // get the correct lastModificationDate from the resource
           this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
@@ -176,8 +160,29 @@ export class ResourceToolbarComponent implements OnInit {
 
   deleteResource() {
     this._dialog
-      .open(DeleteResourceDialogComponent)
+      .open<DeleteResourceDialogComponent, DeleteResourceDialogProps>(DeleteResourceDialogComponent, {
+        data: {
+          resource: this.resource,
+          lastModificationDate: this.lastModificationDate,
+        },
+      })
       .afterClosed()
+      .pipe(filter(response => !!response))
+      .subscribe(response => {
+        this._onResourceDeleted(response);
+      });
+  }
+
+  eraseResource() {
+    this._dialog
+      .open<EraseResourceDialogComponent, EraseResourceDialogProps>(EraseResourceDialogComponent, {
+        data: {
+          resource: this.resource,
+          lastModificationDate: this.lastModificationDate,
+        },
+      })
+      .afterClosed()
+      .pipe(filter(response => !!response))
       .subscribe(response => {
         this._onResourceDeleted(response);
       });

@@ -4,6 +4,7 @@ import { CreateResourcePageComponent } from './create-resource-page.component';
 import { DeleteResourceDialogComponent } from './delete-resource-dialog.component';
 import { DeleteValueDialogComponent } from './delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './edit-resource-label-dialog.component';
+import { EraseResourceDialogComponent } from './erase-resource-dialog.component';
 import { ExistingPropertyValueComponent } from './existing-property-value.component';
 import { PropertiesToolbarComponent } from './properties-toolbar.component';
 import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
@@ -70,4 +71,5 @@ export const ResourcePropertiesComponents = [
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
   DeleteResourceDialogComponent,
+  EraseResourceDialogComponent,
 ];
