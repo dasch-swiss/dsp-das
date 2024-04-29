@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ResourceSelectors, ToggleShowAllCommentsAction } from '@dasch-swiss/vre/shared/app-state';
 import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
-import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-properties-toolbar',
@@ -38,18 +36,15 @@ import { Store } from '@ngxs/store';
 export class PropertiesToolbarComponent {
   @Input({ required: true }) showToggleProperties!: boolean;
 
-  showAllComments$ = this._store.select(ResourceSelectors.showAllComments);
+  showAllComments$ = this.propertiesDisplayService.showComments$;
 
-  constructor(
-    private _store: Store,
-    public propertiesDisplayService: PropertiesDisplayService
-  ) {}
+  constructor(public propertiesDisplayService: PropertiesDisplayService) {}
 
   toggleShowAllProps() {
     this.propertiesDisplayService.toggleShowProperties();
   }
 
   toggleShowAllComments() {
-    this._store.dispatch(new ToggleShowAllCommentsAction());
+    this.propertiesDisplayService.toggleShowComments();
   }
 }

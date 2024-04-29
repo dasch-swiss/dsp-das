@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
+import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
 import { FormValueGroup } from './form-value-array.type';
 
 @Component({
@@ -25,7 +24,7 @@ import { FormValueGroup } from './form-value-array.type';
 export class PropertyValueCommentComponent {
   @Input({ required: true }) displayMode!: boolean;
   @Input({ required: true }) control!: FormValueGroup['controls']['comment'];
-  showAllComments$ = this._store.select(ResourceSelectors.showAllComments);
+  showAllComments$ = this._propertiesDisplayService.showComments$;
 
-  constructor(private _store: Store) {}
+  constructor(private _propertiesDisplayService: PropertiesDisplayService) {}
 }

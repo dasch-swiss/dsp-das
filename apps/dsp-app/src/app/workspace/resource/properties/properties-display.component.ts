@@ -2,7 +2,6 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
-import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -63,10 +62,7 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   myProperties$!: Observable<PropertyInfoValues[]>;
 
-  constructor(
-    private _store: Store,
-    private _propertiesDisplayService: PropertiesDisplayService
-  ) {}
+  constructor(private _propertiesDisplayService: PropertiesDisplayService) {}
 
   ngOnChanges() {
     this._setupProperties();
