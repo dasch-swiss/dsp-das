@@ -115,6 +115,7 @@ export class LinkValueComponent implements OnInit, OnDestroy {
       })
       .afterClosed()
       .pipe(
+        filter(v => v !== undefined),
         switchMap(resourceId => {
           myResourceId = resourceId as string;
           return this._dspApiConnection.v2.res.getResource(myResourceId);
