@@ -1,27 +1,19 @@
 <div *ngIf="isSysAdmin$ | async; else notAllowed">
-  <mat-tab-group
-    animationDuration="0ms"
-    mat-stretch-tabs="true"
-    mat-align-tabs="start"
-    class="navigation tab-bar margin-from-top"
-    [selectedIndex]="activeTabIndex"
-    (selectedTabChange)="onTabChange($event)">
-    >
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">assignment</mat-icon>
-        All projects
-      </ng-template>
-      <app-projects></app-projects>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">group</mat-icon>
-        All users
-      </ng-template>
-      <app-users></app-users>
-    </mat-tab>
-  </mat-tab-group>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="navigation tab-bar margin-from-top">
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+    <a
+      mat-tab-link
+      *ngFor="let link of links"
+      [routerLink]="link.url"
+      (click)="activeLink = link.name"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive">
+      <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
+      {{ link.name }}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
 </div>
 
 <ng-template #notAllowed>

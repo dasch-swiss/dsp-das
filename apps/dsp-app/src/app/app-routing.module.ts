@@ -144,12 +144,17 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: '',
+        redirectTo: RouteConstants.systemProjects,
+        pathMatch: 'full',
+      },
+      {
         path: RouteConstants.systemProjects,
-        component: SystemComponent,
+        component: ProjectsComponent,
       },
       {
         path: RouteConstants.systemUsers,
-        component: SystemComponent,
+        component: UsersComponent,
       },
     ],
   },
