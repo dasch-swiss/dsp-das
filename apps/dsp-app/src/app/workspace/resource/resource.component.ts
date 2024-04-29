@@ -35,7 +35,13 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { Common, DspCompoundPosition, DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import {
+  Common,
+  DspCompoundPosition,
+  DspResource,
+  PropertyInfoValues,
+  ResourceService,
+} from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -150,6 +156,8 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   notification = this._notification;
 
+  resourceProperties: PropertyInfoValues[];
+
   get userCanEdit(): boolean {
     if (!this.resource.res) {
       return false;
@@ -237,6 +245,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(filter(resource => resource !== null))
       .subscribe(res => {
         this.resource = res;
+        this.resourceProperties = ResourceComponent.getResourceProperties(res.resProps);
         this.loading = false;
         this._cdr.detectChanges();
       });
@@ -285,6 +294,12 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   // ------------------------------------------------------------------------
   // general methods
   // ------------------------------------------------------------------------
+
+  static getResourceProperties(properties: PropertyInfoValues[]) {
+    return properties
+      .filter(prop => prop.guiDef.guiOrder !== undefined)
+      .filter(prop => !prop.propDef['isLinkProperty']);
+  }
 
   compoundNavigation(page: number) {
     this.selectedRegion = undefined;

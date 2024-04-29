@@ -71,7 +71,7 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   private _setupProperties() {
     this.myProperties$ = this.showAllProperties$.pipe(
-      tap(v => console.log('input', this.resource)),
+      tap(v => console.log('input', this.properties)),
       map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties)),
       tap(v => console.log('output', v))
     );
@@ -99,17 +99,9 @@ export class PropertiesDisplayComponent implements OnChanges {
         )
       );
 
-    return properties
-      .filter(prop => prop.guiDef.guiOrder !== undefined)
-      .filter(prop => !prop.propDef['isLinkProperty'])
-      .filter(prop => {
-        return (
-          showAllProperties ||
-          (prop.values && prop.values.length > 0) ||
-          // prop.propDef.objectType !== representationConstants.stillImage) || // TODO still image (julien change)
-          condition(prop)
-        );
-      });
+    return properties.filter(prop => {
+      return showAllProperties || (prop.values && prop.values.length > 0);
+    });
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
