@@ -7,12 +7,13 @@ import { ckEditor } from '../ck-editor';
   selector: 'app-rich-text-value',
   template: `
     <ckeditor [formControl]="control" [config]="editorConfig" [editor]="editor" (change)="onChange()"></ckeditor>
+    <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>
   `,
 })
 export class RichTextValueComponent {
   @Input() control!: FormControl<string>;
 
-  editorConfig = ckEditor.config;
-  editor = Editor;
+  readonly editorConfig = ckEditor.config;
+  readonly editor = Editor;
   onChange = () => {};
 }
