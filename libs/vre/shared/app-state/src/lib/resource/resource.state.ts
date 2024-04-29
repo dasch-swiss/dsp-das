@@ -104,9 +104,13 @@ export class ResourceState {
       .selectSnapshot(ProjectsSelectors.allProjects)
       .find(u => u.id === projectIri) as ReadProject;
     if (project) {
-      state.attachedProjects[resourceIri].value.push(project);
+      console.log('test', [...state.attachedProjects[resourceIri].value, project]);
       ctx.setState({
         ...state,
+        attachedProjects: {
+          ...state.attachedProjects,
+          [resourceIri]: { value: [...state.attachedProjects[resourceIri].value, project] },
+        },
         isLoading: false,
       });
 
