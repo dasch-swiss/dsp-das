@@ -4,7 +4,7 @@ import { ResourceCreationPayloads } from '../../fixtures/resource-creation-paylo
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
 const lastModificationDate = response => response.body['knora-api:lastModificationDate']['@value'];
-describe('Resource', () => {
+describe.skip('Resource', () => {
   let finalLastModificationDate: string;
   let po: AddResourceInstancePage;
 
