@@ -145,12 +145,8 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   attachedToProjectResource = '';
 
   project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
-    // takeWhile(attachedProjects => this.resource !== undefined && attachedProjects[this.resource.res.id] !== undefined),
     takeUntil(this.ngUnsubscribe),
-    tap(attachedProjects => {
-      console.log('attached', attachedProjects);
-    }),
-    filter(attachedProjects => attachedProjects[this.resource.res.id] !== undefined),
+    filter(attachedProjects => attachedProjects[this.resource.res.id]?.value?.length > 0),
     map(attachedProjects =>
       attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
     )

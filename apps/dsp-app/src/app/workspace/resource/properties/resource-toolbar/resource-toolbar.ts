@@ -21,7 +21,7 @@ import {
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceService, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ComponentCommunicationEventService,
@@ -93,6 +93,7 @@ export class ResourceToolbarComponent implements OnInit {
       this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
       this.userCanDelete = allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
     }
+    this._cd.detectChanges();
   }
 
   /**
