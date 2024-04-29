@@ -471,9 +471,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
           const annotation = new DspResource(incomingRegion);
 
           // gather region property information
-          annotation.resProps = Common.initProps(incomingRegion).filter(
-            v => v.propDef['isLinkProperty'] || v.values.length > 0
-          );
+          annotation.resProps = Common.initProps(incomingRegion).filter(v => v.values.length > 0);
 
           // gather system property information
           annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
