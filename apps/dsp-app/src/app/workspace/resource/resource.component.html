@@ -142,7 +142,7 @@
         </mat-tab>
 
         <!-- incoming resource -->
-        <mat-tab *ngIf="false && incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
+        <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
           <app-properties-display
             [resource]="incomingResource"
             [properties]="incomingResource.resProps"></app-properties-display>
@@ -173,12 +173,12 @@
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                                                                  *ngIf="resource.res"
-                                                                                                                                                                  [resource]="resource"
-                                                                                                                                                                  [displayProjectInfo]="true"
-                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                </app-properties>-->
+                                                                                                                                                                                                          *ngIf="resource.res"
+                                                                                                                                                                                                          [resource]="resource"
+                                                                                                                                                                                                          [displayProjectInfo]="true"
+                                                                                                                                                                                                          [adminPermissions]="isAdmin$ | async"
+                                                                                                                                                                                                          [valueUuidToHighlight]="valueUuid">
+                                                                                                                                                                                                        </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->

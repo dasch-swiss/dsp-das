@@ -419,7 +419,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     }
     this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
       this.incomingResource = new DspResource(response);
-      this.incomingResource.resProps = Common.initProps(response);
+      this.incomingResource.resProps = Common.initProps(response)
+        .filter(v => v.values.length > 0)
+        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
