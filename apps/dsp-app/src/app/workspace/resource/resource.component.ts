@@ -245,7 +245,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(filter(resource => resource !== null))
       .subscribe(res => {
         this.resource = res;
-        this.resourceProperties = ResourceComponent.getResourceProperties(res.resProps);
+        this.resourceProperties = res.resProps.filter(prop => prop.guiDef.guiOrder !== undefined);
         this.loading = false;
         this._cdr.detectChanges();
       });
@@ -296,9 +296,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   // ------------------------------------------------------------------------
 
   static getResourceProperties(properties: PropertyInfoValues[]) {
-    return properties
-      .filter(prop => prop.guiDef.guiOrder !== undefined)
-      .filter(prop => !prop.propDef['isLinkProperty']);
+    return properties.filter(prop => prop.guiDef.guiOrder !== undefined);
   }
 
   compoundNavigation(page: number) {
