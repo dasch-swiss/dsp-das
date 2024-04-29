@@ -30,6 +30,7 @@ import {
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
@@ -171,6 +172,15 @@ export class ResourceToolbarComponent implements OnInit {
         }
       }
     });
+  }
+
+  deleteResource() {
+    this._dialog
+      .open(DeleteResourceDialogComponent)
+      .afterClosed()
+      .subscribe(response => {
+        this._onResourceDeleted(response);
+      });
   }
 
   /**
