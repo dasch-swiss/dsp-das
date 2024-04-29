@@ -17,7 +17,6 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs/operators';
-import { JsLibPotentialError } from './JsLibPotentialError';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
@@ -86,11 +85,10 @@ export class CreateResourceFormComponent implements OnInit {
   form: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file: FormControl<CreateFileValue | null>;
+    file?: FormControl<CreateFileValue | null>;
   }> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
     properties: this._fb.group({}),
-    file: null as CreateFileValue | null,
   });
 
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
@@ -107,8 +105,6 @@ export class CreateResourceFormComponent implements OnInit {
     Constants.HasArchiveFileValue,
     Constants.HasTextFileValue,
   ];
-
-  JsLibPotentialError = JsLibPotentialError;
 
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
