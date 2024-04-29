@@ -80,7 +80,6 @@ export class PropertiesDisplayComponent implements OnChanges {
     const condition = (prop: PropertyInfoValues) =>
       prop.propDef.id === Constants.HasIncomingLinkValue &&
       //   numberOffAllIncomingLinkRes > 0 &&
-      !prop.propDef['isLinkProperty'] &&
       ![
         RepresentationConstants.stillImage,
         RepresentationConstants.movingImage,
@@ -99,6 +98,7 @@ export class PropertiesDisplayComponent implements OnChanges {
 
     return resource.resProps
       .filter(prop => prop.guiDef.guiOrder !== undefined)
+      .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => {
         return (
           showAllProperties ||

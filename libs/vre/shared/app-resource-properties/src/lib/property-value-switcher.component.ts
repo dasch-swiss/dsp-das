@@ -196,7 +196,7 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
       case Constants.UriValue:
         return this.uriTpl;
       default:
-        throw Error('Unrecognized property');
+        throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
     }
   }
 }
