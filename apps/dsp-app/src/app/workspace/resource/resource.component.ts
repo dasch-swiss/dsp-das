@@ -327,112 +327,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   // ------------------------------------------------------------------------
   // get and display resource
   // ------------------------------------------------------------------------
-  private _initResource(iri) {
-    this.oldResourceIri = this.resourceIri;
-    this._getResource(iri)
-      .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
-      .subscribe(dspResource => {
-        this._renderResource(dspResource);
-        this._getResourceAttachedData(dspResource);
-      });
-  }
-
-  private _getResource(iri: string): Observable<DspResource> {
-    return this._store.dispatch(new LoadResourceAction(iri));
-  }
-
-  private _renderResource(resource: DspResource) {
-    if (resource.res.isDeleted) {
-      // guard; not yet implemented
-      return;
-    }
-    if (resource.isRegion) {
-      // render the image onto which the region is pointing; a region
-      // itself can not be displayed without an image it is annotating
-      this._renderAsRegion(resource);
-    } else {
-      this._renderAsMainResource(resource);
-    }
-
-    this.attachedToProjectResource = resource.res.attachedToProject;
-    this._cdr.markForCheck();
-  }
-
-  private _renderAsMainResource(resource: DspResource) {
-    this.resource = resource;
-    this.oldResourceIri = this.resourceIri;
-
-    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
-    if (!this.representationsToDisplay.length && !this.compoundPosition) {
-      // the resource could be a compound object
-      if (this.stillImageRepresentationsForCompoundResourceSub) {
-        this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
-      }
-      this.stillImageRepresentationsForCompoundResourceSub = this._incomingService
-        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-        .pipe(
-          tap({
-            error: () => {
-              this.loading = false;
-              this._cdr.markForCheck();
-            },
-          })
-        )
-        .subscribe((countQuery: CountQueryResponse) => {
-          if (countQuery.numberOfResults > 0) {
-            // this is a compound object
-            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
-            this.compoundNavigation(1);
-          } else {
-            this.loading = false;
-          }
-          this._cdr.markForCheck();
-        });
-    } else {
-      this._requestIncomingResources(resource);
-    }
-  }
-
-  private _renderAsRegion(region: DspResource) {
-    // display the corresponding still-image resource instance
-    // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
-    const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-      .linkedResourceIri;
-    // get the annotated main resource
-    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-      this.resource = dspResource;
-      this._renderAsMainResource(dspResource);
-
-      // open annotation`s tab and highlight region
-      this.selectedTabLabel = 'annotations';
-      this.openRegion(region.res.id);
-
-      this.selectedRegion = region.res.id;
-      // define resource as annotation of type region
-      this.resourceIsAnnotation = this.resource.res.entityInfo.classes[Constants.Region] ? 'region' : 'sequence';
-    });
-  }
-
-  private _getIncomingResource(iri: string) {
-    if (this.incomingResourceSub) {
-      this.incomingResourceSub.unsubscribe();
-    }
-    this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
-      this.incomingResource = new DspResource(response);
-      this.incomingResource.resProps = Common.initProps(response)
-        .filter(v => v.values.length > 0)
-        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
-      this.incomingResource.systemProps =
-        this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
-      if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
-        this._getIncomingRegions(this.incomingResource, 0);
-      }
-
-      this._cdr.markForCheck();
-    });
-  }
 
   tabChanged(e: MatTabChangeEvent) {
     if (e.tab.textLabel === 'annotations') {
@@ -460,6 +354,86 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   previewProject() {
     // --> TODO: pop up project preview on hover
+  }
+
+  openRegion(iri: string) {
+    // open annotation tab
+    this.selectedTab = this.incomingResource ? 2 : 1;
+
+    // activate the selected region
+    this.selectedRegion = iri;
+
+    // and scroll to region with this id
+    const region = document.getElementById(iri);
+    if (region) {
+      region.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+
+  updateRegions(iri: string) {
+    if (this.incomingResource) {
+      this.incomingResource.incomingAnnotations = [];
+    } else {
+      this.resource.incomingAnnotations = [];
+    }
+    this._getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
+    this.openRegion(iri);
+  }
+
+  openEditLabelDialog() {
+    this._dialog
+      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
+        EditResourceLabelDialogComponent,
+        DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res })
+      )
+      .afterClosed()
+      .subscribe(response => {
+        if (!response) return;
+
+        this._componentCommsService.emit(new EmitEvent(Events.ValueUpdated)); // TODO I have made changes here (it was new EmitEvent(Events.resourceChanged))
+        if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
+          this.regionChanged.emit();
+        }
+        this._cdr.markForCheck();
+      });
+  }
+
+  private _getResourceAttachedData(resource: DspResource): void {
+    this._actions$
+      .pipe(ofActionSuccessful(GetAttachedUserAction))
+      .pipe(take(1))
+      .subscribe(() => {
+        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
+        this.resourceAttachedUser = attachedUsers[resource.res.id].value.find(
+          u => u.id === resource.res.attachedToUser
+        );
+      });
+    this._store.dispatch([
+      new GetAttachedUserAction(resource.res.id, resource.res.attachedToUser),
+      new GetAttachedProjectAction(resource.res.id, resource.res.attachedToProject),
+    ]);
+  }
+
+  /**
+   * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
+   *
+   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
+   * It takes the number of images returned as an argument.
+   */
+  private _getIncomingLinks(offset: number): void {
+    this._incomingService
+      .getIncomingLinksForResource(this.resource?.res.id, offset)
+      .subscribe((incomingResources: ReadResourceSequence) => {
+        // Check if incomingReferences is initialized, if not, initialize it as an empty array
+        if (!this.resource?.res.incomingReferences) {
+          this.resource.res.incomingReferences = [];
+        }
+        // append elements incomingResources to this.resource.incomingLinks
+        Array.prototype.push.apply(this.resource?.res.incomingReferences, incomingResources.resources);
+      });
   }
 
   /**
@@ -638,83 +612,110 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       });
   }
 
-  /**
-   * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
-   *
-   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-   * It takes the number of images returned as an argument.
-   */
-  private _getIncomingLinks(offset: number): void {
-    this._incomingService
-      .getIncomingLinksForResource(this.resource?.res.id, offset)
-      .subscribe((incomingResources: ReadResourceSequence) => {
-        // Check if incomingReferences is initialized, if not, initialize it as an empty array
-        if (!this.resource?.res.incomingReferences) {
-          this.resource.res.incomingReferences = [];
-        }
-        // append elements incomingResources to this.resource.incomingLinks
-        Array.prototype.push.apply(this.resource?.res.incomingReferences, incomingResources.resources);
+  private _initResource(iri) {
+    this.oldResourceIri = this.resourceIri;
+    this._getResource(iri)
+      .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
+      .subscribe(dspResource => {
+        this._renderResource(dspResource);
+        this._getResourceAttachedData(dspResource);
       });
   }
 
-  openRegion(iri: string) {
-    // open annotation tab
-    this.selectedTab = this.incomingResource ? 2 : 1;
+  private _getResource(iri: string): Observable<DspResource> {
+    return this._store.dispatch(new LoadResourceAction(iri));
+  }
 
-    // activate the selected region
-    this.selectedRegion = iri;
-
-    // and scroll to region with this id
-    const region = document.getElementById(iri);
-    if (region) {
-      region.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
+  private _renderResource(resource: DspResource) {
+    if (resource.res.isDeleted) {
+      // guard; not yet implemented
+      return;
     }
-  }
-
-  updateRegions(iri: string) {
-    if (this.incomingResource) {
-      this.incomingResource.incomingAnnotations = [];
+    if (resource.isRegion) {
+      // render the image onto which the region is pointing; a region
+      // itself can not be displayed without an image it is annotating
+      this._renderAsRegion(resource);
     } else {
-      this.resource.incomingAnnotations = [];
+      this._renderAsMainResource(resource);
     }
-    this._getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
-    this.openRegion(iri);
+
+    this.attachedToProjectResource = resource.res.attachedToProject;
+    this._cdr.markForCheck();
   }
 
-  openEditLabelDialog() {
-    this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
-        EditResourceLabelDialogComponent,
-        DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res })
-      )
-      .afterClosed()
-      .subscribe(response => {
-        if (!response) return;
+  private _renderAsMainResource(resource: DspResource) {
+    this.resource = resource;
+    this.oldResourceIri = this.resourceIri;
 
-        this._componentCommsService.emit(new EmitEvent(Events.ValueUpdated)); // TODO I have made changes here (it was new EmitEvent(Events.resourceChanged))
-        if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
-          this.regionChanged.emit();
-        }
-        this._cdr.markForCheck();
-      });
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+    if (!this.representationsToDisplay.length && !this.compoundPosition) {
+      // the resource could be a compound object
+      if (this.stillImageRepresentationsForCompoundResourceSub) {
+        this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
+      }
+      this.stillImageRepresentationsForCompoundResourceSub = this._incomingService
+        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+        .pipe(
+          tap({
+            error: () => {
+              this.loading = false;
+              this._cdr.markForCheck();
+            },
+          })
+        )
+        .subscribe((countQuery: CountQueryResponse) => {
+          if (countQuery.numberOfResults > 0) {
+            // this is a compound object
+            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+            this.compoundNavigation(1);
+          } else {
+            this.loading = false;
+          }
+          this._cdr.markForCheck();
+        });
+    } else {
+      this._requestIncomingResources(resource);
+    }
   }
 
-  private _getResourceAttachedData(resource: DspResource): void {
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(take(1))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.resourceAttachedUser = attachedUsers[resource.res.id].value.find(
-          u => u.id === resource.res.attachedToUser
-        );
-      });
-    this._store.dispatch([
-      new GetAttachedUserAction(resource.res.id, resource.res.attachedToUser),
-      new GetAttachedProjectAction(resource.res.id, resource.res.attachedToProject),
-    ]);
+  private _renderAsRegion(region: DspResource) {
+    // display the corresponding still-image resource instance
+    // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
+    const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
+      .linkedResourceIri;
+    // get the annotated main resource
+    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
+      this.resource = dspResource;
+      this._renderAsMainResource(dspResource);
+
+      // open annotation`s tab and highlight region
+      this.selectedTabLabel = 'annotations';
+      this.openRegion(region.res.id);
+
+      this.selectedRegion = region.res.id;
+      // define resource as annotation of type region
+      this.resourceIsAnnotation = this.resource.res.entityInfo.classes[Constants.Region] ? 'region' : 'sequence';
+    });
+  }
+
+  private _getIncomingResource(iri: string) {
+    if (this.incomingResourceSub) {
+      this.incomingResourceSub.unsubscribe();
+    }
+    this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
+      this.incomingResource = new DspResource(response);
+      this.incomingResource.resProps = Common.initProps(response)
+        .filter(v => v.values.length > 0)
+        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
+      this.incomingResource.systemProps =
+        this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+
+      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+      if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
+        this._getIncomingRegions(this.incomingResource, 0);
+      }
+
+      this._cdr.markForCheck();
+    });
   }
 }
