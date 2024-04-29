@@ -249,7 +249,7 @@ export const propertiesTypeMapping = new Map<
   [
     Constants.ListValue,
     {
-      control: (value?: ReadListValue) => new FormControl(value?.listNode ?? ''),
+      control: (value?: ReadListValue) => new FormControl(value?.listNode ?? null),
       mapping: (value: string) => {
         const newListValue = new CreateListValue();
         newListValue.listNode = value;
