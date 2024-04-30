@@ -77,7 +77,9 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   private _setPermissions() {
     const value = this._propertyValueService._editModeData!.values[0];
-    const allPermissions = PermissionUtil.allUserPermissions(value.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
+    const allPermissions = value
+      ? PermissionUtil.allUserPermissions(value?.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR')
+      : [];
 
     this.userHasPermissionToModify = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
   }
