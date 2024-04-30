@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Optional } from '@angular/core';
+import { of } from 'rxjs';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertiesDisplayService } from './properties-display.service';
 
@@ -24,7 +25,7 @@ import { PropertiesDisplayService } from './properties-display.service';
 export class PropertyValueCommentComponent {
   @Input({ required: true }) displayMode!: boolean;
   @Input({ required: true }) control!: FormValueGroup['controls']['comment'];
-  showAllComments$ = this._propertiesDisplayService.showComments$;
+  showAllComments$ = this._propertiesDisplayService?.showComments$ ?? of(true);
 
-  constructor(private _propertiesDisplayService: PropertiesDisplayService) {}
+  constructor(@Optional() private _propertiesDisplayService: PropertiesDisplayService) {}
 }
