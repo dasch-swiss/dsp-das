@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
+import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-properties-toolbar',

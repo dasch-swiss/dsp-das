@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
 import { FormValueGroup } from './form-value-array.type';
+import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-property-value-comment',

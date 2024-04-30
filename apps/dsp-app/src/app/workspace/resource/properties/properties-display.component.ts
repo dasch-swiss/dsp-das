@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { PropertiesDisplayService } from '@dsp-app/src/app/workspace/resource/properties/properties-display.service';
+import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
 
 @Component({
@@ -70,9 +70,7 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   private _setupProperties() {
     this.myProperties$ = this._propertiesDisplayService.showAllProperties$.pipe(
-      tap(v => console.log('input', this.properties)),
-      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties)),
-      tap(v => console.log('output', v))
+      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties))
     );
   }
 
