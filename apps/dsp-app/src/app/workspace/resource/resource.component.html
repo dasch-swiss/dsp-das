@@ -17,10 +17,9 @@
         </h3>
         <ng-container *ngIf="project$ | async as project">
           <app-resource-toolbar
-            *ngIf="isAdmin$ | async as admin"
             [resource]="resource"
             [lastModificationDate]="resource.res.lastModificationDate"
-            [adminPermissions]="admin"
+            [adminPermissions]="isAdmin$ | async"
             [attachedProject]="project"
             (regionChanged)="regionChanged.emit()"
             (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
@@ -176,12 +175,12 @@
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                                                                                                                                                  *ngIf="resource.res"
-                                                                                                                                                                                                                                                  [resource]="resource"
-                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
-                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                                                                                                </app-properties>-->
+                                                                                                                                                                                                                                                          *ngIf="resource.res"
+                                                                                                                                                                                                                                                          [resource]="resource"
+                                                                                                                                                                                                                                                          [displayProjectInfo]="true"
+                                                                                                                                                                                                                                                          [adminPermissions]="isAdmin$ | async"
+                                                                                                                                                                                                                                                          [valueUuidToHighlight]="valueUuid">
+                                                                                                                                                                                                                                                        </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->
