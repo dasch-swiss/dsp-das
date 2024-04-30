@@ -246,24 +246,11 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .subscribe(res => {
         this.resource = res;
 
-        this.resourceProperties = res.resProps;
-        // this.resourceProperties = this.resourceProperties.filter(v => v.guiDef.guiOrder !== undefined);
-        // this.resourceProperties = this.resourceProperties.filter(v => v.propDef['isEditable']);
-        this.resourceProperties = this.resourceProperties.filter(prop => !prop.propDef['isLinkProperty']);
-        this.resourceProperties = this.resourceProperties.filter(
-          prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue')
-        );
-
-        /*
-                                                        this.resourceProperties.forEach(prop => {
-                                                          if (prop.propDef['isLinkProperty']) {
-                                                            prop.propDef.objectType = Constants.LinkValue;
-                                                            prop.propDef.id += 'Value';
-                                                          }
-                                                        });
-                                                        */
-        console.log('aaaa', this.resourceProperties, res.resProps);
-
+        this.resourceProperties = res.resProps
+          .filter(prop => !prop.propDef['isLinkProperty'])
+          .filter(
+            prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue')
+          );
         this.loading = false;
         this._cdr.detectChanges();
       });
