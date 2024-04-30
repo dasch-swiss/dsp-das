@@ -245,7 +245,16 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(filter(resource => resource !== null))
       .subscribe(res => {
         this.resource = res;
-        this.resourceProperties = res.resProps
+
+        this.resourceProperties = res.resProps;
+        this.resourceProperties = this.resourceProperties.filter(v => v.propDef['isEditable']);
+        const linkValues = this.resourceProperties
+          .filter(prop => prop.propDef['isLinkValueProperty'])
+          .map(prop => prop.propDef.id);
+        this.resourceProperties = this.resourceProperties.filter(
+          prop => !prop.propDef['isLinkProperty'] || !linkValues.includes(`${prop.propDef.id}Value`)
+        );
+        this.resourceProperties = this.resourceProperties
           .filter(prop => prop.values.length > 0 || !prop.propDef['isLinkValueProperty'])
           .filter(prop => prop.propDef['isEditable']);
         this.resourceProperties.forEach(prop => {
