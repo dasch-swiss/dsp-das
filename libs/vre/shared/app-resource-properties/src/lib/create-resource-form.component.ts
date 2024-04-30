@@ -39,7 +39,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           matTooltipPosition="above">
           Resource label *
         </h3>
-        <app-common-input [control]="form.controls.label" data-cy="label-input"></app-common-input>
+        <app-common-input
+          [control]="form.controls.label"
+          data-cy="label-input"
+          placeholder="Text value"></app-common-input>
       </div>
 
       <div class="my-grid">

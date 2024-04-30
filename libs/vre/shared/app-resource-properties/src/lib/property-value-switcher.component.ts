@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -143,10 +144,14 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
   itemTpl!: TemplateRef<any>;
   validators: ValidatorFn[] | undefined;
 
-  constructor(private _propertyValueService: PropertyValueService) {}
+  constructor(
+    private _propertyValueService: PropertyValueService,
+    private _cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this._setupData();
+    this._cd.detectChanges();
   }
 
   _setupData() {
