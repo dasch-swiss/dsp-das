@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
-import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
+import { Cardinality } from '@dasch-swiss/dsp-js';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -39,13 +39,11 @@ export class PropertyValuesComponent implements OnInit {
   }
 
   addItem() {
-    const item =
-      propertiesTypeMapping.get(this.propertyValueService.propertyDefinition.objectType!) ??
-      propertiesTypeMapping.get(Constants.LinkValue);
-
     this.propertyValueService.formArray.push(
       this._fb.group({
-        item: item!.control() as AbstractControl,
+        item: propertiesTypeMapping
+          .get(this.propertyValueService.propertyDefinition.objectType!)!
+          .control() as AbstractControl,
         comment: this._fb.control(''),
       })
     );

@@ -248,7 +248,14 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         this.resourceProperties = res.resProps
           .filter(prop => prop.values.length > 0 || !prop.propDef['isLinkValueProperty'])
           .filter(prop => prop.propDef['isEditable']);
+        this.resourceProperties.forEach(prop => {
+          if (prop.propDef['isLinkProperty']) {
+            prop.propDef.objectType = Constants.LinkValue;
+            prop.propDef.id += 'Value';
+          }
+        });
         console.log('aaaa', this.resourceProperties);
+
         this.loading = false;
         this._cdr.detectChanges();
       });

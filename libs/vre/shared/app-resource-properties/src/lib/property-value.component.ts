@@ -127,6 +127,7 @@ export class PropertyValueComponent implements OnInit {
     if (this.group.invalid) return;
 
     this.loading = true;
+
     const createVal = propertiesTypeMapping
       .get(this.propertyValueService.propertyDefinition.objectType!)!
       .mapping(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
