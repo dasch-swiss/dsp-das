@@ -14,7 +14,7 @@ import { ResourceClassIriService } from './resource-class-iri.service';
   selector: 'app-create-resource-page',
   template: ` <h3>Create new resource of type: {{ (resClass$ | async)?.label }}</h3>
     <app-create-resource-form
-      *ngIf="resourceClassIriService.resourceClassIri$ | async as classIri"
+      *ngIf="resourceClassIriService.resourceClassIriFromParamSubject.asObservable() | async as classIri"
       [resourceType]="(resClass$ | async)?.label"
       [resourceClassIri]="classIri"
       [projectIri]="projectIri"
@@ -40,7 +40,7 @@ export class CreateResourcePageComponent {
 
   resClass$ = combineLatest([
     this.projectOntologies$.pipe(filter(v => Object.keys(v).length !== 0)),
-    this.resourceClassIriService.resourceClassIri$,
+    this.resourceClassIriService.resourceClassIriFromParamSubject.asObservable(),
     this.resourceClassIriService.ontoId$,
   ]).pipe(
     map(([projectOntologies, classId, ontoId]) => {

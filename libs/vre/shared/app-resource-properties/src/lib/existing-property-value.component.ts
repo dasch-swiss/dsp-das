@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { filter } from 'rxjs/operators';
 import { FormValueArray } from './form-value-array.type';
 import { ResourceClassIriService } from './resource-class-iri.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -10,7 +11,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-existing-property-value',
   template: `
     <app-property-value-switcher
-      *ngIf="resourceClassIriService.resourceClassIri$ | async as resClassIri"
+      *ngIf="resourceClassIri$ | async as resClassIri"
       [myProperty]="prop"
       [formArray]="formArray"
       [resourceClassIri]="resClassIri"
@@ -29,6 +30,10 @@ export class ExistingPropertyValueComponent implements OnChanges {
     private _fb: FormBuilder,
     public resourceClassIriService: ResourceClassIriService
   ) {}
+
+  resourceClassIri$ = this.resourceClassIriService.resourceClassIriFromParamSubject
+    .asObservable()
+    .pipe(filter(v => v !== null));
 
   ngOnChanges() {
     this.formArray = this._fb.array(
