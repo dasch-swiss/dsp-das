@@ -247,18 +247,18 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         this.resource = res;
 
         this.resourceProperties = res.resProps;
-        this.resourceProperties = this.resourceProperties.filter(v => v.guiDef.guiOrder !== undefined);
-        this.resourceProperties = this.resourceProperties.filter(v => v.propDef['isEditable']);
+        // this.resourceProperties = this.resourceProperties.filter(v => v.guiDef.guiOrder !== undefined);
+        // this.resourceProperties = this.resourceProperties.filter(v => v.propDef['isEditable']);
         this.resourceProperties = this.resourceProperties.filter(prop => !prop.propDef['isLinkProperty']);
 
         /*
-                        this.resourceProperties.forEach(prop => {
-                          if (prop.propDef['isLinkProperty']) {
-                            prop.propDef.objectType = Constants.LinkValue;
-                            prop.propDef.id += 'Value';
-                          }
-                        });
-                        */
+                                        this.resourceProperties.forEach(prop => {
+                                          if (prop.propDef['isLinkProperty']) {
+                                            prop.propDef.objectType = Constants.LinkValue;
+                                            prop.propDef.id += 'Value';
+                                          }
+                                        });
+                                        */
         console.log('aaaa', this.resourceProperties);
 
         this.loading = false;
