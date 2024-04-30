@@ -119,12 +119,14 @@ export class UserState {
 
   @Action(LoadUsersAction)
   loadUsersAction(ctx: StateContext<UserStateModel>): LoadUsersAction {
+    ctx.patchState({ isLoading: true });
     return this._userApiService.list().pipe(
       take(1),
       tap({
         next: response => {
           ctx.setState({
             ...ctx.getState(),
+            isLoading: false,
             allUsers: response.users,
           });
         },
