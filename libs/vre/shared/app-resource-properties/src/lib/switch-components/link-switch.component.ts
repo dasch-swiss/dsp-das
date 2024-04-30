@@ -6,7 +6,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
 @Component({
   selector: 'app-link-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode"
-      ><a [href]="control.value">{{ value }}</a>
+      ><a [href]="control.value" style="font-weight: bold">{{ value }}</a>
     </ng-container>
     <ng-template #editMode>
       <app-link-value [control]="control" [propIri]="propIri" [resourceClassIri]="resourceClassIri"></app-link-value>
