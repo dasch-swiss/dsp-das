@@ -245,7 +245,10 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(filter(resource => resource !== null))
       .subscribe(res => {
         this.resource = res;
-        this.resourceProperties = res.resProps.filter(prop => prop.guiDef.guiOrder !== undefined);
+        this.resourceProperties = res.resProps
+          .filter(prop => prop.values.length > 0 || !prop.propDef['isLinkValueProperty'])
+          .filter(prop => prop.propDef['isEditable']);
+        console.log('aaaa', this.resourceProperties);
         this.loading = false;
         this._cdr.detectChanges();
       });
