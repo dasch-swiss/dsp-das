@@ -1,7 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PermissionUtil } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
+import { PropertyValueService } from './property-value.service';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
@@ -11,6 +13,7 @@ import { Store } from '@ngxs/store';
       <div class="button-container d-flex">
         <ng-container *ngIf="!editMode; else editTemplate">
           <button
+            *ngIf="userHasPermissionToModify"
             mat-button
             class="edit"
             matTooltip="edit"
@@ -23,6 +26,7 @@ import { Store } from '@ngxs/store';
           </button>
           <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
             <button
+              *ngIf="userHasPermissionToModify"
               mat-button
               class="delete"
               data-cy="delete-button"
@@ -59,10 +63,23 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   infoTooltip!: string;
 
-  constructor(private _store: Store) {}
+  userHasPermissionToModify = false;
+
+  constructor(
+    private _store: Store,
+    private _propertyValueService: PropertyValueService
+  ) {}
 
   ngOnInit() {
     this.infoTooltip = this._getInfoToolTip();
+    this._setPermissions();
+  }
+
+  private _setPermissions() {
+    const value = this._propertyValueService._editModeData!.values[0];
+    const allPermissions = PermissionUtil.allUserPermissions(value.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
+
+    this.userHasPermissionToModify = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
   }
 
   private _getInfoToolTip() {
