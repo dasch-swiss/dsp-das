@@ -98,6 +98,15 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
+
+    <ng-template #emptyLinkTpl let-item="item" let-displayMode="displayMode">
+      <app-link-switch
+        [control]="item"
+        [displayMode]="displayMode"
+        [propIri]="propertyDefinition.id + 'Value'"
+        [values]="[]"
+        [resourceClassIri]="resourceClassIri"></app-link-switch>
+    </ng-template>
   `,
   styles: [
     `
@@ -140,6 +149,7 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
   @ViewChild('linkTpl') linkTpl!: TemplateRef<any>;
   @ViewChild('uriTpl') uriTpl!: TemplateRef<any>;
   @ViewChild('defaultTpl') defaultTpl!: TemplateRef<any>;
+  @ViewChild('emptyLinkTpl') emptyLinkTpl!: TemplateRef<any>;
 
   itemTpl!: TemplateRef<any>;
   validators: ValidatorFn[] | undefined;
@@ -200,8 +210,12 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
         return this.linkTpl;
       case Constants.UriValue:
         return this.uriTpl;
-      default:
+      default: {
+        if (this.propertyDefinition.isLinkProperty) {
+          return this.emptyLinkTpl;
+        }
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
+      }
     }
   }
 }
