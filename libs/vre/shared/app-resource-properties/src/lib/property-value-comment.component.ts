@@ -15,7 +15,11 @@ import { PropertiesDisplayService } from './properties-display.service';
     </div>
 
     <ng-template #editMode>
-      <mat-form-field style="flex: 1; width: 100%" subscriptSizing="dynamic" class="formfield" *ngIf="!displayMode">
+      <mat-form-field
+        style="flex: 1; width: 100%; margin: 10px 0"
+        subscriptSizing="dynamic"
+        class="formfield"
+        *ngIf="!displayMode">
         <mat-icon matPrefix style="color: #808080" *ngIf="control.disabled">lock</mat-icon>
         <textarea matInput rows="1" [placeholder]="'Comment'" [formControl]="control"></textarea>
       </mat-form-field>

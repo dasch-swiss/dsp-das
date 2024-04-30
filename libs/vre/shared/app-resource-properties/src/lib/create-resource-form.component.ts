@@ -33,30 +33,33 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
 
       <div class="my-grid">
-        <h3
-          class="mat-subtitle-2 my-h3"
-          matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
-          matTooltipPosition="above">
-          Resource label *
-        </h3>
-        <app-common-input
-          [control]="form.controls.label"
-          data-cy="label-input"
-          placeholder="Text value"></app-common-input>
+        <div style="display: flex">
+          <h3
+            class="mat-subtitle-2 my-h3"
+            matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+            matTooltipPosition="above">
+            Resource label *
+          </h3>
+          <app-common-input
+            [control]="form.controls.label"
+            style="flex: 1"
+            data-cy="label-input"
+            placeholder="Text value"></app-common-input>
+        </div>
       </div>
 
       <div class="my-grid">
-        <ng-container *ngFor="let prop of myProperties">
+        <div class="my-row" *ngFor="let prop of myProperties">
           <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
             {{ prop.propDef.label }}
           </h3>
-          <div>
+          <div style="flex: 1">
             <app-property-value-switcher
               [myProperty]="prop"
               [formArray]="form.controls.properties.controls[prop.propDef.id]"
               [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
           </div>
-        </ng-container>
+        </div>
       </div>
 
       <button
@@ -76,7 +79,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.my-grid {display: grid; grid-template-columns: 140px 470px; grid-gap: 10px} .my-grid .my-h3 {text-align: right}',
+    '.my-row { display: flex; border-bottom: 1px solid rgba(33,33,33,.1)}',
+    '.my-grid { width: 600px}',
+    '.my-grid h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
     '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
   ],
 })
