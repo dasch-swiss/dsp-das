@@ -20,6 +20,7 @@ import {
   UpdateResourceMetadata,
   UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
+import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
@@ -84,6 +85,7 @@ export class ResourceToolbarComponent implements OnInit {
     private _componentCommsService: ComponentCommunicationEventService,
     private _ontologyService: OntologyService,
     private _dialog: MatDialog,
+    private _adminProjectsApi: AdminProjectsApiService,
     private _store: Store
   ) {}
 
@@ -98,6 +100,11 @@ export class ResourceToolbarComponent implements OnInit {
       // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
       this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
       this.userCanDelete = allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
+    }
+    if (!this.attachedProject && this.resource.res.attachedToProject) {
+      this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
+        this.attachedProject = res.project as ReadProject;
+      });
     }
     this._cd.detectChanges();
   }
