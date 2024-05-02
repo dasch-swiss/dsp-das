@@ -53,10 +53,11 @@ export class LinkValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string>;
   @Input({ required: true }) propIri!: string;
   @Input({ required: true }) resourceClassIri!: string;
-
+  @Input({ required: true }) defaultValue!: string;
   @ViewChild(MatAutocompleteTrigger) autoComplete!: MatAutocompleteTrigger;
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
+  useDefaultValue = true;
   resources: ReadResource[] = [];
 
   readResource: ReadResource | undefined;
@@ -135,7 +136,8 @@ export class LinkValueComponent implements OnInit, OnDestroy {
   }
 
   displayResource(resId: string | null): string {
-    if (!this.resources || resId === null) return '';
+    if (this.useDefaultValue) return this.defaultValue;
+    if (resId === null) return '';
     return this.resources.find(res => res.id === resId)?.label ?? '';
   }
 
@@ -150,6 +152,7 @@ export class LinkValueComponent implements OnInit, OnDestroy {
 
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.readResource = readResource;
+        this.useDefaultValue = false;
       });
   }
 

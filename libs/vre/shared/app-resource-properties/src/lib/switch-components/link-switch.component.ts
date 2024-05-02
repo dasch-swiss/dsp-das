@@ -10,7 +10,11 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       ><a [href]="link" style="font-weight: bold" target="_blank">{{ value }}</a>
     </ng-container>
     <ng-template #editMode>
-      <app-link-value [control]="control" [propIri]="propIri" [resourceClassIri]="resourceClassIri"></app-link-value>
+      <app-link-value
+        [control]="control"
+        [propIri]="propIri"
+        [resourceClassIri]="resourceClassIri"
+        [defaultValue]="value"></app-link-value>
     </ng-template>`,
 })
 export class LinkSwitchComponent implements IsSwitchComponent {
