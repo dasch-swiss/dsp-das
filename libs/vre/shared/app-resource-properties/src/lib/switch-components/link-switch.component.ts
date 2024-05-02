@@ -25,7 +25,7 @@ export class LinkSwitchComponent implements IsSwitchComponent {
   @Input({ required: true }) resourceClassIri!: string;
 
   get value() {
-    return (this.values as ReadValue[])[0].strval;
+    return this.values && this.values.length > 0 ? (this.values as ReadValue[])[0].strval : '';
   }
 
   get link() {

@@ -1,6 +1,12 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
-import { Cardinality } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute } from '@angular/router';
+import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -15,6 +21,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       mat-icon-button
       (click)="addItem()"
       *ngIf="
+        (isAdmin$ | async) &&
         (!propertyValueService.currentlyAdding || propertyValueService.keepEditMode) &&
         (propertyValueService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
@@ -26,11 +33,27 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class PropertyValuesComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
 
+  // TODO: this is copy pasted from ProjectBase: this needs to be in StateManagement (not project base)
+  isAdmin$ = combineLatest([
+    this._store.select(UserSelectors.user).pipe(filter(user => user !== null)) as Observable<ReadUser>,
+    this._store.select(UserSelectors.userProjectAdminGroups),
+    this._route.params,
+    this._route.params,
+  ]).pipe(
+    map(([user, userProjectGroups, params, parentParams]) => {
+      const projectIri = this._projectService.uuidToIri(params.uuid ? params.uuid : parentParams.uuid);
+      return ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
+    })
+  );
+
   protected readonly Cardinality = Cardinality;
 
   constructor(
     public propertyValueService: PropertyValueService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _store: Store,
+    private _route: ActivatedRoute,
+    private _projectService: ProjectService
   ) {}
 
   ngOnInit() {
