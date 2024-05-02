@@ -38,7 +38,7 @@ export class PropertyValuesComponent implements OnInit {
     this._store.select(UserSelectors.user).pipe(filter(user => user !== null)) as Observable<ReadUser>,
     this._store.select(UserSelectors.userProjectAdminGroups),
     this._route.params,
-    this._route.params,
+    this._route.parent!.params,
   ]).pipe(
     map(([user, userProjectGroups, params, parentParams]) => {
       const projectIri = this._projectService.uuidToIri(params.uuid ? params.uuid : parentParams.uuid);
