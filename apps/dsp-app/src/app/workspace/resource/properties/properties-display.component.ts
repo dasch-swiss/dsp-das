@@ -2,7 +2,6 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { isA } from '@jest/expect-utils';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -10,9 +9,12 @@ import { RepresentationConstants } from '../representation/file-representation';
 @Component({
   selector: 'app-properties-display',
   template: `
-    <div style="display: flex; justify-content: end; background: #EAEFF3; margin-bottom: 8px">
-      <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
-      <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
+    <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">
+      <h3 style="margin: 0 16px" *ngIf="isAnnotation">{{ resource.res.label }}</h3>
+      <div style="display: flex; justify-content: end; flex: 1">
+        <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
+        <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
+      </div>
     </div>
     <!-- list of properties -->
     <ng-container *ngIf="myProperties$ | async as myProperties">
@@ -104,5 +106,4 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
   protected readonly cardinality = Cardinality;
-  protected readonly isA = isA;
 }

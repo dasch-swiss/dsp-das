@@ -8,17 +8,14 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DeleteResourceResponse,
   KnoraApiConnection,
   PermissionUtil,
   ReadLinkValue,
   ReadProject,
-  ReadResource,
   ReadValue,
-  UpdateResourceMetadata,
-  UpdateResourceMetadataResponse,
 } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -33,13 +30,14 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
+  EditResourceLabelDialogComponent,
+  EditResourceLabelDialogProps,
   EraseResourceDialogComponent,
   EraseResourceDialogProps,
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { filter } from 'rxjs/operators';
-import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialog/dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,12 +47,7 @@ import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialo
 })
 export class ResourceToolbarComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-
-  /**
-   * does the logged-in user has system or project admin permissions?
-   */
   @Input() adminPermissions = false;
-
   /**
    * in case properties belongs to an annotation (e.g. region in still images)
    * in this case we don't have to display the isRegionOf property
@@ -62,7 +55,7 @@ export class ResourceToolbarComponent implements OnInit {
   @Input() isAnnotation = false;
 
   @Input() showToggleProperties = false;
-  @Input() showEditLabel = false;
+  @Input() showEditLabel = true;
 
   @Input() attachedProject: ReadProject;
 
@@ -73,7 +66,6 @@ export class ResourceToolbarComponent implements OnInit {
 
   userCanDelete: boolean;
   userCanEdit: boolean;
-
   canReadComments: boolean;
 
   constructor(
@@ -109,60 +101,24 @@ export class ResourceToolbarComponent implements OnInit {
     this._cd.detectChanges();
   }
 
-  /**
-   * opens resource
-   * @param linkValue
-   */
   openResource(linkValue: ReadLinkValue | string) {
     const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
     const path = this._resourceService.getResourcePath(iri);
     window.open(`/resource${path}`, '_blank');
   }
 
-  editDialog() {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: { mode: 'editResource', title: this.resource.res.label },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
-      if (!answer) {
-        // if the user clicks outside of the dialog window, answer is undefined
-        return;
-      }
-      if (answer.confirmed === true) {
-        if (this.resource.res.label !== answer.comment) {
-          // update resource's label if it has changed
-          // get the correct lastModificationDate from the resource
-          this._dspApiConnection.v2.res.getResource(this.resource.res.id).subscribe((res: ReadResource) => {
-            const payload = new UpdateResourceMetadata();
-            payload.id = this.resource.res.id;
-            payload.type = this.resource.res.type;
-            payload.lastModificationDate = res.lastModificationDate;
-            payload.label = answer.comment;
-
-            this._dspApiConnection.v2.res
-              .updateResourceMetadata(payload)
-              .subscribe((response: UpdateResourceMetadataResponse) => {
-                this.resource.res.label = payload.label;
-                this.lastModificationDate = response.lastModificationDate;
-                // if annotations tab is active; a label of a region has been changed --> update regions
-                this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
-                if (this.isAnnotation) {
-                  this.regionChanged.emit();
-                }
-                this._cd.markForCheck();
-              });
-          });
+  editResourceLabel() {
+    this._dialog
+      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent)
+      .afterClosed()
+      .pipe(filter(answer => !!answer))
+      .subscribe(answer => {
+        this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
+        if (this.isAnnotation) {
+          this.regionChanged.emit();
         }
-      }
-    });
+        this._cd.markForCheck();
+      });
   }
 
   deleteResource() {
@@ -195,9 +151,6 @@ export class ResourceToolbarComponent implements OnInit {
       });
   }
 
-  /**
-   * display message to confirm the copy of the citation link (ARK URL)
-   */
   openSnackBar(message: string) {
     this._notification.openSnackBar(message);
   }
