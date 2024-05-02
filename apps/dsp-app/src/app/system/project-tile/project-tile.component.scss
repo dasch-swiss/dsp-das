@@ -3,15 +3,19 @@
 @use '../../../styles/typography' as t;
 @use '../../../styles/responsive' as *;
 
-.project-tile {
-  :hover {
-    border-radius: 6px;
-    background-color: $secondary_600;
-  }
+.project-tile:hover {
+  border-radius: 6px;
+  filter: none;
+  transition: all 0.2s ease;
+}
 
+.project-tile {
+  filter: saturate(20%);
   border: 1px solid $cool_gray_300;
   border-radius: 6px;
   box-shadow: 0px 4px 4px $cool_gray_300;
+  background-image: url('/assets/images/project-tile-bg.jpg');
+  background-size: cover;
 
   .project-tile-content {
     padding: 10px;
