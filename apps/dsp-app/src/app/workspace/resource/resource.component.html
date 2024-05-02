@@ -168,19 +168,22 @@
             *ngFor="let annotation of annotationResources"
             [id]="annotation.res.id"
             [class.active]="annotation.res.id === selectedRegion">
-            <app-properties-display [resource]="annotation" [properties]="annotation.resProps"></app-properties-display>
+            <app-properties-display
+              [resource]="annotation"
+              [properties]="annotation.resProps"
+              [isAnnotation]="true"></app-properties-display>
           </div>
         </mat-tab>
       </mat-tab-group>
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                                                                                                                                                          *ngIf="resource.res"
-                                                                                                                                                                                                                                                          [resource]="resource"
-                                                                                                                                                                                                                                                          [displayProjectInfo]="true"
-                                                                                                                                                                                                                                                          [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                                                                                                          [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                                                                                                        </app-properties>-->
+                                                                                                                                                                                                                                                                  *ngIf="resource.res"
+                                                                                                                                                                                                                                                                  [resource]="resource"
+                                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
+                                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
+                                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
+                                                                                                                                                                                                                                                                </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->

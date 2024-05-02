@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { isA } from '@jest/expect-utils';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
@@ -9,12 +10,10 @@ import { RepresentationConstants } from '../representation/file-representation';
 @Component({
   selector: 'app-properties-display',
   template: `
-    <app-properties-toolbar
-      [showToggleProperties]="true"
-      style="
-    display: block;
-    margin-bottom: 8px"></app-properties-toolbar>
-
+    <div style="display: flex; justify-content: end; background: #EAEFF3; margin-bottom: 8px">
+      <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
+      <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
+    </div>
     <!-- list of properties -->
     <ng-container *ngIf="myProperties$ | async as myProperties">
       <ng-container *ngIf="myProperties.length > 0; else noProperties">
@@ -28,8 +27,6 @@ import { RepresentationConstants } from '../representation/file-representation';
             </h3>
             <div style="flex: 1">
               <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
-              <!-- in case of incoming links we have to display them here -->
-              <!--<div *ngIf="prop.propDef.id === hasIncomingLinkIri">-->
             </div>
           </div>
         </div>
@@ -60,8 +57,9 @@ import { RepresentationConstants } from '../representation/file-representation';
   providers: [PropertiesDisplayService],
 })
 export class PropertiesDisplayComponent implements OnChanges {
-  @Input() resource: DspResource;
+  @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
+  @Input() isAnnotation = false;
 
   myProperties$!: Observable<PropertyInfoValues[]>;
 
@@ -106,4 +104,5 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
   protected readonly cardinality = Cardinality;
+  protected readonly isA = isA;
 }

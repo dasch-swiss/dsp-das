@@ -47,7 +47,7 @@ import { ConfirmationWithComment, DialogComponent } from '../../../../main/dialo
   styleUrls: ['./resource-toolbar.scss'],
 })
 export class ResourceToolbarComponent implements OnInit {
-  @Input() resource: DspResource;
+  @Input({ required: true }) resource!: DspResource;
 
   /**
    * does the logged-in user has system or project admin permissions?
