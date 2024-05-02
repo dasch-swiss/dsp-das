@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 
@@ -13,8 +13,9 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
   </mat-slide-toggle>`,
 })
 export class MultipleSlideToggleComponent {
-  @Input() control!: FormControl<Cardinality>;
+  @Input({ required: true }) control!: FormControl<Cardinality>;
   @Input() label?: string;
+  @Output() afterCardinalityChange = new EventEmitter<Cardinality>();
   protected readonly Cardinality = Cardinality;
 
   get checked() {
@@ -28,6 +29,6 @@ export class MultipleSlideToggleComponent {
       [Cardinality._0_n, Cardinality._0_1],
       [Cardinality._1_n, Cardinality._1],
     ]);
-    this.control.patchValue(multipleToggle.get(this.control.getRawValue())!);
+    this.afterCardinalityChange.emit(multipleToggle.get(this.control.getRawValue()));
   }
 }

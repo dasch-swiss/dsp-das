@@ -64,8 +64,14 @@
     </span>
     <span class="fill-remaining-space center"></span>
     <span class="cardinality-toggles">
-      <app-multiple-slide-toggle [control]="cardinalityControl" [label]="'multiple'"></app-multiple-slide-toggle>
-      <app-required-slide-toggle [control]="cardinalityControl" [label]="'required'"></app-required-slide-toggle>
+      <app-multiple-slide-toggle
+        [control]="cardinalityControl"
+        [label]="'multiple'"
+        (afterCardinalityChange)="afterCardinalityChange($event)"></app-multiple-slide-toggle>
+      <app-required-slide-toggle
+        [control]="cardinalityControl"
+        [label]="'required'"
+        (afterCardinalityChange)="afterCardinalityChange($event)"></app-required-slide-toggle>
     </span>
   </div>
 </div>

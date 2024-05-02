@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 
@@ -15,8 +15,9 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
   `,
 })
 export class RequiredSlideToggleComponent {
-  @Input() control: FormControl<Cardinality>;
+  @Input({ required: true }) control!: FormControl<Cardinality>;
   @Input() label?: string;
+  @Output() afterCardinalityChange = new EventEmitter<Cardinality>();
 
   get checked() {
     return this.control.value === Cardinality._1 || this.control.value === Cardinality._1_n;
@@ -29,6 +30,6 @@ export class RequiredSlideToggleComponent {
       [Cardinality._0_n, Cardinality._1_n],
       [Cardinality._1_n, Cardinality._0_n],
     ]);
-    this.control.patchValue(requiredToggle.get(this.control.value));
+    this.afterCardinalityChange.emit(requiredToggle.get(this.control.getRawValue()));
   }
 }

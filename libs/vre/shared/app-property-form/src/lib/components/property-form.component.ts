@@ -54,12 +54,14 @@ import { PropertyForm } from '../property-form.type';
       <app-multiple-slide-toggle
         [control]="form.controls.cardinality"
         data-cy="multiple-toggle"
-        [label]="'Multiple values ?'"></app-multiple-slide-toggle>
+        [label]="'Multiple values ?'"
+        (afterCardinalityChange)="form.controls.cardinality.patchValue($event)"></app-multiple-slide-toggle>
 
       <app-required-slide-toggle
         [control]="form.controls.cardinality"
         data-cy="required-toggle"
-        [label]="'Required value ?'"></app-required-slide-toggle>
+        [label]="'Required value ?'"
+        (afterCardinalityChange)="form.controls.cardinality.patchValue($event)"></app-required-slide-toggle>
     </div>
   </form>`,
 })

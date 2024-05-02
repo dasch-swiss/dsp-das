@@ -113,17 +113,15 @@ export class ResourceClassPropertyInfoComponent implements OnInit, OnChanges, Af
 
   ngOnInit() {
     this.cardinalityControl = this._fb.control<Cardinality>(this.propCard.cardinality);
-    this.cardinalityControl.valueChanges
-      .pipe(
-        switchMap(changes =>
-          this._dialog.afterConfirmation(
-            'Please note that this change may not be reversible. Do you wish to continue ?',
-            'Attention'
-          )
-        ),
-        switchMap(() => this.submitCardinalitiesChange())
-      )
-      .subscribe();
+  }
+
+  afterCardinalityChange(newValue: Cardinality) {
+    this._dialog
+      .afterConfirmation('Please note that this change may not be reversible. Do you wish to continue ?', 'Attention')
+      .pipe(switchMap(() => this.submitCardinalitiesChange()))
+      .subscribe(() => {
+        this.cardinalityControl.patchValue(newValue);
+      });
   }
 
   ngOnChanges(): void {
