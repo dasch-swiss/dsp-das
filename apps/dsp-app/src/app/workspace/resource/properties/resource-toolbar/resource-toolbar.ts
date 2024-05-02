@@ -3,23 +3,14 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  DeleteResourceResponse,
-  KnoraApiConnection,
-  PermissionUtil,
-  ReadLinkValue,
-  ReadProject,
-  ReadValue,
-} from '@dasch-swiss/dsp-js';
+import { DeleteResourceResponse, PermissionUtil, ReadLinkValue, ReadProject, ReadValue } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -69,8 +60,6 @@ export class ResourceToolbarComponent implements OnInit {
   canReadComments: boolean;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _notification: NotificationService,
     private _resourceService: ResourceService,
     private _cd: ChangeDetectorRef,
@@ -96,6 +85,7 @@ export class ResourceToolbarComponent implements OnInit {
     if (!this.attachedProject && this.resource.res.attachedToProject) {
       this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
         this.attachedProject = res.project as ReadProject;
+        this._cd.detectChanges();
       });
     }
     this._cd.detectChanges();
