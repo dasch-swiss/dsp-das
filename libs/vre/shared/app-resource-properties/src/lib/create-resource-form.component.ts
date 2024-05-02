@@ -51,7 +51,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <div class="my-grid">
         <div class="my-row" *ngFor="let prop of myProperties">
           <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-            {{ prop.propDef.label }}
+            {{ prop.propDef.label
+            }}{{
+              prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
+            }}
           </h3>
           <div style="flex: 1">
             <app-property-value-switcher
@@ -115,6 +118,8 @@ export class CreateResourceFormComponent implements OnInit {
     Constants.HasArchiveFileValue,
     Constants.HasTextFileValue,
   ];
+
+  readonly cardinality = Cardinality;
 
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];

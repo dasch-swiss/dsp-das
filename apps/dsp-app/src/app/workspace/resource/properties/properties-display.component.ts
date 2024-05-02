@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { Observable } from 'rxjs';
@@ -21,7 +21,10 @@ import { RepresentationConstants } from '../representation/file-representation';
         <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
           <div [class.border-bottom]="prop.values && !last" style="display: flex; padding: 8px 0;">
             <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-              {{ prop.propDef.label }}
+              {{ prop.propDef.label
+              }}{{
+                prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
+              }}
             </h3>
             <div style="flex: 1">
               <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
@@ -102,4 +105,5 @@ export class PropertiesDisplayComponent implements OnChanges {
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
+  protected readonly cardinality = Cardinality;
 }
