@@ -99,8 +99,6 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   _addFile(file: File) {
-    this.onTouched();
-
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
     const match = file.name.match(regex);
     const fileExtension = match![1];
@@ -138,6 +136,8 @@ export class Upload2Component implements ControlValueAccessor {
       const fileResponse = new (fileValueMapping.get(this.representation)!.UploadClass)();
       fileResponse.filename = res.uploadedFiles[0].internalFilename;
       this.onChange(fileResponse);
+      this.onTouched();
+
       this._cdr.detectChanges();
     });
 
