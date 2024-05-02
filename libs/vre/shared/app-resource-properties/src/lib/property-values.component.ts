@@ -17,7 +17,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       *ngIf="
         (!propertyValueService.currentlyAdding || propertyValueService.keepEditMode) &&
         (propertyValueService.formArray.controls.length === 0 ||
-          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality))
+          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
+        propertyValueService.propertyDefinition.isEditable
       ">
       <mat-icon style="font-size: 18px; width: 18px; height: 18px">add_box</mat-icon>
     </button>`,
