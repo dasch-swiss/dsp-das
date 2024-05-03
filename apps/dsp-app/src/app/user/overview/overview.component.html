@@ -1,7 +1,18 @@
 <div class="content extra-large middle">
-  <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
-
   <div class="overview">
+    <div *ngIf="isProjectsLoading$ | async" [@replaceAnimation]>
+      <div class="title-bar admin">
+        <div class="title">
+          <p>Browse Research Projects</p>
+        </div>
+      </div>
+      <div class="project-tiles">
+        <div *ngFor="let item of loadingTiles" class="project-tile-container">
+          <app-project-tile isLoading="true"></app-project-tile>
+        </div>
+      </div>
+    </div>
+
     <!-- user is a system admin -->
     <div *ngIf="(allProjects$ | async).length > 0 && ((isSysAdmin$ | async) && (isProjectsLoading$ | async) === false)">
       <!-- list all projects -->
