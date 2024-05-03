@@ -14,7 +14,7 @@ import { RepresentationConstants } from '../representation/file-representation';
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">
       <h3 style="margin: 0 16px" *ngIf="isAnnotation">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
-        <app-properties-toolbar [showToggleProperties]="true"></app-properties-toolbar>
+        <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="isAnnotation"></app-properties-toolbar>
         <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
       </div>
     </div>

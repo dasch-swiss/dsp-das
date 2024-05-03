@@ -6,28 +6,54 @@ import { PropertiesDisplayService } from './properties-display.service';
   template: `
     <button
       mat-button
+      *ngIf="!showOnlyIcons; else commentsIconTpl"
       color="primary"
       class="toggle-props"
       [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all') + ' comments'"
       matTooltipPosition="above"
       (click)="toggleShowAllComments()">
       <mat-icon>{{ (showAllComments$ | async) ? 'comments_disabled' : 'comment' }}</mat-icon>
-      <span *ngIf="!showOnlyIcons">{{ (showAllComments$ | async) ? 'Hide' : 'Show all' }} comments</span>
+      {{ (showAllComments$ | async) ? 'Hide' : 'Show all' }} comments
     </button>
 
-    <button
-      mat-button
-      color="primary"
-      class="toggle-props"
-      *ngIf="showToggleProperties"
-      [matTooltip]="((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'"
-      matTooltipPosition="above"
-      (click)="toggleShowAllProps()">
-      <mat-icon>{{ (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
-      <span *ngIf="!showOnlyIcons"
-        >{{ (propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all' }} properties</span
-      >
-    </button>
+    <ng-container *ngIf="showToggleProperties">
+      <button
+        mat-button
+        color="primary"
+        class="toggle-props"
+        *ngIf="!showOnlyIcons; else showPropsIconTpl"
+        [matTooltip]="
+          ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
+        "
+        matTooltipPosition="above"
+        (click)="toggleShowAllProps()">
+        <mat-icon>{{ (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+        {{ (propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all' }} properties
+      </button>
+    </ng-container>
+
+    <ng-template #commentsIconTpl>
+      <button
+        style="color: rgb(51, 103, 144)"
+        mat-icon-button
+        [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all') + ' comments'"
+        matTooltipPosition="above"
+        (click)="toggleShowAllComments()">
+        <mat-icon>{{ (showAllComments$ | async) ? 'comments_disabled' : 'comment' }}</mat-icon>
+      </button>
+    </ng-template>
+    <ng-template #showPropsIconTpl>
+      <button
+        mat-icon-button
+        style="color: rgb(51, 103, 144)"
+        [matTooltip]="
+          ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
+        "
+        matTooltipPosition="above"
+        (click)="toggleShowAllProps()">
+        <mat-icon>{{ (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+      </button></ng-template
+    >
   `,
   styles: ['button { padding-top: 24px; padding-bottom: 24px}'],
 })

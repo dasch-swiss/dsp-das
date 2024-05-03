@@ -54,6 +54,7 @@ export class EditResourceLabelDialogComponent {
         })
       )
       .subscribe(() => {
+        window.location.reload();
         this._dialogRef.close(true);
       });
   }
