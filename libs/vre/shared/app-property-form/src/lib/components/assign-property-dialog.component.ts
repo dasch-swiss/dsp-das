@@ -98,8 +98,7 @@ export class AssignPropertyDialogComponent {
         })
       )
       .subscribe(() => {
-        // this._store.dispatch(new )
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       });
   }
 }

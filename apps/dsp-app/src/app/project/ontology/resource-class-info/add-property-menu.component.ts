@@ -145,15 +145,21 @@ export class AddPropertyMenuComponent {
     };
 
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog.open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(
-      AssignPropertyDialogComponent,
-      DspDialogConfig.mediumDialog({
-        ontologyId: ontology.id,
-        lastModificationDate: ontology.lastModificationDate,
-        propertyInfo: propertyAssignment.property,
-        resClassIri: this.resourceClass.id,
-      })
-    );
+    this._dialog
+      .open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(
+        AssignPropertyDialogComponent,
+        DspDialogConfig.mediumDialog({
+          ontologyId: ontology.id,
+          lastModificationDate: ontology.lastModificationDate,
+          propertyInfo: propertyAssignment.property,
+          resClassIri: this.resourceClass.id,
+        })
+      )
+      .afterClosed()
+      .pipe(filter(res => res === true))
+      .subscribe(res => {
+        this.updatePropertyAssignment.emit(ontology.id);
+      });
   }
 
   addNewProperty(propType: DefaultProperty) {
