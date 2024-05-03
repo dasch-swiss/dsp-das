@@ -56,8 +56,8 @@ import {
   ResourceSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
@@ -404,6 +404,8 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       });
   }
 
+  trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
+
   private _getResourceAttachedData(resource: DspResource): void {
     this._actions$
       .pipe(ofActionSuccessful(GetAttachedUserAction))
@@ -479,7 +481,13 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
           // gather system property information
           annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-          annotations.push(annotation);
+          this._actions$
+            .pipe(ofActionSuccessful(GetAttachedUserAction))
+            .pipe(take(1))
+            .subscribe(() => {
+              annotations.push(annotation);
+            });
+          this._store.dispatch(new GetAttachedUserAction(annotation.res.id, annotation.res.attachedToUser));
         }
 
         const stillImage = new FileRepresentation(img, regions);

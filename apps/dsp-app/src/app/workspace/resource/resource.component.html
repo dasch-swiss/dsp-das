@@ -166,13 +166,11 @@
           </ng-template>
           <div
             class="region-property"
-            *ngFor="let annotation of annotationResources"
+            *ngFor="let annotation of annotationResources; trackby: trackAnnotationByFn"
             [id]="annotation.res.id"
             [class.active]="annotation.res.id === selectedRegion">
-            <app-properties-display
-              [resource]="annotation"
-              [properties]="annotation.resProps"
-              [isAnnotation]="true"></app-properties-display>
+            <app-properties-display [resource]="annotation" [properties]="annotation.resProps" isAnnotation="true">
+            </app-properties-display>
           </div>
         </mat-tab>
       </mat-tab-group>

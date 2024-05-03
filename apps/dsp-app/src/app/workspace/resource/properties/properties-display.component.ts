@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Cardinality, Constants } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
 
 @Component({
@@ -16,6 +18,21 @@ import { RepresentationConstants } from '../representation/file-representation';
         <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
       </div>
     </div>
+    <div
+      class="infobar mat-caption"
+      *ngIf="isAnnotation && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
+      Created
+      <span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
+        by
+        {{
+          resourceAttachedUser.username
+            ? resourceAttachedUser.username
+            : resourceAttachedUser.givenName + ' ' + resourceAttachedUser.familyName
+        }}
+      </span>
+      <span *ngIf="resource.res.creationDate"> on {{ resource.res.creationDate | date }}</span>
+    </div>
+
     <!-- list of properties -->
     <ng-container *ngIf="myProperties$ | async as myProperties">
       <ng-container *ngIf="myProperties.length > 0; else noProperties">
@@ -54,21 +71,50 @@ import { RepresentationConstants } from '../representation/file-representation';
     </ng-template>
   `,
   styles: [
-    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; width: 150px; margin-top: 0px; text-align: right; padding-right: 24px; flex-shrink: 0}',
+    `
+      .label {
+        color: rgb(107, 114, 128);
+        align-self: start;
+        cursor: help;
+        width: 150px;
+        margin-top: 0px;
+        text-align: right;
+        padding-right: 24px;
+        flex-shrink: 0;
+      }
+      .infobar {
+        text-align: right;
+        padding-right: 6px;
+      }
+    `,
   ],
   providers: [PropertiesDisplayService],
 })
 export class PropertiesDisplayComponent implements OnChanges {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
   @Input() isAnnotation = false;
 
+  resourceAttachedUser$: Observable<ReadUser> = this._store.select(ResourceSelectors.attachedUsers).pipe(
+    takeUntil(this.ngUnsubscribe),
+    map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
+  );
   myProperties$!: Observable<PropertyInfoValues[]>;
 
-  constructor(private _propertiesDisplayService: PropertiesDisplayService) {}
+  constructor(
+    private _propertiesDisplayService: PropertiesDisplayService,
+    private _store: Store
+  ) {}
 
   ngOnChanges() {
     this._setupProperties();
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   private _setupProperties() {
