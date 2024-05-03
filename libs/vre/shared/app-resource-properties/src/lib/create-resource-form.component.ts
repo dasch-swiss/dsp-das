@@ -16,7 +16,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { switchMap, take } from 'rxjs/operators';
+import { finalize, switchMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
@@ -159,9 +159,16 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getResourceProperties() {
+    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(this.ontologyIri)
-      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
+      .pipe(
+        switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)),
+        finalize(() => {
+          this.loading = false;
+          this._cd.detectChanges();
+        })
+      )
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
