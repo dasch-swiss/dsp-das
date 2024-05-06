@@ -56,8 +56,8 @@ import {
   ResourceSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
@@ -619,7 +619,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         // prepare regions to be displayed
         // triggers ngOnChanges of StillImageComponent
         this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
-        this._cdr.markForCheck();
+        this._cdr.detectChanges();
       });
   }
 
