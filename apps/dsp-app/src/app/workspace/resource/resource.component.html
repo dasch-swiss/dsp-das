@@ -177,18 +177,18 @@
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                                                                                                                                                                          *ngIf="resource.res"
-                                                                                                                                                                                                                                                                          [resource]="resource"
-                                                                                                                                                                                                                                                                          [displayProjectInfo]="true"
-                                                                                                                                                                                                                                                                          [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                                                                                                                          [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                                                                                                                        </app-properties>-->
+                                                                                                                                                                                                                                                                                  *ngIf="resource.res"
+                                                                                                                                                                                                                                                                                  [resource]="resource"
+                                                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
+                                                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
+                                                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
+                                                                                                                                                                                                                                                                                </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->
     <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
   </div>
-
+  <dasch-swiss-app-progress-indicator *ngIf="!resource && loading"></dasch-swiss-app-progress-indicator>
   <!-- resource not found  -->
   <div *ngIf="!resource && !loading" class="no-results">
     <p>
