@@ -1,4 +1,5 @@
 <div [formGroup]="form">
+  {{ form.valid | json }}
   <div class="inputs-wrapper">
     <app-jdn-datepicker [activeCalendar]="'Gregorian'">
       <mat-form-field class="child-input-component">

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Constants,
@@ -44,18 +45,20 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
+import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input.component';
+import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
 import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
 
-export const propertiesTypeMapping = new Map<
-  string,
-  {
-    control: (value?: ReadValue) => AbstractControl;
-    mapping: (value: any, propertyDefinition?: ResourcePropertyDefinition) => CreateValue;
-    updateMapping: (id: string, value: any, propertyDefinition?: ResourcePropertyDefinition) => UpdateValue;
-  }
->([
+interface MappingParameters<T extends ReadValue> {
+  control: (value?: T) => AbstractControl;
+  mapping: (value: any, propertyDefinition?: any) => CreateValue;
+  updateMapping: (id: string, value: any, propertyDefinition?: any) => UpdateValue;
+}
+
+export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.IntValue,
     {
@@ -156,7 +159,6 @@ export const propertiesTypeMapping = new Map<
       mapping: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
         newTextValue.text = value;
-        console.log(newTextValue, 'text value as xml');
         return newTextValue;
       },
       updateMapping: (id: string, value: string) => {
@@ -187,21 +189,28 @@ export const propertiesTypeMapping = new Map<
   [
     Constants.TimeValue,
     {
-      control: (value?: ReadTimeValue) =>
-        new FormGroup({
-          date: new FormControl(value?.time, Validators.required), // TODO
-          time: new FormControl(value?.time, Validators.required),
-        }),
+      control: (value?: ReadTimeValue) => {
+        if (value) {
+          const z = convertTimestampToDateTime(value.time, new DatePipe('en-US'));
+          return new FormControl(z);
+        }
 
-      mapping: (value: any) => {
+        const today = new Date();
+        const calendarDate = new CalendarDate(today.getFullYear(), (today.getMonth() + 1) % 12, today.getDate());
+        const gcd = new GregorianCalendarDate(new CalendarPeriod(calendarDate, calendarDate));
+        return new FormControl(new DateTime(gcd, '00:00'));
+      },
+
+      mapping: (value: DateTime) => {
+        const newValue = dateTimeTimestamp(value.date, value.time);
         const newTimeValue = new CreateTimeValue();
-        newTimeValue.time = value;
+        newTimeValue.time = newValue;
         return newTimeValue;
       },
-      updateMapping: (id: string, value: any) => {
+      updateMapping: (id: string, value: DateTime) => {
         const newTimeValue = new UpdateTimeValue();
         newTimeValue.id = id;
-        newTimeValue.time = value;
+        newTimeValue.time = dateTimeTimestamp(value.date, value.time);
         return newTimeValue;
       },
     },
