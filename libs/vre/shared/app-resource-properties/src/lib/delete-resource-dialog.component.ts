@@ -48,7 +48,7 @@ export class DeleteResourceDialogComponent {
     const payload = new DeleteResource();
     payload.id = this.data.resource.res.id;
     payload.type = this.data.resource.res.type;
-    payload.deleteComment = this.comment ?? '';
+    payload.deleteComment = this.comment ?? undefined;
     payload.lastModificationDate = this.data.lastModificationDate;
     this._dspApiConnection.v2.res.deleteResource(payload).subscribe(response => {
       this._dialogRef.close(response as DeleteResourceResponse);
