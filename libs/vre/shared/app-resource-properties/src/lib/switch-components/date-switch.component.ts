@@ -9,8 +9,12 @@ import { IsSwitchComponent } from './is-switch-component.interface';
     <ng-container *ngIf="displayMode; else editMode">
       <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl">
         <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
-        {{ start.day }}.{{ start.month }}.{{ start.year }}
-        <span>- {{ end.day }}.{{ end.month }}.{{ end.year }}</span>
+        <span *ngIf="start.day as startDay">{{ startDay }}.</span
+        ><span *ngIf="start.month as startMonth">{{ startMonth }}.</span>{{ start.year }}
+        <span
+          >- <span *ngIf="end.day as endDay">{{ endDay }}.</span
+          ><span *ngIf="end.month as endMonth">{{ end.month }}.</span>{{ end.year }}</span
+        >
       </ng-container>
     </ng-container>
 
