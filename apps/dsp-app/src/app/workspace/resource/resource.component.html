@@ -15,16 +15,13 @@
           matTooltipPosition="above">
           {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
         </h3>
-        <ng-container *ngIf="project$ | async as project">
-          <app-resource-toolbar
-            [resource]="resource"
-            [lastModificationDate]="resource.res.lastModificationDate"
-            [adminPermissions]="isAdmin$ | async"
-            [attachedProject]="project"
-            [showEditLabel]="false"
-            (regionChanged)="regionChanged.emit()"
-            (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
-        </ng-container>
+        <app-resource-toolbar
+          [resource]="resource"
+          [lastModificationDate]="resource.res.lastModificationDate"
+          [adminPermissions]="isAdmin$ | async"
+          [showEditLabel]="false"
+          (regionChanged)="regionChanged.emit()"
+          (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
         <!-- TODO uncomment this on  top -->
       </div>
       <div class="resource-label">
@@ -177,12 +174,12 @@
       <ng-template #deletedResource>
         <!-- TODO!!! -->
         <!--<app-properties
-                                                                                                                                                                                                                                                                                  *ngIf="resource.res"
-                                                                                                                                                                                                                                                                                  [resource]="resource"
-                                                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
-                                                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                                                                                                                                </app-properties>-->
+                                                                                                                                                                                                                                                                                                  *ngIf="resource.res"
+                                                                                                                                                                                                                                                                                                  [resource]="resource"
+                                                                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
+                                                                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
+                                                                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
+                                                                                                                                                                                                                                                                                                </app-properties>-->
       </ng-template>
     </div>
     <!-- progress indicator -->
