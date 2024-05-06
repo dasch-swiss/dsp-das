@@ -13,7 +13,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { of, Subscription } from 'rxjs';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
@@ -87,7 +87,6 @@ export class LinkValueComponent implements OnInit, OnDestroy {
     const readResource = this.readResource as ReadResource;
     this.subscription = of(this._getTextInput())
       .pipe(
-        tap(v => console.log('value changes', v)),
         filter(searchTerm => searchTerm?.length >= 3),
         switchMap((searchTerm: string) =>
           this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, 0, {

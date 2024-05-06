@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ReadValue } from '@dasch-swiss/dsp-js';
+import { ReadLinkValue, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
@@ -25,7 +25,14 @@ export class LinkSwitchComponent implements IsSwitchComponent {
   @Input({ required: true }) resourceClassIri!: string;
 
   get value() {
-    return this.values && this.values.length > 0 ? (this.values as ReadValue[])[0].strval : '';
+    if (this.values?.length === 0) {
+      return '';
+    }
+    const found = (this.values as ReadLinkValue[]).find(v => v.linkedResourceIri === this.control.value);
+    if (found) {
+      return found.strval;
+    }
+    return '';
   }
 
   get link() {
