@@ -99,7 +99,9 @@ export class ResourceToolbarComponent implements OnInit {
 
   editResourceLabel() {
     this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent)
+      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
+        data: { resource: this.resource.res },
+      })
       .afterClosed()
       .pipe(filter(answer => !!answer))
       .subscribe(answer => {
