@@ -13,8 +13,8 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       <span
         style="display: flex;
     align-items: center;">
-        <ng-container *ngFor="let label of labels$ | async; let last = last"
-          ><span [ngStyle]="{ 'font-weight': last ? 'bold' : 'normal' }">{{ label }}</span>
+        <ng-container *ngFor="let label of labels$ | async; let last = last; let index = index"
+          ><span [ngStyle]="{ 'font-weight': last && index > 0 ? 'bold' : 'normal' }">{{ label }}</span>
           <mat-icon *ngIf="!last">chevron_right</mat-icon>
         </ng-container>
       </span>
