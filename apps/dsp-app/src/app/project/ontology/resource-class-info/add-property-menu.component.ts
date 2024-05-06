@@ -144,6 +144,11 @@ export class AddPropertyMenuComponent {
       },
     };
 
+    const maxGuiOrderProperty = this.resourceClass.propertiesList.reduce(
+      (prev, current) => Math.max(prev, current.guiOrder ?? 0),
+      0
+    );
+
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
       .open<AssignPropertyDialogComponent, AssignPropertyDialogProps>(
@@ -153,6 +158,7 @@ export class AddPropertyMenuComponent {
           lastModificationDate: ontology.lastModificationDate,
           propertyInfo: propertyAssignment.property,
           resClassIri: this.resourceClass.id,
+          maxGuiOrderProperty,
         })
       )
       .afterClosed()

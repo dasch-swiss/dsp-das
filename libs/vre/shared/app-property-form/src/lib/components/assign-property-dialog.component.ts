@@ -12,6 +12,7 @@ export interface AssignPropertyDialogProps {
   lastModificationDate: string;
   propertyInfo: PropertyInfoObject;
   resClassIri?: string;
+  maxGuiOrderProperty: number;
 }
 
 @Component({
@@ -84,7 +85,7 @@ export class AssignPropertyDialogComponent {
       {
         propertyIndex: prop.id,
         cardinality: this.form.controls.cardinality.value,
-        guiOrder: 0, // TODO this.data.guiOrder, // add new property to the end of current list of properties
+        guiOrder: this.data.maxGuiOrderProperty + 1, // TODO this.data.guiOrder, // add new property to the end of current list of properties
       },
     ];
 
