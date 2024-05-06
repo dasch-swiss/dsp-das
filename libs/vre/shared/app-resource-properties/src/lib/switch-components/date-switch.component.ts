@@ -20,7 +20,9 @@ import { IsSwitchComponent } from './is-switch-component.interface';
 
     <ng-template #knoraDateTpl>
       <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
-      {{ knoraDate.day }}.{{ knoraDate.month }}.{{ knoraDate.year }}
+      <span *ngIf="knoraDate.day as knoraDateDay">{{ knoraDateDay }}.</span>
+      <span *ngIf="knoraDate.month as knoraDateMonth">{{ knoraDateMonth }}.</span>
+      {{ knoraDate.year }}
     </ng-template>
 
     <ng-template #editMode>
