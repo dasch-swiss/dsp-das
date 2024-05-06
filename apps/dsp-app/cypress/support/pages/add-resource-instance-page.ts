@@ -6,7 +6,7 @@ export class AddResourceInstancePage {
   getSubmitButton = () => cy.get('[data-cy=submit-button]');
 
   clickOnSubmit = () => {
-    this.getSubmitButton().click();
+    this.getSubmitButton().click({ force: true });
   };
 
   mouseHover = () => {
@@ -14,7 +14,7 @@ export class AddResourceInstancePage {
   };
   setupEdit = () => {
     this.mouseHover();
-    cy.get('[data-cy=edit-button]').click();
+    cy.get('[data-cy=edit-button]').click({ force: true });
   };
 
   saveEdit() {

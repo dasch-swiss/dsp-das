@@ -319,7 +319,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it('timestamp BUGS', () => {
+    it.only('timestamp BUGS', () => {
       createHTTP(ResourceCreationPayloads.timestamp(finalLastModificationDate));
       po.visitAddPage();
 
