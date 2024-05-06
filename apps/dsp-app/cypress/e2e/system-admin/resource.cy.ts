@@ -4,7 +4,7 @@ import { ResourceCreationPayloads } from '../../fixtures/resource-creation-paylo
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
 const lastModificationDate = response => response.body['knora-api:lastModificationDate']['@value'];
-describe.skip('Resource', () => {
+describe('Resource', () => {
   let finalLastModificationDate: string;
   let po: AddResourceInstancePage;
 
@@ -120,7 +120,7 @@ describe.skip('Resource', () => {
       const editedColor = { hex: '#A3B3F3', rgb: 'rgb(163, 179, 243)' };
 
       const enterNewValue = (value: string) => {
-        cy.get('[data-cy=color-picker-input]').click();
+        cy.get('[data-cy=color-picker-input]').click({ force: true });
         cy.get('.color-picker .hex-text .box input').clear().type(value);
       };
 

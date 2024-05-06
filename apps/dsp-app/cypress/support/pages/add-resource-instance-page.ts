@@ -18,7 +18,7 @@ export class AddResourceInstancePage {
   };
 
   saveEdit() {
-    cy.get('[data-cy=save-button]').click();
+    cy.get('[data-cy=save-button]').click({ force: true });
     cy.reload(); // TODO shouldnt reload
   }
 
