@@ -12,7 +12,7 @@ export class UserSelectors {
   }
 
   @Selector([UserState])
-  static usersLoading(state: UserStateModel): boolean | undefined {
+  static usersLoading(state: UserStateModel): boolean {
     return state.usersLoading;
   }
 
