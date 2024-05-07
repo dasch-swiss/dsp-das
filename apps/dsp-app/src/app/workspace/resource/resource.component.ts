@@ -178,18 +178,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
     })
   );
 
-  isEditor$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
   }
@@ -770,7 +758,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   openEditDialog() {
     const dialogRef = this._dialog.open(DialogComponent, {
-      data: { mode: `editResource`, title: this.resource.res.label },
+      data: { mode: 'editResource', title: this.resource.res.label },
     });
     dialogRef.afterClosed().subscribe((answer: ConfirmationWithComment) => {
       if (answer.confirmed === true && this.resource.res.label !== answer.comment) {

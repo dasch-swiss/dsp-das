@@ -69,13 +69,6 @@ export class ProjectService {
     return ProjectService.IsProjectOrSysAdmin(groupsPerProject, userProjectGroups, projectIri);
   }
 
-  static IsProjectMemberOrAdminOrSysAdmin(user: ReadUser, userProjectGroups: string[], projectIri: string): boolean {
-    return (
-      ProjectService.IsProjectMember(user, userProjectGroups, projectIri) ||
-      ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri)
-    );
-  }
-
   static IsProjectOrSysAdmin(
     groupsPerProject: { [key: string]: string[] },
     userProjectGroups: string[],
