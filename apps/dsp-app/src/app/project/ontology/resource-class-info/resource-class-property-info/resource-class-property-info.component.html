@@ -26,32 +26,14 @@
     </div>
     <div class="edit-menu">
       <span class="menu-icon">
-        <mat-icon [matMenuTriggerFor]="classInfoMenu" class="menu-icon-button" (click)="canBeRemovedFromClass()"
+        <mat-icon
+          [matMenuTriggerFor]="classInfoMenu"
+          class="menu-icon-button"
+          (click)="canBeRemovedFromClass()"
+          *ngIf="userCanEdit"
           >more_vert</mat-icon
         >
       </span>
-      <mat-menu #classInfoMenu="matMenu">
-        <div class="remove-menu-wrapper">
-          <button
-            mat-menu-item
-            [disabled]="!propCanBeRemovedFromClass"
-            (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
-            <mat-icon>link_off</mat-icon>
-            <ngx-skeleton-loader
-              *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass === null"
-              count="1"
-              appearance="line"
-              class="skeleton"
-              [theme]="{
-                        'margin-bottom': 0,
-                        'vertical-align': 'middle',
-                        'min-width' : '16em'
-                    }">
-            </ngx-skeleton-loader>
-            <span *ngIf="propCanBeRemovedFromClass !== undefined">remove property from class</span>
-          </button>
-        </div>
-      </mat-menu>
     </div>
   </div>
   <div mat-line class="lower-prop-container">
@@ -77,3 +59,26 @@
     </span>
   </div>
 </div>
+
+<mat-menu #classInfoMenu="matMenu">
+  <div class="remove-menu-wrapper">
+    <button
+      mat-menu-item
+      [disabled]="!propCanBeRemovedFromClass"
+      (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
+      <mat-icon>link_off</mat-icon>
+      <ngx-skeleton-loader
+        *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass === null"
+        count="1"
+        appearance="line"
+        class="skeleton"
+        [theme]="{
+                        'margin-bottom': 0,
+                        'vertical-align': 'middle',
+                        'min-width' : '16em'
+                    }">
+      </ngx-skeleton-loader>
+      <span *ngIf="propCanBeRemovedFromClass !== undefined">remove property from class</span>
+    </button>
+  </div>
+</mat-menu>
