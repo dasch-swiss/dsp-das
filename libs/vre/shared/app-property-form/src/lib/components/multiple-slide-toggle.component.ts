@@ -7,6 +7,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
   template: ` <mat-slide-toggle
     [matTooltip]="'The property in this class can have multiple values'"
     matTooltipPosition="above"
+    [disabled]="disabled"
     [checked]="checked"
     (change)="toggle()">
     {{ label }}
@@ -15,6 +16,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
 export class MultipleSlideToggleComponent {
   @Input({ required: true }) control!: FormControl<Cardinality>;
   @Input() label?: string;
+  @Input() disabled = false;
   @Output() afterCardinalityChange = new EventEmitter<Cardinality>();
   protected readonly Cardinality = Cardinality;
 

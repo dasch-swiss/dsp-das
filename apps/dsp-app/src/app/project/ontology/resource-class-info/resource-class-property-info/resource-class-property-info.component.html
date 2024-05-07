@@ -67,10 +67,12 @@
       <app-multiple-slide-toggle
         [control]="cardinalityControl"
         [label]="'multiple'"
+        [disabled]="!userCanEdit"
         (afterCardinalityChange)="afterCardinalityChange($event)"></app-multiple-slide-toggle>
       <app-required-slide-toggle
         [control]="cardinalityControl"
         [label]="'required'"
+        [disabled]="!userCanEdit"
         (afterCardinalityChange)="afterCardinalityChange($event)"></app-required-slide-toggle>
     </span>
   </div>

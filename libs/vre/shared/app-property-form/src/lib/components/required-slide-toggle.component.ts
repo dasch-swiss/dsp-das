@@ -8,6 +8,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
     <mat-slide-toggle
       [matTooltip]="'The property in this class must have one value'"
       matTooltipPosition="above"
+      [disabled]="disabled"
       [checked]="checked"
       (change)="toggleRequired()">
       {{ label }}
@@ -17,6 +18,7 @@ import { Cardinality } from '@dasch-swiss/dsp-js';
 export class RequiredSlideToggleComponent {
   @Input({ required: true }) control!: FormControl<Cardinality>;
   @Input() label?: string;
+  @Input() disabled = false;
   @Output() afterCardinalityChange = new EventEmitter<Cardinality>();
 
   get checked() {
