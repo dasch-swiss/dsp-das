@@ -64,17 +64,18 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           </div>
         </div>
       </div>
-
-      <button
-        mat-raised-button
-        type="submit"
-        color="primary"
-        appLoadingButton
-        data-cy="submit-button"
-        [isLoading]="loading"
-        (click)="submitData()">
-        {{ 'appLabels.form.action.submit' | translate }}
-      </button>
+      <div class="my-grid" style="display: flex; justify-content: end">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          appLoadingButton
+          data-cy="submit-button"
+          [isLoading]="loading"
+          (click)="submitData()">
+          {{ 'appLabels.form.action.submit' | translate }}
+        </button>
+      </div>
     </form>
 
     <ng-template #loadingTemplate>
@@ -83,6 +84,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   `,
   styles: [
     '.my-row { display: flex; border-bottom: 1px solid rgba(33,33,33,.1)}',
+    '.my-row:last-child { border-bottom: 0}',
     '.my-grid { width: 600px}',
     '.my-grid h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
     '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
