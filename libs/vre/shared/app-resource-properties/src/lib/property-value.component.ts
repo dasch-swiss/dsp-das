@@ -63,7 +63,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class PropertyValueComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
   @Input() index!: number;
-  protected readonly Cardinality = Cardinality;
 
   initialFormValue!: { item: any; comment: string | null };
 
@@ -72,6 +71,8 @@ export class PropertyValueComponent implements OnInit {
   loading = false;
 
   subscription!: Subscription;
+
+  protected readonly Cardinality = Cardinality;
 
   get group() {
     return this.propertyValueService.formArray.at(this.index);
@@ -171,10 +172,14 @@ export class PropertyValueComponent implements OnInit {
       return;
     }
     this.propertyValueService.lastOpenedItem$.subscribe(value => {
-      if (this.propertyValueService.currentlyAdding && this.displayMode === false) {
+      if (this.propertyValueService.currentlyAdding && !this.displayMode) {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
         this.propertyValueService.currentlyAdding = false;
         return;
+      }
+
+      if (value === null) {
+        this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
       }
 
       this.displayMode = this.index !== value;
