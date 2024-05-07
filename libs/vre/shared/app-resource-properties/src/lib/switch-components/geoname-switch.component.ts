@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DisplayPlace, GeonameService } from '../geoname.service';
@@ -15,7 +15,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       <app-geoname-value [control]="control"></app-geoname-value>
     </ng-template>`,
 })
-export class GeonameSwitchComponent implements IsSwitchComponent, OnInit {
+export class GeonameSwitchComponent implements IsSwitchComponent, OnChanges {
   @Input() control!: FormControl<string>;
   @Input() displayMode = true;
 
@@ -23,7 +23,7 @@ export class GeonameSwitchComponent implements IsSwitchComponent, OnInit {
 
   constructor(private _geonameService: GeonameService) {}
 
-  ngOnInit() {
+  ngOnChanges() {
     if (this.displayMode) {
       this.geonameLabel$ = this._geonameService.resolveGeonameID(this.control.value);
     }
