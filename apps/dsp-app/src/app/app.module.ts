@@ -156,7 +156,6 @@ import { ColorPickerComponent } from './workspace/resource/values/color-value/co
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { ThirdPartyIiifComponent } from './workspace/resource/values/third-party-iiif/third-party-iiif.component';
-import { TimeInputComponent } from './workspace/resource/values/time-value/time-input/time-input.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
@@ -268,7 +267,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SystemComponent,
     TextValueHtmlLinkDirective,
     ThirdPartyIiifComponent,
-    TimeInputComponent,
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
