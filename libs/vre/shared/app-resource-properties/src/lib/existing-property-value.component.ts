@@ -2,22 +2,19 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { filter } from 'rxjs/operators';
 import { FormValueArray } from './form-value-array.type';
-import { ResourceClassIriService } from './resource-class-iri.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-existing-property-value',
   template: `
     <app-property-value-switcher
-      *ngIf="resourceClassIri$ | async as resClassIri"
+      *ngIf="resource.type"
       [myProperty]="prop"
       [formArray]="formArray"
-      [resourceClassIri]="resClassIri"
+      [resourceClassIri]="resource.type"
       [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>
   `,
-  providers: [ResourceClassIriService],
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class ExistingPropertyValueComponent implements OnChanges {
@@ -26,14 +23,7 @@ export class ExistingPropertyValueComponent implements OnChanges {
 
   formArray!: FormValueArray;
 
-  constructor(
-    private _fb: FormBuilder,
-    public resourceClassIriService: ResourceClassIriService
-  ) {}
-
-  resourceClassIri$ = this.resourceClassIriService.resourceClassIriFromParamSubject
-    .asObservable()
-    .pipe(filter(v => v !== null));
+  constructor(private _fb: FormBuilder) {}
 
   ngOnChanges() {
     this.formArray = this._fb.array(
