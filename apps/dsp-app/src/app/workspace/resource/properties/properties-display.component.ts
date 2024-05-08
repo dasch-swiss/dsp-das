@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Cardinality, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -44,9 +44,7 @@ import { RepresentationConstants } from '../representation/file-representation';
                 prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
               }}
             </h3>
-            <div style="flex: 1">
-              <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
-            </div>
+            <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
           </div>
         </div>
       </ng-container>
@@ -82,6 +80,7 @@ import { RepresentationConstants } from '../representation/file-representation';
         padding-right: 24px;
         flex-shrink: 0;
       }
+
       .infobar {
         text-align: right;
         padding-right: 6px;
@@ -90,7 +89,7 @@ import { RepresentationConstants } from '../representation/file-representation';
   ],
   providers: [PropertiesDisplayService],
 })
-export class PropertiesDisplayComponent implements OnChanges {
+export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input({ required: true }) resource!: DspResource;
