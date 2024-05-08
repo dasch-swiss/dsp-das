@@ -26,6 +26,7 @@ import {
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { DateTime } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { Subject } from 'rxjs';
 import { ValueErrorStateMatcher } from '../../value-error-state-matcher';
 
@@ -55,17 +56,6 @@ class MatInputBase {
 }
 
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
-
-export class DateTime {
-  /**
-   * @param date DateTime's date.
-   * @param time DateTime's time.
-   */
-  constructor(
-    public date: GregorianCalendarDate,
-    public time: string
-  ) {}
-}
 
 @Component({
   selector: 'app-time-input',

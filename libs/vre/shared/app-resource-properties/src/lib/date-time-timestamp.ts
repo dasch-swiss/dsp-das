@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
-import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input.component';
+import { DateTime } from './date-time';
 
 function userInputToTimestamp(userInput: DateTime): string {
   const splitTime = userInput.time.split(':');

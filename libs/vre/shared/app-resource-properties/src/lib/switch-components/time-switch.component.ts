@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input.component';
+import { DateTime } from '../date-time';
 import { dateTimeTimestamp } from '../date-time-timestamp';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
@@ -11,7 +11,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       <div>Time: {{ test | date: 'HH:mm' }}</div>
     </ng-container>
     <ng-template #editMode>
-      <app-time-input-2 [control]="control"></app-time-input-2>
+      <app-time-value [control]="control"></app-time-value>
     </ng-template>`,
 })
 export class TimeSwitchComponent implements IsSwitchComponent {

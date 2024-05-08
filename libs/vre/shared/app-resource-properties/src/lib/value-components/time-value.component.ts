@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
-import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input.component';
+import { DateTime } from './time-value.component';
 
 @Component({
-  selector: 'app-time-input-2',
+  selector: 'app-time-value',
   template: `
     <div style="display: flex; gap: 8px">
       <app-jdn-datepicker [activeCalendar]="'Gregorian'">
@@ -35,7 +35,7 @@ import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/
     </div>
   `,
 })
-export class TimeInput2Component {
+export class TimeValueComponent {
   @Input({ required: true }) control!: FormControl<DateTime>;
 
   editTime(newValue: string) {

@@ -35,7 +35,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { TimeInput2Component } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input-2.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -270,7 +269,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TextValueHtmlLinkDirective,
     ThirdPartyIiifComponent,
     TimeInputComponent,
-    TimeInput2Component,
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
