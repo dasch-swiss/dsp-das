@@ -115,7 +115,13 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.TextValue,
     {
-      control: (value?: ReadTextValue) => new FormControl(value?.strval),
+      control: (value?: ReadTextValue) => {
+        if (!value) return new FormControl(null);
+
+        const pattern = /<\?xml version="1\.0" encoding="UTF-8"\?>\n<text>(.*)<\/text>/;
+        const match = value.strval!.match(pattern);
+        return new FormControl(match ? match[1] : value.strval);
+      },
 
       mapping: (value: string, propertyDefinition: ResourcePropertyDefinition) => {
         switch (propertyDefinition.guiElement) {
