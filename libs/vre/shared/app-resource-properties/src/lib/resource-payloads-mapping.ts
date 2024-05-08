@@ -47,7 +47,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { DateTime } from '@dsp-app/src/app/workspace/resource/values/time-value/time-input/time-input.component';
+import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
 import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
