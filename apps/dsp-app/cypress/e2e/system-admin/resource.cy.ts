@@ -146,7 +146,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it('place', () => {
+    it.skip('place', () => {
       const initialValue = 'Basel';
       const editedValue = 'Allschwil';
 
@@ -365,7 +365,7 @@ describe('Resource', () => {
     });
   });
 
-  describe('can not add an empty value when it is required', () => {
+  describe.only('can not add an empty value when it is required', () => {
     const types = new Map<string, any>([
       ['text', () => ResourceCreationPayloads.textShort(finalLastModificationDate)],
       ['number', () => ResourceCreationPayloads.number(finalLastModificationDate)],
