@@ -22,7 +22,16 @@ export class SegmentApiService {
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  create() {
+  create(
+    resourceIri: string,
+    label: string,
+    start: number,
+    end: number,
+    comment?: string,
+    title?: string,
+    description?: string,
+    keyword?: string
+  ) {
     const bearerToken = this._accessTokenService.getAccessToken();
     const headerOptions = {
       headers: new HttpHeaders({
@@ -35,43 +44,59 @@ export class SegmentApiService {
       'http://0.0.0.0:3333/v2/resources',
       {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#VideoSegment',
-        'http://www.w3.org/2000/01/rdf-schema#label': 'segment',
+        'http://www.w3.org/2000/01/rdf-schema#label': label,
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
           '@id': 'http://rdfh.ch/projects/0803',
         },
         'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
           'http://api.knora.org/ontology/knora-api/v2#linkValueHasTargetIri': {
-            '@id': 'http://rdfh.ch/0803/O5J50GVGTZ2W4ZyC5ZM5HQ',
+            '@id': resourceIri,
           },
         },
         'http://api.knora.org/ontology/knora-api/v2#hasSegmentBounds': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#IntervalValue',
           'http://api.knora.org/ontology/knora-api/v2#intervalValueHasStart': {
-            '@value': '0.0',
+            '@value': start.toString(),
             '@type': 'http://www.w3.org/2001/XMLSchema#decimal',
           },
           'http://api.knora.org/ontology/knora-api/v2#intervalValueHasEnd': {
-            '@value': '10.0',
+            '@value': end.toString(),
             '@type': 'http://www.w3.org/2001/XMLSchema#decimal',
           },
         },
-        'http://api.knora.org/ontology/knora-api/v2#hasComment': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'COMMENT',
-        },
-        'http://api.knora.org/ontology/knora-api/v2#hasTitle': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'title',
-        },
-        'http://api.knora.org/ontology/knora-api/v2#hasDescription': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'description',
-        },
-        'http://api.knora.org/ontology/knora-api/v2#hasKeyword': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'keyword',
-        },
+        ...(comment
+          ? {
+              'http://api.knora.org/ontology/knora-api/v2#hasComment': {
+                '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+                'http://api.knora.org/ontology/knora-api/v2#valueAsString': comment,
+              },
+            }
+          : {}),
+        ...(title
+          ? {
+              'http://api.knora.org/ontology/knora-api/v2#hasTitle': {
+                '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+                'http://api.knora.org/ontology/knora-api/v2#valueAsString': title,
+              },
+            }
+          : {}),
+        ...(description
+          ? {
+              'http://api.knora.org/ontology/knora-api/v2#hasDescription': {
+                '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+                'http://api.knora.org/ontology/knora-api/v2#valueAsString': description,
+              },
+            }
+          : {}),
+        ...(keyword
+          ? {
+              'http://api.knora.org/ontology/knora-api/v2#hasKeyword': {
+                '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+                'http://api.knora.org/ontology/knora-api/v2#valueAsString': keyword,
+              },
+            }
+          : {}),
       },
       headerOptions
     );

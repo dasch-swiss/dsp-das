@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateSegmentDialogComponent } from './create-segment-dialog.component';
 import { Segment } from './segment';
 import { SegmentApiService } from './segment-api.service';
 
@@ -10,10 +12,18 @@ import { SegmentApiService } from './segment-api.service';
 export class SegmentsComponent {
   segments: Segment[] = [];
 
-  constructor(private _segmentApi: SegmentApiService) {}
+  constructor(
+    private _segmentApi: SegmentApiService,
+    private _dialog: MatDialog
+  ) {}
 
   add() {
-    this._segmentApi.create().subscribe();
+    this._dialog
+      .open(CreateSegmentDialogComponent)
+      .afterClosed()
+      .subscribe(() => {
+        this.getVideoSegment();
+      });
   }
 
   getVideoSegment() {
