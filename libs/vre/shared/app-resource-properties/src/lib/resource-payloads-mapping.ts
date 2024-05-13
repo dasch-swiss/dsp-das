@@ -126,6 +126,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
       mapping: (value: string, propertyDefinition: ResourcePropertyDefinition) => {
         switch (propertyDefinition.guiElement) {
           case Constants.GuiSimpleText:
+          case Constants.GuiTextarea:
             const newTextValue = new CreateTextValueAsString();
             newTextValue.text = value;
             return newTextValue;
