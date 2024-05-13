@@ -1,8 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import {
+  KnoraApiConnection,
+  ReadIntervalValue,
+  ReadResourceSequence,
+  ReadTextValueAsString,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
+import { map } from 'rxjs/operators';
+import { Segment } from './segment';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +77,7 @@ export class SegmentApiService {
     );
   }
 
-  getSegment(resourceIri: string) {
+  getVideoSegment(resourceIri: string) {
     const payload = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -111,17 +118,30 @@ CONSTRUCT {
 OFFSET 0
 `;
 
-    return this._dspApiConnection.v2.search.doExtendedSearch(payload);
-  }
+    return this._dspApiConnection.v2.search.doExtendedSearch(payload).pipe(
+      map(value => {
+        const endpoint = 'http://api.knora.org/ontology/knora-api/v2#';
 
-  private _auth() {
-    const bearerToken = this._accessTokenService.getAccessToken();
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/sparql-query; charset=UTF-8',
-        Accept: '*/*',
-        Authorization: `Bearer ${bearerToken}`,
-      }),
-    };
+        return (value as ReadResourceSequence).resources.map(resource => {
+          const data = {
+            hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
+            hasVideoSegmentOfValue: resource.properties[`${endpoint}hasVideoSegmentOfValue`] as
+              | ReadTextValueAsString[]
+              | undefined,
+            hasComment: resource.properties[`${endpoint}hasComment`] as ReadTextValueAsString[] | undefined,
+            hasDescription: resource.properties[`${endpoint}hasDescription`] as ReadTextValueAsString[] | undefined,
+            hasKeyword: resource.properties[`${endpoint}hasKeyword`] as ReadTextValueAsString[] | undefined,
+            hasTitle: resource.properties[`${endpoint}hasTitle`] as ReadTextValueAsString[] | undefined,
+          };
+
+          const mappedObject = Object.entries(data).reduce((acc, [key, value_]) => {
+            acc[key] = value_ !== undefined ? value_![0] : undefined;
+            return acc;
+          }, {});
+
+          return { ...mappedObject, label: resource.label } as Segment;
+        });
+      })
+    );
   }
 }
