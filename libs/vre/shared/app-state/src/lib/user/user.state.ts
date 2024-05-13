@@ -23,6 +23,7 @@ const defaults = <UserStateModel>{
   userProjectAdminGroups: [],
   isMemberOfSystemAdminGroup: false,
   allUsers: [],
+  usersLoading: false,
 };
 
 @State<UserStateModel>({
@@ -119,14 +120,14 @@ export class UserState {
 
   @Action(LoadUsersAction)
   loadUsersAction(ctx: StateContext<UserStateModel>): LoadUsersAction {
-    ctx.patchState({ isLoading: true });
+    ctx.patchState({ usersLoading: true });
     return this._userApiService.list().pipe(
       take(1),
       tap({
         next: response => {
           ctx.setState({
             ...ctx.getState(),
-            isLoading: false,
+            usersLoading: false,
             allUsers: response.users,
           });
         },
@@ -172,6 +173,7 @@ export class UserState {
           }
           if ((<ReadUser>state.user).id === response.user.id) {
             state.user = response.user;
+            ctx.dispatch([new SetProjectMemberAction(state.user)]);
           }
 
           state.isLoading = false;
