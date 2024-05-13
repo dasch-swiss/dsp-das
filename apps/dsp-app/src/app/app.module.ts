@@ -29,6 +29,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   HumanReadableErrorPipe,
@@ -173,6 +174,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
+    ...SegmentSupportComponents,
     PropertiesDisplayComponent,
     AccountComponent,
     ActionBubbleComponent,

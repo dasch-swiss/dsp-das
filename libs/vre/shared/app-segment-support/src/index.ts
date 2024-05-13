@@ -1,1 +1,2 @@
-export * from './lib/vre-shared-app-segment-support.module';
+export * from './lib/create-segment-dialog.component';
+export * from './lib/segment-support.components';
