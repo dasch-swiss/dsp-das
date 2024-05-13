@@ -14,6 +14,6 @@ export class SegmentsComponent {
   }
 
   getSegment() {
-    this._segmentApi.getSegment().subscribe();
+    this._segmentApi.getSegment('http://rdfh.ch/0803/O5J50GVGTZ2W4ZyC5ZM5HQ').subscribe();
   }
 }

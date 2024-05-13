@@ -1,44 +1,41 @@
-POST http://0.0.0.0:3333/v2/resources
+POST http://0.0.0.0:3333/v2/searchextended
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwLjAuMC4wOjMzMzMiLCJzdWIiOiJodHRwOi8vcmRmaC5jaC91c2Vycy9yb290IiwiYXVkIjpbIktub3JhIiwiU2lwaSIsImh0dHA6Ly9sb2NhbGhvc3Q6MzM0MCJdLCJleHAiOjE3MTgxOTI2NDYsImlhdCI6MTcxNTYwMDY0NiwianRpIjoiR1RNZHd6c09SOTZ4alByV214OVM4QSIsInNjb3BlIjoiYWRtaW4ifQ.d--poDh_Jk6WkS0rkLjRERA8at56e2ttfMeCr8AOHV8
-Content-Type: application/json
-
+Content-Type: application/ld+json
 {
-    "@type": "http://api.knora.org/ontology/knora-api/v2#VideoSegment",
-    "http://www.w3.org/2000/01/rdf-schema#label": "segment",
-    "http://api.knora.org/ontology/knora-api/v2#attachedToProject": {
-        "@id": "http://rdfh.ch/projects/0803"
-    },
-    "http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#LinkValue",
-        "http://api.knora.org/ontology/knora-api/v2#linkValueHasTargetIri": {
-            "@id": "http://rdfh.ch/0803/O5J50GVGTZ2W4ZyC5ZM5HQ"
-        }
-    },
-    "http://api.knora.org/ontology/knora-api/v2#hasSegmentBounds": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#IntervalValue",
-        "http://api.knora.org/ontology/knora-api/v2#intervalValueHasStart": {
-            "@value": "0.0",
-            "@type": "http://www.w3.org/2001/XMLSchema#decimal"
-        },
-        "http://api.knora.org/ontology/knora-api/v2#intervalValueHasEnd": {
-            "@value": "10.0",
-            "@type": "http://www.w3.org/2001/XMLSchema#decimal"
-        }
-    },
-    "http://api.knora.org/ontology/knora-api/v2#hasComment": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "http://api.knora.org/ontology/knora-api/v2#valueAsString": "COMMENT"
-    },
-    "http://api.knora.org/ontology/knora-api/v2#hasTitle": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "http://api.knora.org/ontology/knora-api/v2#valueAsString": "title"
-    },
-    "http://api.knora.org/ontology/knora-api/v2#hasDescription": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "http://api.knora.org/ontology/knora-api/v2#valueAsString": "description"
-    },
-    "http://api.knora.org/ontology/knora-api/v2#hasKeyword": {
-        "@type": "http://api.knora.org/ontology/knora-api/v2#TextValue",
-        "http://api.knora.org/ontology/knora-api/v2#valueAsString": "keyword"
-    }
+"query: "
+PREFIX knora-api: <http: //api.knora.org/ontology/knora-api/simple/v2#>
+
+CONSTRUCT {
+    ?region knora-api: isMainResource true .
+
+?region knora-api: hasGeometry ?geom .
+
+?region knora-api: hasComment ?comment .
+
+?region knora-api: hasColor ?color .
+} WHERE {
+?region a knora-api: Region .
+?region a knora-api: Resource .
+
+?region knora-api: isRegionOf <http: //rdfh.ch/0803/LOlCo2nGRxyF-nD4fWeQ_w> .
+knora-api: isRegionOf knora-api: objectType knora-api: Resource .
+
+<http: //rdfh.ch/0803/LOlCo2nGRxyF-nD4fWeQ_w> a knora-api:Resource .
+
+?region knora-api: hasGeometry ?geom .
+knora-api: hasGeometry knora-api: objectType knora-api: Geom .
+
+?geom a knora-api: Geom .
+
+OPTIONAL {
+?region knora-api: hasComment ?comment .
+knora-api: hasComment knora-api: objectType xsd: string .
+?comment a xsd: string .
 }
+
+?region knora-api: hasColor ?color .
+knora-api: hasColor knora-api: objectType knora-api: Color .
+
+?color a knora-api: Color .
+} OFFSET 0
+"}

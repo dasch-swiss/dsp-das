@@ -70,37 +70,44 @@ export class SegmentApiService {
     );
   }
 
-  getSegment() {
+  getSegment(resourceIri: string) {
     const payload = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
 
 CONSTRUCT {
-?page knora-api:isMainResource true .
-
-?page knora-api:seqnum ?seqnum .
-
-?page knora-api:hasStillImageFile ?file .
+  ?segment knora-api:isMainResource true .
+  ?segment knora-api:isVideoSegmentOf <${resourceIri}> .
+  ?segment knora-api:hasSegmentBounds ?bounds .
+  ?segment knora-api:hasTitle ?title .
+  ?segment knora-api:hasDescription ?description .
+  ?segment knora-api:hasKeyword ?keyword .
+  ?segment knora-api:hasComment ?comment .
+  ?segment knora-api:relatesTo ?relatesTo .
 } WHERE {
+  <${resourceIri}> a knora-api:MovingImageRepresentation .
+  ?segment knora-api:isVideoSegmentOf <${resourceIri}> .
+  ?segment rdfs:label ?label .
+  ?segment knora-api:hasSegmentBounds ?bounds
 
-?page a knora-api:StillImageRepresentation .
-?page a knora-api:Resource .
+  OPTIONAL {
+    ?segment knora-api:hasTitle ?title .
+  }
+  OPTIONAL {
+    ?segment knora-api:hasDescription ?description .
+  }
+  OPTIONAL {
+    ?segment knora-api:hasKeyword ?keyword .
+  }
+  OPTIONAL {
+    ?segment knora-api:hasComment ?comment .
+  }
+   OPTIONAL {
+    ?segment knora-api:relatesTo ?relatesTo .
+  }
 
-?page knora-api:isPartOf <http://rdfh.ch/0801/--rbZIzLTNC4qrcpAAkjwA> .
-knora-api:isPartOf knora-api:objectType knora-api:Resource .
-
-<http://rdfh.ch/0801/--rbZIzLTNC4qrcpAAkjwA> a knora-api:Resource .
-
-?page knora-api:seqnum ?seqnum .
-knora-api:seqnum knora-api:objectType xsd:integer .
-
-?seqnum a xsd:integer .
-
-?page knora-api:hasStillImageFile ?file .
-knora-api:hasStillImageFile knora-api:objectType knora-api:File .
-
-?file a knora-api:File .
-
-} ORDER BY ?seqnum
+}
 OFFSET 0
 `;
 
