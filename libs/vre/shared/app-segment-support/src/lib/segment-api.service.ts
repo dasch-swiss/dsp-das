@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 
 @Injectable({
@@ -8,12 +10,14 @@ import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 export class SegmentApiService {
   constructor(
     private _http: HttpClient,
-    private _accessTokenService: AccessTokenService
+    private _accessTokenService: AccessTokenService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   create() {
     const bearerToken = this._accessTokenService.getAccessToken();
-    const httpOptions = {
+    const headerOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${bearerToken}`,
@@ -62,7 +66,55 @@ export class SegmentApiService {
           'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'keyword',
         },
       },
-      httpOptions
+      headerOptions
     );
+  }
+
+  getSegment() {
+    const payload = `
+PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
+
+CONSTRUCT {
+?page knora-api:isMainResource true .
+
+?page knora-api:seqnum ?seqnum .
+
+?page knora-api:hasStillImageFile ?file .
+} WHERE {
+
+?page a knora-api:StillImageRepresentation .
+?page a knora-api:Resource .
+
+?page knora-api:isPartOf <http://rdfh.ch/0801/--rbZIzLTNC4qrcpAAkjwA> .
+knora-api:isPartOf knora-api:objectType knora-api:Resource .
+
+<http://rdfh.ch/0801/--rbZIzLTNC4qrcpAAkjwA> a knora-api:Resource .
+
+?page knora-api:seqnum ?seqnum .
+knora-api:seqnum knora-api:objectType xsd:integer .
+
+?seqnum a xsd:integer .
+
+?page knora-api:hasStillImageFile ?file .
+knora-api:hasStillImageFile knora-api:objectType knora-api:File .
+
+?file a knora-api:File .
+
+} ORDER BY ?seqnum
+OFFSET 0
+`;
+
+    return this._dspApiConnection.v2.search.doExtendedSearch(payload);
+  }
+
+  private _auth() {
+    const bearerToken = this._accessTokenService.getAccessToken();
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/sparql-query; charset=UTF-8',
+        Accept: '*/*',
+        Authorization: `Bearer ${bearerToken}`,
+      }),
+    };
   }
 }
