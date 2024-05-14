@@ -1,4 +1,5 @@
 import { Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteResource, DeleteResourceResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -12,21 +13,36 @@ export interface EraseResourceDialogProps {
 @Component({
   selector: 'app-erase-resource-dialog',
   template: ` <app-dialog-header
-      title="Do you want to erase this resource forever ?"
+      title="Do you want to erase this resource forever?"
       [subtitle]="'Erase resource instance'"></app-dialog-header>
-    <mat-dialog-content class="form-content">
-      <br />WARNING: This action cannot be undone, so use it with care.
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
-      <span class="fill-remaining-space"></span>
-      <button mat-button mat-raised-button [color]="'warn'" class="confirm-button center" (click)="submit()">
-        Yes, erase
-      </button>
-    </mat-dialog-actions>`,
+    <mat-dialog-content>
+      <div style="margin-bottom: 8px">WARNING: This action cannot be undone, so use it with care.</div>
+      <form [formGroup]="eraseForm" (ngSubmit)="submit()">
+        <mat-form-field style="width: 100%">
+          <mat-label>Reason</mat-label>
+          <textarea matInput rows="4" formControlName="comment"></textarea>
+          <mat-error *ngIf="eraseForm.get('comment').hasError('required')">Reason is required</mat-error>
+        </mat-form-field>
+      </form>
+      <mat-dialog-actions>
+        <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
+        <span class="fill-remaining-space"></span>
+        <button
+          [disabled]="eraseForm.invalid"
+          mat-button
+          mat-raised-button
+          [color]="'warn'"
+          class="confirm-button center"
+          (click)="submit()">
+          Yes, erase
+        </button>
+      </mat-dialog-actions>
+    </mat-dialog-content>`,
 })
 export class EraseResourceDialogComponent {
-  comment: string | undefined;
+  eraseForm: FormGroup = new FormGroup({
+    comment: new FormControl('', [Validators.required]),
+  });
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -40,7 +56,7 @@ export class EraseResourceDialogComponent {
     const payload = new DeleteResource();
     payload.id = this.data.resource.res.id;
     payload.type = this.data.resource.res.type;
-    payload.deleteComment = this.comment ?? '';
+    payload.deleteComment = this.eraseForm.get('comment')?.value;
     payload.lastModificationDate = this.data.lastModificationDate;
 
     this._dspApiConnection.v2.res.eraseResource(payload).subscribe(response => {
