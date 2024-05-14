@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IncomingLink } from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
+import { IncomingLink } from './incoming-link.interface';
 
 @Component({
   selector: 'app-incoming-link-value',

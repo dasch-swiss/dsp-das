@@ -44,3 +44,5 @@ export * from './lib/date-time';
 export * from './lib/incoming-link-value.component';
 export * from './lib/standoff-link-value.component';
 export * from './lib/property-row.component';
+export * from './lib/incoming-link.interface';
+export * from './lib/incoming.service';

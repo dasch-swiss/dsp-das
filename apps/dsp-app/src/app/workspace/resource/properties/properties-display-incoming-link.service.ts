@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingService } from '@dsp-app/src/app/workspace/resource/services/incoming.service';
+import { IncomingLink, IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export interface IncomingLink {
-  label: string;
-  uri: string;
-  project: string;
-}
 
 @Injectable()
 export class PropertiesDisplayIncomingLinkService {

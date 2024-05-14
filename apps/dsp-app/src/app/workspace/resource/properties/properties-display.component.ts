@@ -1,15 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ReadUser, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { IncomingLink, PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  IncomingLink,
-  PropertiesDisplayIncomingLinkService,
-} from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
 import { Store } from '@ngxs/store';
 import { Observable, of, Subject } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 
 @Component({
   selector: 'app-properties-display',
