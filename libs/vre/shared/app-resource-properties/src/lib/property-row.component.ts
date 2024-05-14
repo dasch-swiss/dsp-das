@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-property-row',
   template: ` <div [class.border-bottom]="borderBottom" style="display: flex; padding: 8px 0;">
     <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
-    <div>
+    <div style="flex: 1">
       <ng-content></ng-content>
     </div>
   </div>`,
