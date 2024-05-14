@@ -10,7 +10,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
-import { Constants, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import {
+  Constants,
+  ReadResource,
+  ReadTextValueAsHtml,
+  ReadTextValueAsString,
+  ReadTextValueAsXml,
+  ReadValue,
+} from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
@@ -68,6 +75,18 @@ import { PropertyValueService } from './property-value.service';
       <app-text-switch [control]="item" [displayMode]="displayMode"></app-text-switch>
     </ng-template>
 
+    <ng-template #textHtmlTpl let-item="item" let-displayMode="displayMode">
+      <app-text-html-switch [control]="item" [displayMode]="displayMode"></app-text-html-switch>
+    </ng-template>
+
+    <ng-template #paragraphTpl let-item="item" let-displayMode="displayMode">
+      <app-base-switch [control]="item" [displayMode]="displayMode" style="white-space: pre-line">
+        <mat-form-field style="width: 100%">
+          <textarea matInput [formControl]="item" rows="9" placeholder="Text value"></textarea>
+        </mat-form-field>
+      </app-base-switch>
+    </ng-template>
+
     <ng-template #dateTpl let-item="item" let-displayMode="displayMode">
       <app-date-switch [control]="item" [displayMode]="displayMode"></app-date-switch>
     </ng-template>
@@ -114,10 +133,6 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
 
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
-  get property() {
-    return this.myProperty.guiDef;
-  }
-
   get cardinality() {
     return this.myProperty.guiDef.cardinality;
   }
@@ -131,6 +146,8 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
   @ViewChild('booleanTpl') booleanTpl!: TemplateRef<any>;
   @ViewChild('colorTpl') colorTpl!: TemplateRef<any>;
   @ViewChild('textTpl') textTpl!: TemplateRef<any>;
+  @ViewChild('textHtmlTpl') textHtmlTpl!: TemplateRef<any>;
+  @ViewChild('paragraphTpl') paragraphTpl!: TemplateRef<any>;
   @ViewChild('richTextTpl') richTextTpl!: TemplateRef<any>;
   @ViewChild('dateTpl') dateTpl!: TemplateRef<any>;
   @ViewChild('timeTpl') timeTpl!: TemplateRef<any>;
@@ -182,10 +199,7 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
       case Constants.ColorValue:
         return this.colorTpl;
       case Constants.TextValue:
-        if (this.propertyDefinition.guiElement === Constants.GuiRichText) {
-          return this.richTextTpl;
-        }
-        return this.textTpl;
+        return this._manageTextValue();
       case Constants.DateValue:
         return this.dateTpl;
       case Constants.TimeValue:
@@ -203,6 +217,39 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
       default: {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
+    }
+  }
+
+  private _manageTextValue() {
+    if (this.myProperty.values.length === 0) {
+      return this._defaultTextBehavior();
+    }
+
+    const value = this.myProperty.values[0] as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
+
+    if (value instanceof ReadTextValueAsString) {
+      return this._defaultTextBehavior();
+    }
+
+    if (value instanceof ReadTextValueAsXml && value.mapping === Constants.StandardMapping) {
+      return this.richTextTpl;
+    }
+
+    if (value instanceof ReadTextValueAsHtml) {
+      return this.textHtmlTpl;
+    }
+
+    throw new Error('The text value is not supported');
+  }
+
+  private _defaultTextBehavior() {
+    switch (this.propertyDefinition.guiElement) {
+      case Constants.GuiRichText:
+        return this.richTextTpl;
+      case Constants.GuiTextarea:
+        return this.paragraphTpl;
+      default:
+        return this.textTpl;
     }
   }
 }
