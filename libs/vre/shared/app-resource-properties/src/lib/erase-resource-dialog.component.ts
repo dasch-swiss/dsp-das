@@ -12,35 +12,37 @@ export interface EraseResourceDialogProps {
 
 @Component({
   selector: 'app-erase-resource-dialog',
-  template: ` <app-dialog-header
+  template: `
+    <app-dialog-header
       title="Do you want to erase this resource forever?"
       [subtitle]="'Erase resource instance'"></app-dialog-header>
+
     <mat-dialog-content>
       <div style="margin-bottom: 8px">WARNING: This action cannot be undone, so use it with care.</div>
-      <form [formGroup]="eraseForm" (ngSubmit)="submit()">
-        <mat-form-field style="width: 100%">
-          <mat-label>Reason</mat-label>
-          <textarea matInput rows="4" formControlName="comment"></textarea>
-          <mat-error *ngIf="eraseForm.get('comment').hasError('required')">Reason is required</mat-error>
-        </mat-form-field>
-      </form>
-      <mat-dialog-actions>
-        <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
-        <span class="fill-remaining-space"></span>
-        <button
-          [disabled]="eraseForm.invalid"
-          mat-button
-          mat-raised-button
-          [color]="'warn'"
-          class="confirm-button center"
-          (click)="submit()">
-          Yes, erase
-        </button>
-      </mat-dialog-actions>
-    </mat-dialog-content>`,
+      <mat-form-field style="width: 100%">
+        <mat-label>Reason</mat-label>
+        <textarea matInput rows="4" [formControl]="eraseForm.controls.comment"></textarea>
+        <mat-error *ngIf="eraseForm.controls.comment.errors as errors"> {{ errors | humanReadableError }}</mat-error>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
+      <span class="fill-remaining-space"></span>
+      <button
+        [disabled]="eraseForm.invalid"
+        mat-button
+        mat-raised-button
+        [color]="'warn'"
+        class="confirm-button center"
+        (click)="submit()">
+        Yes, erase
+      </button>
+    </mat-dialog-actions>
+  `,
 })
 export class EraseResourceDialogComponent {
-  eraseForm: FormGroup = new FormGroup({
+  eraseForm = new FormGroup({
     comment: new FormControl('', [Validators.required]),
   });
 
