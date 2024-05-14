@@ -22,7 +22,7 @@ export interface EraseResourceDialogProps {
       <mat-form-field style="width: 100%">
         <mat-label>Reason</mat-label>
         <textarea matInput rows="4" [formControl]="eraseForm.controls.comment"></textarea>
-        <mat-error *ngIf="eraseForm.controls.comment.errors as errors"> {{ errors | humanReadableError }}</mat-error>
+        <mat-error *ngIf="eraseForm.controls.comment.errors as errors"> {{ errors | humanReadableError }} </mat-error>
       </mat-form-field>
     </mat-dialog-content>
 
@@ -58,7 +58,7 @@ export class EraseResourceDialogComponent {
     const payload = new DeleteResource();
     payload.id = this.data.resource.res.id;
     payload.type = this.data.resource.res.type;
-    payload.deleteComment = this.eraseForm.get('comment')?.value;
+    payload.deleteComment = this.eraseForm.controls.comment.value ?? '';
     payload.lastModificationDate = this.data.lastModificationDate;
 
     this._dspApiConnection.v2.res.eraseResource(payload).subscribe(response => {
