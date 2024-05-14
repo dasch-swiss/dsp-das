@@ -3,10 +3,13 @@ import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+  IncomingLink,
+  PropertiesDisplayIncomingLinkService,
+} from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
 import { Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { RepresentationConstants } from '../representation/file-representation';
 
 @Component({
   selector: 'app-properties-display',
@@ -49,6 +52,17 @@ import { RepresentationConstants } from '../representation/file-representation';
         </div>
       </ng-container>
     </ng-container>
+    <h1>Incoming</h1>
+    <div
+      *ngFor="let res of incomingLinks$ | async; let last = last"
+      [class.border-bottom]="!last"
+      style="display: flex; padding: 8px 0;">
+      <h3 class="label mat-subtitle-2" matTooltip="Incoming link" matTooltipPosition="above">Incoming Link</h3>
+      <div>{{ res.label }}</div>
+      <div>{{ res.uri }}</div>
+      <div>{{ res.project }}</div>
+    </div>
+    <h1>End Incoming</h1>
 
     <ng-template #noProperties>
       <div *ngIf="resource.res.isDeleted; else noDefinedProperties">
@@ -87,7 +101,7 @@ import { RepresentationConstants } from '../representation/file-representation';
       }
     `,
   ],
-  providers: [PropertiesDisplayService],
+  providers: [PropertiesDisplayService, PropertiesDisplayIncomingLinkService],
 })
 export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -101,14 +115,17 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
   );
   myProperties$!: Observable<PropertyInfoValues[]>;
+  incomingLinks$: Observable<IncomingLink[]>;
 
   constructor(
     private _propertiesDisplayService: PropertiesDisplayService,
+    private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService,
     private _store: Store
   ) {}
 
   ngOnChanges() {
     this._setupProperties();
+    this.incomingLinks$ = this._propertiesDisplayIncomingLink.getIncomingLinks$(this.resource.res.id, 0);
   }
 
   ngOnDestroy() {
@@ -118,16 +135,12 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   private _setupProperties() {
     this.myProperties$ = this._propertiesDisplayService.showAllProperties$.pipe(
-      map(showAllProps => PropertiesDisplayComponent.getMyProperties(showAllProps, this.properties))
+      map(showAllProps =>
+        this.properties.filter(prop => {
+          return showAllProps || (prop.values && prop.values.length > 0);
+        })
+      )
     );
-  }
-
-  static getMyProperties(showAllProperties: boolean, properties: PropertyInfoValues[]) {
-    const representationConstants = RepresentationConstants;
-
-    return properties.filter(prop => {
-      return showAllProperties || (prop.values && prop.values.length > 0);
-    });
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
