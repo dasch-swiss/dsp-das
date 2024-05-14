@@ -3,10 +3,13 @@ import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { PropertiesDisplayIncomingLinkService } from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
+import {
+  IncomingLink,
+  PropertiesDisplayIncomingLinkService,
+} from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
 import { Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-properties-display',
@@ -51,15 +54,24 @@ import { map, takeUntil } from 'rxjs/operators';
     </ng-container>
 
     <!-- incoming link -->
-    <app-property-row
-      tooltip="Indicates that this resource is referred to by another resource"
-      label="has incoming link"
-      [borderBottom]="true">
-      <app-incoming-link-value [resourceId]="resource.res.id"></app-incoming-link-value>
-    </app-property-row>
+    <ng-container *ngIf="showIncomingLinks$ | async">
+      <app-property-row
+        *ngIf="incomingLinks$ | async as incomingLinks"
+        tooltip="Indicates that this resource is referred to by another resource"
+        label="has incoming link"
+        [borderBottom]="true">
+        <app-incoming-link-value [incomingLinks]="incomingLinks"></app-incoming-link-value>
+      </app-property-row>
+    </ng-container>
+
+    <ng-container *ngIf="false">
+      <app-property-row label="info" [borderBottom]="false">
+        This resource has no defined properties.
+      </app-property-row>
+    </ng-container>
 
     <ng-template #noProperties>
-      <div *ngIf="resource.res.isDeleted; else noDefinedProperties">
+      <div *ngIf="resource.res.isDeleted">
         <app-property-row label="Deleted on" [borderBottom]="true">
           {{ resource.res.deleteDate | date }}
         </app-property-row>
@@ -67,12 +79,6 @@ import { map, takeUntil } from 'rxjs/operators';
           {{ resource.res.deleteComment }}
         </app-property-row>
       </div>
-    </ng-template>
-
-    <ng-template #noDefinedProperties>
-      <app-property-row label="info" [borderBottom]="false">
-        This resource has no defined properties.
-      </app-property-row>
     </ng-template>
   `,
   styles: [
@@ -96,11 +102,14 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     takeUntil(this.ngUnsubscribe),
     map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
   );
-  myProperties$!: Observable<PropertyInfoValues[]>;
+  myProperties$: Observable<PropertyInfoValues[]> = of([]);
+  incomingLinks$: Observable<IncomingLink[]> = of([]);
+  showIncomingLinks$ = of(false);
 
   constructor(
     private _propertiesDisplayService: PropertiesDisplayService,
-    private _store: Store
+    private _store: Store,
+    private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService
   ) {}
 
   ngOnChanges() {
@@ -119,6 +128,11 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
           return showAllProps || (prop.values && prop.values.length > 0);
         })
       )
+    );
+
+    this.incomingLinks$ = this._propertiesDisplayIncomingLink.getIncomingLinks$(this.resource.res.id, 0);
+    this.showIncomingLinks$ = this.incomingLinks$.pipe(
+      switchMap(links => (links.length > 0 ? of(true) : this._propertiesDisplayService.showAllProperties$))
     );
   }
 
