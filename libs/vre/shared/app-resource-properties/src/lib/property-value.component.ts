@@ -133,6 +133,10 @@ export class PropertyValueComponent implements OnInit {
       .get(this.propertyValueService.propertyDefinition.objectType!)!
       .createValue(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
 
+    if (this.group.controls.comment.value) {
+      createVal.valueHasComment = this.group.controls.comment.value;
+    }
+
     const resource = this.propertyValueService._editModeData?.resource as ReadResource;
     const updateRes = new UpdateResource();
     updateRes.id = resource.id;
