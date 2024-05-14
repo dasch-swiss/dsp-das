@@ -3,10 +3,7 @@ import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  IncomingLink,
-  PropertiesDisplayIncomingLinkService,
-} from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
+import { PropertiesDisplayIncomingLinkService } from '@dsp-app/src/app/workspace/resource/properties/properties-display-incoming-link.service';
 import { Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -21,6 +18,7 @@ import { map, takeUntil } from 'rxjs/operators';
         <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
       </div>
     </div>
+
     <div
       class="infobar mat-caption"
       *ngIf="isAnnotation && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
@@ -39,62 +37,46 @@ import { map, takeUntil } from 'rxjs/operators';
     <!-- list of properties -->
     <ng-container *ngIf="myProperties$ | async as myProperties">
       <ng-container *ngIf="myProperties.length > 0; else noProperties">
-        <div *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn">
-          <div [class.border-bottom]="prop.values && !last" style="display: flex; padding: 8px 0;">
-            <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-              {{ prop.propDef.label
-              }}{{
-                prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
-              }}
-            </h3>
-            <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
-          </div>
-        </div>
+        <app-property-row
+          *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn"
+          [borderBottom]="prop.values && !last"
+          [tooltip]="prop.propDef.comment"
+          [label]="
+            prop.propDef.label +
+            (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
+          ">
+          <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
+        </app-property-row>
       </ng-container>
     </ng-container>
-    <h1>Incoming</h1>
-    <div
-      *ngFor="let res of incomingLinks$ | async; let last = last"
-      [class.border-bottom]="!last"
-      style="display: flex; padding: 8px 0;">
-      <h3 class="label mat-subtitle-2" matTooltip="Incoming link" matTooltipPosition="above">Incoming Link</h3>
-      <div>{{ res.label }}</div>
-      <div>{{ res.uri }}</div>
-      <div>{{ res.project }}</div>
-    </div>
-    <h1>End Incoming</h1>
+
+    <!-- incoming link -->
+    <app-property-row
+      tooltip="Indicates that this resource is referred to by another resource"
+      label="has incoming link"
+      [borderBottom]="true">
+      <app-incoming-link-value [resourceId]="resource.res.id"></app-incoming-link-value>
+    </app-property-row>
 
     <ng-template #noProperties>
       <div *ngIf="resource.res.isDeleted; else noDefinedProperties">
-        <div>
-          <h3 class="label mat-subtitle-2">Deleted on</h3>
-          <div>{{ resource.res.deleteDate | date }}</div>
-        </div>
-        <div>
-          <h3 class="label mat-subtitle-2">Comment</h3>
-          <div>{{ resource.res.deleteComment }}</div>
-        </div>
+        <app-property-row label="Deleted on" [borderBottom]="true">
+          {{ resource.res.deleteDate | date }}
+        </app-property-row>
+        <app-property-row label="Comment" [borderBottom]="false">
+          {{ resource.res.deleteComment }}
+        </app-property-row>
       </div>
     </ng-template>
 
     <ng-template #noDefinedProperties>
-      <h3 class="label mat-subtitle-2">Info</h3>
-      <div class="property-value">This resource has no defined properties.</div>
+      <app-property-row label="info" [borderBottom]="false">
+        This resource has no defined properties.
+      </app-property-row>
     </ng-template>
   `,
   styles: [
     `
-      .label {
-        color: rgb(107, 114, 128);
-        align-self: start;
-        cursor: help;
-        width: 150px;
-        margin-top: 0px;
-        text-align: right;
-        padding-right: 24px;
-        flex-shrink: 0;
-      }
-
       .infobar {
         text-align: right;
         padding-right: 6px;
@@ -115,17 +97,14 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
   );
   myProperties$!: Observable<PropertyInfoValues[]>;
-  incomingLinks$: Observable<IncomingLink[]>;
 
   constructor(
     private _propertiesDisplayService: PropertiesDisplayService,
-    private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService,
     private _store: Store
   ) {}
 
   ngOnChanges() {
     this._setupProperties();
-    this.incomingLinks$ = this._propertiesDisplayIncomingLink.getIncomingLinks$(this.resource.res.id, 0);
   }
 
   ngOnDestroy() {

@@ -23,8 +23,8 @@ export class PropertiesDisplayIncomingLinkService {
         return (incomingResources as ReadResourceSequence).resources.map(resource => {
           return {
             label: resource.label,
-            uri: resource.id.match(/[^\/]*\/[^\/]*$/)[0],
-            project: resource.attachedToProject,
+            uri: `/resource/${resource.id.match(/[^\/]*\/[^\/]*$/)[0]}`,
+            project: resource.resourceClassLabel,
           };
         });
       })
