@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Cardinality, Constants, ReadUser } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -124,25 +124,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   static getMyProperties(showAllProperties: boolean, properties: PropertyInfoValues[]) {
     const representationConstants = RepresentationConstants;
-
-    const condition = (prop: PropertyInfoValues) =>
-      prop.propDef.id === Constants.HasIncomingLinkValue &&
-      //   numberOffAllIncomingLinkRes > 0 &&
-      ![
-        RepresentationConstants.stillImage,
-        RepresentationConstants.movingImage,
-        RepresentationConstants.audio,
-        RepresentationConstants.document,
-        RepresentationConstants.text,
-        RepresentationConstants.archive,
-      ].includes(prop.propDef.objectType) &&
-      !(
-        //         isAnnotation &&
-        (
-          prop.propDef.subjectType === representationConstants.region &&
-          prop.propDef.objectType !== representationConstants.color
-        )
-      );
 
     return properties.filter(prop => {
       return showAllProperties || (prop.values && prop.values.length > 0);
