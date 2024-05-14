@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Cardinality, ReadUser } from '@dasch-swiss/dsp-js';
+import { Cardinality, Constants, ReadLinkValue, ReadUser, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -51,6 +51,17 @@ import { map, switchMap, takeUntil } from 'rxjs/operators';
           <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
         </app-property-row>
       </ng-container>
+    </ng-container>
+
+    <!-- standoff link -->
+    <ng-container *ngIf="showStandoffLinks$ | async">
+      <app-property-row
+        *ngIf="incomingLinks$ | async as incomingLinks"
+        tooltip=" Represent a link in standoff markup from one resource to another"
+        label="has Standoff link"
+        [borderBottom]="true">
+        <app-standoff-link-value [standoffLinks]="standoffLinks"></app-standoff-link-value>
+      </app-property-row>
     </ng-container>
 
     <!-- incoming link -->
@@ -106,6 +117,9 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   incomingLinks$: Observable<IncomingLink[]> = of([]);
   showIncomingLinks$ = of(false);
 
+  standoffLinks: ReadLinkValue[] = [];
+  showStandoffLinks$ = of(false);
+
   constructor(
     private _propertiesDisplayService: PropertiesDisplayService,
     private _store: Store,
@@ -124,15 +138,24 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private _setupProperties() {
     this.myProperties$ = this._propertiesDisplayService.showAllProperties$.pipe(
       map(showAllProps =>
-        this.properties.filter(prop => {
-          return showAllProps || (prop.values && prop.values.length > 0);
-        })
+        this.properties
+          .filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable)
+          .filter(prop => {
+            return showAllProps || (prop.values && prop.values.length > 0);
+          })
       )
     );
 
     this.incomingLinks$ = this._propertiesDisplayIncomingLink.getIncomingLinks$(this.resource.res.id, 0);
     this.showIncomingLinks$ = this.incomingLinks$.pipe(
       switchMap(links => (links.length > 0 ? of(true) : this._propertiesDisplayService.showAllProperties$))
+    );
+
+    this.standoffLinks =
+      (this.properties.find(prop => prop.propDef.id === Constants.HasStandoffLinkToValue)?.values as ReadLinkValue[]) ??
+      [];
+    this.showStandoffLinks$ = this._propertiesDisplayService.showAllProperties$.pipe(
+      map(showAllProps => (this.standoffLinks.length > 0 ? true : showAllProps))
     );
   }
 

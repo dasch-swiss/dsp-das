@@ -14,6 +14,7 @@ import { PropertyValueCommentComponent } from './property-value-comment.componen
 import { PropertyValueSwitcherComponent } from './property-value-switcher.component';
 import { PropertyValueComponent } from './property-value.component';
 import { PropertyValuesComponent } from './property-values.component';
+import { StandoffLinkValueComponent } from './standoff-link-value.component';
 import { BaseSwitchComponent } from './switch-components/base-switch.component';
 import { ColorSwitchComponent } from './switch-components/color-switch.component';
 import { DateSwitchComponent } from './switch-components/date-switch.component';
@@ -79,5 +80,6 @@ export const ResourcePropertiesComponents = [
   DeleteResourceDialogComponent,
   EraseResourceDialogComponent,
   IncomingLinkValueComponent,
+  StandoffLinkValueComponent,
   PropertyRowComponent,
 ];

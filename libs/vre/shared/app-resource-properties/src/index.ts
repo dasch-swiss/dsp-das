@@ -42,4 +42,5 @@ export * from './lib/erase-resource-dialog.component';
 export * from './lib/properties-display.service';
 export * from './lib/date-time';
 export * from './lib/incoming-link-value.component';
+export * from './lib/standoff-link-value.component';
 export * from './lib/property-row.component';
