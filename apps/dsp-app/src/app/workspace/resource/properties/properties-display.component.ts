@@ -39,7 +39,7 @@ import { PropertiesDisplayIncomingLinkService } from './properties-display-incom
       <ng-container *ngIf="myProperties.length > 0; else noProperties">
         <app-property-row
           *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn"
-          [borderBottom]="prop.values && !last"
+          [borderBottom]="true"
           [tooltip]="prop.propDef.comment"
           [label]="
             prop.propDef.label +
