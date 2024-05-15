@@ -58,43 +58,29 @@ import { Events, UpdatedFileEventValue, ValueOperationEventService } from './ser
   providers: [ValueOperationEventService], // provide service on the component level so that each implementation of this component has its own instance.
 })
 export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-  @ViewChild('stillImage') stillImageComponent: StillImageComponent;
-
   @Input() resourceIri: string;
-
+  @ViewChild('stillImage') stillImageComponent: StillImageComponent;
   @ViewChild('matTabAnnotations') matTabAnnotations;
 
   oldResourceIri: string; // for change detection
   resource: DspResource;
-
-  // in case of incoming representations,
-  // this will be the currently selected (part-of main) resource
   incomingResource: DspResource;
-
-  // for the annotations e.g. regions in a still image representation
   annotationResources: DspResource[];
-
   selectedRegion: string;
-
   selectedTab = 0;
-
   selectedTabLabel: string;
   representationsToDisplay: FileRepresentation[] = [];
   stillImageRepresentationsForCompoundResourceSub: Subscription;
   incomingRegionsSub: Subscription;
-  representationConstants = RepresentationConstants;
-
-  // in case of compound object,
-  // this will store the current page position information
   compoundPosition: DspCompoundPosition;
-
   loading = true;
-
   valueOperationEventSubscriptions: Subscription[] = [];
-
   showRestrictedMessage = true;
+  resourceAttachedUser: ReadUser;
+  resourceProperties: PropertyInfoValues[];
+
+  readonly representationConstants = RepresentationConstants;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
     takeUntil(this.ngUnsubscribe),
@@ -103,24 +89,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
     )
   );
-
-  resourceAttachedUser: ReadUser;
-  resourceProperties: PropertyInfoValues[];
-
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  get userCanEdit(): boolean {
-    if (!this.resource.res) {
-      return false;
-    }
-
-    const allPermissions = PermissionUtil.allUserPermissions(
-      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
-    );
-    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-  }
 
   isAdmin$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
@@ -148,6 +116,21 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
+  }
+
+  get attachedToProjectResource(): string {
+    return this.resource.res.attachedToProject;
+  }
+
+  get userCanEdit(): boolean {
+    if (!this.resource.res) {
+      return false;
+    }
+
+    const allPermissions = PermissionUtil.allUserPermissions(
+      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
+    );
+    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
   }
 
   constructor(
