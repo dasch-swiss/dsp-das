@@ -167,13 +167,4 @@ export class ResourceState {
       })
     );
   }
-
-  /*
-  const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-      .linkedResourceIri;
-    // get the annotated main resource
-    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-      this.resource = dspResource;
-      this._renderAsMainResource(dspResource);
-   */
 }
