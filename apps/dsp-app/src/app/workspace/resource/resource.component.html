@@ -5,35 +5,7 @@
 </div>
 <div class="content large middle">
   <div class="resource-view" *ngIf="resource">
-    <!-- dsp-resource-representation -->
-    <div class="resource-header">
-      <div class="resource-class-header">
-        <h3
-          [class.label-info]="resourceClassType?.comment"
-          [matTooltip]="resourceClassType?.comment"
-          matTooltipClass="header-tooltip"
-          matTooltipPosition="above">
-          {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
-        </h3>
-        <app-resource-toolbar
-          [resource]="resource"
-          [lastModificationDate]="resource.res.lastModificationDate"
-          [adminPermissions]="isAdmin$ | async"
-          [showEditLabel]="false"></app-resource-toolbar>
-      </div>
-      <div class="resource-label">
-        <h4>{{ resource.res.label }}</h4>
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Edit label"
-          (click)="openEditLabelDialog()"
-          *ngIf="userCanEdit">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-      <app-resource-info-bar [resource]="resource"></app-resource-info-bar>
-    </div>
+    <app-resource-header [resource]="resource"></app-resource-header>
 
     <app-resource-representations
       [resource]="resource"

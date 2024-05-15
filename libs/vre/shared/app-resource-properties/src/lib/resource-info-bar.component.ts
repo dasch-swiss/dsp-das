@@ -28,6 +28,16 @@ import { filter, map, take } from 'rxjs/operators';
       </span>
     </div>
   `,
+  styles: [
+    `
+      .infobar {
+        margin-top: 10px;
+        box-sizing: border-box;
+        white-space: nowrap;
+        color: rgba(0, 0, 0, 0.87);
+      }
+    `,
+  ],
 })
 export class ResourceInfoBarComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;

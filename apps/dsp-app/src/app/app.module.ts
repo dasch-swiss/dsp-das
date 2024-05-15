@@ -35,6 +35,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
 import { ResourceRepresentationsComponent } from '@dsp-app/src/app/workspace/resource/resource-representations.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -292,6 +293,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
     ResourceRepresentationsComponent,
+    ResourceHeaderComponent,
   ],
   imports: [
     AngularSplitModule,

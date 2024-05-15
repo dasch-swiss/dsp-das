@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +6,6 @@ import {
   Constants,
   CountQueryResponse,
   KnoraApiConnection,
-  PermissionUtil,
   ReadArchiveFileValue,
   ReadAudioFileValue,
   ReadDocumentFileValue,
@@ -17,7 +15,6 @@ import {
   ReadResourceSequence,
   ReadStillImageFileValue,
   ReadTextFileValue,
-  ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import {
@@ -27,23 +24,13 @@ import {
   PropertyInfoValues,
   ResourceService,
 } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  EditResourceLabelDialogComponent,
-  EditResourceLabelDialogProps,
-  IncomingService,
-} from '@dasch-swiss/vre/shared/app-resource-properties';
-import {
-  GetAttachedUserAction,
-  LoadResourceAction,
-  ResourceSelectors,
-  UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { GetAttachedUserAction, LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
@@ -76,37 +63,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   readonly representationConstants = RepresentationConstants;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  isAdmin$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
-  get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
-    return this.resource.res.entityInfo.classes[this.resource.res.type];
-  }
-
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  get userCanEdit(): boolean {
-    if (!this.resource.res) {
-      return false;
-    }
-
-    const allPermissions = PermissionUtil.allUserPermissions(
-      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
-    );
-    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -119,8 +75,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     private _valueOperationEventService: ValueOperationEventService,
     private _cdr: ChangeDetectorRef,
     private _store: Store,
-    private _actions$: Actions,
-    private _dialog: MatDialog
+    private _actions$: Actions
   ) {
     this._route.params.subscribe(params => {
       const projectCode = params.project;
@@ -245,19 +200,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         block: 'center',
       });
     }
-  }
-
-  openEditLabelDialog() {
-    this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
-        EditResourceLabelDialogComponent,
-        DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res })
-      )
-      .afterClosed()
-      .subscribe(response => {
-        if (!response) return;
-        this._cdr.markForCheck();
-      });
   }
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;

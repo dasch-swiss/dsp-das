@@ -70,42 +70,6 @@
   }
 }
 
-.resource-class-header {
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: row;
-  align-items: left;
-  justify-content: space-between;
-
-  h3.label-info {
-    cursor: help;
-  }
-
-  h3 {
-    display: inline-block;
-    text-transform: uppercase;
-    font-size: 16px;
-    font-weight: normal;
-    letter-spacing: 1.25px;
-    margin-block-end: 0em;
-  }
-
-  .action {
-    display: inline-block;
-    white-space: nowrap;
-
-    button {
-      border-radius: 0;
-    }
-  }
-}
-
-.infobar {
-  margin-top: 10px;
-  box-sizing: border-box;
-  white-space: nowrap;
-  color: rgba(0, 0, 0, 0.87);
-}
 
 ::ng-deep .header-tooltip.mdc-tooltip .mdc-tooltip__surface {
   max-width: unset;
