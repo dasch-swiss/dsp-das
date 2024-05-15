@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
 import { Subject, Subscription } from 'rxjs';
-import { FileRepresentation } from './representation/file-representation';
 import { StillImageComponent } from './representation/still-image/still-image.component';
 import { ValueOperationEventService } from './services/value-operation-event.service';
 
@@ -25,7 +24,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   selectedRegion: string;
   selectedTab = 0;
   selectedTabLabel: string;
-  representationsToDisplay: FileRepresentation[] = [];
   compoundPosition: DspCompoundPosition;
   loading = false;
   valueOperationEventSubscriptions: Subscription[] = [];
@@ -34,7 +32,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   constructor(
     private _router: Router,
-    private _titleService: Title
+    private _titleService: Title,
+    public incomingRepresentationsService: IncomingRepresentationsService
   ) {
     this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');
@@ -54,7 +53,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       this._renderAsRegion(resource);
     }
 
-    // TODO this._renderAsMainResource(resource);
+    this.incomingRepresentationsService.onInit(resource);
   }
 
   ngOnDestroy() {

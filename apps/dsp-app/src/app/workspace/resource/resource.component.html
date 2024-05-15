@@ -8,6 +8,7 @@
     <app-resource-header [resource]="resource"></app-resource-header>
 
     <app-resource-representations
+      *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
       [resource]="resource"
       [selectedRegion]="selectedRegion"
       [selectedTabLabel]="selectedTabLabel"
@@ -16,7 +17,7 @@
       [representationsToDisplay]="representationsToDisplay"
       (openRegion)="openRegion($event)"></app-resource-representations>
     <!--  (compoundNavigation)="compoundNavigation($event)"
-                  (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
+                          (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
 
     <app-resource-tabs
       *ngIf="!loading"

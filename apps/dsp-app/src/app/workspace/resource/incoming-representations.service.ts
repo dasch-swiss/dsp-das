@@ -41,7 +41,8 @@ export class IncomingRepresentationsService {
     private _actions$: Actions
   ) {}
 
-  private _renderAsMainResource(resource: DspResource) {
+  onInit(resource: DspResource) {
+    this.resource = resource;
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
 
     if (this.representationsToDisplay.length > 0) {
