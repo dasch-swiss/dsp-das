@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { DateTime } from '../date-time';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-time-value',
   template: `
     <div style="display: flex; gap: 8px">

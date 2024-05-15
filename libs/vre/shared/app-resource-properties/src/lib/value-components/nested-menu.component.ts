@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-nested-menu',
   template: `
     <mat-form-field *ngIf="data.isRootNode" [matMenuTriggerFor]="menu" data-cy="select-list-button" style="width: 100%">

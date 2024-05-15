@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ReadLinkValue, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-link-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode"
       ><a [href]="link" target="_blank">{{ value }}</a>

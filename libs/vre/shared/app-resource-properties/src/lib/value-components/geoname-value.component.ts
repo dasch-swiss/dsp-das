@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { filter, switchMap } from 'rxjs/operators';
 import { GeonameService, SearchPlace } from '../geoname.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-geoname-value',
   template: ` <mat-form-field style="width: 100%">
     <input

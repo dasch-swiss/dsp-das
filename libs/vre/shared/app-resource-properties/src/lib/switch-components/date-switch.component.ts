@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-date-switch',
   template: `
     <ng-container *ngIf="displayMode; else editMode">

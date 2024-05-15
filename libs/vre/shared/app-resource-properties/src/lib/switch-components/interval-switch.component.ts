@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-interval-switch',
   template: `
     <ng-container *ngIf="displayMode; else editMode">{{ control.value.start }}- {{ control.value.end }} </ng-container>

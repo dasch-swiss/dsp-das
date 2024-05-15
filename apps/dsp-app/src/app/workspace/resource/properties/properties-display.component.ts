@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Cardinality, Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -9,6 +9,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { RepresentationConstants } from '../representation/file-representation';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-properties-display',
   template: `
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">

@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DateTime } from '../date-time';
 import { dateTimeTimestamp } from '../date-time-timestamp';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-time-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode">
       <div>Date: {{ test | date }}</div>

@@ -1,10 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DisplayPlace, GeonameService } from '../geoname.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-geoname-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode">
       <a class="link" target="_blank" rel="noopener" [href]="'https://www.geonames.org/' + control.value">{{

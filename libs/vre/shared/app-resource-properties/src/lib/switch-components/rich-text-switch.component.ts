@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-rich-text-switch',
   template: ` <div *ngIf="displayMode; else editMode" [innerHTML]="control.value" appHtmlLink></div>
     <ng-template #editMode>
