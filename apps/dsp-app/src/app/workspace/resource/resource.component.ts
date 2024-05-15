@@ -17,13 +17,7 @@ import {
   ReadTextFileValue,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import {
-  Common,
-  DspCompoundPosition,
-  DspResource,
-  PropertyInfoValues,
-  ResourceService,
-} from '@dasch-swiss/vre/shared/app-common';
+import { Common, DspCompoundPosition, DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -58,7 +52,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   loading = true;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
-  resourceProperties: PropertyInfoValues[];
 
   readonly representationConstants = RepresentationConstants;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -109,11 +102,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .subscribe(res => {
         this.resource = res;
 
-        this.resourceProperties = res.resProps
-          .filter(prop => !prop.propDef['isLinkProperty'])
-          .filter(
-            prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue')
-          );
         this.loading = false;
         this._cdr.detectChanges();
       });
@@ -169,11 +157,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
   }
 
-  // ------------------------------------------------------------------------
-  // ------------------------------------------------------------------------
-  // get and display resource
-  // ------------------------------------------------------------------------
-
   tabChanged(e: MatTabChangeEvent) {
     if (e.tab.textLabel === 'annotations') {
       this.stillImageComponent?.renderRegions();
@@ -182,8 +165,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     }
     this.selectedTabLabel = e.tab.textLabel;
   }
-
-  resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
 
   openRegion(iri: string) {
     // open annotation tab
@@ -201,8 +182,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       });
     }
   }
-
-  trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
 
   /**
    * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.

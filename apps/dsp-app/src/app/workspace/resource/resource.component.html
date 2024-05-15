@@ -17,53 +17,16 @@
       (openRegion)="openRegion($event)"
       (compoundNavigation)="compoundNavigation($event)"
       (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"></app-resource-representations>
-    <div class="data-container" *ngIf="!loading">
-      <!-- tabs -->
-      <mat-tab-group
-        *ngIf="!resource.res.isDeleted"
-        animationDuration="0ms"
-        [(selectedIndex)]="selectedTab"
-        (selectedTabChange)="tabChanged($event)">
-        <!-- first tab for the main resource e.g. book -->
-        <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
-          <app-properties-display
-            *ngIf="resourceProperties"
-            [resource]="resource"
-            [properties]="resourceProperties"></app-properties-display>
-        </mat-tab>
 
-        <!-- incoming resource -->
-        <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
-          <app-properties-display
-            [resource]="incomingResource"
-            [properties]="incomingResource.resProps"></app-properties-display>
-        </mat-tab>
-
-        <!-- annotations -->
-        <mat-tab
-          label="annotations"
-          *ngIf="representationsToDisplay?.length && representationsToDisplay[0].fileValue && representationsToDisplay[0].fileValue.type === representationConstants.stillImage">
-          <ng-template matTabLabel class="annotations">
-            <span
-              [matBadge]="representationsToDisplay[0]?.annotations.length"
-              [matBadgeHidden]="representationsToDisplay[0]?.annotations.length === 0"
-              matBadgeColor="primary"
-              matBadgeOverlap="false">
-              Annotations
-            </span>
-          </ng-template>
-          <div
-            class="region-property"
-            *ngFor="let annotation of annotationResources; trackBy: trackAnnotationByFn"
-            [id]="annotation.res.id"
-            [class.active]="annotation.res.id === selectedRegion">
-            <app-properties-display [resource]="annotation" [properties]="annotation.resProps" isAnnotation="true">
-            </app-properties-display>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <!-- progress indicator -->
+    <app-resource-tabs
+      *ngIf="!loading"
+      [resource]="resource"
+      [incomingResource]="incomingResource"
+      [annotationResources]="annotationResources"
+      [representationsToDisplay]="representationsToDisplay"
+      [selectedRegion]="selectedRegion"
+      [selectedTab]="selectedTab"
+      (tabChanged)="tabChanged($event)"></app-resource-tabs>
     <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
   </div>
   <dasch-swiss-app-progress-indicator *ngIf="!resource && loading"></dasch-swiss-app-progress-indicator>

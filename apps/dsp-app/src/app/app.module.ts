@@ -37,6 +37,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
 import { ResourceRepresentationsComponent } from '@dsp-app/src/app/workspace/resource/resource-representations.component';
+import { ResourceTabsComponent } from '@dsp-app/src/app/workspace/resource/resource-tabs.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -294,6 +295,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ImageDisplayAbsoluteComponent,
     ResourceRepresentationsComponent,
     ResourceHeaderComponent,
+    ResourceTabsComponent,
   ],
   imports: [
     AngularSplitModule,
