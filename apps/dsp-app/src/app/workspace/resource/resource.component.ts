@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   Constants,
   CountQueryResponse,
@@ -17,7 +17,7 @@ import {
   ReadTextFileValue,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { Common, DspCompoundPosition, DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -27,7 +27,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
-import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
+import { ValueOperationEventService } from './services/value-operation-event.service';
 
 @Component({
   selector: 'app-resource',
@@ -61,38 +61,15 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
-    private _resourceService: ResourceService,
-    private _route: ActivatedRoute,
     private _router: Router,
     private _titleService: Title,
-    private _valueOperationEventService: ValueOperationEventService,
     private _cdr: ChangeDetectorRef,
     private _store: Store,
     private _actions$: Actions
   ) {
-    this._route.params.subscribe(params => {
-      const projectCode = params.project;
-      const resourceUuid = params.resource;
-      if (projectCode && resourceUuid) {
-        this.resourceIri = this._resourceService.getResourceIri(projectCode, resourceUuid);
-        this.oldResourceIri = this.resourceIri;
-        this._initResource(this.resourceIri);
-      }
-    });
-
     this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');
     });
-
-    this.valueOperationEventSubscriptions.push(
-      this._valueOperationEventService.on(Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
-        if (newFileValue) {
-          if (this.resourceIri) {
-            this._initResource(this.resourceIri);
-          }
-        }
-      })
-    );
   }
 
   ngOnInit() {

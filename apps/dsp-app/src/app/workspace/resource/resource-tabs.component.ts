@@ -23,8 +23,8 @@ import {
           [properties]="resourceProperties"></app-properties-display>
       </mat-tab>
 
-      <!-- incoming resource -->
-      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
+      <!-- incoming (compound object) resource -->
+      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="'A' + resourceClassLabel(incomingResource) + 'B'">
         <app-properties-display
           [resource]="incomingResource"
           [properties]="incomingResource.resProps"></app-properties-display>
