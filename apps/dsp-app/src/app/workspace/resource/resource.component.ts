@@ -18,7 +18,6 @@ import {
   ReadResourceSequence,
   ReadStillImageFileValue,
   ReadTextFileValue,
-  ReadUser,
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -38,7 +37,6 @@ import {
   IncomingService,
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import {
-  GetAttachedProjectAction,
   GetAttachedUserAction,
   LoadResourceAction,
   ResourceSelectors,
@@ -74,19 +72,10 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   loading = true;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
-  resourceAttachedUser: ReadUser;
   resourceProperties: PropertyInfoValues[];
 
   readonly representationConstants = RepresentationConstants;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
-    takeUntil(this.ngUnsubscribe),
-    filter(attachedProjects => attachedProjects[this.resource.res.id]?.value?.length > 0),
-    map(attachedProjects =>
-      attachedProjects[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToProject)
-    )
-  );
 
   isAdmin$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
@@ -309,22 +298,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
 
-  private _getResourceAttachedData(resource: DspResource): void {
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(take(1))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.resourceAttachedUser = attachedUsers[resource.res.id].value.find(
-          u => u.id === resource.res.attachedToUser
-        );
-      });
-    this._store.dispatch([
-      new GetAttachedUserAction(resource.res.id, resource.res.attachedToUser),
-      new GetAttachedProjectAction(resource.res.id, resource.res.attachedToProject),
-    ]);
-  }
-
   /**
    * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
    *
@@ -523,7 +496,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
       .subscribe(dspResource => {
         this._renderResource(dspResource);
-        this._getResourceAttachedData(dspResource);
       });
   }
 
