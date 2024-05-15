@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties
 import { GetAttachedUserAction, LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
 import { FileRepresentation } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { ValueOperationEventService } from './services/value-operation-event.service';
@@ -35,7 +35,7 @@ import { ValueOperationEventService } from './services/value-operation-event.ser
   styleUrls: ['./resource.component.scss'],
   providers: [ValueOperationEventService], // provide service on the component level so that each implementation of this component has its own instance.
 })
-export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
+export class ResourceComponent implements OnChanges, OnDestroy {
   @Input() resourceIri: string;
   @ViewChild('stillImage') stillImageComponent: StillImageComponent;
   @ViewChild('matTabAnnotations') matTabAnnotations;
@@ -70,24 +70,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this._store
-      .select(ResourceSelectors.resource)
-      .pipe(filter(resource => resource !== null))
-      .subscribe(res => {
-        this.resource = res;
-
-        this.loading = false;
-        this._cdr.detectChanges();
-      });
-  }
-
   ngOnChanges() {
-    // do not reload the whole resource when the iri did not change
-    if (this.oldResourceIri === this.resourceIri) {
-      return;
-    }
-
     this.loading = true;
     // reset all resources
     this.incomingResource = undefined;
@@ -309,11 +292,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
    * Incoming resources are: regions, representations, and incoming links.
    */
   private _requestIncomingResources(resource: DspResource): void {
-    // make sure that this resource has been initialized correctly
-    if (resource === undefined) {
-      return;
-    }
-
     // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
     if (resource.res.properties[Constants.HasStillImageFileValue]) {
       // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
@@ -353,8 +331,13 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   private _initResource(iri) {
     this.oldResourceIri = this.resourceIri;
     this._getResource(iri)
-      .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
+      .pipe(
+        switchMap(() => this._store.select(ResourceSelectors.resource)),
+        filter(resource => resource !== null)
+      )
       .subscribe(dspResource => {
+        this.resource = dspResource;
+        this.loading = false;
         this._renderResource(dspResource);
       });
   }
@@ -388,11 +371,8 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
         .pipe(
           takeUntil(this.ngUnsubscribe),
-          tap({
-            error: () => {
-              this.loading = false;
-              this._cdr.markForCheck();
-            },
+          finalize(() => {
+            this.loading = false;
           })
         )
         .subscribe((countQuery: CountQueryResponse) => {
@@ -400,10 +380,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
             // this is a compound object
             this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
             this.compoundNavigation(1);
-          } else {
-            this.loading = false;
           }
-          this._cdr.markForCheck();
         });
     } else {
       this._requestIncomingResources(resource);
