@@ -62,12 +62,7 @@ import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { SplitSize } from '../results/results.component';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
-import {
-  EmitEvent,
-  Events,
-  UpdatedFileEventValue,
-  ValueOperationEventService,
-} from './services/value-operation-event.service';
+import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
 
 @Component({
   selector: 'app-resource',
@@ -300,10 +295,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   // general methods
   // ------------------------------------------------------------------------
 
-  static getResourceProperties(properties: PropertyInfoValues[]) {
-    return properties.filter(prop => prop.guiDef.guiOrder !== undefined);
-  }
-
   compoundNavigation(page: number) {
     this.selectedRegion = undefined;
     this.representationsToDisplay = [];
@@ -355,10 +346,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
   }
 
-  previewProject() {
-    // --> TODO: pop up project preview on hover
-  }
-
   openRegion(iri: string) {
     // open annotation tab
     this.selectedTab = this.incomingResource ? 2 : 1;
@@ -396,7 +383,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .subscribe(response => {
         if (!response) return;
 
-        this._componentCommsService.emit(new EmitEvent(Events.ValueUpdated)); // TODO I have made changes here (it was new EmitEvent(Events.resourceChanged))
         if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
           this.regionChanged.emit();
         }

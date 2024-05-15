@@ -37,7 +37,7 @@
       </div>
       <div class="infobar mat-caption" *ngIf="(project$ | async) as project">
         Resource of the project
-        <a class="link" [title]="project.longname" (click)="openProject(project)" (mouseover)="previewProject()">
+        <a class="link" [title]="project.longname" (click)="openProject(project)">
           <strong>{{ project?.shortname }}</strong></a
         ><span *ngIf="resourceAttachedUser || resource.res.creationDate"
           >, created
