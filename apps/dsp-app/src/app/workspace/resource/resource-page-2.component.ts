@@ -5,7 +5,8 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-page-2',
-  template: '<app-resource *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri"></app-resource>',
+  template:
+    '<app-resource-parent *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri"></app-resource-parent>',
 })
 export class ResourcePage2Component {
   resourceIri$ = this._route.params.pipe(

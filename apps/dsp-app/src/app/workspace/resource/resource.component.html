@@ -34,7 +34,7 @@
   <div *ngIf="!resource && !loading" class="no-results">
     <p>
       The resource
-      <span *ngIf="resourceIri">&mdash; <strong> {{ resourceIri }}</strong> &mdash;</span>
+      <span *ngIf="resource.res.id">&mdash; <strong> {{ resource.res.id }}</strong> &mdash;</span>
       could not be found.
     </p>
     <p>Reasons:</p>

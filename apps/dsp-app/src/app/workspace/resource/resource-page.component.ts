@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-page',
-  template: '<app-resource *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri"></app-resource>',
+  template:
+    '<app-resource-parent *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri"></app-resource-parent>',
 })
 export class ResourcePageComponent {
   constructor(

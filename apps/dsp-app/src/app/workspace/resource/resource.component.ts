@@ -9,7 +9,6 @@ import {
   ReadArchiveFileValue,
   ReadAudioFileValue,
   ReadDocumentFileValue,
-  ReadLinkValue,
   ReadMovingImageFileValue,
   ReadResource,
   ReadResourceSequence,
@@ -21,10 +20,10 @@ import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/share
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { GetAttachedUserAction, LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { finalize, take, takeUntil } from 'rxjs/operators';
 import { FileRepresentation } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { ValueOperationEventService } from './services/value-operation-event.service';
@@ -36,12 +35,10 @@ import { ValueOperationEventService } from './services/value-operation-event.ser
   providers: [ValueOperationEventService], // provide service on the component level so that each implementation of this component has its own instance.
 })
 export class ResourceComponent implements OnChanges, OnDestroy {
-  @Input() resourceIri: string;
+  @Input({ required: true }) resource!: DspResource;
   @ViewChild('stillImage') stillImageComponent: StillImageComponent;
   @ViewChild('matTabAnnotations') matTabAnnotations;
 
-  oldResourceIri: string; // for change detection
-  resource: DspResource;
   incomingResource: DspResource;
   annotationResources: DspResource[];
   selectedRegion: string;
@@ -49,7 +46,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   selectedTabLabel: string;
   representationsToDisplay: FileRepresentation[] = [];
   compoundPosition: DspCompoundPosition;
-  loading = true;
+  loading = false;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -71,23 +68,24 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    this.loading = true;
-    // reset all resources
     this.incomingResource = undefined;
     this.compoundPosition = undefined;
     this.showRestrictedMessage = true;
-    // get resource with all necessary information
-    // incl. incoming resources and annotations
-    if (this.resourceIri) {
-      this._initResource(this.resourceIri);
+    this._newMethod();
+  }
+
+  private _newMethod() {
+    const resource = this.resource;
+    if (resource.isRegion) {
+      this._renderAsRegion(resource);
+      return;
     }
+
+    this._renderAsMainResource(resource);
   }
 
   ngOnDestroy() {
-    // unsubscribe from the ValueOperationEventService when component is destroyed
-    if (this.valueOperationEventSubscriptions !== undefined) {
-      this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
-    }
+    this.valueOperationEventSubscriptions?.forEach(sub => sub.unsubscribe());
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -258,11 +256,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
    * It takes the number of images returned as an argument.
    */
   private _getIncomingStillImageRepresentations(offset: number): void {
-    // make sure that this.resource has been initialized correctly
-    if (this.resource === undefined) {
-      return;
-    }
-
     if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
       this._notification.openSnackBar(`Offset of ${offset} is invalid`);
       return;
@@ -272,9 +265,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       .getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((incomingImageRepresentations: ReadResourceSequence) => {
-        if (!this.resource) {
-          return; // if there is no resource anymore when the response arrives, do nothing
-        }
         if (incomingImageRepresentations.resources.length > 0) {
           // set the incoming representations for the current offset only
           this.resource.incomingRepresentations = incomingImageRepresentations.resources;
@@ -316,55 +306,13 @@ export class ResourceComponent implements OnChanges, OnDestroy {
       .getIncomingRegions(resource.res.id, offset)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((regions: ReadResourceSequence) => {
-        // append elements of regions.resources to resource.incoming
         Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
-
-        // this.annotationResources.push(regions.resources)
-
-        // prepare regions to be displayed
-        // triggers ngOnChanges of StillImageComponent
         this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
         this._cdr.detectChanges();
       });
   }
 
-  private _initResource(iri) {
-    this.oldResourceIri = this.resourceIri;
-    this._getResource(iri)
-      .pipe(
-        switchMap(() => this._store.select(ResourceSelectors.resource)),
-        filter(resource => resource !== null)
-      )
-      .subscribe(dspResource => {
-        this.resource = dspResource;
-        this.loading = false;
-        this._renderResource(dspResource);
-      });
-  }
-
-  private _getResource(iri: string): Observable<DspResource> {
-    return this._store.dispatch(new LoadResourceAction(iri));
-  }
-
-  private _renderResource(resource: DspResource) {
-    if (resource.res.isDeleted) {
-      return;
-    }
-    if (resource.isRegion) {
-      // render the image onto which the region is pointing; a region
-      // itself can not be displayed without an image it is annotating
-      this._renderAsRegion(resource);
-    } else {
-      this._renderAsMainResource(resource);
-    }
-
-    this._cdr.markForCheck();
-  }
-
   private _renderAsMainResource(resource: DspResource) {
-    this.resource = resource;
-    this.oldResourceIri = this.resourceIri;
-
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
     if (!this.representationsToDisplay.length && !this.compoundPosition) {
       this._incomingService
@@ -377,7 +325,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
         )
         .subscribe((countQuery: CountQueryResponse) => {
           if (countQuery.numberOfResults > 0) {
-            // this is a compound object
             this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
             this.compoundNavigation(1);
           }
@@ -388,21 +335,9 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   private _renderAsRegion(region: DspResource) {
-    // display the corresponding still-image resource instance
-    // find the iri of the parent resource; still-image in case of region, moving-image or audio in case of sequence
-    const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-      .linkedResourceIri;
-    // get the annotated main resource
-    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-      this.resource = dspResource;
-      this._renderAsMainResource(dspResource);
-
-      // open annotation`s tab and highlight region
-      this.selectedTabLabel = 'annotations';
-      this.openRegion(region.res.id);
-
-      this.selectedRegion = region.res.id;
-    });
+    this.selectedTabLabel = 'annotations';
+    this.openRegion(region.res.id);
+    this.selectedRegion = region.res.id;
   }
 
   private _getIncomingResource(iri: string) {
