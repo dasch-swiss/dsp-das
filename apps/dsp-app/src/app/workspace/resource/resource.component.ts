@@ -47,7 +47,6 @@ import {
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { SplitSize } from '../results/results.component';
 import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { Events, UpdatedFileEventValue, ValueOperationEventService } from './services/value-operation-event.service';
@@ -64,8 +63,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('stillImage') stillImageComponent: StillImageComponent;
 
   @Input() resourceIri: string;
-
-  @Input() splitSizeChanged: SplitSize;
 
   @ViewChild('matTabAnnotations') matTabAnnotations;
 
