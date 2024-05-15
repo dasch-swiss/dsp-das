@@ -1,15 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -30,7 +19,6 @@ import {
   ReadStillImageFileValue,
   ReadTextFileValue,
   ReadUser,
-  ReadValue,
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -78,9 +66,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   @Input() resourceIri: string;
 
   @Input() splitSizeChanged: SplitSize;
-
-  @Output() regionChanged = new EventEmitter<ReadValue>();
-  @Output() regionDeleted = new EventEmitter<void>();
 
   @ViewChild('matTabAnnotations') matTabAnnotations;
 
@@ -381,10 +366,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .afterClosed()
       .subscribe(response => {
         if (!response) return;
-
-        if (this.matTabAnnotations && this.matTabAnnotations.isActive) {
-          this.regionChanged.emit();
-        }
         this._cdr.markForCheck();
       });
   }

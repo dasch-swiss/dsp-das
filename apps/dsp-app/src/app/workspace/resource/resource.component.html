@@ -19,10 +19,7 @@
           [resource]="resource"
           [lastModificationDate]="resource.res.lastModificationDate"
           [adminPermissions]="isAdmin$ | async"
-          [showEditLabel]="false"
-          (regionChanged)="regionChanged.emit()"
-          (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
-        <!-- TODO uncomment this on  top -->
+          [showEditLabel]="false"></app-resource-toolbar>
       </div>
       <div class="resource-label">
         <h4>{{ resource.res.label }}</h4>
