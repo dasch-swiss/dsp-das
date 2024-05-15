@@ -71,21 +71,6 @@ export class Region {
 }
 
 /**
- * represents a still image file value including its regions.
- */
-export class StillImageRepresentation {
-  /**
-   *
-   * @param stillImageFileValue a [[ReadStillImageFileValue]] representing an image.
-   * @param regions the regions belonging to the image.
-   */
-  constructor(
-    readonly stillImageFileValue: ReadStillImageFileValue,
-    readonly regions: Region[]
-  ) {}
-}
-
-/**
  * represents a geometry belonging to a specific region resource.
  */
 export class GeometryForRegion {
@@ -258,18 +243,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
           this.loading = false;
         }
       );
-  }
-
-  /**
-   * renders all regions to be found in [[this.images]].
-   * (Although this.images is an Angular Input property, the built-in change detection of Angular does not detect changes in complex objects or arrays, only reassignment of objects/arrays.
-   * Use this method if additional regions were added to the resources.images)
-   */
-  updateRegions() {
-    if (!this._viewer) {
-      this._setupViewer();
-    }
-    this.renderRegions();
   }
 
   /**

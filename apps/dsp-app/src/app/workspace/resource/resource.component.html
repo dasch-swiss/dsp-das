@@ -12,12 +12,12 @@
       [resource]="resource"
       [selectedRegion]="selectedRegion"
       [selectedTabLabel]="selectedTabLabel"
-      [incomingResource]="incomingResource"
-      [compoundPosition]="compoundPosition"
+      [incomingResource]="incomingRepresentationsService.incomingResource"
+      [compoundPosition]="incomingRepresentationsService.compoundPosition"
       [representationsToDisplay]="representationsToDisplay"
+      (compoundNavigation)="incomingRepresentationsService.compoundNavigation($event)"
+      (getIncomingRegions)="incomingRepresentationsService.getIncomingRegions($event.resource, $event.offset)"
       (openRegion)="openRegion($event)"></app-resource-representations>
-    <!--  (compoundNavigation)="compoundNavigation($event)"
-                          (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
 
     <app-resource-tabs
       *ngIf="!loading"
