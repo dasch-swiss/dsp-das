@@ -73,11 +73,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   projectCode: string;
 
-  resourceUuid: string;
-  // used to store the uuid of the value that is parsed from the url params
-  valueUuid: string;
-
-  // this will be the main resource
   resource: DspResource;
 
   // in case of incoming representations,
@@ -102,8 +97,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   compoundPosition: DspCompoundPosition;
 
   loading = true;
-
-  refresh: boolean;
 
   valueOperationEventSubscriptions: Subscription[] = [];
 
@@ -180,10 +173,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   ) {
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
-      this.resourceUuid = params.resource;
-      this.valueUuid = params.value;
-      if (this.projectCode && this.resourceUuid) {
-        this.resourceIri = this._resourceService.getResourceIri(this.projectCode, this.resourceUuid);
+      const resourceUuid = params.resource;
+      if (this.projectCode && resourceUuid) {
+        this.resourceIri = this._resourceService.getResourceIri(this.projectCode, resourceUuid);
         this.oldResourceIri = this.resourceIri;
         this._initResource(this.resourceIri);
       }
