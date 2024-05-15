@@ -113,8 +113,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   refresh: boolean;
 
-  navigationSubscription: Subscription;
-
   valueOperationEventSubscriptions: Subscription[] = [];
 
   showRestrictedMessage = true;
@@ -128,9 +126,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   );
 
   resourceAttachedUser: ReadUser;
-
-  notification = this._notification;
-
   resourceProperties: PropertyInfoValues[];
 
   get attachedToProjectResource(): string {
@@ -253,10 +248,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.navigationSubscription !== undefined) {
-      this.navigationSubscription.unsubscribe();
-    }
-
     // unsubscribe from the ValueOperationEventService when component is destroyed
     if (this.valueOperationEventSubscriptions !== undefined) {
       this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
@@ -272,11 +263,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-
-  // ------------------------------------------------------------------------
-  // ------------------------------------------------------------------------
-  // general methods
-  // ------------------------------------------------------------------------
 
   compoundNavigation(page: number) {
     this.selectedRegion = undefined;
