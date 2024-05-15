@@ -70,9 +70,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('matTabAnnotations') matTabAnnotations;
 
   oldResourceIri: string; // for change detection
-
-  projectCode: string;
-
   resource: DspResource;
 
   // in case of incoming representations,
@@ -172,10 +169,10 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     private _dialog: MatDialog
   ) {
     this._route.params.subscribe(params => {
-      this.projectCode = params.project;
+      const projectCode = params.project;
       const resourceUuid = params.resource;
-      if (this.projectCode && resourceUuid) {
-        this.resourceIri = this._resourceService.getResourceIri(this.projectCode, resourceUuid);
+      if (projectCode && resourceUuid) {
+        this.resourceIri = this._resourceService.getResourceIri(projectCode, resourceUuid);
         this.oldResourceIri = this.resourceIri;
         this._initResource(this.resourceIri);
       }
