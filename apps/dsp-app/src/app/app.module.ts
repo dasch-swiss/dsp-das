@@ -36,6 +36,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
+import { ResourcePage2Component } from '@dsp-app/src/app/workspace/resource/resource-page-2.component';
 import { ResourceRepresentationsComponent } from '@dsp-app/src/app/workspace/resource/resource-representations.component';
 import { ResourceTabsComponent } from '@dsp-app/src/app/workspace/resource/resource-tabs.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -255,6 +256,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResourcePageComponent,
+    ResourcePage2Component,
     ResourceToolbarComponent,
     ResultsComponent,
     SearchPanelComponent,

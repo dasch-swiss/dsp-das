@@ -25,7 +25,7 @@ import { GetAttachedUserAction, LoadResourceAction, ResourceSelectors } from '@d
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { FileRepresentation, RepresentationConstants } from './representation/file-representation';
+import { FileRepresentation } from './representation/file-representation';
 import { Region, StillImageComponent } from './representation/still-image/still-image.component';
 import { ValueOperationEventService } from './services/value-operation-event.service';
 
@@ -52,8 +52,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   loading = true;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
-
-  readonly representationConstants = RepresentationConstants;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
@@ -367,7 +365,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
   private _renderResource(resource: DspResource) {
     if (resource.res.isDeleted) {
-      // guard; not yet implemented
       return;
     }
     if (resource.isRegion) {
