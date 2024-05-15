@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
   Cardinality,
+  Constants,
   CreateValue,
   KnoraApiConnection,
   ReadResource,
@@ -12,7 +13,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { LoadResourceAction } from '@dasch-swiss/vre/shared/app-state';
+import { LoadAnnotatedResourceAction, LoadResourceAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import { finalize, startWith, switchMap, take } from 'rxjs/operators';
@@ -131,7 +132,11 @@ export class PropertyValueComponent implements OnInit {
 
     const createVal = propertiesTypeMapping
       .get(this.propertyValueService.propertyDefinition.objectType!)!
-      .mapping(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
+      .createValue(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
+
+    if (this.group.controls.comment.value) {
+      createVal.valueHasComment = this.group.controls.comment.value;
+    }
 
     const resource = this.propertyValueService._editModeData?.resource as ReadResource;
     const updateRes = new UpdateResource();
@@ -144,7 +149,13 @@ export class PropertyValueComponent implements OnInit {
       .createValue(updateRes as UpdateResource<CreateValue>)
       .pipe(
         take(1),
-        switchMap(() => this._store.dispatch(new LoadResourceAction(resource.id))),
+        switchMap((): any => {
+          if (resource.type === Constants.Region) {
+            this._store.dispatch(new LoadAnnotatedResourceAction(resource.id));
+          } else {
+            this._store.dispatch(new LoadResourceAction(resource.id));
+          }
+        }),
         finalize(() => {
           this.loading = false;
         })
@@ -195,9 +206,13 @@ export class PropertyValueComponent implements OnInit {
       .updateValue(this._getPayload(this.index))
       .pipe(
         take(1),
-        switchMap(() =>
-          this._store.dispatch(new LoadResourceAction(this.propertyValueService._editModeData!.resource.id))
-        ),
+        switchMap((): any => {
+          if (this.propertyValueService._editModeData?.resource.type === Constants.Region) {
+            this._store.dispatch(new LoadAnnotatedResourceAction(this.propertyValueService._editModeData!.resource.id));
+          } else {
+            this._store.dispatch(new LoadResourceAction(this.propertyValueService._editModeData!.resource.id));
+          }
+        }),
         finalize(() => {
           this.loading = false;
         })
@@ -215,7 +230,7 @@ export class PropertyValueComponent implements OnInit {
     const id = values[index].id;
     const entity = propertiesTypeMapping
       .get(this.propertyValueService.propertyDefinition.objectType!)!
-      .updateMapping(id, group.controls.item.value, this.propertyValueService.propertyDefinition);
+      .updateValue(id, group.controls.item.value, this.propertyValueService.propertyDefinition);
     if (group.controls.comment.value) {
       entity.valueHasComment = group.controls.comment.value;
     }

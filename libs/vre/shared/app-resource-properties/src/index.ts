@@ -17,6 +17,7 @@ export * from './lib/switch-components/list-switch.component';
 export * from './lib/switch-components/date-switch.component';
 export * from './lib/switch-components/rich-text-switch.component';
 export * from './lib/switch-components/text-switch.component';
+export * from './lib/switch-components/text-html-switch.component';
 export * from './lib/switch-components/text-types-selector.component';
 
 export * from './lib/delete-value-dialog.component';
@@ -40,3 +41,9 @@ export * from './lib/delete-resource-dialog.component';
 export * from './lib/erase-resource-dialog.component';
 export * from './lib/properties-display.service';
 export * from './lib/date-time';
+export * from './lib/incoming-link-value.component';
+export * from './lib/standoff-link-value.component';
+export * from './lib/property-row.component';
+export * from './lib/incoming-link.interface';
+export * from './lib/incoming.service';
+export * from './lib/resource-info-bar.component';

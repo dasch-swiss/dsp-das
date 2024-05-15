@@ -5,23 +5,17 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
-  selector: 'app-rich-text-switch',
+  selector: 'app-text-html-switch',
   template: ` <div
       *ngIf="displayMode; else editMode"
       [innerHTML]="control.value"
       appHtmlLink
       (internalLinkClicked)="_openResource($event)"></div>
-    <ng-template #editMode>
-      <app-rich-text-value [control]="myControl"></app-rich-text-value>
-    </ng-template>`,
+    <ng-template #editMode> This value cannot be edited.</ng-template>`,
 })
-export class RichTextSwitchComponent implements IsSwitchComponent {
+export class TextHtmlSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string | null>;
   @Input() displayMode = true;
-
-  get myControl() {
-    return this.control as FormControl<string>;
-  }
 
   constructor(private _resourceService: ResourceService) {}
 

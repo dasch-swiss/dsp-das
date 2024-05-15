@@ -19,10 +19,7 @@
           [resource]="resource"
           [lastModificationDate]="resource.res.lastModificationDate"
           [adminPermissions]="isAdmin$ | async"
-          [showEditLabel]="false"
-          (regionChanged)="regionChanged.emit()"
-          (regionDeleted)="regionDeleted.emit()"></app-resource-toolbar>
-        <!-- TODO uncomment this on  top -->
+          [showEditLabel]="false"></app-resource-toolbar>
       </div>
       <div class="resource-label">
         <h4>{{ resource.res.label }}</h4>
@@ -35,19 +32,7 @@
           <mat-icon>edit</mat-icon>
         </button>
       </div>
-      <div class="infobar mat-caption" *ngIf="(project$ | async) as project">
-        Resource of the project
-        <a class="link" [title]="project.longname" (click)="openProject(project)" (mouseover)="previewProject()">
-          <strong>{{ project?.shortname }}</strong></a
-        ><span *ngIf="resourceAttachedUser || resource.res.creationDate"
-          >, created
-          <span *ngIf="resourceAttachedUser"
-            >by {{ (resourceAttachedUser.username ? resourceAttachedUser.username : resourceAttachedUser.givenName + ' '
-            + resourceAttachedUser.familyName) }}</span
-          >
-          <span *ngIf="resource.res.creationDate"> on {{ resource.res.creationDate | date }}</span>
-        </span>
-      </div>
+      <app-resource-info-bar [resource]="resource"></app-resource-info-bar>
     </div>
     <div
       class="representation-container center"
@@ -98,7 +83,6 @@
         *ngSwitchCase="representationConstants.movingImage"
         [src]="representationsToDisplay[0]"
         [parentResource]="resource.res"
-        [splitSizeChanged]="splitSizeChanged"
         (loaded)="representationLoaded($event)">
       </app-video>
 
@@ -129,7 +113,7 @@
     <div class="data-container" *ngIf="!loading">
       <!-- tabs -->
       <mat-tab-group
-        *ngIf="!resource.res.isDeleted; else deletedResource"
+        *ngIf="!resource.res.isDeleted"
         animationDuration="0ms"
         [(selectedIndex)]="selectedTab"
         (selectedTabChange)="tabChanged($event)">
@@ -163,7 +147,7 @@
           </ng-template>
           <div
             class="region-property"
-            *ngFor="let annotation of annotationResources; trackby: trackAnnotationByFn"
+            *ngFor="let annotation of annotationResources; trackBy: trackAnnotationByFn"
             [id]="annotation.res.id"
             [class.active]="annotation.res.id === selectedRegion">
             <app-properties-display [resource]="annotation" [properties]="annotation.resProps" isAnnotation="true">
@@ -171,16 +155,6 @@
           </div>
         </mat-tab>
       </mat-tab-group>
-      <ng-template #deletedResource>
-        <!-- TODO!!! -->
-        <!--<app-properties
-                                                                                                                                                                                                                                                                                                  *ngIf="resource.res"
-                                                                                                                                                                                                                                                                                                  [resource]="resource"
-                                                                                                                                                                                                                                                                                                  [displayProjectInfo]="true"
-                                                                                                                                                                                                                                                                                                  [adminPermissions]="isAdmin$ | async"
-                                                                                                                                                                                                                                                                                                  [valueUuidToHighlight]="valueUuid">
-                                                                                                                                                                                                                                                                                                </app-properties>-->
-      </ng-template>
     </div>
     <!-- progress indicator -->
     <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
