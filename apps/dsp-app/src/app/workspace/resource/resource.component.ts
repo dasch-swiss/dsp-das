@@ -92,17 +92,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   selectedTab = 0;
 
   selectedTabLabel: string;
-
-  resourceIsAnnotation: 'region' | 'sequence';
-
-  // list of representations to be displayed
-  // --> TODO: will be expanded with | MovingImageRepresentation[] | AudioRepresentation[] etc.
   representationsToDisplay: FileRepresentation[] = [];
-
   stillImageRepresentationsForCompoundResourceSub: Subscription;
-
   incomingRegionsSub: Subscription;
-
   representationConstants = RepresentationConstants;
 
   // in case of compound object,
@@ -650,8 +642,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       this.openRegion(region.res.id);
 
       this.selectedRegion = region.res.id;
-      // define resource as annotation of type region
-      this.resourceIsAnnotation = this.resource.res.entityInfo.classes[Constants.Region] ? 'region' : 'sequence';
     });
   }
 
