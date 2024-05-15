@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
+import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
 
 @Component({
   selector: 'app-resource-tabs',
@@ -30,12 +31,31 @@ import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resou
       </mat-tab>
 
       <!-- annotations -->
-      <app-annotation-tab
-        *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
-        [representationsToDisplay]="representationsToDisplay"
-        [selectedRegion]="selectedRegion"
-        [annotationResources]="incomingRepresentationsService.annotationResources">
-      </app-annotation-tab>
+      <ng-container *ngIf="incomingRepresentationsService as irs">
+        <mat-tab
+          label="Annotations"
+          *ngIf="
+            irs.representationsToDisplay?.length &&
+            irs.representationsToDisplay[0].fileValue &&
+            irs.representationsToDisplay[0].fileValue.type === representationConstants.stillImage
+          ">
+          <ng-template matTabLabel class="annotations">
+            <span
+              [matBadge]="irs.representationsToDisplay[0]?.annotations.length"
+              [matBadgeHidden]="irs.representationsToDisplay[0]?.annotations.length === 0"
+              matBadgeColor="primary"
+              matBadgeOverlap="false">
+              Annotations
+            </span>
+          </ng-template>
+          <app-annotation-tab
+            *ngIf="irs.representationsToDisplay as representationsToDisplay"
+            [representationsToDisplay]="representationsToDisplay"
+            [selectedRegion]="selectedRegion"
+            [annotationResources]="irs.annotationResources">
+          </app-annotation-tab>
+        </mat-tab>
+      </ng-container>
     </mat-tab-group>
   `,
 })
@@ -59,4 +79,6 @@ export class ResourceTabsComponent implements OnInit {
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
   }
+
+  protected readonly representationConstants = RepresentationConstants;
 }
