@@ -70,7 +70,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   selectedTab = 0;
   selectedTabLabel: string;
   representationsToDisplay: FileRepresentation[] = [];
-  stillImageRepresentationsForCompoundResourceSub: Subscription;
   compoundPosition: DspCompoundPosition;
   loading = true;
   valueOperationEventSubscriptions: Subscription[] = [];
@@ -211,9 +210,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     // unsubscribe from the ValueOperationEventService when component is destroyed
     if (this.valueOperationEventSubscriptions !== undefined) {
       this.valueOperationEventSubscriptions.forEach(sub => sub.unsubscribe());
-    }
-    if (this.stillImageRepresentationsForCompoundResourceSub) {
-      this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
     }
 
     this.ngUnsubscribe.next();
@@ -456,12 +452,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
-    // get all representations for compound resource of this offset sequence
-    if (this.stillImageRepresentationsForCompoundResourceSub) {
-      this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
-    }
-    this.stillImageRepresentationsForCompoundResourceSub = this._incomingService
+    this._incomingService
       .getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((incomingImageRepresentations: ReadResourceSequence) => {
         if (!this.resource) {
           return; // if there is no resource anymore when the response arrives, do nothing
@@ -560,13 +553,10 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
 
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
     if (!this.representationsToDisplay.length && !this.compoundPosition) {
-      // the resource could be a compound object
-      if (this.stillImageRepresentationsForCompoundResourceSub) {
-        this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
-      }
-      this.stillImageRepresentationsForCompoundResourceSub = this._incomingService
+      this._incomingService
         .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
         .pipe(
+          takeUntil(this.ngUnsubscribe),
           tap({
             error: () => {
               this.loading = false;
