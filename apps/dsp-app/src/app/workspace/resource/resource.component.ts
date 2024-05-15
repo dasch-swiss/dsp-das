@@ -71,7 +71,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   selectedTabLabel: string;
   representationsToDisplay: FileRepresentation[] = [];
   stillImageRepresentationsForCompoundResourceSub: Subscription;
-  incomingRegionsSub: Subscription;
   compoundPosition: DspCompoundPosition;
   loading = true;
   valueOperationEventSubscriptions: Subscription[] = [];
@@ -215,10 +214,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     }
     if (this.stillImageRepresentationsForCompoundResourceSub) {
       this.stillImageRepresentationsForCompoundResourceSub.unsubscribe();
-    }
-
-    if (this.incomingRegionsSub) {
-      this.incomingRegionsSub.unsubscribe();
     }
 
     this.ngUnsubscribe.next();
@@ -513,11 +508,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private _getIncomingRegions(resource: DspResource, offset: number): void {
-    if (this.incomingRegionsSub) {
-      this.incomingRegionsSub.unsubscribe();
-    }
-    this.incomingRegionsSub = this._incomingService
+    this._incomingService
       .getIncomingRegions(resource.res.id, offset)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((regions: ReadResourceSequence) => {
         // append elements of regions.resources to resource.incoming
         Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
