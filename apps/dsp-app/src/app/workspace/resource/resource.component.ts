@@ -42,7 +42,7 @@ import {
   ResourceService,
 } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { ComponentCommunicationEventService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   EditResourceLabelDialogComponent,
@@ -205,8 +205,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     private _cdr: ChangeDetectorRef,
     private _store: Store,
     private _actions$: Actions,
-    private _dialog: MatDialog,
-    private _componentCommsService: ComponentCommunicationEventService
+    private _dialog: MatDialog
   ) {
     this._route.params.subscribe(params => {
       this.projectCode = params.project;
@@ -586,11 +585,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     this._getIncomingLinks(0);
   }
 
-  /**
-   * gets the incoming regions for [[this.resource]].
-   *
-   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-   */
   private _getIncomingRegions(resource: DspResource, offset: number): void {
     if (this.incomingRegionsSub) {
       this.incomingRegionsSub.unsubscribe();
