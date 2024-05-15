@@ -1,14 +1,15 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ReadUser, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingLink, PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-properties-display',
   template: `
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">

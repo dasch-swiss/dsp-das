@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -24,6 +25,7 @@ import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-property-value-switcher',
   providers: [PropertyValueService],
   template: `
@@ -186,6 +188,7 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
 
   ngAfterViewInit() {
     this.itemTpl = this._getTemplate();
+    this._cd.detectChanges();
   }
 
   private _getTemplate(): TemplateRef<any> {
