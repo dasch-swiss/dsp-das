@@ -43,7 +43,10 @@ export class IncomingRepresentationsService {
 
   private _renderAsMainResource(resource: DspResource) {
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
-    if (!this.representationsToDisplay.length && !this.compoundPosition) {
+
+    if (this.representationsToDisplay.length > 0) {
+      this._requestIncomingResources(resource);
+    } else if (!this.compoundPosition) {
       this._incomingService
         .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
         .subscribe((countQuery: CountQueryResponse) => {
@@ -52,19 +55,15 @@ export class IncomingRepresentationsService {
             this.compoundNavigation(1);
           }
         });
-    } else {
-      this._requestIncomingResources(resource);
     }
   }
 
   private _requestIncomingResources(resource: DspResource): void {
     // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
     if (resource.res.properties[Constants.HasStillImageFileValue]) {
-      // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
-      // the resource is a StillImageRepresentation, check if there are regions pointing to it
-
       this.getIncomingRegions(resource, 0);
     } else if (this.compoundPosition) {
+      // TODO JULIEN NOT SURE IF THIS PART IS NEEDED.
       // this resource is not a StillImageRepresentation
       // check if there are StillImageRepresentations pointing to this resource
 
@@ -72,9 +71,6 @@ export class IncomingRepresentationsService {
       // more pages may be requested by [[this.viewer]].
       this._getIncomingStillImageRepresentations(this.compoundPosition.offset);
     }
-
-    // check for incoming links for the current resource
-    this._getIncomingLinks(0);
   }
 
   private _getIncomingStillImageRepresentations(offset: number): void {
@@ -94,25 +90,6 @@ export class IncomingRepresentationsService {
           this.loading = false;
           this.representationsToDisplay = [];
         }
-      });
-  }
-
-  /**
-   * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
-   *
-   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
-   * It takes the number of images returned as an argument.
-   */
-  private _getIncomingLinks(offset: number): void {
-    this._incomingService
-      .getIncomingLinksForResource(this.resource?.res.id, offset)
-      .subscribe((incomingResources: ReadResourceSequence) => {
-        // Check if incomingReferences is initialized, if not, initialize it as an empty array
-        if (!this.resource?.res.incomingReferences) {
-          this.resource.res.incomingReferences = [];
-        }
-        // append elements incomingResources to this.resource.incomingLinks
-        Array.prototype.push.apply(this.resource?.res.incomingReferences, incomingResources.resources);
       });
   }
 
