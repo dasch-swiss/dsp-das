@@ -83,7 +83,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   // in case of incoming representations,
   // this will be the currently selected (part-of main) resource
   incomingResource: DspResource;
-  incomingResourceSub: Subscription;
 
   // for the annotations e.g. regions in a still image representation
   annotationResources: DspResource[];
@@ -671,23 +670,27 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private _getIncomingResource(iri: string) {
-    if (this.incomingResourceSub) {
-      this.incomingResourceSub.unsubscribe();
-    }
-    this.incomingResourceSub = this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
-      this.incomingResource = new DspResource(response);
-      this.incomingResource.resProps = Common.initProps(response)
-        .filter(v => v.values.length > 0)
-        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
-      this.incomingResource.systemProps =
-        this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+    this._dspApiConnection.v2.res
+      .getResource(iri)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((response: ReadResource) => {
+        this.incomingResource = new DspResource(response);
+        this.incomingResource.resProps = Common.initProps(response)
+          .filter(v => v.values.length > 0)
+          .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
+        this.incomingResource.systemProps =
+          this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
-      if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
-        this._getIncomingRegions(this.incomingResource, 0);
-      }
+        this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+        if (
+          this.representationsToDisplay.length &&
+          this.representationsToDisplay[0].fileValue &&
+          this.compoundPosition
+        ) {
+          this._getIncomingRegions(this.incomingResource, 0);
+        }
 
-      this._cdr.markForCheck();
-    });
+        this._cdr.markForCheck();
+      });
   }
 }
