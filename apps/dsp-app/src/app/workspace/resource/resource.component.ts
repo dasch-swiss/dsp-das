@@ -63,21 +63,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
   readonly representationConstants = RepresentationConstants;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  get userCanEdit(): boolean {
-    if (!this.resource.res) {
-      return false;
-    }
-
-    const allPermissions = PermissionUtil.allUserPermissions(
-      this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
-    );
-    return allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
