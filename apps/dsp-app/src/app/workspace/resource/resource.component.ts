@@ -18,6 +18,7 @@ import {
   ReadResourceSequence,
   ReadStillImageFileValue,
   ReadTextFileValue,
+  ReadUser,
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
