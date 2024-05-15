@@ -13,12 +13,10 @@ import {
   ReadDocumentFileValue,
   ReadLinkValue,
   ReadMovingImageFileValue,
-  ReadProject,
   ReadResource,
   ReadResourceSequence,
   ReadStillImageFileValue,
   ReadTextFileValue,
-  ReadUser,
   ResourceClassDefinitionWithPropertyDefinition,
   SystemPropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -29,7 +27,7 @@ import {
   PropertyInfoValues,
   ResourceService,
 } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
@@ -86,18 +84,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     map(([user, userProjectGroups]) => {
       return this.attachedToProjectResource
         ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
-  isEditor$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
         : false;
     })
   );
@@ -242,20 +228,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     this.selectedTabLabel = e.tab.textLabel;
   }
 
-  representationLoaded(e: boolean) {
-    this.loading = !e;
-    this._cdr.detectChanges();
-  }
-
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
-
-  resourceLabel = (incomingResource: DspResource, resource: DspResource) => {
-    return incomingResource ? `${resource.res.label}: ${incomingResource.res.label}` : resource.res.label;
-  };
-
-  openProject(project: ReadProject) {
-    window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
-  }
 
   openRegion(iri: string) {
     // open annotation tab
@@ -272,16 +245,6 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
         block: 'center',
       });
     }
-  }
-
-  updateRegions(iri: string) {
-    if (this.incomingResource) {
-      this.incomingResource.incomingAnnotations = [];
-    } else {
-      this.resource.incomingAnnotations = [];
-    }
-    this._getIncomingRegions(this.incomingResource ? this.incomingResource : this.resource, 0);
-    this.openRegion(iri);
   }
 
   openEditLabelDialog() {
@@ -460,7 +423,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
       // the resource is a StillImageRepresentation, check if there are regions pointing to it
 
-      this._getIncomingRegions(resource, 0);
+      this.getIncomingRegions(resource, 0);
     } else if (this.compoundPosition) {
       // this resource is not a StillImageRepresentation
       // check if there are StillImageRepresentations pointing to this resource
@@ -474,7 +437,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
     this._getIncomingLinks(0);
   }
 
-  private _getIncomingRegions(resource: DspResource, offset: number): void {
+  getIncomingRegions(resource: DspResource, offset: number): void {
     this._incomingService
       .getIncomingRegions(resource.res.id, offset)
       .pipe(takeUntil(this.ngUnsubscribe))
@@ -588,7 +551,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
           this.representationsToDisplay[0].fileValue &&
           this.compoundPosition
         ) {
-          this._getIncomingRegions(this.incomingResource, 0);
+          this.getIncomingRegions(this.incomingResource, 0);
         }
 
         this._cdr.markForCheck();

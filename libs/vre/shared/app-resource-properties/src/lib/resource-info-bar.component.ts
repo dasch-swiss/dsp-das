@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, map, take } from 'rxjs/operators';
@@ -48,7 +50,9 @@ export class ResourceInfoBarComponent implements OnInit {
     this._getResourceAttachedData(this.resource);
   }
 
-  openProject(project: any) {}
+  openProject(project: ReadProject) {
+    window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
+  }
 
   private _getResourceAttachedData(resource: DspResource): void {
     this._actions$

@@ -35,6 +35,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ResourceRepresentationsComponent } from '@dsp-app/src/app/workspace/resource/resource-representations.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -290,6 +291,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
+    ResourceRepresentationsComponent,
   ],
   imports: [
     AngularSplitModule,
