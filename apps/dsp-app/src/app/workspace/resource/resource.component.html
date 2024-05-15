@@ -16,14 +16,12 @@
       [representationsToDisplay]="representationsToDisplay"
       (openRegion)="openRegion($event)"></app-resource-representations>
     <!--  (compoundNavigation)="compoundNavigation($event)"
-          (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
+                  (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
 
     <app-resource-tabs
       *ngIf="!loading"
       [resource]="resource"
-      [incomingResource]="incomingResource"
       [annotationResources]="annotationResources"
-      [representationsToDisplay]="representationsToDisplay"
       [selectedRegion]="selectedRegion"
       [selectedTab]="selectedTab"
       (tabChanged)="tabChanged($event)"></app-resource-tabs>

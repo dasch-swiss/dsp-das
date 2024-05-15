@@ -3,6 +3,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
 import { Subject, Subscription } from 'rxjs';
 import { FileRepresentation } from './representation/file-representation';
 import { StillImageComponent } from './representation/still-image/still-image.component';
@@ -12,7 +13,7 @@ import { ValueOperationEventService } from './services/value-operation-event.ser
   selector: 'app-resource',
   templateUrl: './resource.component.html',
   styleUrls: ['./resource.component.scss'],
-  providers: [ValueOperationEventService], // provide service on the component level so that each implementation of this component has its own instance.
+  providers: [ValueOperationEventService, IncomingRepresentationsService], // provide service on the component level so that each implementation of this component has its own instance.
 })
 export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;

@@ -35,6 +35,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { AnnotationTabComponent } from '@dsp-app/src/app/workspace/resource/annotation-tab.component';
 import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
 import { ResourcePage2Component } from '@dsp-app/src/app/workspace/resource/resource-page-2.component';
 import { ResourceParentComponent } from '@dsp-app/src/app/workspace/resource/resource-parent.component';
@@ -300,6 +301,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceRepresentationsComponent,
     ResourceHeaderComponent,
     ResourceTabsComponent,
+    AnnotationTabComponent,
   ],
   imports: [
     AngularSplitModule,
