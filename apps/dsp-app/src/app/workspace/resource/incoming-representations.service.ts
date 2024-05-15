@@ -1,0 +1,245 @@
+import { Inject, Injectable } from '@angular/core';
+import {
+  Constants,
+  CountQueryResponse,
+  KnoraApiConnection,
+  ReadArchiveFileValue,
+  ReadAudioFileValue,
+  ReadDocumentFileValue,
+  ReadMovingImageFileValue,
+  ReadResource,
+  ReadResourceSequence,
+  ReadStillImageFileValue,
+  ReadTextFileValue,
+  SystemPropertyDefinition,
+} from '@dasch-swiss/dsp-js';
+import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
+import { FileRepresentation } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
+import { Region } from '@dsp-app/src/app/workspace/resource/representation/still-image/still-image.component';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { take } from 'rxjs/operators';
+
+@Injectable()
+export class IncomingRepresentationsService {
+  representationsToDisplay: FileRepresentation[] = [];
+  compoundPosition: DspCompoundPosition | undefined;
+  resource: DspResource;
+  loading = false;
+  incomingResource: DspResource | undefined;
+  annotationResources: DspResource[];
+
+  constructor(
+    private _incomingService: IncomingService,
+    private _notification: NotificationService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _store: Store,
+    private _actions$: Actions
+  ) {}
+
+  private _renderAsMainResource(resource: DspResource) {
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+    if (!this.representationsToDisplay.length && !this.compoundPosition) {
+      this._incomingService
+        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+        .subscribe((countQuery: CountQueryResponse) => {
+          if (countQuery.numberOfResults > 0) {
+            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+            this.compoundNavigation(1);
+          }
+        });
+    } else {
+      this._requestIncomingResources(resource);
+    }
+  }
+
+  private _requestIncomingResources(resource: DspResource): void {
+    // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
+    if (resource.res.properties[Constants.HasStillImageFileValue]) {
+      // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
+      // the resource is a StillImageRepresentation, check if there are regions pointing to it
+
+      this.getIncomingRegions(resource, 0);
+    } else if (this.compoundPosition) {
+      // this resource is not a StillImageRepresentation
+      // check if there are StillImageRepresentations pointing to this resource
+
+      // this gets the first page of incoming StillImageRepresentations
+      // more pages may be requested by [[this.viewer]].
+      this._getIncomingStillImageRepresentations(this.compoundPosition.offset);
+    }
+
+    // check for incoming links for the current resource
+    this._getIncomingLinks(0);
+  }
+
+  private _getIncomingStillImageRepresentations(offset: number): void {
+    if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
+      this._notification.openSnackBar(`Offset of ${offset} is invalid`);
+      return;
+    }
+
+    this._incomingService
+      .getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset)
+      .subscribe((incomingImageRepresentations: ReadResourceSequence) => {
+        if (incomingImageRepresentations.resources.length > 0) {
+          // set the incoming representations for the current offset only
+          this.resource.incomingRepresentations = incomingImageRepresentations.resources;
+          this._getIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
+        } else {
+          this.loading = false;
+          this.representationsToDisplay = [];
+        }
+      });
+  }
+
+  /**
+   * get resources pointing to [[this.resource]] with properties other than knora-api:isPartOf and knora-api:isRegionOf.
+   *
+   * @param offset the offset to be used (needed for paging). First request uses an offset of 0.
+   * It takes the number of images returned as an argument.
+   */
+  private _getIncomingLinks(offset: number): void {
+    this._incomingService
+      .getIncomingLinksForResource(this.resource?.res.id, offset)
+      .subscribe((incomingResources: ReadResourceSequence) => {
+        // Check if incomingReferences is initialized, if not, initialize it as an empty array
+        if (!this.resource?.res.incomingReferences) {
+          this.resource.res.incomingReferences = [];
+        }
+        // append elements incomingResources to this.resource.incomingLinks
+        Array.prototype.push.apply(this.resource?.res.incomingReferences, incomingResources.resources);
+      });
+  }
+
+  getIncomingRegions(resource: DspResource, offset: number): void {
+    this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe((regions: ReadResourceSequence) => {
+      Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
+      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+    });
+  }
+
+  compoundNavigation(page: number) {
+    // TODO this.selectedRegion = undefined;
+    this.representationsToDisplay = [];
+
+    // set current compound object position:
+    // calculate offset and offset item position from current page and total pages info
+    const offset = Math.ceil(page / 25) - 1;
+    const position = Math.floor(page - offset * 25 - 1);
+
+    // get incoming still image representations, if the offset changed
+    if (offset !== this.compoundPosition.offset) {
+      this.compoundPosition.offset = offset;
+      this._getIncomingStillImageRepresentations(offset);
+    } else {
+      // get incoming resource, if the offset is the same but page changed
+      this._getIncomingResource(this.resource.incomingRepresentations[position].id);
+    }
+    this.compoundPosition.position = position;
+    this.compoundPosition.page = page;
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+  }
+
+  private _getIncomingResource(iri: string) {
+    this._dspApiConnection.v2.res.getResource(iri).subscribe((response: ReadResource) => {
+      this.incomingResource = new DspResource(response);
+      this.incomingResource.resProps = Common.initProps(response)
+        .filter(v => v.values.length > 0)
+        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
+      this.incomingResource.systemProps =
+        this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+
+      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+      if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
+        this.getIncomingRegions(this.incomingResource, 0);
+      }
+    });
+  }
+
+  private _collectRepresentationsAndAnnotations(resource: DspResource): FileRepresentation[] {
+    if (!resource) {
+      return;
+    }
+
+    // general object for all kind of representations
+    const representations: FileRepresentation[] = [];
+
+    // --> TODO: use proper classes and a factory
+    if (resource.res.properties[Constants.HasStillImageFileValue]) {
+      // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
+      // resource has StillImageFileValues that are directly attached to it (properties)
+
+      const fileValues: ReadStillImageFileValue[] = resource.res.properties[
+        Constants.HasStillImageFileValue
+      ] as ReadStillImageFileValue[];
+      for (const img of fileValues) {
+        const regions: Region[] = [];
+
+        const annotations: DspResource[] = [];
+
+        for (const incomingRegion of resource.incomingAnnotations) {
+          const region = new Region(incomingRegion);
+          regions.push(region);
+
+          const annotation = new DspResource(incomingRegion);
+
+          // gather region property information
+          annotation.resProps = Common.initProps(incomingRegion).filter(v => v.values.length > 0);
+
+          // gather system property information
+          annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+
+          this._actions$
+            .pipe(ofActionSuccessful(GetAttachedUserAction))
+            .pipe(take(1))
+            .subscribe(() => {
+              annotations.push(annotation);
+            });
+          this._store.dispatch(new GetAttachedUserAction(annotation.res.id, annotation.res.attachedToUser));
+        }
+
+        const stillImage = new FileRepresentation(img, regions);
+
+        representations.push(stillImage);
+
+        this.annotationResources = annotations;
+      }
+    } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
+      const fileValues: ReadDocumentFileValue[] = resource.res.properties[
+        Constants.HasDocumentFileValue
+      ] as ReadDocumentFileValue[];
+      for (const doc of fileValues) {
+        const document = new FileRepresentation(doc);
+        representations.push(document);
+      }
+    } else if (resource.res.properties[Constants.HasAudioFileValue]) {
+      const fileValue: ReadAudioFileValue = resource.res.properties[
+        Constants.HasAudioFileValue
+      ][0] as ReadAudioFileValue;
+      const audio = new FileRepresentation(fileValue);
+      representations.push(audio);
+    } else if (resource.res.properties[Constants.HasMovingImageFileValue]) {
+      const fileValue: ReadMovingImageFileValue = resource.res.properties[
+        Constants.HasMovingImageFileValue
+      ][0] as ReadMovingImageFileValue;
+      const video = new FileRepresentation(fileValue);
+      representations.push(video);
+    } else if (resource.res.properties[Constants.HasArchiveFileValue]) {
+      const fileValue: ReadArchiveFileValue = resource.res.properties[
+        Constants.HasArchiveFileValue
+      ][0] as ReadArchiveFileValue;
+      const archive = new FileRepresentation(fileValue);
+      representations.push(archive);
+    } else if (resource.res.properties[Constants.HasTextFileValue]) {
+      const fileValue: ReadTextFileValue = resource.res.properties[Constants.HasTextFileValue][0] as ReadTextFileValue;
+      const text = new FileRepresentation(fileValue);
+      representations.push(text);
+    }
+    return representations;
+  }
+}

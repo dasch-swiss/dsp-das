@@ -14,9 +14,9 @@
       [incomingResource]="incomingResource"
       [compoundPosition]="compoundPosition"
       [representationsToDisplay]="representationsToDisplay"
-      (openRegion)="openRegion($event)"
-      (compoundNavigation)="compoundNavigation($event)"
-      (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"></app-resource-representations>
+      (openRegion)="openRegion($event)"></app-resource-representations>
+    <!--  (compoundNavigation)="compoundNavigation($event)"
+          (getIncomingRegions)="getIncomingRegions($event.resource, $event.offset)"-->
 
     <app-resource-tabs
       *ngIf="!loading"
