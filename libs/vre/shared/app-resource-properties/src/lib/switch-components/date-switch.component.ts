@@ -23,6 +23,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       <span *ngIf="knoraDate.day as knoraDateDay">{{ knoraDateDay }}.</span>
       <span *ngIf="knoraDate.month as knoraDateMonth">{{ knoraDateMonth }}.</span>
       {{ knoraDate.year }}
+      <span>{{ knoraDate | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
     </ng-template>
 
     <ng-template #editMode>
