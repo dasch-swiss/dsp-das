@@ -16,7 +16,7 @@ Add
 @dasch-swiss/jdnconvertiblecalendar:registry=https://registry.npmjs.org/
 ```
 
-and run `npm install`.
+and run ```npm install```.
 
 ## @dasch-swiss librairies
 
