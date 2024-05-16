@@ -1,5 +1,3 @@
-<!-- display all resource instances if instance id does not exist -->
-<!-- If results are present -->
 <div class="multiple-instances" *ngIf="searchParams$ | async">
   <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
     <as-split-area [size]="40">
@@ -12,10 +10,7 @@
     <as-split-area [size]="60" *ngIf="selectedResources?.count > 0" cdkScrollable>
       <div [ngSwitch]="viewMode">
         <!-- single resource view -->
-        <app-resource
-          *ngSwitchCase="'single'"
-          [resourceIri]="selectedResources.resInfo[0].id"
-          [splitSizeChanged]="splitSizeChanged"></app-resource>
+        <app-resource *ngSwitchCase="'single'" [resourceIri]="selectedResources.resInfo[0].id"></app-resource>
 
         <!-- intermediate view -->
         <app-intermediate
@@ -35,16 +30,6 @@
   </as-split>
 </div>
 
-<!-- add new resource instance if instance id is called "add" -->
-<div
-  class="single-instance-form"
-  *ngIf="(instanceId$ | async) && (instanceId$ | async) === routeConstants.addClassInstance">
-  <h3>Create new resource of type: {{(resClass$ | async)?.label}}</h3>
-  <app-resource-instance-form [resourceClassIri]="classId$ | async" [projectIri]="projectIri">
-  </app-resource-instance-form>
-</div>
-
-<!-- display single resource instance if instance id exists and is not called "add" -->
 <div class="single-instance" *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
   <app-resource [resourceIri]="resourceIri$ | async"></app-resource>
 </div>
