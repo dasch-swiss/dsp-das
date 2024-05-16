@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -93,7 +92,6 @@ interface PolygonsForRegion {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-still-image',
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
