@@ -45,18 +45,18 @@ export class IncomingRepresentationsService {
     this.resource = resource;
     this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
 
-    if (this.representationsToDisplay.length > 0) {
-      this._requestIncomingResources(resource);
-    } else if (!this.compoundPosition) {
-      this._incomingService
-        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-        .subscribe((countQuery: CountQueryResponse) => {
-          if (countQuery.numberOfResults > 0) {
-            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
-            this.compoundNavigation(1);
-          }
-        });
+    if (this._isImageWithRegions(resource, this.representationsToDisplay)) {
+      this.getIncomingRegions(resource, 0);
     }
+
+    this._incomingService
+      .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+      .subscribe((countQuery: CountQueryResponse) => {
+        if (countQuery.numberOfResults > 0) {
+          this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+          this.compoundNavigation(1);
+        }
+      });
   }
 
   getIncomingRegions(resource: DspResource, offset: number): void {
@@ -90,17 +90,6 @@ export class IncomingRepresentationsService {
 
   private _requestIncomingResources(resource: DspResource): void {
     // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
-    if (resource.res.properties[Constants.HasStillImageFileValue]) {
-      this.getIncomingRegions(resource, 0);
-    } else if (this.compoundPosition) {
-      // TODO JULIEN NOT SURE IF THIS PART IS NEEDED.
-      // this resource is not a StillImageRepresentation
-      // check if there are StillImageRepresentations pointing to this resource
-
-      // this gets the first page of incoming StillImageRepresentations
-      // more pages may be requested by [[this.viewer]].
-      this._getIncomingStillImageRepresentations(this.compoundPosition.offset);
-    }
   }
 
   private _getIncomingStillImageRepresentations(offset: number): void {
@@ -219,5 +208,9 @@ export class IncomingRepresentationsService {
       representations.push(text);
     }
     return representations;
+  }
+
+  private _isImageWithRegions(resource: DspResource, representations: FileRepresentation[]) {
+    return resource.res.properties[Constants.HasStillImageFileValue] && representations.length > 0;
   }
 }
