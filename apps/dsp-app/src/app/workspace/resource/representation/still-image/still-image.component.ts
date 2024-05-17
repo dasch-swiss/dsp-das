@@ -172,7 +172,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.images && changes.images.isFirstChange()) {
       this._setupViewer();
-      this.loadImages();
+      this._loadImages();
     }
     // only if the image changed
     if (
@@ -181,7 +181,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
       changes.images.currentValue &&
       changes.images.currentValue[0].fileValue.fileUrl !== changes.images.previousValue[0].fileValue.fileUrl
     ) {
-      this.loadImages();
+      this._loadImages();
     }
 
     if (this.currentTab === 'annotations') {
@@ -211,36 +211,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     if (this.fileInfoSub) {
       this.fileInfoSub.unsubscribe();
     }
-  }
-
-  private loadImages() {
-    // closing, so no more loading of short in between images if turning
-    // multiple pages
-    this._viewer.close();
-    if (this.imagesSub) {
-      this.imagesSub.unsubscribe();
-    }
-    this.imagesSub = this._rs
-      .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
-      .subscribe(
-        (res: { originalFilename: string }) => {
-          this.originalFilename = res.originalFilename;
-          this._openImages();
-          this._unhighlightAllRegions();
-        },
-        () => {
-          this.failedToLoad = true;
-          // disable mouse navigation incl. zoom
-          this._viewer.setMouseNavEnabled(false);
-          // disable the navigator
-          this._viewer.navigator.element.style.display = 'none';
-          // disable the region draw mode
-          this.regionDrawMode = false;
-          // stop loading tiles
-          this._viewer.removeAllHandlers('open');
-          this.loading = false;
-        }
-      );
   }
 
   /**
@@ -507,7 +477,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       this._viewer.destroy();
       this._setupViewer();
-      this.loadImages();
+      this._loadImages();
       this.regionAdded.emit(res.id);
     });
   }
@@ -778,5 +748,35 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     regEle.addEventListener('click', () => {
       this.regionClicked.emit(regionIri);
     });
+  }
+
+  private _loadImages() {
+    // closing, so no more loading of short in between images if turning
+    // multiple pages
+    this._viewer.close();
+    if (this.imagesSub) {
+      this.imagesSub.unsubscribe();
+    }
+    this.imagesSub = this._rs
+      .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
+      .subscribe(
+        (res: { originalFilename: string }) => {
+          this.originalFilename = res.originalFilename;
+          this._openImages();
+          this._unhighlightAllRegions();
+        },
+        () => {
+          this.failedToLoad = true;
+          // disable mouse navigation incl. zoom
+          this._viewer.setMouseNavEnabled(false);
+          // disable the navigator
+          this._viewer.navigator.element.style.display = 'none';
+          // disable the region draw mode
+          this.regionDrawMode = false;
+          // stop loading tiles
+          this._viewer.removeAllHandlers('open');
+          this.loading = false;
+        }
+      );
   }
 }
