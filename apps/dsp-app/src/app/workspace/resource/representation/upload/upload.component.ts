@@ -19,6 +19,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UploadedFileResponse, UploadFileService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import {Store} from "@ngxs/store";
+import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
+import {filter, map, mergeMap} from "rxjs/operators";
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -59,7 +62,8 @@ export class UploadComponent implements OnInit {
     private _fb: UntypedFormBuilder,
     private _notification: NotificationService,
     private _sanitizer: DomSanitizer,
-    private _upload: UploadFileService
+    private _upload: UploadFileService,
+    private _store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +84,6 @@ export class UploadComponent implements OnInit {
       this._notification.openSnackBar(error);
       this.file = null;
     } else {
-      const formData = new FormData();
       this.file = files[0];
 
       // only certain filetypes are supported
@@ -92,8 +95,11 @@ export class UploadComponent implements OnInit {
         // show loading indicator only for files > 1MB
         this.isLoading = this.file.size > 1048576;
 
-        formData.append(this.file.name, this.file);
-        this._upload.upload(formData).subscribe(
+        this._store.select(ProjectsSelectors.currentProject).pipe(
+          filter(v => v !== undefined),
+          map(p=> p.shortcode),
+          mergeMap(sc => this._upload.upload(this.file, sc))
+        ).subscribe(
           (res: UploadedFileResponse) => {
             // prepare thumbnail url to display something after upload
             switch (this.representation) {

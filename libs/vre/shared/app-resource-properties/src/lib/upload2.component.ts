@@ -122,13 +122,10 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   private _uploadFile(file: File): void {
-    const formData = new FormData();
-    formData.append(file.name, file);
-
-     this._store.select(ProjectsSelectors.currentProject).pipe(
+    this._store.select(ProjectsSelectors.currentProject).pipe(
         filter(v => v !== undefined),
         map(p=> p.shortcode),
-        mergeMap(s => this._upload.upload(formData, s))
+        mergeMap(sc => this._upload.upload(file, sc))
     ).subscribe((res: UploadedFileResponse) => {
       switch (this.representation) {
         case Constants.HasStillImageFileValue:
