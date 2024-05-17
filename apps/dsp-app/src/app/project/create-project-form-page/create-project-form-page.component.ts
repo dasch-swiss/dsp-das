@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
+import { AddUserToProjectMembershipAction, LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { ProjectForm } from '../reusable-project-form/project-form.type';
 
 @Component({
@@ -66,6 +66,16 @@ export class CreateProjectFormPageComponent {
         selfjoin: true,
         status: true,
       })
+      .pipe(
+        map(projectResponse => {
+          if (this._router.url.includes(RouteConstants.assignCurrentUser)) {
+            const currentUser = this._store.selectSnapshot(UserSelectors.user);
+            this._store.dispatch(new AddUserToProjectMembershipAction(currentUser.id, projectResponse.project.id));
+          }
+
+          return projectResponse;
+        })
+      )
       .pipe(
         finalize(() => {
           this.loading = false;
