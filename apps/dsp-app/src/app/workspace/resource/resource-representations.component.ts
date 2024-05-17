@@ -21,17 +21,7 @@ import { map } from 'rxjs/operators';
       #stillImage
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.stillImage"
-      [image]="representationsToDisplay[0]"
-      [imageCaption]="resourceLabel(incomingResource, resource)"
-      [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id"
-      [project]="resource.res.attachedToProject"
-      [currentTab]="selectedTabLabel"
-      [parentResource]="incomingResource ? incomingResource.res : resource.res"
-      [activateRegion]="selectedRegion"
-      [editorPermissions]="isEditor$ | async"
-      (loaded)="representationLoaded($event)"
-      (regionClicked)="openRegion.emit($event)"
-      (regionAdded)="updateRegions($event)">
+      [image]="representationsToDisplay[0]">
     </app-still-image>
 
     <app-document

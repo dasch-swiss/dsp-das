@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -95,7 +94,7 @@ interface PolygonsForRegion {
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
 })
-export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) image!: FileRepresentation;
   @Input() imageCaption?: string;
   @Input() resourceIri: string;
@@ -106,10 +105,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   @Input() editorPermissions: boolean;
 
   @Output() regionClicked = new EventEmitter<string>();
-
   @Output() regionAdded = new EventEmitter<string>();
-
-  @Output() loaded = new EventEmitter<boolean>();
 
   imagesSub: Subscription;
   fileInfoSub: Subscription;
@@ -178,10 +174,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     if (changes.activateRegion) {
       this._unhighlightAllRegions();
     }
-  }
-
-  ngAfterViewInit() {
-    this.loaded.emit(true);
   }
 
   ngOnDestroy() {
