@@ -1,4 +1,4 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {AppConfigService} from '@dasch-swiss/vre/shared/app-config';
 import {AccessTokenService} from '@dasch-swiss/vre/shared/app-session';
@@ -33,13 +33,16 @@ export class UploadFileService {
   upload(file: File, shortcode: string): Observable<UploadedFileResponse> {
 
     const jwt = this._accessTokenService.getAccessToken()!;
-    const params = new HttpParams().set('token', jwt);
+    const headers = new HttpHeaders({
+            'Content-Type': 'application/octet-stream}',
+            'Authorization': `Bearer ${jwt}`
+        },
+    );
 
-    // --> TODO in order to track the progress change below to true and 'events'
     const options = {
-      params,
       reportProgress: false,
       observe: 'body' as const,
+      headers : headers
     };
     const url = `${this._acs.dspIngestConfig.url}/projects/${shortcode}/assets/ingest/${file.name}`;
     return this._http.post<UploadedFileResponse>(url, file, options);
