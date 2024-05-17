@@ -286,7 +286,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
           : '';
 
         if (!this.failedToLoad) {
-          this._createSVGOverlay(geom.region.id, geometry, aspectRatio, imageXOffset, geom.region.label, commentValue);
+          this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
         }
 
         imageXOffset++;
@@ -676,20 +676,10 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     return tileSources;
   }
 
-  /**
-   * creates and adds a ROI-overlay to the viewer
-   * @param regionIri the Iri of the region.
-   * @param geometry - the geometry describing the ROI
-   * @param aspectRatio -  the aspectRatio (h/w) of the image on which the geometry should be placed
-   * @param xOffset -  the x-offset in Openseadragon viewport coordinates of the image on which the geometry should be placed
-   * @param regionLabel -  the label of the region
-   * @param regionComment - the comment of the region
-   */
   private _createSVGOverlay(
     regionIri: string,
     geometry: RegionGeometry,
     aspectRatio: number,
-    xOffset: number,
     regionLabel: string,
     regionComment: string
   ): void {
