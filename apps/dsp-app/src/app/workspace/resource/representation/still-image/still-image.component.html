@@ -8,55 +8,15 @@
     *ngIf="failedToLoad"></app-status>
 
   <!-- navigation in case of compound object: previous and next page -->
-  <div class="navigation vertical previous" *ngIf="compoundNavigation">
-    <button
-      mat-button
-      [disabled]="compoundNavigation.page <= 1"
-      (click)="openPage(compoundNavigation.page - 1)"
-      class="full-size">
-      <mat-icon>keyboard_arrow_left</mat-icon>
-    </button>
-  </div>
-  <div class="navigation vertical next" *ngIf="compoundNavigation">
-    <button
-      mat-button
-      class="full-size"
-      [disabled]="
-                compoundNavigation.page >= compoundNavigation.totalPages
-            "
-      (click)="openPage(compoundNavigation.page + 1)">
-      <mat-icon>keyboard_arrow_right</mat-icon>
-    </button>
-  </div>
+  <!--<ng-container *ngIf="compoundNavigation">
+      <app-compound-arrow-navigation [forwardNavigation]="false"></app-compound-arrow-navigation>
+      <app-compound-arrow-navigation [forwardNavigation]="true"></app-compound-arrow-navigation>
+    </ng-container>-->
 </div>
 
 <div class="toolbar">
   <!-- navigation -->
-  <div *ngIf="compoundNavigation" class="compoundNavigation">
-    <mat-slider
-      [color]="'primary'"
-      [disabled]="compoundNavigation.totalPages < 2"
-      [max]="compoundNavigation.totalPages"
-      [min]="1"
-      [step]="1"
-      showTickMarks
-      discrete
-      #ngSlider
-      ><input
-        matSliderThumb
-        [(ngModel)]="compoundNavigation.page"
-        (change)="
-                    openPage(
-                        {
-                            source: ngSliderThumb,
-                            parent: ngSlider,
-                            value: ngSliderThumb.value
-                        }.value
-                    )
-                "
-        #ngSliderThumb="matSliderThumb" />
-    </mat-slider>
-  </div>
+  <app-compound-slider></app-compound-slider>
   <!-- toolbar -->
   <div class="toolbar-bottom">
     <!-- vertical more button with menu to open and copy iiif url -->
@@ -113,33 +73,7 @@
     <span class="fill-remaining-space"></span>
 
     <!-- navigation in case of compound object: first page and previous page -->
-    <span class="compound-nav" *ngIf="compoundNavigation">
-      <button mat-icon-button [disabled]="compoundNavigation.page <= 1" matTooltip="First page" (click)="openPage(1)">
-        <mat-icon>first_page</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        [disabled]="compoundNavigation.page <= 1"
-        matTooltip="Previous page"
-        (click)="openPage(compoundNavigation.page - 1)">
-        <mat-icon>navigate_before</mat-icon>
-      </button>
-      <span class="range">{{compoundNavigation.page}} of {{compoundNavigation.totalPages}}</span>
-      <button
-        mat-icon-button
-        [disabled]="compoundNavigation.page >= compoundNavigation.totalPages"
-        matTooltip="Next page"
-        (click)="openPage(compoundNavigation.page + 1)">
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        [disabled]="compoundNavigation.page === compoundNavigation.totalPages"
-        matTooltip="Last page"
-        (click)="openPage(compoundNavigation.totalPages)">
-        <mat-icon>last_page</mat-icon>
-      </button>
-    </span>
+    <!--<app-compound-navigation *ngIf="compoundNavigation"></app-compound-navigation>-->
 
     <span class="fill-remaining-space"></span>
 

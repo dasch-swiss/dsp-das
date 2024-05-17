@@ -2,8 +2,9 @@ import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
+import { CompoundService } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound.service';
 import { Subject, Subscription } from 'rxjs';
 import { StillImageComponent } from './representation/still-image/still-image.component';
 import { ValueOperationEventService } from './services/value-operation-event.service';
@@ -12,7 +13,7 @@ import { ValueOperationEventService } from './services/value-operation-event.ser
   selector: 'app-resource',
   templateUrl: './resource.component.html',
   styleUrls: ['./resource.component.scss'],
-  providers: [ValueOperationEventService, IncomingRepresentationsService], // provide service on the component level so that each implementation of this component has its own instance.
+  providers: [ValueOperationEventService, IncomingRepresentationsService, CompoundService], // provide service on the component level so that each implementation of this component has its own instance.
 })
 export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
@@ -24,7 +25,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   selectedRegion: string;
   selectedTab = 0;
   selectedTabLabel: string;
-  compoundPosition: DspCompoundPosition;
   loading = false;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
@@ -42,7 +42,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   ngOnChanges() {
     this.incomingResource = undefined;
-    this.compoundPosition = undefined;
     this.showRestrictedMessage = true;
     this._newMethod();
   }

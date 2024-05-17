@@ -15,7 +15,6 @@
       [incomingResource]="incomingRepresentationsService.incomingResource"
       [compoundPosition]="incomingRepresentationsService.compoundPosition"
       [representationsToDisplay]="representationsToDisplay"
-      (compoundNavigation)="incomingRepresentationsService.compoundNavigation($event)"
       (getIncomingRegions)="incomingRepresentationsService.getIncomingRegions($event.resource, $event.offset)"
       (openRegion)="openRegion($event)"></app-resource-representations>
 

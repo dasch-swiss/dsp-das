@@ -23,7 +23,6 @@ import { map } from 'rxjs/operators';
       *ngSwitchCase="representationConstants.stillImage"
       [images]="representationsToDisplay"
       [imageCaption]="resourceLabel(incomingResource, resource)"
-      [compoundNavigation]="compoundPosition"
       [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id"
       [project]="resource.res.attachedToProject"
       [currentTab]="selectedTabLabel"
@@ -31,7 +30,6 @@ import { map } from 'rxjs/operators';
       [activateRegion]="selectedRegion"
       [editorPermissions]="isEditor$ | async"
       (loaded)="representationLoaded($event)"
-      (goToPage)="compoundNavigation.emit($event)"
       (regionClicked)="openRegion.emit($event)"
       (regionAdded)="updateRegions($event)">
     </app-still-image>
@@ -95,7 +93,6 @@ export class ResourceRepresentationsComponent {
   @Input({ required: true }) selectedTabLabel!: string;
   @Input({ required: true }) selectedRegion!: string;
 
-  @Output() compoundNavigation = new EventEmitter<number>();
   @Output() openRegion = new EventEmitter<string>();
   @Output() getIncomingRegions = new EventEmitter<{ resource: DspResource; offset: number }>();
 

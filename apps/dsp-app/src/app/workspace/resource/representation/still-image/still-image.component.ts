@@ -34,7 +34,6 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspCompoundPosition } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
@@ -102,12 +101,9 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   @Input() resourceIri: string;
   @Input() project: string;
   @Input() activateRegion?: string; // highlight a region
-  @Input() compoundNavigation?: DspCompoundPosition;
   @Input() currentTab: string;
   @Input() parentResource: ReadResource;
   @Input() editorPermissions: boolean;
-
-  @Output() goToPage = new EventEmitter<number>();
 
   @Output() regionClicked = new EventEmitter<string>();
 
@@ -357,11 +353,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
   openImageInNewTab(url: string) {
     window.open(url, '_blank');
-  }
-
-  openPage(p: number) {
-    this.regionDrawMode = false;
-    this.goToPage.emit(p);
   }
 
   private _replaceFile(file: UpdateFileValue) {

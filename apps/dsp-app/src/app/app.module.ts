@@ -36,6 +36,9 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { AnnotationTabComponent } from '@dsp-app/src/app/workspace/resource/annotation-tab.component';
+import { CompoundArrowNavigationComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-arrow-navigation.component';
+import { CompoundNavigationComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-navigation.component';
+import { CompoundSliderComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-slider.component';
 import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
 import { ResourcePage2Component } from '@dsp-app/src/app/workspace/resource/resource-page-2.component';
 import { ResourceParentComponent } from '@dsp-app/src/app/workspace/resource/resource-parent.component';
@@ -302,6 +305,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceHeaderComponent,
     ResourceTabsComponent,
     AnnotationTabComponent,
+    CompoundArrowNavigationComponent,
+    CompoundSliderComponent,
+    CompoundNavigationComponent,
   ],
   imports: [
     AngularSplitModule,
