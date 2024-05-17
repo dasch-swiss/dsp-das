@@ -7,19 +7,22 @@
   <div class="resource-view" *ngIf="resource">
     <app-resource-header [resource]="resource"></app-resource-header>
 
-    <app-resource-representations
-      *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
-      [resource]="resource"
-      [selectedRegion]="selectedRegion"
-      [selectedTabLabel]="selectedTabLabel"
-      [incomingResource]="incomingRepresentationsService.incomingResource"
-      [compoundPosition]="incomingRepresentationsService.compoundPosition"
-      [representationsToDisplay]="representationsToDisplay"
-      (getIncomingRegions)="incomingRepresentationsService.getIncomingRegions($event.resource, $event.offset)"
-      (openRegion)="openRegion($event)"></app-resource-representations>
+    <ng-container *ngIf="!incomingRepresentationsService.compoundPosition">
+      <app-resource-representations
+        *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
+        [resource]="resource"
+        [selectedRegion]="selectedRegion"
+        [selectedTabLabel]="selectedTabLabel"
+        [incomingResource]="incomingRepresentationsService.incomingResource"
+        [compoundPosition]="incomingRepresentationsService.compoundPosition"
+        [representationsToDisplay]="representationsToDisplay"
+        (getIncomingRegions)="incomingRepresentationsService.getIncomingRegions($event.resource, $event.offset)"
+        (openRegion)="openRegion($event)"></app-resource-representations>
+    </ng-container>
+    <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
 
     <app-resource-tabs
-      *ngIf="!loading"
+      *ngIf="false && !loading"
       [resource]="resource"
       [annotationResources]="annotationResources"
       [selectedRegion]="selectedRegion"

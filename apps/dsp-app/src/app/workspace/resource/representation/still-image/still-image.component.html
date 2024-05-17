@@ -3,20 +3,20 @@
   <!-- in case of an error -->
   <app-status
     [status]="404"
-    [url]="images[0].fileValue.fileUrl"
+    [url]="image.fileValue.fileUrl"
     [representation]="'still-image'"
     *ngIf="failedToLoad"></app-status>
 
   <!-- navigation in case of compound object: previous and next page -->
   <!--<ng-container *ngIf="compoundNavigation">
-      <app-compound-arrow-navigation [forwardNavigation]="false"></app-compound-arrow-navigation>
-      <app-compound-arrow-navigation [forwardNavigation]="true"></app-compound-arrow-navigation>
-    </ng-container>-->
+          <app-compound-arrow-navigation [forwardNavigation]="false"></app-compound-arrow-navigation>
+          <app-compound-arrow-navigation [forwardNavigation]="true"></app-compound-arrow-navigation>
+        </ng-container>-->
 </div>
 
 <div class="toolbar">
   <!-- navigation -->
-  <app-compound-slider></app-compound-slider>
+  <!--<app-compound-slider></app-compound-slider>-->
   <!-- toolbar -->
   <div class="toolbar-bottom">
     <!-- vertical more button with menu to open and copy iiif url -->
@@ -24,7 +24,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #more="matMenu" class="representation-menu">
-      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(images[0].fileValue.fileUrl)">
+      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(image.fileValue.fileUrl)">
         Open IIIF URL in new tab
       </button>
       <button
@@ -44,19 +44,19 @@
         <button
           mat-menu-item
           (click)="openSnackBar('IIIF URL copied to clipboard!')"
-          [cdkCopyToClipboard]="images[0].fileValue.fileUrl">
+          [cdkCopyToClipboard]="image.fileValue.fileUrl">
           <mat-icon>content_copy</mat-icon>
           Copy IIIF URL to clipboard
         </button>
         <button
           mat-menu-item
-          [cdkCopyToClipboard]="images[0].fileValue.arkUrl"
+          [cdkCopyToClipboard]="image.fileValue.arkUrl"
           (click)="openSnackBar('ARK URL copied to clipboard!')">
           <mat-icon>content_copy</mat-icon>
           Copy ARK url to clipboard
         </button>
       </mat-menu>
-      <button mat-icon-button matTooltip="Download" (click)="download(images[0].fileValue.fileUrl)">
+      <button mat-icon-button matTooltip="Download" (click)="download(image.fileValue.fileUrl)">
         <mat-icon>download</mat-icon>
       </button>
       <button

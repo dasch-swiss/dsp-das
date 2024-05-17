@@ -72,8 +72,6 @@ export class IncomingRepresentationsService {
   compoundNavigation(page: number) {
     this.representationsToDisplay = [];
 
-    // set current compound object position:
-    // calculate offset and offset item position from current page and total pages info
     const offset = Math.ceil(page / 25) - 1;
     const position = Math.floor(page - offset * 25 - 1);
 
@@ -87,7 +85,6 @@ export class IncomingRepresentationsService {
     }
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
-    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
   }
 
   private _requestIncomingResources(resource: DspResource): void {

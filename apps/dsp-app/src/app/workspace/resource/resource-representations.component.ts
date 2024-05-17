@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
       #stillImage
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.stillImage"
-      [images]="representationsToDisplay"
+      [image]="representationsToDisplay[0]"
       [imageCaption]="resourceLabel(incomingResource, resource)"
       [resourceIri]="incomingResource ? incomingResource.res.id : resource.res.id"
       [project]="resource.res.attachedToProject"

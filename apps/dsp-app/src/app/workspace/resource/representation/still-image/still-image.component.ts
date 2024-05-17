@@ -96,7 +96,7 @@ interface PolygonsForRegion {
   styleUrls: ['./still-image.component.scss'],
 })
 export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit {
-  @Input() images: FileRepresentation[];
+  @Input({ required: true }) image!: FileRepresentation;
   @Input() imageCaption?: string;
   @Input() resourceIri: string;
   @Input() project: string;
@@ -166,19 +166,8 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.images && changes.images.isFirstChange()) {
-      this._setupViewer();
-      this._loadImages();
-    }
-    // only if the image changed
-    if (
-      changes.images &&
-      changes.images.previousValue &&
-      changes.images.currentValue &&
-      changes.images.currentValue[0].fileValue.fileUrl !== changes.images.previousValue[0].fileValue.fileUrl
-    ) {
-      this._loadImages();
-    }
+    this._setupViewer();
+    this._loadImages();
 
     if (this.currentTab === 'annotations') {
       this.renderRegions();
@@ -250,7 +239,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
 
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
-    for (const image of this.images) {
+    for (const image of [this.image]) {
       const stillImage = image.fileValue as ReadStillImageFileValue;
       const aspectRatio = stillImage.dimY / stillImage.dimX;
 
@@ -321,7 +310,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
   }
 
   download(url: string) {
-    this._rs.downloadFile(url, this.images[0].fileValue.filename);
+    this._rs.downloadFile(url, this.image.fileValue.filename);
   }
 
   openReplaceFileDialog() {
@@ -377,7 +366,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
         );
 
         this._rs
-          .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
+          .getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename)
           .subscribe((res: { originalFilename: string }) => {
             this.originalFilename = res.originalFilename;
           });
@@ -468,7 +457,6 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
       this._viewer.destroy();
       this._setupViewer();
-      this._loadImages();
       this.regionAdded.emit(res.id);
     });
   }
@@ -602,22 +590,17 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
    * Images are positioned in a horizontal row next to each other.
    */
   private _openImages(): void {
-    // imageXOffset controls the x coordinate of the left side of each image in the OpenSeadragon viewport coordinate system.
-    // the first image has its left side at x = 0, and all images are scaled to have a width of 1 in viewport coordinates.
-    // see also: https://openseadragon.github.io/examples/viewport-coordinates/
-
-    // reset the status
     this.failedToLoad = false;
 
-    const fileValues: ReadFileValue[] = this.images.map(img => img.fileValue);
+    const fileValues: ReadFileValue[] = [this.image.fileValue]; // TODO this was this.images.
 
     // display only the defined range of this.images
-    const tileSources: object[] = this._prepareTileSourcesFromFileValues(fileValues);
+    const tileSources: object[] = StillImageComponent._prepareTileSourcesFromFileValues(fileValues);
 
     this.removeOverlays();
     this._viewer.addOnceHandler('open', args => {
       // check if the current image exists
-      if (this.images[0].fileValue.fileUrl.includes(args.source['@id'])) {
+      if (this.image.fileValue.fileUrl.includes(args.source['id'])) {
         // enable mouse navigation incl. zoom
         this._viewer.setMouseNavEnabled(true);
         // enable the navigator
@@ -634,7 +617,7 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
    * @param imagesToDisplay the given file values to de displayed.
    * @returns the tile sources to be passed to OSD _viewer.
    */
-  private _prepareTileSourcesFromFileValues(imagesToDisplay: ReadFileValue[]): object[] {
+  private static _prepareTileSourcesFromFileValues(imagesToDisplay: ReadFileValue[]): object[] {
     const images = imagesToDisplay as ReadStillImageFileValue[];
 
     let imageXOffset = 0;
@@ -738,26 +721,24 @@ export class StillImageComponent implements OnChanges, OnDestroy, AfterViewInit 
     if (this.imagesSub) {
       this.imagesSub.unsubscribe();
     }
-    this.imagesSub = this._rs
-      .getFileInfo(this.images[0].fileValue.fileUrl, this.images[0].fileValue.filename)
-      .subscribe(
-        (res: { originalFilename: string }) => {
-          this.originalFilename = res.originalFilename;
-          this._openImages();
-          this._unhighlightAllRegions();
-        },
-        () => {
-          this.failedToLoad = true;
-          // disable mouse navigation incl. zoom
-          this._viewer.setMouseNavEnabled(false);
-          // disable the navigator
-          this._viewer.navigator.element.style.display = 'none';
-          // disable the region draw mode
-          this.regionDrawMode = false;
-          // stop loading tiles
-          this._viewer.removeAllHandlers('open');
-          this.loading = false;
-        }
-      );
+    this.imagesSub = this._rs.getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename).subscribe(
+      (res: { originalFilename: string }) => {
+        this.originalFilename = res.originalFilename;
+        this._openImages();
+        this._unhighlightAllRegions();
+      },
+      () => {
+        this.failedToLoad = true;
+        // disable mouse navigation incl. zoom
+        this._viewer.setMouseNavEnabled(false);
+        // disable the navigator
+        this._viewer.navigator.element.style.display = 'none';
+        // disable the region draw mode
+        this.regionDrawMode = false;
+        // stop loading tiles
+        this._viewer.removeAllHandlers('open');
+        this.loading = false;
+      }
+    );
   }
 }
