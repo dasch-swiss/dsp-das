@@ -59,6 +59,35 @@ export class IncomingRepresentationsService {
     }
   }
 
+  getIncomingRegions(resource: DspResource, offset: number): void {
+    this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe((regions: ReadResourceSequence) => {
+      Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
+      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+    });
+  }
+
+  compoundNavigation(page: number) {
+    // TODO this.selectedRegion = undefined;
+    this.representationsToDisplay = [];
+
+    // set current compound object position:
+    // calculate offset and offset item position from current page and total pages info
+    const offset = Math.ceil(page / 25) - 1;
+    const position = Math.floor(page - offset * 25 - 1);
+
+    // get incoming still image representations, if the offset changed
+    if (offset !== this.compoundPosition.offset) {
+      this.compoundPosition.offset = offset;
+      this._getIncomingStillImageRepresentations(offset);
+    } else {
+      // get incoming resource, if the offset is the same but page changed
+      this._getIncomingResource(this.resource.incomingRepresentations[position].id);
+    }
+    this.compoundPosition.position = position;
+    this.compoundPosition.page = page;
+    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+  }
+
   private _requestIncomingResources(resource: DspResource): void {
     // request incoming regions --> TODO: add case to get incoming sequences in case of video and audio
     if (resource.res.properties[Constants.HasStillImageFileValue]) {
@@ -92,35 +121,6 @@ export class IncomingRepresentationsService {
           this.representationsToDisplay = [];
         }
       });
-  }
-
-  getIncomingRegions(resource: DspResource, offset: number): void {
-    this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe((regions: ReadResourceSequence) => {
-      Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
-      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
-    });
-  }
-
-  compoundNavigation(page: number) {
-    // TODO this.selectedRegion = undefined;
-    this.representationsToDisplay = [];
-
-    // set current compound object position:
-    // calculate offset and offset item position from current page and total pages info
-    const offset = Math.ceil(page / 25) - 1;
-    const position = Math.floor(page - offset * 25 - 1);
-
-    // get incoming still image representations, if the offset changed
-    if (offset !== this.compoundPosition.offset) {
-      this.compoundPosition.offset = offset;
-      this._getIncomingStillImageRepresentations(offset);
-    } else {
-      // get incoming resource, if the offset is the same but page changed
-      this._getIncomingResource(this.resource.incomingRepresentations[position].id);
-    }
-    this.compoundPosition.position = position;
-    this.compoundPosition.page = page;
-    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
   }
 
   private _getIncomingResource(iri: string) {
