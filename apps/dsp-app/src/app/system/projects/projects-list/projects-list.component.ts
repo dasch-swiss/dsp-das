@@ -134,7 +134,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   createNewProject() {
     const queryParams = this.isUsersProjects ? { [RouteConstants.assignCurrentUser]: true } : {};
-    this._router.navigate([RouteConstants.project, RouteConstants.createNew], { queryParams: queryParams });
+    this._router.navigate([RouteConstants.project, RouteConstants.createNew], { queryParams });
   }
 
   editProject(iri: string) {
