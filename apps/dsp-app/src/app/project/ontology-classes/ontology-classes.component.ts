@@ -3,7 +3,6 @@ import { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { OntologyClassService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology-classes',
   templateUrl: './ontology-classes.component.html',
   styleUrls: ['./ontology-classes.component.scss'],

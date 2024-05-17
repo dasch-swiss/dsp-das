@@ -68,7 +68,6 @@ import {
 } from './edit-resource-class-dialog/edit-resource-class-dialog.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology',
   templateUrl: './ontology.component.html',
   styleUrls: ['./ontology.component.scss'],

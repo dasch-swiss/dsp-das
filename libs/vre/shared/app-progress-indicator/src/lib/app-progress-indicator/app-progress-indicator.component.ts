@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [NgIf, MatIconModule],
   templateUrl: './app-progress-indicator.component.html',
   styleUrls: ['./app-progress-indicator.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppProgressIndicatorComponent implements OnInit {
   /**

@@ -16,7 +16,6 @@ import { ProjectBase } from '../project-base';
 import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration',
   templateUrl: './collaboration.component.html',
   styleUrls: ['./collaboration.component.scss'],

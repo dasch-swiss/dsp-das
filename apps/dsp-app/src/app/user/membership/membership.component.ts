@@ -22,7 +22,6 @@ import { map, takeUntil } from 'rxjs/operators';
 import { AutocompleteItem } from '../../workspace/search/operator';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-membership',
   template: `
     <dasch-swiss-app-progress-indicator *ngIf="isMembershipLoading$ | async"></dasch-swiss-app-progress-indicator>

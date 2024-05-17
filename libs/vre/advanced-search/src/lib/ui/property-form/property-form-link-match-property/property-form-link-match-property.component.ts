@@ -45,7 +45,6 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
   ],
   templateUrl: './property-form-link-match-property.component.html',
   styleUrls: ['./property-form-link-match-property.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
   @Input() values: PropertyFormItem[] | undefined = [];

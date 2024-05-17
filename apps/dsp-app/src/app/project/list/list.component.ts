@@ -24,7 +24,6 @@ import {
 } from './reusable-list-info-form/edit-list-info-dialog.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
