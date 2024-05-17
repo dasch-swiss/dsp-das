@@ -6,7 +6,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AddUserToProjectMembershipAction, LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ProjectForm } from '../reusable-project-form/project-form.type';
 
 @Component({
@@ -67,21 +67,16 @@ export class CreateProjectFormPageComponent {
         status: true,
       })
       .pipe(
-        map(projectResponse => {
-          if (this._router.url.includes(RouteConstants.assignCurrentUser)) {
-            const currentUser = this._store.selectSnapshot(UserSelectors.user);
-            this._store.dispatch(new AddUserToProjectMembershipAction(currentUser.id, projectResponse.project.id));
-          }
-
-          return projectResponse;
-        })
-      )
-      .pipe(
         finalize(() => {
           this.loading = false;
         })
       )
       .subscribe(projectResponse => {
+        if (this._router.url.includes(RouteConstants.assignCurrentUser)) {
+          const currentUser = this._store.selectSnapshot(UserSelectors.user);
+          this._store.dispatch(new AddUserToProjectMembershipAction(currentUser.id, projectResponse.project.id));
+        }
+
         const uuid = ProjectService.IriToUuid(projectResponse.project.id);
         this._store.dispatch(new LoadProjectsAction());
         this._router.navigate([RouteConstants.projectRelative, uuid]);
