@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {AppConfigService} from '@dasch-swiss/vre/shared/app-config';
+import {AccessTokenService} from '@dasch-swiss/vre/shared/app-session';
+import {Observable} from 'rxjs';
 
 export interface UploadedFile {
   fileType: string;
@@ -26,11 +26,11 @@ export class UploadFileService {
   ) {}
 
   /**
-   * uploads files to SIPI
-   * @param (file)
+   * uploads files to ingest server
+   * @param (file) The file to upload
+   * @param (shortcode) The project shortcode
    */
-  upload(file: FormData): Observable<UploadedFileResponse> {
-    const ingestUrl = `${this._acs.dspIngestConfig.url}`;
+  upload(file: FormData, shortcode: String): Observable<UploadedFileResponse> {
 
     const jwt = this._accessTokenService.getAccessToken()!;
     const params = new HttpParams().set('token', jwt);
@@ -41,6 +41,7 @@ export class UploadFileService {
       reportProgress: false,
       observe: 'body' as const,
     };
-    return this._http.post<UploadedFileResponse>(uploadUrl, file, options);
+    const url = `${this._acs.dspIngestConfig.url}/projects/${shortcode}/assets/ingest/${file.name}`;
+    return this._http.post<UploadedFileResponse>(url, file, options);
   }
 }

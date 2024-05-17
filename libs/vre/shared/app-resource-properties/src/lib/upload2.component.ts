@@ -1,11 +1,15 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Constants } from '@dasch-swiss/dsp-js';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentationType } from './file-representation.type';
-import { fileValueMapping } from './file-value-mapping';
-import { UploadedFileResponse, UploadFileService } from './upload-file.service';
+import {ChangeDetectorRef, Component, ElementRef, Input, Self, ViewChild} from '@angular/core';
+import {ControlValueAccessor, NgControl} from '@angular/forms';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {Constants} from '@dasch-swiss/dsp-js';
+import {NotificationService} from '@dasch-swiss/vre/shared/app-notification';
+import {FileRepresentationType} from './file-representation.type';
+import {fileValueMapping} from './file-value-mapping';
+import {UploadedFileResponse, UploadFileService} from './upload-file.service';
+import {Store} from "@ngxs/store";
+import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
+import {filter, map, mergeMap} from "rxjs/operators";
+import {project} from "effect/Layer";
 
 @Component({
   selector: 'app-upload-2',
@@ -79,6 +83,7 @@ export class Upload2Component implements ControlValueAccessor {
     private _upload: UploadFileService,
     private _sanitizer: DomSanitizer,
     private _cdr: ChangeDetectorRef,
+    private _store: Store,
     @Self() public ngControl: NgControl
   ) {
     ngControl.valueAccessor = this;
@@ -120,7 +125,11 @@ export class Upload2Component implements ControlValueAccessor {
     const formData = new FormData();
     formData.append(file.name, file);
 
-    this._upload.upload(formData).subscribe((res: UploadedFileResponse) => {
+     this._store.select(ProjectsSelectors.currentProject).pipe(
+        filter(v => v !== undefined),
+        map(p=> p.shortcode),
+        mergeMap(s => this._upload.upload(formData, s))
+    ).subscribe((res: UploadedFileResponse) => {
       switch (this.representation) {
         case Constants.HasStillImageFileValue:
           this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(
