@@ -47,16 +47,19 @@ export class IncomingRepresentationsService {
 
     if (this._isImageWithRegions(resource, this.representationsToDisplay)) {
       this.getIncomingRegions(resource, 0);
+      return;
     }
 
-    this._incomingService
-      .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-      .subscribe((countQuery: CountQueryResponse) => {
-        if (countQuery.numberOfResults > 0) {
-          this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
-          this.compoundNavigation(1);
-        }
-      });
+    if (this._isObjectWithoutRepresentation(resource)) {
+      this._incomingService
+        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+        .subscribe((countQuery: CountQueryResponse) => {
+          if (countQuery.numberOfResults > 0) {
+            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+            this.compoundNavigation(1);
+          }
+        });
+    }
   }
 
   getIncomingRegions(resource: DspResource, offset: number): void {
@@ -212,5 +215,16 @@ export class IncomingRepresentationsService {
 
   private _isImageWithRegions(resource: DspResource, representations: FileRepresentation[]) {
     return resource.res.properties[Constants.HasStillImageFileValue] && representations.length > 0;
+  }
+
+  private _isObjectWithoutRepresentation(resource: DspResource) {
+    return [
+      Constants.HasStillImageFileValue,
+      Constants.HasMovingImageFileValue,
+      Constants.HasAudioFileValue,
+      Constants.HasTextFileValue,
+      Constants.HasDocumentFileValue,
+      Constants.HasArchiveFileValue,
+    ].reduce((prev, current) => prev && !resource.res.properties[current], true);
   }
 }
