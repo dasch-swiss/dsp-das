@@ -43,9 +43,9 @@ export class IncomingRepresentationsService {
 
   onInit(resource: DspResource) {
     this.resource = resource;
-    this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+    const representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
 
-    if (this._isImageWithRegions(resource, this.representationsToDisplay)) {
+    if (this._isImageWithRegions(resource, representationsToDisplay)) {
       this.getIncomingRegions(resource, 0);
       return;
     }
@@ -70,7 +70,6 @@ export class IncomingRepresentationsService {
   }
 
   compoundNavigation(page: number) {
-    // TODO this.selectedRegion = undefined;
     this.representationsToDisplay = [];
 
     // set current compound object position:
