@@ -1,10 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ReadUser, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingLink, PropertiesDisplayService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import {
+  IncomingOrStandoffLink,
+  PropertiesDisplayService,
+  sortByKeys,
+} from '@dasch-swiss/vre/shared/app-resource-properties';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 
@@ -15,7 +19,10 @@ import { PropertiesDisplayIncomingLinkService } from './properties-display-incom
       <h3 style="margin: 0 16px" *ngIf="isAnnotation">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="isAnnotation"></app-properties-toolbar>
-        <app-resource-toolbar *ngIf="isAnnotation" [resource]="resource"></app-resource-toolbar>
+        <app-resource-toolbar
+          *ngIf="isAnnotation"
+          [adminPermissions]="adminPermissions"
+          [resource]="resource"></app-resource-toolbar>
       </div>
     </div>
 
@@ -57,7 +64,7 @@ import { PropertiesDisplayIncomingLinkService } from './properties-display-incom
         tooltip=" Represent a link in standoff markup from one resource to another"
         label="has Standoff link"
         [borderBottom]="true">
-        <app-standoff-link-value [standoffLinks]="standoffLinks"></app-standoff-link-value>
+        <app-incoming-standoff-link-value [links]="standoffLinks"></app-incoming-standoff-link-value>
       </app-property-row>
     </ng-container>
 
@@ -68,7 +75,7 @@ import { PropertiesDisplayIncomingLinkService } from './properties-display-incom
         tooltip="Indicates that this resource is referred to by another resource"
         label="has incoming link"
         [borderBottom]="true">
-        <app-incoming-link-value [incomingLinks]="incomingLinks"></app-incoming-link-value>
+        <app-incoming-standoff-link-value [links]="incomingLinks"></app-incoming-standoff-link-value>
       </app-property-row>
     </ng-container>
 
@@ -105,16 +112,17 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
   @Input() isAnnotation = false;
+  @Input() adminPermissions = false;
 
   resourceAttachedUser$: Observable<ReadUser> = this._store.select(ResourceSelectors.attachedUsers).pipe(
     takeUntil(this.ngUnsubscribe),
     map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
   );
   myProperties$: Observable<PropertyInfoValues[]> = of([]);
-  incomingLinks$: Observable<IncomingLink[]> = of([]);
+  incomingLinks$: Observable<IncomingOrStandoffLink[]> = of([]);
   showIncomingLinks$ = of(false);
 
-  standoffLinks: ReadLinkValue[] = [];
+  standoffLinks: IncomingOrStandoffLink[] = [];
   showStandoffLinks$ = of(false);
 
   constructor(
@@ -148,9 +156,17 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       switchMap(links => (links.length > 0 ? of(true) : this._propertiesDisplayService.showAllProperties$))
     );
 
-    this.standoffLinks =
+    this.standoffLinks = (
       (this.properties.find(prop => prop.propDef.id === Constants.HasStandoffLinkToValue)?.values as ReadLinkValue[]) ??
-      [];
+      []
+    ).map(link => {
+      return {
+        label: link.strval,
+        uri: `/resource/${link.linkedResourceIri.match(/[^\/]*\/[^\/]*$/)[0]}`,
+        project: link.linkedResource.resourceClassLabel,
+      };
+    });
+    this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
     this.showStandoffLinks$ = this._propertiesDisplayService.showAllProperties$.pipe(
       map(showAllProps => (this.standoffLinks.length > 0 ? true : showAllProps))
     );
