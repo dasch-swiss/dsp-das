@@ -97,7 +97,7 @@ export class UploadComponent implements OnInit {
 
         this._store.select(ProjectsSelectors.currentProject).pipe(
           filter(v => v !== undefined),
-          map(p=> p.shortcode),
+          map(prj=> prj.shortcode),
           mergeMap(sc => this._upload.upload(this.file, sc))
         ).subscribe(
           (res: UploadedFileResponse) => {

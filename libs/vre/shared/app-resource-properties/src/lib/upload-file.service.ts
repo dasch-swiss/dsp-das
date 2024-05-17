@@ -30,7 +30,7 @@ export class UploadFileService {
    * @param (file) The file to upload
    * @param (shortcode) The project shortcode
    */
-  upload(file: File, shortcode: String): Observable<UploadedFileResponse> {
+  upload(file: File, shortcode: string): Observable<UploadedFileResponse> {
 
     const jwt = this._accessTokenService.getAccessToken()!;
     const params = new HttpParams().set('token', jwt);
