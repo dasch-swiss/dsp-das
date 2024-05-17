@@ -1,14 +1,19 @@
 /**
- * configuration to instantiate the iiif url.
+ * configuration to instantiate the ingest url.
  *
  * @category Config
  */
-export class DspIngestfConfig {
-  static readonly DSP_INGEST_URL = 'http://localhost:3340';
+export class DspIngestConfig {
 
-  constructor(public dspIngestUrl: string) {}
+    /**
+     * @param ingestUrl the url to the ingest service
+     */
+    constructor(
+        public ingestUrl: string,
+    ) {
+    }
 
-  get url(): string {
-    return this.dspIngestUrl;
-  }
+    get url(): string {
+        return this.ingestUrl;
+    }
 }

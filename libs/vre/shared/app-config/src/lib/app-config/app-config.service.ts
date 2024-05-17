@@ -10,8 +10,8 @@ import { AppConfigToken } from './dsp-api-tokens';
 import { DspAppConfig } from './dsp-app-config';
 import { DspConfig } from './dsp-config';
 import { DspIiifConfig } from './dsp-iiif-config';
-import { DspIngestConfig } from './dsp-iiif-config';
 import { DspInstrumentationConfig, DspRollbarConfig } from './dsp-instrumentation-config';
+import {DspIngestConfig} from "./dsp-ingest-config";
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +61,7 @@ export class AppConfigService {
     // init iiif configuration
     this._dspIiifConfig = new DspIiifConfig(c.iiifProtocol, c.iiifHost, c.iiifPort, c.iiifPath);
 
-    // init ingestconfiguration
+    // init ingest configuration
     this._dspIngestConfig = new DspIngestConfig(c.ingestUrl);
 
     // init dsp app extended configuration

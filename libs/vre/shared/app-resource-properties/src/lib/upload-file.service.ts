@@ -30,7 +30,7 @@ export class UploadFileService {
    * @param (file)
    */
   upload(file: FormData): Observable<UploadedFileResponse> {
-    const uploadUrl = `${this._acs.dspIiifConfig.iiifUrl}/upload`;
+    const ingestUrl = `${this._acs.dspIngestConfig.url}`;
 
     const jwt = this._accessTokenService.getAccessToken()!;
     const params = new HttpParams().set('token', jwt);
