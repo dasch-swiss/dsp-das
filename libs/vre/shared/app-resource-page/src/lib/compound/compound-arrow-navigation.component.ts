@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
+import { IncomingRepresentationsService } from '../incoming-representations.service';
 
 @Component({
   selector: 'app-compound-arrow-navigation',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DspCompoundPosition } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
+import { IncomingRepresentationsService } from '../incoming-representations.service';
 
 @Injectable()
 export class CompoundService {

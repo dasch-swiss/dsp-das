@@ -28,6 +28,7 @@ import {
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
+import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
@@ -35,16 +36,6 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { AnnotationTabComponent } from '@dsp-app/src/app/workspace/resource/annotation-tab.component';
-import { CompoundArrowNavigationComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-arrow-navigation.component';
-import { CompoundNavigationComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-navigation.component';
-import { CompoundSliderComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-slider.component';
-import { CompoundViewerComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/compound-viewer.component';
-import { ResourceHeaderComponent } from '@dsp-app/src/app/workspace/resource/resource-header.component';
-import { ResourcePage2Component } from '@dsp-app/src/app/workspace/resource/resource-page-2.component';
-import { ResourceParentComponent } from '@dsp-app/src/app/workspace/resource/resource-parent.component';
-import { ResourceRepresentationsComponent } from '@dsp-app/src/app/workspace/resource/resource-representations.component';
-import { ResourceTabsComponent } from '@dsp-app/src/app/workspace/resource/resource-tabs.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -160,8 +151,6 @@ import { VideoPreviewComponent } from './workspace/resource/representation/video
 import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
-import { ResourcePageComponent } from './workspace/resource/resource-page.component';
-import { ResourceComponent } from './workspace/resource/resource.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
@@ -183,6 +172,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
+    ...ResourcePageComponents,
     PropertiesDisplayComponent,
     AccountComponent,
     ActionBubbleComponent,
@@ -258,12 +248,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceClassFormComponent,
     ResourceClassInfoComponent,
     ResourceClassPropertyInfoComponent,
-    ResourceComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
-    ResourcePageComponent,
-    ResourcePage2Component,
-    ResourceParentComponent,
     ResourceToolbarComponent,
     ResultsComponent,
     SearchPanelComponent,
@@ -302,14 +288,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
-    ResourceRepresentationsComponent,
-    ResourceHeaderComponent,
-    ResourceTabsComponent,
-    AnnotationTabComponent,
-    CompoundArrowNavigationComponent,
-    CompoundSliderComponent,
-    CompoundNavigationComponent,
-    CompoundViewerComponent,
   ],
   imports: [
     AngularSplitModule,

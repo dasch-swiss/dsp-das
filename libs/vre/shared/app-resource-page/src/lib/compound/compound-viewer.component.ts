@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
 import { FileRepresentation } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
+import { IncomingRepresentationsService } from '../incoming-representations.service';
 
 @Component({
   selector: 'app-compound-viewer',

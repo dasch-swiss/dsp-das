@@ -1,5 +1,5 @@
-@use '../../../styles/config' as *;
-@use '../../../styles/responsive' as *;
+@use '../../../../../../apps/dsp-app/src/styles/config' as *;
+@use '../../../../../../apps/dsp-app/src/styles/responsive' as *;
 
 :host ::ng-deep .mat-mdc-tab-body {
   min-height: 70vh;

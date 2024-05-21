@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingRepresentationsService } from '@dsp-app/src/app/workspace/resource/incoming-representations.service';
 import { RepresentationConstants } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
+import { IncomingRepresentationsService } from './incoming-representations.service';
 
 @Component({
   selector: 'app-resource-tabs',
