@@ -30,7 +30,7 @@ import { map } from 'rxjs/operators';
         [adminPermissions]="isAdmin$ | async"
         [showEditLabel]="false"></app-resource-toolbar>
     </div>
-    <div class="resource-label">
+    <div class="resource-label" style="display: flex; justify-content: space-between">
       <h4>{{ resource.res.label }}</h4>
       <button
         mat-icon-button
@@ -45,6 +45,21 @@ import { map } from 'rxjs/operators';
   </div>`,
   styles: [
     `
+      .resource-header {
+        margin-bottom: 24px;
+      }
+
+      .resource-label h4 {
+        display: inline-block;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 22px;
+        margin-bottom: 0;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        padding-top: 16px;
+      }
+
       .resource-class-header {
         display: flex;
         box-sizing: border-box;
