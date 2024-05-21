@@ -12,6 +12,7 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { mergeMap } from 'rxjs/operators';
 import { DialogComponent } from '../../../../main/dialog/dialog.component';
 import {
@@ -20,7 +21,6 @@ import {
   UpdatedFileEventValue,
   ValueOperationEventService,
 } from '../../services/value-operation-event.service';
-import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 
 @Component({

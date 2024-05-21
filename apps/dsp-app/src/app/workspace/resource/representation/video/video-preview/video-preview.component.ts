@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
-import { FileRepresentation } from '../../file-representation';
 
 export interface MovingImageSidecar {
   // eslint-disable-next-line @typescript-eslint/naming-convention

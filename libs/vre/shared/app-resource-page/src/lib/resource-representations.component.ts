@@ -2,13 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  FileRepresentation,
-  RepresentationConstants,
-} from '@dsp-app/src/app/workspace/resource/representation/file-representation';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FileRepresentation, RepresentationConstants } from './file-representation';
 
 @Component({
   selector: 'app-resource-representations',

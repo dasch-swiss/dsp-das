@@ -18,10 +18,10 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
-import { FileRepresentation } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
 import { Region } from '@dsp-app/src/app/workspace/resource/representation/still-image/still-image.component';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
+import { FileRepresentation } from './file-representation';
 
 @Injectable()
 export class IncomingRepresentationsService {

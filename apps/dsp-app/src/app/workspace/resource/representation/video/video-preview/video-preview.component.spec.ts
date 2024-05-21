@@ -2,8 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReadMovingImageFileValue } from '@dasch-swiss/dsp-js';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { TimePipe } from '@dsp-app/src/app/main/pipes/time.pipe';
-import { FileRepresentation } from '../../file-representation';
 import { VideoPreviewComponent } from './video-preview.component';
 
 const videoFileValue: ReadMovingImageFileValue = {
@@ -30,7 +30,7 @@ const videoFileValue: ReadMovingImageFileValue = {
 };
 
 @Component({
-  template: ` <app-video-preview [src]="videoFileRepresentation"> </app-video-preview>`,
+  template: ` <app-video-preview [src]="videoFileRepresentation"></app-video-preview>`,
 })
 class TestHostComponent implements OnInit {
   @ViewChild(VideoPreviewComponent) videoPreviewComp: VideoPreviewComponent;

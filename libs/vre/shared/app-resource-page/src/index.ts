@@ -9,6 +9,7 @@ export * from './lib/resource-representations.component';
 export * from './lib/resource-tabs.component';
 export * from './lib/resource-toolbar.component';
 export * from './lib/annotation-tab.component';
+export * from './lib/file-representation';
 
 export * from './lib/compound/compound.service';
 export * from './lib/compound/compound-arrow-navigation.component';

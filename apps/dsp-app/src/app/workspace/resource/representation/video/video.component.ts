@@ -25,6 +25,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { mergeMap } from 'rxjs/operators';
 import { DialogComponent } from '../../../../main/dialog/dialog.component';
 import {
@@ -34,7 +35,6 @@ import {
   ValueOperationEventService,
 } from '../../services/value-operation-event.service';
 import { PointerValue } from '../av-timeline/av-timeline.component';
-import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { MovingImageSidecar } from './video-preview/video-preview.component';
 

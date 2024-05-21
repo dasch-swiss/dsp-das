@@ -7,13 +7,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { AudioComponent } from './audio.component';
 
@@ -56,7 +55,7 @@ const appInitSpy = {
 };
 
 @Component({
-  template: ` <app-audio [src]="audioFileRepresentation"> </app-audio>`,
+  template: ` <app-audio [src]="audioFileRepresentation"></app-audio>`,
 })
 class TestHostComponent implements OnInit {
   @ViewChild(AudioComponent) audioPlayerComp: AudioComponent;

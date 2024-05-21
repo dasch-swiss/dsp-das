@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FileRepresentation } from '@dsp-app/src/app/workspace/resource/representation/file-representation';
+import { FileRepresentation } from '../file-representation';
 import { IncomingRepresentationsService } from '../incoming-representations.service';
 
 @Component({
@@ -13,6 +13,4 @@ export class CompoundViewerComponent {
   images: FileRepresentation[];
 
   constructor(public incomingRepresentationsService: IncomingRepresentationsService) {}
-
-  ngOnInit() {}
 }

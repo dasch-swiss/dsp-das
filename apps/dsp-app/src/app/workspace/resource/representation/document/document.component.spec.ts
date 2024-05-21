@@ -7,14 +7,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { DocumentComponent } from './document.component';
 
@@ -94,7 +93,7 @@ const appInitSpy = {
  * test host component with a pdf document
  */
 @Component({
-  template: ` <app-document [src]="documentFileRepresentation"> </app-document>`,
+  template: ` <app-document [src]="documentFileRepresentation"></app-document>`,
 })
 class TestPdfDocumentHostComponent implements OnInit {
   @ViewChild(DocumentComponent) documentComp: DocumentComponent;
@@ -110,7 +109,7 @@ class TestPdfDocumentHostComponent implements OnInit {
  * test host component with a ppt document
  */
 @Component({
-  template: ` <app-document [src]="documentFileRepresentation"> </app-document>`,
+  template: ` <app-document [src]="documentFileRepresentation"></app-document>`,
 })
 class TestPptDocumentHostComponent implements OnInit {
   @ViewChild(DocumentComponent) documentComp: DocumentComponent;

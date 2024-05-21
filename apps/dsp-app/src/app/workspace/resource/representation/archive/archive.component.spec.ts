@@ -4,13 +4,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FileRepresentation } from '../file-representation';
 
 import { RepresentationService } from '../representation.service';
 import { ArchiveComponent } from './archive.component';
@@ -53,7 +52,7 @@ const appInitSpy = {
 };
 
 @Component({
-  template: ` <app-archive [src]="archiveFileRepresentation"> </app-archive>`,
+  template: ` <app-archive [src]="archiveFileRepresentation"></app-archive>`,
 })
 class TestHostComponent implements OnInit {
   @ViewChild(ArchiveComponent) archiveComp: ArchiveComponent;
