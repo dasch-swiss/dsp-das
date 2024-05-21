@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
 
@@ -13,10 +13,14 @@ import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations'
     </app-properties-display>
   </div>`,
 })
-export class AnnotationTabComponent {
+export class AnnotationTabComponent implements OnInit {
   @Input({ required: true }) annotationResources: DspResource[];
   @Input({ required: true }) representationsToDisplay: FileRepresentation[];
   @Input({ required: true }) selectedRegion!: string;
+
+  ngOnInit() {
+    console.log('init');
+  }
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
 }

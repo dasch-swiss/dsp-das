@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Component, Input, OnInit } from '@angular/core';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingRepresentationsService } from './incoming-representations.service';
 
 @Component({
@@ -11,7 +10,7 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
       *ngIf="!resource.res.isDeleted"
       animationDuration="0ms"
       [(selectedIndex)]="selectedTab"
-      (selectedTabChange)="tabChanged.emit($event)">
+      (selectedTabChange)="tabChanged($event)">
       <!-- first tab for the main resource e.g. book -->
       <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
         <app-properties-display
@@ -65,19 +64,28 @@ export class ResourceTabsComponent implements OnInit {
   @Input({ required: true }) annotationResources!: DspResource[];
   @Input({ required: true }) selectedTab!: number;
 
-  @Output() tabChanged = new EventEmitter<MatTabChangeEvent>();
-
-  constructor(public incomingRepresentationsService: IncomingRepresentationsService) {}
+  constructor(
+    public incomingRepresentationsService: IncomingRepresentationsService,
+    private _regionService: RegionService
+  ) {}
 
   resourceProperties: PropertyInfoValues[];
   loading = true;
 
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
 
+  tabChanged(index: number) {
+    this._regionService.displayRegions(index === 2);
+  }
+
   ngOnInit() {
     this.resourceProperties = this.resource.resProps
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
+
+    this._regionService.regionAdded$.subscribe(() => {
+      this.selectedTab = 2;
+    });
   }
 
   protected readonly representationConstants = RepresentationConstants;

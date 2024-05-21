@@ -26,8 +26,7 @@
       [resource]="resource"
       [annotationResources]="annotationResources"
       [selectedRegion]="selectedRegion"
-      [selectedTab]="selectedTab"
-      (tabChanged)="tabChanged($event)"></app-resource-tabs>
+      [selectedTab]="selectedTab"></app-resource-tabs>
     <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
   </div>
   <dasch-swiss-app-progress-indicator *ngIf="!resource && loading"></dasch-swiss-app-progress-indicator>

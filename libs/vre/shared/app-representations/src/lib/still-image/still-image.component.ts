@@ -82,7 +82,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) parentResource!: ReadResource;
 
   @Output() regionClicked = new EventEmitter<string>();
-  @Output() regionAdded = new EventEmitter<string>();
 
   get resourceIri() {
     return this.parentResource.id;
@@ -104,12 +103,12 @@ export class StillImageComponent implements OnChanges, OnDestroy {
   );
   editorPermissions = false;
 
-  imagesSub: Subscription;
-  fileInfoSub: Subscription;
+  imagesSub: Subscription | undefined;
+  fileInfoSub: Subscription | undefined;
 
   loading = true;
   failedToLoad = false;
-  originalFilename: string;
+  originalFilename: string | undefined;
 
   regionDrawMode = false; // stores whether viewer is currently drawing a region
   private _regionDragInfo; // stores the information of the first click for drawing a region
@@ -179,6 +178,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._regionService.highlightRegion$.subscribe(region => {
       if (region === null) {
         this._unhighlightAllRegions();
+        // TODO add this.removeOverlays() ?
         return;
       }
       this._highlightRegion(region);
@@ -460,7 +460,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._dspApiConnection.v2.res.createResource(createResource).subscribe(res => {
       this._viewer.destroy();
       this._setupViewer();
-      this.regionAdded.emit((res as ReadResource).id);
+      this._regionService.addRegion((res as ReadResource).id);
     });
   }
 
