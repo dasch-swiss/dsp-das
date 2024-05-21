@@ -136,7 +136,6 @@ import { IntermediateComponent } from './workspace/intermediate/intermediate.com
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
-import { PropertiesDisplayComponent } from './workspace/resource/properties/properties-display.component';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
@@ -172,7 +171,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...ResourcePageComponents,
-    PropertiesDisplayComponent,
     AccountComponent,
     ActionBubbleComponent,
     AddRegionFormComponent,
