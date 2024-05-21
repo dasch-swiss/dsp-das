@@ -2,26 +2,26 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
-  CreateArchiveFileValue,
-  CreateAudioFileValue,
-  CreateDocumentFileValue,
-  CreateFileValue,
-  CreateMovingImageFileValue,
-  CreateStillImageFileValue,
-  CreateTextFileValue,
-  UpdateArchiveFileValue,
-  UpdateAudioFileValue,
-  UpdateDocumentFileValue,
-  UpdateFileValue,
-  UpdateMovingImageFileValue,
-  UpdateStillImageFileValue,
-  UpdateTextFileValue,
+    CreateArchiveFileValue,
+    CreateAudioFileValue,
+    CreateDocumentFileValue,
+    CreateFileValue,
+    CreateMovingImageFileValue,
+    CreateStillImageFileValue,
+    CreateTextFileValue,
+    UpdateArchiveFileValue,
+    UpdateAudioFileValue,
+    UpdateDocumentFileValue,
+    UpdateFileValue,
+    UpdateMovingImageFileValue,
+    UpdateStillImageFileValue,
+    UpdateTextFileValue,
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-resource-properties';
-import {Store} from "@ngxs/store";
-import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
-import {filter, map, mergeMap} from "rxjs/operators";
+import { Store } from '@ngxs/store';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
@@ -104,14 +104,13 @@ export class UploadComponent implements OnInit {
         ).subscribe(
           (res: UploadedFile) => {
             // prepare thumbnail url to display something after upload
-            const thumbnailUri =  res.thumbnailUrl;
             switch (this.representation) {
               case 'stillImage':
-                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl( thumbnailUri);
+                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl( res.thumbnailUrl);
                 break;
 
               case 'document':
-                this.thumbnailUrl = thumbnailUri;
+                this.thumbnailUrl = res.baseUrl;
                 break;
 
               default:
@@ -119,7 +118,7 @@ export class UploadComponent implements OnInit {
                 break;
             }
 
-            this.fileControl.setValue(res.internalFilename);
+            this.fileControl.setValue(res);
             const fileValue = this.getNewValue();
 
             if (fileValue) {

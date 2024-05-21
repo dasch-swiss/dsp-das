@@ -131,7 +131,7 @@ export class Upload2Component implements ControlValueAccessor {
           this.previewUrl = this._sanitizer.bypassSecurityTrustUrl( res.thumbnailUrl );
           break;
         case Constants.HasDocumentFileValue:
-          this.previewUrl = res.thumbnailUrl;
+          this.previewUrl = res.baseUrl;
           break;
       }
 

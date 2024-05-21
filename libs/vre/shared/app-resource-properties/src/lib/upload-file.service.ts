@@ -12,6 +12,7 @@ interface UploadedFileResponse {
 export interface UploadedFile {
     internalFilename: string;
     thumbnailUrl: string;
+    baseUrl: string;
 }
 
 @Injectable({
@@ -47,9 +48,11 @@ export class UploadFileService {
         const url = `${this._acs.dspIngestConfig.url}/projects/${shortcode}/assets/ingest/${file.name}`;
         return this._http.post<UploadedFileResponse>(url, file, options).pipe(
             map((res: UploadedFileResponse) => {
+                let baseUrl = `${this._acs.dspIiifConfig.iiifUrl}/${shortcode}/${res.internalFilename}`;
                 return {
                     internalFilename: res.internalFilename,
-                    thumbnailUrl: `${this._acs.dspIiifConfig.iiifUrl}/${shortcode}/${res.internalFilename}/full/256,/0/default.jpg`,
+                    thumbnailUrl: `${baseUrl}/full/256,/0/default.jpg`,
+                    baseUrl: baseUrl,
                 };
             }),
         );
