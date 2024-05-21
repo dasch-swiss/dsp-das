@@ -14,15 +14,10 @@ import {
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
-import {
-  EmitEvent,
-  Events,
-  UpdatedFileEventValue,
-  ValueOperationEventService,
-} from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
 import { RepresentationService } from '../representation.service';
+import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
 
 @Component({
   selector: 'app-document',
