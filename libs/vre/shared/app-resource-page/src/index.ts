@@ -7,6 +7,7 @@ export * from './lib/resource-page-2.component';
 export * from './lib/resource-parent.component';
 export * from './lib/resource-representations.component';
 export * from './lib/resource-tabs.component';
+export * from './lib/resource-toolbar.component';
 export * from './lib/annotation-tab.component';
 
 export * from './lib/compound/compound.service';

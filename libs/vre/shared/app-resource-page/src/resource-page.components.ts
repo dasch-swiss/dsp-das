@@ -9,6 +9,7 @@ import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceParentComponent } from './lib/resource-parent.component';
 import { ResourceRepresentationsComponent } from './lib/resource-representations.component';
 import { ResourceTabsComponent } from './lib/resource-tabs.component';
+import { ResourceToolbarComponent } from './lib/resource-toolbar.component';
 import { ResourceComponent } from './lib/resource.component';
 
 const CompoundComponents = [
@@ -26,5 +27,6 @@ export const ResourcePageComponents = [
   ResourceParentComponent,
   ResourceRepresentationsComponent,
   ResourceTabsComponent,
+  ResourceToolbarComponent,
   AnnotationTabComponent,
 ];

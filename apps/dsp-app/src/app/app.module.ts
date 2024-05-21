@@ -28,7 +28,7 @@ import {
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
-import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourcePageComponents, ResourceToolbarComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
@@ -137,7 +137,6 @@ import { DragDropDirective } from './workspace/resource/directives/drag-drop.dir
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { PropertiesDisplayComponent } from './workspace/resource/properties/properties-display.component';
-import { ResourceToolbarComponent } from './workspace/resource/properties/resource-toolbar/resource-toolbar';
 import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
 import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
