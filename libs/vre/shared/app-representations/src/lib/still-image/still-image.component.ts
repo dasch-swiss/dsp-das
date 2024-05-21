@@ -34,10 +34,13 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
@@ -80,11 +83,26 @@ export class StillImageComponent implements OnChanges, OnDestroy {
   @Input() project: string;
   @Input() activateRegion?: string; // highlight a region
   @Input() currentTab: string;
-  @Input() parentResource: ReadResource;
-  @Input() editorPermissions: boolean;
+  @Input({ required: true }) parentResource!: ReadResource;
 
   @Output() regionClicked = new EventEmitter<string>();
   @Output() regionAdded = new EventEmitter<string>();
+
+  get attachedToProjectResource(): string {
+    return this.parentResource.attachedToProject;
+  }
+
+  isEditor$: Observable<boolean> = combineLatest([
+    this._store.select(UserSelectors.user),
+    this._store.select(UserSelectors.userProjectAdminGroups),
+  ]).pipe(
+    map(([user, userProjectGroups]) => {
+      return this.attachedToProjectResource
+        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
+        : false;
+    })
+  );
+  editorPermissions = false;
 
   imagesSub: Subscription;
   fileInfoSub: Subscription;
@@ -108,7 +126,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     private _notification: NotificationService,
     private _renderer: Renderer2,
     private _rs: RepresentationService,
-    private _valueOperationEventService: ValueOperationEventService
+    private _valueOperationEventService: ValueOperationEventService,
+    private _store: Store
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -144,6 +163,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     if (!changes['image'].isFirstChange()) {
       return;
     }
+
+    this.isEditor$.subscribe(isEditor => {
+      this.editorPermissions = isEditor;
+    });
+
     this._setupViewer();
     this._loadImages();
 
@@ -428,10 +452,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       createResource.properties[Constants.HasComment] = [commentVal];
     }
 
-    this._dspApiConnection.v2.res.createResource(createResource).subscribe((res: ReadResource) => {
+    console.log('a', createResource);
+    this._dspApiConnection.v2.res.createResource(createResource).subscribe(res => {
       this._viewer.destroy();
       this._setupViewer();
-      this.regionAdded.emit(res.id);
+      this.regionAdded.emit((res as ReadResource).id);
     });
   }
 

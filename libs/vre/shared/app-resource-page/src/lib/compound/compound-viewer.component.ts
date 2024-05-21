@@ -6,6 +6,7 @@ import { IncomingRepresentationsService } from '../incoming-representations.serv
   template: ` <app-still-image
       class="dsp-representation stillimage"
       *ngIf="incomingRepresentationsService.representationsToDisplay.length > 0"
+      [parentResource]="incomingRepresentationsService.incomingResource?.res"
       [image]="incomingRepresentationsService.representationsToDisplay[0]"></app-still-image>
 
     <h5>(DEV TEAM) The following elements will be integrated to the still image navigation soon</h5>

@@ -1,11 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-representations',
@@ -18,6 +13,7 @@ import { map } from 'rxjs/operators';
       #stillImage
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.stillImage"
+      [parentResource]="resource.res"
       [image]="representationsToDisplay[0]">
     </app-still-image>
 
@@ -85,23 +81,6 @@ export class ResourceRepresentationsComponent {
 
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
-
-  isEditor$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  constructor(private _store: Store) {}
 
   representationLoaded(e: boolean) {
     this.loading = !e;
