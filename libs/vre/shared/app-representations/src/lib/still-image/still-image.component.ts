@@ -40,8 +40,9 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
+import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
 
@@ -78,9 +79,6 @@ interface PolygonsForRegion {
 })
 export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) image!: FileRepresentation;
-  @Input() imageCaption?: string;
-  @Input() activateRegion?: string; // highlight a region
-  @Input() currentTab: string;
   @Input({ required: true }) parentResource!: ReadResource;
 
   @Output() regionClicked = new EventEmitter<string>();
@@ -129,6 +127,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     private _renderer: Renderer2,
     private _rs: RepresentationService,
     private _valueOperationEventService: ValueOperationEventService,
+    private _regionService: RegionService,
     private _store: Store
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
@@ -173,15 +172,17 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._setupViewer();
     this._loadImages();
 
-    if (this.currentTab === 'annotations') {
+    this._regionService.showRegions$.pipe(filter(value => value)).subscribe(() => {
       this.renderRegions();
-    }
-    if (this.activateRegion !== undefined) {
-      this._highlightRegion(this.activateRegion);
-    }
-    if (changes.activateRegion) {
-      this._unhighlightAllRegions();
-    }
+    });
+
+    this._regionService.highlightRegion$.subscribe(region => {
+      if (region === null) {
+        this._unhighlightAllRegions();
+        return;
+      }
+      this._highlightRegion(region);
+    });
   }
 
   ngOnDestroy() {

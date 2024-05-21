@@ -14,3 +14,4 @@ export * from './lib/representation.service';
 export * from './lib/value-operation-event.service';
 export * from './lib/file-representation';
 export * from './lib/region.interface';
+export * from './lib/region.service';
