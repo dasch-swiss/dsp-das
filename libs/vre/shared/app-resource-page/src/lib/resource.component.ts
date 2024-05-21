@@ -1,13 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import {
-  RegionService,
-  StillImageComponent,
-  ValueOperationEventService,
-} from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService, ValueOperationEventService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject, Subscription } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
 import { IncomingRepresentationsService } from './incoming-representations.service';
@@ -20,8 +15,6 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 })
 export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
-  @ViewChild('stillImage') stillImageComponent: StillImageComponent;
-  @ViewChild('matTabAnnotations') matTabAnnotations;
 
   incomingResource: DspResource;
   annotationResources: DspResource[];
@@ -63,15 +56,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  tabChanged(e: MatTabChangeEvent) {
-    if (e.tab.textLabel === 'annotations') {
-      this.stillImageComponent?.renderRegions();
-    } else {
-      this.stillImageComponent?.removeOverlays();
-    }
-    this.selectedTabLabel = e.tab.textLabel;
   }
 
   openRegion(iri: string) {

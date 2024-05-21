@@ -45,6 +45,7 @@ import { FileRepresentation } from '../file-representation';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
+import { osdViewerConfig } from './osd-viewer.config';
 
 /**
  * represents a region resource.
@@ -171,7 +172,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._loadImages();
 
     this._regionService.showRegions$.pipe(filter(value => value)).subscribe(() => {
-      this.renderRegions();
+      this._renderRegions();
     });
 
     this._regionService.highlightRegion$.subscribe(region => {
@@ -205,101 +206,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
   drawButtonClicked(): void {
     this.regionDrawMode = !this.regionDrawMode;
     this._viewer.setMouseNavEnabled(!this.regionDrawMode);
-  }
-
-  /**
-   * adds a ROI-overlay to the viewer for every region of every image in this.images
-   */
-  renderRegions(): void {
-    /**
-     * sorts rectangular regions by surface, so all rectangular regions are clickable.
-     * Non-rectangular regions are ignored.
-     *
-     * @param geom1 first region.
-     * @param geom2 second region.
-     */
-    const sortRectangularRegion = (geom1: GeometryForRegion, geom2: GeometryForRegion) => {
-      if (geom1.geometry.type === 'rectangle' && geom2.geometry.type === 'rectangle') {
-        const surf1 = StillImageComponent.surfaceOfRectangularRegion(geom1.geometry);
-        const surf2 = StillImageComponent.surfaceOfRectangularRegion(geom2.geometry);
-
-        // if reg1 is smaller than reg2, return 1
-        // reg1 then comes after reg2 and thus is rendered later
-        if (surf1 < surf2) {
-          return 1;
-        } else {
-          return -1;
-        }
-      } else {
-        return 0;
-      }
-    };
-
-    this.removeOverlays();
-
-    let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
-
-    for (const image of [this.image]) {
-      const stillImage = image.fileValue as ReadStillImageFileValue;
-      const aspectRatio = stillImage.dimY / stillImage.dimX;
-
-      // collect all geometries belonging to this page
-      const geometries: GeometryForRegion[] = [];
-      image.annotations.forEach(reg => {
-        this._regions[reg.regionResource.id] = [];
-        const geoms = reg.getGeometries();
-
-        geoms.forEach(geom => {
-          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
-
-          geometries.push(geomForReg);
-        });
-      });
-
-      // sort all geometries belonging to this page
-      geometries.sort(sortRectangularRegion);
-
-      // render all geometries for this page
-      for (const geom of geometries) {
-        const geometry = geom.geometry;
-
-        const colorValues: ReadColorValue[] = geom.region.properties[Constants.HasColor] as ReadColorValue[];
-
-        // if the geometry has a color property, use that value as the color for the line
-        if (colorValues && colorValues.length) {
-          geometry.lineColor = colorValues[0].color;
-        }
-
-        const commentValue = geom.region.properties[Constants.HasComment]
-          ? geom.region.properties[Constants.HasComment][0].strval
-          : '';
-
-        if (!this.failedToLoad) {
-          this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
-        }
-
-        imageXOffset++;
-      }
-    }
-  }
-
-  /**
-   * removes SVG overlays from the DOM.
-   */
-  removeOverlays() {
-    for (const reg in this._regions) {
-      if (reg in this._regions) {
-        for (const pol of this._regions[reg]) {
-          if (pol instanceof HTMLElement) {
-            pol.remove();
-          }
-        }
-      }
-    }
-
-    this._regions = {};
-
-    this._viewer.clearOverlays();
   }
 
   /**
@@ -449,7 +355,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       createResource.properties[Constants.HasComment] = [commentVal];
     }
 
-    console.log('a', createResource);
     this._dspApiConnection.v2.res.createResource(createResource).subscribe(res => {
       this._viewer.destroy();
       this._setupViewer();
@@ -542,33 +447,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
    */
   private _setupViewer(): void {
     const viewerContainer = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
-    const osdOptions = {
+
+    this._viewer = new OpenSeadragon.Viewer({
       element: viewerContainer,
-      sequenceMode: false,
-      showReferenceStrip: true,
-      zoomInButton: 'DSP_OSD_ZOOM_IN',
-      zoomOutButton: 'DSP_OSD_ZOOM_OUT',
-      previousButton: 'DSP_OSD_PREV_PAGE',
-      nextButton: 'DSP_OSD_NEXT_PAGE',
-      homeButton: 'DSP_OSD_HOME',
-      fullPageButton: 'DSP_OSD_FULL_PAGE',
-      // rotateLeftButton: 'DSP_OSD_ROTATE_LEFT',        // doesn't work yet
-      // rotateRightButton: 'DSP_OSD_ROTATE_RIGHT',       // doesn't work yet
-      showNavigator: true,
-      navigatorPosition: 'ABSOLUTE' as const,
-      navigatorTop: 'calc(100% - 136px)',
-      navigatorLeft: 'calc(100% - 136px)',
-      navigatorHeight: '120px',
-      navigatorWidth: '120px',
-      gestureSettingsMouse: {
-        clickToZoom: false, // do not zoom in on click
-        dblClickToZoom: true, // but zoom on double click
-        flickEnabled: true, // perform a flick gesture to drag image
-        animationTime: 0.1, // direct and instant drag performance
-      },
-      visibilityRatio: 1.0, // viewers focus limited to the image borders; no more cutting the image on zooming out
-    };
-    this._viewer = new OpenSeadragon.Viewer(osdOptions);
+      ...osdViewerConfig,
+    });
 
     this._viewer.addHandler('full-screen', args => {
       if (args.fullScreen) {
@@ -593,7 +476,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     // display only the defined range of this.images
     const tileSources: object[] = StillImageComponent._prepareTileSourcesFromFileValues(fileValues);
 
-    this.removeOverlays();
+    this._removeOverlays();
     this._viewer.addOnceHandler('open', args => {
       // check if the current image exists
       if (this.image.fileValue.fileUrl.includes(args.source['id'])) {
@@ -735,5 +618,100 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         this.loading = false;
       }
     );
+  }
+
+  /**
+   * adds a ROI-overlay to the viewer for every region of every image in this.images
+   */
+  private _renderRegions(): void {
+    /**
+     * sorts rectangular regions by surface, so all rectangular regions are clickable.
+     * Non-rectangular regions are ignored.
+     *
+     * @param geom1 first region.
+     * @param geom2 second region.
+     */
+    const sortRectangularRegion = (geom1: GeometryForRegion, geom2: GeometryForRegion) => {
+      if (geom1.geometry.type === 'rectangle' && geom2.geometry.type === 'rectangle') {
+        const surf1 = StillImageComponent.surfaceOfRectangularRegion(geom1.geometry);
+        const surf2 = StillImageComponent.surfaceOfRectangularRegion(geom2.geometry);
+
+        // if reg1 is smaller than reg2, return 1
+        // reg1 then comes after reg2 and thus is rendered later
+        if (surf1 < surf2) {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else {
+        return 0;
+      }
+    };
+
+    this._removeOverlays();
+
+    let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
+
+    for (const image of [this.image]) {
+      const stillImage = image.fileValue as ReadStillImageFileValue;
+      const aspectRatio = stillImage.dimY / stillImage.dimX;
+
+      // collect all geometries belonging to this page
+      const geometries: GeometryForRegion[] = [];
+      image.annotations.forEach(reg => {
+        this._regions[reg.regionResource.id] = [];
+        const geoms = reg.getGeometries();
+
+        geoms.forEach(geom => {
+          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
+
+          geometries.push(geomForReg);
+        });
+      });
+
+      // sort all geometries belonging to this page
+      geometries.sort(sortRectangularRegion);
+
+      // render all geometries for this page
+      for (const geom of geometries) {
+        const geometry = geom.geometry;
+
+        const colorValues: ReadColorValue[] = geom.region.properties[Constants.HasColor] as ReadColorValue[];
+
+        // if the geometry has a color property, use that value as the color for the line
+        if (colorValues && colorValues.length) {
+          geometry.lineColor = colorValues[0].color;
+        }
+
+        const commentValue = geom.region.properties[Constants.HasComment]
+          ? geom.region.properties[Constants.HasComment][0].strval
+          : '';
+
+        if (!this.failedToLoad) {
+          this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
+        }
+
+        imageXOffset++;
+      }
+    }
+  }
+
+  /**
+   * removes SVG overlays from the DOM.
+   */
+  private _removeOverlays() {
+    for (const reg in this._regions) {
+      if (reg in this._regions) {
+        for (const pol of this._regions[reg]) {
+          if (pol instanceof HTMLElement) {
+            pol.remove();
+          }
+        }
+      }
+    }
+
+    this._regions = {};
+
+    this._viewer.clearOverlays();
   }
 }
