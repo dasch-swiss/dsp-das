@@ -4,8 +4,10 @@ import { FileRepresentation } from '@dsp-app/src/app/workspace/resource/represen
 
 @Component({
   selector: 'app-compound-viewer',
-  template:
-    'AAAAA<app-still-image *ngIf="incomingRepresentationsService.representationsToDisplay.length > 0" [image]="incomingRepresentationsService.representationsToDisplay[0]"></app-still-image>B',
+  template: ` <app-still-image
+    class="dsp-representation stillimage"
+    *ngIf="incomingRepresentationsService.representationsToDisplay.length > 0"
+    [image]="incomingRepresentationsService.representationsToDisplay[0]"></app-still-image>`,
 })
 export class CompoundViewerComponent {
   images: FileRepresentation[];
