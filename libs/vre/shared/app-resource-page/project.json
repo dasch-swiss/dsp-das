@@ -6,24 +6,6 @@
   "tags": [],
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nx/angular:ng-packagr-lite",
-      "outputs": [
-        "{workspaceRoot}/dist/{projectRoot}"
-      ],
-      "options": {
-        "project": "libs/vre/shared/app-resource-page/ng-package.json"
-      },
-      "configurations": {
-        "production": {
-          "tsConfig": "libs/vre/shared/app-resource-page/tsconfig.lib.prod.json"
-        },
-        "development": {
-          "tsConfig": "libs/vre/shared/app-resource-page/tsconfig.lib.json"
-        }
-      },
-      "defaultConfiguration": "production"
-    },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": [
