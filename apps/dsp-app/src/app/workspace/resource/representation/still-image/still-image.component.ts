@@ -24,7 +24,6 @@ import {
   Point2D,
   ReadColorValue,
   ReadFileValue,
-  ReadGeomValue,
   ReadResource,
   ReadStillImageFileValue,
   RegionGeometry,
@@ -51,21 +50,6 @@ import { RepresentationService } from '../representation.service';
 /**
  * represents a region resource.
  */
-export class Region {
-  /**
-   *
-   * @param regionResource a resource of type Region
-   */
-  constructor(readonly regionResource: ReadResource) {}
-
-  /**
-   * get all geometry information belonging to this region.
-   *
-   */
-  getGeometries() {
-    return this.regionResource.properties[Constants.HasGeometry] as ReadGeomValue[];
-  }
-}
 
 /**
  * represents a geometry belonging to a specific region resource.
