@@ -79,7 +79,6 @@ interface PolygonsForRegion {
 export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) image!: FileRepresentation;
   @Input() imageCaption?: string;
-  @Input() project: string;
   @Input() activateRegion?: string; // highlight a region
   @Input() currentTab: string;
   @Input({ required: true }) parentResource!: ReadResource;
