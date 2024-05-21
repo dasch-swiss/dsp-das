@@ -14,9 +14,9 @@ import { EditProjectFormPageComponent } from './project/edit-project-form-page/e
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { ListComponent } from './project/list/list.component';
 import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
+import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
-import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { ProjectComponent } from './project/project.component';
 import { SettingsComponent } from './project/settings/settings.component';
 import { ProjectsComponent } from './system/projects/projects.component';
@@ -37,11 +37,6 @@ const routes: Routes = [
   {
     path: RouteConstants.help,
     component: HelpComponent,
-  },
-  {
-    path: `${RouteConstants.createNewProjectRelative}/:${RouteConstants.assignCurrentUser}`,
-    canActivate: [AuthGuard],
-    component: CreateProjectFormPageComponent,
   },
   {
     path: `${RouteConstants.createNewProjectRelative}`,

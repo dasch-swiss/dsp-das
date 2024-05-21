@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -51,7 +51,8 @@ export class CreateProjectFormPageComponent {
     private _projectApiService: ProjectApiService,
     private _store: Store,
     private _router: Router,
-    private _location: Location
+    private _location: Location,
+    private _route: ActivatedRoute
   ) {}
 
   submitForm() {
@@ -72,7 +73,7 @@ export class CreateProjectFormPageComponent {
         })
       )
       .subscribe(projectResponse => {
-        if (this._router.url.includes(RouteConstants.assignCurrentUser)) {
+        if (this._route.snapshot.queryParams[RouteConstants.assignCurrentUser]) {
           const currentUser = this._store.selectSnapshot(UserSelectors.user);
           this._store.dispatch(new AddUserToProjectMembershipAction(currentUser.id, projectResponse.project.id));
         }
