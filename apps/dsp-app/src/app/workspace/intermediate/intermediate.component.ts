@@ -4,6 +4,7 @@ import { DialogComponent } from '../../main/dialog/dialog.component';
 import { FilteredResources } from '../results/list-view/list-view.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-intermediate',
   templateUrl: './intermediate.component.html',
   styleUrls: ['./intermediate.component.scss'],

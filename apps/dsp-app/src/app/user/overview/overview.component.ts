@@ -9,6 +9,7 @@ import { filter, take } from 'rxjs/operators';
 import { ReplaceAnimation } from '../../main/animations/replace-animation';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],

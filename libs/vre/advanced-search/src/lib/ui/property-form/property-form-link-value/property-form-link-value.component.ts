@@ -21,6 +21,7 @@ import { MatAutocompleteOptionsScrollDirective } from '../../directives/mat-auto
   ],
   templateUrl: './property-form-link-value.component.html',
   styleUrls: ['./property-form-link-value.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
   @Input() value: string | PropertyFormItem[] | undefined = undefined;

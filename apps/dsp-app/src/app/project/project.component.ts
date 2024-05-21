@@ -32,6 +32,7 @@ type AvailableRoute =
   | typeof RouteConstants.advancedSearch;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],

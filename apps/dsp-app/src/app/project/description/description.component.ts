@@ -11,7 +11,7 @@ import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { AppGlobal } from '../../app-global';
 
 @Component({
-  //
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-description',
   templateUrl: './description.component.html',
   styleUrls: ['./description.component.scss'],

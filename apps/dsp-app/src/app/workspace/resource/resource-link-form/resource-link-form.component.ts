@@ -28,6 +28,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { FilteredResources, ShortResInfo } from '../../results/list-view/list-view.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-link-form',
   templateUrl: './resource-link-form.component.html',
   styleUrls: ['./resource-link-form.component.scss'],

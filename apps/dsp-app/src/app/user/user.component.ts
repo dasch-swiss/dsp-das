@@ -13,6 +13,7 @@ import { MenuItem } from '../main/declarations/menu-item';
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnDestroy {
   isDestroyed = new Subject<void>();

@@ -24,6 +24,7 @@ import { CreateUserPageComponent } from '../../../user/create-user-page/create-u
 import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
@@ -37,7 +38,6 @@ export class UsersListComponent {
   get list(): ReadUser[] {
     return this._list;
   }
-
   @Input() set list(value: ReadUser[]) {
     this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }

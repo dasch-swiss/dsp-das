@@ -74,6 +74,7 @@ export interface CheckboxUpdate {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-view',
   templateUrl: './list-view.component.html',
   styleUrls: ['./list-view.component.scss'],
