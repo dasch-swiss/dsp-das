@@ -50,7 +50,6 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
           <app-annotation-tab
             *ngIf="irs.representationsToDisplay as representationsToDisplay"
             [representationsToDisplay]="representationsToDisplay"
-            [selectedRegion]="selectedRegion"
             [annotationResources]="irs.annotationResources">
           </app-annotation-tab>
         </mat-tab>
@@ -60,7 +59,6 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 })
 export class ResourceTabsComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) selectedRegion!: string;
   @Input({ required: true }) annotationResources!: DspResource[];
   @Input({ required: true }) selectedTab!: number;
 

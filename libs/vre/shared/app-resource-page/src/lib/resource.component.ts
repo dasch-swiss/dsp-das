@@ -18,9 +18,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
   incomingResource: DspResource;
   annotationResources: DspResource[];
-  selectedRegion: string;
   selectedTab = 0;
-  selectedTabLabel: string;
   loading = false;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
@@ -29,7 +27,8 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   constructor(
     private _router: Router,
     private _titleService: Title,
-    public incomingRepresentationsService: IncomingRepresentationsService
+    public incomingRepresentationsService: IncomingRepresentationsService,
+    private _regionService: RegionService
   ) {
     this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');
@@ -39,16 +38,12 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this.incomingResource = undefined;
     this.showRestrictedMessage = true;
+
     this._newMethod();
   }
 
   private _newMethod() {
-    const resource = this.resource;
-    if (resource.isRegion) {
-      this._renderAsRegion(resource);
-    }
-
-    this.incomingRepresentationsService.onInit(resource);
+    this.incomingRepresentationsService.onInit(this.resource);
   }
 
   ngOnDestroy() {
@@ -56,28 +51,5 @@ export class ResourceComponent implements OnChanges, OnDestroy {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  openRegion(iri: string) {
-    // open annotation tab
-    this.selectedTab = this.incomingResource ? 2 : 1;
-
-    // activate the selected region
-    this.selectedRegion = iri;
-
-    // and scroll to region with this id
-    const region = document.getElementById(iri);
-    if (region) {
-      region.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }
-
-  private _renderAsRegion(region: DspResource) {
-    this.selectedTabLabel = 'annotations';
-    this.openRegion(region.res.id);
-    this.selectedRegion = region.res.id;
   }
 }

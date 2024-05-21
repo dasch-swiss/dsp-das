@@ -71,12 +71,10 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
 export class ResourceRepresentationsComponent {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) incomingResource!: DspResource;
-  @Input({ required: true }) representationsToDisplay: FileRepresentation[];
+  @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
   @Input({ required: true }) compoundPosition!: DspCompoundPosition;
   @Input({ required: true }) selectedTabLabel!: string;
-  @Input({ required: true }) selectedRegion!: string;
 
-  @Output() openRegion = new EventEmitter<string>();
   @Output() getIncomingRegions = new EventEmitter<{ resource: DspResource; offset: number }>();
 
   loading = false;
@@ -84,22 +82,5 @@ export class ResourceRepresentationsComponent {
 
   representationLoaded(e: boolean) {
     this.loading = !e;
-  }
-
-  resourceLabel = (incomingResource: DspResource, resource: DspResource) => {
-    return incomingResource ? `${resource.res.label}: ${incomingResource.res.label}` : resource.res.label;
-  };
-
-  updateRegions(iri: string) {
-    if (this.incomingResource) {
-      this.incomingResource.incomingAnnotations = [];
-    } else {
-      this.resource.incomingAnnotations = [];
-    }
-    this.getIncomingRegions.emit({
-      resource: this.incomingResource ? this.incomingResource : this.resource,
-      offset: 0,
-    });
-    this.openRegion.emit(iri);
   }
 }
