@@ -42,7 +42,7 @@ const routes: Routes = [
     component: HelpComponent,
   },
   {
-    path: RouteConstants.createNewProjectRelative,
+    path: `${RouteConstants.createNewProjectRelative}`,
     canActivate: [AuthGuard],
     component: CreateProjectFormPageComponent,
   },
