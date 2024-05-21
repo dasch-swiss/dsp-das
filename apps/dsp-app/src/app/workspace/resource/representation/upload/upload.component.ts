@@ -18,10 +18,11 @@ import {
   UpdateTextFileValue,
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UploadedFileResponse, UploadFileService } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import {Store} from "@ngxs/store";
 import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
 import {filter, map, mergeMap} from "rxjs/operators";
+import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
 const resolvedPromise = Promise.resolve(null);
@@ -60,6 +61,7 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private _fb: UntypedFormBuilder,
+    private _acs: AppConfigService,
     private _notification: NotificationService,
     private _sanitizer: DomSanitizer,
     private _upload: UploadFileService,
@@ -94,23 +96,23 @@ export class UploadComponent implements OnInit {
       } else {
         // show loading indicator only for files > 1MB
         this.isLoading = this.file.size > 1048576;
+        const sipiUrl = this._acs.dspIiifConfig.iiifUrl;
 
         this._store.select(ProjectsSelectors.currentProject).pipe(
           filter(v => v !== undefined),
           map(prj=> prj.shortcode),
           mergeMap(sc => this._upload.upload(this.file, sc))
         ).subscribe(
-          (res: UploadedFileResponse) => {
+          (res: UploadedFile) => {
             // prepare thumbnail url to display something after upload
+              const thumbnailUri =  res.thumbnailUrl;
             switch (this.representation) {
               case 'stillImage':
-                const temporaryUrl = res.uploadedFiles[0].temporaryUrl;
-                const thumbnailUri = '/full/256,/0/default.jpg';
-                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl(temporaryUrl + thumbnailUri);
+                this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl( thumbnailUri);
                 break;
 
               case 'document':
-                this.thumbnailUrl = res.uploadedFiles[0].temporaryUrl;
+                this.thumbnailUrl = thumbnailUri;
                 break;
 
               default:
@@ -118,7 +120,7 @@ export class UploadComponent implements OnInit {
                 break;
             }
 
-            this.fileControl.setValue(res.uploadedFiles[0]);
+            this.fileControl.setValue(res.internalFilename);
             const fileValue = this.getNewValue();
 
             if (fileValue) {

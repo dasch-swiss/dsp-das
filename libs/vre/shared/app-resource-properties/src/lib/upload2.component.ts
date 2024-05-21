@@ -5,11 +5,10 @@ import {Constants} from '@dasch-swiss/dsp-js';
 import {NotificationService} from '@dasch-swiss/vre/shared/app-notification';
 import {FileRepresentationType} from './file-representation.type';
 import {fileValueMapping} from './file-value-mapping';
-import {UploadedFileResponse, UploadFileService} from './upload-file.service';
+import { UploadedFile, UploadFileService } from './upload-file.service';
 import {Store} from "@ngxs/store";
 import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
 import {filter, map, mergeMap} from "rxjs/operators";
-import {project} from "effect/Layer";
 
 @Component({
   selector: 'app-upload-2',
@@ -126,21 +125,19 @@ export class Upload2Component implements ControlValueAccessor {
         filter(v => v !== undefined),
         map(prj=> prj.shortcode),
         mergeMap(sc => this._upload.upload(file, sc))
-    ).subscribe((res: UploadedFileResponse) => {
+    ).subscribe((res: UploadedFile) => {
       switch (this.representation) {
         case Constants.HasStillImageFileValue:
-          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(
-            `${res.uploadedFiles[0].temporaryUrl}/full/256,/0/default.jpg`
-          );
+          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl( res.thumbnailUrl );
           break;
         case Constants.HasDocumentFileValue:
-          this.previewUrl = res.uploadedFiles[0].temporaryUrl;
+          this.previewUrl = res.thumbnailUrl;
           break;
       }
 
       // eslint-disable-next-line new-cap
       const fileResponse = new (fileValueMapping.get(this.representation)!.UploadClass)();
-      fileResponse.filename = res.uploadedFiles[0].internalFilename;
+      fileResponse.filename = res.internalFilename;
       this.onChange(fileResponse);
       this.onTouched();
 
