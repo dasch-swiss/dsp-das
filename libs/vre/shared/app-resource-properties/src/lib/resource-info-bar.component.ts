@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { filter, map, take } from 'rxjs/operators';
 
 @Component({
@@ -12,7 +13,7 @@ import { filter, map, take } from 'rxjs/operators';
   template: `
     <div class="infobar mat-caption" *ngIf="project$ | async as project">
       Resource of the project
-      <a class="link" [title]="project.longname" (click)="openProject(project)">
+      <a (click)="openProject(project)" class="link" [title]="project.longname">
         <strong>{{ project?.shortname }}</strong></a
       ><span *ngIf="resourceAttachedUser || resource.res.creationDate"
         >, created
@@ -53,7 +54,8 @@ export class ResourceInfoBarComponent implements OnInit {
 
   constructor(
     private _store: Store,
-    private _actions$: Actions
+    private _actions$: Actions,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -61,7 +63,7 @@ export class ResourceInfoBarComponent implements OnInit {
   }
 
   openProject(project: ReadProject) {
-    window.open(`${RouteConstants.projectRelative}/${ProjectService.IriToUuid(project.id)}`, '_blank');
+    this.router.navigate([RouteConstants.projectRelative, ProjectService.IriToUuid(project.id)]);
   }
 
   private _getResourceAttachedData(resource: DspResource): void {
