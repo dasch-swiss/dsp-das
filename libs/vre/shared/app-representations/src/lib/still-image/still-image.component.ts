@@ -79,7 +79,6 @@ interface PolygonsForRegion {
 export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) image!: FileRepresentation;
   @Input() imageCaption?: string;
-  @Input() resourceIri: string;
   @Input() project: string;
   @Input() activateRegion?: string; // highlight a region
   @Input() currentTab: string;
@@ -87,6 +86,10 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
   @Output() regionClicked = new EventEmitter<string>();
   @Output() regionAdded = new EventEmitter<string>();
+
+  get resourceIri() {
+    return this.parentResource.id;
+  }
 
   get attachedToProjectResource(): string {
     return this.parentResource.attachedToProject;
@@ -430,7 +433,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     const createResource = new CreateResource();
     createResource.label = label;
     createResource.type = Constants.Region;
-    createResource.attachedToProject = this.project;
     const geomVal = new CreateGeomValue();
     geomVal.type = Constants.GeomValue;
     geomVal.geometryString = geomStr;
@@ -445,6 +447,8 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       [Constants.IsRegionOfValue]: [linkVal],
       [Constants.HasGeometry]: [geomVal],
     };
+
+    createResource.attachedToProject = this.parentResource.attachedToProject;
     if (comment) {
       const commentVal = new CreateTextValueAsString();
       commentVal.type = Constants.TextValue;
