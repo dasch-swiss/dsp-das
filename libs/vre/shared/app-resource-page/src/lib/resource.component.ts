@@ -16,7 +16,6 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
 
-  incomingResource: DspResource;
   annotationResources: DspResource[];
   selectedTab = 0;
   loading = false;
@@ -36,7 +35,6 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    this.incomingResource = undefined;
     this.showRestrictedMessage = true;
 
     this._newMethod();

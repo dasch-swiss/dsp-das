@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
 
@@ -73,9 +73,6 @@ export class ResourceRepresentationsComponent {
   @Input({ required: true }) incomingResource!: DspResource;
   @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
   @Input({ required: true }) compoundPosition!: DspCompoundPosition;
-  @Input({ required: true }) selectedTabLabel!: string;
-
-  @Output() getIncomingRegions = new EventEmitter<{ resource: DspResource; offset: number }>();
 
   loading = false;
   protected readonly representationConstants = RepresentationConstants;

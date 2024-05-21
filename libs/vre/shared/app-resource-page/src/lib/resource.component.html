@@ -11,19 +11,13 @@
       <app-resource-representations
         *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
         [resource]="resource"
-        [selectedTabLabel]="selectedTabLabel"
         [incomingResource]="incomingRepresentationsService.incomingResource"
         [compoundPosition]="incomingRepresentationsService.compoundPosition"
-        [representationsToDisplay]="representationsToDisplay"
-        (getIncomingRegions)="incomingRepresentationsService.getIncomingRegions($event.resource, $event.offset)"></app-resource-representations>
+        [representationsToDisplay]="representationsToDisplay"></app-resource-representations>
     </ng-container>
     <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
 
-    <app-resource-tabs
-      *ngIf="!loading"
-      [resource]="resource"
-      [annotationResources]="annotationResources"
-      [selectedTab]="selectedTab"></app-resource-tabs>
+    <app-resource-tabs *ngIf="!loading" [resource]="resource" [selectedTab]="selectedTab"></app-resource-tabs>
     <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
   </div>
   <dasch-swiss-app-progress-indicator *ngIf="!resource && loading"></dasch-swiss-app-progress-indicator>

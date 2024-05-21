@@ -59,7 +59,6 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 })
 export class ResourceTabsComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) annotationResources!: DspResource[];
   @Input({ required: true }) selectedTab!: number;
 
   constructor(
