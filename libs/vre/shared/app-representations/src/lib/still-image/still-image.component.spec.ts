@@ -11,10 +11,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Constants, MockResource, ReadGeomValue, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { Region, StillImageComponent } from './still-image.component';
 

@@ -16,12 +16,11 @@ import {
 import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
+import { FileRepresentation, Region } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
-import { Region } from './region.interface';
 
 @Injectable()
 export class IncomingRepresentationsService {

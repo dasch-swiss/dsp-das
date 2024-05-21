@@ -9,10 +9,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { AudioComponent } from './audio.component';
 

@@ -11,7 +11,7 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
-import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonToMoveComponents, SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   AppConfigService,
   buildTagFactory,
@@ -66,7 +66,6 @@ import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-wi
 import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
 import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
-import { SplitPipe } from './main/pipes/split.pipe';
 import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
 import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';
 import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';

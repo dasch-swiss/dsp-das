@@ -24,16 +24,14 @@ import {
   ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
+import { DialogComponent, DialogHeaderComponent, SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { ResourceClassPropertyInfoComponent } from '@dsp-app/src/app/project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
-import { DialogHeaderComponent } from '../../../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from '../../../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog.component';
 
 /**
  * test host component to simulate parent component

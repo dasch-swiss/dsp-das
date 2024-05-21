@@ -9,11 +9,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { MockProvider } from 'ng-mocks';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { DocumentComponent } from './document.component';
 
