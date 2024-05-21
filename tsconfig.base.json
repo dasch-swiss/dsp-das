@@ -71,6 +71,9 @@
       "@dasch-swiss/vre/shared/app-property-form": [
         "libs/vre/shared/app-property-form/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/app-resource-page": [
+        "libs/vre/shared/app-resource-page/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-resource-properties": [
         "libs/vre/shared/app-resource-properties/src/index.ts"
       ],
