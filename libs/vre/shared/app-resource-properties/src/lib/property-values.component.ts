@@ -28,9 +28,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </button>`,
 })
 export class PropertyValuesComponent implements OnInit {
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-
   @Input() itemTpl!: TemplateRef<any>;
+
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
 
   protected readonly Cardinality = Cardinality;
 
