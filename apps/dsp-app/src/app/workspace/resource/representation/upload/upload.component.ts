@@ -96,7 +96,6 @@ export class UploadComponent implements OnInit {
       } else {
         // show loading indicator only for files > 1MB
         this.isLoading = this.file.size > 1048576;
-        const sipiUrl = this._acs.dspIiifConfig.iiifUrl;
 
         this._store.select(ProjectsSelectors.currentProject).pipe(
           filter(v => v !== undefined),
@@ -105,7 +104,7 @@ export class UploadComponent implements OnInit {
         ).subscribe(
           (res: UploadedFile) => {
             // prepare thumbnail url to display something after upload
-              const thumbnailUri =  res.thumbnailUrl;
+            const thumbnailUri =  res.thumbnailUrl;
             switch (this.representation) {
               case 'stillImage':
                 this.thumbnailUrl = this._sanitizer.bypassSecurityTrustUrl( thumbnailUri);
