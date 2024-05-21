@@ -13,8 +13,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import { mergeMap } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
 

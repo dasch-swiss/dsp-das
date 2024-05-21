@@ -35,10 +35,10 @@ import {
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
 import * as OpenSeadragon from 'openseadragon';
 import { Subscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
 

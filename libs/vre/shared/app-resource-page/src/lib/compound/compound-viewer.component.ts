@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FileRepresentation } from '../file-representation';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingRepresentationsService } from '../incoming-representations.service';
 
 @Component({

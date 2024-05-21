@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { FileRepresentation } from './file-representation';
+import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
   selector: 'app-annotation-tab',
