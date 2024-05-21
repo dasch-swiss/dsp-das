@@ -22,7 +22,7 @@
     <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
 
     <app-resource-tabs
-      *ngIf="false && !loading"
+      *ngIf="!loading"
       [resource]="resource"
       [annotationResources]="annotationResources"
       [selectedRegion]="selectedRegion"
