@@ -28,7 +28,8 @@ import {
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
-import { ResourcePageComponents, ResourceToolbarComponent } from '@dasch-swiss/vre/shared/app-resource-page';
+import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
+import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
@@ -136,17 +137,6 @@ import { IntermediateComponent } from './workspace/intermediate/intermediate.com
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
-import { AddRegionFormComponent } from './workspace/resource/representation/add-region-form/add-region-form.component';
-import { ArchiveComponent } from './workspace/resource/representation/archive/archive.component';
-import { AudioComponent } from './workspace/resource/representation/audio/audio.component';
-import { AvTimelineComponent } from './workspace/resource/representation/av-timeline/av-timeline.component';
-import { DocumentComponent } from './workspace/resource/representation/document/document.component';
-import { ReplaceFileFormComponent } from './workspace/resource/representation/replace-file-form/replace-file-form.component';
-import { StillImageComponent } from './workspace/resource/representation/still-image/still-image.component';
-import { TextComponent } from './workspace/resource/representation/text/text.component';
-import { UploadComponent } from './workspace/resource/representation/upload/upload.component';
-import { VideoPreviewComponent } from './workspace/resource/representation/video/video-preview/video-preview.component';
-import { VideoComponent } from './workspace/resource/representation/video/video.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
@@ -171,16 +161,13 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...ResourcePageComponents,
+    ...RepresentationsComponents,
     AccountComponent,
     ActionBubbleComponent,
-    AddRegionFormComponent,
     AddUserComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
     AppComponent,
-    ArchiveComponent,
-    AudioComponent,
-    AvTimelineComponent,
     DescriptionComponent,
     CenteredLayoutComponent,
     ChipListInputComponent,
@@ -196,7 +183,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DialogComponent,
     DialogHeaderComponent,
     DisableContextMenuDirective,
-    DocumentComponent,
     DragDropDirective,
     EditResourceClassDialogComponent,
     EditUserPageComponent,
@@ -241,13 +227,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectsComponent,
     ProjectsListComponent,
     PropertyInfoComponent,
-    ReplaceFileFormComponent,
     ResourceClassFormComponent,
     ResourceClassInfoComponent,
     ResourceClassPropertyInfoComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
-    ResourceToolbarComponent,
     ResultsComponent,
     SearchPanelComponent,
     SelectedResourcesComponent,
@@ -257,7 +241,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SortButtonComponent,
     SplitPipe,
     StatusComponent,
-    StillImageComponent,
     StringifyStringLiteralPipe,
     SystemComponent,
     TextValueHtmlLinkDirective,
@@ -265,16 +248,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
-    UploadComponent,
     UserComponent,
     UserFormComponent,
     UserMenuComponent,
     UsersComponent,
     UsersListComponent,
-    VideoComponent,
-    VideoPreviewComponent,
     HintComponent,
-    TextComponent,
     OntologyClassesComponent,
     OntologyClassItemComponent,
     OntologyClassInstanceComponent,

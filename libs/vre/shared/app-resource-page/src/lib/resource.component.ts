@@ -3,7 +3,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { StillImageComponent } from '@dsp-app/src/app/workspace/resource/representation/still-image/still-image.component';
+import { StillImageComponent } from '@dasch-swiss/vre/shared/app-representations';
 import { ValueOperationEventService } from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
 import { Subject, Subscription } from 'rxjs';
 import { CompoundService } from './compound/compound.service';

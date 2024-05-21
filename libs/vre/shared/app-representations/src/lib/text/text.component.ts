@@ -12,14 +12,14 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
-import { mergeMap } from 'rxjs/operators';
-import { DialogComponent } from '../../../../main/dialog/dialog.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
   EmitEvent,
   Events,
   UpdatedFileEventValue,
   ValueOperationEventService,
-} from '../../services/value-operation-event.service';
+} from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
+import { mergeMap } from 'rxjs/operators';
 import { RepresentationService } from '../representation.service';
 
 @Component({

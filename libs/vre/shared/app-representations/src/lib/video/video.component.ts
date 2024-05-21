@@ -26,17 +26,17 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
-import { mergeMap } from 'rxjs/operators';
-import { DialogComponent } from '../../../../main/dialog/dialog.component';
+import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
   EmitEvent,
   Events,
   UpdatedFileEventValue,
   ValueOperationEventService,
-} from '../../services/value-operation-event.service';
+} from '@dsp-app/src/app/workspace/resource/services/value-operation-event.service';
+import { mergeMap } from 'rxjs/operators';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { RepresentationService } from '../representation.service';
-import { MovingImageSidecar } from './video-preview/video-preview.component';
+import { MovingImageSidecar } from '../video-preview/video-preview.component';
 
 @Component({
   selector: 'app-video',

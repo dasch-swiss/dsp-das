@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { UntypedFormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -10,7 +10,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { of } from 'rxjs';
-import { UploadFileService } from '../../../../../../../../libs/vre/shared/app-resource-properties/src/lib/upload-file.service';
+import { UploadFileService } from '../../../../app-resource-properties/src/lib/upload-file.service';
 import { UploadComponent } from './upload.component';
 
 /**
