@@ -32,6 +32,7 @@ import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-s
 import {
   Events as CommsEvents,
   ComponentCommunicationEventService,
+  EmitEvent,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -154,7 +155,9 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       this._titleService.setTitle('Resource view');
     });
 
-    this._componentCommsService.on(CommsEvents.resourceChanged, () => this._initResource(this.resourceIri));
+    this._componentCommsService.on([CommsEvents.resourceChanged, CommsEvents.resourceDeleted], () =>
+      this._initResource(this.resourceIri)
+    );
     this.valueOperationEventSubscriptions.push(
       this._valueOperationEventService.on(Events.FileValueUpdated, (newFileValue: UpdatedFileEventValue) => {
         if (newFileValue) {
@@ -298,6 +301,7 @@ export class ResourceComponent implements OnChanges, OnInit, OnDestroy {
       .afterClosed()
       .subscribe(response => {
         if (!response) return;
+        this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
         this._cdr.markForCheck();
       });
   }
