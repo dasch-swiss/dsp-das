@@ -108,7 +108,6 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
   loading = true;
   failedToLoad = false;
-  originalFilename: string | undefined;
 
   regionDrawMode = false; // stores whether viewer is currently drawing a region
   private _regionDragInfo; // stores the information of the first click for drawing a region
@@ -354,23 +353,17 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._dspApiConnection.v2.values
       .updateValue(updateRes as UpdateResource<UpdateValue>)
       .pipe(
-        mergeMap((res: WriteValueResponse) =>
-          this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
+        mergeMap(res =>
+          this._dspApiConnection.v2.values.getValue(this.parentResource.id, (res as WriteValueResponse).uuid)
         )
       )
-      .subscribe((res2: ReadResource) => {
+      .subscribe(res2 => {
         this._valueOperationEventService.emit(
           new EmitEvent(
             Events.FileValueUpdated,
-            new UpdatedFileEventValue(res2.properties[Constants.HasStillImageFileValue][0])
+            new UpdatedFileEventValue((res2 as ReadResource).properties[Constants.HasStillImageFileValue][0])
           )
         );
-
-        this._rs
-          .getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename)
-          .subscribe((res: { originalFilename: string }) => {
-            this.originalFilename = res.originalFilename;
-          });
       });
   }
 
@@ -725,8 +718,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       this.imagesSub.unsubscribe();
     }
     this.imagesSub = this._rs.getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename).subscribe(
-      (res: { originalFilename: string }) => {
-        this.originalFilename = res.originalFilename;
+      res => {
         this._openImages();
         this._unhighlightAllRegions();
       },

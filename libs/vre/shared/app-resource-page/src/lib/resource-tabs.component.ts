@@ -69,7 +69,7 @@ export class ResourceTabsComponent implements OnInit {
     private _regionService: RegionService
   ) {}
 
-  resourceProperties: PropertyInfoValues[];
+  resourceProperties!: PropertyInfoValues[];
   loading = true;
 
   resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
