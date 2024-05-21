@@ -27,13 +27,13 @@ import {
 import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DialogComponent } from '../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog.component';
 import { DescriptionComponent } from './description.component';
 
 @Component({

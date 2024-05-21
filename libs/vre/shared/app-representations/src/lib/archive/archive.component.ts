@@ -10,9 +10,9 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-resource-page';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import {
   EmitEvent,
   Events,

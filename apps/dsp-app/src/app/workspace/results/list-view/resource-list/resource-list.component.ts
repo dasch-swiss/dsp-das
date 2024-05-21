@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChildren } from '@a
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Constants, ReadLinkValue, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { CheckboxUpdate, FilteredResources } from '../list-view.component';
+import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CheckboxUpdate } from '../list-view.component';
 import { ListViewService } from '../list-view.service';
 
 @Component({

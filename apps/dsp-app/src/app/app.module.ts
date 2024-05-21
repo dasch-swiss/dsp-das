@@ -11,6 +11,7 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
+import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   AppConfigService,
   buildTagFactory,
@@ -53,8 +54,6 @@ import { LoginFormComponent } from './main/action/login-form/login-form.componen
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { DialogHeaderComponent } from './main/dialog/dialog-header/dialog-header.component';
-import { DialogComponent } from './main/dialog/dialog.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
 import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
@@ -162,6 +161,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePropertiesComponents,
     ...ResourcePageComponents,
     ...RepresentationsComponents,
+    ...CommonToMoveComponents,
     AccountComponent,
     ActionBubbleComponent,
     AddUserComponent,
@@ -180,8 +180,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CreateUserPageComponent,
     CreateResourceClassDialogComponent,
     DateValueHandlerComponent,
-    DialogComponent,
-    DialogHeaderComponent,
     DisableContextMenuDirective,
     DragDropDirective,
     EditResourceClassDialogComponent,

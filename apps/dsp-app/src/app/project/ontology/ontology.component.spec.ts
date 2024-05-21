@@ -37,13 +37,13 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
-import { DialogComponent } from '@dsp-app/src/app/main/dialog/dialog.component';
 import { SplitPipe } from '@dsp-app/src/app/main/pipes/split.pipe';
 import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
 import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
+import { DialogComponent } from '../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog.component';
 import { OntologyComponent } from './ontology.component';
 
 /**

@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Cardinality, ReadResource, ReadUser } from '@dasch-swiss/dsp-js';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
-import { GuiCardinality } from '../../project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
-import { FilteredResources } from '../../workspace/results/list-view/list-view.component';
+import { FilteredResources } from '../filtered-resources.interface';
+import { GuiCardinality } from '../gui-cardinality.interface';
 
 export interface DialogData {
   mode: string; // switch mode
