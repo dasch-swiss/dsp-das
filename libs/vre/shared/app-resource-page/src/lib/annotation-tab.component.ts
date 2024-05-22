@@ -12,6 +12,7 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
     <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [isAnnotation]="true">
     </app-properties-display>
   </div>`,
+  styles: ['.active {border: 1px solid}'],
 })
 export class AnnotationTabComponent implements OnInit {
   selectedRegion: string | null = null;

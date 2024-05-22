@@ -45,6 +45,10 @@ export class RegionService {
     this._highlightRegion.next(region);
   }
 
+  highlightRegion(regionIri: string) {
+    this._highlightRegion.next(regionIri);
+  }
+
   getIncomingRegions() {
     const offset = 0;
     return this._incomingService

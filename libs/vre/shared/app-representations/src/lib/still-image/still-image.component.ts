@@ -1,15 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  Renderer2,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnChanges, OnDestroy, Renderer2, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -42,6 +31,7 @@ import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
+import { Region } from '../region.interface';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
@@ -81,8 +71,6 @@ interface PolygonsForRegion {
 export class StillImageComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) image!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
-
-  @Output() regionClicked = new EventEmitter<string>();
 
   get resourceIri() {
     return this.parentResource.id;
@@ -584,7 +572,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
         location: loc,
       })
       .addHandler('canvas-click', event => {
-        this.regionClicked.emit((<any>event).originalTarget.dataset.regionIri);
+        this._regionClicked((<any>event).originalTarget.dataset.regionIri);
       });
 
     this._regions[regionIri].push(regEle);
@@ -602,7 +590,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     });
     regEle.dataset.regionIri = regionIri;
     regEle.addEventListener('click', () => {
-      this.regionClicked.emit(regionIri);
+      this._regionClicked(regionIri);
     });
   }
 
@@ -671,16 +659,18 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     // collect all geometries belonging to this page
     const geometries: GeometryForRegion[] = [];
-    image.annotations.forEach(reg => {
-      this._regions[reg.regionResource.id] = [];
-      const geoms = reg.getGeometries();
+    this._regionService.regions
+      .map(_resource => new Region(_resource.res))
+      .forEach(reg => {
+        this._regions[reg.regionResource.id] = [];
+        const geoms = reg.getGeometries();
 
-      geoms.forEach(geom => {
-        const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
+        geoms.forEach(geom => {
+          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
 
-        geometries.push(geomForReg);
+          geometries.push(geomForReg);
+        });
       });
-    });
 
     // sort all geometries belonging to this page
     geometries.sort(sortRectangularRegion);
@@ -725,5 +715,9 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._regions = {};
 
     this._viewer.clearOverlays();
+  }
+
+  private _regionClicked(regionIri: string) {
+    this._regionService.highlightRegion(regionIri);
   }
 }
