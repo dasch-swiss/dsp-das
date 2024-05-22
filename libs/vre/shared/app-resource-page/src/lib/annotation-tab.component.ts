@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { FileRepresentation, RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
   selector: 'app-annotation-tab',
   template: ` <div
     class="region-property"
-    *ngFor="let annotation of annotationResources; trackBy: trackAnnotationByFn"
+    *ngFor="let annotation of regionService.regions; trackBy: trackAnnotationByFn"
     [id]="annotation.res.id"
     [class.active]="annotation.res.id === selectedRegion">
     <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [isAnnotation]="true">
@@ -14,15 +14,12 @@ import { FileRepresentation, RegionService } from '@dasch-swiss/vre/shared/app-r
   </div>`,
 })
 export class AnnotationTabComponent implements OnInit {
-  @Input({ required: true }) annotationResources!: DspResource[];
-  @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
-
   selectedRegion: string | null = null;
 
-  constructor(private _regionService: RegionService) {}
+  constructor(public regionService: RegionService) {}
 
   ngOnInit() {
-    this._regionService.highlightRegion$.subscribe(region => {
+    this.regionService.highlightRegion$.subscribe(region => {
       this.selectedRegion = region;
       if (region !== null) {
         this._openRegion(region);

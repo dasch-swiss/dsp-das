@@ -30,7 +30,7 @@ export class ResourcePageService {
     this.representationsToDisplay = getFileValue(resource);
 
     if (this._isImageWithRegions(resource)) {
-      this._regionService.getIncomingRegions(resource, 0);
+      this._regionService.onInit(resource);
     }
   }
 

@@ -30,28 +30,15 @@ import { CompoundService } from './compound/compound.service';
       </mat-tab>
 
       <!-- annotations -->
-      <!--
-                                        <ng-container *ngIf="regionService as irs">
-                                          <mat-tab
-                                            label="Annotations"
-                                            *ngIf="true">
-                                            <ng-template matTabLabel class="annotations">
-                                              <span
-                                                [matBadge]="irs.representationsToDisplay[0]?.annotations.length"
-                                                [matBadgeHidden]="irs.representationsToDisplay[0]?.annotations.length === 0"
-                                                matBadgeColor="primary"
-                                                matBadgeOverlap="false">
-                                                Annotations
-                                              </span>
-                                            </ng-template>
-                                            <app-annotation-tab
-                                              *ngIf="irs.representationsToDisplay as representationsToDisplay"
-                                              [representationsToDisplay]="representationsToDisplay"
-                                              [annotationResources]="irs.annotationResources">
-                                            </app-annotation-tab>
-                                          </mat-tab>
-                                        </ng-container>
-                                        -->
+      <ng-container *ngIf="regionService as irs">
+        <mat-tab label="Annotations" *ngIf="true">
+          <ng-template matTabLabel class="annotations">
+            <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
+          </ng-template>
+          <app-annotation-tab *ngIf="irs.regions.length > 0"></app-annotation-tab>
+        </mat-tab>
+      </ng-container>
+      -->
     </mat-tab-group>
   `,
 })
