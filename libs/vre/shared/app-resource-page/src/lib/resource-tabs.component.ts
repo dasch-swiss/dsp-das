@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { CompoundService } from './compound/compound.service';
@@ -57,8 +58,9 @@ export class ResourceTabsComponent implements OnInit {
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
-  tabChanged(index: number) {
-    this.regionService.displayRegions(index === 2);
+  tabChanged(event: MatTabChangeEvent) {
+    console.log(event);
+    this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
   }
 
   ngOnInit() {

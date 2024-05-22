@@ -172,6 +172,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     this._loadImages();
 
     this._regionService.showRegions$.pipe(filter(value => value)).subscribe(() => {
+      console.log('show regions');
       this._renderRegions();
     });
 
