@@ -75,10 +75,10 @@ export class CompoundService {
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
       /*
-                                                                                                if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
-                                                                                                  this.getIncomingRegions(this.incomingResource, 0);
-                                                                                                }
-                                                                                                */
+                                                                                                      if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
+                                                                                                        this.getIncomingRegions(this.incomingResource, 0);
+                                                                                                      }
+                                                                                                      */
     });
   }
 }

@@ -9,7 +9,7 @@
     <app-resource-header [resource]="resource" />
 
     <app-resource-representation
-      *ngIf="!compoundService.compoundPosition; else compoundViewerTpl"
+      *ngIf="resourcePageService.isCompoundNavigation === false; else compoundViewerTpl"
       [resource]="resource" />
 
     <app-resource-tabs [resource]="resource" />

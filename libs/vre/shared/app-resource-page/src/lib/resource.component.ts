@@ -20,8 +20,7 @@ export class ResourceComponent implements OnChanges {
   constructor(
     private _router: Router,
     private _titleService: Title,
-    public resourcePageService: ResourcePageService,
-    public compoundService: CompoundService
+    public resourcePageService: ResourcePageService
   ) {
     this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');

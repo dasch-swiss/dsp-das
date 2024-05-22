@@ -9,7 +9,7 @@ import { getFileValue } from './get-file-value';
 @Injectable()
 export class ResourcePageService {
   representationsToDisplay!: ReadFileValue;
-
+  isCompoundNavigation: boolean | null = null;
   private _resource!: DspResource;
 
   constructor(
@@ -26,6 +26,7 @@ export class ResourcePageService {
       return;
     }
 
+    this.isCompoundNavigation = false;
     this.representationsToDisplay = getFileValue(resource);
 
     if (this._isImageWithRegions(resource)) {
@@ -53,9 +54,14 @@ export class ResourcePageService {
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .subscribe(countQuery => {
         const countQuery_ = countQuery as CountQueryResponse;
+
         if (countQuery_.numberOfResults > 0) {
+          this.isCompoundNavigation = true;
           this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this._resource);
+          return;
         }
+
+        this.isCompoundNavigation = false;
       });
   }
 }
