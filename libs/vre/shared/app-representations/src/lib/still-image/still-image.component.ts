@@ -346,6 +346,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     colorVal.color = color;
     const linkVal = new CreateLinkValue();
     linkVal.type = Constants.LinkValue;
+    console.log(this);
     linkVal.linkedResourceIri = this.resourceIri;
     createResource.properties = {
       [Constants.HasColor]: [colorVal],

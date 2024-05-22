@@ -11,7 +11,7 @@ import { CompoundService } from './compound.service';
       <app-still-image
         *ngIf="compoundService.incomingResource as incomingResource"
         class="dsp-representation stillimage"
-        [parentResource]="resourcePageService.resource.res"
+        [parentResource]="incomingResource.res"
         [image]="fileRepresentation">
         <div navigationArrows class="arrows">
           <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
