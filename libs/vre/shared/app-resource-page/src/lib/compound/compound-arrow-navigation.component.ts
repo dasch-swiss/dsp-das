@@ -24,7 +24,7 @@ export class CompoundArrowNavigationComponent {
   }
 
   openPage(page: number) {
-    this.compoundService.compoundNavigation(page);
+    this.compoundService.openPage(page);
   }
 
   constructor(public compoundService: CompoundService) {}

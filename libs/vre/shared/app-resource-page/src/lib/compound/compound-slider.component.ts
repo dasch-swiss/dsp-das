@@ -34,7 +34,7 @@ export class CompoundSliderComponent {
   }
 
   openPage(page: number) {
-    this.compoungService.compoundNavigation(page);
+    this.compoungService.openPage(page);
   }
 
   constructor(public compoungService: CompoundService) {}

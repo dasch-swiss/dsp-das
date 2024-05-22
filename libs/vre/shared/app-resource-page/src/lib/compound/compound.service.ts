@@ -3,6 +3,7 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyD
 import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 
 @Injectable()
@@ -15,7 +16,8 @@ export class CompoundService {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private _regionService: RegionService
   ) {}
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
@@ -25,11 +27,6 @@ export class CompoundService {
   }
 
   openPage(page: number) {
-    // this.regionDrawMode = false;
-    this.compoundNavigation(page);
-  }
-
-  compoundNavigation(page: number) {
     this.incomingResource = undefined;
 
     const offset = Math.ceil(page / 25) - 1;
@@ -78,6 +75,7 @@ export class CompoundService {
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
       this.incomingResource = incomingResource;
+      this._regionService.onInit(incomingResource);
     });
   }
 }
