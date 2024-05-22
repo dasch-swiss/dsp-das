@@ -6,6 +6,7 @@ import {
   ReadArchiveFileValue,
   ReadAudioFileValue,
   ReadDocumentFileValue,
+  ReadFileValue,
   ReadMovingImageFileValue,
   ReadResource,
   ReadResourceSequence,
@@ -16,15 +17,11 @@ import {
 import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentation, Region } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { take } from 'rxjs/operators';
 
 @Injectable()
 export class IncomingRepresentationsService {
-  representationsToDisplay: FileRepresentation[] = [];
+  representationsToDisplay!: ReadFileValue;
   compoundPosition: DspCompoundPosition | undefined;
   resource!: DspResource;
   loading = false;
@@ -35,9 +32,7 @@ export class IncomingRepresentationsService {
     private _incomingService: IncomingService,
     private _notification: NotificationService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _store: Store,
-    private _actions$: Actions
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   onInit(resource: DspResource) {
@@ -48,6 +43,8 @@ export class IncomingRepresentationsService {
       return;
     }
 
+    this.representationsToDisplay = this._getFileValue(resource);
+
     if (this._isImageWithRegions(resource)) {
       this.getIncomingRegions(resource, 0);
     }
@@ -56,7 +53,6 @@ export class IncomingRepresentationsService {
   getIncomingRegions(resource: DspResource, offset: number): void {
     this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe(regions => {
       Array.prototype.push.apply(resource.incomingAnnotations, (regions as ReadResourceSequence).resources);
-      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
     });
   }
 
@@ -111,95 +107,67 @@ export class IncomingRepresentationsService {
       this.incomingResource.systemProps =
         this.incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-      this.representationsToDisplay = this._collectRepresentationsAndAnnotations(this.incomingResource);
+      this.representationsToDisplay = this._getFileValue(this.incomingResource);
       if (this.representationsToDisplay.length && this.representationsToDisplay[0].fileValue && this.compoundPosition) {
         this.getIncomingRegions(this.incomingResource, 0);
       }
     });
   }
 
-  private _collectRepresentationsAndAnnotations(resource: DspResource): FileRepresentation[] {
-    // general object for all kind of representations
-    const representations: FileRepresentation[] = [];
-
-    // --> TODO: use proper classes and a factory
+  private _getFileValue(resource: DspResource) {
     if (resource.res.properties[Constants.HasStillImageFileValue]) {
-      // --> TODO: check if resources is a StillImageRepresentation using the ontology responder (support for subclass relations required)
-      // resource has StillImageFileValues that are directly attached to it (properties)
+      return resource.res.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
+      /*
+                                                      for (const img of fileValues) {
+                                                        const regions: Region[] = [];
 
-      const fileValues: ReadStillImageFileValue[] = resource.res.properties[
-        Constants.HasStillImageFileValue
-      ] as ReadStillImageFileValue[];
-      for (const img of fileValues) {
-        const regions: Region[] = [];
+                                                        const annotations: DspResource[] = [];
 
-        const annotations: DspResource[] = [];
+                                                        for (const incomingRegion of resource.incomingAnnotations) {
+                                                          const region = new Region(incomingRegion);
+                                                          regions.push(region);
 
-        for (const incomingRegion of resource.incomingAnnotations) {
-          const region = new Region(incomingRegion);
-          regions.push(region);
+                                                          const annotation = new DspResource(incomingRegion);
 
-          const annotation = new DspResource(incomingRegion);
+                                                          // gather region property information
+                                                          annotation.resProps = Common.initProps(incomingRegion).filter(v => v.values.length > 0);
 
-          // gather region property information
-          annotation.resProps = Common.initProps(incomingRegion).filter(v => v.values.length > 0);
+                                                          // gather system property information
+                                                          annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-          // gather system property information
-          annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+                                                          this._actions$
+                                                            .pipe(ofActionSuccessful(GetAttachedUserAction))
+                                                            .pipe(take(1))
+                                                            .subscribe(() => {
+                                                              annotations.push(annotation);
+                                                            });
+                                                          this._store.dispatch(new GetAttachedUserAction(annotation.res.id, annotation.res.attachedToUser));
+                                                        }
 
-          this._actions$
-            .pipe(ofActionSuccessful(GetAttachedUserAction))
-            .pipe(take(1))
-            .subscribe(() => {
-              annotations.push(annotation);
-            });
-          this._store.dispatch(new GetAttachedUserAction(annotation.res.id, annotation.res.attachedToUser));
-        }
+                                                        const stillImage = new FileRepresentation(img, regions);
 
-        const stillImage = new FileRepresentation(img, regions);
+                                                        representations.push(stillImage);
 
-        representations.push(stillImage);
-
-        this.annotationResources = annotations;
-      }
+                                                        this.annotationResources = annotations;
+                                                      }
+                                                       */
     } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
-      const fileValues: ReadDocumentFileValue[] = resource.res.properties[
-        Constants.HasDocumentFileValue
-      ] as ReadDocumentFileValue[];
-      for (const doc of fileValues) {
-        const document = new FileRepresentation(doc);
-        representations.push(document);
-      }
+      return resource.res.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue;
     } else if (resource.res.properties[Constants.HasAudioFileValue]) {
-      const fileValue: ReadAudioFileValue = resource.res.properties[
-        Constants.HasAudioFileValue
-      ][0] as ReadAudioFileValue;
-      const audio = new FileRepresentation(fileValue);
-      representations.push(audio);
+      return resource.res.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue;
     } else if (resource.res.properties[Constants.HasMovingImageFileValue]) {
-      const fileValue: ReadMovingImageFileValue = resource.res.properties[
-        Constants.HasMovingImageFileValue
-      ][0] as ReadMovingImageFileValue;
-      const video = new FileRepresentation(fileValue);
-      representations.push(video);
+      return resource.res.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue;
     } else if (resource.res.properties[Constants.HasArchiveFileValue]) {
-      const fileValue: ReadArchiveFileValue = resource.res.properties[
-        Constants.HasArchiveFileValue
-      ][0] as ReadArchiveFileValue;
-      const archive = new FileRepresentation(fileValue);
-      representations.push(archive);
+      return resource.res.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue;
     } else if (resource.res.properties[Constants.HasTextFileValue]) {
-      const fileValue: ReadTextFileValue = resource.res.properties[Constants.HasTextFileValue][0] as ReadTextFileValue;
-      const text = new FileRepresentation(fileValue);
-      representations.push(text);
+      return resource.res.properties[Constants.HasTextFileValue][0] as ReadTextFileValue;
     }
-    return representations;
+
+    throw new Error('The resource type is not recognized');
   }
 
   private _isImageWithRegions(resource: DspResource) {
-    const representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
-
-    return resource.res.properties[Constants.HasStillImageFileValue] && representationsToDisplay.length > 0;
+    return resource.res.properties[Constants.HasStillImageFileValue] !== undefined;
   }
 
   private _isObjectWithoutRepresentation(resource: DspResource) {
