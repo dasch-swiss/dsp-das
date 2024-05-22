@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IncomingRepresentationsService } from '../incoming-representations.service';
+import { CompoundService } from './compound.service';
 
 @Component({
   selector: 'app-compound-arrow-navigation',
@@ -17,12 +17,12 @@ export class CompoundArrowNavigationComponent {
   @Input() forwardNavigation!: boolean;
 
   get compoundNavigation() {
-    return this.incomingService.compoundPosition;
+    return this.compoundService.compoundPosition;
   }
 
   openPage(page: number) {
-    this.incomingService.compoundNavigation(page);
+    this.compoundService.compoundNavigation(page);
   }
 
-  constructor(public incomingService: IncomingRepresentationsService) {}
+  constructor(public compoundService: CompoundService) {}
 }

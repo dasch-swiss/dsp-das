@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { RegionService, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
-import { IncomingRepresentationsService } from './incoming-representations.service';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { CompoundService } from './compound/compound.service';
 
 @Component({
   selector: 'app-resource-tabs',
@@ -21,7 +21,7 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 
       <!-- incoming (compound object) resource -->
       <mat-tab
-        *ngIf="incomingRepresentationsService.incomingResource as incomingResource"
+        *ngIf="compoundService.resource as incomingResource"
         #matTabIncoming
         [label]="resourceClassLabel(incomingResource)">
         <app-properties-display
@@ -30,49 +30,48 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
       </mat-tab>
 
       <!-- annotations -->
-      <ng-container *ngIf="incomingRepresentationsService as irs">
-        <mat-tab
-          label="Annotations"
-          *ngIf="
-            irs.representationsToDisplay?.length &&
-            irs.representationsToDisplay[0].fileValue &&
-            irs.representationsToDisplay[0].fileValue.type === representationConstants.stillImage
-          ">
-          <ng-template matTabLabel class="annotations">
-            <span
-              [matBadge]="irs.representationsToDisplay[0]?.annotations.length"
-              [matBadgeHidden]="irs.representationsToDisplay[0]?.annotations.length === 0"
-              matBadgeColor="primary"
-              matBadgeOverlap="false">
-              Annotations
-            </span>
-          </ng-template>
-          <app-annotation-tab
-            *ngIf="irs.representationsToDisplay as representationsToDisplay"
-            [representationsToDisplay]="representationsToDisplay"
-            [annotationResources]="irs.annotationResources">
-          </app-annotation-tab>
-        </mat-tab>
-      </ng-container>
+      <!--
+                                        <ng-container *ngIf="regionService as irs">
+                                          <mat-tab
+                                            label="Annotations"
+                                            *ngIf="true">
+                                            <ng-template matTabLabel class="annotations">
+                                              <span
+                                                [matBadge]="irs.representationsToDisplay[0]?.annotations.length"
+                                                [matBadgeHidden]="irs.representationsToDisplay[0]?.annotations.length === 0"
+                                                matBadgeColor="primary"
+                                                matBadgeOverlap="false">
+                                                Annotations
+                                              </span>
+                                            </ng-template>
+                                            <app-annotation-tab
+                                              *ngIf="irs.representationsToDisplay as representationsToDisplay"
+                                              [representationsToDisplay]="representationsToDisplay"
+                                              [annotationResources]="irs.annotationResources">
+                                            </app-annotation-tab>
+                                          </mat-tab>
+                                        </ng-container>
+                                        -->
     </mat-tab-group>
   `,
 })
 export class ResourceTabsComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) selectedTab!: number;
+
+  selectedTab = 0;
 
   constructor(
-    public incomingRepresentationsService: IncomingRepresentationsService,
-    private _regionService: RegionService
+    public regionService: RegionService,
+    public compoundService: CompoundService
   ) {}
 
   resourceProperties!: PropertyInfoValues[];
   loading = true;
 
-  resourceClassLabel = (resource: DspResource): string => resource.res.entityInfo?.classes[resource.res.type].label;
+  resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(index: number) {
-    this._regionService.displayRegions(index === 2);
+    this.regionService.displayRegions(index === 2);
   }
 
   ngOnInit() {
@@ -80,10 +79,8 @@ export class ResourceTabsComponent implements OnInit {
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
 
-    this._regionService.regionAdded$.subscribe(() => {
+    this.regionService.regionAdded$.subscribe(() => {
       this.selectedTab = 2;
     });
   }
-
-  protected readonly representationConstants = RepresentationConstants;
 }

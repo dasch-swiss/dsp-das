@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IncomingRepresentationsService } from '../incoming-representations.service';
+import { CompoundService } from './compound.service';
 
 @Component({
   selector: 'app-compound-slider',
@@ -31,12 +31,12 @@ import { IncomingRepresentationsService } from '../incoming-representations.serv
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {
-    return this.incomingService.compoundPosition;
+    return this.compoungService.compoundPosition;
   }
 
   openPage(page: number) {
-    this.incomingService.compoundNavigation(page);
+    this.compoungService.compoundNavigation(page);
   }
 
-  constructor(public incomingService: IncomingRepresentationsService) {}
+  constructor(public compoungService: CompoundService) {}
 }

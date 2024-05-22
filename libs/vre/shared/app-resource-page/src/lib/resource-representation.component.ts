@@ -4,7 +4,7 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
 import { getFileValue } from './get-file-value';
 
 @Component({
-  selector: 'app-resource-representations',
+  selector: 'app-resource-representation',
   template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay">
     <app-still-image
       #stillImage
@@ -61,7 +61,7 @@ import { getFileValue } from './get-file-value';
     </app-text>
   </div>`,
 })
-export class ResourceRepresentationsComponent implements OnInit {
+export class ResourceRepresentationComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   representationToDisplay!: FileRepresentation;
 
@@ -69,6 +69,7 @@ export class ResourceRepresentationsComponent implements OnInit {
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnInit() {
+    console.log('juli', this.resource);
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource));
   }
 

@@ -7,7 +7,7 @@ import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourcePage2Component } from './lib/resource-page-2.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceParentComponent } from './lib/resource-parent.component';
-import { ResourceRepresentationsComponent } from './lib/resource-representations.component';
+import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceTabsComponent } from './lib/resource-tabs.component';
 import { ResourceToolbarComponent } from './lib/resource-toolbar.component';
 import { ResourceComponent } from './lib/resource.component';
@@ -25,7 +25,7 @@ export const ResourcePageComponents = [
   ResourcePageComponent,
   ResourcePage2Component,
   ResourceParentComponent,
-  ResourceRepresentationsComponent,
+  ResourceRepresentationComponent,
   ResourceTabsComponent,
   ResourceToolbarComponent,
   AnnotationTabComponent,

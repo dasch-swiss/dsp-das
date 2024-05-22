@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IncomingRepresentationsService } from '../incoming-representations.service';
+import { ResourcePageService } from '../resource-page.service';
 
 @Component({
   selector: 'app-compound-viewer',
@@ -18,5 +18,5 @@ import { IncomingRepresentationsService } from '../incoming-representations.serv
     </div>-->`,
 })
 export class CompoundViewerComponent {
-  constructor(public incomingRepresentationsService: IncomingRepresentationsService) {}
+  constructor(public incomingRepresentationsService: ResourcePageService) {}
 }

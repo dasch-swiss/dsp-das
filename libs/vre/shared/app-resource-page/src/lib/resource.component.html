@@ -3,15 +3,16 @@
   <p>This resource is restricted, file representations may be of lower quality and some properties may be hidden.</p>
   <mat-icon class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
 </div>
+
 <div class="content large middle">
   <div class="resource-view" *ngIf="resource; else noResourceTpl">
-    <app-resource-header [resource]="resource"></app-resource-header>
+    <app-resource-header [resource]="resource" />
 
-    <app-resource-representations
-      *ngIf="!incomingRepresentationsService.compoundPosition; else compoundViewerTpl"
+    <app-resource-representation
+      *ngIf="!compoundService.compoundPosition; else compoundViewerTpl"
       [resource]="resource" />
 
-    <app-resource-tabs [resource]="resource" [selectedTab]="selectedTab"></app-resource-tabs>
+    <app-resource-tabs [resource]="resource" />
   </div>
 </div>
 
