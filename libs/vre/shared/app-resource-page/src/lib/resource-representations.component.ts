@@ -1,28 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
+import { getFileValue } from './get-file-value';
 
 @Component({
   selector: 'app-resource-representations',
-  template: ` <div
-    class="representation-container center"
-    *ngIf="representationsToDisplay?.length && representationsToDisplay[0].fileValue"
-    [ngSwitch]="representationsToDisplay[0].fileValue?.type">
-    <!-- still image view -->
+  template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay">
     <app-still-image
       #stillImage
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.stillImage"
       [parentResource]="resource.res"
-      [image]="representationsToDisplay[0]">
+      [image]="representationToDisplay">
     </app-still-image>
 
     <app-document
       #document
       class="dsp-representation document"
-      [class.pdf]="representationsToDisplay[0].fileValue.filename.split('.').pop() === 'pdf'"
+      [class.pdf]="representationToDisplay.fileValue.filename.split('.').pop() === 'pdf'"
       *ngSwitchCase="representationConstants.document"
-      [src]="representationsToDisplay[0]"
+      [src]="representationToDisplay"
       [parentResource]="resource.res"
       (loaded)="representationLoaded($event)">
     </app-document>
@@ -31,7 +28,7 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
       #audio
       class="dsp-representation audio"
       *ngSwitchCase="representationConstants.audio"
-      [src]="representationsToDisplay[0]"
+      [src]="representationToDisplay"
       [parentResource]="resource.res"
       (loaded)="representationLoaded($event)">
     </app-audio>
@@ -40,7 +37,7 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
       #video
       class="dsp-representation video"
       *ngSwitchCase="representationConstants.movingImage"
-      [src]="representationsToDisplay[0]"
+      [src]="representationToDisplay"
       [parentResource]="resource.res"
       (loaded)="representationLoaded($event)">
     </app-video>
@@ -49,7 +46,7 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
       #archive
       class="dsp-representation archive"
       *ngSwitchCase="representationConstants.archive"
-      [src]="representationsToDisplay[0]"
+      [src]="representationToDisplay"
       [parentResource]="resource.res"
       (loaded)="representationLoaded($event)">
     </app-archive>
@@ -58,22 +55,22 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
       #text
       class="dsp-representation text"
       *ngSwitchCase="representationConstants.text"
-      [src]="representationsToDisplay[0]"
+      [src]="representationToDisplay"
       [parentResource]="resource.res"
       (loaded)="representationLoaded($event)">
     </app-text>
-
-    <span *ngSwitchDefault>
-      The file representation type "{{ representationsToDisplay[0].fileValue.type }}" is not yet implemented
-    </span>
   </div>`,
 })
-export class ResourceRepresentationsComponent {
+export class ResourceRepresentationsComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
+  representationToDisplay!: FileRepresentation;
 
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
+
+  ngOnInit() {
+    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource));
+  }
 
   representationLoaded(e: boolean) {
     this.loading = !e;

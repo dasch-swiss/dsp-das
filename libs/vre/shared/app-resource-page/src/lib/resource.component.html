@@ -7,17 +7,17 @@
   <div class="resource-view" *ngIf="resource; else noResourceTpl">
     <app-resource-header [resource]="resource"></app-resource-header>
 
-    <ng-container *ngIf="!incomingRepresentationsService.compoundPosition">
-      <app-resource-representations
-        *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
-        [resource]="resource"
-        [representationsToDisplay]="representationsToDisplay"></app-resource-representations>
-    </ng-container>
-    <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
+    <app-resource-representations
+      *ngIf="!incomingRepresentationsService.compoundPosition; else compoundViewerTpl"
+      [resource]="resource" />
 
     <app-resource-tabs [resource]="resource" [selectedTab]="selectedTab"></app-resource-tabs>
   </div>
 </div>
+
+<ng-template #compoundViewerTpl>
+  <app-compound-viewer />
+</ng-template>
 
 <ng-template #noResourceTpl>
   <div>
