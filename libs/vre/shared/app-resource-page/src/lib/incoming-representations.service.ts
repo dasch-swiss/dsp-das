@@ -26,7 +26,7 @@ import { take } from 'rxjs/operators';
 export class IncomingRepresentationsService {
   representationsToDisplay: FileRepresentation[] = [];
   compoundPosition: DspCompoundPosition | undefined;
-  resource: DspResource;
+  resource!: DspResource;
   loading = false;
   incomingResource: DspResource | undefined;
   annotationResources: DspResource[];
@@ -52,9 +52,10 @@ export class IncomingRepresentationsService {
     if (this._isObjectWithoutRepresentation(resource)) {
       this._incomingService
         .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-        .subscribe((countQuery: CountQueryResponse) => {
-          if (countQuery.numberOfResults > 0) {
-            this.compoundPosition = new DspCompoundPosition(countQuery.numberOfResults);
+        .subscribe(countQuery => {
+          const countQuery_ = countQuery as CountQueryResponse;
+          if (countQuery_.numberOfResults > 0) {
+            this.compoundPosition = new DspCompoundPosition(countQuery_.numberOfResults);
             this.compoundNavigation(1);
           }
         });
@@ -62,8 +63,8 @@ export class IncomingRepresentationsService {
   }
 
   getIncomingRegions(resource: DspResource, offset: number): void {
-    this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe((regions: ReadResourceSequence) => {
-      Array.prototype.push.apply(resource.incomingAnnotations, regions.resources);
+    this._incomingService.getIncomingRegions(resource.res.id, offset).subscribe(regions => {
+      Array.prototype.push.apply(resource.incomingAnnotations, (regions as ReadResourceSequence).resources);
       this.representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
     });
   }

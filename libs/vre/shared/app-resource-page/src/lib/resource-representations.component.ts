@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
@@ -72,7 +72,6 @@ export class ResourceRepresentationsComponent {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) incomingResource!: DspResource;
   @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
-  @Input({ required: true }) compoundPosition!: DspCompoundPosition;
 
   loading = false;
   protected readonly representationConstants = RepresentationConstants;

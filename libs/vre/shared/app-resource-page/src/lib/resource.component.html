@@ -12,7 +12,6 @@
         *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
         [resource]="resource"
         [incomingResource]="incomingRepresentationsService.incomingResource"
-        [compoundPosition]="incomingRepresentationsService.compoundPosition"
         [representationsToDisplay]="representationsToDisplay"></app-resource-representations>
     </ng-container>
     <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
