@@ -21,7 +21,7 @@ import { CompoundService } from './compound/compound.service';
 
       <!-- incoming (compound object) resource -->
       <mat-tab
-        *ngIf="compoundService.resource as incomingResource"
+        *ngIf="compoundService.incomingResource as incomingResource"
         #matTabIncoming
         [label]="resourceClassLabel(incomingResource)">
         <app-properties-display

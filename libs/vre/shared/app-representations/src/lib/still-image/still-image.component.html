@@ -1,61 +1,27 @@
 <!-- openseadragon (osd) viewer -->
 <div class="osd-container" [class.drawing]="regionDrawMode" [class.on-error]="failedToLoad">
   <!-- in case of an error -->
+  <ng-content select="[navigationArrows]"></ng-content>
   <app-status
     [status]="404"
     [url]="image.fileValue.fileUrl"
     [representation]="'still-image'"
     *ngIf="failedToLoad"></app-status>
-
-  <!-- navigation in case of compound object: previous and next page -->
-  <!--<ng-container *ngIf="compoundNavigation">
-            <app-compound-arrow-navigation [forwardNavigation]="false"></app-compound-arrow-navigation>
-            <app-compound-arrow-navigation [forwardNavigation]="true"></app-compound-arrow-navigation>
-          </ng-container>-->
 </div>
 
+<ng-content select="[slider]" />
 <div class="toolbar">
-  <!-- navigation -->
-  <!---->
-  <!-- toolbar -->
   <div class="toolbar-bottom">
     <!-- vertical more button with menu to open and copy iiif url -->
     <button mat-icon-button [matMenuTriggerFor]="more" matTooltip="More" matTooltipPosition="above">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #more="matMenu" class="representation-menu">
-      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(image.fileValue.fileUrl)">
-        Open IIIF URL in new tab
-      </button>
-      <button
-        class="menu-content"
-        mat-menu-item
-        [disabled]="failedToLoad || !editorPermissions"
-        (click)="openReplaceFileDialog()">
-        Replace file
-      </button>
-    </mat-menu>
 
     <span class="action-buttons">
       <button mat-icon-button [matMenuTriggerFor]="share" matTooltip="Share" matTooltipPosition="above">
         <mat-icon>share</mat-icon>
       </button>
-      <mat-menu #share="matMenu" class="res-share-menu">
-        <button
-          mat-menu-item
-          (click)="openSnackBar('IIIF URL copied to clipboard!')"
-          [cdkCopyToClipboard]="image.fileValue.fileUrl">
-          <mat-icon>content_copy</mat-icon>
-          Copy IIIF URL to clipboard
-        </button>
-        <button
-          mat-menu-item
-          [cdkCopyToClipboard]="image.fileValue.arkUrl"
-          (click)="openSnackBar('ARK URL copied to clipboard!')">
-          <mat-icon>content_copy</mat-icon>
-          Copy ARK url to clipboard
-        </button>
-      </mat-menu>
+
       <button mat-icon-button matTooltip="Download" (click)="download(image.fileValue.fileUrl)">
         <mat-icon>download</mat-icon>
       </button>
@@ -74,6 +40,7 @@
 
     <!-- navigation in case of compound object: first page and previous page -->
     <!--<app-compound-navigation *ngIf="compoundNavigation"></app-compound-navigation>-->
+    <ng-content select="[navigation]"></ng-content>
 
     <span class="fill-remaining-space"></span>
 
@@ -94,3 +61,33 @@
     </span>
   </div>
 </div>
+
+<mat-menu #more="matMenu" class="representation-menu">
+  <button class="menu-content" mat-menu-item (click)="openImageInNewTab(image.fileValue.fileUrl)">
+    Open IIIF URL in new tab
+  </button>
+  <button
+    class="menu-content"
+    mat-menu-item
+    [disabled]="failedToLoad || !editorPermissions"
+    (click)="openReplaceFileDialog()">
+    Replace file
+  </button>
+</mat-menu>
+
+<mat-menu #share="matMenu" class="res-share-menu">
+  <button
+    mat-menu-item
+    (click)="openSnackBar('IIIF URL copied to clipboard!')"
+    [cdkCopyToClipboard]="image.fileValue.fileUrl">
+    <mat-icon>content_copy</mat-icon>
+    Copy IIIF URL to clipboard
+  </button>
+  <button
+    mat-menu-item
+    [cdkCopyToClipboard]="image.fileValue.arkUrl"
+    (click)="openSnackBar('ARK URL copied to clipboard!')">
+    <mat-icon>content_copy</mat-icon>
+    Copy ARK url to clipboard
+  </button>
+</mat-menu>

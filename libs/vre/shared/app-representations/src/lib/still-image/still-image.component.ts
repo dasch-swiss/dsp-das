@@ -430,7 +430,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
    *
    * @param regionIri the Iri of the region whose polygon elements should be highlighted..
    */
-  private _highlightRegion(regionIri) {
+  private _highlightRegion(regionIri: string) {
     const activeRegion: HTMLElement[] = this._regions[regionIri];
 
     if (activeRegion !== undefined) {

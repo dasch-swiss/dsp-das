@@ -3,7 +3,7 @@ import { CompoundService } from './compound.service';
 
 @Component({
   selector: 'app-compound-navigation',
-  template: ` <span class="compound-nav">
+  template: ` <span style="display: flex; align-items: center">
     <button mat-icon-button [disabled]="compoundNavigation.page <= 1" matTooltip="First page" (click)="openPage(1)">
       <mat-icon>first_page</mat-icon>
     </button>

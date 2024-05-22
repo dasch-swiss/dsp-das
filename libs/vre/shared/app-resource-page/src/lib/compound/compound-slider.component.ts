@@ -3,31 +3,39 @@ import { CompoundService } from './compound.service';
 
 @Component({
   selector: 'app-compound-slider',
-  template: ` <div *ngIf="compoundNavigation" class="compoundNavigation">
-    <mat-slider
-      [color]="'primary'"
-      [disabled]="compoundNavigation.totalPages < 2"
-      [max]="compoundNavigation.totalPages"
-      [min]="1"
-      [step]="1"
-      showTickMarks
-      discrete
-      #ngSlider
-      ><input
-        matSliderThumb
-        [(ngModel)]="compoundNavigation.page"
-        (change)="
-          openPage(
-            {
-              source: ngSliderThumb,
-              parent: ngSlider,
-              value: ngSliderThumb.value
-            }.value
-          )
-        "
-        #ngSliderThumb="matSliderThumb" />
-    </mat-slider>
-  </div>`,
+  template: ` <mat-slider
+    [color]="'primary'"
+    [disabled]="compoundNavigation.totalPages < 2"
+    [max]="compoundNavigation.totalPages"
+    [min]="1"
+    [step]="1"
+    showTickMarks
+    discrete
+    #ngSlider
+    style="width: 100%"
+    ><input
+      matSliderThumb
+      [(ngModel)]="compoundNavigation.page"
+      (change)="
+        openPage(
+          {
+            source: ngSliderThumb,
+            parent: ngSlider,
+            value: ngSliderThumb.value
+          }.value
+        )
+      "
+      #ngSliderThumb="matSliderThumb" />
+  </mat-slider>`,
+  styles: [
+    `
+      :host {
+        position: absolute;
+        bottom: 30px;
+        width: 99%;
+      }
+    `,
+  ],
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {

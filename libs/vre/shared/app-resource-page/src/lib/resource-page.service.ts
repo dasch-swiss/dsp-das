@@ -10,7 +10,7 @@ import { getFileValue } from './get-file-value';
 export class ResourcePageService {
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean | null = null;
-  private _resource!: DspResource;
+  resource!: DspResource;
 
   constructor(
     private _incomingService: IncomingService,
@@ -19,7 +19,7 @@ export class ResourcePageService {
   ) {}
 
   onInit(resource: DspResource) {
-    this._resource = resource;
+    this.resource = resource;
 
     if (this._isObjectWithoutRepresentation(resource)) {
       this._checkForCompoundNavigation(resource);
@@ -57,7 +57,7 @@ export class ResourcePageService {
 
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
-          this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this._resource);
+          this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);
           return;
         }
 
