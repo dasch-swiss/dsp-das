@@ -42,23 +42,14 @@ export class IncomingRepresentationsService {
 
   onInit(resource: DspResource) {
     this.resource = resource;
-    const representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
 
-    if (this._isImageWithRegions(resource, representationsToDisplay)) {
-      this.getIncomingRegions(resource, 0);
+    if (this._isObjectWithoutRepresentation(resource)) {
+      this._checkForCompoundNavigation(resource);
       return;
     }
 
-    if (this._isObjectWithoutRepresentation(resource)) {
-      this._incomingService
-        .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
-        .subscribe(countQuery => {
-          const countQuery_ = countQuery as CountQueryResponse;
-          if (countQuery_.numberOfResults > 0) {
-            this.compoundPosition = new DspCompoundPosition(countQuery_.numberOfResults);
-            this.compoundNavigation(1);
-          }
-        });
+    if (this._isImageWithRegions(resource)) {
+      this.getIncomingRegions(resource, 0);
     }
   }
 
@@ -128,10 +119,6 @@ export class IncomingRepresentationsService {
   }
 
   private _collectRepresentationsAndAnnotations(resource: DspResource): FileRepresentation[] {
-    if (!resource) {
-      return;
-    }
-
     // general object for all kind of representations
     const representations: FileRepresentation[] = [];
 
@@ -209,8 +196,10 @@ export class IncomingRepresentationsService {
     return representations;
   }
 
-  private _isImageWithRegions(resource: DspResource, representations: FileRepresentation[]) {
-    return resource.res.properties[Constants.HasStillImageFileValue] && representations.length > 0;
+  private _isImageWithRegions(resource: DspResource) {
+    const representationsToDisplay = this._collectRepresentationsAndAnnotations(resource);
+
+    return resource.res.properties[Constants.HasStillImageFileValue] && representationsToDisplay.length > 0;
   }
 
   private _isObjectWithoutRepresentation(resource: DspResource) {
@@ -222,5 +211,17 @@ export class IncomingRepresentationsService {
       Constants.HasDocumentFileValue,
       Constants.HasArchiveFileValue,
     ].reduce((prev, current) => prev && !resource.res.properties[current], true);
+  }
+
+  private _checkForCompoundNavigation(resource: DspResource) {
+    this._incomingService
+      .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+      .subscribe(countQuery => {
+        const countQuery_ = countQuery as CountQueryResponse;
+        if (countQuery_.numberOfResults > 0) {
+          this.compoundPosition = new DspCompoundPosition(countQuery_.numberOfResults);
+          this.compoundNavigation(1);
+        }
+      });
   }
 }
