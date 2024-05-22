@@ -3,13 +3,14 @@ import { CompoundService } from './compound.service';
 
 @Component({
   selector: 'app-compound-arrow-navigation',
-  template: ` <div style="height: 100%; display:flex; align-items: center">
+  template: ` <div
+    style="height: 100%; display:flex; align-items: center; cursor: pointer"
+    (click)="openPage(compoundNavigation.page + (forwardNavigation ? 1 : -1))">
     <button
       mat-button
       [disabled]="
         forwardNavigation ? compoundNavigation.page >= compoundNavigation.totalPages : compoundNavigation.page <= 1
       "
-      (click)="openPage(compoundNavigation.page + (forwardNavigation ? 1 : -1))"
       class="full-size">
       <mat-icon>keyboard_arrow_{{ forwardNavigation ? 'right' : 'left' }}</mat-icon>
     </button>

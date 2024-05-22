@@ -12,7 +12,7 @@ import { CompoundService } from './compound.service';
     showTickMarks
     discrete
     #ngSlider
-    style="width: 100%"
+    style="display: flex"
     ><input
       matSliderThumb
       [(ngModel)]="compoundNavigation.page"
@@ -27,15 +27,6 @@ import { CompoundService } from './compound.service';
       "
       #ngSliderThumb="matSliderThumb" />
   </mat-slider>`,
-  styles: [
-    `
-      :host {
-        position: absolute;
-        bottom: 30px;
-        width: 99%;
-      }
-    `,
-  ],
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {

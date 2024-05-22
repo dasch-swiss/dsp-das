@@ -32,7 +32,6 @@ export class RegionService {
         switchMap(() => this.getIncomingRegions())
       )
       .subscribe(regions => {
-        console.log('added', regions);
         this.regions = regions;
       });
   }

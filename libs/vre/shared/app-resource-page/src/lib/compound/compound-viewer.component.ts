@@ -13,9 +13,9 @@ import { CompoundService } from './compound.service';
         class="dsp-representation stillimage"
         [parentResource]="resourcePageService.resource.res"
         [image]="fileRepresentation">
-        <div navigationArrows class="navigation-arrows">
-          <app-compound-arrow-navigation [forwardNavigation]="false" />
-          <app-compound-arrow-navigation [forwardNavigation]="true" />
+        <div navigationArrows class="arrows">
+          <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
+          <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
         </div>
         <app-compound-navigation navigation />
         <app-compound-slider slider />
@@ -24,13 +24,18 @@ import { CompoundService } from './compound.service';
   `,
   styles: [
     `
-      .navigation-arrows {
+      .arrow {
         position: absolute;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        z-index: 100;
+        z-index: 1;
         height: 100%;
+
+        &:first-child {
+          left: 0;
+        }
+
+        &:nth-child(2) {
+          right: 0;
+        }
       }
     `,
   ],

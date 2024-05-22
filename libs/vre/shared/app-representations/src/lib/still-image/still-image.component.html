@@ -9,8 +9,8 @@
     *ngIf="failedToLoad"></app-status>
 </div>
 
-<ng-content select="[slider]" />
 <div class="toolbar">
+  <ng-content select="[slider]" />
   <div class="toolbar-bottom">
     <!-- vertical more button with menu to open and copy iiif url -->
     <button mat-icon-button [matMenuTriggerFor]="more" matTooltip="More" matTooltipPosition="above">

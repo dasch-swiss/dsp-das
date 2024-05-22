@@ -88,7 +88,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     return this.parentResource.id;
   }
 
-  get attachedToProjectResource(): string {
+  get attachedToProjectResource() {
     return this.parentResource.attachedToProject;
   }
 
