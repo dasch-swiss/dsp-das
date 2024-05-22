@@ -5,7 +5,7 @@ import { getFileValue } from './get-file-value';
 
 @Component({
   selector: 'app-resource-representation',
-  template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay">
+  template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay.fileValue.type">
     <app-still-image
       #stillImage
       class="dsp-representation stillimage"

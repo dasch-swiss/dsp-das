@@ -54,7 +54,7 @@ import { osdViewerConfig } from './osd-viewer.config';
 /**
  * represents a geometry belonging to a specific region resource.
  */
-export class GeometryForRegion {
+class GeometryForRegion {
   /**
    *
    * @param geometry the geometrical information.
@@ -324,6 +324,23 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     comment: string,
     label: string
   ) {
+    this._dspApiConnection.v2.res
+      .createResource(this._getPayloadUploadRegion(startPoint, endPoint, imageSize, color, comment, label))
+      .subscribe(res => {
+        this._viewer.destroy();
+        this._setupViewer();
+        this._regionService.addRegion((res as ReadResource).id);
+      });
+  }
+
+  private _getPayloadUploadRegion(
+    startPoint: Point2D,
+    endPoint: Point2D,
+    imageSize: Point2D,
+    color: string,
+    comment: string,
+    label: string
+  ) {
     const x1 = Math.max(Math.min(startPoint.x, imageSize.x), 0) / imageSize.x;
     const x2 = Math.max(Math.min(endPoint.x, imageSize.x), 0) / imageSize.x;
     const y1 = Math.max(Math.min(startPoint.y, imageSize.y), 0) / imageSize.y;
@@ -354,12 +371,7 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       commentVal.text = comment;
       createResource.properties[Constants.HasComment] = [commentVal];
     }
-
-    this._dspApiConnection.v2.res.createResource(createResource).subscribe(res => {
-      this._viewer.destroy();
-      this._setupViewer();
-      this._regionService.addRegion((res as ReadResource).id);
-    });
+    return createResource;
   }
 
   /**
@@ -652,47 +664,46 @@ export class StillImageComponent implements OnChanges, OnDestroy {
 
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
-    for (const image of [this.image]) {
-      const stillImage = image.fileValue as ReadStillImageFileValue;
-      const aspectRatio = stillImage.dimY / stillImage.dimX;
+    const image = this.image;
+    const stillImage = image.fileValue as ReadStillImageFileValue;
+    const aspectRatio = stillImage.dimY / stillImage.dimX;
 
-      // collect all geometries belonging to this page
-      const geometries: GeometryForRegion[] = [];
-      image.annotations.forEach(reg => {
-        this._regions[reg.regionResource.id] = [];
-        const geoms = reg.getGeometries();
+    // collect all geometries belonging to this page
+    const geometries: GeometryForRegion[] = [];
+    image.annotations.forEach(reg => {
+      this._regions[reg.regionResource.id] = [];
+      const geoms = reg.getGeometries();
 
-        geoms.forEach(geom => {
-          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
+      geoms.forEach(geom => {
+        const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
 
-          geometries.push(geomForReg);
-        });
+        geometries.push(geomForReg);
       });
+    });
 
-      // sort all geometries belonging to this page
-      geometries.sort(sortRectangularRegion);
+    // sort all geometries belonging to this page
+    geometries.sort(sortRectangularRegion);
 
-      // render all geometries for this page
-      for (const geom of geometries) {
-        const geometry = geom.geometry;
+    // render all geometries for this page
+    for (const geom of geometries) {
+      const geometry = geom.geometry;
 
-        const colorValues: ReadColorValue[] = geom.region.properties[Constants.HasColor] as ReadColorValue[];
+      const colorValues: ReadColorValue[] = geom.region.properties[Constants.HasColor] as ReadColorValue[];
 
-        // if the geometry has a color property, use that value as the color for the line
-        if (colorValues && colorValues.length) {
-          geometry.lineColor = colorValues[0].color;
-        }
-
-        const commentValue = geom.region.properties[Constants.HasComment]
-          ? geom.region.properties[Constants.HasComment][0].strval
-          : '';
-
-        if (!this.failedToLoad) {
-          this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
-        }
-
-        imageXOffset++;
+      // if the geometry has a color property, use that value as the color for the line
+      if (colorValues && colorValues.length) {
+        geometry.lineColor = colorValues[0].color;
       }
+
+      const commentValue = geom.region.properties[Constants.HasComment]
+        ? geom.region.properties[Constants.HasComment][0].strval
+        : '';
+
+      if (!this.failedToLoad) {
+        this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
+      }
+
+      imageXOffset++;
     }
   }
 
