@@ -16,9 +16,7 @@ import { IncomingRepresentationsService } from './incoming-representations.servi
 export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
 
-  annotationResources: DspResource[];
   selectedTab = 0;
-  loading = false;
   valueOperationEventSubscriptions: Subscription[] = [];
   showRestrictedMessage = true;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -26,8 +24,7 @@ export class ResourceComponent implements OnChanges, OnDestroy {
   constructor(
     private _router: Router,
     private _titleService: Title,
-    public incomingRepresentationsService: IncomingRepresentationsService,
-    private _regionService: RegionService
+    public incomingRepresentationsService: IncomingRepresentationsService
   ) {
     this._router.events.subscribe(() => {
       this._titleService.setTitle('Resource view');

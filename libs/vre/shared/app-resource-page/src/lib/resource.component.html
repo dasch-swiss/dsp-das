@@ -4,29 +4,24 @@
   <mat-icon class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
 </div>
 <div class="content large middle">
-  <div class="resource-view" *ngIf="resource">
+  <div class="resource-view" *ngIf="resource; else noResourceTpl">
     <app-resource-header [resource]="resource"></app-resource-header>
 
     <ng-container *ngIf="!incomingRepresentationsService.compoundPosition">
       <app-resource-representations
         *ngIf="incomingRepresentationsService.representationsToDisplay as representationsToDisplay"
         [resource]="resource"
-        [incomingResource]="incomingRepresentationsService.incomingResource"
         [representationsToDisplay]="representationsToDisplay"></app-resource-representations>
     </ng-container>
     <app-compound-viewer *ngIf="incomingRepresentationsService.compoundPosition"></app-compound-viewer>
 
-    <app-resource-tabs *ngIf="!loading" [resource]="resource" [selectedTab]="selectedTab"></app-resource-tabs>
-    <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+    <app-resource-tabs [resource]="resource" [selectedTab]="selectedTab"></app-resource-tabs>
   </div>
-  <dasch-swiss-app-progress-indicator *ngIf="!resource && loading"></dasch-swiss-app-progress-indicator>
-  <!-- resource not found  -->
-  <div *ngIf="!resource && !loading" class="no-results">
-    <p>
-      The resource
-      <span *ngIf="resource.res.id">&mdash; <strong> {{ resource.res.id }}</strong> &mdash;</span>
-      could not be found.
-    </p>
+</div>
+
+<ng-template #noResourceTpl>
+  <div>
+    <p>The resource could not be found.</p>
     <p>Reasons:</p>
     <ul>
       <li>It could be a deleted resource and does not exist anymore.</li>
@@ -34,4 +29,4 @@
       <li>The identifier or the ARK URL is wrong.</li>
     </ul>
   </div>
-</div>
+</ng-template>

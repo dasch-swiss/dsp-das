@@ -70,7 +70,6 @@ import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/sh
 })
 export class ResourceRepresentationsComponent {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) incomingResource!: DspResource;
   @Input({ required: true }) representationsToDisplay!: FileRepresentation[];
 
   loading = false;
