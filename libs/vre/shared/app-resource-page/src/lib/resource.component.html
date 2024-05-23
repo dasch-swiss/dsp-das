@@ -8,12 +8,11 @@
   <div class="resource-view" *ngIf="resource; else noResourceTpl">
     <app-resource-header [resource]="resource" />
 
-    <ng-container *ngIf="resourcePageService.isCompoundNavigation === false; else compoundViewerTpl">
+    <ng-container *ngIf="isCompoundNavigation === false; else compoundViewerTpl">
       <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
     </ng-container>
 
-    <dasch-swiss-app-progress-indicator
-      *ngIf="!resourcePageService.pageIsLoaded()"></dasch-swiss-app-progress-indicator>
+    <dasch-swiss-app-progress-indicator *ngIf="!pageIsLoaded()"></dasch-swiss-app-progress-indicator>
 
     <app-resource-tabs [resource]="resource" />
   </div>

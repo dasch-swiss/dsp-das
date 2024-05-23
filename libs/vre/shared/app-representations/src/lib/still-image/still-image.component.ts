@@ -43,7 +43,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
-import { Region } from '../region.interface';
+import { Region } from '../region';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
