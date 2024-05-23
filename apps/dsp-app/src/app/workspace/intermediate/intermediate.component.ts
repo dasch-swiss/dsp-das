@@ -3,7 +3,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent, FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-intermediate',
   templateUrl: './intermediate.component.html',
   styleUrls: ['./intermediate.component.scss'],

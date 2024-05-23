@@ -11,13 +11,13 @@ import { map } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-data-models',
   templateUrl: './data-models.component.html',
   styleUrls: ['./data-models.component.scss'],
 })
 export class DataModelsComponent extends ProjectBase implements OnInit {
   protected readonly RouteConstants = RouteConstants;
+
   get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
     const uuid = this._route.parent.snapshot.params.uuid;
     const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;

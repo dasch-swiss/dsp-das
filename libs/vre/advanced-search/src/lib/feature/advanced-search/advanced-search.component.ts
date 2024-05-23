@@ -43,7 +43,6 @@ export interface QueryObject {
   providers: [AdvancedSearchStoreService],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchComponent implements OnInit {
   // either the uuid of the project or the shortcode

@@ -21,7 +21,6 @@ import { map, takeUntil } from 'rxjs/operators';
  *
  */
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],

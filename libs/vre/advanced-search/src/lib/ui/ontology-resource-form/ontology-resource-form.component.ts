@@ -10,7 +10,6 @@ import { ApiData } from '../../data-access/advanced-search-service/advanced-sear
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSelectModule],
   templateUrl: './ontology-resource-form.component.html',
   styleUrls: ['./ontology-resource-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyResourceFormComponent {
   @Input() ontologies: ApiData[] | null = []; // todo: handle null case in html

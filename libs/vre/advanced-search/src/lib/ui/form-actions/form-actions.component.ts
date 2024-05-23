@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './form-actions.component.html',
   styleUrls: ['./form-actions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormActionsComponent {
   @Input() addButtonDisabled: boolean | null = true;

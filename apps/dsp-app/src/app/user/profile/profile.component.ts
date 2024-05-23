@@ -10,7 +10,6 @@ import { takeUntil, takeWhile } from 'rxjs/operators';
 import { EditUserPageComponent } from '../edit-user-page/edit-user-page.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],

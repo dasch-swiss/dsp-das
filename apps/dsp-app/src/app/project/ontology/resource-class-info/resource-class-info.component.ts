@@ -33,7 +33,6 @@ import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],

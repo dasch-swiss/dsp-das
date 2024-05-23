@@ -28,7 +28,6 @@ import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology-class-item',
   templateUrl: './ontology-class-item.component.html',
   styleUrls: ['./ontology-class-item.component.scss'],

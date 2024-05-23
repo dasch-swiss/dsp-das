@@ -14,7 +14,6 @@ export interface CreateListItemDialogProps {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-list-item-dialog',
   template: `
     <app-dialog-header title="Insert new child node"></app-dialog-header>
