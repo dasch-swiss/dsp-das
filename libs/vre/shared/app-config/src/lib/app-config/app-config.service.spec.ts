@@ -21,6 +21,7 @@ describe('AppConfigService with dev config', () => {
     iiifHost: '0.0.0.0',
     iiifPort: 1024,
     iiifPath: 'mypath',
+    ingestUrl: 'http://0.0.0.0:3340',
     jsonWebToken: 'mytoken',
     logErrors: true,
     geonameToken: 'geoname_token',
