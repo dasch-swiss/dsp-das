@@ -11,7 +11,7 @@ import { filter, switchMap } from 'rxjs/operators';
   template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
 })
 export class ResourceParentComponent implements OnInit {
-  @Input({ required: true }) resourceIri: string;
+  @Input({ required: true }) resourceIri!: string;
 
   resource: DspResource | undefined;
 

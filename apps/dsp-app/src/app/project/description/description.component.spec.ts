@@ -24,6 +24,7 @@ import {
   ReadProject,
   StringLiteral,
 } from '@dasch-swiss/dsp-js';
+import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
@@ -33,7 +34,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DialogComponent } from '../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog.component';
 import { DescriptionComponent } from './description.component';
 
 @Component({

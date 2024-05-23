@@ -35,6 +35,7 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
   UsersEndpointAdmin,
 } from '@dasch-swiss/dsp-js';
+import { DialogComponent, SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ApplicationStateService } from '@dasch-swiss/vre/shared/app-state-service';
 import { TruncatePipe } from '@dsp-app/src/app/main/pipes/string-transformation/truncate.pipe';
@@ -42,8 +43,6 @@ import { StatusComponent } from '@dsp-app/src/app/main/status/status.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { of } from 'rxjs';
 import { AjaxResponse } from 'rxjs/ajax';
-import { DialogComponent } from '../../../../../../libs/vre/shared/app-common-to-move/src/lib/dialog/dialog.component';
-import { SplitPipe } from '../../../../../../libs/vre/shared/app-common-to-move/src/lib/split.pipe';
 import { OntologyComponent } from './ontology.component';
 
 /**

@@ -14,11 +14,12 @@ import { map } from 'rxjs/operators';
 export class ResourcePage2Component {
   resourceIri$ = this._route.params.pipe(
     map(params => {
-      const projectCode = params.project;
-      const resourceUuid = params.resource;
+      const projectCode = params['project'];
+      const resourceUuid = params['resource'];
       if (projectCode && resourceUuid) {
         return this._resourceService.getResourceIri(projectCode, resourceUuid);
       }
+      return undefined;
     })
   );
 
