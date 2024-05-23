@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService, ValueOperationEventService } from '@dasch-swiss/vre/shared/app-representations';
 import { CompoundService } from './compound/compound.service';
+import { getFileValue } from './get-file-value';
 import { ResourcePageService } from './resource-page.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   showRestrictedMessage = true;
+  resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
     private _router: Router,
@@ -29,11 +31,8 @@ export class ResourceComponent implements OnChanges {
 
   ngOnChanges() {
     this.showRestrictedMessage = true;
+    this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
 
-    this._newMethod();
-  }
-
-  private _newMethod() {
     this.resourcePageService.onInit(this.resource);
   }
 }

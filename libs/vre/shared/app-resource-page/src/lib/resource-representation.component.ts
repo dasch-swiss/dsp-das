@@ -67,7 +67,7 @@ export class ResourceRepresentationComponent implements OnInit {
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnInit() {
-    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource));
+    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
   }
 
   representationLoaded(e: boolean) {

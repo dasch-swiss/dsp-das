@@ -27,7 +27,7 @@ export class ResourcePageService {
     }
 
     this.isCompoundNavigation = false;
-    this.representationsToDisplay = getFileValue(resource);
+    this.representationsToDisplay = getFileValue(resource)!;
 
     if (this._isImageWithRegions(resource)) {
       this._regionService.onInit(resource);
@@ -46,14 +46,7 @@ export class ResourcePageService {
   }
 
   private _isObjectWithoutRepresentation(resource: DspResource) {
-    return [
-      Constants.HasStillImageFileValue,
-      Constants.HasMovingImageFileValue,
-      Constants.HasAudioFileValue,
-      Constants.HasTextFileValue,
-      Constants.HasDocumentFileValue,
-      Constants.HasArchiveFileValue,
-    ].reduce((prev, current) => prev && !resource.res.properties[current], true);
+    return getFileValue(resource) === null;
   }
 
   private _checkForCompoundNavigation(resource: DspResource) {

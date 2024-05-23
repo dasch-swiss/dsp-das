@@ -40,7 +40,7 @@ import { CompoundService } from './compound.service';
 })
 export class CompoundViewerComponent {
   get fileRepresentation() {
-    return new FileRepresentation(getFileValue(this.compoundService.incomingResource!));
+    return new FileRepresentation(getFileValue(this.compoundService.incomingResource!)!);
   }
 
   constructor(public compoundService: CompoundService) {}
