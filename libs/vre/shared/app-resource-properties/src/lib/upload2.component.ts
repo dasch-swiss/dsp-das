@@ -8,7 +8,7 @@ import {fileValueMapping} from './file-value-mapping';
 import { UploadedFile, UploadFileService } from './upload-file.service';
 import {Store} from "@ngxs/store";
 import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
-import {filter, map, mergeMap} from "rxjs/operators";
+import { filter, map, mergeMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-2',
@@ -123,6 +123,7 @@ export class Upload2Component implements ControlValueAccessor {
   private _uploadFile(file: File): void {
     this._store.select(ProjectsSelectors.currentProject).pipe(
         filter(v => v !== undefined),
+        take(1),
         map(prj=> prj.shortcode),
         mergeMap(sc => this._upload.upload(file, sc))
     ).subscribe((res: UploadedFile) => {

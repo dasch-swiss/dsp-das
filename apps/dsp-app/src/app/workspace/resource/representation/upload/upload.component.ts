@@ -21,7 +21,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { Store } from '@ngxs/store';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
@@ -99,6 +99,7 @@ export class UploadComponent implements OnInit {
 
         this._store.select(ProjectsSelectors.currentProject).pipe(
           filter(v => v !== undefined),
+          take(1),
           map(prj=> prj.shortcode),
           mergeMap(sc => this._upload.upload(this.file, sc))
         ).subscribe(
