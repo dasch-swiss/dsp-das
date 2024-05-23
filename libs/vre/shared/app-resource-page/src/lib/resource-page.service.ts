@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { CompoundService } from './compound/compound.service';
-import { getFileValue } from './get-file-value';
 
 @Injectable()
 export class ResourcePageService {

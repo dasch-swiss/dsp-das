@@ -36,13 +36,13 @@ import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { getFileValue } from '@dasch-swiss/vre/shared/app-resource-page';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
+import { getFileValue } from '../get-file-value';
 import { Region } from '../region.interface';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
@@ -88,7 +88,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get image() {
-    return new FileRepresentation(getFileValue(this.resource));
+    return new FileRepresentation(getFileValue(this.resource)!);
   }
 
   get resourceIri() {

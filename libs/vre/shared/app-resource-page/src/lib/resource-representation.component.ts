@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/shared/app-representations';
-import { getFileValue } from './get-file-value';
+import { FileRepresentation, RepresentationConstants, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
   selector: 'app-resource-representation',

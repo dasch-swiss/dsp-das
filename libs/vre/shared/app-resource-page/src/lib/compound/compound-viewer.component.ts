@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
-import { getFileValue } from '../get-file-value';
+import { FileRepresentation, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
 import { CompoundService } from './compound.service';
 
 @Component({

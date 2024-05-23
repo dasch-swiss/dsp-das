@@ -15,4 +15,3 @@ export * from './lib/compound/compound-arrow-navigation.component';
 export * from './lib/compound/compound-navigation.component';
 export * from './lib/compound/compound-slider.component';
 export * from './lib/compound/compound-viewer.component';
-export * from './lib/get-file-value';
