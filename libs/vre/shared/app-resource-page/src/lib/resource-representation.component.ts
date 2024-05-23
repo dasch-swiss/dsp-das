@@ -10,9 +10,7 @@ import { getFileValue } from './get-file-value';
       #stillImage
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.stillImage"
-      [parentResource]="resource.res"
-      [image]="representationToDisplay">
-    </app-still-image>
+      [resource]="resource" />
 
     <app-document
       #document
@@ -69,7 +67,6 @@ export class ResourceRepresentationComponent implements OnInit {
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnInit() {
-    console.log('juli', this.resource);
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource));
   }
 

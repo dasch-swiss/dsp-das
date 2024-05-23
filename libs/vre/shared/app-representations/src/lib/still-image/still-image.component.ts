@@ -1,4 +1,14 @@
-import { Component, ElementRef, Inject, Input, OnChanges, OnDestroy, Renderer2, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -21,10 +31,12 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { getFileValue } from '@dasch-swiss/vre/shared/app-resource-page';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
@@ -68,9 +80,16 @@ interface PolygonsForRegion {
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
 })
-export class StillImageComponent implements OnChanges, OnDestroy {
-  @Input({ required: true }) image!: FileRepresentation;
-  @Input({ required: true }) parentResource!: ReadResource;
+export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
+  @Input({ required: true }) resource!: DspResource;
+
+  get parentResource() {
+    return this.resource.res;
+  }
+
+  get image() {
+    return new FileRepresentation(getFileValue(this.resource));
+  }
 
   get resourceIri() {
     return this.parentResource.id;
@@ -147,15 +166,11 @@ export class StillImageComponent implements OnChanges, OnDestroy {
     return w * h;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes['image'].isFirstChange()) {
-      return;
-    }
-
+  ngOnInit() {
+    console.log('init');
     this.isEditor$.subscribe(isEditor => {
       this.editorPermissions = isEditor;
     });
-
     this._setupViewer();
     this._loadImages();
 
@@ -172,6 +187,13 @@ export class StillImageComponent implements OnChanges, OnDestroy {
       }
       this._highlightRegion(region);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['resource'].isFirstChange()) {
+      return;
+    }
+    this._loadImages();
   }
 
   ngOnDestroy() {
