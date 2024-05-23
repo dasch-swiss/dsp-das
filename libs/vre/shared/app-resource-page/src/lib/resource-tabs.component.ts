@@ -39,7 +39,6 @@ import { CompoundService } from './compound/compound.service';
           <app-annotation-tab *ngIf="irs.regions.length > 0"></app-annotation-tab>
         </mat-tab>
       </ng-container>
-      -->
     </mat-tab-group>
   `,
 })
@@ -59,7 +58,6 @@ export class ResourceTabsComponent implements OnInit {
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(event: MatTabChangeEvent) {
-    console.log(event);
     this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
   }
 

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FileRepresentation } from '@dasch-swiss/vre/shared/app-representations';
 import { getFileValue } from '../get-file-value';
-import { ResourcePageService } from '../resource-page.service';
 import { CompoundService } from './compound.service';
 
 @Component({
@@ -45,8 +44,5 @@ export class CompoundViewerComponent {
     return new FileRepresentation(getFileValue(this.compoundService.incomingResource!));
   }
 
-  constructor(
-    public resourcePageService: ResourcePageService,
-    public compoundService: CompoundService
-  ) {}
+  constructor(public compoundService: CompoundService) {}
 }
