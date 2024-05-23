@@ -7,13 +7,12 @@ import { getFileValue, RegionService, ValueOperationEventService } from '@dasch-
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
-import { ResourcePageService } from './resource-page.service';
 
 @Component({
   selector: 'app-resource',
   templateUrl: './resource.component.html',
   styleUrls: ['./resource.component.scss'],
-  providers: [ValueOperationEventService, ResourcePageService, CompoundService, RegionService],
+  providers: [ValueOperationEventService, CompoundService, RegionService],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
