@@ -4,13 +4,13 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-resource-parent',
+  selector: 'app-resource-fetcher',
   template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
 })
-export class ResourceParentComponent implements OnInit {
+export class ResourceFetcherComponent implements OnInit {
   @Input({ required: true }) resourceIri!: string;
 
   resource: DspResource | undefined;
@@ -22,11 +22,12 @@ export class ResourceParentComponent implements OnInit {
 
   ngOnInit() {
     this._getResource(this.resourceIri)
-      .pipe(
-        switchMap(() => this._store.select(ResourceSelectors.resource)),
-        filter(resource => resource !== null)
-      )
+      .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
       .subscribe(resource => {
+        if (resource === null) {
+          return;
+        }
+
         if (resource.res.isDeleted) {
           return;
         }

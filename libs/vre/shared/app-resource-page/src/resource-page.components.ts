@@ -3,10 +3,10 @@ import { CompoundArrowNavigationComponent } from './lib/compound/compound-arrow-
 import { CompoundNavigationComponent } from './lib/compound/compound-navigation.component';
 import { CompoundSliderComponent } from './lib/compound/compound-slider.component';
 import { CompoundViewerComponent } from './lib/compound/compound-viewer.component';
+import { ResourceFetcherComponent } from './lib/resource-fetcher.component';
 import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourcePage2Component } from './lib/resource-page-2.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
-import { ResourceParentComponent } from './lib/resource-parent.component';
 import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceTabsComponent } from './lib/resource-tabs.component';
 import { ResourceToolbarComponent } from './lib/resource-toolbar.component';
@@ -24,7 +24,7 @@ export const ResourcePageComponents = [
   ResourceHeaderComponent,
   ResourcePageComponent,
   ResourcePage2Component,
-  ResourceParentComponent,
+  ResourceFetcherComponent,
   ResourceRepresentationComponent,
   ResourceTabsComponent,
   ResourceToolbarComponent,
