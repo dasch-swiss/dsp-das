@@ -14,10 +14,7 @@ import { CompoundService } from './compound/compound.service';
       (selectedTabChange)="tabChanged($event)">
       <!-- first tab for the main resource e.g. book -->
       <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
-        <app-properties-display
-          *ngIf="resourceProperties"
-          [resource]="resource"
-          [properties]="resourceProperties"></app-properties-display>
+        <app-properties-display *ngIf="resourceProperties" [resource]="resource" [properties]="resourceProperties" />
       </mat-tab>
 
       <!-- incoming (compound object) resource -->
@@ -25,9 +22,7 @@ import { CompoundService } from './compound/compound.service';
         *ngIf="compoundService.incomingResource as incomingResource"
         #matTabIncoming
         [label]="resourceClassLabel(incomingResource)">
-        <app-properties-display
-          [resource]="incomingResource"
-          [properties]="incomingResource.resProps"></app-properties-display>
+        <app-properties-display [resource]="incomingResource" [properties]="incomingResource.resProps" />
       </mat-tab>
 
       <!-- annotations -->
@@ -36,7 +31,7 @@ import { CompoundService } from './compound/compound.service';
           <ng-template matTabLabel class="annotations">
             <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
           </ng-template>
-          <app-annotation-tab *ngIf="irs.regions.length > 0"></app-annotation-tab>
+          <app-annotation-tab *ngIf="irs.regions.length > 0" />
         </mat-tab>
       </ng-container>
     </mat-tab-group>

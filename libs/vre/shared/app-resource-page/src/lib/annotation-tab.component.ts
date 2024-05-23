@@ -9,8 +9,7 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
     *ngFor="let annotation of regionService.regions; trackBy: trackAnnotationByFn"
     [id]="annotation.res.id"
     [class.active]="annotation.res.id === selectedRegion">
-    <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [isAnnotation]="true">
-    </app-properties-display>
+    <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [isAnnotation]="true" />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })

@@ -41,7 +41,7 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { Region } from '../region.interface';
 import { RegionService } from '../region.service';
@@ -167,16 +167,19 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('init');
-    this.isEditor$.subscribe(isEditor => {
-      this.editorPermissions = isEditor;
-    });
     this._setupViewer();
     this._loadImages();
 
-    this._regionService.showRegions$.pipe(filter(value => value)).subscribe(() => {
-      console.log('show regions');
-      this._renderRegions();
+    this.isEditor$.subscribe(isEditor => {
+      this.editorPermissions = isEditor;
+    });
+
+    this._regionService.showRegions$.pipe(distinctUntilChanged()).subscribe(showRegion => {
+      if (showRegion) {
+        this._renderRegions();
+      } else {
+        this._removeOverlays();
+      }
     });
 
     this._regionService.highlightRegion$.subscribe(region => {
