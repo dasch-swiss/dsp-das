@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -51,8 +51,14 @@ export class RegionService {
 
   getIncomingRegions() {
     const offset = 0;
-    return this._incomingService
-      .getIncomingRegions(this._resource.res.id, offset)
-      .pipe(map(regions => (regions as ReadResourceSequence).resources.map(_resource => new DspResource(_resource))));
+    return this._incomingService.getIncomingRegions(this._resource.res.id, offset).pipe(
+      map(regions =>
+        (regions as ReadResourceSequence).resources.map(_resource => {
+          const z = new DspResource(_resource);
+          z.resProps = Common.initProps(_resource);
+          return z;
+        })
+      )
+    );
   }
 }

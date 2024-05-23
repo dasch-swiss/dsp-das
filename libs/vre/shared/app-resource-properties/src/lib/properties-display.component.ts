@@ -114,7 +114,9 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   resourceAttachedUser$ = this._store.select(ResourceSelectors.attachedUsers).pipe(
     takeUntil(this.ngUnsubscribe),
-    map(attachedUsers => attachedUsers[this.resource.res.id].value.find(u => u.id === this.resource.res.attachedToUser))
+    map(attachedUsers =>
+      attachedUsers[this.resource.res.id]?.value.find(u => u.id === this.resource.res.attachedToUser)
+    )
   );
   myProperties$: Observable<PropertyInfoValues[]> = of([]);
   incomingLinks$: Observable<IncomingOrStandoffLink[]> = of([]);

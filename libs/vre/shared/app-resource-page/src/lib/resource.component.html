@@ -12,6 +12,9 @@
       *ngIf="resourcePageService.isCompoundNavigation === false; else compoundViewerTpl"
       [resource]="resource" />
 
+    <dasch-swiss-app-progress-indicator
+      *ngIf="!resourcePageService.pageIsLoaded()"></dasch-swiss-app-progress-indicator>
+
     <app-resource-tabs [resource]="resource" />
   </div>
 </div>

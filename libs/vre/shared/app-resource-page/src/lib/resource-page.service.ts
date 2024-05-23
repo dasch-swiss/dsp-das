@@ -34,6 +34,13 @@ export class ResourcePageService {
     }
   }
 
+  pageIsLoaded() {
+    return (
+      this.isCompoundNavigation === false ||
+      (this.isCompoundNavigation === true && this._compoundService.incomingResource !== undefined)
+    );
+  }
+
   private _isImageWithRegions(resource: DspResource) {
     return resource.res.properties[Constants.HasStillImageFileValue] !== undefined;
   }
