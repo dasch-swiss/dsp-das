@@ -1,14 +1,14 @@
-import {ChangeDetectorRef, Component, ElementRef, Input, Self, ViewChild} from '@angular/core';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {Constants} from '@dasch-swiss/dsp-js';
-import {NotificationService} from '@dasch-swiss/vre/shared/app-notification';
-import {FileRepresentationType} from './file-representation.type';
-import {fileValueMapping} from './file-value-mapping';
-import { UploadedFile, UploadFileService } from './upload-file.service';
-import {Store} from "@ngxs/store";
-import {ProjectsSelectors} from "@dasch-swiss/vre/shared/app-state";
+import { ChangeDetectorRef, Component, ElementRef, Input, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Constants } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { FileRepresentationType } from './file-representation.type';
+import { fileValueMapping } from './file-value-mapping';
+import { UploadedFile, UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
@@ -121,29 +121,32 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   private _uploadFile(file: File): void {
-    this._store.select(ProjectsSelectors.currentProject).pipe(
+    this._store
+      .select(ProjectsSelectors.currentProject)
+      .pipe(
         filter(v => v !== undefined),
         take(1),
-        map(prj=> prj.shortcode),
+        map(prj => prj.shortcode),
         mergeMap(sc => this._upload.upload(file, sc))
-    ).subscribe((res: UploadedFile) => {
-      switch (this.representation) {
-        case Constants.HasStillImageFileValue:
-          this.previewUrl = this._sanitizer.bypassSecurityTrustUrl( res.thumbnailUrl );
-          break;
-        case Constants.HasDocumentFileValue:
-          this.previewUrl = res.baseUrl;
-          break;
-      }
+      )
+      .subscribe((res: UploadedFile) => {
+        switch (this.representation) {
+          case Constants.HasStillImageFileValue:
+            this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(res.thumbnailUrl);
+            break;
+          case Constants.HasDocumentFileValue:
+            this.previewUrl = res.baseUrl;
+            break;
+        }
 
-      // eslint-disable-next-line new-cap
-      const fileResponse = new (fileValueMapping.get(this.representation)!.UploadClass)();
-      fileResponse.filename = res.internalFilename;
-      this.onChange(fileResponse);
-      this.onTouched();
+        // eslint-disable-next-line new-cap
+        const fileResponse = new (fileValueMapping.get(this.representation)!.UploadClass)();
+        fileResponse.filename = res.internalFilename;
+        this.onChange(fileResponse);
+        this.onTouched();
 
-      this._cdr.detectChanges();
-    });
+        this._cdr.detectChanges();
+      });
 
     this.fileInput.nativeElement.value = '';
   }

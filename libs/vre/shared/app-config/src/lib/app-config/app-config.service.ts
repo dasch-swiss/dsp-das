@@ -10,8 +10,8 @@ import { AppConfigToken } from './dsp-api-tokens';
 import { DspAppConfig } from './dsp-app-config';
 import { DspConfig } from './dsp-config';
 import { DspIiifConfig } from './dsp-iiif-config';
+import { DspIngestConfig } from './dsp-ingest-config';
 import { DspInstrumentationConfig, DspRollbarConfig } from './dsp-instrumentation-config';
-import {DspIngestConfig} from "./dsp-ingest-config";
 
 @Injectable({
   providedIn: 'root',
