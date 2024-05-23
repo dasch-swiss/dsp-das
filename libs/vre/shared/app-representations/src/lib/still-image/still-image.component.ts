@@ -41,7 +41,7 @@ import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { Region } from '../region.interface';
 import { RegionService } from '../region.service';
@@ -624,24 +624,34 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     if (this.imagesSub) {
       this.imagesSub.unsubscribe();
     }
-    this.imagesSub = this._rs.getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename).subscribe(
-      res => {
-        this._openImages();
-        this._unhighlightAllRegions();
-      },
-      () => {
-        this.failedToLoad = true;
-        // disable mouse navigation incl. zoom
-        this._viewer.setMouseNavEnabled(false);
-        // disable the navigator
-        this._viewer.navigator.element.style.display = 'none';
-        // disable the region draw mode
-        this.regionDrawMode = false;
-        // stop loading tiles
-        this._viewer.removeAllHandlers('open');
-        this.loading = false;
-      }
-    );
+    this.imagesSub = this._rs
+      .getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename)
+      .pipe(
+        tap(() => {
+          this._openImages();
+        }),
+        switchMap(() => this._regionService.showRegions$)
+      )
+      .subscribe(
+        showRegion => {
+          this._unhighlightAllRegions();
+          if (showRegion) {
+            this._renderRegions();
+          }
+        },
+        () => {
+          this.failedToLoad = true;
+          // disable mouse navigation incl. zoom
+          this._viewer.setMouseNavEnabled(false);
+          // disable the navigator
+          this._viewer.navigator.element.style.display = 'none';
+          // disable the region draw mode
+          this.regionDrawMode = false;
+          // stop loading tiles
+          this._viewer.removeAllHandlers('open');
+          this.loading = false;
+        }
+      );
   }
 
   /**

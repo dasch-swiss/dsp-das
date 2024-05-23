@@ -27,8 +27,6 @@ export class CompoundService {
   }
 
   openPage(page: number) {
-    this.incomingResource = undefined;
-
     const offset = Math.ceil(page / 25) - 1;
     const position = Math.floor(page - offset * 25 - 1);
 
