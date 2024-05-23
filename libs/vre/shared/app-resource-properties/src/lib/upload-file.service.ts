@@ -51,7 +51,7 @@ export class UploadFileService {
                 let baseUrl = `${this._acs.dspIiifConfig.iiifUrl}/${shortcode}/${res.internalFilename}`;
                 return {
                     internalFilename: res.internalFilename,
-                    thumbnailUrl: `${baseUrl}/full/256,/0/default.jpg`,
+                    thumbnailUrl: baseUrl + '/full/^256,/0/default.jpg',
                     baseUrl: baseUrl,
                 };
             }),
