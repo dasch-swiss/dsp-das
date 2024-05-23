@@ -12,40 +12,6 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 export function getFileValue(resource: DspResource) {
   if (resource.res.properties[Constants.HasStillImageFileValue]) {
     return resource.res.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
-    /*
-                                                                                  for (const img of fileValues) {
-                                                                                    const regions: Region[] = [];
-
-                                                                                    const annotations: DspResource[] = [];
-
-                                                                                    for (const incomingRegion of resource.incomingAnnotations) {
-                                                                                      const region = new Region(incomingRegion);
-                                                                                      regions.push(region);
-
-                                                                                      const annotation = new DspResource(incomingRegion);
-
-                                                                                      // gather region property information
-                                                                                      annotation.resProps = Common.initProps(incomingRegion).filter(v => v.values.length > 0);
-
-                                                                                      // gather system property information
-                                                                                      annotation.systemProps = incomingRegion.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-                                                                                      this._actions$
-                                                                                        .pipe(ofActionSuccessful(GetAttachedUserAction))
-                                                                                        .pipe(take(1))
-                                                                                        .subscribe(() => {
-                                                                                          annotations.push(annotation);
-                                                                                        });
-                                                                                      this._store.dispatch(new GetAttachedUserAction(annotation.res.id, annotation.res.attachedToUser));
-                                                                                    }
-
-                                                                                    const stillImage = new FileRepresentation(img, regions);
-
-                                                                                    representations.push(stillImage);
-
-                                                                                    this.annotationResources = annotations;
-                                                                                  }
-                                                                                   */
   } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
     return resource.res.properties[Constants.HasDocumentFileValue][0] as ReadDocumentFileValue;
   } else if (resource.res.properties[Constants.HasAudioFileValue]) {
