@@ -17,6 +17,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { AutocompleteItem } from '../../../workspace/search/operator';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-select-group',
   templateUrl: './select-group.component.html',
   styleUrls: ['./select-group.component.scss'],

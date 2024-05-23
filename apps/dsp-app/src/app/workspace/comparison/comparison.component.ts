@@ -3,6 +3,7 @@ import { ShortResInfo } from '../results/list-view/list-view.component';
 import { SplitSize } from '../results/results.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-comparison',
   templateUrl: './comparison.component.html',
   styleUrls: ['./comparison.component.scss'],

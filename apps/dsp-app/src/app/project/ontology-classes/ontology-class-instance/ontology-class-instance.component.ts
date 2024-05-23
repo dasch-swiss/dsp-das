@@ -14,6 +14,7 @@ import { SplitSize } from '../../../workspace/results/results.component';
 import { ProjectBase } from '../../project-base';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology-class-instance',
   templateUrl: './ontology-class-instance.component.html',
   styleUrls: ['./ontology-class-instance.component.scss'],

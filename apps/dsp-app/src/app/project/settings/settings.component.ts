@@ -3,6 +3,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { MenuItem } from '../../main/declarations/menu-item';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],

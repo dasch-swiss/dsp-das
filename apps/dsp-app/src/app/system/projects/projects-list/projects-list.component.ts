@@ -12,6 +12,7 @@ import { SortProp } from '../../../main/action/sort-button/sort-button.component
 import { DialogService } from '../../../main/services/dialog.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
   styleUrls: ['./projects-list.component.scss'],

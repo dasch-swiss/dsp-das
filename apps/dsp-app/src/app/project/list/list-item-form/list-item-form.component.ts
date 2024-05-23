@@ -8,6 +8,7 @@ import { atLeastOneStringRequired } from '../../../main/form-validators/at-least
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-item-form',
   template: `
     <form [formGroup]="form" style="display: flex" (ngSubmit)="createChildNode()">
