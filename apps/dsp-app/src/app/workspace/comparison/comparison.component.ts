@@ -36,8 +36,6 @@ import { SplitSize } from '../results/results.component';
   ],
 })
 export class ComparisonComponent implements OnChanges {
-  @Input() resourcesNumber?: number;
-  @Input() resourceIds?: string[];
   @Input() resources?: ShortResInfo[];
 
   // parent (or own) split size changed
@@ -46,23 +44,17 @@ export class ComparisonComponent implements OnChanges {
   topRow: string[] = [];
   bottomRow: string[] = [];
 
+  get resourcesNumber() {
+    return this.resources.length;
+  }
   ngOnChanges(): void {
-    if (this.resources && this.resources.length) {
-      this.resourceIds = this.resources.map(res => res.id);
-    }
+    const resourceIds = this.resources.map(res => res.id);
 
-    if (!this.resourcesNumber) {
-      this.resourcesNumber =
-        this.resourceIds && this.resourceIds.length ? this.resourceIds.length : this.resources.length;
-    }
-
-    // if number of resources are more than 3, divide it into 2 rows
-    // otherwise display then in 1 row only
     if (this.resourcesNumber < 4) {
-      this.topRow = this.resourceIds;
+      this.topRow = resourceIds;
     } else {
-      this.topRow = this.resourceIds.slice(0, this.resourcesNumber / 2);
-      this.bottomRow = this.resourceIds.slice(this.resourcesNumber / 2);
+      this.topRow = resourceIds.slice(0, this.resourcesNumber / 2);
+      this.bottomRow = resourceIds.slice(this.resourcesNumber / 2);
     }
   }
 }
