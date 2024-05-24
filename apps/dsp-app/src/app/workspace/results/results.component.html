@@ -22,7 +22,7 @@
         <!-- multiple resources view / comparison viewer -->
         <app-comparison
           *ngSwitchCase="'compare'"
-          [noOfResources]="selectedResources.count"
+          [resourcesNumber]="selectedResources.count"
           [resources]="selectedResources.resInfo"
           [splitSizeChanged]="splitSize">
         </app-comparison>
