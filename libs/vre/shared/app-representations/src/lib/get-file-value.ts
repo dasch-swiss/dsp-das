@@ -10,10 +10,6 @@ import {
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 export function getFileValue(resource: DspResource) {
-  if (!resource) {
-    return null;
-  }
-
   if (resource.res.properties[Constants.HasStillImageFileValue]) {
     return resource.res.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
   } else if (resource.res.properties[Constants.HasDocumentFileValue]) {
