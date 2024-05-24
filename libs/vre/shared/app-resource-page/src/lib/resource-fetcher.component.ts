@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
   selector: 'app-resource-fetcher',
   template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
 })
-export class ResourceFetcherComponent implements OnInit {
+export class ResourceFetcherComponent implements OnChanges {
   @Input({ required: true }) resourceIri!: string;
 
   resource: DspResource | undefined;
@@ -20,7 +20,7 @@ export class ResourceFetcherComponent implements OnInit {
     private _cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
+  ngOnChanges() {
     this._getResource(this.resourceIri)
       .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
       .subscribe(resource => {
