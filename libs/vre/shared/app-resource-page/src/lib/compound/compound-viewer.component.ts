@@ -8,7 +8,7 @@ import { CompoundService } from './compound.service';
     <ng-container *ngIf="compoundService.compoundPosition">
       <app-still-image
         class="dsp-representation stillimage"
-        *ngIf="compoundService.incomingResource as incomingResource"
+        *ngIf="fileRepresentation.fileValue && compoundService.incomingResource as incomingResource"
         [resource]="incomingResource">
         <div navigationArrows class="arrows">
           <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
