@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
@@ -8,7 +8,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representati
   template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
   providers: [ResourceFetcherService],
 })
-export class ResourceFetcherComponent implements OnChanges {
+export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
 
   resource: DspResource | undefined;
@@ -19,6 +19,7 @@ export class ResourceFetcherComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    this._resourceFetcherService.onDestroy();
     this._resourceFetcherService.onInit(this.resourceIri);
 
     this._resourceFetcherService.resource$.subscribe(resource => {
@@ -40,14 +41,18 @@ export class ResourceFetcherComponent implements OnChanges {
     });
   }
 
+  ngOnDestroy() {
+    this._resourceFetcherService.onDestroy();
+  }
+
   private _renderAsRegion(region: DspResource) {
     const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
       .linkedResourceIri;
 
     /* TODO
-                this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-                  this.resource = dspResource;
-                });
-                */
+                        this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
+                          this.resource = dspResource;
+                        });
+                        */
   }
 }
