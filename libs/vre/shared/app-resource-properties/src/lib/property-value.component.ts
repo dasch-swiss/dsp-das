@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
@@ -85,7 +94,7 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _resourceFetcherService: ResourceFetcherService
+    @Optional() private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   ngOnInit() {
