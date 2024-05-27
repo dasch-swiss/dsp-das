@@ -1,18 +1,12 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
-import {
-  Constants,
-  KnoraApiConnection,
-  ReadLinkValue,
-  ReadResource,
-  SystemPropertyDefinition,
-} from '@dasch-swiss/dsp-js';
-import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { map } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceFetcherService } from './resource-fetcher.service';
 
 @Component({
   selector: 'app-resource-fetcher',
   template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
+  providers: [ResourceFetcherService],
 })
 export class ResourceFetcherComponent implements OnChanges {
   @Input({ required: true }) resourceIri!: string;
@@ -21,12 +15,13 @@ export class ResourceFetcherComponent implements OnChanges {
 
   constructor(
     private _cdr: ChangeDetectorRef,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   ngOnChanges() {
-    this._getResource(this.resourceIri).subscribe(resource => {
+    this._resourceFetcherService.onInit(this.resourceIri);
+
+    this._resourceFetcherService.resource$.subscribe(resource => {
       if (resource === null) {
         return;
       }
@@ -49,21 +44,10 @@ export class ResourceFetcherComponent implements OnChanges {
     const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
       .linkedResourceIri;
 
-    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-      this.resource = dspResource;
-    });
-  }
-
-  private _getResource(resourceIri: string) {
-    return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
-      map(response => {
-        const res = new DspResource(response as ReadResource);
-        res.resProps = Common.initProps(res.res);
-
-        // gather system property information
-        res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-        return res;
-      })
-    );
+    /* TODO
+            this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
+              this.resource = dspResource;
+            });
+            */
   }
 }

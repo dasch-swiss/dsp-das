@@ -246,7 +246,6 @@ export class ResourceToolbarComponent implements OnInit {
   }
 
   private _onResourceDeleted(response: DeleteResourceResponse) {
-    // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
