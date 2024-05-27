@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -17,7 +17,8 @@ export class CompoundService {
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
-    private _regionService: RegionService
+    private _regionService: RegionService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
@@ -66,14 +67,18 @@ export class CompoundService {
       const response = res as ReadResource;
 
       const incomingResource = new DspResource(response);
-      incomingResource.resProps = Common.initProps(response)
-        .filter(v => v.values.length > 0)
-        .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue');
+      incomingResource.resProps = Common.initProps(response).filter(
+        v =>
+          v.values.length > 0 &&
+          v.propDef.label &&
+          v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue'
+      );
       incomingResource.systemProps =
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
       this.incomingResource = incomingResource;
       this._regionService.onInit(incomingResource);
+      this._cd.markForCheck();
     });
   }
 }
