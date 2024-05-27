@@ -8,7 +8,7 @@ import { Store } from '@ngxs/store';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
-import { UploadedFile, UploadFileService } from './upload-file.service';
+import { UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
@@ -129,7 +129,7 @@ export class Upload2Component implements ControlValueAccessor {
         map(prj => prj.shortcode),
         mergeMap(sc => this._upload.upload(file, sc))
       )
-      .subscribe((res: UploadedFile) => {
+      .subscribe(res => {
         switch (this.representation) {
           case Constants.HasStillImageFileValue:
             this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(res.thumbnailUrl);

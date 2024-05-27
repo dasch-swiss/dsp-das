@@ -1,19 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { UploadedFile, UploadedFileResponse } from '@dasch-swiss/vre/shared/app-representations';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-interface UploadedFileResponse {
-  internalFilename: string;
-}
-
-export interface UploadedFile {
-  internalFilename: string;
-  thumbnailUrl: string;
-  baseUrl: string;
-}
 
 @Injectable({
   providedIn: 'root',
