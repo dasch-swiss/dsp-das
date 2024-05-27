@@ -8,8 +8,10 @@ import { map, switchMap } from 'rxjs/operators';
 @Injectable()
 export class ResourceFetcherService {
   private _resourceIri!: string;
-  private _loadResource = new BehaviorSubject(null);
-  resource$ = this._loadResource.asObservable().pipe(switchMap(() => this._getResource()));
+  private _loadResourceSubject = new BehaviorSubject(null);
+
+  private _resourceSubject = new BehaviorSubject<DspResource | null>(null);
+  resource$ = this._resourceSubject.asObservable();
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -18,10 +20,14 @@ export class ResourceFetcherService {
 
   onInit(resourceIri: string) {
     this._resourceIri = resourceIri;
+    this._loadResourceSubject
+      .asObservable()
+      .pipe(switchMap(() => this._getResource()))
+      .subscribe(res => this._resourceSubject.next(res));
   }
 
   reload() {
-    this._loadResource.next(null);
+    this._loadResourceSubject.next(null);
   }
 
   private _getResource() {
