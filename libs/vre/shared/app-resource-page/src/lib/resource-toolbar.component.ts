@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteResourceResponse, PermissionUtil, ReadLinkValue, ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
@@ -168,7 +168,8 @@ export class ResourceToolbarComponent implements OnInit {
     private _ontologyService: OntologyService,
     private _dialog: MatDialog,
     private _adminProjectsApi: AdminProjectsApiService,
-    private _store: Store
+    private _store: Store,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit(): void {
@@ -202,6 +203,7 @@ export class ResourceToolbarComponent implements OnInit {
     this._dialog
       .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
         data: { resource: this.resource.res },
+        viewContainerRef: this._viewContainerRef,
       })
       .afterClosed()
       .pipe(filter(answer => !!answer))

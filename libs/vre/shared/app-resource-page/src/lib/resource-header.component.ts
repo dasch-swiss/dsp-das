@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PermissionUtil, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -127,13 +127,17 @@ export class ResourceHeaderComponent {
 
   constructor(
     private _dialog: MatDialog,
-    private _store: Store
+    private _store: Store,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   openEditLabelDialog() {
     this._dialog.open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
       EditResourceLabelDialogComponent,
-      DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res })
+      {
+        ...DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res }),
+        viewContainerRef: this._viewContainerRef,
+      }
     );
   }
 }
