@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 @Injectable()
 export class ResourceFetcherService {
   private _resourceIri!: string;
-  private _loadResource = new BehaviorSubject<string | null>(null);
+  private _loadResource = new BehaviorSubject(null);
   resource$ = this._loadResource.asObservable().pipe(switchMap(() => this._getResource()));
 
   constructor(
@@ -18,6 +18,10 @@ export class ResourceFetcherService {
 
   onInit(resourceIri: string) {
     this._resourceIri = resourceIri;
+  }
+
+  reload() {
+    this._loadResource.next(null);
   }
 
   private _getResource() {

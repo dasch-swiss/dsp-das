@@ -1,12 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-  Constants,
-  KnoraApiConnection,
-  ReadLinkValue,
-  ReadProject,
-  ReadResource,
-  SystemPropertyDefinition,
-} from '@dasch-swiss/dsp-js';
+import { Constants, KnoraApiConnection, ReadLinkValue, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -120,24 +113,6 @@ export class ResourceState {
         });
 
         return response.project;
-      })
-    );
-  }
-
-  @Action(LoadResourceAction)
-  loadResource(ctx: StateContext<ReourceStateModel>, { resourceIri }: LoadResourceAction) {
-    return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
-      tap(response => {
-        const state = ctx.getState();
-        const res = new DspResource(response as ReadResource);
-        res.resProps = Common.initProps(res.res);
-
-        // gather system property information
-        res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-        ctx.setState({
-          ...state,
-          resource: res,
-        });
       })
     );
   }
