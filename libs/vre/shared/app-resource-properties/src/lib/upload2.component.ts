@@ -6,9 +6,9 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { UploadFileService } from '..';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
-import { UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',

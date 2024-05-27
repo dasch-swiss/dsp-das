@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { switchMap } from 'rxjs/operators';
 
 export interface EditResourceLabelDialogProps {

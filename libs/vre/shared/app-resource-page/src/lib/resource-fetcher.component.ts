@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceFetcherService } from './resource-fetcher.service';
+import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -45,9 +45,9 @@ export class ResourceFetcherComponent implements OnChanges {
       .linkedResourceIri;
 
     /* TODO
-            this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-              this.resource = dspResource;
-            });
-            */
+                this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
+                  this.resource = dspResource;
+                });
+                */
   }
 }

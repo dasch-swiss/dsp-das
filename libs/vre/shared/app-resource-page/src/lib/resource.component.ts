@@ -3,8 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { getFileValue, RegionService, ValueOperationEventService } from '@dasch-swiss/vre/shared/app-representations';
-import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 

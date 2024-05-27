@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PermissionUtil } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';

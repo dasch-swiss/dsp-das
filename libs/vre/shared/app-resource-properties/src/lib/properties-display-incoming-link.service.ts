@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
-import { IncomingService } from './incoming.service';
 import { sortByKeys } from './sortByKeys';
 
 @Injectable()

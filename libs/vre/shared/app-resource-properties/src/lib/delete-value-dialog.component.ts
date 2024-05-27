@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { tap } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
