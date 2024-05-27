@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
-import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { LoadResourceAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
+import {
+  Constants,
+  KnoraApiConnection,
+  ReadLinkValue,
+  ReadResource,
+  SystemPropertyDefinition,
+} from '@dasch-swiss/dsp-js';
+import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -16,30 +20,29 @@ export class ResourceFetcherComponent implements OnChanges {
   resource: DspResource | undefined;
 
   constructor(
-    private _store: Store,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnChanges() {
-    this._getResource(this.resourceIri)
-      .pipe(switchMap(() => this._store.select(ResourceSelectors.resource)))
-      .subscribe(resource => {
-        if (resource === null) {
-          return;
-        }
+    this._getResource(this.resourceIri).subscribe(resource => {
+      if (resource === null) {
+        return;
+      }
 
-        if (resource.res.isDeleted) {
-          return;
-        }
+      if (resource.res.isDeleted) {
+        return;
+      }
 
-        if (resource.isRegion) {
-          this._renderAsRegion(resource);
-          return;
-        }
+      if (resource.isRegion) {
+        this._renderAsRegion(resource);
+        return;
+      }
 
-        this.resource = resource;
-        this._cdr.detectChanges();
-      });
+      this.resource = resource;
+      this._cdr.detectChanges();
+    });
   }
 
   private _renderAsRegion(region: DspResource) {
@@ -51,7 +54,16 @@ export class ResourceFetcherComponent implements OnChanges {
     });
   }
 
-  private _getResource(iri: string): Observable<DspResource> {
-    return this._store.dispatch(new LoadResourceAction(iri));
+  private _getResource(resourceIri: string) {
+    return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
+      map(response => {
+        const res = new DspResource(response as ReadResource);
+        res.resProps = Common.initProps(res.res);
+
+        // gather system property information
+        res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+        return res;
+      })
+    );
   }
 }
