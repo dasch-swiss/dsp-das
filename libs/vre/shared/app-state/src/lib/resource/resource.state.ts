@@ -12,7 +12,6 @@ const defaults = <ReourceStateModel>{
   isLoading: false,
   attachedProjects: {},
   attachedUsers: {},
-  resource: null,
 };
 
 @State<ReourceStateModel>({
