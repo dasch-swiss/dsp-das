@@ -31,56 +31,67 @@ export class OntologyClassInstanceComponent implements OnDestroy {
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  ontoId$ = combineLatest([this.project$, this._route.params]).pipe(
-    takeWhile(([project]) => project !== undefined),
-    takeUntil(this.ngUnsubscribe),
-    map(([project, params]) => {
-      const iriBase = this._ontologyService.getIriBaseUrl();
-      const ontologyName = params[RouteConstants.ontoParameter];
-      // get the resource ids from the route. Do not use the RouteConstants ontology route constant here,
-      // because the ontology and class ids are not defined within the apps domain. They are defined by
-      // the api and can not be changed generically via route constants.
-      return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
-    })
-  );
+  get ontoId$(): Observable<string> {
+    return combineLatest([this.project$, this._route.params]).pipe(
+      takeWhile(([project]) => project !== undefined),
+      takeUntil(this.ngUnsubscribe),
+      map(([project, params]) => {
+        const iriBase = this._ontologyService.getIriBaseUrl();
+        const ontologyName = params[RouteConstants.ontoParameter];
+        // get the resource ids from the route. Do not use the RouteConstants ontology route constant here,
+        // because the ontology and class ids are not defined within the apps domain. They are defined by
+        // the api and can not be changed generically via route constants.
+        return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
+      })
+    );
+  }
 
-  instanceId$ = this._route.params.pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(params => params[RouteConstants.instanceParameter])
-  );
+  // uuid of resource instance
+  get instanceId$(): Observable<string> {
+    return this._route.params.pipe(
+      takeUntil(this.ngUnsubscribe),
+      map(params => params[RouteConstants.instanceParameter])
+    );
+  }
 
-  classId$ = combineLatest([this.ontoId$, this._route.params]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([ontoId, params]) => {
-      const className = params[RouteConstants.classParameter];
-      return `${ontoId}#${className}`;
-    })
-  );
+  // id (iri) of resource class
+  get classId$(): Observable<string> {
+    return combineLatest([this.ontoId$, this._route.params]).pipe(
+      takeUntil(this.ngUnsubscribe),
+      map(([ontoId, params]) => {
+        const className = params[RouteConstants.classParameter];
+        return `${ontoId}#${className}`;
+      })
+    );
+  }
 
-  resourceIri$ = combineLatest([this.instanceId$, this.project$]).pipe(
-    takeWhile(([project]) => project !== undefined),
-    takeUntil(this.ngUnsubscribe),
-    map(([instanceId, project]) => {
-      if (instanceId !== RouteConstants.addClassInstance) {
-        return `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`;
-      } else {
-        return '';
-      }
-    })
-  );
+  // id (iri) or resource instance
+  get resourceIri$(): Observable<string> {
+    return combineLatest([this.instanceId$, this.project$]).pipe(
+      takeWhile(([project]) => project !== undefined),
+      takeUntil(this.ngUnsubscribe),
+      map(([instanceId, project]) =>
+        instanceId !== RouteConstants.addClassInstance
+          ? `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
+          : ''
+      )
+    );
+  }
 
-  searchParams$ = combineLatest([this.classId$, this.instanceId$, this.project$]).pipe(
-    takeWhile(([project]) => project !== undefined),
-    takeUntil(this.ngUnsubscribe),
-    map(([classId, instanceId]) =>
-      !instanceId
-        ? <SearchParams>{
-            query: this._setGravsearch(classId),
-            mode: 'gravsearch',
-          }
-        : null
-    )
-  );
+  get searchParams$(): Observable<SearchParams> {
+    return combineLatest([this.classId$, this.instanceId$, this.project$]).pipe(
+      takeWhile(([project]) => project !== undefined),
+      takeUntil(this.ngUnsubscribe),
+      map(([classId, instanceId]) =>
+        !instanceId
+          ? <SearchParams>{
+              query: this._setGravsearch(classId),
+              mode: 'gravsearch',
+            }
+          : null
+      )
+    );
+  }
 
   selectedResources: FilteredResources;
   viewMode: 'single' | 'intermediate' | 'compare' = 'single';
