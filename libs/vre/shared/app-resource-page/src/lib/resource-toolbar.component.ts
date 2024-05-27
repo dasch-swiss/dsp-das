@@ -152,13 +152,13 @@ export class ResourceToolbarComponent implements OnInit {
   @Input() showToggleProperties = false;
   @Input() showEditLabel = true;
 
-  @Input() attachedProject: ReadProject;
+  @Input() attachedProject!: ReadProject;
 
-  @Input() lastModificationDate: string;
+  @Input() lastModificationDate!: string;
 
-  userCanDelete: boolean;
-  userCanEdit: boolean;
-  canReadComments: boolean;
+  userCanDelete!: boolean;
+  userCanEdit!: boolean;
+  canReadComments!: boolean;
 
   constructor(
     private _notification: NotificationService,

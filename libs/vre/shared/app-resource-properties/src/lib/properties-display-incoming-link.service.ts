@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,8 +8,6 @@ import { sortByKeys } from './sortByKeys';
 
 @Injectable()
 export class PropertiesDisplayIncomingLinkService {
-  resource: DspResource;
-
   constructor(private _incomingService: IncomingService) {}
 
   getIncomingLinks$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {

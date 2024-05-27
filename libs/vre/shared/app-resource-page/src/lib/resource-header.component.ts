@@ -64,7 +64,7 @@ import { map } from 'rxjs/operators';
         display: flex;
         box-sizing: border-box;
         flex-direction: row;
-        align-items: left;
+        align-items: start;
         justify-content: space-between;
 
         h3.label-info {
@@ -93,7 +93,7 @@ import { map } from 'rxjs/operators';
   ],
 })
 export class ResourceHeaderComponent {
-  @Input({ required: true }) resource: DspResource;
+  @Input({ required: true }) resource!: DspResource;
 
   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
@@ -120,7 +120,7 @@ export class ResourceHeaderComponent {
   ]).pipe(
     map(([user, userProjectGroups]) => {
       return this.attachedToProjectResource
-        ? ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
+        ? ProjectService.IsProjectAdminOrSysAdmin(user!, userProjectGroups, this.attachedToProjectResource)
         : false;
     })
   );

@@ -3,10 +3,10 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
-import { UploadFileService } from '..';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
 
@@ -126,7 +126,7 @@ export class Upload2Component implements ControlValueAccessor {
       .pipe(
         filter(v => v !== undefined),
         take(1),
-        map(prj => prj.shortcode),
+        map(prj => prj!.shortcode),
         mergeMap(sc => this._upload.upload(file, sc))
       )
       .subscribe(res => {
