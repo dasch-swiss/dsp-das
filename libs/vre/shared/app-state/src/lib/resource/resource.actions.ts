@@ -16,15 +16,3 @@ export class GetAttachedProjectAction {
     public projectIri: string
   ) {}
 }
-
-export class LoadResourceAction {
-  static readonly type = '[Resource] Load resource';
-
-  constructor(public resourceIri: string) {}
-}
-
-export class LoadAnnotatedResourceAction {
-  static readonly type = '[Resource] Load annotated resource';
-
-  constructor(public regionIri: string) {}
-}

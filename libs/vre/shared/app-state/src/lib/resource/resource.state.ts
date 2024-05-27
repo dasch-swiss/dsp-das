@@ -1,18 +1,11 @@
-import { Inject, Injectable } from '@angular/core';
-import { Constants, KnoraApiConnection, ReadLinkValue, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import { Injectable } from '@angular/core';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/shared/app-api';
-import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { map, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { UserSelectors } from '../user/user.selectors';
-import {
-  GetAttachedProjectAction,
-  GetAttachedUserAction,
-  LoadAnnotatedResourceAction,
-  LoadResourceAction,
-} from './resource.actions';
+import { GetAttachedProjectAction, GetAttachedUserAction } from './resource.actions';
 import { ReourceStateModel } from './resource.state-model';
 
 const defaults = <ReourceStateModel>{
@@ -31,8 +24,6 @@ export class ResourceState {
   constructor(
     private store: Store,
     private _userApiService: UserApiService,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _projectApiService: ProjectApiService
   ) {}
 
@@ -113,19 +104,6 @@ export class ResourceState {
         });
 
         return response.project;
-      })
-    );
-  }
-
-  @Action(LoadAnnotatedResourceAction)
-  loadAnnotatedResource(ctx: StateContext<ReourceStateModel>, { regionIri }: LoadAnnotatedResourceAction) {
-    return this._dspApiConnection.v2.res.getResource(regionIri).pipe(
-      tap(response => {
-        const res = new DspResource(response as ReadResource);
-        res.resProps = Common.initProps(res.res);
-        const annotatedRepresentationIri = (res.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-          .linkedResourceIri;
-        this.store.dispatch(new LoadResourceAction(annotatedRepresentationIri));
       })
     );
   }
