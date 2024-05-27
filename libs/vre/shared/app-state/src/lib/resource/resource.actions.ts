@@ -1,5 +1,3 @@
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-
 export class GetAttachedUserAction {
   static readonly type = '[Resource] Get Attached User';
 
@@ -17,14 +15,6 @@ export class GetAttachedProjectAction {
     public resourceIri: string,
     public projectIri: string
   ) {}
-}
-
-export class ToggleShowAllPropsAction {
-  static readonly type = '[Resource] Toggle Show All Properties';
-}
-
-export class ToggleShowAllCommentsAction {
-  static readonly type = '[Resource] Toggle Show All Comments';
 }
 
 export class LoadResourceAction {

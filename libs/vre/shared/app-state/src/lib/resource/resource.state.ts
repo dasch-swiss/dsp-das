@@ -19,14 +19,10 @@ import {
   GetAttachedUserAction,
   LoadAnnotatedResourceAction,
   LoadResourceAction,
-  ToggleShowAllCommentsAction,
-  ToggleShowAllPropsAction,
 } from './resource.actions';
 import { ReourceStateModel } from './resource.state-model';
 
 const defaults = <ReourceStateModel>{
-  showAllProps: false,
-  showAllComments: false,
   isLoading: false,
   attachedProjects: {},
   attachedUsers: {},
@@ -46,16 +42,6 @@ export class ResourceState {
     private _dspApiConnection: KnoraApiConnection,
     private _projectApiService: ProjectApiService
   ) {}
-
-  @Action(ToggleShowAllPropsAction)
-  toggleShowAllPropsAction(ctx: StateContext<ReourceStateModel>) {
-    ctx.patchState({ showAllProps: !ctx.getState().showAllProps });
-  }
-
-  @Action(ToggleShowAllCommentsAction)
-  toggleShowAllCommentsAction(ctx: StateContext<ReourceStateModel>) {
-    ctx.patchState({ showAllComments: !ctx.getState().showAllComments });
-  }
 
   @Action(GetAttachedUserAction)
   getAttachedUser(ctx: StateContext<ReourceStateModel>, { resourceIri, identifier, idType }: GetAttachedUserAction) {
@@ -155,6 +141,7 @@ export class ResourceState {
       })
     );
   }
+
   @Action(LoadAnnotatedResourceAction)
   loadAnnotatedResource(ctx: StateContext<ReourceStateModel>, { regionIri }: LoadAnnotatedResourceAction) {
     return this._dspApiConnection.v2.res.getResource(regionIri).pipe(
