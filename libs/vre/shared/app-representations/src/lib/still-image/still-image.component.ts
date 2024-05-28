@@ -351,7 +351,18 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     label: string
   ) {
     this._dspApiConnection.v2.res
-      .createResource(this._getPayloadUploadRegion(startPoint, endPoint, imageSize, color, comment, label))
+      .createResource(
+        StillImageComponent._getPayloadUploadRegion(
+          this.resourceIri,
+          this.parentResource.attachedToProject,
+          startPoint,
+          endPoint,
+          imageSize,
+          color,
+          comment,
+          label
+        )
+      )
       .subscribe(res => {
         // this._viewer.destroy();
         // this._setupViewer();
@@ -362,7 +373,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private _getPayloadUploadRegion(
+  private static _getPayloadUploadRegion(
+    resourceIri: string,
+    attachedProject: string,
     startPoint: Point2D,
     endPoint: Point2D,
     imageSize: Point2D,
@@ -387,14 +400,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     const linkVal = new CreateLinkValue();
     linkVal.type = Constants.LinkValue;
     console.log(this);
-    linkVal.linkedResourceIri = this.resourceIri;
+    linkVal.linkedResourceIri = resourceIri;
     createResource.properties = {
       [Constants.HasColor]: [colorVal],
       [Constants.IsRegionOfValue]: [linkVal],
       [Constants.HasGeometry]: [geomVal],
     };
 
-    createResource.attachedToProject = this.parentResource.attachedToProject;
+    createResource.attachedToProject = attachedProject;
     if (comment) {
       const commentVal = new CreateTextValueAsString();
       commentVal.type = Constants.TextValue;
