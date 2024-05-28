@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
@@ -12,12 +12,10 @@ import { CompoundService } from './compound/compound.service';
       animationDuration="0ms"
       [(selectedIndex)]="selectedTab"
       (selectedTabChange)="tabChanged($event)">
-      <!-- first tab for the main resource e.g. book -->
       <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
         <app-properties-display *ngIf="resourceProperties" [resource]="resource" [properties]="resourceProperties" />
       </mat-tab>
 
-      <!-- incoming (compound object) resource -->
       <mat-tab
         *ngIf="compoundService.incomingResource as incomingResource"
         #matTabIncoming
@@ -25,19 +23,18 @@ import { CompoundService } from './compound/compound.service';
         <app-properties-display [resource]="incomingResource" [properties]="incomingResource.resProps" />
       </mat-tab>
 
-      <!-- annotations -->
-      <ng-container *ngIf="regionService as irs">
-        <mat-tab label="Annotations" *ngIf="true">
-          <ng-template matTabLabel class="annotations">
-            <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
-          </ng-template>
-          <app-annotation-tab *ngIf="annotationTabSelected && irs.regions.length > 0" />
-        </mat-tab>
-      </ng-container>
+      <mat-tab label="Annotations">
+        <ng-template matTabLabel class="annotations">
+          <span [matBadge]="regionService.regions.length" matBadgeColor="primary" matBadgeOverlap="false">
+            Annotations
+          </span>
+        </ng-template>
+        <app-annotation-tab *ngIf="annotationTabSelected && regionService.regions.length > 0" />
+      </mat-tab>
     </mat-tab-group>
   `,
 })
-export class ResourceTabsComponent implements OnInit, OnChanges {
+export class ResourceTabsComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
@@ -48,20 +45,12 @@ export class ResourceTabsComponent implements OnInit, OnChanges {
   ) {}
 
   resourceProperties!: PropertyInfoValues[];
-  loading = true;
-
   annotationTabSelected = false;
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(event: MatTabChangeEvent) {
     this.annotationTabSelected = event.tab.textLabel === 'Annotations';
-  }
-
-  ngOnInit() {
-    this.regionService.regions$.subscribe(() => {
-      this.selectedTab = 2;
-    });
   }
 
   ngOnChanges() {

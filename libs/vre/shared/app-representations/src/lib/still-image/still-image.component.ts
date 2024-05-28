@@ -148,13 +148,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /**
-   * calculates the surface of a rectangular region.
-   *
-   * @param geom the region's geometry.
-   * @returns the surface.
-   */
-  static surfaceOfRectangularRegion(geom: RegionGeometry): number {
+  private static surfaceOfRectangularRegion(geom: RegionGeometry): number {
     if (geom.type !== 'rectangle') {
       // console.log('expected rectangular region, but ' + geom.type + ' given');
       return 0;
@@ -165,6 +159,23 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
     return w * h;
   }
+
+  private static sortRectangularRegion = (geom1: GeometryForRegion, geom2: GeometryForRegion) => {
+    if (geom1.geometry.type === 'rectangle' && geom2.geometry.type === 'rectangle') {
+      const surf1 = StillImageComponent.surfaceOfRectangularRegion(geom1.geometry);
+      const surf2 = StillImageComponent.surfaceOfRectangularRegion(geom2.geometry);
+
+      // if reg1 is smaller than reg2, return 1
+      // reg1 then comes after reg2 and thus is rendered later
+      if (surf1 < surf2) {
+        return 1;
+      } else {
+        return -1;
+      }
+    } else {
+      return 0;
+    }
+  };
 
   ngOnInit() {
     this._setupViewer();
@@ -178,10 +189,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._regionService.showRegions$.pipe(distinctUntilChanged()),
       this._regionService.regions$,
     ]).subscribe(([showRegion, regions]) => {
+      this._removeOverlays();
+
       if (showRegion) {
         this._renderRegions();
-      } else {
-        this._removeOverlays();
       }
     });
 
@@ -507,7 +518,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     // display only the defined range of this.images
     const tileSources: object[] = StillImageComponent._prepareTileSourcesFromFileValues(fileValues);
 
-    this._removeOverlays();
     this._viewer.addOnceHandler('open', args => {
       // check if the current image exists
       if (this.image.fileValue.fileUrl.includes(args.source['id'])) {
@@ -650,33 +660,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * adds a ROI-overlay to the viewer for every region of every image in this.images
    */
-  private _renderRegions(): void {
-    /**
-     * sorts rectangular regions by surface, so all rectangular regions are clickable.
-     * Non-rectangular regions are ignored.
-     *
-     * @param geom1 first region.
-     * @param geom2 second region.
-     */
-    const sortRectangularRegion = (geom1: GeometryForRegion, geom2: GeometryForRegion) => {
-      if (geom1.geometry.type === 'rectangle' && geom2.geometry.type === 'rectangle') {
-        const surf1 = StillImageComponent.surfaceOfRectangularRegion(geom1.geometry);
-        const surf2 = StillImageComponent.surfaceOfRectangularRegion(geom2.geometry);
-
-        // if reg1 is smaller than reg2, return 1
-        // reg1 then comes after reg2 and thus is rendered later
-        if (surf1 < surf2) {
-          return 1;
-        } else {
-          return -1;
-        }
-      } else {
-        return 0;
-      }
-    };
-
-    this._removeOverlays();
-
+  private _renderRegions() {
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
     const image = this.image;
@@ -699,7 +683,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       });
 
     // sort all geometries belonging to this page
-    geometries.sort(sortRectangularRegion);
+    geometries.sort(StillImageComponent.sortRectangularRegion);
 
     // render all geometries for this page
     for (const geom of geometries) {
