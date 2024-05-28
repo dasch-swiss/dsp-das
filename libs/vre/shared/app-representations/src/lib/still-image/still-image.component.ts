@@ -341,8 +341,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe(res => {
         // this._viewer.destroy();
         // this._setupViewer();
-        this._regionService.addRegion((res as ReadResource).id);
-        this._regionService.displayRegions(true);
+        const regionId = (res as ReadResource).id;
+        this._regionService.updateRegions();
+        this._regionService.highlightRegion(regionId);
+        this._regionService.showRegions(true);
         setTimeout(() => {
           console.log(this._regionService.regions, 'a');
           this._renderRegions();

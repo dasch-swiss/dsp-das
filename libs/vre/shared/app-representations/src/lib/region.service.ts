@@ -2,12 +2,18 @@ import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { BehaviorSubject, of, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class RegionService {
-  regions: DspResource[] = [];
+  private _regionsSubject = new BehaviorSubject<DspResource[]>([]);
+  regions$ = this._regionsSubject.asObservable();
+
+  get regions() {
+    return this._regionsSubject.value;
+  }
+
   private _resource!: DspResource;
 
   private _showRegions = new BehaviorSubject(false);
@@ -18,38 +24,29 @@ export class RegionService {
     switchMap(value => (value ? this._highlightRegion.asObservable() : of(null)))
   );
 
-  private _regionAdded = new Subject<void>();
-  regionAdded$ = this._regionAdded.asObservable();
-
   constructor(private _incomingService: IncomingService) {}
 
   onInit(resource: DspResource) {
     this._resource = resource;
-
-    this.regionAdded$
-      .pipe(
-        startWith(null),
-        switchMap(() => this.getIncomingRegions())
-      )
-      .subscribe(regions => {
-        this.regions = regions;
-      });
   }
 
-  displayRegions(value: boolean) {
+  showRegions(value: boolean) {
     this._showRegions.next(value);
   }
 
-  addRegion(region: string) {
-    this._regionAdded.next();
-    this.highlightRegion(region);
+  updateRegions() {
+    this._getIncomingRegions()
+      .pipe(take(1))
+      .subscribe(res => {
+        this._regionsSubject.next(res);
+      });
   }
 
   highlightRegion(regionIri: string) {
     this._highlightRegion.next(regionIri);
   }
 
-  getIncomingRegions() {
+  private _getIncomingRegions() {
     const offset = 0;
     return this._incomingService.getIncomingRegions(this._resource.res.id, offset).pipe(
       map(regions =>

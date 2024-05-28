@@ -53,11 +53,11 @@ export class ResourceTabsComponent implements OnInit, OnChanges {
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(event: MatTabChangeEvent) {
-    this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
+    this.regionService.showRegions(event.tab.textLabel === 'Annotations');
   }
 
   ngOnInit() {
-    this.regionService.regionAdded$.subscribe(() => {
+    this.regionService.regions$.subscribe(() => {
       this.selectedTab = 2;
     });
   }
