@@ -31,7 +31,7 @@ import { CompoundService } from './compound/compound.service';
           <ng-template matTabLabel class="annotations">
             <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
           </ng-template>
-          <app-annotation-tab *ngIf="irs.regions.length > 0" />
+          <app-annotation-tab *ngIf="annotationTabSelected && irs.regions.length > 0" />
         </mat-tab>
       </ng-container>
     </mat-tab-group>
@@ -50,10 +50,12 @@ export class ResourceTabsComponent implements OnInit, OnChanges {
   resourceProperties!: PropertyInfoValues[];
   loading = true;
 
+  annotationTabSelected = false;
+
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(event: MatTabChangeEvent) {
-    this.regionService.showRegions(event.tab.textLabel === 'Annotations');
+    this.annotationTabSelected = event.tab.textLabel === 'Annotations';
   }
 
   ngOnInit() {
