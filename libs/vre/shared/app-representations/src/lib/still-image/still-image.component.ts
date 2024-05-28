@@ -174,7 +174,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this.editorPermissions = isEditor;
     });
 
-    this._regionService.showRegions$.pipe(distinctUntilChanged()).subscribe(showRegion => {
+    combineLatest([
+      this._regionService.showRegions$.pipe(distinctUntilChanged()),
+      this._regionService.regions$,
+    ]).subscribe(([showRegion, regions]) => {
       if (showRegion) {
         this._renderRegions();
       } else {
@@ -345,10 +348,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         this._regionService.updateRegions();
         this._regionService.highlightRegion(regionId);
         this._regionService.showRegions(true);
-        setTimeout(() => {
-          console.log(this._regionService.regions, 'a');
-          this._renderRegions();
-        }, 4000);
       });
   }
 

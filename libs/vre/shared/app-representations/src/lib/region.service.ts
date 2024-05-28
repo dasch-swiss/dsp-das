@@ -7,14 +7,14 @@ import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class RegionService {
+  private _resource!: DspResource;
+
   private _regionsSubject = new BehaviorSubject<DspResource[]>([]);
   regions$ = this._regionsSubject.asObservable();
 
   get regions() {
     return this._regionsSubject.value;
   }
-
-  private _resource!: DspResource;
 
   private _showRegions = new BehaviorSubject(false);
   showRegions$ = this._showRegions.asObservable();
@@ -28,6 +28,7 @@ export class RegionService {
 
   onInit(resource: DspResource) {
     this._resource = resource;
+    this.updateRegions();
   }
 
   showRegions(value: boolean) {
