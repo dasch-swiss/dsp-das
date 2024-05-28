@@ -7,9 +7,9 @@ import {
   ResourcePageComponent,
 } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { OntologyClassInstanceGuard } from '@dsp-app/src/app/main/guard/ontology-class-instance.guard';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
+import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
