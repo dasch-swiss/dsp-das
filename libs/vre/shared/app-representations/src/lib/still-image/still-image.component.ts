@@ -312,10 +312,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(data => {
-      // remove the drawn rectangle as either the cancel button was clicked or the region will be displayed
       this._viewer.removeOverlay(overlay);
       if (data) {
-        // data is null if the cancel button was clicked
         this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
       }
     });
@@ -341,9 +339,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._dspApiConnection.v2.res
       .createResource(this._getPayloadUploadRegion(startPoint, endPoint, imageSize, color, comment, label))
       .subscribe(res => {
-        this._viewer.destroy();
-        this._setupViewer();
+        // this._viewer.destroy();
+        // this._setupViewer();
         this._regionService.addRegion((res as ReadResource).id);
+        this._regionService.displayRegions(true);
+        setTimeout(() => {
+          console.log(this._regionService.regions, 'a');
+          this._renderRegions();
+        }, 4000);
       });
   }
 
