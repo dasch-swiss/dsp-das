@@ -5,7 +5,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -22,11 +22,10 @@ export class OntologyClassInstanceGuard implements CanActivate {
   ) {}
 
   canActivate(activatedRoute: ActivatedRouteSnapshot): Observable<boolean> {
-    const instanceId = activatedRoute.params[RouteConstants.instanceParameter];
+    const isAddInstance = activatedRoute.url.find(p => p.path === RouteConstants.addClassInstance) !== undefined;
     return combineLatest([this._store.select(UserSelectors.isLoggedIn), this.isSysAdmin$, this.userProjects$]).pipe(
       map(([isLoggedIn, isSysAdmin, userProjects]) => {
         const projectUuid = activatedRoute.parent.params[RouteConstants.uuidParameter];
-        const isAddInstance = instanceId === RouteConstants.addClassInstance;
 
         if (!isLoggedIn && isAddInstance) {
           this.router.navigateByUrl(`/${RouteConstants.project}/${projectUuid}`);
