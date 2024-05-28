@@ -38,15 +38,13 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
-import { Region } from '../region';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
-import { GeometryForRegion } from './geometry-for-region';
 import { osdViewerConfig } from './osd-viewer.config';
 import { StillImageHelper } from './still-image-helper';
 
-interface PolygonsForRegion {
+export interface PolygonsForRegion {
   [key: string]: HTMLElement[];
 }
 
@@ -365,11 +363,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  /**
-   * highlights the polygon elements associated with the given region.
-   *
-   * @param regionIri the Iri of the region whose polygon elements should be highlighted..
-   */
   private _highlightRegion(regionIri: string) {
     const activeRegion: HTMLElement[] = this._regions[regionIri];
 
@@ -380,10 +373,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  /**
-   * unhighlights the polygon elements of all regions.
-   *
-   */
   private _unhighlightAllRegions() {
     for (const reg in this._regions) {
       if (reg in this._regions) {
@@ -394,9 +383,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  /**
-   * initializes the OpenSeadragon _viewer
-   */
   private _setupViewer(): void {
     const viewerContainer = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
 
@@ -505,22 +491,15 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       },
       () => {
         this.failedToLoad = true;
-        // disable mouse navigation incl. zoom
         this._viewer.setMouseNavEnabled(false);
-        // disable the navigator
         this._viewer.navigator.element.style.display = 'none';
-        // disable the region draw mode
         this.regionDrawMode = false;
-        // stop loading tiles
         this._viewer.removeAllHandlers('open');
         this.loading = false;
       }
     );
   }
 
-  /**
-   * adds a ROI-overlay to the viewer for every region of every image in this.images
-   */
   private _renderRegions() {
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
@@ -528,23 +507,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     const stillImage = image.fileValue as ReadStillImageFileValue;
     const aspectRatio = stillImage.dimY / stillImage.dimX;
 
-    // collect all geometries belonging to this page
-    const geometries: GeometryForRegion[] = [];
-    this._regionService.regions
-      .map(_resource => new Region(_resource.res))
-      .forEach(reg => {
-        this._regions[reg.regionResource.id] = [];
-        const geoms = reg.getGeometries();
-
-        geoms.forEach(geom => {
-          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
-
-          geometries.push(geomForReg);
-        });
-      });
-
-    // sort all geometries belonging to this page
-    geometries.sort(StillImageHelper.sortRectangularRegion);
+    const geometries = StillImageHelper.collectAndSortGeometries(this._regionService.regions, this._regions);
 
     // render all geometries for this page
     for (const geom of geometries) {

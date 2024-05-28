@@ -10,7 +10,10 @@ import {
   ReadStillImageFileValue,
   RegionGeometry,
 } from '@dasch-swiss/dsp-js';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Region } from '../region';
 import { GeometryForRegion } from './geometry-for-region';
+import { PolygonsForRegion } from './still-image.component';
 
 export class StillImageHelper {
   static getPayloadUploadRegion(
@@ -115,6 +118,27 @@ export class StillImageHelper {
       return 0;
     }
   };
+
+  static collectAndSortGeometries(regions: DspResource[], regionsMap: PolygonsForRegion): GeometryForRegion[] {
+    const geometries: GeometryForRegion[] = [];
+
+    regions
+      .map(_resource => new Region(_resource.res))
+      .forEach(reg => {
+        regionsMap[reg.regionResource.id] = [];
+        const geoms = reg.getGeometries();
+
+        geoms.forEach(geom => {
+          const geomForReg = new GeometryForRegion(geom.geometry, reg.regionResource);
+          geometries.push(geomForReg);
+        });
+      });
+
+    // sort all geometries belonging to this page
+    geometries.sort(StillImageHelper.sortRectangularRegion);
+
+    return geometries;
+  }
 
   private static surfaceOfRectangularRegion(geom: RegionGeometry): number {
     if (geom.type !== 'rectangle') {
