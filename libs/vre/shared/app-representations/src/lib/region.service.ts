@@ -42,7 +42,7 @@ export class RegionService {
 
   addRegion(region: string) {
     this._regionAdded.next();
-    this._highlightRegion.next(region);
+    this.highlightRegion(region);
   }
 
   highlightRegion(regionIri: string) {
