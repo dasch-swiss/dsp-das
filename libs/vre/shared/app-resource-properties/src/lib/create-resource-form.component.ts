@@ -144,7 +144,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   submitData() {
-    console.log('passsed', this.form);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -258,7 +257,7 @@ export class CreateResourceFormComponent implements OnInit {
       .map(group => {
         const entity = propertiesTypeMapping
           .get(this.mapping.get(iri)!)!
-          .mapping(group.controls.item.value, propertyDefinition);
+          .createValue(group.controls.item.value, propertyDefinition);
         if (group.controls.comment.value) {
           entity.valueHasComment = group.controls.comment.value;
         }

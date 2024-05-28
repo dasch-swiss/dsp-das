@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { UserSelectors, ProjectsSelectors, LoadProjectsAction } from '@dasch-swiss/vre/shared/app-state';
+import {
+  LoadProjectsAction,
+  LoadUserAction,
+  ProjectsSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -24,12 +29,12 @@ import { map, takeUntil } from 'rxjs/operators';
 export class ProjectsComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  @Input() usersProjects = false;
+  @Input() isUsersProjects = false;
 
   get activeProjects$(): Observable<StoredProject[]> {
     return combineLatest([this.userActiveProjects$, this.allActiveProjects$]).pipe(
       takeUntil(this.ngUnsubscribe),
-      map(([userActiveProjects, allActiveProjects]) => (this.usersProjects ? userActiveProjects : allActiveProjects))
+      map(([userActiveProjects, allActiveProjects]) => (this.isUsersProjects ? userActiveProjects : allActiveProjects))
     );
   }
 
@@ -37,7 +42,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$]).pipe(
       takeUntil(this.ngUnsubscribe),
       map(([userInactiveProjects, allInactiveProjects]) =>
-        this.usersProjects ? userInactiveProjects : allInactiveProjects
+        this.isUsersProjects ? userInactiveProjects : allInactiveProjects
       )
     );
   }
@@ -56,7 +61,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (this.usersProjects) {
+    if (this.isUsersProjects) {
       this._titleService.setTitle('Your projects');
     } else {
       this._titleService.setTitle('All projects from DSP');
@@ -77,5 +82,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
    */
   refresh(): void {
     this._store.dispatch(new LoadProjectsAction());
+    const currentUser = this._store.selectSnapshot(UserSelectors.user);
+    this._store.dispatch(new LoadUserAction(currentUser.username));
   }
 }

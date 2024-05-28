@@ -20,6 +20,7 @@ import { ResourceClassForm } from './resource-class-form.type';
         data-cy="name-input"
         [control]="form.controls.name"
         placeholder="Class name *"
+        [validatorErrors]="[{ errorKey: 'pattern', message: 'This pattern is not supported' }]"
         prefixIcon="fingerprint"></app-common-input>
 
       <dasch-swiss-multi-language-input
@@ -50,7 +51,7 @@ export class ResourceClassFormComponent implements OnInit {
 
   form: ResourceClassForm;
   ontology;
-  readonly existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
+  readonly existingNames: RegExp[] = [];
   readonly labelsValidators = [Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.maxLength(2000)];
 
