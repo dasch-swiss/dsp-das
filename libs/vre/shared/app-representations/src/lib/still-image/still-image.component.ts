@@ -479,7 +479,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         location: loc,
       })
       .addHandler('canvas-click', event => {
-        this._regionClicked((<any>event).originalTarget.dataset.regionIri);
+        this._regionService.highlightRegion((<any>event).originalTarget.dataset.regionIri);
       });
 
     this._regions[regionIri].push(regEle);
@@ -587,9 +587,5 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
     this._regions = {};
     this._viewer.clearOverlays();
-  }
-
-  private _regionClicked(regionIri: string) {
-    this._regionService.highlightRegion(regionIri);
   }
 }
