@@ -26,7 +26,7 @@ import { CompoundService } from './compound/compound.service';
       </mat-tab>
 
       <!-- annotations -->
-      <ng-container *ngIf="regionService as irs">
+      <ng-container *ngIf="!isMovingImage && regionService as irs">
         <mat-tab label="Annotations" *ngIf="true">
           <ng-template matTabLabel class="annotations">
             <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
@@ -34,6 +34,16 @@ import { CompoundService } from './compound/compound.service';
           <app-annotation-tab *ngIf="irs.regions.length > 0" />
         </mat-tab>
       </ng-container>
+
+      <!-- SEGMENTS -->
+      <!-- <ng-container *ngIf="isMovingImage">
+        <mat-tab label="Segments" *ngIf="true">
+          <ng-template matTabLabel class="annotations">
+            <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Segments </span>
+          </ng-template>
+          <app-annotation-tab *ngIf="irs.regions.length > 0" />
+        </mat-tab>
+      </ng-container> -->
     </mat-tab-group>
   `,
 })
@@ -51,6 +61,8 @@ export class ResourceTabsComponent implements OnInit {
   loading = true;
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
+  isMovingImage = (resource: DspResource) =>
+    resource.res.entityInfo?.classes[resource.res.type].subClassOf[0].split('#')[1] === 'MovingImageRepresentation';
 
   tabChanged(event: MatTabChangeEvent) {
     this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
@@ -64,5 +76,13 @@ export class ResourceTabsComponent implements OnInit {
     this.regionService.regionAdded$.subscribe(() => {
       this.selectedTab = 2;
     });
+
+    console.log(
+      3333,
+      this.resource,
+      this.resource.res.entityInfo?.classes[this.resource.res.type].subClassOf[0].split('#')[1] ===
+        'MovingImageRepresentation'
+    );
+    console.log(this.compoundService);
   }
 }

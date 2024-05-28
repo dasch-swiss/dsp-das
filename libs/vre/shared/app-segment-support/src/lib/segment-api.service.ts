@@ -153,6 +153,8 @@ OFFSET 0
         const endpoint = 'http://api.knora.org/ontology/knora-api/v2#';
 
         return (value as ReadResourceSequence).resources.map(resource => {
+          this.projectIri = resource.attachedToProject;
+          console.log(999, resource);
           const data = {
             hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
             hasVideoSegmentOfValue: resource.properties[`${endpoint}hasVideoSegmentOfValue`] as

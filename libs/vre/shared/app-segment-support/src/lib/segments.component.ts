@@ -6,8 +6,12 @@ import { SegmentApiService } from './segment-api.service';
 
 @Component({
   selector: 'app-segments',
-  template:
-    'SEGMENTS: <button mat-raised-button (click)="add()">  ADD</button><button mat-raised-button (click)="getVideoSegment()">GET</button><app-segment *ngFor="let segment of segments" [segment]="segment"></app-segment>',
+  template: `
+    'SEGMENTS: <button mat-raised-button (click)="add()">ADD</button>
+    <button mat-raised-button (click)="deleteVideoSegment()">DELETE</button>
+    <button mat-raised-button (click)="getVideoSegment()">GET</button>
+    <app-segment *ngFor="let segment of segments" [segment]="segment"></app-segment>
+  `,
 })
 export class SegmentsComponent {
   segments: Segment[] = [];
@@ -24,6 +28,12 @@ export class SegmentsComponent {
       .subscribe(() => {
         this.getVideoSegment();
       });
+  }
+
+  deleteVideoSegment() {
+    this.segments.map(segment => {
+      console.log(`Segment ${segment.label} has been deleted`);
+    });
   }
 
   getVideoSegment() {
