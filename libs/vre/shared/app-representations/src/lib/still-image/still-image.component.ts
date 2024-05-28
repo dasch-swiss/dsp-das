@@ -41,7 +41,7 @@ import { getFileValue } from '../get-file-value';
 import { Region } from '../region';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
-import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
+import { ResourceFetcherService } from '../resource-fetcher.service';
 import { GeometryForRegion } from './geometry-for-region';
 import { osdViewerConfig } from './osd-viewer.config';
 import { StillImageHelper } from './still-image-helper';
@@ -107,9 +107,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _notification: NotificationService,
     private _renderer: Renderer2,
     private _rs: RepresentationService,
-    private _valueOperationEventService: ValueOperationEventService,
     private _regionService: RegionService,
-    private _store: Store
+    private _store: Store,
+    private _resourceFetcherService: ResourceFetcherService
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -238,12 +238,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         )
       )
       .subscribe(res2 => {
-        this._valueOperationEventService.emit(
-          new EmitEvent(
-            Events.FileValueUpdated,
-            new UpdatedFileEventValue((res2 as ReadResource).properties[Constants.HasStillImageFileValue][0])
-          )
-        );
+        this._resourceFetcherService.reload();
       });
   }
 
