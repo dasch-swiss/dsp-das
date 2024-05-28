@@ -27,7 +27,7 @@ export class SegmentsComponent {
   }
 
   getVideoSegment() {
-    this._segmentApi.getVideoSegment('http://rdfh.ch/0803/O5J50GVGTZ2W4ZyC5ZM5HQ').subscribe(value => {
+    this._segmentApi.getVideoSegment('http://rdfh.ch/0007/O8zFpWWfRd2StNNwmZ23-Q').subscribe(value => {
       this.segments = value;
     });
   }

@@ -6,7 +6,7 @@ import {
   ReadResourceSequence,
   ReadTextValueAsString,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { map } from 'rxjs/operators';
 import { Segment } from './segment';
@@ -19,8 +19,13 @@ export class SegmentApiService {
     private _http: HttpClient,
     private _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _appConfig: AppConfigService
   ) {}
+
+  apiHost = this._appConfig.dspApiConfig.apiHost;
+  apiPort = this._appConfig.dspApiConfig.apiPort;
+  projectIri = 'eFOgaWEuQJy_P8uR5aMDFQ';
 
   create(
     resourceIri: string,
@@ -46,7 +51,7 @@ export class SegmentApiService {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#VideoSegment',
         'http://www.w3.org/2000/01/rdf-schema#label': label,
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-          '@id': 'http://rdfh.ch/projects/0803',
+          '@id': `http://rdfh.ch/projects/${this.projectIri}`,
         },
         'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',

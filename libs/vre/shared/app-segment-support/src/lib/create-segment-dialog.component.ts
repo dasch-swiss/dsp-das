@@ -76,7 +76,7 @@ export class CreateSegmentDialogComponent {
     const formValue = this.form.getRawValue();
     this._segmentApi
       .create(
-        'http://rdfh.ch/0803/O5J50GVGTZ2W4ZyC5ZM5HQ',
+        'http://rdfh.ch/0007/O8zFpWWfRd2StNNwmZ23-Q',
         formValue.label as string,
         formValue.start as number,
         formValue.end as number,
