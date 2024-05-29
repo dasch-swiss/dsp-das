@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -71,9 +70,9 @@ export class OntologyClassInstanceComponent implements OnDestroy {
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([instanceId, project]) =>
-        instanceId !== RouteConstants.addClassInstance
-          ? `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
-          : ''
+        instanceId === RouteConstants.addClassInstance
+          ? ''
+          : `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
       )
     );
   }
@@ -83,12 +82,12 @@ export class OntologyClassInstanceComponent implements OnDestroy {
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([classId, instanceId]) =>
-        !instanceId
-          ? <SearchParams>{
+        instanceId
+          ? null
+          : <SearchParams>{
               query: this._setGravsearch(classId),
               mode: 'gravsearch',
             }
-          : null
       )
     );
   }
@@ -106,7 +105,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
     protected _router: Router,
     private _cdr: ChangeDetectorRef,
     protected _store: Store,
-    protected _title: Title,
     protected _actions$: Actions
   ) {}
 
