@@ -4,7 +4,7 @@ import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-
 import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-multiple-viewer',
   template: `
     <div class="multiple-instances" *ngIf="searchParams">
       <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
@@ -36,9 +36,9 @@ import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component'
       </as-split>
     </div>
   `,
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: ['./multiple-viewer.component.scss'],
 })
-export class DashboardComponent {
+export class MultipleViewerComponent {
   @Input({ required: true }) searchParams: SearchParams;
   viewMode: 'single' | 'intermediate' | 'compare' = 'single';
   selectedResources?: FilteredResources;

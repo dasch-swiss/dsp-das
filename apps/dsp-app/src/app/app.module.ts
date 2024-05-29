@@ -38,7 +38,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { DashboardComponent } from '@dsp-app/src/app/project/ontology-classes/dashboard.component';
+import { MultipleViewerComponent } from '@dsp-app/src/app/project/ontology-classes/multiple-viewer.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -262,7 +262,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
-    DashboardComponent,
+    MultipleViewerComponent,
   ],
   imports: [
     AngularSplitModule,
