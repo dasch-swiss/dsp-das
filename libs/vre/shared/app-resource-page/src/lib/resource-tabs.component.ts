@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { CompoundService } from './compound/compound.service';
@@ -29,14 +30,14 @@ import { CompoundService } from './compound/compound.service';
       </mat-tab>
 
       <!-- annotations -->
-      <ng-container *ngIf="regionService as irs">
-        <mat-tab label="Annotations" *ngIf="true">
-          <ng-template matTabLabel class="annotations">
-            <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
-          </ng-template>
-          <app-annotation-tab *ngIf="irs.regions.length > 0" />
-        </mat-tab>
-      </ng-container>
+      <mat-tab label="Annotations" *ngIf="displayAnnotations">
+        <ng-template matTabLabel class="annotations">
+          <span [matBadge]="regionService.regions.length" matBadgeColor="primary" matBadgeOverlap="false">
+            Annotations
+          </span>
+        </ng-template>
+        <app-annotation-tab *ngIf="regionService.regions.length > 0" />
+      </mat-tab>
     </mat-tab-group>
   `,
 })
@@ -44,6 +45,10 @@ export class ResourceTabsComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
+
+  get displayAnnotations() {
+    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.compoundService.exists;
+  }
 
   constructor(
     public regionService: RegionService,
