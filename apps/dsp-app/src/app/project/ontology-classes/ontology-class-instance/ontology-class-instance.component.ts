@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -15,12 +14,18 @@ import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { SearchParams } from '../../../workspace/results/list-view/list-view.component';
-import { SplitSize } from '../../../workspace/results/results.component';
 
 @Component({
   selector: 'app-ontology-class-instance',
-  templateUrl: './ontology-class-instance.component.html',
-  styleUrls: ['./ontology-class-instance.component.scss'],
+  template: `
+    <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
+
+    <div
+      class="single-instance"
+      *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
+      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
+    </div>
+  `,
 })
 export class OntologyClassInstanceComponent implements OnDestroy {
   @Select(OntologiesSelectors.projectOntologies)
@@ -93,9 +98,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
     );
   }
 
-  selectedResources: FilteredResources;
-  viewMode: 'single' | 'intermediate' | 'compare' = 'single';
-  splitSizeChanged: SplitSize;
   routeConstants = RouteConstants;
 
   constructor(
@@ -104,7 +106,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
     private _ontologyService: OntologyService,
     protected _projectService: ProjectService,
     protected _router: Router,
-    private _cdr: ChangeDetectorRef,
     protected _store: Store,
     protected _actions$: Actions
   ) {}
@@ -112,17 +113,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  openSelectedResources(res: FilteredResources) {
-    this.selectedResources = { ...res, resInfo: [...res.resInfo] };
-
-    if (!res || res.count <= 1) {
-      this.viewMode = 'single';
-    } else if (this.viewMode !== 'compare') {
-      this.viewMode = res.count > 0 ? 'intermediate' : 'single';
-    }
-    this._cdr.detectChanges();
   }
 
   private _setGravsearch(iri: string): string {
