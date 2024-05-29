@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Component, Input, OnInit } from '@angular/core';
+import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
@@ -9,14 +9,26 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
     *ngFor="let annotation of regionService.regions; trackBy: trackAnnotationByFn"
     [id]="annotation.res.id"
     [class.active]="annotation.res.id === selectedRegion">
-    <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [displayLabel]="true" />
+    <app-properties-display
+      [resource]="annotation"
+      [properties]="annotation.resProps"
+      [displayLabel]="true"
+      [linkToNewTab]="
+        resourceService.getResourcePath(resource.res.id) +
+        '?annotation=' +
+        resourceService.getResourceUuid(annotation.res.id)
+      " />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })
 export class AnnotationTabComponent implements OnInit {
+  @Input({ required: true }) resource!: DspResource;
   selectedRegion: string | null = null;
 
-  constructor(public regionService: RegionService) {}
+  constructor(
+    public regionService: RegionService,
+    public resourceService: ResourceService
+  ) {}
 
   ngOnInit() {
     this.regionService.highlightRegion$.subscribe(region => {

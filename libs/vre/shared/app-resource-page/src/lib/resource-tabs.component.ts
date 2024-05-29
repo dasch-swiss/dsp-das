@@ -34,7 +34,7 @@ import { CompoundService } from './compound/compound.service';
           <ng-template matTabLabel class="annotations">
             <span [matBadge]="irs.regions.length" matBadgeColor="primary" matBadgeOverlap="false"> Annotations </span>
           </ng-template>
-          <app-annotation-tab *ngIf="irs.regions.length > 0" />
+          <app-annotation-tab *ngIf="irs.regions.length > 0" [resource]="resource" />
         </mat-tab>
       </ng-container>
     </mat-tab-group>
