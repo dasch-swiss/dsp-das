@@ -42,7 +42,6 @@ export class StillImageHelper {
     colorVal.color = color;
     const linkVal = new CreateLinkValue();
     linkVal.type = Constants.LinkValue;
-    console.log(this);
     linkVal.linkedResourceIri = resourceIri;
     createResource.properties = {
       [Constants.HasColor]: [colorVal],
@@ -142,7 +141,6 @@ export class StillImageHelper {
 
   private static surfaceOfRectangularRegion(geom: RegionGeometry): number {
     if (geom.type !== 'rectangle') {
-      // console.log('expected rectangular region, but ' + geom.type + ' given');
       return 0;
     }
 
