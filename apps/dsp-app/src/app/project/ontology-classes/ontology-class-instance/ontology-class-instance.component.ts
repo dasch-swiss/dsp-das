@@ -114,12 +114,12 @@ export class OntologyClassInstanceComponent implements OnDestroy {
   }
 
   openSelectedResources(res: FilteredResources) {
-    this.selectedResources = res;
+    this.selectedResources = { ...res, resInfo: [...res.resInfo] };
 
     if (!res || res.count <= 1) {
       this.viewMode = 'single';
     } else if (this.viewMode !== 'compare') {
-      this.viewMode = res && res.count > 0 ? 'intermediate' : 'single';
+      this.viewMode = res.count > 0 ? 'intermediate' : 'single';
     }
     this._cdr.detectChanges();
   }
