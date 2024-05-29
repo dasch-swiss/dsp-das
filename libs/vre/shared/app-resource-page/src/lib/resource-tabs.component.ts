@@ -13,12 +13,10 @@ import { CompoundService } from './compound/compound.service';
       animationDuration="0ms"
       [(selectedIndex)]="selectedTab"
       (selectedTabChange)="tabChanged($event)">
-      <!-- first tab for the main resource e.g. book -->
       <mat-tab #matTabProperties [label]="'appLabels.resource.properties' | translate">
         <app-properties-display *ngIf="resourceProperties" [resource]="resource" [properties]="resourceProperties" />
       </mat-tab>
 
-      <!-- incoming (compound object) resource -->
       <mat-tab
         *ngIf="compoundService.incomingResource as incomingResource"
         #matTabIncoming
@@ -36,7 +34,7 @@ import { CompoundService } from './compound/compound.service';
             Annotations
           </span>
         </ng-template>
-        <app-annotation-tab *ngIf="regionService.regions.length > 0" />
+        <app-annotation-tab *ngIf="annotationTabSelected && regionService.regions.length > 0" />
       </mat-tab>
     </mat-tab-group>
   `,
@@ -45,6 +43,8 @@ export class ResourceTabsComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
+  resourceProperties!: PropertyInfoValues[];
+  annotationTabSelected = false;
 
   get displayAnnotations() {
     return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.compoundService.exists;
@@ -55,22 +55,16 @@ export class ResourceTabsComponent implements OnChanges {
     public compoundService: CompoundService
   ) {}
 
-  resourceProperties!: PropertyInfoValues[];
-  loading = true;
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   tabChanged(event: MatTabChangeEvent) {
-    this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
+    this.annotationTabSelected = event.tab.textLabel === 'Annotations';
   }
 
   ngOnChanges() {
     this.resourceProperties = this.resource.resProps
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
-
-    this.regionService.regionAdded$.subscribe(() => {
-      this.selectedTab = 2;
-    });
   }
 }
