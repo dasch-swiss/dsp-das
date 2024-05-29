@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
-import { Subscription } from 'rxjs';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-annotation-tab',
