@@ -11,6 +11,7 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store } from '@ngxs/store';
+import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { SearchParams } from '../../../workspace/results/list-view/list-view.component';
@@ -141,4 +142,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
 
         OFFSET 0`;
   }
+
+  protected readonly search = search;
 }

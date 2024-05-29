@@ -1,7 +1,6 @@
 import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchParams } from './list-view/list-view.component';
@@ -19,9 +18,6 @@ export interface SplitSize {
 export class ResultsComponent implements AfterViewChecked {
   searchParams: SearchParams;
   resourceIri: string;
-  viewMode: 'single' | 'intermediate' | 'compare' = 'single';
-  selectedResources: FilteredResources;
-  splitSize: SplitSize;
   projectUuid: string;
 
   constructor(
@@ -52,17 +48,6 @@ export class ResultsComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     this._cd.detectChanges();
-  }
-
-  onSelectionChange(res: FilteredResources) {
-    this.selectedResources = res;
-    this.resourceIri = this.selectedResources.resInfo[0]?.id;
-
-    if (!res || res.count <= 1) {
-      this.viewMode = 'single';
-    } else if (this.viewMode !== 'compare') {
-      this.viewMode = res && res.count > 0 ? 'intermediate' : 'single';
-    }
   }
 
   private _handleParentParams(parentParams: Params) {
