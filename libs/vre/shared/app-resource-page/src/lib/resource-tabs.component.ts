@@ -1,6 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { CompoundService } from './compound/compound.service';
 
@@ -40,14 +42,15 @@ import { CompoundService } from './compound/compound.service';
     </mat-tab-group>
   `,
 })
-export class ResourceTabsComponent implements OnChanges {
+export class ResourceTabsComponent implements OnInit, OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
 
   constructor(
     public regionService: RegionService,
-    public compoundService: CompoundService
+    public compoundService: CompoundService,
+    private _route: ActivatedRoute
   ) {}
 
   resourceProperties!: PropertyInfoValues[];
@@ -59,13 +62,30 @@ export class ResourceTabsComponent implements OnChanges {
     this.regionService.displayRegions(event.tab.textLabel === 'Annotations');
   }
 
+  ngOnInit() {
+    this.regionService.regionAdded$.subscribe(() => {});
+
+    this._highlightAnnotationFromUri();
+  }
+
   ngOnChanges() {
     this.resourceProperties = this.resource.resProps
       .filter(prop => !prop.propDef['isLinkProperty'])
       .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
+  }
 
-    this.regionService.regionAdded$.subscribe(() => {
-      this.selectedTab = 2;
-    });
+  private _highlightAnnotationFromUri() {
+    const annotation = this._route.snapshot.queryParamMap.get(RouteConstants.annotationQueryParam);
+    if (!annotation) {
+      return;
+    }
+    setTimeout(() => {
+      this._openAnnotationTab();
+      this.regionService.highlightRegion(annotation);
+    }, 1000);
+  }
+
+  private _openAnnotationTab() {
+    this.selectedTab = 2;
   }
 }

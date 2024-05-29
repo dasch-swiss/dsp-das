@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 
 @Component({
@@ -15,8 +16,10 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
       [displayLabel]="true"
       [linkToNewTab]="
         resourceService.getResourcePath(resource.res.id) +
-        '?annotation=' +
-        resourceService.getResourceUuid(annotation.res.id)
+        '?' +
+        RouteConstants.annotationQueryParam +
+        '=' +
+        annotation.res.id
       " />
   </div>`,
   styles: ['.active {border: 1px solid}'],
@@ -50,4 +53,5 @@ export class AnnotationTabComponent implements OnInit {
   }
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
+  protected readonly RouteConstants = RouteConstants;
 }
