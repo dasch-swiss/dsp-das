@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
-import { SplitSize } from '@dsp-app/src/app/workspace/results/results.component';
+import { SearchParams } from '../../workspace/results/list-view/list-view.component';
+import { SplitSize } from '../../workspace/results/results.component';
 
 @Component({
   selector: 'app-multiple-viewer',
