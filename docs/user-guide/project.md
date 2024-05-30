@@ -36,18 +36,22 @@ From the side panel of the project workspace, as a project admin (or a system ad
 ---
 
 ## Project Settings
+
 On the Project Settings page, you can monitor and customize important aspects of your project. This includes updating the project description, changing image settings (only for resources that have the restricted view permissions set) and managing project members by adding, removing or changing their roles.
 
 ### Project Description
+
 In this section, you can personalize key details of your project. You can change the project's name, update the description in multiple languages (de, fr, it, en, rm), and add or modify keywords. Just make the necessary changes and click "Save".
 ![Collaboration page](../assets/images/project-description.png)*<https://app.dasch.swiss/project/3ABR_2i8QYGSIDvmP9mlEw/settings/edit> - Project Description page where project admin and system admin can change the project description of the project.*
 
 ### Image Settings
+
 There are three statuses for image settings: Off, Apply Watermark, and Restrict Image Size. For projects without the permission set to restricted view on resources, the status is Off by default.
 ![Collaboration page](../assets/images/image-settings-off.png)*<https://app.dasch.swiss/project/3ABR_2i8QYGSIDvmP9mlEw/settings/image-settings> - By default, image settings are set to Off for projects without the permission set to restricted view on resources.*
 
 
 #### Apply Watermark or Restrict Image Size
+
 If the permission is set to restricted view on resources, you have two options:
 
 - Apply Watermark: The watermark is a default one with the DaSCH logo.
