@@ -53,6 +53,7 @@ export class RouteConstants {
   static readonly listParameter = 'list';
   static readonly classes = 'classes';
   static readonly properties = 'properties';
+  static readonly assignCurrentUser = 'assign-current-user';
 
   static readonly homeRelative = `/${RouteConstants.home}`;
   static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
@@ -70,14 +71,17 @@ export class RouteConstants {
   static readonly projectResourceRelative = `:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}`;
 
   static readonly OntologyEditorViewRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/${RouteConstants.editor}/:${RouteConstants.viewParameter}`;
+  static readonly OntologyClassAddRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/${RouteConstants.addClassInstance}`;
   static readonly OntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}`;
-  static readonly OntologyClassInstanceRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/:${RouteConstants.instanceParameter}`;
+  static readonly JulienOntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/:${RouteConstants.instanceParameter}`;
 
   static readonly advancedSearchResultsRelative = `${RouteConstants.advancedSearch}/:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
   static readonly searchProjectRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}/:${RouteConstants.projectParameter}`;
   static readonly searchRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
 
   static readonly notFoundWildcardRelative = `/${RouteConstants.notFound}`;
+
+  static readonly annotationQueryParam = 'annotation';
 }
 
 export enum Auth {

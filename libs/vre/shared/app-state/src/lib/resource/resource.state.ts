@@ -5,17 +5,10 @@ import { Action, State, StateContext, Store } from '@ngxs/store';
 import { map, take } from 'rxjs/operators';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { UserSelectors } from '../user/user.selectors';
-import {
-  GetAttachedProjectAction,
-  GetAttachedUserAction,
-  ToggleShowAllCommentsAction,
-  ToggleShowAllPropsAction,
-} from './resource.actions';
+import { GetAttachedProjectAction, GetAttachedUserAction } from './resource.actions';
 import { ReourceStateModel } from './resource.state-model';
 
 const defaults = <ReourceStateModel>{
-  showAllProps: false,
-  showAllComments: false,
   isLoading: false,
   attachedProjects: {},
   attachedUsers: {},
@@ -32,16 +25,6 @@ export class ResourceState {
     private _userApiService: UserApiService,
     private _projectApiService: ProjectApiService
   ) {}
-
-  @Action(ToggleShowAllPropsAction)
-  toggleShowAllPropsAction(ctx: StateContext<ReourceStateModel>) {
-    ctx.patchState({ showAllProps: !ctx.getState().showAllProps });
-  }
-
-  @Action(ToggleShowAllCommentsAction)
-  toggleShowAllCommentsAction(ctx: StateContext<ReourceStateModel>) {
-    ctx.patchState({ showAllComments: !ctx.getState().showAllComments });
-  }
 
   @Action(GetAttachedUserAction)
   getAttachedUser(ctx: StateContext<ReourceStateModel>, { resourceIri, identifier, idType }: GetAttachedUserAction) {
@@ -98,9 +81,12 @@ export class ResourceState {
       .selectSnapshot(ProjectsSelectors.allProjects)
       .find(u => u.id === projectIri) as ReadProject;
     if (project) {
-      state.attachedProjects[resourceIri].value.push(project);
       ctx.setState({
         ...state,
+        attachedProjects: {
+          ...state.attachedProjects,
+          [resourceIri]: { value: [...state.attachedProjects[resourceIri].value, project] },
+        },
         isLoading: false,
       });
 
@@ -110,9 +96,12 @@ export class ResourceState {
     return this._projectApiService.get(projectIri).pipe(
       take(1),
       map(response => {
-        state.attachedProjects[resourceIri].value.push(response.project);
         ctx.setState({
           ...state,
+          attachedProjects: {
+            ...state.attachedProjects,
+            [resourceIri]: { value: [...state.attachedProjects[resourceIri].value, response.project] },
+          },
           isLoading: false,
         });
 

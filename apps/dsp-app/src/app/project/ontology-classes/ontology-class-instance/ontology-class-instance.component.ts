@@ -1,28 +1,40 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResourceClassDefinition, StoredProject } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
+import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { IProjectOntologiesKeyValuePairs, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+  IProjectOntologiesKeyValuePairs,
+  OntologiesSelectors,
+  ProjectsSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { search } from 'effect/String';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
-import { FilteredResources, SearchParams } from '../../../workspace/results/list-view/list-view.component';
-import { SplitSize } from '../../../workspace/results/results.component';
-import { ProjectBase } from '../../project-base';
+import { SearchParams } from '../../../workspace/results/list-view/list-view.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology-class-instance',
-  templateUrl: './ontology-class-instance.component.html',
-  styleUrls: ['./ontology-class-instance.component.scss'],
-})
-export class OntologyClassInstanceComponent extends ProjectBase implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  template: `
+    <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
 
-  routeConstants = RouteConstants;
+    <div
+      class="single-instance"
+      *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
+      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
+    </div>
+  `,
+})
+export class OntologyClassInstanceComponent implements OnDestroy {
+  @Select(OntologiesSelectors.projectOntologies)
+  projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
+  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
+
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   get ontoId$(): Observable<string> {
     return combineLatest([this.project$, this._route.params]).pipe(
@@ -58,45 +70,15 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
     );
   }
 
-  get resClass$(): Observable<ResourceClassDefinition> {
-    return combineLatest([
-      this.projectOntologies$,
-      this.classId$,
-      this.ontoId$,
-      this.instanceId$,
-      this.userProjects$,
-      this.isSysAdmin$,
-    ]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([projectOntologies, classId, ontoId, instanceId, userProjects, isSysAdmin]) => {
-        if (
-          instanceId !== RouteConstants.addClassInstance ||
-          (instanceId === RouteConstants.addClassInstance &&
-            !(userProjects?.some(p => p.id === this.projectIri) || isSysAdmin)) ||
-          !projectOntologies[this.projectIri]
-        ) {
-          return;
-        }
-
-        const ontology = projectOntologies[this.projectIri].readOntologies.find(onto => onto.id === ontoId);
-        if (ontology) {
-          // find ontology of current resource class to get the class label
-          const classes = getAllEntityDefinitionsAsArray(ontology.classes);
-          return <ResourceClassDefinition>classes[classes.findIndex(res => res.id === classId)];
-        }
-      })
-    );
-  }
-
   // id (iri) or resource instance
   get resourceIri$(): Observable<string> {
     return combineLatest([this.instanceId$, this.project$]).pipe(
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([instanceId, project]) =>
-        instanceId !== RouteConstants.addClassInstance
-          ? `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
-          : ''
+        instanceId === RouteConstants.addClassInstance
+          ? ''
+          : `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
       )
     );
   }
@@ -106,28 +88,17 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([classId, instanceId]) =>
-        !instanceId
-          ? <SearchParams>{
+        instanceId
+          ? null
+          : <SearchParams>{
               query: this._setGravsearch(classId),
               mode: 'gravsearch',
             }
-          : null
       )
     );
   }
 
-  // which resources are selected?
-  selectedResources: FilteredResources;
-
-  // display single resource or intermediate page in case of multiple selection
-  viewMode: 'single' | 'intermediate' | 'compare' = 'single';
-
-  splitSizeChanged: SplitSize;
-
-  @Select(OntologiesSelectors.projectOntologies)
-  projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
+  routeConstants = RouteConstants;
 
   constructor(
     private _acs: AppConfigService,
@@ -135,33 +106,13 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
     private _ontologyService: OntologyService,
     protected _projectService: ProjectService,
     protected _router: Router,
-    private _cdr: ChangeDetectorRef,
     protected _store: Store,
-    protected _title: Title,
     protected _actions$: Actions
-  ) {
-    super(_store, _route, _projectService, _title, _router, _cdr, _actions$);
-  }
-
-  ngOnInit() {
-    // waits for current project data to be loaded to the state if not already loaded
-    this.project$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this._cdr.markForCheck());
-  }
+  ) {}
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  openSelectedResources(res: FilteredResources) {
-    this.selectedResources = res;
-
-    if (!res || res.count <= 1) {
-      this.viewMode = 'single';
-    } else if (this.viewMode !== 'compare') {
-      this.viewMode = res && res.count > 0 ? 'intermediate' : 'single';
-    }
-    this._cdr.detectChanges();
   }
 
   private _setGravsearch(iri: string): string {
@@ -181,4 +132,6 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
 
         OFFSET 0`;
   }
+
+  protected readonly search = search;
 }

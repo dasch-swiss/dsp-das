@@ -1,27 +1,24 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { Subscription } from 'rxjs';
 import { SearchParams } from '../../workspace/results/list-view/list-view.component';
-import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent {
   session = false;
   show = false;
   searchParams: SearchParams;
   helpLink = RouteConstants.help;
 
   dsp: DspConfig;
-
-  componentCommsSubscription: Subscription;
 
   homeLink = RouteConstants.home;
 
@@ -39,13 +36,6 @@ export class HeaderComponent implements OnDestroy {
     );
 
     this.dsp = this._appConfigService.dspConfig;
-  }
-
-  ngOnDestroy() {
-    // unsubscribe from the ValueOperationEventService when component is destroyed
-    if (this.componentCommsSubscription !== undefined) {
-      this.componentCommsSubscription.unsubscribe();
-    }
   }
 
   /**

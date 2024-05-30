@@ -2,13 +2,11 @@ import { Injectable } from '@angular/core';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { Action, State, StateContext } from '@ngxs/store';
-import { of } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { AddUserToProjectMembershipAction, SetProjectMemberAction } from '../projects/projects.actions';
 import {
   CreateUserAction,
   LoadUserAction,
-  LoadUserContentByIriAction,
   LoadUsersAction,
   LogUserOutAction,
   RemoveUserAction,
@@ -25,6 +23,7 @@ const defaults = <UserStateModel>{
   userProjectAdminGroups: [],
   isMemberOfSystemAdminGroup: false,
   allUsers: [],
+  usersLoading: false,
 };
 
 @State<UserStateModel>({
@@ -48,28 +47,6 @@ export class UserState {
         });
         ctx.dispatch(new SetUserProjectGroupsAction(response.user));
         return response.user;
-      })
-    );
-  }
-
-  @Action(LoadUserContentByIriAction)
-  loadUserContentByIriAction(ctx: StateContext<UserStateModel>, { iri }: LoadUserContentByIriAction) {
-    ctx.patchState({ isLoading: true });
-    return this._userApiService.get(iri).pipe(
-      take(1),
-      tap({
-        next: response => {
-          const state = ctx.getState();
-          const userIndex = state.allUsers.findIndex(u => u.id === response.user.id);
-          if (userIndex > -1) {
-            state.allUsers[userIndex] = response.user;
-          }
-
-          ctx.setState({
-            ...state,
-            isLoading: false,
-          });
-        },
       })
     );
   }
@@ -142,20 +119,17 @@ export class UserState {
   }
 
   @Action(LoadUsersAction)
-  loadUsersAction(ctx: StateContext<UserStateModel>, { loadFullUserData }: LoadUsersAction) {
-    ctx.patchState({ isLoading: true });
+  loadUsersAction(ctx: StateContext<UserStateModel>): LoadUsersAction {
+    ctx.patchState({ usersLoading: true });
     return this._userApiService.list().pipe(
       take(1),
       tap({
         next: response => {
           ctx.setState({
             ...ctx.getState(),
+            usersLoading: false,
             allUsers: response.users,
           });
-
-          if (loadFullUserData) {
-            response.users.map(u => ctx.dispatch(new LoadUserContentByIriAction(u.id)));
-          }
         },
       })
     );
@@ -199,6 +173,7 @@ export class UserState {
           }
           if ((<ReadUser>state.user).id === response.user.id) {
             state.user = response.user;
+            ctx.dispatch([new SetProjectMemberAction(state.user)]);
           }
 
           state.isLoading = false;

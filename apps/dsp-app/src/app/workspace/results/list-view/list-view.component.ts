@@ -18,11 +18,12 @@ import {
   KnoraApiConnection,
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
+import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Store } from '@ngxs/store';
-import { Subject, Subscription, combineLatest, of } from 'rxjs';
+import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 
 /**
@@ -53,12 +54,6 @@ export interface ShortResInfo {
  * count: total number of resources selected
  * selectedIds: list of selected resource's ids
  */
-export interface FilteredResources {
-  count: number;
-  resListIndex: number[];
-  resInfo: ShortResInfo[];
-  selectionType: 'multiple' | 'single';
-}
 
 /* return the checkbox value
  *
@@ -134,9 +129,8 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.componentCommsSubscriptions.push(
-      this._componentCommsService.on(Events.loginSuccess, () => this.initSearch()),
-      this._componentCommsService.on(Events.resourceChanged, () => this._doSearch()),
-      this._componentCommsService.on(Events.resourceDeleted, () => this._doSearch())
+      this._componentCommsService.on([Events.loginSuccess], () => this.initSearch()),
+      this._componentCommsService.on([Events.resourceChanged, Events.resourceDeleted], () => this._doSearch())
     );
   }
 
