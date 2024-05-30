@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
+import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Store } from '@ngxs/store';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { atLeastOneStringRequired } from '../../../main/form-validators/at-least-one-string-required.validator';
-import { CustomRegex } from '../../../workspace/resource/values/custom-regex';
 import { ResourceClassForm } from './resource-class-form.type';
 
 @Component({
@@ -20,6 +20,7 @@ import { ResourceClassForm } from './resource-class-form.type';
         data-cy="name-input"
         [control]="form.controls.name"
         placeholder="Class name *"
+        [validatorErrors]="[{ errorKey: 'pattern', message: 'This pattern is not supported' }]"
         prefixIcon="fingerprint"></app-common-input>
 
       <dasch-swiss-multi-language-input
@@ -50,7 +51,7 @@ export class ResourceClassFormComponent implements OnInit {
 
   form: ResourceClassForm;
   ontology;
-  readonly existingNames: [RegExp] = [new RegExp('anEmptyRegularExpressionWasntPossible')];
+  readonly existingNames: RegExp[] = [];
   readonly labelsValidators = [Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.maxLength(2000)];
 

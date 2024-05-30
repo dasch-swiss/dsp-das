@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import {
+  ResourceComponent,
+  ResourcePage2Component,
+  ResourcePageComponent,
+} from '@dasch-swiss/vre/shared/app-resource-page';
+import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
@@ -24,7 +30,6 @@ import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';
 import { OverviewComponent } from './user/overview/overview.component';
 import { UserComponent } from './user/user.component';
-import { ResourceComponent } from './workspace/resource/resource.component';
 import { ResultsComponent } from './workspace/results/results.component';
 import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 
@@ -38,7 +43,7 @@ const routes: Routes = [
     component: HelpComponent,
   },
   {
-    path: RouteConstants.createNewProjectRelative,
+    path: `${RouteConstants.createNewProjectRelative}`,
     canActivate: [AuthGuard],
     component: CreateProjectFormPageComponent,
   },
@@ -76,8 +81,12 @@ const routes: Routes = [
       },
       {
         canActivate: [OntologyClassInstanceGuard],
-        path: RouteConstants.OntologyClassInstanceRelative,
-        component: OntologyClassInstanceComponent,
+        path: RouteConstants.OntologyClassAddRelative,
+        component: CreateResourcePageComponent,
+      },
+      {
+        path: RouteConstants.JulienOntologyClassRelative,
+        component: ResourcePageComponent,
       },
       {
         path: RouteConstants.addList,
@@ -144,9 +153,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: RouteConstants.home,
-        pathMatch: 'full',
+        path: '',
         redirectTo: RouteConstants.systemProjects,
+        pathMatch: 'full',
       },
       {
         path: RouteConstants.systemProjects,
@@ -180,7 +189,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.projectResourceRelative,
-        component: ResourceComponent,
+        component: ResourcePage2Component,
       },
     ],
     runGuardsAndResolvers: 'always',

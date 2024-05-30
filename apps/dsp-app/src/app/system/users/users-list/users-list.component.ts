@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
+import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -15,10 +16,9 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { DialogComponent } from '../../../main/dialog/dialog.component';
 import { DialogService } from '../../../main/services/dialog.service';
 import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
 import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
@@ -38,6 +38,7 @@ export class UsersListComponent {
   get list(): ReadUser[] {
     return this._list;
   }
+
   @Input() set list(value: ReadUser[]) {
     this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }
@@ -64,11 +65,6 @@ export class UsersListComponent {
       other: '# Members',
     },
   };
-
-  //
-  // project view
-  // dsp-js admin group iri
-  adminGroupIri: string = Constants.ProjectAdminGroupIRI;
 
   // project uuid; as identifier in project application state service
   projectUuid: string;
@@ -129,8 +125,8 @@ export class UsersListComponent {
     private _cd: ChangeDetectorRef
   ) {
     // get the uuid of the current project
-    this._route.parent.parent.paramMap.subscribe((params: Params) => {
-      this.projectUuid = params.get('uuid');
+    this._route.parent?.parent?.paramMap.subscribe((params: Params) => {
+      this.projectUuid = params.get(RouteConstants.uuidParameter);
     });
   }
 
