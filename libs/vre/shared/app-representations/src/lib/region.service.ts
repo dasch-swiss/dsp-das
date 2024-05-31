@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -27,7 +27,10 @@ export class RegionService {
   private _imageIsLoadedSubject = new BehaviorSubject(false);
   imageIsLoaded$ = this._imageIsLoadedSubject.asObservable();
 
-  constructor(private _incomingService: IncomingService) {}
+  constructor(
+    private _incomingService: IncomingService,
+    private _cd: ChangeDetectorRef
+  ) {}
 
   onInit(resource: DspResource) {
     this._resource = resource;
@@ -48,6 +51,7 @@ export class RegionService {
 
   highlightRegion(regionIri: string) {
     this._highlightRegion.next(regionIri);
+    this._cd.markForCheck();
   }
 
   imageIsLoaded() {
