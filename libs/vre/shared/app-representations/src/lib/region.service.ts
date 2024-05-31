@@ -46,6 +46,7 @@ export class RegionService {
       .pipe(take(1))
       .subscribe(res => {
         this._regionsSubject.next(res);
+        this._cd.markForCheck();
       });
   }
 
