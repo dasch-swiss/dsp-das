@@ -4,12 +4,13 @@ import { DeleteResourceResponse, PermissionUtil, ReadProject } from '@dasch-swis
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import {
+  Events as CommsEvents,
   ComponentCommunicationEventService,
   EmitEvent,
-  Events as CommsEvents,
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
@@ -170,7 +171,8 @@ export class ResourceToolbarComponent implements OnInit {
     private _dialog: MatDialog,
     private _adminProjectsApi: AdminProjectsApiService,
     private _store: Store,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _regionService: RegionService
   ) {}
 
   ngOnInit(): void {
@@ -256,10 +258,15 @@ export class ResourceToolbarComponent implements OnInit {
 
   private _onResourceDeleted(response: DeleteResourceResponse) {
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
+    if (this.resource.isRegion) {
+      this._regionService.updateRegions();
+      this._cd.markForCheck();
+      return;
+    }
+
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
-    this._cd.markForCheck();
   }
 }
