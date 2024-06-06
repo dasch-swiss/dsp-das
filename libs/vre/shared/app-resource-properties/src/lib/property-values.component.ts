@@ -6,6 +6,7 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   selector: 'app-property-values',
@@ -18,7 +19,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       mat-icon-button
       (click)="addItem()"
       *ngIf="
-        (isCurrentProjectAdminOrSysAdmin$ | async) &&
+        (isCurrentProjectAdminSysAdminOrMember$ | async) &&
         (!propertyValueService.currentlyAdding || propertyValueService.keepEditMode) &&
         (propertyValueService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
@@ -30,7 +31,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class PropertyValuesComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
 
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
+  isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
 
   protected readonly Cardinality = Cardinality;
 
