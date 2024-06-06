@@ -6,7 +6,6 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   selector: 'app-property-values',
