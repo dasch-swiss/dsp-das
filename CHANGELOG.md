@@ -1,5 +1,22 @@
 # Changelog
 
+## [11.10.2](https://github.com/dasch-swiss/dsp-das/compare/v11.10.1...v11.10.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* resource switching ([#1634](https://github.com/dasch-swiss/dsp-das/issues/1634)) ([173aaa0](https://github.com/dasch-swiss/dsp-das/commit/173aaa030bc1ae40a395ddf5b2435babdd6a5d0e))
+
+## [11.10.1](https://github.com/dasch-swiss/dsp-das/compare/v11.10.0...v11.10.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* highlighting image region after creating new one (#DEV-3700)  ([#1632](https://github.com/dasch-swiss/dsp-das/issues/1632)) ([ec9807c](https://github.com/dasch-swiss/dsp-das/commit/ec9807c1c001bd30aa5ed7db454e1aeab8e90d03))
+* highlights selected image region (#DEV-3700) ([#1630](https://github.com/dasch-swiss/dsp-das/issues/1630)) ([b0b8feb](https://github.com/dasch-swiss/dsp-das/commit/b0b8feb1f794c9f5d0d1a2bd8241c77e64ea4ec1))
+* on resource change, display first tab ([#1629](https://github.com/dasch-swiss/dsp-das/issues/1629)) ([bd31f3e](https://github.com/dasch-swiss/dsp-das/commit/bd31f3e603bb620e0eb6412d250857828eba34a0))
+* property value add button permissions (#DEV-3723) ([#1633](https://github.com/dasch-swiss/dsp-das/issues/1633)) ([4119a07](https://github.com/dasch-swiss/dsp-das/commit/4119a07d476b4d932a9afcc4301db5a528d106e2))
+
 ## [11.10.0](https://github.com/dasch-swiss/dsp-das/compare/v11.9.1...v11.10.0) (2024-05-30)
 
 
