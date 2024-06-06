@@ -8,17 +8,17 @@ import {
   StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { RestrictedViewResponse } from '@dasch-swiss/vre/open-api';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
 import { IKeyValuePairs } from '../model-interfaces';
+import { ResourceSelectors } from '../resource/resource.selectors';
 import { RouterSelectors } from '../router/router.selector';
 import { UserSelectors } from '../user/user.selectors';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
-import { ResourceSelectors } from '../resource/resource.selectors';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 export class ProjectsSelectors {
   // get list of all projects the user is NOT a member of
