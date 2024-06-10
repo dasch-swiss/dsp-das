@@ -5,6 +5,7 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
@@ -40,6 +41,10 @@ import { CompoundService } from './compound/compound.service';
         </ng-template>
         <app-annotation-tab *ngIf="annotationTabSelected && regionService.regions.length > 0" [resource]="resource" />
       </mat-tab>
+
+      <mat-tab label="Segments" *ngIf="segmentsService.resources">
+        <app-segment-tab />
+      </mat-tab>
     </mat-tab-group>
   `,
 })
@@ -59,6 +64,7 @@ export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     public regionService: RegionService,
     public compoundService: CompoundService,
+    public segmentsService: SegmentsService,
     private _route: ActivatedRoute
   ) {}
 

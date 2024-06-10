@@ -20,7 +20,6 @@ export class SegmentsDisplayComponent implements OnInit {
   readonly rowHeight = 40;
 
   ngOnInit() {
-    console.log('aa', this.segments);
     this.segmentsWithRow = this.segments.reduce((prev, currentValue) => {
       const lastRow = prev.length > 0 ? prev[prev.length - 1].row : 0;
       const segmentsFromLastRow = prev.filter(seg => seg.row === lastRow);

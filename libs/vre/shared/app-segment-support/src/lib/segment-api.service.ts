@@ -6,6 +6,7 @@ import {
   ReadResourceSequence,
   ReadTextValueAsString,
 } from '@dasch-swiss/dsp-js';
+import { Common, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { map } from 'rxjs/operators';
@@ -154,7 +155,6 @@ OFFSET 0
 
         return (value as ReadResourceSequence).resources.map(resource => {
           this.projectIri = resource.attachedToProject;
-          console.log(999, resource);
           const data = {
             hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
             hasVideoSegmentOfValue: resource.properties[`${endpoint}hasVideoSegmentOfValue`] as
@@ -171,7 +171,10 @@ OFFSET 0
             return acc;
           }, {});
 
-          return { ...mappedObject, label: resource.label } as Segment;
+          const segment = { ...mappedObject, label: resource.label } as Segment;
+          const dspResource = new DspResource(resource);
+          dspResource.resProps = Common.initProps(resource);
+          return { segment, resource: dspResource };
         });
       })
     );

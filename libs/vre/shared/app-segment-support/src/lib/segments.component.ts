@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from './create-segment-dialog.component';
-import { Segment } from './segment';
-import { SegmentApiService } from './segment-api.service';
+import { SegmentsService } from './segments.service';
 
 @Component({
   selector: 'app-segments',
@@ -10,18 +9,21 @@ import { SegmentApiService } from './segment-api.service';
     'SEGMENTS:
     <button mat-raised-button (click)="add()">ADD</button>
     <button mat-raised-button (click)="deleteVideoSegment()">DELETE</button>
-    <button mat-raised-button (click)="getVideoSegment()">GET</button>
-    <app-segments-display *ngIf="segments.length > 0" [segments]="segments" />
+    <button mat-raised-button (click)="segmentsService.getVideoSegment(resourceIri)">GET</button>
+    <app-segments-display *ngIf="segmentsService.segments.length > 0" [segments]="segmentsService.segments" />
   `,
 })
-export class SegmentsComponent {
+export class SegmentsComponent implements OnInit {
   @Input({ required: true }) resourceIri!: string;
-  segments: Segment[] = [];
 
   constructor(
-    private _segmentApi: SegmentApiService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    public segmentsService: SegmentsService
   ) {}
+
+  ngOnInit() {
+    this.segmentsService.onInit(this.resourceIri);
+  }
 
   add() {
     this._dialog
@@ -30,19 +32,9 @@ export class SegmentsComponent {
       })
       .afterClosed()
       .subscribe(() => {
-        this.getVideoSegment();
+        this.segmentsService.getVideoSegment(this.resourceIri);
       });
   }
 
-  deleteVideoSegment() {
-    this.segments.map(segment => {
-      console.log(`Segment ${segment.label} has been deleted`);
-    });
-  }
-
-  getVideoSegment() {
-    this._segmentApi.getVideoSegment(this.resourceIri).subscribe(value => {
-      this.segments = value;
-    });
-  }
+  deleteVideoSegment() {}
 }
