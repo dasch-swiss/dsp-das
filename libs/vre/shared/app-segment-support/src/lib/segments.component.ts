@@ -11,7 +11,7 @@ import { SegmentApiService } from './segment-api.service';
     <button mat-raised-button (click)="add()">ADD</button>
     <button mat-raised-button (click)="deleteVideoSegment()">DELETE</button>
     <button mat-raised-button (click)="getVideoSegment()">GET</button>
-    <app-segment *ngFor="let segment of segments" [segment]="segment"></app-segment>
+    <app-segments-display *ngIf="segments.length > 0" [segments]="segments" />
   `,
 })
 export class SegmentsComponent {
