@@ -1,6 +1,7 @@
 import {
   Constants,
   IHasPropertyWithPropertyDefinition,
+  ReadMovingImageFileValue,
   ReadResource,
   ReadStillImageFileValue,
 } from '@dasch-swiss/dsp-js';
@@ -21,21 +22,13 @@ export class Common {
               guiDef: prop,
               values: resource.getValuesAs(prop.propertyIndex, ReadStillImageFileValue),
             };
-
-            /*
-                                                                                                                                                                                                TODO Julien: I removed this part
-                                                                                                                                                                                                const stillImageRepresentations = [
-                                                                                                                                                                                                  new FileRepresentation(
-                                                                                                                                                                                                    resource.getValuesAs(Constants.HasStillImageFileValue, ReadStillImageFileValue)[0],
-                                                                                                                                                                                                    []
-                                                                                                                                                                                                  ),
-                                                                                                                                                                                                ];
-
-                                                                                                                                                                                                this.representationsToDisplay = stillImageRepresentations;
-
-                                                                                                                                                                                                */
-            // --> TODO: get regions here
-
+            break;
+          case Constants.MovingImageFileValue:
+            propInfoAndValues = {
+              propDef: prop.propertyDefinition,
+              guiDef: prop,
+              values: resource.getValuesAs(prop.propertyIndex, ReadMovingImageFileValue),
+            };
             break;
 
           default:
