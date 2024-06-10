@@ -7,35 +7,18 @@ import { SegmentApiService } from './segment-api.service';
   selector: 'app-create-segment-dialog',
   template: ` <app-dialog-header title="Create a segment"></app-dialog-header>
     <div mat-dialog-content>
-      <app-common-input [control]="form.controls.label" placeholder="Label*"></app-common-input>
+      <app-common-input [control]="form.controls.label" placeholder="Label*" />
 
-      <app-common-input
-        placeholder="Start*"
-        [control]="form.controls.start"
-        type="number"
-        data-cy="start-input"></app-common-input>
-      <app-common-input
-        placeholder="End*"
-        [control]="form.controls.end"
-        type="number"
-        data-cy="end-input"></app-common-input>
+      <app-common-input placeholder="Start*" [control]="form.controls.start" type="number" data-cy="start-input" />
+      <app-common-input placeholder="End*" [control]="form.controls.end" type="number" data-cy="end-input" />
 
-      <app-common-input placeholder="title" [control]="form.controls.title" data-cy="title-input"></app-common-input>
+      <app-common-input placeholder="title" [control]="form.controls.title" data-cy="title-input" />
 
-      <app-common-input
-        placeholder="Description"
-        [control]="form.controls.description"
-        data-cy="description-input"></app-common-input>
+      <app-common-input placeholder="Description" [control]="form.controls.description" data-cy="description-input" />
 
-      <app-common-input
-        placeholder="Keyword"
-        [control]="form.controls.keyword"
-        data-cy="keyword-input"></app-common-input>
+      <app-common-input placeholder="Keyword" [control]="form.controls.keyword" data-cy="keyword-input" />
 
-      <app-common-input
-        placeholder="Comment"
-        [control]="form.controls.comment"
-        data-cy="comment-input"></app-common-input>
+      <app-common-input placeholder="Comment" [control]="form.controls.comment" data-cy="comment-input" />
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close data-cy="cancel-button">Cancel</button>
