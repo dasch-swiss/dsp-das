@@ -12,9 +12,9 @@ import { UserForm } from '../user-form/user-form.type';
 @Component({
   selector: 'app-create-user-dialog',
   template: `
-    <app-user-form [user]="user" (afterFormInit)="form = $event"></app-user-form>
+    <app-user-form [user]="user" (afterFormInit)="form = $event" />
 
-    <div class="form-panel">
+    <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'appLabels.form.action.cancel' | translate }}</button>
       <button
         mat-raised-button
