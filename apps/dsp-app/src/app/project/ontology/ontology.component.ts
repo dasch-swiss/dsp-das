@@ -23,7 +23,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
   DefaultClass,
   DefaultProperties,
@@ -425,14 +425,12 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     this._dialog
       .open<CreateResourceClassDialogComponent, CreateResourceClassDialogProps, null>(
         CreateResourceClassDialogComponent,
-        {
-          data: {
-            id: resClassInfo.iri,
-            title: resClassInfo.label,
-            ontologyId: currentOntology.id,
-            lastModificationDate: currentOntology.lastModificationDate,
-          },
-        }
+        DspDialogConfig.dialogDrawerConfig({
+          id: resClassInfo.iri,
+          title: resClassInfo.label,
+          ontologyId: currentOntology.id,
+          lastModificationDate: currentOntology.lastModificationDate,
+        })
       )
       .afterClosed()
       .subscribe(event => {
