@@ -20,7 +20,7 @@ import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { DialogService } from '../../../main/services/dialog.service';
-import { CreateUserPageComponent } from '../../../user/create-user-page/create-user-page.component';
+import { CreateUserDialogComponent } from '../../../user/create-user-page/create-user-dialog.component';
 import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
 @Component({
@@ -312,7 +312,7 @@ export class UsersListComponent {
   }
 
   createUser() {
-    const dialogRef = this._matDialog.open(CreateUserPageComponent, DspDialogConfig.dialogDrawerConfig());
+    const dialogRef = this._matDialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig());
     dialogRef.afterClosed().subscribe(() => {
       this.refreshParent.emit();
     });
