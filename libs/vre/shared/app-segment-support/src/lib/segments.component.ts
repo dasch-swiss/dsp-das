@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateSegmentDialogComponent } from './create-segment-dialog.component';
+import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from './create-segment-dialog.component';
 import { Segment } from './segment';
 import { SegmentApiService } from './segment-api.service';
 
 @Component({
   selector: 'app-segments',
   template: `
-    'SEGMENTS: <button mat-raised-button (click)="add()">ADD</button>
+    'SEGMENTS:
+    <button mat-raised-button (click)="add()">ADD</button>
     <button mat-raised-button (click)="deleteVideoSegment()">DELETE</button>
     <button mat-raised-button (click)="getVideoSegment()">GET</button>
     <app-segment *ngFor="let segment of segments" [segment]="segment"></app-segment>
   `,
 })
 export class SegmentsComponent {
+  @Input({ required: true }) resourceIri!: string;
   segments: Segment[] = [];
 
   constructor(
@@ -23,7 +25,9 @@ export class SegmentsComponent {
 
   add() {
     this._dialog
-      .open(CreateSegmentDialogComponent)
+      .open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
+        data: { resourceIri: this.resourceIri },
+      })
       .afterClosed()
       .subscribe(() => {
         this.getVideoSegment();
@@ -37,7 +41,7 @@ export class SegmentsComponent {
   }
 
   getVideoSegment() {
-    this._segmentApi.getVideoSegment('http://rdfh.ch/0007/O8zFpWWfRd2StNNwmZ23-Q').subscribe(value => {
+    this._segmentApi.getVideoSegment(this.resourceIri).subscribe(value => {
       this.segments = value;
     });
   }

@@ -25,7 +25,7 @@ export class SegmentApiService {
 
   apiHost = this._appConfig.dspApiConfig.apiHost;
   apiPort = this._appConfig.dspApiConfig.apiPort;
-  projectIri = 'eFOgaWEuQJy_P8uR5aMDFQ';
+  projectIri = 'http://rdfh.ch/projects/vNYc6-z_ST-a_ENjDxSZjQ';
 
   create(
     resourceIri: string,
@@ -46,12 +46,12 @@ export class SegmentApiService {
     };
 
     return this._http.post(
-      'http://0.0.0.0:3333/v2/resources',
+      'https://api.dev.dasch.swiss/v2/resources',
       {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#VideoSegment',
         'http://www.w3.org/2000/01/rdf-schema#label': label,
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-          '@id': `http://rdfh.ch/projects/${this.projectIri}`,
+          '@id': this.projectIri,
         },
         'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
