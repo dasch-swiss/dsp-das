@@ -14,19 +14,20 @@ import { sortByKeys } from './sortByKeys';
   selector: 'app-properties-display',
   template: `
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">
-      <h3 style="margin: 0 16px" *ngIf="isAnnotation">{{ resource.res.label }}</h3>
+      <h3 style="margin: 0 16px" *ngIf="displayLabel">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
-        <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="isAnnotation"></app-properties-toolbar>
+        <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel"></app-properties-toolbar>
         <app-resource-toolbar
-          *ngIf="isAnnotation"
+          *ngIf="displayLabel"
           [adminPermissions]="adminPermissions"
-          [resource]="resource"></app-resource-toolbar>
+          [resource]="resource"
+          [linkToNewTab]="linkToNewTab"></app-resource-toolbar>
       </div>
     </div>
 
     <div
       class="infobar mat-caption"
-      *ngIf="isAnnotation && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
+      *ngIf="displayLabel && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
       Created
       <span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
         by
@@ -109,8 +110,9 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
-  @Input() isAnnotation = false;
+  @Input() displayLabel = false;
   @Input() adminPermissions = false;
+  @Input() linkToNewTab?: string;
 
   resourceAttachedUser$ = this._store.select(ResourceSelectors.attachedUsers).pipe(
     takeUntil(this.ngUnsubscribe),

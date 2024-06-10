@@ -30,7 +30,6 @@ import { mergeMap } from 'rxjs/operators';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-import { EmitEvent, Events, UpdatedFileEventValue, ValueOperationEventService } from '../value-operation-event.service';
 import { MovingImageSidecar } from '../video-preview/video-preview.component';
 
 @Component({
@@ -88,9 +87,6 @@ export class VideoComponent implements OnChanges, AfterViewInit {
   // seconds per pixel to calculate preview image on timeline
   secondsPerPixel: number;
 
-  // percent of video loaded
-  currentBuffer: number;
-
   // status
   play = false;
   reachedTheEnd = false;
@@ -112,8 +108,7 @@ export class VideoComponent implements OnChanges, AfterViewInit {
     private _dialog: MatDialog,
     private _sanitizer: DomSanitizer,
     private _rs: RepresentationService,
-    private _notification: NotificationService,
-    private _valueOperationEventService: ValueOperationEventService
+    private _notification: NotificationService
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -173,9 +168,6 @@ export class VideoComponent implements OnChanges, AfterViewInit {
   timeUpdate() {
     // current time
     this.currentTime = this.videoEle.nativeElement.currentTime;
-
-    // buffer progress
-    this.currentBuffer = (this.videoEle.nativeElement.buffered.end(0) / this.duration) * 100;
 
     let range = 0;
     const bf = this.videoEle.nativeElement.buffered;
@@ -413,13 +405,6 @@ export class VideoComponent implements OnChanges, AfterViewInit {
         this.ngOnChanges();
 
         this.loadedMetadata();
-
-        this._valueOperationEventService.emit(
-          new EmitEvent(
-            Events.FileValueUpdated,
-            new UpdatedFileEventValue(res2.properties[Constants.HasMovingImageFileValue][0])
-          )
-        );
       });
   }
 

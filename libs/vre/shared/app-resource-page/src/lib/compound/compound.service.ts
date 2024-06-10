@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
-import { IncomingService } from '@dasch-swiss/vre/shared/app-resource-properties';
 
 @Injectable()
 export class CompoundService {
@@ -12,12 +12,17 @@ export class CompoundService {
   incomingResource: DspResource | undefined;
   private _resource!: DspResource;
 
+  get exists() {
+    return this.compoundPosition !== undefined;
+  }
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
     private _notification: NotificationService,
-    private _regionService: RegionService
+    private _regionService: RegionService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
@@ -77,6 +82,7 @@ export class CompoundService {
 
       this.incomingResource = incomingResource;
       this._regionService.onInit(incomingResource);
+      this._cd.markForCheck();
     });
   }
 }

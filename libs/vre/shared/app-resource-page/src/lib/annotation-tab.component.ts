@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-annotation-tab',
@@ -9,22 +11,45 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
     *ngFor="let annotation of regionService.regions; trackBy: trackAnnotationByFn"
     [id]="annotation.res.id"
     [class.active]="annotation.res.id === selectedRegion">
-    <app-properties-display [resource]="annotation" [properties]="annotation.resProps" [isAnnotation]="true" />
+    <app-properties-display
+      [resource]="annotation"
+      [properties]="annotation.resProps"
+      [displayLabel]="true"
+      [linkToNewTab]="
+        resourceService.getResourcePath(resource.res.id) +
+        '?' +
+        RouteConstants.annotationQueryParam +
+        '=' +
+        annotation.res.id
+      " />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })
-export class AnnotationTabComponent implements OnInit {
+export class AnnotationTabComponent implements OnInit, OnDestroy {
+  @Input({ required: true }) resource!: DspResource;
   selectedRegion: string | null = null;
 
-  constructor(public regionService: RegionService) {}
+  private _subscription!: Subscription;
+
+  constructor(
+    public regionService: RegionService,
+    public resourceService: ResourceService
+  ) {}
 
   ngOnInit() {
-    this.regionService.highlightRegion$.subscribe(region => {
+    this.regionService.showRegions(true);
+
+    this._subscription = this.regionService.highlightRegion$.subscribe(region => {
       this.selectedRegion = region;
       if (region !== null) {
         this._openRegion(region);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+    this.regionService.showRegions(false);
   }
 
   private _openRegion(iri: string) {
@@ -38,4 +63,5 @@ export class AnnotationTabComponent implements OnInit {
   }
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
+  protected readonly RouteConstants = RouteConstants;
 }

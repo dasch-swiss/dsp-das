@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteResourceResponse, PermissionUtil, ReadLinkValue, ReadProject } from '@dasch-swiss/dsp-js';
+import { DeleteResourceResponse, PermissionUtil, ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import {
+  Events as CommsEvents,
   ComponentCommunicationEventService,
   EmitEvent,
-  Events as CommsEvents,
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
@@ -34,7 +35,7 @@ import { filter } from 'rxjs/operators';
         color="primary"
         matTooltipPosition="above"
         [disabled]="resource.res.isDeleted"
-        (click)="openResource(resource.res.id)">
+        (click)="openResource()">
         <mat-icon>open_in_new</mat-icon>
       </button>
       <!-- Share resource: copy ark url, add to favorites or open in new tab -->
@@ -152,13 +153,14 @@ export class ResourceToolbarComponent implements OnInit {
   @Input() showToggleProperties = false;
   @Input() showEditLabel = true;
 
-  @Input() attachedProject: ReadProject;
+  @Input() attachedProject!: ReadProject;
 
-  @Input() lastModificationDate: string;
+  @Input() lastModificationDate!: string;
+  @Input() linkToNewTab?: string;
 
-  userCanDelete: boolean;
-  userCanEdit: boolean;
-  canReadComments: boolean;
+  userCanDelete!: boolean;
+  userCanEdit!: boolean;
+  canReadComments!: boolean;
 
   constructor(
     private _notification: NotificationService,
@@ -168,7 +170,9 @@ export class ResourceToolbarComponent implements OnInit {
     private _ontologyService: OntologyService,
     private _dialog: MatDialog,
     private _adminProjectsApi: AdminProjectsApiService,
-    private _store: Store
+    private _store: Store,
+    private _viewContainerRef: ViewContainerRef,
+    private _regionService: RegionService
   ) {}
 
   ngOnInit(): void {
@@ -192,16 +196,23 @@ export class ResourceToolbarComponent implements OnInit {
     this._cd.detectChanges();
   }
 
-  openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
-    window.open(`/resource${path}`, '_blank');
+  openResource() {
+    window.open(`/resource${this._getResourceSharedPath()}`, '_blank');
+  }
+
+  private _getResourceSharedPath() {
+    if (this.linkToNewTab) {
+      return this.linkToNewTab;
+    }
+
+    return this._resourceService.getResourcePath(this.resource.res.id);
   }
 
   editResourceLabel() {
     this._dialog
       .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
         data: { resource: this.resource.res },
+        viewContainerRef: this._viewContainerRef,
       })
       .afterClosed()
       .pipe(filter(answer => !!answer))
@@ -246,12 +257,16 @@ export class ResourceToolbarComponent implements OnInit {
   }
 
   private _onResourceDeleted(response: DeleteResourceResponse) {
-    // display notification and mark resource as 'erased'
     this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
+    if (this.resource.isRegion) {
+      this._regionService.updateRegions();
+      this._cd.markForCheck();
+      return;
+    }
+
     const ontologyIri = this._ontologyService.getOntologyIriFromRoute(this.attachedProject.shortcode);
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
-    this._cd.markForCheck();
   }
 }

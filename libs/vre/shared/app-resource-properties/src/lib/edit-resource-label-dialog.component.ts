@@ -3,7 +3,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { switchMap } from 'rxjs/operators';
+import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
+import { finalize, switchMap } from 'rxjs/operators';
 
 export interface EditResourceLabelDialogProps {
   resource: ReadResource;
@@ -19,18 +21,29 @@ export interface EditResourceLabelDialogProps {
 
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" [disabled]="control.invalid" (click)="submit()">Submit</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="control.invalid"
+        appLoadingButton
+        [isLoading]="loading"
+        (click)="submit()">
+        Submit
+      </button>
     </div>`,
 })
 export class EditResourceLabelDialogComponent {
   control = new FormControl(this.data.resource.label, { validators: [Validators.required], nonNullable: true });
   initialValue = this.data.resource.label;
+  loading = false;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: EditResourceLabelDialogProps,
-    private _dialogRef: MatDialogRef<EditResourceLabelDialogComponent>
+    private _dialogRef: MatDialogRef<EditResourceLabelDialogComponent>,
+    private _resourceFetcherService: ResourceFetcherService,
+    private _componentCommsService: ComponentCommunicationEventService
   ) {}
 
   submit() {
@@ -40,6 +53,8 @@ export class EditResourceLabelDialogComponent {
     }
 
     if (this.control.invalid) return;
+
+    this.loading = true;
 
     const payload = new UpdateResourceMetadata();
     payload.id = this.data.resource.id;
@@ -51,9 +66,14 @@ export class EditResourceLabelDialogComponent {
         switchMap(res => {
           payload.lastModificationDate = (res as ReadResource).lastModificationDate;
           return this._dspApiConnection.v2.res.updateResourceMetadata(payload);
+        }),
+        finalize(() => {
+          this.loading = false;
         })
       )
       .subscribe(() => {
+        this._componentCommsService.emit(new EmitEvent(Events.resourceChanged));
+        this._resourceFetcherService.reload();
         this._dialogRef.close(true);
       });
   }

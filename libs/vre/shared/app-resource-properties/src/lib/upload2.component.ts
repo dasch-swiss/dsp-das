@@ -3,37 +3,43 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 import { fileValueMapping } from './file-value-mapping';
-import { UploadedFile, UploadFileService } from './upload-file.service';
 
 @Component({
   selector: 'app-upload-2',
   template: `
-    <div
-      *ngIf="ngControl.value === null; else showFileTemplate"
-      appDragDrop
-      (click)="fileInput.click()"
-      (fileDropped)="_addFile($event.item(0))"
-      style="cursor: pointer">
+    <ng-container *ngIf="!loading; else loadingTpl">
       <div
-        style="text-align: center;
+        *ngIf="ngControl.value === null; else showFileTemplate"
+        appDragDrop
+        (click)="fileInput.click()"
+        (fileDropped)="_addFile($event.item(0))"
+        style="cursor: pointer">
+        <div
+          style="text-align: center;
     padding: 16px; border: 1px solid black">
-        <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
-        <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
-        <div>Upload file</div>
-        <div class="mat-subtitle-2">
-          The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}
+          <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
+          <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
+          <div>Upload file</div>
+          <div class="mat-subtitle-2">
+            The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}
+          </div>
+        </div>
+        <div class="mat-subtitle-2" style="background: black; color: white; text-align: center; padding: 8px">
+          Drag and drop or click to upload
         </div>
       </div>
-      <div class="mat-subtitle-2" style="background: black; color: white; text-align: center; padding: 8px">
-        Drag and drop or click to upload
-      </div>
-    </div>
-    <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
+      <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }} </mat-error>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <dasch-swiss-app-progress-indicator />
+    </ng-template>
 
     <ng-template #showFileTemplate>
       <div *ngIf="previewUrl" style="display: flex; justify-content: center">
@@ -69,6 +75,7 @@ export class Upload2Component implements ControlValueAccessor {
 
   previewUrl: SafeUrl | null = null;
   fileToUpload: File | undefined;
+  loading = false;
 
   onChange!: (value: any) => void;
   onTouched!: () => void;
@@ -121,15 +128,20 @@ export class Upload2Component implements ControlValueAccessor {
   }
 
   private _uploadFile(file: File): void {
+    this.loading = true;
     this._store
       .select(ProjectsSelectors.currentProject)
       .pipe(
         filter(v => v !== undefined),
         take(1),
-        map(prj => prj.shortcode),
-        mergeMap(sc => this._upload.upload(file, sc))
+        map(prj => prj!.shortcode),
+        mergeMap(sc => this._upload.upload(file, sc)),
+        finalize(() => {
+          this.loading = false;
+          this._cdr.detectChanges();
+        })
       )
-      .subscribe((res: UploadedFile) => {
+      .subscribe(res => {
         switch (this.representation) {
           case Constants.HasStillImageFileValue:
             this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(res.thumbnailUrl);

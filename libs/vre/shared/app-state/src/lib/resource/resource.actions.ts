@@ -19,22 +19,8 @@ export class GetAttachedProjectAction {
   ) {}
 }
 
-export class ToggleShowAllPropsAction {
-  static readonly type = '[Resource] Toggle Show All Properties';
-}
+export class SetCurrentResourceAction {
+  static readonly type = '[Resource] Set Current Resource';
 
-export class ToggleShowAllCommentsAction {
-  static readonly type = '[Resource] Toggle Show All Comments';
-}
-
-export class LoadResourceAction {
-  static readonly type = '[Resource] Load resource';
-
-  constructor(public resourceIri: string) {}
-}
-
-export class LoadAnnotatedResourceAction {
-  static readonly type = '[Resource] Load annotated resource';
-
-  constructor(public regionIri: string) {}
+  constructor(public resource: DspResource) {}
 }

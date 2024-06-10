@@ -1,25 +1,39 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StoredProject } from '@dasch-swiss/dsp-js';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { IProjectOntologiesKeyValuePairs, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+  IProjectOntologiesKeyValuePairs,
+  OntologiesSelectors,
+  ProjectsSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store } from '@ngxs/store';
+import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { SearchParams } from '../../../workspace/results/list-view/list-view.component';
-import { SplitSize } from '../../../workspace/results/results.component';
-import { ProjectBase } from '../../project-base';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology-class-instance',
-  templateUrl: './ontology-class-instance.component.html',
-  styleUrls: ['./ontology-class-instance.component.scss'],
+  template: `
+    <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
+
+    <div
+      class="single-instance"
+      *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
+      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
+    </div>
+  `,
 })
-export class OntologyClassInstanceComponent extends ProjectBase implements OnInit, OnDestroy {
+export class OntologyClassInstanceComponent implements OnDestroy {
+  @Select(OntologiesSelectors.projectOntologies)
+  projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
+  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
+
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   get ontoId$(): Observable<string> {
@@ -62,9 +76,9 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([instanceId, project]) =>
-        instanceId !== RouteConstants.addClassInstance
-          ? `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
-          : ''
+        instanceId === RouteConstants.addClassInstance
+          ? ''
+          : `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
       )
     );
   }
@@ -74,30 +88,17 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
       takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([classId, instanceId]) =>
-        !instanceId
-          ? <SearchParams>{
+        instanceId
+          ? null
+          : <SearchParams>{
               query: this._setGravsearch(classId),
               mode: 'gravsearch',
             }
-          : null
       )
     );
   }
 
-  // which resources are selected?
-  selectedResources: FilteredResources;
-
-  // display single resource or intermediate page in case of multiple selection
-  viewMode: 'single' | 'intermediate' | 'compare' = 'single';
-
-  splitSizeChanged: SplitSize;
-
   routeConstants = RouteConstants;
-
-  @Select(OntologiesSelectors.projectOntologies)
-  projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
 
   constructor(
     private _acs: AppConfigService,
@@ -105,33 +106,13 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
     private _ontologyService: OntologyService,
     protected _projectService: ProjectService,
     protected _router: Router,
-    private _cdr: ChangeDetectorRef,
     protected _store: Store,
-    protected _title: Title,
     protected _actions$: Actions
-  ) {
-    super(_store, _route, _projectService, _title, _router, _cdr, _actions$);
-  }
-
-  ngOnInit() {
-    // waits for current project data to be loaded to the state if not already loaded
-    this.project$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this._cdr.markForCheck());
-  }
+  ) {}
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  openSelectedResources(res: FilteredResources) {
-    this.selectedResources = res;
-
-    if (!res || res.count <= 1) {
-      this.viewMode = 'single';
-    } else if (this.viewMode !== 'compare') {
-      this.viewMode = res && res.count > 0 ? 'intermediate' : 'single';
-    }
-    this._cdr.detectChanges();
   }
 
   private _setGravsearch(iri: string): string {
@@ -151,4 +132,6 @@ export class OntologyClassInstanceComponent extends ProjectBase implements OnIni
 
         OFFSET 0`;
   }
+
+  protected readonly search = search;
 }
