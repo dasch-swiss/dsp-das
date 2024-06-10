@@ -444,8 +444,9 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
 
     this._dialog
-      .open<EditResourceClassDialogComponent, EditResourceClassDialogProps, boolean>(EditResourceClassDialogComponent, {
-        data: {
+      .open<EditResourceClassDialogComponent, EditResourceClassDialogProps, boolean>(
+        EditResourceClassDialogComponent,
+        DspDialogConfig.dialogDrawerConfig({
           id: resClassInfo.iri,
           title: resClassInfo.label,
           ontologyId: currentOntology.id,
@@ -453,8 +454,8 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
           name: resClass.label,
           comments: resClass.comments as MultiLanguages,
           labels: resClass.labels as MultiLanguages,
-        },
-      })
+        })
+      )
       .afterClosed()
       .subscribe(event => {
         if (event === true) {
@@ -466,13 +467,14 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
   editProperty(data: PropertyInfoObject) {
     const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
     this._dialog
-      .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(EditPropertyFormDialogComponent, {
-        data: {
+      .open<EditPropertyFormDialogComponent, EditPropertyFormDialogProps>(
+        EditPropertyFormDialogComponent,
+        DspDialogConfig.dialogDrawerConfig({
           ontology,
           lastModificationDate: ontology.lastModificationDate,
           propertyInfo: data,
-        },
-      })
+        })
+      )
       .afterClosed()
       .subscribe(() => {
         // get the ontologies for this project
