@@ -3,21 +3,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Ou
 import { fromEvent, merge, Observable } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
-
-export interface MovingImageSidecar {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  '@context': string;
-  checksumDerivative: string;
-  checksumOriginal: string;
-  duration: number;
-  fileSize: number;
-  fps: number;
-  height: number;
-  id: string;
-  internalMimeType: string;
-  originalFilename: string;
-  width: number;
-}
+import { MovingImageSidecar } from '../moving-image-sidecar';
 
 export interface Dimension {
   width: number;

@@ -13,8 +13,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
+import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
-import { MovingImageSidecar } from '../video-preview/video-preview.component';
 
 @Component({
   selector: 'app-video',

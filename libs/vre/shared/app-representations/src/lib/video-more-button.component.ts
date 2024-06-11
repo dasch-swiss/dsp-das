@@ -15,7 +15,8 @@ import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { mergeMap } from 'rxjs/operators';
-import { FileRepresentation } from 'still-image/still-image.component';
+import { FileRepresentation } from './file-representation';
+import { MovingImageSidecar } from './moving-image-sidecar';
 
 @Component({
   selector: 'app-video-more-button',
@@ -42,6 +43,7 @@ import { FileRepresentation } from 'still-image/still-image.component';
 export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) resource!: ReadResource;
+  @Input() fileInfo?: MovingImageSidecar;
 
   constructor(
     private _notification: NotificationService,
@@ -92,8 +94,6 @@ export class VideoMoreButtonComponent {
   }
 
   private _replaceFile(file: UpdateFileValue) {
-    this.goToStart();
-
     const updateRes = new UpdateResource();
     updateRes.id = this.resource.id;
     updateRes.type = this.resource.type;
@@ -103,9 +103,10 @@ export class VideoMoreButtonComponent {
     this._dspApiConnection.v2.values
       .updateValue(updateRes as UpdateResource<UpdateValue>)
       .pipe(
-        mergeMap((res: WriteValueResponse) => this._dspApiConnection.v2.values.getValue(this.resource.id, res.uuid))
+        mergeMap(res => this._dspApiConnection.v2.values.getValue(this.resource.id, (res as WriteValueResponse).uuid))
       )
-      .subscribe((res2: ReadResource) => {
+      .subscribe(res3 => {
+        const res2 = res3 as ReadResource;
         this.src.fileValue.fileUrl = (
           res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
         ).fileUrl;
@@ -116,19 +117,16 @@ export class VideoMoreButtonComponent {
           res2.properties[Constants.HasMovingImageFileValue][0] as ReadMovingImageFileValue
         ).strval;
 
-        this.ngOnChanges();
-
-        this.loadedMetadata();
+        window.location.reload();
       });
   }
 
-  private _downloadFile(data) {
+  private _downloadFile(data: Blob) {
     const url = window.URL.createObjectURL(data);
     const linkElement = document.createElement('a');
     linkElement.href = url;
 
-    // set filename
-    if (this.fileInfo.originalFilename === undefined) {
+    if (this.fileInfo?.originalFilename === undefined) {
       linkElement.download = url.substring(url.lastIndexOf('/') + 1);
     } else {
       linkElement.download = this.fileInfo.originalFilename;
