@@ -69,9 +69,9 @@ export class CreateSegmentDialogComponent {
         formValue.label as string,
         formValue.start as number,
         formValue.end as number,
+        formValue.comment ?? undefined,
         formValue.title ?? undefined,
         formValue.description ?? undefined,
-        formValue.comment ?? undefined,
         formValue.keyword ?? undefined
       )
       .subscribe(() => {
