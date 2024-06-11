@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateSegmentDialogComponent } from './create-segment-dialog.component';
+import { MediaControlService } from '@dasch-swiss/vre/shared/app-representations';
 import { Segment } from './segment';
 
 @Component({
@@ -12,7 +12,7 @@ import { Segment } from './segment';
     justify-content: center;
     align-items: center;"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
-      (click)="edit()">
+      (click)="playVideo()">
       {{ segment.label }}
     </div>
   `,
@@ -26,7 +26,12 @@ export class SegmentComponent implements OnInit {
   videoLengthSecs = 200;
   readonly rowHeight = 40;
 
-  constructor(private _dialog: MatDialog) {}
+  play = false;
+
+  constructor(
+    private _dialog: MatDialog,
+    public _mediaControl: MediaControlService
+  ) {}
 
   ngOnInit() {
     this.width =
@@ -34,7 +39,8 @@ export class SegmentComponent implements OnInit {
     this.start = (this.segment.hasSegmentBounds.start / this.videoLengthSecs) * 100;
   }
 
-  edit() {
-    this._dialog.open(CreateSegmentDialogComponent);
+  playVideo() {
+    this._mediaControl.playMedia(!this.play);
+    this.play = !this.play;
   }
 }

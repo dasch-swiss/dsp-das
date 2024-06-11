@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { SegmentsService } from './segments.service';
 
@@ -15,10 +14,7 @@ import { SegmentsService } from './segments.service';
 export class SegmentsComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
 
-  constructor(
-    private _dialog: MatDialog,
-    public segmentsService: SegmentsService
-  ) {}
+  constructor(public segmentsService: SegmentsService) {}
 
   ngOnInit() {
     this.segmentsService.onInit(this.resource.id);

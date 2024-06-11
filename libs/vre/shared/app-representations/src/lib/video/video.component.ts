@@ -8,6 +8,7 @@ import {
   Inject,
   Input,
   OnChanges,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -29,6 +30,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { mergeMap } from 'rxjs/operators';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
+import { MediaControlService } from '../media-control.service';
 import { RepresentationService } from '../representation.service';
 import { MovingImageSidecar } from '../video-preview/video-preview.component';
 
@@ -36,8 +38,9 @@ import { MovingImageSidecar } from '../video-preview/video-preview.component';
   selector: 'app-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
+  providers: [MediaControlService],
 })
-export class VideoComponent implements OnChanges, AfterViewInit {
+export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() src: FileRepresentation;
 
   @Input() start? = 0;
@@ -108,13 +111,20 @@ export class VideoComponent implements OnChanges, AfterViewInit {
     private _dialog: MatDialog,
     private _sanitizer: DomSanitizer,
     private _rs: RepresentationService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    public _mediaControl: MediaControlService
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
     if (event.key === 'Escape' && this.cinemaMode) {
       this.cinemaMode = false;
     }
+  }
+
+  ngOnInit() {
+    this._mediaControl.play$.subscribe(value => {
+      console.log('got it', value);
+    });
   }
 
   ngOnChanges(): void {
