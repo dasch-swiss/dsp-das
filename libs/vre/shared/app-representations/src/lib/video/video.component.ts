@@ -20,10 +20,10 @@ import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
   SegmentsService,
+  MediaControlService,
 } from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
-import { MediaControlService } from '../media-control.service';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
 

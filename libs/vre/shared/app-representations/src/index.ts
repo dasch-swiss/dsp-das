@@ -20,5 +20,4 @@ export * from './lib/upload/uploaded-file.interface';
 export * from './lib/upload/upload-file-response.interface';
 export * from './lib/upload/upload-file.service';
 export * from './lib/resource-fetcher.service';
-export * from './lib/media-control.service';
 export * from './lib/video/video-more-button.component';

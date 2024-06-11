@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MediaControlService } from '@dasch-swiss/vre/shared/app-representations';
+import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
 
 @Component({

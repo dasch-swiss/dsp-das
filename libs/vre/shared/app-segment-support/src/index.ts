@@ -4,3 +4,4 @@ export * from './lib/segment.component';
 export * from './lib/segments-display.component';
 export * from './lib/segments.service';
 export * from './lib/segment-api.service';
+export * from './lib/media-control.service';

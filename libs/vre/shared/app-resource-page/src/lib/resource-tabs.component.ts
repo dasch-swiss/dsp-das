@@ -69,8 +69,6 @@ export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
-  isMovingImage = (resource: DspResource) =>
-    resource.res.entityInfo?.classes[resource.res.type].subClassOf[0].split('#')[1] === 'MovingImageRepresentation';
 
   tabChanged(event: MatTabChangeEvent) {
     this.annotationTabSelected = event.tab.textLabel === 'Annotations';
