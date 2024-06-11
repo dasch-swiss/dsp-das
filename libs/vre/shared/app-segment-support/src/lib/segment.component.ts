@@ -6,13 +6,14 @@ import { Segment } from './segment';
   selector: 'app-segment',
   template: `
     <div
-      style="height: 38px; background: lightblue; color: white; position: absolute;
+      style="height: 30px; background: lightblue; color: white; position: absolute;
     display: flex;
     justify-content: center;
     align-items: center; cursor: pointer"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
       (click)="playVideo()">
-      {{ segment.label }}
+      <mat-icon style="margin-right: 4px">play_circle</mat-icon>
+      <span class="mat-body-2">{{ segment.label }}</span>
     </div>
   `,
 })
@@ -30,6 +31,7 @@ export class SegmentComponent implements OnInit {
   constructor(public _mediaControl: MediaControlService) {}
 
   ngOnInit() {
+    console.log(this, 's', this.videoLengthSecs);
     this.width =
       ((this.segment.hasSegmentBounds.end - this.segment.hasSegmentBounds.start) * 100) / this.videoLengthSecs;
     this.start = (this.segment.hasSegmentBounds.start / this.videoLengthSecs) * 100;

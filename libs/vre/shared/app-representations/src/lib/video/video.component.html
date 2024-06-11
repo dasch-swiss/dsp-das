@@ -109,6 +109,6 @@
 </div>
 
 <app-segments-display
-  *ngIf="segmentsService.segments.length > 0"
+  *ngIf="segmentsService.segments.length > 0 && duration > 0"
   [segments]="segmentsService.segments"
   [videoLengthSecs]="duration" />
