@@ -6,16 +6,33 @@ import { Segment } from './segment';
   selector: 'app-segment',
   template: `
     <div
-      style="height: 30px; background: lightblue; color: white; position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center; cursor: pointer"
+      class="segment"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
       (click)="playVideo()">
       <mat-icon style="margin-right: 4px">play_circle</mat-icon>
       <span class="mat-body-2">{{ segment.label }}</span>
     </div>
   `,
+  styles: [
+    `
+      .segment {
+        height: 30px;
+        background: lightblue;
+        color: white;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+
+        &:hover {
+          background: #9fd6e8;
+        }
+      }
+    `,
+  ],
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;

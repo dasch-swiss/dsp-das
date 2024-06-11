@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Segment } from './segment';
 
 interface SegmentWithRow {
@@ -16,7 +16,7 @@ interface SegmentWithRow {
       [videoLengthSecs]="videoLengthSecs" />
   </div>`,
 })
-export class SegmentsDisplayComponent implements OnInit {
+export class SegmentsDisplayComponent implements OnChanges {
   @Input({ required: true }) segments!: Segment[];
   @Input({ required: true }) videoLengthSecs!: number;
 
@@ -24,7 +24,7 @@ export class SegmentsDisplayComponent implements OnInit {
   height!: number;
   readonly rowHeight = 40;
 
-  ngOnInit() {
+  ngOnChanges() {
     this.segmentsWithRow = this.segments.reduce((prev, currentValue) => {
       const lastRow = prev.length > 0 ? prev[prev.length - 1].row : 0;
       const segmentsFromLastRow = prev.filter(seg => seg.row === lastRow);

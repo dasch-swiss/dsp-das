@@ -95,8 +95,6 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this.segmentsService.onInit(this.parentResource.id);
-
     this._mediaControl.play$.subscribe(seconds => {
       if (seconds >= this.duration) {
         this._notification.openSnackBar('The video cannot be played at this time.');
@@ -108,6 +106,8 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(): void {
+    this.segmentsService.onInit(this.parentResource.id);
+
     this.videoError = '';
     // set the file info first bc. browsers might queue and block requests
     // if there are already six ongoing requests
