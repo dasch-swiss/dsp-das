@@ -124,6 +124,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit() {
     this._mediaControl.play$.subscribe(value => {
       console.log('got it', value);
+      this.togglePlay();
     });
   }
 
@@ -159,9 +160,9 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
     this.play = !this.play;
 
     if (this.play) {
-      this.videoEle.nativeElement.play();
+      this.videoEle?.nativeElement.play();
     } else {
-      this.videoEle.nativeElement.pause();
+      this.videoEle?.nativeElement.pause();
     }
   }
 
