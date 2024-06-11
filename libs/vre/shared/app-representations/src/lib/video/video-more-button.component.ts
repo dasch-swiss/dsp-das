@@ -15,8 +15,8 @@ import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { mergeMap } from 'rxjs/operators';
-import { FileRepresentation } from './file-representation';
-import { MovingImageSidecar } from './moving-image-sidecar';
+import { FileRepresentation } from '../file-representation';
+import { MovingImageSidecar } from '../moving-image-sidecar';
 
 @Component({
   selector: 'app-video-more-button',
