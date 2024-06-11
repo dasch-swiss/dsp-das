@@ -12,6 +12,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MediaControlService } from '../media-control.service';
@@ -72,7 +74,9 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   constructor(
     private _sanitizer: DomSanitizer,
     private _rs: RepresentationService,
-    public _mediaControl: MediaControlService
+    public _mediaControl: MediaControlService,
+    private _notification: NotificationService,
+    public segmentsService: SegmentsService
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -82,9 +86,15 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this._mediaControl.play$.subscribe(value => {
-      console.log('got it', value);
-      this.togglePlay();
+    this.segmentsService.onInit(this.parentResource.id);
+
+    this._mediaControl.play$.subscribe(seconds => {
+      if (seconds >= this.duration) {
+        this._notification.openSnackBar('The video cannot be played at this time.');
+        return;
+      }
+      this._navigate(seconds);
+      this.playVideo();
     });
   }
 
@@ -107,7 +117,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
    * stop playing and go back to start
    */
   goToStart() {
-    this.videoEle.nativeElement.pause();
+    this.pauseVideo();
     this.play = false;
     this.currentTime = 0;
     this.videoEle.nativeElement.currentTime = this.currentTime;
@@ -116,11 +126,23 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   togglePlay() {
     this.play = !this.play;
 
-    if (this.play) {
-      this.videoEle?.nativeElement.play();
-    } else {
-      this.videoEle?.nativeElement.pause();
+    if (!this.videoEle) {
+      return;
     }
+
+    if (this.play) {
+      this.playVideo();
+    } else {
+      this.pauseVideo();
+    }
+  }
+
+  playVideo() {
+    this.videoEle.nativeElement.play();
+  }
+
+  pauseVideo() {
+    this.videoEle.nativeElement.pause();
   }
 
   toggleCinemaMode() {
@@ -149,6 +171,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   loadedMetadata() {
     // get video duration
     this.duration = this.videoEle.nativeElement.duration;
+    this._mediaControl.mediaDurationSecs = this.duration;
 
     // set default volume
     this.videoEle.nativeElement.volume = this.volume;

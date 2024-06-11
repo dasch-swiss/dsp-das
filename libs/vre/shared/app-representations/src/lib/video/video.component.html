@@ -112,4 +112,7 @@
   </mat-toolbar>
 </div>
 
-<app-segments [resource]="parentResource" />
+<app-segments-display
+  *ngIf="segmentsService.segments.length > 0"
+  [segments]="segmentsService.segments"
+  [videoLengthSecs]="duration" />

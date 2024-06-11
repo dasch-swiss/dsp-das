@@ -4,21 +4,13 @@ import { SegmentsService } from './segments.service';
 
 @Component({
   selector: 'app-segments',
-  template: `
-    'SEGMENTS:
-    <button mat-raised-button (click)="deleteVideoSegment()">DELETE</button>
-    <button mat-raised-button (click)="segmentsService.getVideoSegment(resource.id)">GET</button>
-    <app-segments-display *ngIf="segmentsService.segments.length > 0" [segments]="segmentsService.segments" />
-  `,
+  template: ' <button mat-raised-button (click)="segmentsService.getVideoSegment(resource.id)">GET</button> ',
 })
 export class SegmentsComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
+  @Input({ required: true }) videoLengthSecs!: number;
 
   constructor(public segmentsService: SegmentsService) {}
 
-  ngOnInit() {
-    this.segmentsService.onInit(this.resource.id);
-  }
-
-  deleteVideoSegment() {}
+  ngOnInit() {}
 }

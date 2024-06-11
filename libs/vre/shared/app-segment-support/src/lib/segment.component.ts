@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MediaControlService } from '@dasch-swiss/vre/shared/app-representations';
 import { Segment } from './segment';
 
@@ -10,7 +9,7 @@ import { Segment } from './segment';
       style="height: 38px; background: lightblue; color: white; position: absolute;
     display: flex;
     justify-content: center;
-    align-items: center;"
+    align-items: center; cursor: pointer"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
       (click)="playVideo()">
       {{ segment.label }}
@@ -20,18 +19,15 @@ import { Segment } from './segment';
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;
   @Input({ required: true }) row!: number;
+  @Input({ required: true }) videoLengthSecs!: number;
 
   width!: number;
   start!: number;
-  videoLengthSecs = 200;
   readonly rowHeight = 40;
 
   play = false;
 
-  constructor(
-    private _dialog: MatDialog,
-    public _mediaControl: MediaControlService
-  ) {}
+  constructor(public _mediaControl: MediaControlService) {}
 
   ngOnInit() {
     this.width =
@@ -40,7 +36,7 @@ export class SegmentComponent implements OnInit {
   }
 
   playVideo() {
-    this._mediaControl.playMedia(!this.play);
+    this._mediaControl.playMedia(this.segment.hasSegmentBounds.start);
     this.play = !this.play;
   }
 }
