@@ -16,24 +16,14 @@ export interface Dimension {
   styleUrls: ['./video-preview.component.scss'],
 })
 export class VideoPreviewComponent implements OnChanges {
-  // needed video information: name and duration
-  @Input() src: FileRepresentation;
-
-  // show frame at the corresponding time
-  @Input() time?: number;
-
-  @Input() fileInfo: MovingImageSidecar;
-
-  // emit true when the matrix file (or the default error file) is loaded;
-  // this helps to avoid an empty or black preview frame
+  @Input({ required: true }) src!: FileRepresentation;
+  @Input({ required: true }) time!: number;
+  @Input() fileInfo?: MovingImageSidecar;
   @Output() loaded = new EventEmitter<boolean>();
 
   @ViewChild('frame') frame: ElementRef;
 
   focusOnPreview = false;
-
-  // video information: aspect ratio
-  aspectRatio: number;
 
   // preview images are organized in matrix files;
   // we need the last number of those files and the number of lines from the last matrix file
