@@ -1,11 +1,7 @@
 <div class="player" appDisableContextMenu [class.cinema]="cinemaMode">
   <div class="container">
     <!-- in case of an error -->
-    <app-status
-      [comment]="videoError"
-      [url]="src.fileValue.fileUrl"
-      [representation]="'video'"
-      *ngIf="false && videoError" />
+    <app-status [comment]="videoError" [url]="src.fileValue.fileUrl" [representation]="'video'" *ngIf="videoError" />
 
     <div class="video-container">
       <video

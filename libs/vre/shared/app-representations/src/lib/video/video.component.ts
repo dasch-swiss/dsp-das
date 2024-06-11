@@ -13,12 +13,12 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MediaControlService } from '../media-control.service';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
+import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 
 @Component({
   selector: 'app-video',
@@ -73,10 +73,10 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     private _sanitizer: DomSanitizer,
-    private _rs: RepresentationService,
     public _mediaControl: MediaControlService,
     private _notification: NotificationService,
-    public segmentsService: SegmentsService
+    public segmentsService: SegmentsService,
+    private _rs: RepresentationService
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
