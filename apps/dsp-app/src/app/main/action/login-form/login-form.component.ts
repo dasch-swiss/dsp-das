@@ -11,10 +11,7 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
   selector: 'app-login-form',
   template: `
     <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
-      <app-common-input
-        [control]="form.controls.username"
-        placeholder="Username"
-        data-cy="username-input"></app-common-input>
+      <app-common-input [control]="form.controls.username" placeholder="Username" data-cy="username-input" />
 
       <mat-form-field data-cy="password-input">
         <input

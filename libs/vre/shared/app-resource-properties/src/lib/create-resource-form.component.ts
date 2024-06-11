@@ -44,7 +44,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             [control]="form.controls.label"
             style="flex: 1"
             data-cy="label-input"
-            placeholder="Text value"></app-common-input>
+            placeholder="Text value" />
         </div>
       </div>
 

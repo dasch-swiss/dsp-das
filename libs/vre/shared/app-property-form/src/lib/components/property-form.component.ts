@@ -33,7 +33,7 @@ import { PropertyForm } from '../property-form.type';
       placeholder="Property name *"
       data-cy="name-input"
       prefixIcon="fingerprint"
-      [control]="form.controls.name"></app-common-input>
+      [control]="form.controls.name" />
     <dasch-swiss-multi-language-input
       [formArray]="form.controls.labels"
       data-cy="label-input"

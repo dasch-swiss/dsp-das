@@ -18,19 +18,19 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
           [placeholder]="'appLabels.form.project.general.shortcode' | translate"
           [validatorErrors]="[shortcodePatternError, shortCodeExistsError]"
           data-cy="shortcode-input"
-          style="flex: 1; margin-right: 16px"></app-common-input>
+          style="flex: 1; margin-right: 16px" />
 
         <app-common-input
           [control]="form.controls.shortname"
           [placeholder]="'appLabels.form.project.general.shortname' | translate"
           data-cy="shortname-input"
-          style="flex: 1"></app-common-input>
+          style="flex: 1" />
       </div>
 
       <app-common-input
         [placeholder]="'appLabels.form.project.general.longname' | translate"
         [control]="form.controls.longname"
-        data-cy="longname-input"></app-common-input>
+        data-cy="longname-input" />
 
       <dasch-swiss-multi-language-textarea
         [placeholder]="('appLabels.form.project.general.description' | translate) + '*'"
