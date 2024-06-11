@@ -30,7 +30,7 @@ import { PropertyForm } from '../property-form.type';
       </mat-select>
     </mat-form-field>
     <app-common-input
-      placeholder="Property name *"
+      label="Property name *"
       data-cy="name-input"
       prefixIcon="fingerprint"
       [control]="form.controls.name" />
