@@ -6,7 +6,8 @@ import { FormControl } from '@angular/forms';
   template: `
     <mat-form-field style="width: 100%">
       <mat-icon matIconPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
-      <input matInput [placeholder]="placeholder" [formControl]="control" [type]="type" />
+      <input matInput [placeholder]="placeholder" [formControl]="control" *ngIf="type === 'text'" />
+      <input matInput [placeholder]="placeholder" [formControl]="control" *ngIf="type === 'number'" type="number" />
       <mat-error *ngIf="control.errors as errors">
         {{ errors | humanReadableError: validatorErrors }}
       </mat-error>
