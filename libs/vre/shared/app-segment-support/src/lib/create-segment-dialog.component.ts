@@ -3,12 +3,12 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { Store } from '@ngxs/store';
 import { SegmentApiService } from './segment-api.service';
 import { SegmentsService } from './segments.service';
 
 export interface CreateSegmentDialogProps {
   resource: ReadResource;
+  videoDurationSecs: number;
 }
 
 @Component({
@@ -47,8 +47,8 @@ export class CreateSegmentDialogComponent {
 
   form = this._fb.group({
     label: ['', Validators.required],
-    start: [0, Validators.required],
-    end: [0, Validators.required],
+    start: [0, [Validators.required, Validators.min(0)]],
+    end: [0, [Validators.required, Validators.max(this.data.videoDurationSecs)]],
     title: null as string | null,
     description: null as string | null,
     comment: null as string | null,
@@ -59,7 +59,6 @@ export class CreateSegmentDialogComponent {
     private _fb: FormBuilder,
     private _segmentApi: SegmentApiService,
     private _segmentsService: SegmentsService,
-    private _store: Store,
     private _dialogRef: DialogRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateSegmentDialogProps
   ) {}

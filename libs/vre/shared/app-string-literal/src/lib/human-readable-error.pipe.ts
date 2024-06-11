@@ -32,6 +32,28 @@ export class HumanReadableErrorPipe implements PipeTransform {
       }`;
     }
 
+    if (error.hasOwnProperty('min')) {
+      console.log(error);
+      return `The value must be greater than or equal to ${
+        (
+          error['min'] as {
+            min: number;
+          }
+        ).min
+      }`;
+    }
+
+    if (error.hasOwnProperty('max')) {
+      console.log(error);
+      return `The value must be less than or equal to ${
+        (
+          error['max'] as {
+            max: number;
+          }
+        ).max
+      }`;
+    }
+
     if (error.hasOwnProperty('existingName')) {
       return 'This is already taken by another entity';
     }
