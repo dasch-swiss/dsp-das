@@ -14,6 +14,7 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
 
       <mat-form-field data-cy="password-input">
+        <mat-label>Password</mat-label>
         <input
           placeholder="Password"
           autocomplete="current-password"
