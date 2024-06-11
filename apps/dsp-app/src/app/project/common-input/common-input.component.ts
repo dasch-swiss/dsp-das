@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
   selector: 'app-common-input',
   template: `
     <mat-form-field style="width: 100%">
+      <mat-label>{{ placeholder }}</mat-label>
       <mat-icon matIconPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
       <input matInput [placeholder]="placeholder" [formControl]="control" [type]="type" />
       <mat-error *ngIf="control.errors as errors">
