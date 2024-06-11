@@ -24,12 +24,9 @@ export class SegmentApiService {
     private _appConfig: AppConfigService
   ) {}
 
-  apiHost = this._appConfig.dspApiConfig.apiHost;
-  apiPort = this._appConfig.dspApiConfig.apiPort;
-  projectIri = 'http://rdfh.ch/projects/0803';
-
   create(
     resourceIri: string,
+    projectIri: string,
     label: string,
     start: number,
     end: number,
@@ -47,12 +44,12 @@ export class SegmentApiService {
     };
 
     return this._http.post(
-      `${this.apiHost}/v2/resources`,
+      `${this._appConfig.dspApiConfig.apiUrl}/v2/resources`,
       {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#VideoSegment',
         'http://www.w3.org/2000/01/rdf-schema#label': label,
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-          '@id': this.projectIri,
+          '@id': projectIri,
         },
         'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
@@ -154,7 +151,6 @@ OFFSET 0
         const endpoint = 'http://api.knora.org/ontology/knora-api/v2#';
 
         return (value as ReadResourceSequence).resources.map(resource => {
-          this.projectIri = resource.attachedToProject;
           const data = {
             hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
             hasVideoSegmentOfValue: resource.properties[`${endpoint}hasVideoSegmentOfValue`] as

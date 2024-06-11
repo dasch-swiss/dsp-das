@@ -2,10 +2,12 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ReadResource } from '@dasch-swiss/dsp-js';
+import { Store } from '@ngxs/store';
 import { SegmentApiService } from './segment-api.service';
 
 export interface CreateSegmentDialogProps {
-  resourceIri: string;
+  resource: ReadResource;
 }
 
 @Component({
@@ -55,6 +57,7 @@ export class CreateSegmentDialogComponent {
   constructor(
     private _fb: FormBuilder,
     private _segmentApi: SegmentApiService,
+    private _store: Store,
     private _dialogRef: DialogRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateSegmentDialogProps
   ) {}
@@ -65,7 +68,8 @@ export class CreateSegmentDialogComponent {
     const formValue = this.form.getRawValue();
     this._segmentApi
       .create(
-        this.data.resourceIri,
+        this.data.resource.id,
+        this.data.resource.attachedToProject,
         formValue.label as string,
         formValue.start as number,
         formValue.end as number,
