@@ -18,7 +18,6 @@ export class SegmentsService {
     this._segmentApi.getVideoSegment(resourceIri).subscribe(value => {
       this.segments = value.map(v => v.segment);
       this.resources = value.map(v => v.resource);
-      console.log('a', this.resources);
     });
   }
 }

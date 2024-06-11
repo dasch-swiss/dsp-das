@@ -31,7 +31,6 @@ export class SegmentComponent implements OnInit {
   constructor(public _mediaControl: MediaControlService) {}
 
   ngOnInit() {
-    console.log(this, 's', this.videoLengthSecs);
     this.width =
       ((this.segment.hasSegmentBounds.end - this.segment.hasSegmentBounds.start) * 100) / this.videoLengthSecs;
     this.start = (this.segment.hasSegmentBounds.start / this.videoLengthSecs) * 100;
