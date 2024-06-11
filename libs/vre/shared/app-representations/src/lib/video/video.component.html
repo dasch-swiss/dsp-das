@@ -12,7 +12,7 @@
         [src]="video"
         type="video/mp4"
         preload="auto"
-        [muted]="muted"
+        [muted]="false"
         (click)="togglePlay()"
         (timeupdate)="timeUpdate()"
         (loadedmetadata)="loadedMetadata()"
@@ -58,26 +58,7 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row class="action">
-      <!-- vertical more button with menu to open and copy url -->
-      <button mat-icon-button [matMenuTriggerFor]="more">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #more="matMenu" class="representation-menu">
-        <button mat-menu-item class="menu-content" (click)="openVideoInNewTab(this.src.fileValue.fileUrl)">
-          Open video in new tab
-        </button>
-        <button
-          mat-menu-item
-          class="menu-content"
-          [cdkCopyToClipboard]="this.src.fileValue.fileUrl"
-          (click)="openSnackBar('URL copied to clipboard!')">
-          Copy video URL to clipboard
-        </button>
-        <button mat-menu-item class="menu-content" (click)="downloadVideo(this.src.fileValue.fileUrl)">
-          Download video
-        </button>
-        <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">Replace file</button>
-      </mat-menu>
+      <app-video-more-button [src]="src" [resource]="parentResource" />
       <button
         mat-icon-button
         (click)="goToStart()"
