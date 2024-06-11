@@ -9,16 +9,23 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import {
+  CreateSegmentDialogComponent,
+  CreateSegmentDialogProps,
+  SegmentsService,
+} from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MediaControlService } from '../media-control.service';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
-import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 
 @Component({
   selector: 'app-video',
@@ -73,10 +80,12 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     private _sanitizer: DomSanitizer,
+    private _dialog: MatDialog,
     public _mediaControl: MediaControlService,
     private _notification: NotificationService,
     public segmentsService: SegmentsService,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -170,7 +179,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   loadedMetadata() {
     // get video duration
-    this.duration = this.videoEle.nativeElement.duration;
+    this.duration = Math.floor(this.videoEle.nativeElement.duration);
     this._mediaControl.mediaDurationSecs = this.duration;
 
     // set default volume
@@ -235,6 +244,13 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   displayPreview(status: boolean) {
     this.preview.nativeElement.style.display = status ? 'block' : 'none';
+  }
+
+  createVideoSegment() {
+    this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
+      ...DspDialogConfig.dialogDrawerConfig({ resource: this.parentResource }),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   handleVideoError(event: ErrorEvent) {

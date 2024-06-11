@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { Store } from '@ngxs/store';
 import { SegmentApiService } from './segment-api.service';
+import { SegmentsService } from './segments.service';
 
 export interface CreateSegmentDialogProps {
   resource: ReadResource;
@@ -57,6 +58,7 @@ export class CreateSegmentDialogComponent {
   constructor(
     private _fb: FormBuilder,
     private _segmentApi: SegmentApiService,
+    private _segmentsService: SegmentsService,
     private _store: Store,
     private _dialogRef: DialogRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateSegmentDialogProps
@@ -79,6 +81,7 @@ export class CreateSegmentDialogComponent {
         formValue.keyword ?? undefined
       )
       .subscribe(() => {
+        this._segmentsService.getVideoSegment(this.data.resource.id);
         this._dialogRef.close();
       });
   }

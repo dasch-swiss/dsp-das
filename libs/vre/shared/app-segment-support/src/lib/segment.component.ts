@@ -26,13 +26,16 @@ export class SegmentComponent implements OnInit {
   start!: number;
   readonly rowHeight = 40;
 
+  readonly segmentRightMargin = 0.2;
+
   play = false;
 
   constructor(public _mediaControl: MediaControlService) {}
 
   ngOnInit() {
     this.width =
-      ((this.segment.hasSegmentBounds.end - this.segment.hasSegmentBounds.start) * 100) / this.videoLengthSecs;
+      ((this.segment.hasSegmentBounds.end - this.segment.hasSegmentBounds.start) * 100) / this.videoLengthSecs -
+      this.segmentRightMargin;
     this.start = (this.segment.hasSegmentBounds.start / this.videoLengthSecs) * 100;
   }
 
