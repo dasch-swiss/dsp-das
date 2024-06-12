@@ -16,16 +16,11 @@ export interface CreateSegmentDialogProps {
   template: ` <app-dialog-header title="Create a segment"></app-dialog-header>
     <div mat-dialog-content>
       <app-common-input [control]="form.controls.label" label="Label*" />
-
-      <app-common-input label="Start*" [control]="form.controls.start" type="number" data-cy="start-input" />
-      <app-common-input label="End*" [control]="form.controls.end" type="number" data-cy="end-input" />
-
+      <app-common-input label="Start (secs) *" [control]="form.controls.start" type="number" data-cy="start-input" />
+      <app-common-input label="End (secs) *" [control]="form.controls.end" type="number" data-cy="end-input" />
       <app-common-input label="title" [control]="form.controls.title" data-cy="title-input" />
-
       <app-common-input label="Description" [control]="form.controls.description" data-cy="description-input" />
-
       <app-common-input label="Keyword" [control]="form.controls.keyword" data-cy="keyword-input" />
-
       <app-common-input label="Comment" [control]="form.controls.comment" data-cy="comment-input" />
     </div>
     <div mat-dialog-actions align="end">
