@@ -42,7 +42,7 @@ import { CompoundService } from './compound/compound.service';
         <app-annotation-tab *ngIf="annotationTabSelected && regionService.regions.length > 0" [resource]="resource" />
       </mat-tab>
 
-      <mat-tab label="Segments" *ngIf="segmentsService.resources">
+      <mat-tab label="Segments" *ngIf="segmentsService.resources && segmentsService.resources.length > 0">
         <app-segment-tab [resource]="resource.res" />
       </mat-tab>
     </mat-tab-group>
