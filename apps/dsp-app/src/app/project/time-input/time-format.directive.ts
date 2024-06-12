@@ -1,21 +1,52 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { secondsToTimeString } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/seconds-to-time-string';
+import { timeStringToSeconds } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/time-string-to-seconds';
 
 @Directive({
   selector: '[appTimeFormat]',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TimeFormatDirective),
+      multi: true,
+    },
+  ],
 })
-export class TimeFormatDirective {
+export class TimeFormatDirective implements ControlValueAccessor {
+  private onChange: (value: number) => void;
+  private onTouched: () => void;
+
   constructor(private el: ElementRef) {}
 
-  @HostListener('input', ['$event'])
-  onInput(event: InputEvent): void {
-    let value = this.el.nativeElement.value;
-    if (value.length > 8) {
-      value = value.slice(0, 8);
+  @HostListener('input', ['$event.target.value'])
+  onInput(value: string): void {
+    if (this.onChange) {
+      this.onChange(timeStringToSeconds(value));
     }
-    const timePattern = /^(\d{0,2}):?(\d{0,2})?:?(\d{0,2})?$/;
-    const match = value.match(timePattern);
-    if (match) {
-      this.el.nativeElement.value = match[1] + (match[2] ? `:${match[2]}` : '') + (match[3] ? `:${match[3]}` : '');
+  }
+
+  @HostListener('blur')
+  onBlur(): void {
+    if (this.onTouched) {
+      this.onTouched();
     }
+  }
+
+  writeValue(value: number): void {
+    const formattedValue = secondsToTimeString(value);
+    this.el.nativeElement.value = formattedValue;
+  }
+
+  registerOnChange(fn: (value: number) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.el.nativeElement.disabled = isDisabled;
   }
 }

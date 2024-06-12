@@ -52,6 +52,7 @@ import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
 import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
+import { timeStringToSeconds } from './time-string-to-seconds';
 
 interface MappingParameters<T extends ReadValue> {
   control: (value?: T) => AbstractControl;
@@ -229,13 +230,13 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     {
       control: (value?: ReadIntervalValue) =>
         new FormGroup({
-          start: new FormControl(value?.start, [Validators.required, timeValidator()]),
-          end: new FormControl(value?.end, [Validators.required, timeValidator()]),
+          start: new FormControl(value?.start, [Validators.required]),
+          end: new FormControl(value?.end, [Validators.required]),
         }),
-      createValue: (value: { start: string; end: string }) => {
+      createValue: (value: { start: number; end: number }) => {
         const newIntervalValue = new CreateIntervalValue();
-        newIntervalValue.start = parseFloat(value.start);
-        newIntervalValue.end = parseFloat(value.end);
+        newIntervalValue.start = value.start;
+        newIntervalValue.end = value.end;
         return newIntervalValue;
       },
       updateValue: (id: string, value: { start: number; end: number }) => {
