@@ -47,6 +47,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { timeValidator } from '@dsp-app/src/app/project/time-input/time-validator';
 import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
 import { handleXML } from './handle-xml';
@@ -228,8 +229,8 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     {
       control: (value?: ReadIntervalValue) =>
         new FormGroup({
-          start: new FormControl(value?.start, Validators.required),
-          end: new FormControl(value?.end, Validators.required),
+          start: new FormControl(value?.start, [Validators.required, timeValidator()]),
+          end: new FormControl(value?.end, [Validators.required, timeValidator()]),
         }),
       createValue: (value: { start: string; end: string }) => {
         const newIntervalValue = new CreateIntervalValue();

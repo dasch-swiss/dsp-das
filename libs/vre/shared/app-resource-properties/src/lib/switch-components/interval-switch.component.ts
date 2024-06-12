@@ -9,8 +9,8 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       >{{ control.value.start }}{{ ' ' }}- {{ control.value.end }}
     </ng-container>
     <ng-template #editMode>
-      <app-common-input label="start" [control]="control.controls.start" type="number" data-cy="start-input" />
-      <app-common-input label="end" [control]="control.controls.end" type="number" data-cy="end-input" />
+      <app-time-input label="Start" [control]="control.controls.start" />
+      <app-time-input label="End" [control]="control.controls.end" />
     </ng-template>
   `,
 })
