@@ -19,7 +19,7 @@ Additionally, you can work on the resource directly, e.g, mark regions of intere
 
 Each media viewer offers different tools and functionalities, either displayed in the bottom toolbar (e.g. zoom, open in fullscreen button, play button, etc. - captioned in orange thereafter) or in the menu - the three-dot button on the bottom-left side (e.g. copy the ARK URL to the clipboard, download/replace the file, open the file in a new tab - captioned in red thereafter).
 
-![Single resource view. The resource type in this example is "Page".](../../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Page" and an image viewer displays the photograph of the manuscript page.*
+![Single resource view. The resource type in this example is "Slides and Posters".](../../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Slides and Posters" and an image viewer displays the PDF of a presentation.*
 
 Everything about the resource is displayed below the media viewer (when there is one). All the information about the resource itself (e.g. type, label, permissions, creator, date of creation, etc.), the data (properties and values), and different functionalities such as editing, deleting, sharing the resource. You can find more information about the functionalities in the following sections.
 
@@ -75,7 +75,7 @@ Supported file types: **7z**, **gz**, **gzip**, **tar**, **tgz**, **z**, **zip**
 
 ### Display resource properties
 
-By default, only important properties are shown in the resource viewer. To display them all, click on the "unfold" button in the resource toolbar.
+By default, only important properties are shown in the resource viewer. To display them all, click on the button "Show all properties" in the resource toolbar.
 
 ![Show or hide properties.](../../assets/images/show-hide-properties.png)*Show or hide properties from the toolbar.*
 
@@ -83,11 +83,11 @@ To get more information about the property value, i.e. date of creation and auth
 
 ![Get more information about the value](../../assets/images/value-info.png)*Get the creation date and the author name of the value.*
 
-### Display a value comment
+### Display value comments
 
-To display the existing value comment, hover over the property value and click on the comment button (3rd icon from the left).
+To display the existing value comments, click on the button "Show all comments" in the property toolbar.
 
-![Hover over the property value to see if there is a comment.](../../assets/images/comment-value.png)*Hover over the property value to see if there is a comment and display it.*
+![Show all property comments or hide them.](../../assets/images/comment-value.png)*Show all property comments or hide them.*
 
 ---
 
