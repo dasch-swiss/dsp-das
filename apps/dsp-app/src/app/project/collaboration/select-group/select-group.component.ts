@@ -19,8 +19,25 @@ import { AutocompleteItem } from '../../../workspace/search/operator';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-select-group',
-  templateUrl: './select-group.component.html',
-  styleUrls: ['./select-group.component.scss'],
+  template: `
+    <mat-form-field *ngIf="(projectGroups$ | async)?.length > 0">
+      <mat-select
+        placeholder="Permission group"
+        [formControl]="groupCtrl"
+        multiple
+        (selectionChange)="onGroupSelect()"
+        (openedChange)="onGroupChange()">
+        <mat-option
+          *ngFor="let group of projectGroups$ | async; trackBy: trackByFn"
+          [value]="group.iri"
+          [disabled]="disabled">
+          {{ group.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="(projectGroups$ | async)?.length === 0" class="center">No group defined yet.</div>
+  `,
 })
 export class SelectGroupComponent implements OnDestroy, AfterViewInit {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

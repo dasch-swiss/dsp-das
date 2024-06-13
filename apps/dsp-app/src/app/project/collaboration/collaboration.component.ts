@@ -18,8 +18,54 @@ import { AddUserComponent } from './add-user/add-user.component';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration',
-  templateUrl: './collaboration.component.html',
-  styleUrls: ['./collaboration.component.scss'],
+  template: `
+    <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
+
+    <div *ngIf="(isProjectsLoading$ | async) === false">
+      <div *ngIf="isCurrentProjectAdminOrSysAdmin$ | async" class="content large middle">
+        <!-- add user to the project -->
+        <app-add-user
+          *ngIf="(project$ | async)?.status && (isCurrentProjectAdminOrSysAdmin$ | async) === true"
+          [projectUuid]="projectUuid"
+          (refreshParent)="refresh()"
+          #addUserComponent></app-add-user>
+
+        <!-- main content: list of project members -->
+
+        <div class="users-list">
+          <!-- list of active users -->
+          <app-users-list
+            [project]="project$ | async"
+            [list]="activeProjectMembers$ | async"
+            [status]="true"
+            (refreshParent)="refresh()"></app-users-list>
+
+          <!-- list of inactive users -->
+          <app-users-list
+            [project]="project$ | async"
+            [list]="inactiveProjectMembers$ | async"
+            [status]="false"
+            (refreshParent)="refresh()"></app-users-list>
+        </div>
+      </div>
+
+      <div *ngIf="(isCurrentProjectAdminOrSysAdmin$ | async) === false" class="content large middle">
+        <app-status [status]="403"></app-status>
+      </div>
+    </div>
+  `,
+  styles: [
+    `
+      @use '../../../styles/responsive' as *;
+
+      // mobile device: tablet and smaller than a tablet
+      @media (max-width: map-get($grid-breakpoints, tablet)) {
+        .users-list {
+          margin: 0 16px 0 16px;
+        }
+      }
+    `,
+  ],
 })
 export class CollaborationComponent extends ProjectBase implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -88,9 +134,6 @@ export class CollaborationComponent extends ProjectBase implements OnInit, OnDes
     this.ngUnsubscribe.complete();
   }
 
-  /**
-   * refresh list of members after adding a new user to the team
-   */
   refresh(): void {
     this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
 
