@@ -62,6 +62,9 @@
       "@dasch-swiss/vre/shared/app-helper-services": [
         "libs/vre/shared/app-helper-services/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/app-list": [
+        "libs/vre/shared/app-list/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-logging": [
         "libs/vre/shared/app-logging/src/index.ts"
       ],
