@@ -23,6 +23,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { CreateListInfoPageComponent, ReusableListInfoFormComponent } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
@@ -47,6 +48,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ListComponents } from '../../../../libs/vre/shared/app-list/src/list.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
@@ -87,17 +89,6 @@ import { EditProjectFormPageComponent } from './project/edit-project-form-page/e
 import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
-import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
-import { ListItemComponent } from './project/list/list-item/list-item.component';
-import { ListItemElementComponent } from './project/list/list-item-element/list-item-element.component';
-import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
-import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
-import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
-import { ReusableListItemFormComponent } from './project/list/list-item-form/reusable-list-item-form.component';
-import { ListComponent } from './project/list/list.component';
-import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
-import { EditListInfoDialogComponent } from './project/list/reusable-list-info-form/edit-list-info-dialog.component';
-import { ReusableListInfoFormComponent } from './project/list/reusable-list-info-form/reusable-list-info-form.component';
 import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
@@ -163,8 +154,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePageComponents,
     ...RepresentationsComponents,
     ...CommonToMoveComponents,
+    ...ListComponents,
     AccountComponent,
-    ActionBubbleComponent,
     AddUserComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
@@ -201,15 +192,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     KnoraDatePipe,
     LoadingButtonDirective,
     LinkifyPipe,
-    ListComponent,
-    EditListInfoDialogComponent,
-    EditListItemDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,
-    ReusableListItemFormComponent,
-    ListItemComponent,
-    ListItemElementComponent,
-    ListItemFormComponent,
     ListViewComponent,
     LoginFormComponent,
     MembershipComponent,
@@ -261,7 +245,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectTileComponent,
     DataModelsComponent,
     IsFalsyPipe,
-    CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
     MultipleViewerComponent,
   ],

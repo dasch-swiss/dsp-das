@@ -11,12 +11,12 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
+import { AppGlobal } from '@dsp-app/src/app/app-global';
+import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
+import { ProjectBase } from '@dsp-app/src/app/project/project-base';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
-import { AppGlobal } from '../../app-global';
-import { DialogService } from '../../main/services/dialog.service';
-import { ProjectBase } from '../project-base';
 import {
   EditListInfoDialogComponent,
   EditListInfoDialogProps,

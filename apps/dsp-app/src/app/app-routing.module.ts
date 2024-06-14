@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { ListComponent } from '@dasch-swiss/vre/shared/app-list';
 import {
   ResourceComponent,
   ResourcePage2Component,
   ResourcePageComponent,
 } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { CreateListInfoPageComponent } from '../../../../libs/vre/shared/app-list/src/lib/reusable-list-info-form/create-list-info-page.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
@@ -18,8 +20,6 @@ import { DataModelsComponent } from './project/data-models/data-models.component
 import { DescriptionComponent } from './project/description/description.component';
 import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
-import { ListComponent } from './project/list/list.component';
-import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
