@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { ListComponent } from '@dasch-swiss/vre/shared/app-list';
+import { CreateListInfoPageComponent, ListComponent } from '@dasch-swiss/vre/shared/app-list';
 import {
   ResourceComponent,
   ResourcePage2Component,
   ResourcePageComponent,
 } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { CreateListInfoPageComponent } from '../../../../libs/vre/shared/app-list/src/lib/reusable-list-info-form/create-list-info-page.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';

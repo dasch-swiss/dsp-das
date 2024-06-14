@@ -23,7 +23,11 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
-import { CreateListInfoPageComponent, ReusableListInfoFormComponent } from '@dasch-swiss/vre/shared/app-list';
+import {
+  CreateListInfoPageComponent,
+  ReusableListInfoFormComponent,
+  ListComponents,
+} from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
@@ -40,7 +44,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { ConfirmDialogComponent } from '@dasch-swiss/vre/shared/app-ui';
+import { UiComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -49,8 +53,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ListComponents } from '../../../../libs/vre/shared/app-list/src/list.components';
-import { UiComponents } from '../../../../libs/vre/shared/app-ui/src/ui.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';

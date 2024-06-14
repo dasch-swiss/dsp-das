@@ -1,3 +1,4 @@
+export * from './list.components';
 export * from './lib/list.component';
 export * from './lib/action-bubble/action-bubble.component';
 export * from './lib/list-item/list-item.component';
