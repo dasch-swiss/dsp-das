@@ -43,10 +43,6 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
 
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
 
-  //   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
-  //     return this.resource.res.entityInfo.classes[this.resource.res.type];
-  //   }
-
   get results$(): Observable<number> {
     return combineLatest([
       this._store.select(OntologyClassSelectors.classItems),
