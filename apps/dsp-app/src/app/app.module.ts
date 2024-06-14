@@ -40,6 +40,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { ConfirmDialogComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -49,9 +50,9 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ListComponents } from '../../../../libs/vre/shared/app-list/src/list.components';
+import { UiComponents } from '../../../../libs/vre/shared/app-ui/src/ui.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
@@ -155,6 +156,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...RepresentationsComponents,
     ...CommonToMoveComponents,
     ...ListComponents,
+    ...UiComponents,
     AccountComponent,
     AddUserComponent,
     AdminImageDirective,
@@ -167,7 +169,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ColorPickerComponent,
     CommonInputComponent,
     ComparisonComponent,
-    ConfirmDialogComponent,
     CookiePolicyComponent,
     CreateUserDialogComponent,
     CreateResourceClassDialogComponent,
