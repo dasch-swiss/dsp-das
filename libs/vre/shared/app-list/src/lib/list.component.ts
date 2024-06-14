@@ -39,12 +39,11 @@ export class ListComponent implements OnInit, OnDestroy {
     map(([lists, listIri]) => lists.find(i => i.id.includes(listIri!)))
   );
 
-  listIri$: Observable<string> = combineLatest([this._route.params, this._projectBaseService.project$]).pipe(
+  listIri$: Observable<string> = combineLatest([this._route.params, this.projectBaseService.project$]).pipe(
     map(([params, project]) => `${this._acs.dspAppConfig.iriBase}/lists/${project.shortcode}/${params['list']}`)
   );
 
   @Select(ListsSelectors.isListsLoading) isListsLoading$!: Observable<boolean>;
-  @Select(ListsSelectors.listsInProject) listsInProject$!: Observable<ListNodeInfo[]>;
 
   constructor(
     private _acs: AppConfigService,
@@ -57,7 +56,7 @@ export class ListComponent implements OnInit, OnDestroy {
     protected _store: Store,
     protected _cd: ChangeDetectorRef,
     protected _actions$: Actions,
-    private _projectBaseService: ProjectBaseService
+    public projectBaseService: ProjectBaseService
   ) {}
 
   @HostListener('window:resize', ['$event']) onWindowResize() {
@@ -69,13 +68,13 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._projectBaseService.onInit();
+    this.projectBaseService.onInit();
     this.disableContent = window.innerWidth <= 768;
     this._setPageTitle();
   }
 
   ngOnDestroy() {
-    this._projectBaseService.onDestroy();
+    this.projectBaseService.onDestroy();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -84,7 +83,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this._matDialog.open<EditListInfoDialogComponent, EditListInfoDialogProps, boolean>(
       EditListInfoDialogComponent,
       DspDialogConfig.dialogDrawerConfig({
-        projectIri: this._projectService.uuidToIri(this._projectBaseService.projectUuid),
+        projectIri: this._projectService.uuidToIri(this.projectBaseService.projectUuid),
         list,
       })
     );
@@ -99,12 +98,8 @@ export class ListComponent implements OnInit, OnDestroy {
       )
       .pipe(switchMap(() => this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction), take(1))))
       .subscribe(() => {
-        this._store.dispatch(new LoadListsInProjectAction(this._projectBaseService.projectIri));
-        this._router.navigate([
-          RouteConstants.project,
-          this._projectBaseService.projectUuid,
-          RouteConstants.dataModels,
-        ]);
+        this._store.dispatch(new LoadListsInProjectAction(this.projectBaseService.projectIri));
+        this._router.navigate([RouteConstants.project, this.projectBaseService.projectUuid, RouteConstants.dataModels]);
       });
   }
 
