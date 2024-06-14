@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClassDefinition, Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
   ComponentCommunicationEventService,
@@ -22,6 +22,7 @@ import {
   IClassItemsKeyValuePairs,
   LoadClassItemsCountAction,
   OntologyClassSelectors,
+  UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
@@ -36,11 +37,15 @@ import { map, takeUntil } from 'rxjs/operators';
 export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDestroy {
   destroyed: Subject<void> = new Subject<void>();
 
-  @Input() resClass: ClassDefinition;
+  @Input() resClass: ResourceClassDefinitionWithAllLanguages;
 
   @Input() projectMember: boolean;
 
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
+
+  //   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
+  //     return this.resource.res.entityInfo.classes[this.resource.res.type];
+  //   }
 
   get results$(): Observable<number> {
     return combineLatest([
@@ -99,6 +104,22 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  displayOntologyLabelsInPreferredLanguage(): string {
+    let prefferedLanguage: string;
+    this._store.select(UserSelectors.language).subscribe(l => {
+      prefferedLanguage = l;
+    });
+
+    if (this.resClass.labels) {
+      const label = this.resClass.labels.find(l => l.language === prefferedLanguage);
+      if (label) {
+        return label.value;
+      } else {
+        return this.resClass.labels[0].value;
+      }
+    }
   }
 
   selectItem() {
