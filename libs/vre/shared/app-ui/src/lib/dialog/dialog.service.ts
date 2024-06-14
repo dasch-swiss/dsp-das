@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogProps,
+} from '@dsp-app/src/app/main/action/confirm-dialog/confirm-dialog.component';
 import { filter } from 'rxjs/operators';
-import { ConfirmDialogComponent, ConfirmDialogProps } from '../action/confirm-dialog/confirm-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {

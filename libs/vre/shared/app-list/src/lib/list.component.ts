@@ -11,7 +11,7 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
-import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
+import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';

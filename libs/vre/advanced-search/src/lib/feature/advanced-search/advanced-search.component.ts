@@ -17,7 +17,7 @@ import {
   SearchItem,
   AdvancedSearchStateSnapshot,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { ConfirmationDialogComponent } from '../../ui/dialog/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../../../../shared/app-ui/src/lib/dialog/confirmation-dialog/confirmation-dialog.component';
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';

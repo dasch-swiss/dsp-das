@@ -5,8 +5,7 @@ import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/shared/app-api';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
-import { DIALOG_LARGE } from '@dsp-app/src/app/main/services/dialog-sizes.constant';
-import { DialogService } from '@dsp-app/src/app/main/services/dialog.service';
+import { DIALOG_LARGE, DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { filter, switchMap } from 'rxjs/operators';
 import { ListItemService } from '../list-item/list-item.service';
 import {
