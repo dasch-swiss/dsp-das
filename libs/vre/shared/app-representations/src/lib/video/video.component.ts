@@ -97,18 +97,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this._mediaControl.play$.subscribe(seconds => {
-      if (seconds >= this.duration) {
-        this._notification.openSnackBar('The video cannot be played at this time.');
-        return;
-      }
-      this._navigate(seconds);
-      this.playVideo();
-    });
-
-    this._mediaControl.watchForPause$.subscribe(seconds => {
-      this.watchForPause = seconds;
-    });
+    this._watchForMediaEvents();
   }
 
   ngOnChanges(): void {
@@ -126,6 +115,21 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     this.loaded.emit(true);
+  }
+
+  private _watchForMediaEvents() {
+    this._mediaControl.play$.subscribe(seconds => {
+      if (seconds >= this.duration) {
+        this._notification.openSnackBar('The video cannot be played at this time.');
+        return;
+      }
+      this._navigate(seconds);
+      this.playVideo();
+    });
+
+    this._mediaControl.watchForPause$.subscribe(seconds => {
+      this.watchForPause = seconds;
+    });
   }
 
   /**

@@ -13,6 +13,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
@@ -50,10 +51,14 @@ export class AudioComponent implements OnInit, AfterViewInit {
     private _dialog: MatDialog,
     private _rs: RepresentationService,
     public segmentsService: SegmentsService,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _mediaControl: MediaControlService,
+    private _notification: NotificationService
   ) {}
 
   ngOnInit(): void {
+    this._watchForMediaEvents();
+
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
@@ -84,12 +89,34 @@ export class AudioComponent implements OnInit, AfterViewInit {
   }
 
   togglePlay() {
-    const player = document.getElementById('audio') as HTMLAudioElement;
-    if (player.paused) {
-      player.play();
+    if (this.isPaused()) {
+      this.play();
     } else {
-      player.pause();
+      this.pause();
     }
+  }
+
+  play() {
+    (document.getElementById('audio') as HTMLAudioElement).play();
+  }
+
+  pause() {
+    (document.getElementById('audio') as HTMLAudioElement).pause();
+  }
+
+  private _watchForMediaEvents() {
+    this._mediaControl.play$.subscribe(seconds => {
+      if (seconds >= this.duration) {
+        this._notification.openSnackBar('The video cannot be played at this time.');
+        return;
+      }
+      this._navigate(seconds);
+      this.play();
+    });
+
+    this._mediaControl.watchForPause$.subscribe(seconds => {
+      this.watchForPause = seconds;
+    });
   }
 
   isPaused() {
