@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -12,8 +12,12 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import {
+  CreateSegmentDialogComponent,
+  CreateSegmentDialogProps,
+  SegmentsService,
+} from '@dasch-swiss/vre/shared/app-segment-support';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
@@ -43,7 +47,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
     private _sanitizer: DomSanitizer,
     private _dialog: MatDialog,
     private _rs: RepresentationService,
-    public segmentsService: SegmentsService
+    public segmentsService: SegmentsService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit(): void {
@@ -156,6 +161,17 @@ export class AudioComponent implements OnInit, AfterViewInit {
   isMuted() {
     const player = document.getElementById('audio') as HTMLAudioElement;
     return player.muted;
+  }
+
+  createAudioSegment() {
+    this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
+      ...DspDialogConfig.dialogDrawerConfig({
+        type: 'AudioSegment',
+        resource: this.parentResource,
+        videoDurationSecs: this.duration,
+      }),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   private _replaceFile(file: UpdateFileValue) {

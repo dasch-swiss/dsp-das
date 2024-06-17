@@ -69,7 +69,8 @@ export class CreateSegmentDialogComponent {
 
     const formValue = this.form.getRawValue();
     this._segmentApi
-      .createVideoSegment(
+      .createSegment(
+        this.data.type,
         this.data.resource.id,
         this.data.resource.attachedToProject,
         formValue.label as string,
