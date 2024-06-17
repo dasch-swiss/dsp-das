@@ -25,6 +25,31 @@ export class SegmentApiService {
     private _appConfig: AppConfigService
   ) {}
 
+  createAudioSegment(
+    resourceIri: string,
+    projectIri: string,
+    label: string,
+    start: number,
+    end: number,
+    comment?: string,
+    title?: string,
+    description?: string,
+    keyword?: string
+  ) {
+    return this.createSegment(
+      'AudioSegment',
+      resourceIri,
+      projectIri,
+      label,
+      start,
+      end,
+      comment,
+      title,
+      description,
+      keyword
+    );
+  }
+
   createVideoSegment(
     resourceIri: string,
     projectIri: string,
