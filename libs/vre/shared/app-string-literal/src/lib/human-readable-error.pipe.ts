@@ -1,11 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ValidatorError } from './validator-error.interface';
 
 @Pipe({
   name: 'humanReadableError',
   standalone: true,
 })
 export class HumanReadableErrorPipe implements PipeTransform {
-  transform(error: object, params: { errorKey: string; message: string }[] = null): string {
+  transform(error: object, params: ValidatorError[] = null): string {
     if (error.hasOwnProperty('required')) {
       return 'This field is required';
     }

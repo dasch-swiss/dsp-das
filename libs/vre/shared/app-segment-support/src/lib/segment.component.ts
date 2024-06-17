@@ -12,6 +12,9 @@ import { Segment } from './segment';
       <mat-icon style="margin-right: 4px">play_circle</mat-icon>
       <span class="mat-body-2">{{ segment.label }}</span>
     </div>
+    <button mat-icon-button>
+      <mat-icon>arrow_down</mat-icon>
+    </button>
   `,
   styles: [
     `
