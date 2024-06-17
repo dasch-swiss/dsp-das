@@ -7,7 +7,7 @@
     <div class="container">
       <div class="contents">
         <div class="icon">
-          <mat-icon> audio_file </mat-icon>
+          <mat-icon> audio_file</mat-icon>
         </div>
         <div *ngIf="failedToLoad">Your browser does not support the audio element.</div>
         <div *ngIf="audio" class="audio-player">
@@ -33,10 +33,10 @@
           <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">Replace file</button>
         </mat-menu>
         <button mat-icon-button (click)="togglePlay()" *ngIf="isPaused()">
-          <mat-icon> play_circle </mat-icon>
+          <mat-icon> play_circle</mat-icon>
         </button>
         <button mat-icon-button (click)="togglePlay()" *ngIf="!isPaused()">
-          <mat-icon> pause_circle </mat-icon>
+          <mat-icon> pause_circle</mat-icon>
         </button>
         <div class="current-time-span">
           <span> {{ parseTime(currentTime) }} / {{ parseTime(getDuration()) }} </span>
@@ -57,12 +57,19 @@
           /></mat-slider>
         </div>
         <button mat-icon-button (click)="toggleMute()" *ngIf="!isMuted()">
-          <mat-icon> volume_up </mat-icon>
+          <mat-icon> volume_up</mat-icon>
         </button>
         <button mat-icon-button (click)="toggleMute()" *ngIf="isMuted()">
-          <mat-icon> volume_off </mat-icon>
+          <mat-icon> volume_off</mat-icon>
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<app-segments-display
+  *ngIf="segmentsService.segments.length > 0 && duration > 0"
+  [segments]="segmentsService.segments"
+  [videoLengthSecs]="duration" />
+
+<button (click)="crea">CREATE</button>

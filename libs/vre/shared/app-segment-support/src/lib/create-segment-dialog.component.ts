@@ -9,6 +9,7 @@ import { SegmentsService } from './segments.service';
 export interface CreateSegmentDialogProps {
   resource: ReadResource;
   videoDurationSecs: number;
+  type: 'VideoSegment' | 'AudioSegment';
 }
 
 @Component({

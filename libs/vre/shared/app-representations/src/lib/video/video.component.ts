@@ -260,7 +260,11 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   createVideoSegment() {
     this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
-      ...DspDialogConfig.dialogDrawerConfig({ resource: this.parentResource, videoDurationSecs: this.duration }),
+      ...DspDialogConfig.dialogDrawerConfig({
+        type: 'VideoSegment',
+        resource: this.parentResource,
+        videoDurationSecs: this.duration,
+      }),
       viewContainerRef: this._viewContainerRef,
     });
   }

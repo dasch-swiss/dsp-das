@@ -13,6 +13,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
@@ -34,12 +35,15 @@ export class AudioComponent implements OnInit, AfterViewInit {
   currentTime = 0;
   audio: SafeUrl;
 
+  duration = 0;
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _sanitizer: DomSanitizer,
     private _dialog: MatDialog,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    public segmentsService: SegmentsService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +56,12 @@ export class AudioComponent implements OnInit, AfterViewInit {
       }
     );
     this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+
+    this.loaded.subscribe(value => {
+      if (value) {
+        this.duration = this.getDuration();
+      }
+    });
   }
 
   ngAfterViewInit() {
