@@ -6,24 +6,30 @@ import { Segment } from './segment';
   selector: 'app-segment',
   template: `
     <div
-      class="segment"
+      class="segment-container"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
-      (click)="playVideo()"
-      [matTooltip]="segment.label">
-      <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
-      <span class="mat-body-2 label">{{ segment.label }}</span>
+      (click)="playVideo()">
+      <div class="segment">
+        <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
+        <span class="mat-body-2 label">{{ segment.label }}</span>
+      </div>
+      <div style="position: absolute; right: 0; width: 40px; top: 0; height: 30px; background: red">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </div>
     </div>
-    <button mat-icon-button>
-      <mat-icon>arrow_down</mat-icon>
-    </button>
   `,
   styles: [
     `
-      .segment {
+      .segment-container {
+        position: absolute;
         height: 30px;
+      }
+
+      .segment {
+        width: 100%;
+        height: 100%;
         background: lightblue;
         color: white;
-        position: absolute;
         display: flex;
         justify-content: center;
 
