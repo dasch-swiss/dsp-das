@@ -31,8 +31,9 @@ export class SegmentsDisplayComponent implements OnChanges {
 
       const canBeInLastRow = segmentsFromLastRow.reduce((prev_, current_) => {
         return (
-          currentValue.hasSegmentBounds.start >= current_.segment.hasSegmentBounds.end ||
-          currentValue.hasSegmentBounds.end <= current_.segment.hasSegmentBounds.start
+          (currentValue.hasSegmentBounds.start >= current_.segment.hasSegmentBounds.end ||
+            currentValue.hasSegmentBounds.end <= current_.segment.hasSegmentBounds.start) &&
+          prev_
         );
       }, true);
 

@@ -173,8 +173,7 @@ OFFSET 0
             .filter(prop => !prop.propDef['isLinkProperty'])
             .filter(prop => prop.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue');
 
-          const segment = { ...mappedObject, label: resource.label, resource: dspResource } as Segment;
-          return { segment, resource: dspResource };
+          return { ...mappedObject, label: resource.label, resource: dspResource } as Segment;
         });
       })
     );
