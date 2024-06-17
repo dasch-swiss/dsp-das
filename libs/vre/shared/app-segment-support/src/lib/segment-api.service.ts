@@ -36,6 +36,32 @@ export class SegmentApiService {
     description?: string,
     keyword?: string
   ) {
+    return this.createSegment(
+      'VideoSegment',
+      resourceIri,
+      projectIri,
+      label,
+      start,
+      end,
+      comment,
+      title,
+      description,
+      keyword
+    );
+  }
+
+  createSegment(
+    type: 'VideoSegment' | 'AudioSegment',
+    resourceIri: string,
+    projectIri: string,
+    label: string,
+    start: number,
+    end: number,
+    comment?: string,
+    title?: string,
+    description?: string,
+    keyword?: string
+  ) {
     const bearerToken = this._accessTokenService.getAccessToken();
     const headerOptions = {
       headers: new HttpHeaders({
@@ -44,15 +70,17 @@ export class SegmentApiService {
       }),
     };
 
+    const parameterType = `http://api.knora.org/ontology/knora-api/v2#is${type}OfValue`;
+
     return this._http.post(
       `${this._appConfig.dspApiConfig.apiUrl}/v2/resources`,
       {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#VideoSegment',
+        '@type': `http://api.knora.org/ontology/knora-api/v2#${type}`,
         'http://www.w3.org/2000/01/rdf-schema#label': label,
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
           '@id': projectIri,
         },
-        'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue': {
+        [parameterType]: {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
           'http://api.knora.org/ontology/knora-api/v2#linkValueHasTargetIri': {
             '@id': resourceIri,
