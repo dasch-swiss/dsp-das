@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
+import { SegmentsService } from './segments.service';
 
 @Component({
   selector: 'app-segment',
@@ -8,12 +9,16 @@ import { Segment } from './segment';
     <div
       class="segment-container"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
-      (click)="playVideo()">
-      <div class="segment">
+      (mouseenter)="showHover = true"
+      (mouseleave)="showHover = false">
+      <div class="segment" (click)="playVideo()">
         <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
         <span class="mat-body-2 label">{{ segment.label }}</span>
       </div>
-      <div style="position: absolute; right: 0; width: 40px; top: 0; height: 30px; background: red">
+      <div
+        style="position: absolute; right: -40px; width: 40px; top: 0; height: 30px; background: black; color: white"
+        *ngIf="showHover"
+        (click)="segmentsSevice.highlightSegment(segment)">
         <mat-icon>keyboard_arrow_down</mat-icon>
       </div>
     </div>
@@ -23,6 +28,7 @@ import { Segment } from './segment';
       .segment-container {
         position: absolute;
         height: 30px;
+        cursor: pointer;
       }
 
       .segment {
@@ -34,7 +40,6 @@ import { Segment } from './segment';
         justify-content: center;
 
         align-items: center;
-        cursor: pointer;
         overflow: hidden;
 
         &:hover {
@@ -57,13 +62,18 @@ export class SegmentComponent implements OnInit {
 
   width!: number;
   start!: number;
+  showHover = false;
+
   readonly rowHeight = 40;
 
   readonly segmentRightMargin = 0.2;
 
   play = false;
 
-  constructor(public _mediaControl: MediaControlService) {}
+  constructor(
+    public mediaControl: MediaControlService,
+    public segmentsSevice: SegmentsService
+  ) {}
 
   ngOnInit() {
     this.width =
@@ -73,7 +83,7 @@ export class SegmentComponent implements OnInit {
   }
 
   playVideo() {
-    this._mediaControl.playMedia(this.segment.hasSegmentBounds.start);
+    this.mediaControl.playMedia(this.segment.hasSegmentBounds.start);
     this.play = !this.play;
   }
 }

@@ -59,6 +59,7 @@ export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
   selectedTab = 0;
   resourceProperties!: PropertyInfoValues[];
   annotationTabSelected = false;
+  segmentTabSelected = false;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -81,6 +82,12 @@ export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this._highlightAnnotationFromUri();
+
+    this.segmentsService.highlightSegment$.subscribe(segment => {
+      if (segment) {
+        this.selectedTab = 1;
+      }
+    });
   }
 
   ngOnChanges() {

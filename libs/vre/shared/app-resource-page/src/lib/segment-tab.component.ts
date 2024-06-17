@@ -1,17 +1,51 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
+import { Segment, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-segment-tab',
-  template: ` <app-properties-display
-    *ngFor="let resource of segmentsService.resources"
-    [resource]="resource"
-    [properties]="resource.resProps"
-    [displayLabel]="true" />`,
+  template: ` <div
+    *ngFor="let segment of segmentsService.segments"
+    [id]="segment.resource.res.id"
+    [class.active]="segment === selectedSegment">
+    <app-properties-display
+      [resource]="segment.resource"
+      [properties]="segment.resource.resProps"
+      [displayLabel]="true" />
+  </div>`,
+  styles: ['.active {border: 1px solid}'],
 })
-export class SegmentTabComponent {
+export class SegmentTabComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
 
+  selectedSegment: Segment | null = null;
+  subscription!: Subscription;
+
   constructor(public segmentsService: SegmentsService) {}
+
+  ngOnInit() {
+    this.subscription = this.segmentsService.highlightSegment$
+      .pipe(
+        delay(100) // delay in order to let time to change tab and then scroll
+      )
+      .subscribe(segment => {
+        this.selectedSegment = segment;
+        if (segment !== null) {
+          this._openSegment(segment.resource.res.id);
+        }
+      });
+  }
+
+  private _openSegment(iri: string) {
+    document.getElementById(iri)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

@@ -8,7 +8,7 @@ interface SegmentWithRow {
 
 @Component({
   selector: 'app-segments-display',
-  template: ` <div style="position: relative; overflow: hidden" [ngStyle]="{ height: height + 'px' }">
+  template: ` <div style="position: relative" [ngStyle]="{ height: height + 'px' }">
     <app-segment
       *ngFor="let segment of segmentsWithRow"
       [segment]="segment.segment"
