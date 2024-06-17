@@ -160,6 +160,10 @@ export class SegmentApiService {
   }
 
   getVideoSegment(resourceIri: string) {
+    return this.getSegment('VideoSegment', resourceIri);
+  }
+
+  getSegment(type: 'VideoSegment' | 'AudioSegment', resourceIri: string) {
     const payload = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -167,7 +171,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 CONSTRUCT {
   ?segment knora-api:isMainResource true .
-  ?segment knora-api:isVideoSegmentOf <${resourceIri}> .
+  ?segment knora-api:is${type}Of <${resourceIri}> .
   ?segment knora-api:hasSegmentBounds ?bounds .
   ?segment knora-api:hasTitle ?title .
   ?segment knora-api:hasDescription ?description .
@@ -175,8 +179,8 @@ CONSTRUCT {
   ?segment knora-api:hasComment ?comment .
   ?segment knora-api:relatesTo ?relatesTo .
 } WHERE {
-  <${resourceIri}> a knora-api:MovingImageRepresentation .
-  ?segment knora-api:isVideoSegmentOf <${resourceIri}> .
+  <${resourceIri}> a knora-api:${type === 'VideoSegment' ? 'MovingImageRepresentation' : 'AudioRepresentation'} .
+  ?segment knora-api:is${type}Of <${resourceIri}> .
   ?segment rdfs:label ?label .
   ?segment knora-api:hasSegmentBounds ?bounds
 
@@ -207,7 +211,7 @@ OFFSET 0
         return (value as ReadResourceSequence).resources.map(resource => {
           const data = {
             hasSegmentBounds: resource.properties[`${endpoint}hasSegmentBounds`] as ReadIntervalValue[],
-            hasVideoSegmentOfValue: resource.properties[`${endpoint}hasVideoSegmentOfValue`] as
+            [`has${type}OfValue`]: resource.properties[`${endpoint}has${type}OfValue`] as
               | ReadTextValueAsString[]
               | undefined,
             hasComment: resource.properties[`${endpoint}hasComment`] as ReadTextValueAsString[] | undefined,
@@ -225,7 +229,7 @@ OFFSET 0
           dspResource.resProps = Common.initProps(resource);
           dspResource.resProps = dspResource.resProps
             .filter(prop => !prop.propDef['isLinkProperty'])
-            .filter(prop => prop.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue');
+            .filter(prop => prop.propDef.id !== `http://api.knora.org/ontology/knora-api/v2#is${type}OfValue`);
 
           return { ...mappedObject, label: resource.label, resource: dspResource, row: 0 } as Segment;
         });
