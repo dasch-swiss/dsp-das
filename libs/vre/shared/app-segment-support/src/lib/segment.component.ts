@@ -11,12 +11,15 @@ import { SegmentsService } from './segments.service';
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false">
-      <div class="segment" (click)="playVideo()">
+      <div class="segment" (click)="playVideo()" [matTooltip]="segment.label">
         <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
         <span class="mat-body-2 label">{{ segment.label }}</span>
       </div>
       <div
-        style="position: absolute; right: -40px; width: 40px; top: 0; height: 30px; background: black; color: white"
+        style="position: absolute; right: -40px; width: 40px; top: 0; height: 30px; background: black; color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;"
         *ngIf="showHover"
         (click)="segmentsSevice.highlightSegment(segment)">
         <mat-icon>keyboard_arrow_down</mat-icon>

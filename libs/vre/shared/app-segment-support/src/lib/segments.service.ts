@@ -18,7 +18,7 @@ export class SegmentsService {
 
   getVideoSegment(resourceIri: string) {
     this._segmentApi.getVideoSegment(resourceIri).subscribe(value => {
-      this.segments = value;
+      this.segments = value.reverse();
     });
   }
 
