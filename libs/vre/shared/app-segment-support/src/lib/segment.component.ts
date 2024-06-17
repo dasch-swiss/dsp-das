@@ -9,7 +9,7 @@ import { SegmentsService } from './segments.service';
     <div
       class="segment-container"
       #segmentContainer
-      [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
+      [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false">
       <div class="segment" (click)="playVideo()" [matTooltip]="segment.label">
@@ -27,7 +27,6 @@ import { SegmentsService } from './segments.service';
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;
-  @Input({ required: true }) row!: number;
   @Input({ required: true }) videoLengthSecs!: number;
 
   @ViewChild('segmentContainer') myElement!: ElementRef;

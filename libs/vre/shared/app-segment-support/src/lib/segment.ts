@@ -3,6 +3,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 export interface Segment {
   resource: DspResource;
+  row: number;
   label: string;
   hasSegmentBounds: ReadIntervalValue;
   hasVideoSegmentOfValue: ReadLinkValue | undefined;

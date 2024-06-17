@@ -11,6 +11,7 @@ import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { map } from 'rxjs/operators';
 import { Segment } from './segment';
+import { SegmentOrdering } from './segment-ordering';
 
 @Injectable({
   providedIn: 'root',
@@ -173,9 +174,10 @@ OFFSET 0
             .filter(prop => !prop.propDef['isLinkProperty'])
             .filter(prop => prop.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#isVideoSegmentOfValue');
 
-          return { ...mappedObject, label: resource.label, resource: dspResource } as Segment;
+          return { ...mappedObject, label: resource.label, resource: dspResource, row: 0 } as Segment;
         });
-      })
+      }),
+      map(v => SegmentOrdering.createSegment(v))
     );
   }
 }
