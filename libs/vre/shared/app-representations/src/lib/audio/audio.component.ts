@@ -16,6 +16,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
+  MediaControlService,
   SegmentsService,
 } from '@dasch-swiss/vre/shared/app-segment-support';
 import { mergeMap } from 'rxjs/operators';
@@ -26,6 +27,7 @@ import { RepresentationService } from '../representation.service';
   selector: 'app-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss'],
+  providers: [MediaControlService],
 })
 export class AudioComponent implements OnInit, AfterViewInit {
   @Input() src: FileRepresentation;
@@ -64,9 +66,13 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
     this.loaded.subscribe(value => {
       if (value) {
-        this.duration = this.getDuration();
+        setTimeout(() => {
+          this.duration = this.getDuration();
+        }, 5000);
       }
     });
+
+    this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
   }
 
   ngAfterViewInit() {
@@ -150,6 +156,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   getDuration() {
     const player = document.getElementById('audio') as HTMLAudioElement;
+    console.log(player, player.duration);
     return player.duration;
   }
 

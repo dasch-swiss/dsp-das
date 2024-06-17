@@ -112,7 +112,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(): void {
-    this.segmentsService.onInit(this.parentResource.id);
+    this.segmentsService.onInit(this.parentResource.id, 'VideoSegment');
 
     this.videoError = '';
     // set the file info first bc. browsers might queue and block requests

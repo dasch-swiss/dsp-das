@@ -67,9 +67,11 @@
   </div>
 </div>
 
-<app-segments-display
-  *ngIf="segmentsService.segments.length > 0 && duration > 0"
-  [segments]="segmentsService.segments"
-  [videoLengthSecs]="duration" />
+<div style="background: red; position: relative; top: 160px; z-index: 2">
+  <app-segments-display
+    *ngIf="segmentsService.segments.length > 0 && duration > 0"
+    [segments]="segmentsService.segments"
+    [videoLengthSecs]="duration" />
 
-<button (click)="createAudioSegment()" style="position: relative; z-index: 1">CREATE</button>
+  <button (click)="createAudioSegment()" style="position: relative; z-index: 1">CREATE</button>
+</div>

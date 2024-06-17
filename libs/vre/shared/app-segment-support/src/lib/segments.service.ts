@@ -12,12 +12,12 @@ export class SegmentsService {
 
   constructor(private _segmentApi: SegmentApiService) {}
 
-  onInit(resourceIri: string) {
-    this.getVideoSegment(resourceIri);
+  onInit(resourceIri: string, type: 'VideoSegment' | 'AudioSegment') {
+    this.getSegment(resourceIri, type);
   }
 
-  getVideoSegment(resourceIri: string) {
-    this._segmentApi.getVideoSegment(resourceIri).subscribe(value => {
+  getSegment(resourceIri: string, type: 'VideoSegment' | 'AudioSegment') {
+    this._segmentApi.getSegment(type, resourceIri).subscribe(value => {
       this.segments = value;
     });
   }

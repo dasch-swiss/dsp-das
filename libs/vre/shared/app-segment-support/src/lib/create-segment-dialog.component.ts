@@ -82,7 +82,7 @@ export class CreateSegmentDialogComponent {
         formValue.keywords.length > 0 ? formValue.keywords.join(' ') : undefined
       )
       .subscribe(() => {
-        this._segmentsService.getVideoSegment(this.data.resource.id);
+        this._segmentsService.getSegment(this.data.resource.id, this.data.type);
         this._dialogRef.close();
       });
   }
