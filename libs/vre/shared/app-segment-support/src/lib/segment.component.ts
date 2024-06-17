@@ -8,9 +8,10 @@ import { Segment } from './segment';
     <div
       class="segment"
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
-      (click)="playVideo()">
-      <mat-icon style="margin-right: 4px">play_circle</mat-icon>
-      <span class="mat-body-2">{{ segment.label }}</span>
+      (click)="playVideo()"
+      [matTooltip]="segment.label">
+      <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
+      <span class="mat-body-2 label">{{ segment.label }}</span>
     </div>
     <button mat-icon-button>
       <mat-icon>arrow_down</mat-icon>
@@ -33,6 +34,12 @@ import { Segment } from './segment';
         &:hover {
           background: #9fd6e8;
         }
+      }
+
+      .label {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     `,
   ],
