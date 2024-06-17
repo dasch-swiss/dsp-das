@@ -86,7 +86,7 @@ export class SegmentComponent implements OnInit {
   }
 
   playVideo() {
-    this.mediaControl.playMedia(this.segment.hasSegmentBounds.start);
+    this.mediaControl.playMedia(this.segment.hasSegmentBounds.start, this.segment.hasSegmentBounds.end);
     this.play = !this.play;
   }
 }

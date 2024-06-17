@@ -19,8 +19,8 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
-  SegmentsService,
   MediaControlService,
+  SegmentsService,
 } from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
@@ -78,6 +78,8 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   readonly timeScrollStep = 25;
 
+  watchForPause: number | null = null;
+
   constructor(
     private _sanitizer: DomSanitizer,
     private _dialog: MatDialog,
@@ -102,6 +104,10 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
       }
       this._navigate(seconds);
       this.playVideo();
+    });
+
+    this._mediaControl.watchForPause$.subscribe(seconds => {
+      this.watchForPause = seconds;
     });
   }
 
@@ -167,6 +173,12 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
     while (!(bf.start(range) <= this.currentTime && this.currentTime <= bf.end(range))) {
       range += 1;
+    }
+
+    if (this.watchForPause !== null && this.watchForPause === Math.floor(this.currentTime)) {
+      this.pauseVideo();
+      this.watchForPause = null;
+      return;
     }
 
     if (this.currentTime === this.duration && this.play) {
