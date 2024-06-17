@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
@@ -8,60 +8,29 @@ import { SegmentsService } from './segments.service';
   template: `
     <div
       class="segment-container"
+      #segmentContainer
       [ngStyle]="{ width: width + '%', left: start + '%', top: row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false">
       <div class="segment" (click)="playVideo()" [matTooltip]="segment.label">
         <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
-        <span class="mat-body-2 label">{{ segment.label }}</span>
+        <span class="mat-body-2 label" *ngIf="myElement && myElement.nativeElement.offsetWidth > 100">{{
+          segment.label
+        }}</span>
       </div>
-      <div
-        style="position: absolute; right: -40px; width: 40px; top: 0; height: 30px; background: black; color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;"
-        *ngIf="showHover"
-        (click)="segmentsSevice.highlightSegment(segment)">
-        <mat-icon>keyboard_arrow_down</mat-icon>
+      <div class="hover-button" style="" *ngIf="showHover" (click)="segmentsSevice.highlightSegment(segment)">
+        <mat-icon>arrow_downward</mat-icon>
       </div>
     </div>
   `,
-  styles: [
-    `
-      .segment-container {
-        position: absolute;
-        height: 30px;
-        cursor: pointer;
-      }
-
-      .segment {
-        width: 100%;
-        height: 100%;
-        background: lightblue;
-        color: white;
-        display: flex;
-        justify-content: center;
-
-        align-items: center;
-        overflow: hidden;
-
-        &:hover {
-          background: #9fd6e8;
-        }
-      }
-
-      .label {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-    `,
-  ],
+  styleUrls: ['./segment.component.scss'],
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;
   @Input({ required: true }) row!: number;
   @Input({ required: true }) videoLengthSecs!: number;
+
+  @ViewChild('segmentContainer') myElement!: ElementRef;
 
   width!: number;
   start!: number;
