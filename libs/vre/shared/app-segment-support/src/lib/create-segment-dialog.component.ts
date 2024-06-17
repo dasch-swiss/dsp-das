@@ -20,7 +20,10 @@ export interface CreateSegmentDialogProps {
       <app-time-input label="End" [control]="form.controls.end" data-cy="end-input" />
       <app-common-input label="Title" [control]="form.controls.title" data-cy="title-input" />
       <app-common-input label="Description" [control]="form.controls.description" data-cy="description-input" />
-      <app-common-input label="Keyword" [control]="form.controls.keyword" data-cy="keyword-input" />
+      <app-chip-list-input
+        [formArray]="form.controls.keywords"
+        data-cy="keywords-input"
+        [validators]="keywordsValidators" />
       <app-common-input label="Comment" [control]="form.controls.comment" data-cy="comment-input" />
     </div>
     <div mat-dialog-actions align="end">
@@ -40,6 +43,8 @@ export interface CreateSegmentDialogProps {
 export class CreateSegmentDialogComponent {
   loading = false;
 
+  readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
+
   form = this._fb.group({
     label: ['', Validators.required],
     start: [0, [Validators.required, Validators.min(0)]],
@@ -47,7 +52,7 @@ export class CreateSegmentDialogComponent {
     title: null as string | null,
     description: null as string | null,
     comment: null as string | null,
-    keyword: null as string | null,
+    keywords: this._fb.array([], this.keywordsValidators),
   });
 
   constructor(
@@ -72,7 +77,7 @@ export class CreateSegmentDialogComponent {
         formValue.comment ?? undefined,
         formValue.title ?? undefined,
         formValue.description ?? undefined,
-        formValue.keyword ?? undefined
+        formValue.keywords.length > 0 ? formValue.keywords.join(' ') : undefined
       )
       .subscribe(() => {
         this._segmentsService.getVideoSegment(this.data.resource.id);
