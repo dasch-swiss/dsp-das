@@ -56,7 +56,7 @@ import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { ProjectBase } from '../project-base';
 import {
   CreateResourceClassDialogComponent,
@@ -198,6 +198,7 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
 
     const projectOntologies = this._store.selectSnapshot(OntologiesSelectors.projectOntologies);
     if (
+      !this._store.selectSnapshot(OntologiesSelectors.isLoading) &&
       currentProject.ontologies.length > 0 &&
       (!projectOntologies[this.projectIri] || projectOntologies[this.projectIri].readOntologies.length === 0)
     ) {
@@ -547,7 +548,10 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
 
   private setTitle() {
     combineLatest([ProjectBase.navigationEndFilter(this._router.events), this.project$, this.currentOntology$])
-      .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        takeWhile(([currentOntology]) => currentOntology)
+      )
       .subscribe(([event, project, currentOntology]) => {
         this._titleService.setTitle(`Project ${project?.shortname} | Data model ${currentOntology.id ? '' : 's'}`);
       });
