@@ -25,7 +25,7 @@ export class SegmentApiService {
     private _appConfig: AppConfigService
   ) {}
 
-  create(
+  createVideoSegment(
     resourceIri: string,
     projectIri: string,
     label: string,
