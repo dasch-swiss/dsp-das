@@ -125,11 +125,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
 
     if (this.resClass.labels) {
       const label = this.resClass.labels.find(l => l.language === prefferedLanguage);
-      if (label) {
-        this.ontologiesLabel = label.value;
-      } else {
-        this.ontologiesLabel = this.resClass.labels[0].value;
-      }
+      this.ontologiesLabel = label ? label.value : this.resClass.labels[0].value;
     }
   }
 
