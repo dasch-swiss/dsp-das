@@ -43,7 +43,7 @@ export class ResourceFetcherService {
     return this._dspApiConnection.v2.res.getResource(this._resourceIri).pipe(
       map(response => {
         const res = new DspResource(response as ReadResource);
-        res.resProps = Common.initProps(res.res);
+        res.resProps = Common.newInitProps(res.res);
 
         console.log(
           'fetcher works',

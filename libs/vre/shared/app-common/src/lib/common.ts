@@ -50,4 +50,10 @@ export class Common {
 
     return props;
   }
+
+  public static newInitProps(resource: ReadResource) {
+    return this.initProps(resource)
+      .filter(prop => !prop.propDef['isLinkProperty'])
+      .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
+  }
 }
