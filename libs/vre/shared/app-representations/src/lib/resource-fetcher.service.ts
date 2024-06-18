@@ -45,12 +45,6 @@ export class ResourceFetcherService {
         const res = new DspResource(response as ReadResource);
         res.resProps = GenerateProperty.commonProperty(res.res);
 
-        console.log(
-          'fetcher works',
-          res.resProps.map(v => {
-            return { l: v.propDef.objectType };
-          })
-        );
         // gather system property information
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
         this._store.dispatch(new SetCurrentResourceAction(res));
