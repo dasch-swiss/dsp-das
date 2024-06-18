@@ -6,9 +6,20 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from './property-info-values.interface';
 
-export class Common {
-  /** gather propoerties information */
-  public static initProps(resource: ReadResource): PropertyInfoValues[] {
+export class GenerateProperty {
+  public static commonProperty(resource: ReadResource) {
+    return this._initProps(resource)
+      .filter(prop => !prop.propDef['isLinkProperty'])
+      .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
+  }
+
+  public static regionProperty(resource: ReadResource) {
+    return this._initProps(resource).filter(
+      v => v.propDef.objectType !== 'http://api.knora.org/ontology/knora-api/v2#Representation'
+    );
+  }
+
+  private static _initProps(resource: ReadResource): PropertyInfoValues[] {
     let props = resource.entityInfo.classes[resource.type]
       .getResourcePropertiesList()
       .map((prop: IHasPropertyWithPropertyDefinition) => {
@@ -49,11 +60,5 @@ export class Common {
       });
 
     return props;
-  }
-
-  public static newInitProps(resource: ReadResource) {
-    return this.initProps(resource)
-      .filter(prop => !prop.propDef['isLinkProperty'])
-      .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'));
   }
 }
