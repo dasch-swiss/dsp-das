@@ -37,7 +37,7 @@ import { map, takeUntil } from 'rxjs/operators';
 export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDestroy {
   destroyed: Subject<void> = new Subject<void>();
 
-  @Input() resClass: ResourceClassDefinitionWithAllLanguages;
+  @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
   @Input() projectMember: boolean;
 
@@ -67,6 +67,8 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     },
   };
 
+  ontologiesLabel: string;
+
   @Select(OntologyClassSelectors.classItems) classItems$: Observable<IClassItemsKeyValuePairs>;
 
   constructor(
@@ -89,6 +91,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     const ontologyName = OntologyService.getOntologyName(splitIri[0]);
     this.classLink = `${RouteConstants.projectRelative}/${uuid}/${RouteConstants.ontology}/${ontologyName}/${splitIri[1]}`;
     this.icon = this._getIcon();
+    this.getOntologiesLabelsInPreferredLanguage();
   }
 
   ngAfterViewInit(): void {
@@ -102,22 +105,6 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
     this.destroyed.complete();
   }
 
-  displayOntologyLabelsInPreferredLanguage(): string {
-    let prefferedLanguage: string;
-    this._store.select(UserSelectors.language).subscribe(l => {
-      prefferedLanguage = l;
-    });
-
-    if (this.resClass.labels) {
-      const label = this.resClass.labels.find(l => l.language === prefferedLanguage);
-      if (label) {
-        return label.value;
-      } else {
-        return this.resClass.labels[0].value;
-      }
-    }
-  }
-
   selectItem() {
     this._componentCommsService.emit(new EmitEvent(Events.unselectedListItem));
   }
@@ -125,6 +112,24 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
   isTextOverflowing(element: HTMLElement): boolean {
     if (element) {
       return element.scrollHeight > element.clientHeight;
+    }
+  }
+
+  /**
+   * Gets the ontology label in the preferred language of the user
+   */
+  private getOntologiesLabelsInPreferredLanguage(): void {
+    // TODO: this method and changes in below PR are workourund, the label selection should be invastigated deeper to find out why DE is set as default
+    // https://github.com/dasch-swiss/dsp-das/pull/1651
+    const prefferedLanguage = this._store.selectSnapshot(UserSelectors.language);
+
+    if (this.resClass.labels) {
+      const label = this.resClass.labels.find(l => l.language === prefferedLanguage);
+      if (label) {
+        this.ontologiesLabel = label.value;
+      } else {
+        this.ontologiesLabel = this.resClass.labels[0].value;
+      }
     }
   }
 
