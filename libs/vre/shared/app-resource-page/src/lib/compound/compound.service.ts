@@ -77,6 +77,12 @@ export class CompoundService {
       incomingResource.systemProps =
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
+      console.log(
+        'compound',
+        incomingResource.resProps.map(v => {
+          return { l: v.propDef.objectType };
+        })
+      );
       this.incomingResource = incomingResource;
       this._regionService.onInit(incomingResource);
       this._cd.markForCheck();
