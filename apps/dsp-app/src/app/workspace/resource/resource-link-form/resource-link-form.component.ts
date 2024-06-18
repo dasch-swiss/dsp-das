@@ -63,9 +63,16 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     this._store.select(UserSelectors.isSysAdmin),
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
-    map(([currentProject, currentUserProjects, isSysAdmin]) => [
-      isSysAdmin ? currentProject : currentUserProjects.find(x => x.id === currentProject.id),
-    ])
+    map(([currentProject, currentUserProjects, isSysAdmin]) => {
+      const projects = isSysAdmin
+        ? currentProject
+          ? [currentProject]
+          : currentUserProjects
+        : currentProject
+          ? currentUserProjects.find(x => x.id === currentProject.id)
+          : currentUserProjects;
+      return projects as StoredProject[];
+    })
   );
 
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
