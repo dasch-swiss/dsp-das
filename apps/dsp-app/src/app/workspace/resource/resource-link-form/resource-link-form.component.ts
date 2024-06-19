@@ -64,13 +64,11 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
     map(([currentProject, currentUserProjects, isSysAdmin]) => {
-      const projects = isSysAdmin
-        ? currentProject
+      const projects = currentProject
+        ? isSysAdmin
           ? [currentProject]
-          : currentUserProjects
-        : currentProject
-          ? currentUserProjects.find(x => x.id === currentProject.id)
-          : currentUserProjects;
+          : currentUserProjects.find(x => x.id === currentProject.id)
+        : currentUserProjects;
       return projects as StoredProject[];
     })
   );
