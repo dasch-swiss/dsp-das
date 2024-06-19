@@ -49,11 +49,18 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
-      <mat-slide-toggle
-        *ngIf="displayMode"
-        [disabled]="displayMode"
-        [(ngModel)]="item.value"
-        data-cy="bool-toggle"></mat-slide-toggle>
+      <mat-icon
+        *ngIf="displayMode && item.value"
+        [title]="'appLabels.uiControls.icon.true' | translate"
+        class="material-icons-outlined"
+        >toggle_off</mat-icon
+      >
+      <mat-icon
+        *ngIf="displayMode && !item.value"
+        [title]="'appLabels.uiControls.icon.false' | translate"
+        class="material-icons-outlined"
+        >toggle_on</mat-icon
+      >
       <mat-slide-toggle *ngIf="!displayMode" [formControl]="item" data-cy="bool-toggle"></mat-slide-toggle>
     </ng-template>
 
@@ -121,6 +128,11 @@ import { PropertyValueService } from './property-value.service';
   `,
   styles: [
     `
+      .mat-icon {
+        margin: 5px 0 0 10px;
+        transform: scale(-1.5, 1.5);
+      }
+
       mat-form-field {
         width: 100%;
       }
