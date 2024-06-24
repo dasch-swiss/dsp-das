@@ -11,10 +11,10 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { mergeMap } from 'rxjs/operators';
-import { ResourceUtil } from '../../../../app-common/src/lib/resource.util';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 
