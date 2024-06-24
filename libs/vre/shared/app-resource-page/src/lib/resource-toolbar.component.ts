@@ -21,6 +21,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
+import { ResourceUtil } from 'dsp-app/libs/vre/shared/app-common/src/lib/resource.util';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -158,9 +159,15 @@ export class ResourceToolbarComponent implements OnInit {
   @Input() lastModificationDate!: string;
   @Input() linkToNewTab?: string;
 
-  userCanDelete!: boolean;
-  userCanEdit!: boolean;
   canReadComments!: boolean;
+
+  get userCanEdit() {
+    return ResourceUtil.isEditableByUser(this.resource.res);
+  }
+
+  get userCanDelete() {
+    return ResourceUtil.isDeletableByUser(this.resource.res);
+  }
 
   constructor(
     private _notification: NotificationService,
@@ -176,17 +183,6 @@ export class ResourceToolbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.resource.res) {
-      // get user permissions
-      const allPermissions = PermissionUtil.allUserPermissions(
-        this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
-      );
-
-      this.canReadComments = true; // allPermissions.indexOf(PermissionUtil.Permissions.RV) === -1; // TODO permissions to show comments should be provided
-      // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
-      this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-      this.userCanDelete = allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
-    }
     if (!this.attachedProject && this.resource.res.attachedToProject) {
       this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
         this.attachedProject = res.project as ReadProject;

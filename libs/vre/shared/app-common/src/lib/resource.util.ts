@@ -1,8 +1,13 @@
-import { PermissionUtil, ReadResource } from '@dasch-swiss/dsp-js';
+import { PermissionUtil, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 
 export class ResourceUtil {
-  public static isEditableByUser(resource: ReadResource) {
-    const permissions = PermissionUtil.allUserPermissions(resource.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
+  public static isEditableByUser(instance: ReadResource | ReadValue) {
+    const permissions = PermissionUtil.allUserPermissions(instance.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
     return permissions.indexOf(PermissionUtil.Permissions.M) !== -1;
+  }
+
+  public static isDeletableByUser(instance: ReadResource | ReadValue) {
+    const permissions = PermissionUtil.allUserPermissions(instance.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR');
+    return permissions.indexOf(PermissionUtil.Permissions.D) !== -1;
   }
 }
