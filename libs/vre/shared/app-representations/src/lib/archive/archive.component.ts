@@ -13,6 +13,7 @@ import {
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { mergeMap } from 'rxjs/operators';
+import { ResourceUtil } from '../../../../app-common/src/lib/resource.util';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 
@@ -31,6 +32,10 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   originalFilename: string;
 
   failedToLoad = false;
+
+  get usercanEdit() {
+    return ResourceUtil.isEditableByUser(this.parentResource);
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)

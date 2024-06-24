@@ -36,6 +36,7 @@ import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { ResourceUtil } from '../../../../app-common/src/lib/resource.util';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
 import { RegionService } from '../region.service';
@@ -68,21 +69,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     return this.parentResource.id;
   }
 
-  get attachedToProjectResource() {
-    return this.parentResource.attachedToProject;
+  get usercanEdit() {
+    return ResourceUtil.isEditableByUser(this.resource.res);
   }
-
-  isEditor$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-  editorPermissions = false;
 
   imagesSub: Subscription | undefined;
   fileInfoSub: Subscription | undefined;
@@ -124,10 +113,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this._setupViewer();
     this._loadImages();
-
-    this.isEditor$.subscribe(isEditor => {
-      this.editorPermissions = isEditor;
-    });
 
     this._regionService.imageIsLoaded$
       .pipe(
