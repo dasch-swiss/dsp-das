@@ -100,7 +100,7 @@ export class ResourceHeaderComponent {
   }
 
   get userCanEdit(): boolean {
-    return ResourceUtil.isEditableByUser(this.resource.res);
+    return ResourceUtil.userCanEdit(this.resource.res);
   }
 
   get attachedToProjectResource(): string {

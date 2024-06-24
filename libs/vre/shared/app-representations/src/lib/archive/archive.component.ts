@@ -34,7 +34,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
   failedToLoad = false;
 
   get usercanEdit() {
-    return ResourceUtil.isEditableByUser(this.parentResource);
+    return ResourceUtil.userCanEdit(this.parentResource);
   }
 
   constructor(

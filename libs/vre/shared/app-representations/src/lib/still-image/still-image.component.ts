@@ -67,7 +67,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get usercanEdit() {
-    return ResourceUtil.isEditableByUser(this.resource.res);
+    return ResourceUtil.userCanEdit(this.resource.res);
   }
 
   imagesSub: Subscription | undefined;

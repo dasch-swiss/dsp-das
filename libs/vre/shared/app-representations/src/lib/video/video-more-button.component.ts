@@ -49,7 +49,7 @@ export class VideoMoreButtonComponent {
   @Input() fileInfo?: MovingImageSidecar;
 
   get usercanEdit() {
-    return ResourceUtil.isEditableByUser(this.resource);
+    return ResourceUtil.userCanEdit(this.resource);
   }
 
   constructor(

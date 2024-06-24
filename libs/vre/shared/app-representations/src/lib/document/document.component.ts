@@ -46,7 +46,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
   fileType: string;
 
   get usercanEdit() {
-    return ResourceUtil.isEditableByUser(this.parentResource);
+    return ResourceUtil.userCanEdit(this.parentResource);
   }
 
   constructor(

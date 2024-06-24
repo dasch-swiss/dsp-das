@@ -161,11 +161,11 @@ export class ResourceToolbarComponent implements OnInit {
   canReadComments!: boolean;
 
   get userCanEdit() {
-    return ResourceUtil.isEditableByUser(this.resource.res);
+    return ResourceUtil.userCanEdit(this.resource.res);
   }
 
   get userCanDelete() {
-    return ResourceUtil.isDeletableByUser(this.resource.res);
+    return ResourceUtil.userCanDelete(this.resource.res);
   }
 
   constructor(

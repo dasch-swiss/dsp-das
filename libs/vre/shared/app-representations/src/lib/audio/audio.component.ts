@@ -36,7 +36,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
   audio: SafeUrl;
 
   get usercanEdit() {
-    return ResourceUtil.isEditableByUser(this.parentResource);
+    return ResourceUtil.userCanEdit(this.parentResource);
   }
 
   constructor(
