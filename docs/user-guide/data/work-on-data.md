@@ -130,7 +130,8 @@ To create a new region on an image, you click on the icon `Draw a region` in the
 
 ![Select a region.](../../assets/images/region_draw.png)*Select a region on the image with the drawing tool.*
 
-Enter the information about the region, an informative label and a description as a comment. You can change the color.
+Enter the information about the region and an informative label. You may also add a description as a comment (optional). You can change the color.
+
 
 ![Fill in the form.](../../assets/images/region_fillin_form.png)*Fill in the form about the selected region.*
 
