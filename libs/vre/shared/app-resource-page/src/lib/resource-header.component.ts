@@ -1,7 +1,7 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PermissionUtil, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
@@ -10,7 +10,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { ResourceUtil } from 'dsp-app/libs/vre/shared/app-common/src/lib/resource.util';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

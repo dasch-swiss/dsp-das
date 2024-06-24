@@ -1,10 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PermissionUtil } from '@dasch-swiss/dsp-js';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ResourceUtil } from '../../../app-common/src/lib/resource.util';
 import { PropertyValueService } from './property-value.service';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor

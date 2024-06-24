@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteResourceResponse, PermissionUtil, ReadProject } from '@dasch-swiss/dsp-js';
+import { DeleteResourceResponse, ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
-import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import {
   Events as CommsEvents,
   ComponentCommunicationEventService,
@@ -21,7 +21,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { ResourceUtil } from 'dsp-app/libs/vre/shared/app-common/src/lib/resource.util';
 import { filter } from 'rxjs/operators';
 
 @Component({
