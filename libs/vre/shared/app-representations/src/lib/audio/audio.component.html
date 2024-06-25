@@ -13,6 +13,7 @@
     <input matSliderThumb />
   </mat-slider>
 </mat-toolbar-row>
+<app-audio-toolbar [parentResource]="parentResource" />
 
 <app-segments-display
   *ngIf="segmentsService.segments.length > 0 && duration > 0"

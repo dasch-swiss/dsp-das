@@ -1,6 +1,6 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from '@dasch-swiss/vre/shared/app-segment-support';
 import { AudioPlayerService } from './audio-player.service';
@@ -31,7 +31,7 @@ import { AudioPlayerService } from './audio-player.service';
   `,
 })
 export class AudioToolbarComponent {
-  @Input({ required: true }) parentResource!: DspResource;
+  @Input({ required: true }) parentResource!: ReadResource;
 
   constructor(
     private _dialog: MatDialog,
@@ -43,8 +43,8 @@ export class AudioToolbarComponent {
     this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
       ...DspDialogConfig.dialogDrawerConfig({
         type: 'AudioSegment',
-        resource: this.parentResource.res,
-        videoDurationSecs: this.audioPlayesr.duration(),
+        resource: this.parentResource,
+        videoDurationSecs: this.audioPlayer.duration(),
       }),
       viewContainerRef: this._viewContainerRef,
     });

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { FileRepresentation } from '../file-representation';
@@ -29,10 +28,6 @@ export class AudioComponent implements OnInit, AfterViewInit {
   duration = 0;
   watchForPause?: number;
 
-  get userCanEdit() {
-    return ResourceUtil.userCanEdit(this.parentResource);
-  }
-
   constructor(
     private _sanitizer: DomSanitizer,
     public segmentsService: SegmentsService,
@@ -43,8 +38,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this._watchForMediaEvents();
-    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+    this._watchForMediaEvents();src
+    this.audio = this._sanitizer.bypassSecurityTrustUrl(this..fileValue.fileUrl);
     this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
 
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(

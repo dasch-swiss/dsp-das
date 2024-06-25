@@ -10,10 +10,12 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { mergeMap } from 'rxjs/operators';
+import { FileRepresentation } from '../file-representation';
+import { getFileValue } from '../get-file-value';
 import { RepresentationService } from '../representation.service';
 
 @Component({
@@ -29,7 +31,15 @@ import { RepresentationService } from '../representation.service';
     </mat-menu>`,
 })
 export class AudioMoreButtonComponent {
-  @Input({ required: true }) parentResource!: DspResource;
+  @Input({ required: true }) parentResource!: ReadResource;
+
+  get src() {
+    return new FileRepresentation(getFileValue(new DspResource(this.parentResource))!);
+  }
+
+  get userCanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
 
   constructor(
     private _dialog: MatDialog,
