@@ -9,7 +9,7 @@ import { ValidatorError } from '@dasch-swiss/vre/shared/app-string-literal';
       <mat-label>{{ label }}</mat-label>
       <input matInput [formControl]="control" appTimeFormat placeholder="hh:mm:ss" />
       <mat-error *ngIf="control.errors as errors">
-        {{ errors | humanReadableError: validatorErrors }}
+        {{ errors | humanReadableError: possibleErrors }}
       </mat-error>
     </mat-form-field>
   `,
