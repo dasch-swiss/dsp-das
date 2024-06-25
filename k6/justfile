@@ -1,0 +1,10 @@
+appUrl := "https://app.dev.dasch.swiss"
+
+default:
+    @just --list
+
+first-page-load:
+    APP_URL={{appUrl}} k6 run first-page-load.js
+
+load-resource:
+    APP_URL={{appUrl}} k6 run load-resource.js

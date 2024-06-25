@@ -5,6 +5,6 @@ export class Homepage {
   }
 
   async goto() {
-    await this.page.goto('https://app.dev.dasch.swiss');
+    await this.page.goto(__ENV.APP_URL);
   }
 }
