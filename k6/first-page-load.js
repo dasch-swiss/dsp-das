@@ -1,6 +1,6 @@
 import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
-import { HomePage } from './pages/homepage.js';
+import { Homepage } from './pages/homepage.js';
 
 export const options = {
   cloud: {
@@ -42,12 +42,13 @@ export const options = {
 
 export default async function () {
   const page = browser.newPage();
+  const homepage = new Homepage(page);
 
   try {
-    await page.goto('https://app.dev.dasch.swiss/');
+    await homepage.goto();
     page.screenshot({ path: 'screenshots/screenshot.png' });
-    check(page, {
-      title: p => p.locator('html>head>title').textContent() == 'Projects Overview',
+    check(homepage, {
+      title: p => p.title.textContent() == 'Projects Overview',
     });
   } finally {
     page.close();
