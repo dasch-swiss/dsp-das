@@ -1,6 +1,6 @@
 import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
-import { Homepage } from './pages/homepage.js';
+import { Resourcepage } from './pages/resourcepage.js';
 
 export const options = {
   cloud: {
@@ -44,13 +44,13 @@ export const options = {
 
 export default async function () {
   const page = browser.newPage();
-  const homepage = new Homepage(page);
+  const homepage = new Resourcepage(page);
 
   try {
     await homepage.goto();
-    page.screenshot({ path: 'screenshots/homepage.png' });
+    page.screenshot({ path: 'screenshots/resource-page.png' });
     check(homepage, {
-      title: p => p.title.textContent() == 'Projects Overview',
+      resourcelabel: p => p.rsourcelabel.textContent() == '1723-02-06_Scheuchzer_Johann_Jakob-Bernoulli_Johann_I',
     });
   } finally {
     page.close();
