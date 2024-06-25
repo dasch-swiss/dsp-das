@@ -32,9 +32,9 @@ import { RepresentationService } from '../representation.service';
   providers: [MediaControlService],
 })
 export class AudioComponent implements OnInit, AfterViewInit {
-  @Input() src: FileRepresentation;
+  @Input({ required: true }) src!: FileRepresentation;
 
-  @Input() parentResource: ReadResource;
+  @Input({ required: true }) parentResource!: ReadResource;
 
   @Output() loaded = new EventEmitter<boolean>();
 
@@ -44,7 +44,11 @@ export class AudioComponent implements OnInit, AfterViewInit {
   audio: SafeUrl;
 
   duration = 0;
+  watchForPause?: number;
 
+  get usercanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -241,5 +245,9 @@ export class AudioComponent implements OnInit, AfterViewInit {
         const audioElem = document.getElementById('audio');
         (audioElem as HTMLAudioElement).load();
       });
+  }
+
+  private _navigate(position: number) {
+    (document.getElementById('audio') as HTMLAudioElement).currentTime = position;
   }
 }
