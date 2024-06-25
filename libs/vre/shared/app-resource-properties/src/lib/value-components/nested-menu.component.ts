@@ -1,14 +1,25 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MatMenu } from '@angular/material/menu';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-nested-menu',
   template: `
-    <mat-form-field *ngIf="data.isRootNode" [matMenuTriggerFor]="menu" data-cy="select-list-button" style="width: 100%">
+    <mat-form-field
+      *ngIf="data.isRootNode"
+      #languageMenuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="menu"
+      data-cy="select-list-button"
+      style="width: 100%">
       <mat-label>{{ selection ?? data.label }}</mat-label>
       <mat-select></mat-select>
     </mat-form-field>
-    <div *ngIf="!data.isRootNode" mat-menu-item [matMenuTriggerFor]="menu" style="width: 100%">
+    <div
+      *ngIf="!data.isRootNode"
+      mat-menu-item
+      [matMenuTriggerFor]="menu"
+      style="width: 100%"
+      (click)="selectMenuWithChildren(data)">
       {{ data.label }}
     </div>
     <mat-menu #menu="matMenu">
@@ -40,4 +51,11 @@ export class NestedMenuComponent {
   @Input() data!: ListNodeV2;
   @Input() selection!: string;
   @Output() selectedNode = new EventEmitter<ListNodeV2>();
+
+  @ViewChild(MatMenu) menu!: MatMenu;
+
+  selectMenuWithChildren(node: ListNodeV2) {
+    this.menu.closed.emit('click');
+    this.selectedNode.emit(node);
+  }
 }
