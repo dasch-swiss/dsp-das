@@ -189,7 +189,6 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   getDuration() {
     const player = document.getElementById('audio') as HTMLAudioElement;
-    console.log(player, player.duration);
     return player.duration;
   }
 

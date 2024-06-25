@@ -2,6 +2,10 @@ import { Segment } from './segment';
 
 export class SegmentOrdering {
   static createSegment(segmentsToOrder: Segment[]): Segment[] {
+    if (segmentsToOrder.length === 0) {
+      return [];
+    }
+
     return this.createSegmentRecursive(segmentsToOrder, 0, 0)!;
   }
 
