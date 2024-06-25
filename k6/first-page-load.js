@@ -3,22 +3,34 @@ import { check } from 'k6';
 import { HomePage } from './pages/homepage.js';
 
 export const options = {
-  vus: 10,
   cloud: {
     distribution: {
       distributionLabel1: { loadZone: 'amazon:de:frankfurt', percent: 100 },
     },
   },
   scenarios: {
-    browser: {
+    smokeTest: {
+      // a small test that checks for major issues before spending more time and resources
       executor: 'shared-iterations',
-
-      // executor-specific configuration
       vus: 1,
-      iterations: 200,
-      maxDuration: '5s',
-      tags: { example_tag: 'testing' },
+      iterations: 5,
+      maxDuration: '10s',
 
+      options: {
+        browser: {
+          type: 'chromium',
+        },
+      },
+    },
+    averageLoad: {
+      startTime: '10s',
+      executor: 'ramping-vus',
+      startVUs: 0,
+      stages: [
+        { duration: '20s', target: 9 },
+        { duration: '10s', target: 0 },
+      ],
+      gracefulRampDown: '0s',
       options: {
         browser: {
           type: 'chromium',
