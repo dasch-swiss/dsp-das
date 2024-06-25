@@ -1,5 +1,55 @@
 # Changelog
 
+## [11.12.1](https://github.com/dasch-swiss/dsp-das/compare/v11.12.0...v11.12.1) (2024-06-19)
+
+
+### Bug Fixes
+
+* no duplicates in compound, no isRegionOf property for annotation ([#1657](https://github.com/dasch-swiss/dsp-das/issues/1657)) ([b85f6a4](https://github.com/dasch-swiss/dsp-das/commit/b85f6a4ee0dd4c45b22e2c79f1634f9fe6bf8491))
+* resource link form (DEV-3767) ([#1656](https://github.com/dasch-swiss/dsp-das/issues/1656)) ([43d1edb](https://github.com/dasch-swiss/dsp-das/commit/43d1edbceced151a3048c158729f8b253063bb46))
+
+## [11.12.0](https://github.com/dasch-swiss/dsp-das/compare/v11.11.0...v11.12.0) (2024-06-18)
+
+
+### Enhancements
+
+* displays slide toggle for boolean property (DEV-3752) ([#1648](https://github.com/dasch-swiss/dsp-das/issues/1648)) ([f4d5765](https://github.com/dasch-swiss/dsp-das/commit/f4d5765a4e0e2a50f495452e4f625d81000e8e43))
+
+
+### Bug Fixes
+
+* **dialog:** set height to make dialog scroll ([#1653](https://github.com/dasch-swiss/dsp-das/issues/1653)) ([fb6a9d6](https://github.com/dasch-swiss/dsp-das/commit/fb6a9d65f2c989a4b349a24ad58e870ddf075eee))
+* display all properties in compound resource ([#1654](https://github.com/dasch-swiss/dsp-das/issues/1654)) ([36184bb](https://github.com/dasch-swiss/dsp-das/commit/36184bbc941bac8e520bb98b2c46121b562db6a8))
+* display ontology labels in prefffered language (DEV-3739) ([#1651](https://github.com/dasch-swiss/dsp-das/issues/1651)) ([2dfd44d](https://github.com/dasch-swiss/dsp-das/commit/2dfd44d37ea972c62968150638130cfef2b26da1))
+* load ontologies (DEV-3758) ([#1652](https://github.com/dasch-swiss/dsp-das/issues/1652)) ([9d55966](https://github.com/dasch-swiss/dsp-das/commit/9d5596613a99d6c4319679d7dbaf74b3821d37c4))
+* property value gap adjustment (DEV-3718) ([#1655](https://github.com/dasch-swiss/dsp-das/issues/1655)) ([22b8471](https://github.com/dasch-swiss/dsp-das/commit/22b8471a80debdb71e1ca976108fe835731c1175))
+
+
+### Maintenance
+
+* move list and dialog into nx libraries ([#1649](https://github.com/dasch-swiss/dsp-das/issues/1649)) ([ad0cfb6](https://github.com/dasch-swiss/dsp-das/commit/ad0cfb67dc5bab22983d5d703c42ab6aa448399b))
+
+## [11.11.0](https://github.com/dasch-swiss/dsp-das/compare/v11.10.3...v11.11.0) (2024-06-13)
+
+
+### Enhancements
+
+* add labels to every input ([#1644](https://github.com/dasch-swiss/dsp-das/issues/1644)) ([6e463ae](https://github.com/dasch-swiss/dsp-das/commit/6e463aebb5995cbba6d4a263c0bf1b31819c8a20))
+* link value autocomplete, property values css adjustments (DEV-3718) ([#1647](https://github.com/dasch-swiss/dsp-das/issues/1647)) ([fcea70c](https://github.com/dasch-swiss/dsp-das/commit/fcea70cd558bae703ac0d9a5c3d8bf4a02c66f80))
+* property values row colour (DEV-3732) ([#1640](https://github.com/dasch-swiss/dsp-das/issues/1640)) ([bd0f6e4](https://github.com/dasch-swiss/dsp-das/commit/bd0f6e48cde14ae82ea1db95e27c5152e2d8fce3))
+
+
+### Bug Fixes
+
+* better display interval properties ([#1641](https://github.com/dasch-swiss/dsp-das/issues/1641)) ([45d5edb](https://github.com/dasch-swiss/dsp-das/commit/45d5edbde0653b314372eec30c1b876363f318f0))
+* search autocomplete adjustments (DEV-3718) ([#1642](https://github.com/dasch-swiss/dsp-das/issues/1642)) ([9c5559a](https://github.com/dasch-swiss/dsp-das/commit/9c5559a826b29cfdf0697bdbfe2d78e0e7c4b363))
+* some dialogs are displayed as drawers ([#1638](https://github.com/dasch-swiss/dsp-das/issues/1638)) ([1cd713e](https://github.com/dasch-swiss/dsp-das/commit/1cd713e23d9684664d8690ea311a13e8e08eb659))
+
+
+### Maintenance
+
+* split video component with its features ([#1643](https://github.com/dasch-swiss/dsp-das/issues/1643)) ([6f6d1f8](https://github.com/dasch-swiss/dsp-das/commit/6f6d1f87c03209ba78b5a6eca4a484caa7802055))
+
 ## [11.10.3](https://github.com/dasch-swiss/dsp-das/compare/v11.10.2...v11.10.3) (2024-06-06)
 
 

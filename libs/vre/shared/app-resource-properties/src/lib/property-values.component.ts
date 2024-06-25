@@ -19,11 +19,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       }
       div.property-value {
         display: flex;
-        padding: 5px;
-
-        &:nth-child(even) {
-          background-color: $primary_50;
-        }
+        padding: 5px 0;
       }
     `,
   ],

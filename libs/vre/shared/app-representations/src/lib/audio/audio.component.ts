@@ -11,6 +11,7 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -43,6 +44,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
   audio: SafeUrl;
 
   duration = 0;
+
 
   constructor(
     @Inject(DspApiConnectionToken)
