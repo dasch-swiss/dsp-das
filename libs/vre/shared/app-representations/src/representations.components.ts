@@ -1,5 +1,7 @@
 import { AddRegionFormComponent } from './lib/add-region-form/add-region-form.component';
 import { ArchiveComponent } from './lib/archive/archive.component';
+import { AudioMoreButtonComponent } from './lib/audio/audio-more-button.component';
+import { AudioToolbarComponent } from './lib/audio/audio-toolbar.component';
 import { AudioComponent } from './lib/audio/audio.component';
 import { AvTimelineComponent } from './lib/av-timeline/av-timeline.component';
 import { DocumentComponent } from './lib/document/document.component';
@@ -15,6 +17,8 @@ export const RepresentationsComponents = [
   AddRegionFormComponent,
   ArchiveComponent,
   AudioComponent,
+  AudioToolbarComponent,
+  AudioMoreButtonComponent,
   AvTimelineComponent,
   DocumentComponent,
   ReplaceFileFormComponent,
