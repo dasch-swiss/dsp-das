@@ -1,10 +1,13 @@
 appUrl := "https://app.dev.dasch.swiss"
 
+# List all the available targets
 default:
     @just --list
 
-first-page-load:
+# Run the test locally
+run:
     APP_URL={{appUrl}} k6 run first-page-load.js
 
-load-resource:
-    APP_URL={{appUrl}} k6 run load-resource.js
+# Run the test in k6 cloud
+run-cloud:
+    APP_URL={{appUrl}} k6 cloud first-page-load.js
