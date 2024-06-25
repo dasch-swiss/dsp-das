@@ -38,15 +38,15 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   @Output() loaded = new EventEmitter<boolean>();
 
-  originalFilename: string;
+  originalFilename?: string;
   failedToLoad = false;
   currentTime = 0;
-  audio: SafeUrl;
+  audio!: SafeUrl;
 
   duration = 0;
   watchForPause?: number;
 
-  get usercanEdit() {
+  get userCanEdit() {
     return ResourceUtil.userCanEdit(this.parentResource);
   }
 
@@ -64,6 +64,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._watchForMediaEvents();
+    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+    this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
 
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
       res => {
@@ -73,17 +75,10 @@ export class AudioComponent implements OnInit, AfterViewInit {
         this.failedToLoad = true;
       }
     );
-    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
 
     this.loaded.subscribe(value => {
-      if (value) {
-        setTimeout(() => {
-          this.duration = this.getDuration();
-        }, 5000);
-      }
+      this.duration = this.getDuration();
     });
-
-    this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
   }
 
   ngAfterViewInit() {
@@ -200,6 +195,10 @@ export class AudioComponent implements OnInit, AfterViewInit {
   isMuted() {
     const player = document.getElementById('audio') as HTMLAudioElement;
     return player.muted;
+  }
+
+  playFromBeginning() {
+    this._navigate(0);
   }
 
   createAudioSegment() {

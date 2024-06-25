@@ -15,30 +15,35 @@
 </mat-toolbar-row>
 <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
   <div>
+    <button mat-icon-button (click)="togglePlay()">
+      <mat-icon>{{ isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+    </button>
+    <button mat-icon-button (click)="playFromBeginning()">
+      <mat-icon>skip_previous</mat-icon>
+    </button>
+    <button mat-icon-button (click)="toggleMute()">
+      <mat-icon>{{ isMuted() ? 'volume_up' : 'volume_off' }}</mat-icon>
+    </button>
+  </div>
+
+  <div>
+    <button mat-icon-button (click)="createAudioSegment()">
+      <mat-icon>view_timeline</mat-icon>
+    </button>
     <button mat-icon-button [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
-
-    <button mat-icon-button>
-      <mat-icon>skip_previous</mat-icon>
-    </button>
-    <button mat-icon-button>
-      <mat-icon>play_circle</mat-icon>
-    </button>
-  </div>
-  <div>
-    <button mat-icon-button>
-      <mat-icon>view_timeline</mat-icon>
-    </button>
   </div>
 </mat-toolbar-row>
+
+<app-segments-display
+  *ngIf="segmentsService.segments.length > 0 && duration > 0"
+  [segments]="segmentsService.segments"
+  [videoLengthSecs]="duration" />
+
 <mat-menu #more="matMenu" class="representation-menu">
-  <button class="menu-content" mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
-  <button class="menu-content" mat-menu-item [cdkCopyToClipboard]="src.fileValue.fileUrl">
-    Copy audio URL to clipboard
-  </button>
-  <button class="menu-content" mat-menu-item (click)="download(src.fileValue.fileUrl)">Download audio</button>
-  <button [disabled]="!usercanEdit" class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
-    Replace file
-  </button>
+  <button mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
+  <button mat-menu-item [cdkCopyToClipboard]="src.fileValue.fileUrl">Copy audio URL to clipboard</button>
+  <button mat-menu-item (click)="download(src.fileValue.fileUrl)">Download audio</button>
+  <button mat-menu-item [disabled]="!userCanEdit" (click)="openReplaceFileDialog()">Replace file</button>
 </mat-menu>
