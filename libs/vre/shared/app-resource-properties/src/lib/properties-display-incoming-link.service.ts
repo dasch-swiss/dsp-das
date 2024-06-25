@@ -11,26 +11,6 @@ export class PropertiesDisplayIncomingLinkService {
   constructor(private _incomingService: IncomingService) {}
 
   getIncomingLinks$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {
-    return this._getIncomingLinks$(resourceId, offset);
-  }
-
-  getIncomingLinksRecursively$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {
-    const incomingLinks$ = this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
-      expand(response =>
-        this._incomingService.getIncomingLinksForResource(resourceId, offset++).pipe(
-          map(incomingResources => {
-            const array = (incomingResources as ReadResourceSequence).resources.map(resource => {
-              return this._createIncomingOrStandoffLink(resource);
-            });
-
-            return sortByKeys(array, ['project', 'label']);
-          })
-        )
-      ),
-      takeWhile(response => response.mayHaveMoreResults, true),
-      reduce((all, { data }) => all.concat(data), [])
-    );
-
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
       map(incomingResources => {
         const array = (incomingResources as ReadResourceSequence).resources.map(resource => {
@@ -42,14 +22,19 @@ export class PropertiesDisplayIncomingLinkService {
     );
   }
 
-  private _getIncomingLinks$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {
-    return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
+  getIncomingLinksRecursively$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {
+    let pageNo = 0;
+    return this._incomingService.getIncomingLinksForResource(resourceId, pageNo).pipe(
+      expand(() => {
+        return (
+          this._incomingService.getIncomingLinksForResource(resourceId, pageNo++) as Observable<ReadResourceSequence>
+        ).pipe(takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults === true, true));
+      }),
+      takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults === true, true),
+      reduce((all: ReadResource[], data) => all.concat(data.resources), []),
       map(incomingResources => {
-        const array = (incomingResources as ReadResourceSequence).resources.map(resource => {
-          return this._createIncomingOrStandoffLink(resource);
-        });
-
-        return sortByKeys(array, ['project', 'label']);
+        const standOffLinks = incomingResources.map(resource => this._createIncomingOrStandoffLink(resource));
+        return sortByKeys(standOffLinks, ['project', 'label']);
       })
     );
   }
