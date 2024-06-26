@@ -9,9 +9,10 @@
 </div>
 
 <ng-container *ngIf="isPlayerReady">
+  <div style="background: red">{{ currentTime }}</div>
   <app-media-slider
     [max]="mediaPlayer.duration()"
-    [currentTime]="mediaPlayer.currentTime()"
+    [currentTime]="currentTime"
     (afterNavigation)="mediaPlayer.navigate($event)" />
   <app-audio-toolbar [parentResource]="parentResource" />
   <app-segments-display

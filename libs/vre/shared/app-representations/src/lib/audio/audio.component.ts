@@ -27,6 +27,8 @@ export class AudioComponent implements OnInit {
   duration = 0;
   watchForPause?: number;
 
+  currentTime = 0;
+
   isPlayerReady = false;
 
   constructor(
@@ -58,6 +60,11 @@ export class AudioComponent implements OnInit {
     this.mediaPlayer.onInit(player);
     this.isPlayerReady = true;
     this.duration = this.mediaPlayer.duration();
+
+    this.mediaPlayer.onTimeUpdate$.subscribe(v => {
+      this.currentTime = v;
+      console.log('v', v);
+    });
   }
 
   private _watchForMediaEvents() {
