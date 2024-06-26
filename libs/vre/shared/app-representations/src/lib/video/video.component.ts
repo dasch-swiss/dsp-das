@@ -164,15 +164,6 @@ export class VideoComponent implements OnInit, OnChanges {
    *
    * @param range positive or negative number value
    */
-  updateTimeFromButton(range: number) {
-    if (range > 0 && this.currentTime > this.duration - 10) {
-      this.videoPlayer.navigate(this.duration);
-    } else if (range < 0 && this.currentTime < 10) {
-      this.videoPlayer.navigate(0);
-    } else {
-      this.videoPlayer.navigate(this.currentTime + range);
-    }
-  }
 
   updatePreview(ev: PointerValue) {
     if (!this.timelineDimension) {

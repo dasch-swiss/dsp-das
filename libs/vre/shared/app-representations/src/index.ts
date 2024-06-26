@@ -22,5 +22,6 @@ export * from './lib/upload/upload-file.service';
 export * from './lib/resource-fetcher.service';
 export * from './lib/video/video-more-button.component';
 export * from './lib/video/video-toolbar.component';
+export * from './lib/video/video-overlay.component';
 export * from './lib/audio/audio-toolbar.component';
 export * from './lib/audio/audio-more-button.component';

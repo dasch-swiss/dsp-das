@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
@@ -10,47 +10,53 @@ import { VideoPlayerService } from './video-player.service';
 
 @Component({
   selector: 'app-video-toolbar',
-  template: ` <mat-toolbar-row class="action">
-    <app-video-more-button [resource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
-    <button
-      mat-icon-button
-      (click)="goToStart()"
-      [disabled]="currentTime === 0"
-      matTooltip="Stop and go to start"
-      [matTooltipPosition]="matTooltipPos">
-      <mat-icon>skip_previous</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      (click)="videoPlayer.togglePlay()"
-      [matTooltip]="play ? 'Pause' : 'Play'"
-      [matTooltipPosition]="matTooltipPos">
-      <mat-icon>{{ play ? 'pause' : 'play_arrow' }}</mat-icon>
-    </button>
-    <!-- TODO reached the end button "replay" -->
+  template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
+    <div>
+      <button
+        mat-icon-button
+        (click)="videoPlayer.togglePlay()"
+        [matTooltip]="play ? 'Pause' : 'Play'"
+        [matTooltipPosition]="matTooltipPos">
+        <mat-icon>{{ videoPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+      </button>
 
-    <p>
-      {{ currentTime | appTime }}
-    </p>
+      <button
+        mat-icon-button
+        (click)="goToStart()"
+        matTooltip="Stop and go to start"
+        [matTooltipPosition]="matTooltipPos">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <!-- TODO reached the end button "replay" -->
+    </div>
 
-    <button mat-icon-button (click)="createVideoSegment()" [matTooltip]="'Create a segment'">
-      <mat-icon>view_timeline</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      (click)="toggleCinemaMode()"
-      [matTooltip]="cinemaMode ? 'Default view' : 'Cinema mode'"
-      [matTooltipPosition]="matTooltipPos">
-      <mat-icon>{{ cinemaMode ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
-    </button>
+    <div>{{ videoPlayer.currentTime() | appTime }} / {{ videoPlayer.duration() | appTime }}</div>
+
+    <div>
+      <app-video-more-button [resource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
+
+      <button mat-icon-button (click)="createVideoSegment()" [matTooltip]="'Create a segment'">
+        <mat-icon>view_timeline</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        (click)="toggleCinemaMode()"
+        [matTooltip]="cinemaMode ? 'Default view' : 'Cinema mode'"
+        [matTooltipPosition]="matTooltipPos">
+        <mat-icon>{{ cinemaMode ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+      </button>
+    </div>
   </mat-toolbar-row>`,
 })
 export class VideoToolbarComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
+  @Input({ required: true }) cinemaMode!: boolean;
 
-  cinemaMode = false;
+  @Output() cinemaModeChange = new EventEmitter<boolean>();
+
   matTooltipPos: TooltipPosition = 'below';
   play = false;
 
@@ -75,7 +81,7 @@ export class VideoToolbarComponent {
   }
 
   toggleCinemaMode() {
-    this.cinemaMode = !this.cinemaMode;
+    this.cinemaModeChange.emit(!this.cinemaMode);
   }
 
   goToStart() {
