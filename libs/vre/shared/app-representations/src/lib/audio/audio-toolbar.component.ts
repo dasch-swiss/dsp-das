@@ -17,7 +17,7 @@ import { AudioPlayerService } from './audio-player.service';
           <mat-icon>skip_previous</mat-icon>
         </button>
         <button mat-icon-button (click)="audioPlayer.toggleMute()">
-          <mat-icon>{{ audioPlayer.isMuted() ? 'volume_up' : 'volume_off' }}</mat-icon>
+          <mat-icon>{{ audioPlayer.isMuted() ? 'volume_off' : 'volume_up' }}</mat-icon>
         </button>
       </div>
 

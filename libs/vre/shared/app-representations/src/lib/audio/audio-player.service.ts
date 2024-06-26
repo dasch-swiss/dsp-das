@@ -47,4 +47,8 @@ export class AudioPlayerService {
   navigate(position: number) {
     this._audioPlayer.currentTime = position;
   }
+
+  currentTime() {
+    return this._audioPlayer.currentTime;
+  }
 }

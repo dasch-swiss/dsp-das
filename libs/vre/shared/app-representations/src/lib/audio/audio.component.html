@@ -8,14 +8,16 @@
   </div>
 </div>
 
-<mat-toolbar-row style="height: 34px; background-color: black">
-  <mat-slider color="accent" style="width: 100%">
-    <input matSliderThumb />
-  </mat-slider>
-</mat-toolbar-row>
-<app-audio-toolbar [parentResource]="parentResource" *ngIf="isPlayerReady" />
+<ng-container *ngIf="isPlayerReady">
+  <mat-toolbar-row style="height: 34px; background-color: black">
+    <mat-slider color="accent" style="width: 100%" [max]="audioPlayer.duration()">
+      <input matSliderThumb [ngModel]="audioPlayer.currentTime()" (ngModelChange)="audioPlayer.navigate($event)" />
+    </mat-slider>
+  </mat-toolbar-row>
+  <app-audio-toolbar [parentResource]="parentResource" />
 
-<app-segments-display
-  *ngIf="segmentsService.segments.length > 0 && duration > 0"
-  [segments]="segmentsService.segments"
-  [videoLengthSecs]="duration" />
+  <app-segments-display
+    *ngIf="segmentsService.segments.length > 0 && duration > 0"
+    [segments]="segmentsService.segments"
+    [videoLengthSecs]="duration" />
+</ng-container>

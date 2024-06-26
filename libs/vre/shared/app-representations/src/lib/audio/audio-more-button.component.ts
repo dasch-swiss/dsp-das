@@ -1,6 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   KnoraApiConnection,
@@ -45,8 +44,7 @@ export class AudioMoreButtonComponent {
     private _dialog: MatDialog,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _rs: RepresentationService,
-    private _sanitizer: DomSanitizer
+    private _rs: RepresentationService
   ) {}
 
   openReplaceFileDialog() {
@@ -98,7 +96,7 @@ export class AudioMoreButtonComponent {
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, (res as WriteValueResponse).uuid)
         )
       )
-      .subscribe(res => {
+      .subscribe(() => {
         window.location.reload();
       });
   }
