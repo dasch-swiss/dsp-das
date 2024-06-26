@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -37,7 +37,8 @@ export class AudioComponent implements OnInit {
     private _mediaControl: MediaControlService,
     private _notification: NotificationService,
     public mediaPlayer: MediaPlayerService,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +64,7 @@ export class AudioComponent implements OnInit {
 
     this.mediaPlayer.onTimeUpdate$.subscribe(v => {
       this.currentTime = v;
-      console.log('v', v);
+      this._cd.detectChanges();
     });
   }
 
@@ -81,8 +82,4 @@ export class AudioComponent implements OnInit {
       this.watchForPause = seconds;
     });
   }
-
-  private _setPlayer() {}
-
-  protected readonly Math = Math;
 }
