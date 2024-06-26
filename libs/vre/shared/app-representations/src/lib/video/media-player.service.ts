@@ -3,14 +3,14 @@ import { fromEvent, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class VideoPlayerService {
-  private _videoPlayer!: HTMLVideoElement;
+export class MediaPlayerService {
+  private _mediaPlayer!: HTMLVideoElement | HTMLAudioElement;
 
   onTimeUpdate$!: Observable<number>;
 
   onInit(player: HTMLVideoElement) {
-    this._videoPlayer = player;
-    this.onTimeUpdate$ = fromEvent<Event>(this._videoPlayer, 'timeupdate').pipe(
+    this._mediaPlayer = player;
+    this.onTimeUpdate$ = fromEvent<Event>(this._mediaPlayer, 'timeupdate').pipe(
       map(v => (v.target as HTMLVideoElement).currentTime)
     );
   }
@@ -24,19 +24,19 @@ export class VideoPlayerService {
   }
 
   isPaused() {
-    return this._videoPlayer.paused;
+    return this._mediaPlayer.paused;
   }
 
   play() {
-    this._videoPlayer.play();
+    this._mediaPlayer.play();
   }
 
   pause() {
-    this._videoPlayer.pause();
+    this._mediaPlayer.pause();
   }
 
   duration() {
-    return this._videoPlayer.duration;
+    return this._mediaPlayer.duration;
   }
 
   playFromBeginning() {
@@ -44,18 +44,18 @@ export class VideoPlayerService {
   }
 
   toggleMute() {
-    this._videoPlayer.muted = !this._videoPlayer.muted;
+    this._mediaPlayer.muted = !this._mediaPlayer.muted;
   }
 
   isMuted() {
-    return this._videoPlayer.muted;
+    return this._mediaPlayer.muted;
   }
 
   navigate(position: number) {
-    this._videoPlayer.currentTime = position;
+    this._mediaPlayer.currentTime = position;
   }
 
   currentTime() {
-    return this._videoPlayer.currentTime;
+    return this._mediaPlayer.currentTime;
   }
 }

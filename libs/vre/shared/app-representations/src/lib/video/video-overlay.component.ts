@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { VideoPlayerService } from './video-player.service';
+import { MediaPlayerService } from './media-player.service';
 
 @Component({
   selector: 'app-video-overlay',
@@ -15,7 +15,7 @@ export class VideoOverlayComponent {
   duration = 0;
   play = true;
 
-  constructor(public videoPlayer: VideoPlayerService) {}
+  constructor(public videoPlayer: MediaPlayerService) {}
 
   updateTimeFromButton(range: number) {
     if (range > 0 && this.currentTime > this.duration - 10) {

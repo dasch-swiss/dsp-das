@@ -17,13 +17,13 @@ import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
-import { VideoPlayerService } from './video-player.service';
+import { MediaPlayerService } from './media-player.service';
 
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
-  providers: [MediaControlService, VideoPlayerService],
+  providers: [MediaControlService, MediaPlayerService],
 })
 export class VideoComponent implements OnInit, OnChanges {
   @Input({ required: true }) src!: FileRepresentation;
@@ -70,7 +70,7 @@ export class VideoComponent implements OnInit, OnChanges {
     public _mediaControl: MediaControlService,
     private _notification: NotificationService,
     public segmentsService: SegmentsService,
-    public videoPlayer: VideoPlayerService,
+    public videoPlayer: MediaPlayerService,
     private _rs: RepresentationService
   ) {}
 

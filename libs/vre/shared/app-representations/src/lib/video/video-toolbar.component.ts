@@ -6,7 +6,7 @@ import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from '@dasch-swiss/vre/shared/app-segment-support';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
-import { VideoPlayerService } from './video-player.service';
+import { MediaPlayerService } from './media-player.service';
 
 @Component({
   selector: 'app-video-toolbar',
@@ -66,7 +66,7 @@ export class VideoToolbarComponent {
   constructor(
     private _viewContainerRef: ViewContainerRef,
     private _dialog: MatDialog,
-    public videoPlayer: VideoPlayerService
+    public videoPlayer: MediaPlayerService
   ) {}
 
   createVideoSegment() {
