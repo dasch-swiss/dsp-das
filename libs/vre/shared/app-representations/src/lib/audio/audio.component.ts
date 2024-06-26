@@ -57,6 +57,10 @@ export class AudioComponent implements OnInit {
   }
 
   onAudioPlayerReady() {
+    if (this.isPlayerReady) {
+      return;
+    }
+
     const player = document.getElementById('audio') as HTMLAudioElement;
     this.mediaPlayer.onInit(player);
     this.isPlayerReady = true;

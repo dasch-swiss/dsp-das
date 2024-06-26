@@ -85,6 +85,10 @@ export class VideoComponent implements OnInit, OnChanges {
   }
 
   onVideoPlayerReady() {
+    if (this.isPlayerReady) {
+      return;
+    }
+
     const player = document.getElementById('video') as HTMLVideoElement;
     this.videoPlayer.onInit(player);
     this.isPlayerReady = true;
