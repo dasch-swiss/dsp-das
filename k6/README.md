@@ -16,7 +16,7 @@ The test are based on the [k6 browser module](https://k6.io/docs/using-k6-browse
 You can run the tests using the following command:
 
 ```sh
-k6 run script.js
+k6 run tests/<test_script.js>
 ```
 
 ### Using `just`
@@ -37,8 +37,41 @@ just run-cloud
 
 For running in the cloud you [need to login](https://k6.io/docs/cloud/creating-and-running-a-test/cloud-tests-from-the-cli/#run-test-on-the-cli).
 
+## Developing the tests locally without k6 cloud
+
+This setup contains a `docker-compose.yml` file that allows you to run the tests locally without having to install grafana. You can run the tests and export its metrics to the local grafana instance.
+
+### Setting up the environment
+
+Start Grafana with InfluxDB instances:
+
+```sh
+just grafana-up
+```
+
+This will open up the create dashboard page in the browser and copy the `grafana_dashboard.json` to your clipboard. On this page you have to "import a dashboard" and paste the json and save.
+
+Stopping the grafana stack is done with:
+
+```sh
+just grafana-down
+```
+
+[IMPORTANT] The grafana setup is not persistent. If you stop the containers, the data will be lost and you will have to recreate the dashboard with the steps above.
+
+### Visualizing the test results in Grafana
+
+When running the tests you have to instruct k6 to export the metrics to the grafana instance. You can do this by setting the `K6_OUT` environment variable to the url of the influxdb instance.
+
+We have a `just` command that sets this variable for you:
+
+```sh
+just run-grafana
+```
+
 ## Documentation
 
 - [k6: Official Tutorial](https://k6.io/docs/examples/tutorials/get-started-with-k6/)
 - [GitHub: k6-learn](https://github.com/grafana/k6-learn/blob/main/Modules/II-k6-Foundations/01-Getting-started-with-k6-OSS.md)
 - [k6: More resources](https://k6.io/docs/get-started/resources/)
+- [youtube: Nice introduction to k6 (Grafana setup comes from here)](https://www.youtube.com/watch?v=Hu1K2ZGJ_K4)

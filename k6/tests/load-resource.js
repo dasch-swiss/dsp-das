@@ -1,7 +1,7 @@
 import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
-import { Resourcepage } from './pages/resourcepage.js';
-import { defaultOptions } from './options/options.js';
+import { Resourcepage } from '../pages/resourcepage.js';
+import { defaultOptions } from '../options/options.js';
 
 export const options = defaultOptions;
 
