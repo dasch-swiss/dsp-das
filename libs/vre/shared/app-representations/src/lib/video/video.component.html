@@ -7,12 +7,14 @@
       <video
         class="video"
         #videoEle
+        id="video"
         *ngIf="video; else loading"
         [src]="video"
         type="video/mp4"
         preload="auto"
         [muted]="false"
-        (click)="togglePlay()"
+        (canplay)="onVideoPlayerReady()"
+        (click)="videoPlayer.togglePlay()"
         (timeupdate)="timeUpdate()"
         (loadedmetadata)="loadedMetadata()"
         (canplaythrough)="loadedVideo()"
@@ -21,18 +23,15 @@
       <div class="overlay">
         <div>
           <mat-icon (click)="updateTimeFromButton(-10)">replay_10</mat-icon>
-          <mat-icon (click)="togglePlay()">{{ reachedTheEnd ? 'replay' : play ? 'pause' : 'play_arrow' }} </mat-icon>
+          <mat-icon (click)="videoPlayer.togglePlay()">{{ play ? 'pause' : 'play_arrow' }}</mat-icon>
           <mat-icon (click)="updateTimeFromButton(10)">forward_10</mat-icon>
         </div>
       </div>
+
+      <app-video-toolbar *ngIf="fileInfo" [src]="src" [parentResource]="parentResource" [fileInfo]="fileInfo" />
     </div>
 
-    <ng-template #loading>
-      <dasch-swiss-app-progress-indicator />
-    </ng-template>
-
     <div class="preview-line">
-      <!-- preview image -->
       <div class="preview" #preview>
         <app-video-preview [src]="src" [time]="previewTime" [fileInfo]="fileInfo" (loaded)="displayPreview(!$event)" />
       </div>
@@ -51,62 +50,8 @@
         (mouseenter)="displayPreview(true)"
         (dimension)="timelineDimension = $event"
         (mouseleave)="displayPreview(false)"
-        (changed)="updateTimeFromSlider($event)"
+        (changed)="videoPlayer.navigate($event)"
         [disabled]="!videoEle" />
-    </mat-toolbar-row>
-
-    <mat-toolbar-row class="action">
-      <app-video-more-button [resource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
-      <button
-        mat-icon-button
-        (click)="goToStart()"
-        [disabled]="currentTime === 0 || !videoEle"
-        matTooltip="Stop and go to start"
-        [matTooltipPosition]="matTooltipPos">
-        <mat-icon>skip_previous</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        (click)="togglePlay()"
-        [matTooltip]="
-                    reachedTheEnd ? 'Replay' : play ? 'Pause' : 'Play'
-                "
-        [matTooltipPosition]="matTooltipPos"
-        [disabled]="!videoEle">
-        <mat-icon>{{ reachedTheEnd ? 'replay' : play ? 'pause' : 'play_arrow' }}</mat-icon>
-      </button>
-
-      <span class="empty-space"></span>
-      <span class="fill-remaining-space"></span>
-
-      <div (wheel)="updateTimeFromScroll($event)">
-        <p class="mat-subtitle-2 time" (click)="togglePlay()">
-          {{ currentTime | appTime }}
-          <span *ngIf="duration">/ {{ duration | appTime }}</span>
-        </p>
-      </div>
-      <!--            <button mat-icon-button (click)="muted = !muted" [matTooltip]="(muted ? 'Unmute' : 'Mute')"-->
-      <!--                [matTooltipPosition]="matTooltipPos"-->
-      <!--                [disabled]="failedToLoad">-->
-      <!--                <mat-icon>-->
-      <!--                    {{ muted ? "volume_mute" : "volume_up" }}-->
-      <!--                </mat-icon>-->
-      <!--            </button>-->
-      <span class="fill-remaining-space"></span>
-      <span class="empty-space"></span>
-      <span class="empty-space"></span>
-
-      <button mat-icon-button (click)="createVideoSegment()" [matTooltip]="'Create a segment'">
-        <mat-icon>view_timeline</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        (click)="toggleCinemaMode()"
-        [disabled]="!videoEle"
-        [matTooltip]="cinemaMode ? 'Default view' : 'Cinema mode'"
-        [matTooltipPosition]="matTooltipPos">
-        <mat-icon>{{ cinemaMode ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
-      </button>
     </mat-toolbar-row>
   </mat-toolbar>
 </div>
@@ -115,3 +60,7 @@
   *ngIf="segmentsService.segments.length > 0 && duration > 0"
   [segments]="segmentsService.segments"
   [videoLengthSecs]="duration" />
+
+<ng-template #loading>
+  <dasch-swiss-app-progress-indicator />
+</ng-template>

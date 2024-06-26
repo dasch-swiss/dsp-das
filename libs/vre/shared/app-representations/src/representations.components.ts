@@ -10,6 +10,7 @@ import { StillImageComponent } from './lib/still-image/still-image.component';
 import { TextComponent } from './lib/text/text.component';
 import { UploadComponent } from './lib/upload/upload.component';
 import { VideoMoreButtonComponent } from './lib/video/video-more-button.component';
+import { VideoToolbarComponent } from './lib/video/video-toolbar.component';
 import { VideoComponent } from './lib/video/video.component';
 import { VideoPreviewComponent } from './lib/video-preview/video-preview.component';
 
@@ -28,4 +29,5 @@ export const RepresentationsComponents = [
   VideoComponent,
   VideoPreviewComponent,
   VideoMoreButtonComponent,
+  VideoToolbarComponent,
 ];

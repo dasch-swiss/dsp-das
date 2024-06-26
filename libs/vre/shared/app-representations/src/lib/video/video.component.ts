@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,31 +8,24 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import {
-  CreateSegmentDialogComponent,
-  CreateSegmentDialogProps,
-  MediaControlService,
-  SegmentsService,
-} from '@dasch-swiss/vre/shared/app-segment-support';
+import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
+import { VideoPlayerService } from './video-player.service';
 
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
-  providers: [MediaControlService],
+  providers: [MediaControlService, VideoPlayerService],
 })
-export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
+export class VideoComponent implements OnInit, OnChanges {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Output() loaded = new EventEmitter<boolean>();
@@ -44,7 +36,6 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('preview') preview!: ElementRef;
 
   start = 0;
-  fileInfo?: MovingImageSidecar;
 
   // video file url
   video?: SafeUrl;
@@ -58,36 +49,28 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
   // size of progress bar / timeline
   timelineDimension?: DOMRect;
 
-  // time information
   duration = 0;
   currentTime: number = this.start;
   previewTime = 0;
 
-  // status
   play = false;
   reachedTheEnd = false;
 
-  // volume
   readonly volume = 0.75;
 
-  // video player mode
   cinemaMode = false;
 
-  // matTooltipPosition
-  matTooltipPos = 'below';
-
-  readonly timeScrollStep = 25;
-
   watchForPause: number | null = null;
+  isPlayerReady = false;
+  fileInfo?: MovingImageSidecar;
 
   constructor(
     private _sanitizer: DomSanitizer,
-    private _dialog: MatDialog,
     public _mediaControl: MediaControlService,
     private _notification: NotificationService,
     public segmentsService: SegmentsService,
-    private _rs: RepresentationService,
-    private _viewContainerRef: ViewContainerRef
+    public videoPlayer: VideoPlayerService,
+    private _rs: RepresentationService
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -100,21 +83,24 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
     this._watchForMediaEvents();
   }
 
+  onVideoPlayerReady() {
+    const player = document.getElementById('video') as HTMLVideoElement;
+    this.videoPlayer.onInit(player);
+    this.isPlayerReady = true;
+    this.loaded.emit(true);
+  }
+
   ngOnChanges(): void {
     this.segmentsService.onInit(this.parentResource.id, 'VideoSegment');
 
     this.videoError = '';
+
+    this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     // set the file info first bc. browsers might queue and block requests
     // if there are already six ongoing requests
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(file => {
       this.fileInfo = file as MovingImageSidecar;
     });
-
-    this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
-  }
-
-  ngAfterViewInit() {
-    this.loaded.emit(true);
   }
 
   private _watchForMediaEvents() {
@@ -123,49 +109,13 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
         this._notification.openSnackBar('The video cannot be played at this time.');
         return;
       }
-      this._navigate(seconds);
-      this.playVideo();
+      this.videoPlayer.navigate(seconds);
+      this.videoPlayer.play();
     });
 
     this._mediaControl.watchForPause$.subscribe(seconds => {
       this.watchForPause = seconds;
     });
-  }
-
-  /**
-   * stop playing and go back to start
-   */
-  goToStart() {
-    this.pauseVideo();
-    this.play = false;
-    this.currentTime = 0;
-    this.videoEle.nativeElement.currentTime = this.currentTime;
-  }
-
-  togglePlay() {
-    this.play = !this.play;
-
-    if (!this.videoEle) {
-      return;
-    }
-
-    if (this.play) {
-      this.playVideo();
-    } else {
-      this.pauseVideo();
-    }
-  }
-
-  playVideo() {
-    this.videoEle.nativeElement.play();
-  }
-
-  pauseVideo() {
-    this.videoEle.nativeElement.pause();
-  }
-
-  toggleCinemaMode() {
-    this.cinemaMode = !this.cinemaMode;
   }
 
   timeUpdate() {
@@ -180,7 +130,7 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     if (this.watchForPause !== null && this.watchForPause === Math.floor(this.currentTime)) {
-      this.pauseVideo();
+      this.videoPlayer.pause();
       this.watchForPause = null;
       return;
     }
@@ -216,21 +166,12 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
    */
   updateTimeFromButton(range: number) {
     if (range > 0 && this.currentTime > this.duration - 10) {
-      this._navigate(this.duration);
+      this.videoPlayer.navigate(this.duration);
     } else if (range < 0 && this.currentTime < 10) {
-      this._navigate(0);
+      this.videoPlayer.navigate(0);
     } else {
-      this._navigate(this.currentTime + range);
+      this.videoPlayer.navigate(this.currentTime + range);
     }
-  }
-
-  updateTimeFromSlider(time: number) {
-    this._navigate(time);
-  }
-
-  updateTimeFromScroll(ev: WheelEvent) {
-    ev.preventDefault();
-    this._navigate(this.currentTime + ev.deltaY / this.timeScrollStep);
   }
 
   updatePreview(ev: PointerValue) {
@@ -260,17 +201,6 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
 
   displayPreview(status: boolean) {
     this.preview.nativeElement.style.display = status ? 'block' : 'none';
-  }
-
-  createVideoSegment() {
-    this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
-      ...DspDialogConfig.dialogDrawerConfig({
-        type: 'VideoSegment',
-        resource: this.parentResource,
-        videoDurationSecs: this.duration,
-      }),
-      viewContainerRef: this._viewContainerRef,
-    });
   }
 
   handleVideoError(event: ErrorEvent) {
@@ -303,9 +233,5 @@ export class VideoComponent implements OnInit, OnChanges, AfterViewInit {
       }
       this.videoError = vErr;
     }
-  }
-
-  private _navigate(position: number) {
-    this.videoEle.nativeElement.currentTime = position;
   }
 }
