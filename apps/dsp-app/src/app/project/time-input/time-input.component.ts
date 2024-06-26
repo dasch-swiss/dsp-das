@@ -27,7 +27,7 @@ export class TimeInputComponent implements OnInit {
         errorKey: 'format',
         message: 'Please enter a valid time in format hh:mm:ss',
       },
-      ...this.validatorErrors,
+      ...(this.validatorErrors ?? []),
     ];
   }
 }

@@ -65,8 +65,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
     this.loaded.emit(true);
   }
 
-  onTimeUpdate(event: { target: HTMLAudioElement }) {
-    this.currentTime = event.target.currentTime;
+  onTimeUpdate(event: unknown) {
+    this.currentTime = (event as { target: HTMLAudioElement }).target.currentTime;
   }
 
   private _watchForMediaEvents() {
