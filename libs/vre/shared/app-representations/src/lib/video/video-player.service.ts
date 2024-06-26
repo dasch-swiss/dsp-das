@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
+import { fromEvent, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class VideoPlayerService {
   private _videoPlayer!: HTMLVideoElement;
 
+  onTimeUpdate$!: Observable<number>;
+
   onInit(player: HTMLVideoElement) {
     this._videoPlayer = player;
+    this.onTimeUpdate$ = fromEvent<Event>(this._videoPlayer, 'timeupdate').pipe(
+      map(v => (v.target as HTMLVideoElement).currentTime)
+    );
   }
 
   togglePlay() {

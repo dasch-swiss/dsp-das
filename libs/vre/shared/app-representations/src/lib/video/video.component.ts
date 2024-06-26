@@ -51,6 +51,7 @@ export class VideoComponent implements OnInit, OnChanges {
 
   duration = 0;
   currentTime: number = this.start;
+  myCurrentTime: number = 0;
   previewTime = 0;
 
   play = false;
@@ -88,6 +89,9 @@ export class VideoComponent implements OnInit, OnChanges {
     this.videoPlayer.onInit(player);
     this.isPlayerReady = true;
     this.loaded.emit(true);
+    this.videoPlayer.onTimeUpdate$.subscribe(v => {
+      this.myCurrentTime = v;
+    });
   }
 
   ngOnChanges(): void {
