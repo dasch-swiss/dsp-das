@@ -6,13 +6,14 @@
     </button>
     <span class="fill-remaining-space"></span>
     <div class="range">
-      {{currentRangeStart}} - {{currentRangeEnd}} {{'appLabels.uiControls.pager.of' | translate}} {{numberOfAllResults}}
+      {{currentRangeStart}} - {{(currentRangeEnd < currentRangeStart) ? '...' : currentRangeEnd}}
+      <span *ngIf="showNumberOfAllResults">{{'appLabels.uiControls.pager.of' | translate}} {{numberOfAllResults}}</span>
     </div>
     <span class="fill-remaining-space"></span>
     <button
       mat-button
       class="pagination-button next"
-      [disabled]="(pageSize > numberOfAllResults) || nextDisabled"
+      [disabled]="(PagerComponent.pageSize > numberOfAllResults) || nextDisabled"
       (click)="goToPage('next')">
       <span>{{'appLabels.uiControls.pager.next' | translate}}</span>
       <mat-icon>east</mat-icon>

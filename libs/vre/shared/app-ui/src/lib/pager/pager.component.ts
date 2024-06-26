@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,17 +14,21 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class PagerComponent {
   @Output() pageChanged: EventEmitter<number> = new EventEmitter<number>();
+  @Input() showNumberOfAllResults = true;
+  @Input() nextPageIsAvailable: null | boolean = null;
   @Input() set numberOfAllResults(value: number) {
     this._numberOfAllResults = value;
-    this.currentRangeEnd = this.numberOfAllResults > 25 ? 25 : this.numberOfAllResults;
+    this._calculateRange(this.currentIndex);
   }
   get numberOfAllResults(): number {
     return this._numberOfAllResults;
   }
 
-  readonly pageSize = 25;
+  static readonly pageSize = 25;
 
   private _numberOfAllResults: number = 0;
+
+  PagerComponent = PagerComponent;
 
   currentIndex = 0;
   currentRangeStart = 1;
@@ -32,6 +36,8 @@ export class PagerComponent {
 
   previousDisabled = false;
   nextDisabled = false;
+
+  constructor(private _cd: ChangeDetectorRef) {}
 
   initPager(): void {
     this.currentIndex = 0;
@@ -41,17 +47,17 @@ export class PagerComponent {
   }
 
   goToPage(direction: 'previous' | 'next') {
-    if (direction === 'previous') {
-      if (this.currentIndex > 0) {
-        this.nextDisabled = false;
-        this.currentIndex -= 1;
-      }
+    if (direction === 'previous' && this.currentIndex > 0) {
+      this.nextDisabled = false;
+      this.currentIndex -= 1;
     }
+
     if (direction === 'next') {
       this.currentIndex += 1;
 
+      const isEndRange = PagerComponent.pageSize * (this.currentIndex + 1) >= this.numberOfAllResults;
       // if end range for the next page of results is greater than the total number of results
-      if (this.pageSize * (this.currentIndex + 1) >= this.numberOfAllResults) {
+      if ((isEndRange && !this.nextPageIsAvailable) || (isEndRange && this.nextPageIsAvailable === true)) {
         this.nextDisabled = true;
       }
     }
@@ -60,16 +66,23 @@ export class PagerComponent {
     this.pageChanged.emit(this.currentIndex);
   }
 
+  /** calculates number of all results when total amount of records is unknown
+   * @param newBatchCount
+   */
+  calculateNumberOfAllResults(newBatchCount: number) {
+    this.numberOfAllResults = this.currentIndex * PagerComponent.pageSize + newBatchCount;
+  }
+
   /**
    * @param page offset
    */
   private _calculateRange(page: number) {
-    this.currentRangeStart = this.pageSize * page + 1;
+    this.currentRangeStart = PagerComponent.pageSize * page + 1;
+    this.currentRangeEnd =
+      PagerComponent.pageSize * (page + 1) > this.numberOfAllResults
+        ? this.numberOfAllResults
+        : PagerComponent.pageSize * (page + 1);
 
-    if (this.pageSize * (page + 1) > this.numberOfAllResults) {
-      this.currentRangeEnd = this.numberOfAllResults;
-    } else {
-      this.currentRangeEnd = this.pageSize * (page + 1);
-    }
+    this._cd.markForCheck();
   }
 }
