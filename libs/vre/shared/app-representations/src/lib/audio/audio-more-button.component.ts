@@ -1,9 +1,9 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   KnoraApiConnection,
-  ReadAudioFileValue,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
@@ -45,7 +45,8 @@ export class AudioMoreButtonComponent {
     private _dialog: MatDialog,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _sanitizer: DomSanitizer
   ) {}
 
   openReplaceFileDialog() {
@@ -93,26 +94,12 @@ export class AudioMoreButtonComponent {
     this._dspApiConnection.v2.values
       .updateValue(updateRes as UpdateResource<UpdateValue>)
       .pipe(
-        mergeMap((res: WriteValueResponse) =>
-          this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
+        mergeMap(res =>
+          this._dspApiConnection.v2.values.getValue(this.parentResource.id, (res as WriteValueResponse).uuid)
         )
       )
-      .subscribe((res2: ReadResource) => {
-        this.src.fileValue.fileUrl = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).fileUrl;
-        this.src.fileValue.filename = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).filename;
-        this.src.fileValue.strval = (res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue).strval;
-        this.src.fileValue.valueCreationDate = (
-          res2.properties[Constants.HasAudioFileValue][0] as ReadAudioFileValue
-        ).valueCreationDate;
-
-        this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
-
-        this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
-          this.originalFilename = res.originalFilename;
-        });
-
-        const audioElem = document.getElementById('audio');
-        (audioElem as HTMLAudioElement).load();
+      .subscribe(res => {
+        window.location.reload();
       });
   }
 }

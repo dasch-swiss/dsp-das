@@ -11,7 +11,7 @@ import { AudioPlayerService } from './audio-player.service';
   selector: 'app-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss'],
-  providers: [MediaControlService],
+  providers: [MediaControlService, AudioPlayerService],
 })
 export class AudioComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) src!: FileRepresentation;
@@ -28,6 +28,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
   duration = 0;
   watchForPause?: number;
 
+  isPlayerReady = false;
+
   constructor(
     private _sanitizer: DomSanitizer,
     public segmentsService: SegmentsService,
@@ -38,8 +40,8 @@ export class AudioComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this._watchForMediaEvents();src
-    this.audio = this._sanitizer.bypassSecurityTrustUrl(this..fileValue.fileUrl);
+    this._watchForMediaEvents();
+    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
 
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
@@ -52,7 +54,9 @@ export class AudioComponent implements OnInit, AfterViewInit {
     );
 
     this.loaded.subscribe(value => {
-      this._setPlayer();
+      const player = document.getElementById('audio') as HTMLAudioElement;
+      this.audioPlayer.onInit(player);
+      this.isPlayerReady = true;
       this.duration = this.audioPlayer.duration();
     });
   }
@@ -80,7 +84,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
     });
   }
 
-  parseTime(time: string) {
+  parseTime(time: any) {
     if (Number.isNaN(time)) {
       return '00:00';
     }
@@ -97,8 +101,5 @@ export class AudioComponent implements OnInit, AfterViewInit {
     return `${minutesString}:${secondsString}`;
   }
 
-  private _setPlayer() {
-    const player = document.getElementById('audio') as HTMLAudioElement;
-    this.audioPlayer.onInit(player);
-  }
+  private _setPlayer() {}
 }
