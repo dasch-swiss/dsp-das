@@ -3,6 +3,7 @@ import { ArchiveComponent } from './lib/archive/archive.component';
 import { AudioMoreButtonComponent } from './lib/audio/audio-more-button.component';
 import { AudioToolbarComponent } from './lib/audio/audio-toolbar.component';
 import { AudioComponent } from './lib/audio/audio.component';
+import { MediaSliderComponent } from './lib/audio/media-slider.component';
 import { AvTimelineComponent } from './lib/av-timeline/av-timeline.component';
 import { DocumentComponent } from './lib/document/document.component';
 import { ReplaceFileFormComponent } from './lib/replace-file-form/replace-file-form.component';
@@ -23,6 +24,7 @@ export const RepresentationsComponents = [
   AudioMoreButtonComponent,
   AvTimelineComponent,
   DocumentComponent,
+  MediaSliderComponent,
   ReplaceFileFormComponent,
   StillImageComponent,
   TextComponent,

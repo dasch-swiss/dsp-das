@@ -25,3 +25,4 @@ export * from './lib/video/video-toolbar.component';
 export * from './lib/video/video-overlay.component';
 export * from './lib/audio/audio-toolbar.component';
 export * from './lib/audio/audio-more-button.component';
+export * from './lib/audio/media-slider.component';

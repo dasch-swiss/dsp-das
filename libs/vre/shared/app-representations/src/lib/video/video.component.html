@@ -40,6 +40,11 @@
         [disabled]="!videoEle" />
     </mat-toolbar-row>
   </mat-toolbar>
+  <app-media-slider
+    *ngIf="isPlayerReady"
+    [max]="videoPlayer.duration()"
+    [currentTime]="videoPlayer.currentTime()"
+    (afterNavigation)="videoPlayer.navigate($event)" />
   <app-video-toolbar
     *ngIf="fileInfo"
     [src]="src"

@@ -9,13 +9,11 @@
 </div>
 
 <ng-container *ngIf="isPlayerReady">
-  <mat-toolbar-row style="height: 34px; background-color: black">
-    <mat-slider color="accent" style="width: 100%" [max]="Math.floor(audioPlayer.duration())" [min]="0" [step]="1">
-      <input matSliderThumb [ngModel]="audioPlayer.currentTime()" (ngModelChange)="audioPlayer.navigate($event)" />
-    </mat-slider>
-  </mat-toolbar-row>
+  <app-media-slider
+    [max]="audioPlayer.duration()"
+    [currentTime]="audioPlayer.currentTime()"
+    (afterNavigation)="audioPlayer.navigate($event)" />
   <app-audio-toolbar [parentResource]="parentResource" />
-
   <app-segments-display
     *ngIf="segmentsService.segments.length > 0 && duration > 0"
     [segments]="segmentsService.segments"
