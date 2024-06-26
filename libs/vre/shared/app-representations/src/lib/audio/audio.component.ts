@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -13,7 +13,7 @@ import { AudioPlayerService } from './audio-player.service';
   styleUrls: ['./audio.component.scss'],
   providers: [MediaControlService, AudioPlayerService],
 })
-export class AudioComponent implements OnInit, AfterViewInit {
+export class AudioComponent implements OnInit {
   @Input({ required: true }) src!: FileRepresentation;
 
   @Input({ required: true }) parentResource!: ReadResource;
@@ -22,8 +22,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   originalFilename?: string;
   failedToLoad = false;
-  currentTime = 0;
-  audio!: SafeUrl;
+  audioFileUrl!: SafeUrl;
 
   duration = 0;
   watchForPause?: number;
@@ -41,7 +40,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._watchForMediaEvents();
-    this.audio = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
+    this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
 
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
@@ -52,21 +51,13 @@ export class AudioComponent implements OnInit, AfterViewInit {
         this.failedToLoad = true;
       }
     );
-
-    this.loaded.subscribe(value => {
-      const player = document.getElementById('audio') as HTMLAudioElement;
-      this.audioPlayer.onInit(player);
-      this.isPlayerReady = true;
-      this.duration = this.audioPlayer.duration();
-    });
   }
 
-  ngAfterViewInit() {
-    this.loaded.emit(true);
-  }
-
-  onTimeUpdate(event: unknown) {
-    this.currentTime = (event as { target: HTMLAudioElement }).target.currentTime;
+  onAudioPlayerReady() {
+    const player = document.getElementById('audio') as HTMLAudioElement;
+    this.audioPlayer.onInit(player);
+    this.isPlayerReady = true;
+    this.duration = this.audioPlayer.duration();
   }
 
   private _watchForMediaEvents() {
@@ -84,22 +75,7 @@ export class AudioComponent implements OnInit, AfterViewInit {
     });
   }
 
-  parseTime(time: any) {
-    if (Number.isNaN(time)) {
-      return '00:00';
-    }
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time - minutes * 60);
-    let minutesString = minutes.toString();
-    if (minutes < 10) {
-      minutesString = `0${minutesString}`;
-    }
-    let secondsString = seconds.toString();
-    if (seconds < 10) {
-      secondsString = `0${secondsString}`;
-    }
-    return `${minutesString}:${secondsString}`;
-  }
-
   private _setPlayer() {}
+
+  protected readonly Math = Math;
 }

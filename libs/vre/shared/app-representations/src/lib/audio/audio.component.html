@@ -1,16 +1,16 @@
 <div style="background: black; height: 200px; display: flex; justify-content: center; align-items: center">
   <mat-icon style="color: white; transform: scale(4)"> audio_file</mat-icon>
   <div *ngIf="failedToLoad">Your browser does not support the audio element.</div>
-  <div *ngIf="audio" class="audio-player">
-    <audio id="audio" preload="auto" (timeupdate)="onTimeUpdate($event)">
-      <source [src]="audio" type="audio/mpeg" />
+  <div *ngIf="audioFileUrl" class="audio-player">
+    <audio id="audio" preload="auto" (canplay)="onAudioPlayerReady()">
+      <source [src]="audioFileUrl" type="audio/mpeg" />
     </audio>
   </div>
 </div>
 
 <ng-container *ngIf="isPlayerReady">
   <mat-toolbar-row style="height: 34px; background-color: black">
-    <mat-slider color="accent" style="width: 100%" [max]="audioPlayer.duration()">
+    <mat-slider color="accent" style="width: 100%" [max]="Math.floor(audioPlayer.duration())" [min]="0" [step]="1">
       <input matSliderThumb [ngModel]="audioPlayer.currentTime()" (ngModelChange)="audioPlayer.navigate($event)" />
     </mat-slider>
   </mat-toolbar-row>
