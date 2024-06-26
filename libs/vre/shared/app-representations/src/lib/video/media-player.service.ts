@@ -10,9 +10,9 @@ export class MediaPlayerService {
 
   onInit(player: HTMLVideoElement | HTMLAudioElement) {
     this._mediaPlayer = player;
-    this.onTimeUpdate$ = fromEvent<Event>(this._mediaPlayer, 'timeupdate').pipe(
-      map(v => (v.target as HTMLVideoElement).currentTime)
-    );
+    this.onTimeUpdate$ = fromEvent<{
+      target: HTMLVideoElement | HTMLAudioElement;
+    }>(this._mediaPlayer, 'timeupdate').pipe(map(v => v.target.currentTime));
   }
 
   togglePlay() {
