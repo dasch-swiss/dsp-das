@@ -8,7 +8,7 @@ export class MediaPlayerService {
 
   onTimeUpdate$!: Observable<number>;
 
-  onInit(player: HTMLVideoElement) {
+  onInit(player: HTMLVideoElement | HTMLAudioElement) {
     this._mediaPlayer = player;
     this.onTimeUpdate$ = fromEvent<Event>(this._mediaPlayer, 'timeupdate').pipe(
       map(v => (v.target as HTMLVideoElement).currentTime)

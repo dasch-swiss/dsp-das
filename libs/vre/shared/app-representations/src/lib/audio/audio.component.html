@@ -10,9 +10,9 @@
 
 <ng-container *ngIf="isPlayerReady">
   <app-media-slider
-    [max]="audioPlayer.duration()"
-    [currentTime]="audioPlayer.currentTime()"
-    (afterNavigation)="audioPlayer.navigate($event)" />
+    [max]="mediaPlayer.duration()"
+    [currentTime]="mediaPlayer.currentTime()"
+    (afterNavigation)="mediaPlayer.navigate($event)" />
   <app-audio-toolbar [parentResource]="parentResource" />
   <app-segments-display
     *ngIf="segmentsService.segments.length > 0 && duration > 0"

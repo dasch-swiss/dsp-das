@@ -3,24 +3,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { CreateSegmentDialogComponent, CreateSegmentDialogProps } from '@dasch-swiss/vre/shared/app-segment-support';
-import { AudioPlayerService } from './audio-player.service';
+import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
   selector: 'app-audio-toolbar',
   template: `
     <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
       <div>
-        <button mat-icon-button (click)="audioPlayer.togglePlay()">
-          <mat-icon>{{ audioPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+        <button mat-icon-button (click)="mediaPlayer.togglePlay()">
+          <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
         </button>
-        <button mat-icon-button (click)="audioPlayer.playFromBeginning()">
+        <button mat-icon-button (click)="mediaPlayer.playFromBeginning()">
           <mat-icon>skip_previous</mat-icon>
         </button>
-        <button mat-icon-button (click)="audioPlayer.toggleMute()">
-          <mat-icon>{{ audioPlayer.isMuted() ? 'volume_off' : 'volume_up' }}</mat-icon>
+        <button mat-icon-button (click)="mediaPlayer.toggleMute()">
+          <mat-icon>{{ mediaPlayer.isMuted() ? 'volume_off' : 'volume_up' }}</mat-icon>
         </button>
       </div>
-      <div>{{ parseTime(audioPlayer.currentTime()) }} / {{ durationString }}</div>
+      <div>{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
 
       <div>
         <button mat-icon-button (click)="createAudioSegment()">
@@ -39,11 +39,11 @@ export class AudioToolbarComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    public audioPlayer: AudioPlayerService
+    public mediaPlayer: MediaPlayerService
   ) {}
 
   ngOnInit() {
-    this.durationString = this.parseTime(this.audioPlayer.duration());
+    this.durationString = this.parseTime(this.mediaPlayer.duration());
   }
 
   createAudioSegment() {
@@ -51,7 +51,7 @@ export class AudioToolbarComponent implements OnInit {
       ...DspDialogConfig.dialogDrawerConfig({
         type: 'AudioSegment',
         resource: this.parentResource,
-        videoDurationSecs: this.audioPlayer.duration(),
+        videoDurationSecs: this.mediaPlayer.duration(),
       }),
       viewContainerRef: this._viewContainerRef,
     });

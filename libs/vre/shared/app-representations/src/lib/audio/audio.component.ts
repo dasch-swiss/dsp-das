@@ -5,13 +5,13 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
-import { AudioPlayerService } from './audio-player.service';
+import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
   selector: 'app-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss'],
-  providers: [MediaControlService, AudioPlayerService],
+  providers: [MediaControlService, MediaPlayerService],
 })
 export class AudioComponent implements OnInit {
   @Input({ required: true }) src!: FileRepresentation;
@@ -34,7 +34,7 @@ export class AudioComponent implements OnInit {
     public segmentsService: SegmentsService,
     private _mediaControl: MediaControlService,
     private _notification: NotificationService,
-    public audioPlayer: AudioPlayerService,
+    public mediaPlayer: MediaPlayerService,
     private _rs: RepresentationService
   ) {}
 
@@ -55,9 +55,9 @@ export class AudioComponent implements OnInit {
 
   onAudioPlayerReady() {
     const player = document.getElementById('audio') as HTMLAudioElement;
-    this.audioPlayer.onInit(player);
+    this.mediaPlayer.onInit(player);
     this.isPlayerReady = true;
-    this.duration = this.audioPlayer.duration();
+    this.duration = this.mediaPlayer.duration();
   }
 
   private _watchForMediaEvents() {
@@ -66,8 +66,8 @@ export class AudioComponent implements OnInit {
         this._notification.openSnackBar('The video cannot be played at this time.');
         return;
       }
-      this.audioPlayer.navigate(seconds);
-      this.audioPlayer.play();
+      this.mediaPlayer.navigate(seconds);
+      this.mediaPlayer.play();
     });
 
     this._mediaControl.watchForPause$.subscribe(seconds => {
