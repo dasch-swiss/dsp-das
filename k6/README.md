@@ -45,7 +45,11 @@ For running in the cloud you [need to login](https://k6.io/docs/cloud/creating-a
 
 ## Developing the tests locally without k6 cloud
 
-This setup contains a `docker-compose.yml` file that allows you to run the tests locally without having to install grafana. You can run the tests and export its metrics to the local grafana instance.
+This setup contains a `docker-compose.yml` file that allows you to run the tests locally without having to install Grafana. You can run the tests and export its metrics to the local Grafana instance.
+
+All tests are found in the `./tests` folder.
+The folder `./options` contains common [options](https://k6.io/docs/using-k6/k6-options/) for running the test, e.g. number of VU, certain [scenarios](https://k6.io/docs/using-k6/scenarios/) and such.
+The folder `./pages` contains [page objects](https://martinfowler.com/bliki/PageObject.html) modelling reusable pages for use in the tests.
 
 ### Setting up the environment
 
@@ -59,13 +63,13 @@ just grafana-up
 
 This will open up the create dashboard page in the browser and copy the `grafana_dashboard.json` to your clipboard. On this page you have to "import a dashboard" and paste the json and save.
 
-Stopping the grafana stack is done with:
+Stopping the Grafana stack is done with:
 
 ```sh
 just grafana-down
 ```
 
-[IMPORTANT] The grafana setup is not persistent. If you stop the containers, the data will be lost and you will have to recreate the dashboard with the steps above.
+[IMPORTANT] The Grafana setup is not persistent. If you stop the containers, the data will be lost and you will have to recreate the dashboard with the steps above.
 
 #### Create a Dashboard for HTTP Tests
 
@@ -74,7 +78,7 @@ If you are using `k6`'s `http` for testing API you might want to import the [nr 
 
 ### Visualizing the test results in Grafana
 
-When running the tests you have to instruct k6 to export the metrics to the grafana instance. You can do this by setting the `K6_OUT` environment variable to the url of the influxdb instance.
+When running the tests you have to instruct k6 to export the metrics to the Grafana instance. You can do this by setting the `K6_OUT` environment variable to the url of the InfluxDB instance.
 
 We have a `just` command that sets this variable for you:
 
