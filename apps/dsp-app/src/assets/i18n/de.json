@@ -145,7 +145,8 @@
       }
     },
     "resource": {
-      "properties": "Eigenschaften"
+      "properties": "Eigenschaften",
+      "comment": "Kommentar"
     }
   }
 }
