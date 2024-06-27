@@ -55,6 +55,8 @@ Start Grafana with InfluxDB instances:
 just grafana-up
 ```
 
+#### Create a Dashboard for Browser Tests
+
 This will open up the create dashboard page in the browser and copy the `grafana_dashboard.json` to your clipboard. On this page you have to "import a dashboard" and paste the json and save.
 
 Stopping the grafana stack is done with:
@@ -64,6 +66,11 @@ just grafana-down
 ```
 
 [IMPORTANT] The grafana setup is not persistent. If you stop the containers, the data will be lost and you will have to recreate the dashboard with the steps above.
+
+#### Create a Dashboard for HTTP Tests
+
+Grafana provides some [preconfigured dashboards](https://grafana.com/grafana/dashboards/?search=k6), unfortunately they do not provide one for the browser metrics.
+If you are using `k6`'s `http` for testing API you might want to import the [nr `2587` "k6 Load Testing Results"](https://grafana.com/grafana/dashboards/2587-k6-load-testing-results/) dashboard.
 
 ### Visualizing the test results in Grafana
 
