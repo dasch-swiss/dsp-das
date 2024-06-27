@@ -23,16 +23,22 @@ k6 run tests/<test_script.js>
 
 We provide a `justfile` to make it easier to run the tests.
 
+Listing all the available tests:
+
+```sh
+just list
+```
+
 You can run the tests _locally_ using the following command:
 
 ```sh
-just run
+just run <test_name>
 ```
 
 You can run the tests _in the [k6 cloud](https://k6.io/docs/cloud/)_ using the following command:
 
 ```sh
-just run-cloud
+just run-cloud <test_name>
 ```
 
 For running in the cloud you [need to login](https://k6.io/docs/cloud/creating-and-running-a-test/cloud-tests-from-the-cli/#run-test-on-the-cli).
@@ -66,7 +72,7 @@ When running the tests you have to instruct k6 to export the metrics to the graf
 We have a `just` command that sets this variable for you:
 
 ```sh
-just run-grafana
+just run-grafana <test_name>
 ```
 
 ## Documentation
