@@ -7,9 +7,11 @@ default:
 
 # List all the available tests
 list:
-    @echo "Run a test with e.g. just run testToRun=your-test."
     @echo "Choose a test from below:"
-    @ls -1 tests| sed 's/\.js//'
+    @echo ""
+    @ls -1 tests|sed 's/\.js//'|awk '{print " * " $0}'
+    @echo ""
+    @echo "Run the test using 'just run <testName>'"
 
 # Run the test locally
 run testToRun=testToRun:
