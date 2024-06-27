@@ -4,8 +4,8 @@
       {
         "builtIn": 1,
         "datasource": {
-          "type": "datasource",
-          "uid": "grafana"
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
         "enable": true,
         "hide": true,
@@ -15,12 +15,40 @@
       }
     ]
   },
+  "description": "A dashboard for visualizing results from the k6.io load testing tool with browser extension, using the InfluxDB exporter",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "id": 1,
+  "gnetId": 2587,
+  "graphTooltip": 2,
+  "id": 3,
   "links": [],
   "panels": [
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 18,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fdpxpa5pzwj5se"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Overview",
+      "type": "row"
+    },
     {
       "datasource": {
         "type": "influxdb",
@@ -85,7 +113,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 1,
       "interval": ">1s",
@@ -94,7 +122,9 @@
           "calcs": ["max", "min"],
           "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Min",
+          "sortDesc": true
         },
         "tooltip": {
           "maxHeight": 600,
@@ -223,10 +253,10 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 0
+        "y": 1
       },
       "id": 7,
-      "interval": ">1s",
+      "interval": "1s",
       "options": {
         "legend": {
           "calcs": ["mean", "sum"],
@@ -337,7 +367,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "none"
         },
         "overrides": [
           {
@@ -361,7 +391,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 0
+        "y": 1
       },
       "id": 10,
       "interval": ">1s",
@@ -380,7 +410,7 @@
       },
       "targets": [
         {
-          "alias": "Num Checks",
+          "alias": "$tag_check",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -390,6 +420,10 @@
             {
               "params": ["$__interval"],
               "type": "time"
+            },
+            {
+              "params": ["check"],
+              "type": "tag"
             },
             {
               "params": ["none"],
@@ -409,7 +443,7 @@
               },
               {
                 "params": [],
-                "type": "count"
+                "type": "sum"
               }
             ]
           ],
@@ -420,50 +454,51 @@
       "type": "timeseries"
     },
     {
+      "collapsed": false,
       "datasource": {
         "type": "influxdb",
         "uid": "fdpxpa5pzwj5se"
       },
-      "description": "Grouped by 1 sec intervals",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 19,
+      "panels": [],
+      "repeat": "Measurement",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fdpxpa5pzwj5se"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "$Measurement",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
-          },
-          "mappings": [],
-          "min": 0,
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -482,29 +517,30 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 12,
+        "h": 3,
+        "w": 4,
         "x": 0,
-        "y": 7
+        "y": 9
       },
       "id": 11,
-      "interval": ">1s",
+      "maxDataPoints": 100,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
+      "pluginVersion": "11.0.1",
       "targets": [
         {
-          "alias": "max",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -516,85 +552,14 @@
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": ["null"],
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_lcp",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p95",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_lcp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [95],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p80",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_lcp",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "query": "SELECT mean(\"value\") FROM $Measurement WHERE $timeFilter ",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -604,134 +569,36 @@
                 "type": "field"
               },
               {
-                "params": ["80"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_lcp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["50"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "min",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_lcp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
                 "params": [],
-                "type": "min"
+                "type": "mean"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "title": "browser_web_vital_lcp",
-      "type": "timeseries"
+      "title": "$Measurement (mean)",
+      "type": "stat"
     },
     {
       "datasource": {
         "type": "influxdb",
         "uid": "fdpxpa5pzwj5se"
       },
-      "description": "Grouped by 1 sec intervals",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
-          },
-          "mappings": [],
-          "min": 0,
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -750,29 +617,30 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 7
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 9
       },
-      "id": 12,
-      "interval": ">1s",
+      "id": 14,
+      "maxDataPoints": 100,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
+      "pluginVersion": "11.0.1",
       "targets": [
         {
-          "alias": "max",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -784,85 +652,14 @@
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": ["null"],
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_cls",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p95",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_cls",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [95],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p80",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_cls",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "query": "SELECT max(\"value\") FROM $Measurement WHERE $timeFilter",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -872,51 +669,78 @@
                 "type": "field"
               },
               {
-                "params": ["80"],
-                "type": "percentile"
+                "params": [],
+                "type": "mean"
               }
             ]
           ],
           "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
+        }
+      ],
+      "title": "$Measurement (max)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
             {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
-          "measurement": "browser_web_vital_cls",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
               {
-                "params": ["value"],
-                "type": "field"
+                "color": "green",
+                "value": null
               },
               {
-                "params": ["50"],
-                "type": "percentile"
+                "color": "red",
+                "value": 80
               }
             ]
-          ],
-          "tags": []
+          },
+          "unit": "ms"
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "id": 15,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
         {
-          "alias": "min",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -928,14 +752,15 @@
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": ["null"],
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_cls",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "E",
+          "query": "SELECT median(\"value\") FROM $Measurement WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
           "resultFormat": "time_series",
           "select": [
             [
@@ -945,15 +770,315 @@
               },
               {
                 "params": [],
-                "type": "min"
+                "type": "mean"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "title": "browser_web_vital_cls",
-      "type": "timeseries"
+      "title": "$Measurement (med)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "id": 16,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fdpxpa5pzwj5se"
+          },
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT min(\"value\") FROM $Measurement WHERE $timeFilter and value > 0",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$Measurement (min)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 16,
+        "y": 9
+      },
+      "id": 12,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fdpxpa5pzwj5se"
+          },
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 90) FROM $Measurement WHERE $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$Measurement (p90)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "fdpxpa5pzwj5se"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 9
+      },
+      "id": 13,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "fdpxpa5pzwj5se"
+          },
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM $Measurement WHERE $timeFilter ",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "$Measurement (p95)",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -986,7 +1111,8 @@
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
-              "type": "linear"
+              "log": 2,
+              "type": "log"
             },
             "showPoints": "never",
             "spanNulls": false,
@@ -999,7 +1125,6 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1021,7 +1146,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 12
       },
       "id": 5,
       "interval": ">1s",
@@ -1056,9 +1181,11 @@
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_fcp",
+          "measurement": "/^$Measurement$/",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT max(\"value\") FROM /^$Measurement$/ WHERE $timeFilter and value > 0 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
           "refId": "C",
           "resultFormat": "time_series",
           "select": [
@@ -1092,9 +1219,11 @@
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_fcp",
+          "measurement": "/^$Measurement$/",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM /^$Measurement$/ WHERE $timeFilter and value > 0 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
           "refId": "D",
           "resultFormat": "time_series",
           "select": [
@@ -1112,7 +1241,7 @@
           "tags": []
         },
         {
-          "alias": "p80",
+          "alias": "p90",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -1128,9 +1257,11 @@
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_fcp",
+          "measurement": "/^$Measurement$/",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT percentile(\"value\", 90) FROM /^$Measurement$/ WHERE $timeFilter and value > 0 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1140,43 +1271,7 @@
                 "type": "field"
               },
               {
-                "params": ["80"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_fcp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["50"],
+                "params": ["90"],
                 "type": "percentile"
               }
             ]
@@ -1200,9 +1295,11 @@
               "type": "fill"
             }
           ],
-          "measurement": "browser_web_vital_fcp",
+          "measurement": "/^$Measurement$/",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT min(\"value\") FROM /^$Measurement$/ WHERE $timeFilter and value > 0 GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
           "refId": "E",
           "resultFormat": "time_series",
           "select": [
@@ -1220,68 +1317,35 @@
           "tags": []
         }
       ],
-      "title": "browser_web_vital_fcp",
+      "title": "$Measurement (over time)",
       "type": "timeseries"
     },
     {
+      "cards": {},
+      "color": {
+        "cardColor": "rgb(0, 234, 255)",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateRdYlGn",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
       "datasource": {
         "type": "influxdb",
         "uid": "fdpxpa5pzwj5se"
       },
-      "description": "Grouped by 1 sec intervals",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
+          }
         },
         "overrides": []
       },
@@ -1289,294 +1353,63 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 12
       },
-      "id": 13,
+      "heatmap": {},
+      "height": "250px",
+      "highlightCards": true,
+      "id": 8,
       "interval": ">1s",
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "calculate": true,
+        "calculation": {
+          "yBuckets": {
+            "mode": "count",
+            "scale": {
+              "log": 2,
+              "type": "log"
+            }
+          }
         },
+        "cellGap": 2,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "rgb(0, 234, 255)",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "RdYlGn",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": false
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
         "tooltip": {
           "maxHeight": 600,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "alias": "max",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_ttfb",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
-              }
-            ]
-          ],
-          "tags": []
+          "mode": "single",
+          "showColorScale": false,
+          "yHistogram": true
         },
-        {
-          "alias": "p95",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_ttfb",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [95],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p80",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_ttfb",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["80"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_ttfb",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["50"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "min",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_web_vital_ttfb",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "min"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "browser_web_vital_ttfp",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fdpxpa5pzwj5se"
-      },
-      "description": "Grouped by 1 sec intervals",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
+        "yAxis": {
+          "axisPlacement": "left",
+          "reverse": false,
           "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 21
-      },
-      "id": 15,
-      "interval": ">1s",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "multi",
-          "sort": "none"
         }
       },
+      "pluginVersion": "11.0.1",
       "targets": [
         {
-          "alias": "max",
           "datasource": {
             "type": "influxdb",
             "uid": "fdpxpa5pzwj5se"
@@ -1588,85 +1421,15 @@
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": ["null"],
               "type": "fill"
             }
           ],
-          "measurement": "browser_http_req_duration",
+          "measurement": "http_req_duration",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p95",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_duration",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [95],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p80",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_duration",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "query": "SELECT \"value\" FROM $Measurement WHERE $timeFilter and value > 0",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1676,366 +1439,91 @@
                 "type": "field"
               },
               {
-                "params": ["80"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_duration",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["50"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "min",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_duration",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
                 "params": [],
-                "type": "min"
+                "type": "mean"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "title": "browser_http_req_duration",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "fdpxpa5pzwj5se"
+      "title": "$Measurement (over time)",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
       },
-      "description": "Grouped by 1 sec intervals",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
       },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 21
-      },
-      "id": 14,
-      "interval": ">1s",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "maxHeight": 600,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "alias": "max",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_failed",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p95",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_failed",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [95],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p80",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_failed",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["80"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "p50",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_failed",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": ["50"],
-                "type": "percentile"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "min",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "fdpxpa5pzwj5se"
-          },
-          "dsType": "influxdb",
-          "groupBy": [
-            {
-              "params": ["$__interval"],
-              "type": "time"
-            },
-            {
-              "params": ["none"],
-              "type": "fill"
-            }
-          ],
-          "measurement": "browser_http_req_failed",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "min"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "browser_http_req_failed",
-      "type": "timeseries"
+      "yAxis": {
+        "format": "ms",
+        "logBase": 2,
+        "show": true
+      }
     }
   ],
   "refresh": "5s",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Measurement",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "browser_web_vital_lcp",
+            "value": "browser_web_vital_lcp"
+          },
+          {
+            "selected": false,
+            "text": "browser_web_vital_ttfb",
+            "value": "browser_web_vital_ttfb"
+          },
+          {
+            "selected": false,
+            "text": "browser_http_req_duration",
+            "value": "browser_http_req_duration"
+          },
+          {
+            "selected": false,
+            "text": "browser_web_vital_cls",
+            "value": "browser_web_vital_cls"
+          },
+          {
+            "selected": false,
+            "text": "browser_http_req_failed",
+            "value": "browser_http_req_failed"
+          },
+          {
+            "selected": false,
+            "text": "browser_web_vital_fcp",
+            "value": "browser_web_vital_fcp"
+          }
+        ],
+        "query": "browser_web_vital_lcp,browser_web_vital_ttfb,browser_http_req_duration,browser_web_vital_cls,browser_http_req_failed,browser_web_vital_fcp",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timeRangeUpdatedDuringEditOrView": false,
@@ -2044,8 +1532,8 @@
     "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "browser",
-  "title": "k6",
-  "uid": "RgdVrzDZz",
-  "version": 9,
+  "title": "k6 Browser Load Testing Results",
+  "uid": "ddq27femwg0sga",
+  "version": 6,
   "weekStart": ""
 }
