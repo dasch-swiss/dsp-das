@@ -1,4 +1,4 @@
-export class Homepage {
+export class HomePage {
   constructor(page) {
     this.page = page;
     this.title = page.locator('html > head > title');

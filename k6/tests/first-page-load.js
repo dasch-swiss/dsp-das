@@ -1,6 +1,6 @@
 import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
-import { Homepage } from '../pages/homepage.js';
+import { HomePage } from '../pages/home-page.js';
 import { defaultOptions } from '../options/options.js';
 import { Counter } from 'k6/metrics';
 
@@ -10,7 +10,7 @@ export const options = defaultOptions;
 
 export default async function () {
   const page = browser.newPage();
-  const homepage = new Homepage(page);
+  const homepage = new HomePage(page);
 
   try {
     await homepage.goto();

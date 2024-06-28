@@ -1,6 +1,6 @@
 import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
-import { Resourcepage } from '../pages/resourcepage.js';
+import { ResourcePage } from '../pages/resource-page.js';
 import { defaultOptions } from '../options/options.js';
 import { Counter } from 'k6/metrics';
 
@@ -9,7 +9,7 @@ export const errorCounter = new Counter('errors');
 
 export default async function () {
   const page = browser.newPage();
-  const homepage = new Resourcepage(page);
+  const homepage = new ResourcePage(page);
 
   try {
     await homepage.goto();
