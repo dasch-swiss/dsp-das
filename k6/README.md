@@ -22,6 +22,11 @@ k6 run tests/<test_script.js>
 ### Using `just`
 
 We provide a `justfile` to make it easier to run the tests.
+If you don't have [`just`](https://just.systems/man/en/) installed, you can install it using brew:
+
+```sh
+brew install just
+```
 
 Listing all the available tests:
 
