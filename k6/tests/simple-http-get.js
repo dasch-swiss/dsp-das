@@ -21,7 +21,7 @@ export const options = {
 // about authoring k6 scripts.
 //
 export default function () {
-  const path = Math.random() < 0.999 ? '200' : '500';
+  const path = Math.random() < 0.9 ? '200' : '500';
   let res = http.get(`https://httpstat.us/${path}`);
   //const res = http.get('https://ingest.dev.dasch.swiss/info');
   const success = check(res, { status: res => res.status === 200 });
