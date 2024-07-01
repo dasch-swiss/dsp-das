@@ -1,11 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Segment } from './segment';
 
-interface SegmentWithRow {
-  segment: Segment;
-  row: number;
-}
-
 @Component({
   selector: 'app-segments-display',
   template: ` <div style="position: relative" [ngStyle]="{ height: height + 'px' }">
