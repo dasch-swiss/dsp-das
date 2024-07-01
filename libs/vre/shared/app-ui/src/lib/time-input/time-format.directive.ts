@@ -1,7 +1,7 @@
-import { Directive, ElementRef, HostListener, forwardRef } from '@angular/core';
+import { Directive, ElementRef, forwardRef, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { secondsToTimeString } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/seconds-to-time-string';
-import { timeStringToSeconds } from '../../../../../../libs/vre/shared/app-resource-properties/src/lib/time-string-to-seconds';
+import { secondsToTimeString } from './seconds-to-time-string';
+import { timeStringToSeconds } from './time-string-to-seconds';
 
 @Directive({
   selector: '[appTimeFormat]',

@@ -25,8 +25,8 @@ import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker'
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import {
   CreateListInfoPageComponent,
-  ReusableListInfoFormComponent,
   ListComponents,
+  ReusableListInfoFormComponent,
 } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
@@ -46,8 +46,6 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
-import { TimeFormatDirective } from '@dsp-app/src/app/project/time-input/time-format.directive';
-import { TimeInputComponent } from '@dsp-app/src/app/project/time-input/time-input.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -236,8 +234,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TextValueHtmlLinkDirective,
     ThirdPartyIiifComponent,
     TimePipe,
-    TimeFormatDirective,
-    TimeInputComponent,
     TitleFromCamelCasePipe,
     TruncatePipe,
     UserComponent,
