@@ -193,10 +193,16 @@
       "icon": {
         "true": "Yes",
         "false": "No"
+      },
+      "pager": {
+        "of": "of",
+        "previous": "Previous",
+        "next": "Next"
       }
     },
     "resource": {
-      "properties": "Properties"
+      "properties": "Properties",
+      "comment": "Comment"
     }
   }
 }

@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -49,7 +48,7 @@ import { CompoundService } from './compound/compound.service';
     </mat-tab-group>
   `,
 })
-export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
+export class ResourceTabsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
@@ -77,10 +76,6 @@ export class ResourceTabsComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedTab = 1;
       }
     });
-  }
-
-  ngOnChanges() {
-    this.selectedTab = 0;
   }
 
   ngOnDestroy() {

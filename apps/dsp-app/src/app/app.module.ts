@@ -45,7 +45,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { UiComponents } from '@dasch-swiss/vre/shared/app-ui';
+import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { TimeFormatDirective } from '@dsp-app/src/app/project/time-input/time-format.directive';
 import { TimeInputComponent } from '@dsp-app/src/app/project/time-input/time-input.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -258,6 +258,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MultipleViewerComponent,
   ],
   imports: [
+    ...UiStandaloneComponents,
     AngularSplitModule,
     AppDatePickerComponent,
     AppProgressIndicatorComponent,

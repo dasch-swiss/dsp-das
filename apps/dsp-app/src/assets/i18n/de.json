@@ -142,10 +142,16 @@
       "icon": {
         "true": "Ja",
         "false": "Nein"
+      },
+      "pager": {
+        "of": "von",
+        "previous": "Zurück",
+        "next": "Weiter"
       }
     },
     "resource": {
-      "properties": "Eigenschaften"
+      "properties": "Eigenschaften",
+      "comment": "Kommentar"
     }
   }
 }
