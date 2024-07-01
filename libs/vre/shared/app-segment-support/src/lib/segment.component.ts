@@ -18,7 +18,7 @@ import { SegmentsService } from './segments.service';
           segment.label
         }}</span>
       </div>
-      <div class="hover-button" style="" *ngIf="showHover" (click)="segmentsSevice.highlightSegment(segment)">
+      <div class="hover-button" style="" *ngIf="showHover" (click)="segmentsService.highlightSegment(segment)">
         <mat-icon>arrow_downward</mat-icon>
       </div>
     </div>
@@ -43,7 +43,7 @@ export class SegmentComponent implements OnInit {
 
   constructor(
     public mediaControl: MediaControlService,
-    public segmentsSevice: SegmentsService
+    public segmentsService: SegmentsService
   ) {}
 
   ngOnInit() {
