@@ -47,12 +47,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { timeValidator } from '@dsp-app/src/app/project/time-input/time-validator';
 import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
 import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
-import { timeStringToSeconds } from './time-string-to-seconds';
 
 interface MappingParameters<T extends ReadValue> {
   control: (value?: T) => AbstractControl;
