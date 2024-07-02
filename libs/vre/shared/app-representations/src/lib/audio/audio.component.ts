@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { RepresentationService } from '../representation.service';
 import { MediaPlayerService } from '../video/media-player.service';
@@ -13,7 +15,7 @@ import { MediaPlayerService } from '../video/media-player.service';
   styleUrls: ['./audio.component.scss'],
   providers: [MediaControlService, MediaPlayerService],
 })
-export class AudioComponent implements OnInit {
+export class AudioComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: FileRepresentation;
 
   @Input({ required: true }) parentResource!: ReadResource;
@@ -30,6 +32,7 @@ export class AudioComponent implements OnInit {
   currentTime = 0;
 
   isPlayerReady = false;
+  private _ngUnsubscribe = new Subject<void>();
 
   constructor(
     private _sanitizer: DomSanitizer,
@@ -41,7 +44,9 @@ export class AudioComponent implements OnInit {
     private _cd: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this._ngUnsubscribe.next();
+
     this._watchForMediaEvents();
     this.audioFileUrl = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     this.segmentsService.onInit(this.parentResource.id, 'AudioSegment');
@@ -54,6 +59,10 @@ export class AudioComponent implements OnInit {
         this.failedToLoad = true;
       }
     );
+  }
+
+  ngOnDestroy() {
+    this._ngUnsubscribe.next();
   }
 
   onAudioPlayerReady() {
@@ -78,7 +87,7 @@ export class AudioComponent implements OnInit {
   }
 
   private _watchForMediaEvents() {
-    this._mediaControl.play$.subscribe(seconds => {
+    this._mediaControl.play$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
       if (seconds >= this.duration) {
         this._notification.openSnackBar('The video cannot be played at this time.');
         return;
@@ -87,7 +96,7 @@ export class AudioComponent implements OnInit {
       this.mediaPlayer.play();
     });
 
-    this._mediaControl.watchForPause$.subscribe(seconds => {
+    this._mediaControl.watchForPause$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
       console.log('pause', seconds);
       this.watchForPause = seconds;
     });
