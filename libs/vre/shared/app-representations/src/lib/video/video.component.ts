@@ -5,7 +5,7 @@ import {
   HostListener,
   Input,
   OnChanges,
-  OnInit,
+  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -13,6 +13,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PointerValue } from '../av-timeline/av-timeline.component';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
@@ -25,7 +27,7 @@ import { MediaPlayerService } from './media-player.service';
   styleUrls: ['./video.component.scss'],
   providers: [MediaControlService, MediaPlayerService],
 })
-export class VideoComponent implements OnInit, OnChanges {
+export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Output() loaded = new EventEmitter<boolean>();
@@ -64,6 +66,7 @@ export class VideoComponent implements OnInit, OnChanges {
   watchForPause: number | null = null;
   isPlayerReady = false;
   fileInfo?: MovingImageSidecar;
+  private _ngUnsubscribe = new Subject<void>();
 
   constructor(
     private _sanitizer: DomSanitizer,
@@ -78,10 +81,6 @@ export class VideoComponent implements OnInit, OnChanges {
     if (event.key === 'Escape' && this.cinemaMode) {
       this.cinemaMode = false;
     }
-  }
-
-  ngOnInit() {
-    this._watchForMediaEvents();
   }
 
   onVideoPlayerReady() {
@@ -99,10 +98,11 @@ export class VideoComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
+    this._ngUnsubscribe.next();
+
+    this._watchForMediaEvents();
     this.segmentsService.onInit(this.parentResource.id, 'VideoSegment');
-
     this.videoError = '';
-
     this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     // set the file info first bc. browsers might queue and block requests
     // if there are already six ongoing requests
@@ -111,8 +111,12 @@ export class VideoComponent implements OnInit, OnChanges {
     });
   }
 
+  ngOnDestroy() {
+    this._ngUnsubscribe.next();
+  }
+
   private _watchForMediaEvents() {
-    this._mediaControl.play$.subscribe(seconds => {
+    this._mediaControl.play$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
       if (seconds >= this.duration) {
         this._notification.openSnackBar('The video cannot be played at this time.');
         return;
