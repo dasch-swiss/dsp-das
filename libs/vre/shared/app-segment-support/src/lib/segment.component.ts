@@ -12,7 +12,7 @@ import { SegmentsService } from './segments.service';
       [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false">
-      <div class="segment" (click)="playVideo()" [matTooltip]="segment.label">
+      <div class="segment" (click)="playMedia()" [matTooltip]="segment.label">
         <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
         <span class="mat-body-2 label" *ngIf="myElement && myElement.nativeElement.offsetWidth > 100">{{
           segment.label
@@ -53,7 +53,7 @@ export class SegmentComponent implements OnInit {
     this.start = (this.segment.hasSegmentBounds.start / this.videoLengthSecs) * 100;
   }
 
-  playVideo() {
+  playMedia() {
     this.mediaControl.playMedia(this.segment.hasSegmentBounds.start, this.segment.hasSegmentBounds.end);
     this.play = !this.play;
   }
