@@ -109,13 +109,7 @@
           "edit": "Projekt aktualisieren",
           "editSuccess": "Das Projekt wurde erfolgreich aktualisiert",
           "deactivate": "Projekt deaktivieren",
-          "deactivateHint": "Möchtest du das Projekt wirklich deaktivieren?",
-          "formWizard": {
-            "step_1": "Projektdaten",
-            "step_2": "Mitlgieder hinzufügen",
-            "step_3": "Bestätgien",
-            "more": "Ein weiteres Projekt erstellen"
-          }
+          "deactivateHint": "Möchtest du das Projekt wirklich deaktivieren?"
         },
         "imageSettings": {
           "off": "Aus",

@@ -138,13 +138,7 @@
           "deactivateHint": "You're sure to deactivate this project?",
           "deactivateButton": "Deactivate project now",
           "activate": "Do you want to reactivate?",
-          "activateButton": "Reactivate project now",
-          "formWizard": {
-            "step_1": "Project data",
-            "step_2": "Add project member",
-            "step_3": "Confirm",
-            "more": "Add more projects"
-          }
+          "activateButton": "Reactivate project now"
         },
         "imageSettings": {
           "off": "Off",
@@ -186,12 +180,7 @@
           "editSuccess": "You have successfully updated this resource.",
           "delete": "Delete this resource",
           "deleteHint": "You're sure to delete this resource?",
-          "deleteButton": "Delete resource now",
-          "formWizard": {
-            "step_1": "Select your resource",
-            "step_2": "Add properties",
-            "step_3": "Confirm"
-          }
+          "deleteButton": "Delete resource now"
         }
       }
     },
