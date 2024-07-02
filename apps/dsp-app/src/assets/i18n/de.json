@@ -84,7 +84,7 @@
           "delete": "Benutzer löschen",
           "deleteHint": "Bist du sicher, dass du diesen Benutzer löschen willst?",
           "password": "Passwort ändern",
-          "passwordSuccess": "Du hast das Passwort erfolgreich geändert."
+          "passwordSuccess": "Du hast das Passwort erfolgreich geändert.",
           "select": "Neuen Benutzer zum Projekt hinzufügen (eMail Adresse oder Benutzername)",
           "deleted": "bereits gelöscht"
         }
