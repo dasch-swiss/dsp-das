@@ -12,11 +12,8 @@
         <!-- auto complete list to select user -->
         <div class="form-content">
           <mat-form-field class="large-field select-user">
-            <input
-              matInput
-              [matAutocomplete]="user"
-              [formControl]="selectUserForm.controls['addUser']"
-              [placeholder]="'appLabels.addProjectMember.select' | translate" />
+            <mat-label>{{'appLabels.addProjectMember.select' | translate}}</mat-label>
+            <input matInput [matAutocomplete]="user" [formControl]="selectUserForm.controls['addUser']" />
             <button
               class="reset-button"
               mat-icon-button
