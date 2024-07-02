@@ -46,7 +46,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   get displayAnnotations() {
-    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.compoundService.exists;
+    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined;
   }
 
   constructor(
