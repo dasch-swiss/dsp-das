@@ -5,14 +5,12 @@
       "secondParagraph": "DSP-APP ist eine (generische) Benutzerschnittstelle um auf Daten von einem Haupt-Repository zuzugreifen, das hier beschrieben ist: ",
       "projectsIntro": "Öffentliche Projekte in DSP"
     },
-    "frameworkForListings": {
-      "list": {
-        "title": "Mitglieder in diesem Projekt",
-        "description": "",
-        "content": "user",
-        "showAs": "expansion",
-        "restrictedBy": ""
-      }
+    "addProjectMember": {
+      "title": "Projektmitglied hinzufügen",
+      "description": "Projektteam erweitern",
+      "select": "Aus der Liste wählen ...",
+      "usersLoading": "Lade Benutzer ...",
+      "newUser": "Neuer Benutzer"
     },
     "usersList": {
       "sortProps": {

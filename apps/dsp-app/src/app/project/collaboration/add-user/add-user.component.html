@@ -1,13 +1,13 @@
-<div class="app-toolbar transparent more-space-bottom" *ngIf="selectUserForm">
+<div class="app-toolbar transparent more-space-bottom">
   <div class="app-toolbar-row toolbar-subtitle">
     <h3 class="mat-body subtitle">Increase your team</h3>
   </div>
   <div class="app-toolbar-row toolbar-form">
-    <h2 class="mat-headline-6">{{ 'appLabels.form.user.title.add2project' | translate }}</h2>
+    <h2 class="mat-headline-6">{{ 'appLabels.addProjectMember.title' | translate }}</h2>
 
     <span class="fill-remaining-space"></span>
 
-    <span class="app-toolbar-action select-form" *ngIf="selectUserForm">
+    <span class="app-toolbar-action select-form">
       <form [formGroup]="selectUserForm" class="form">
         <!-- auto complete list to select user -->
         <div class="form-content">
@@ -16,7 +16,7 @@
               matInput
               [matAutocomplete]="user"
               [formControl]="selectUserForm.controls['addUser']"
-              [placeholder]="'appLabels.form.user.title.select' | translate" />
+              [placeholder]="'appLabels.addProjectMember.select' | translate" />
             <button
               class="reset-button"
               mat-icon-button
@@ -30,7 +30,7 @@
               <mat-option *ngIf="!users?.length" class="loading-option">
                 <div class="loading-container">
                   <mat-spinner diameter="20"></mat-spinner>
-                  <span>Loading users ...</span>
+                  <span>{{ 'appLabels.addProjectMember.usersLoading' | translate }}</span>
                 </div>
               </mat-option>
               <mat-option
@@ -48,7 +48,9 @@
     <span class="fill-remaining-space"></span>
 
     <span class="app-toolbar-action select-form">
-      <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">New user</button>
+      <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
+        {{ 'appLabels.addProjectMember.newUser' | translate }}
+      </button>
     </span>
   </div>
 </div>

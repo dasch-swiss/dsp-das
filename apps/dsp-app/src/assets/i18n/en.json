@@ -11,23 +11,12 @@
         "inactive": "Deactivated"
       }
     },
-    "frameworkForListings": {
-      "project": {
-        "list": {
-          "title": "Projects",
-          "description": ""
-        }
-      },
-      "user": {
-        "list": {
-          "title": "Members in this project",
-          "description": ""
-        },
-        "add": {
-          "title": "Add a new project member",
-          "description": ""
-        }
-      }
+    "addProjectMember": {
+        "title": "Add project member",
+        "description": "Increase your team",
+        "select": "Select from list...",
+        "usersLoading": "Loading users ...",
+        "newUser": "New user"
     },
     "usersList": {
       "sortProps": {
@@ -108,8 +97,6 @@
           "deleteButton": "Suspend user account now",
           "password": "Update password",
           "passwordSuccess": "You have successfully updated the password.",
-          "add2project": "Add project member",
-          "select": "Select from list...",
           "create": "or create new",
           "deleted": "already deleted"
         }
