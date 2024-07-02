@@ -1,5 +1,22 @@
 # Changelog
 
+## [11.14.0](https://github.com/dasch-swiss/dsp-das/compare/v11.13.0...v11.14.0) (2024-07-02)
+
+
+### Enhancements
+
+* Add k6 brower performance test ([#1666](https://github.com/dasch-swiss/dsp-das/issues/1666)) ([6fb4787](https://github.com/dasch-swiss/dsp-das/commit/6fb478788af1f868e5ea0f63d7c91c21f247993b))
+
+
+### Bug Fixes
+
+* editing a stillimage properties keep the same page active ([#1677](https://github.com/dasch-swiss/dsp-das/issues/1677)) ([acfa48e](https://github.com/dasch-swiss/dsp-das/commit/acfa48e247197c0d8cbebeeff78b69ec25d47256))
+
+
+### Maintenance
+
+* **add user form:** remove validation and error msgs ([#1675](https://github.com/dasch-swiss/dsp-das/issues/1675)) ([ada9505](https://github.com/dasch-swiss/dsp-das/commit/ada950568e6a3488062c1da3753a0dbdeb402c8e))
+
 ## [11.13.0](https://github.com/dasch-swiss/dsp-das/compare/v11.12.1...v11.13.0) (2024-07-01)
 
 
