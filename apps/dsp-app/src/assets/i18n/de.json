@@ -84,14 +84,7 @@
           "delete": "Benutzer löschen",
           "deleteHint": "Bist du sicher, dass du diesen Benutzer löschen willst?",
           "password": "Passwort ändern",
-          "passwordSuccess": "Du hast das Passwort erfolgreich geändert.",
-          "formWizard": {
-            "step_1": "Benutzername",
-            "step_2": "Profil",
-            "step_3": "Berechtigung",
-            "step_4": "Bestätigen",
-            "more": "Mehr Benutzer hinzufügen"
-          },
+          "passwordSuccess": "Du hast das Passwort erfolgreich geändert."
           "select": "Neuen Benutzer zum Projekt hinzufügen (eMail Adresse oder Benutzername)",
           "deleted": "bereits gelöscht"
         }
