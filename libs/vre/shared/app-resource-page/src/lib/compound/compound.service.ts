@@ -28,7 +28,7 @@ export class CompoundService {
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
     this.compoundPosition = _compound;
     this._resource = resource;
-    this.openPage(1);
+    this.openPage(_compound.page);
   }
 
   openPage(page: number) {
@@ -36,7 +36,7 @@ export class CompoundService {
     const position = Math.floor(page - offset * 25 - 1);
 
     // get incoming still image representations, if the offset changed
-    if (offset === this.compoundPosition.offset) {
+    if (offset === this.compoundPosition.offset && this._resource.incomingRepresentations.length > 0) {
       // get incoming resource, if the offset is the same but page changed
       this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
     } else {
