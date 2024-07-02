@@ -16,10 +16,6 @@
         "list": {
           "title": "Projects",
           "description": ""
-        },
-        "add": {
-          "title": "Add a new project member",
-          "description": ""
         }
       },
       "user": {

@@ -12,10 +12,6 @@
         "content": "user",
         "showAs": "expansion",
         "restrictedBy": ""
-      },
-      "add": {
-        "title": "Füge neues Team Mitglied hinzu",
-        "description": ""
       }
     },
     "usersList": {
