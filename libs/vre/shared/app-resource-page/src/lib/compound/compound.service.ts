@@ -32,13 +32,14 @@ export class CompoundService {
     const position = Math.floor(page - offset * 25 - 1);
 
     // get incoming still image representations, if the offset changed
-    if (offset !== this.compoundPosition.offset) {
-      this.compoundPosition.offset = offset;
-      this._loadIncomingResourcesPage(offset);
-    } else {
+    if (offset === this.compoundPosition.offset) {
       // get incoming resource, if the offset is the same but page changed
       this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
+    } else {
+      this.compoundPosition.offset = offset;
+      this._loadIncomingResourcesPage(offset);
     }
+
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
   }
