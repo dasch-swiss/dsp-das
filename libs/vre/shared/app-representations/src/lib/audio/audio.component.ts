@@ -25,7 +25,7 @@ export class AudioComponent implements OnInit {
   audioFileUrl!: SafeUrl;
 
   duration = 0;
-  watchForPause?: number;
+  watchForPause: number | null = null;
 
   currentTime = 0;
 
@@ -69,6 +69,11 @@ export class AudioComponent implements OnInit {
     this.mediaPlayer.onTimeUpdate$.subscribe(v => {
       this.currentTime = v;
       this._cd.detectChanges();
+
+      if (this.watchForPause !== null && this.watchForPause === Math.floor(this.currentTime)) {
+        this.mediaPlayer.pause();
+        this.watchForPause = null;
+      }
     });
   }
 
@@ -83,6 +88,7 @@ export class AudioComponent implements OnInit {
     });
 
     this._mediaControl.watchForPause$.subscribe(seconds => {
+      console.log('pause', seconds);
       this.watchForPause = seconds;
     });
   }
