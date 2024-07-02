@@ -177,9 +177,6 @@
           "project": "Project membership",
           "user": "Members in the project",
           "group": "Permissions"
-        },
-        "hint": {
-          "alreadyMember": "The user is already a member of this project"
         }
       },
       "lists": {

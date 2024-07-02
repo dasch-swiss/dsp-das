@@ -148,9 +148,6 @@
           "project": "Mitglied im Projekt",
           "user": "Mitglieder im Projekt",
           "group": "Berechtigungen"
-        },
-        "hint": {
-          "alreadyMember": "Der Benutzer ist bereits in diesem Projekt"
         }
       }
     },
