@@ -111,6 +111,7 @@ import { ReusableProjectFormComponent } from './project/reusable-project-form/re
 import { SettingsComponent } from './project/settings/settings.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
+import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
@@ -144,7 +145,6 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
-import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
