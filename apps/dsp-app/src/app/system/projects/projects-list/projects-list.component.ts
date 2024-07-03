@@ -177,11 +177,11 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
         filter(response => !!response),
         take(1)
       )
-      .subscribe((response: StoredProject) => {
+      .subscribe((erasedProject: StoredProject) => {
         this.refreshParent.emit();
         this._notification.openSnackBar(
           this.translateService.instant('appLabels.projects.list.eraseConfirmation', {
-            0: response.shortname,
+            0: erasedProject.shortname,
           })
         );
       });

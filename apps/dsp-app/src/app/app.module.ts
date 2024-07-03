@@ -144,6 +144,7 @@ import { AdvancedSearchContainerComponent } from './workspace/search/advanced-se
 import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
 import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
 import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
+import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -250,6 +251,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     IsFalsyPipe,
     ImageDisplayAbsoluteComponent,
     MultipleViewerComponent,
+    EraseProjectDialogComponent,
   ],
   imports: [
     ...UiStandaloneComponents,

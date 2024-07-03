@@ -4,17 +4,20 @@
 </app-dialog-header>
 
 <mat-dialog-content>
-  <div style="margin-bottom: 8px">{{ 'appLabels.projects.list.eraseConfirmationDialog.warning' | translate }}</div>
-  <mat-form-field class="large-field">
+  <div>{{ 'appLabels.projects.list.eraseConfirmationDialog.warning' | translate }}</div>
+  <mat-form-field>
     <mat-label>{{ 'appLabels.projects.list.eraseConfirmationDialog.shortCode' | translate }}</mat-label>
     <input
       matInput
+      maxlength="4"
+      minlength="4"
       data-cy="short-code-input"
       [placeholder]="'appLabels.projects.list.eraseConfirmationDialog.shortCode' | translate"
       [formControl]="eraseForm.controls.shortCode"
       [value]="eraseForm.controls.shortCode" />
-    <mat-hint *ngIf="eraseFormErrors.shortCode"> {{ eraseFormErrors.shortCode }} </mat-hint>
-    <mat-error *ngIf="eraseForm.controls.shortCode.errors as errors"> {{ errors | humanReadableError }} </mat-error>
+    <mat-error *ngIf="eraseForm.controls.shortCode.hasError('shortCode') as errors">
+      {{ 'appLabels.projects.list.eraseConfirmationDialog.shortCodeValidation' | translate }}
+    </mat-error>
   </mat-form-field>
   <mat-form-field class="large-field">
     <mat-label>{{ 'appLabels.projects.list.eraseConfirmationDialog.systemAdminPassword' | translate }}</mat-label>
@@ -25,8 +28,9 @@
       [formControl]="eraseForm.controls.password"
       matInput
       type="password" />
-    <mat-error *ngIf="eraseForm.controls.password.errors as errors"> {{ errors | humanReadableError }} </mat-error>
-    <mat-hint *ngIf="eraseFormErrors.password"> {{ eraseFormErrors.password }} </mat-hint>
+    <mat-error *ngIf="eraseForm.controls.password.hasError('password') as errors">
+      {{ 'appLabels.projects.list.eraseConfirmationDialog.passwordValidation' | translate }}
+    </mat-error>
   </mat-form-field>
 </mat-dialog-content>
 
@@ -38,10 +42,9 @@
   <button
     [disabled]="eraseForm.invalid"
     mat-button
-    mat-raised-button
     appLoadingButton
-    [class.mat-primary]="!isIncorrectInputError"
-    [class.mat-warn]="isIncorrectInputError"
+    [isLoading]="isLoading"
+    mat-raised-button
     class="confirm-button center"
     (click)="submit()">
     {{ 'appLabels.projects.list.eraseConfirmationDialog.confirm' | translate }}
