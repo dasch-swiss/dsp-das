@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { FormBase } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AddUserToProjectMembershipAction, LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -19,7 +20,7 @@ import { ProjectForm } from '../reusable-project-form/project-form.type';
           shortname: '',
           longname: '',
           description: [],
-          keywords: []
+          keywords: [],
         }"
         (afterFormInit)="form = $event"></app-reusable-project-form>
 
@@ -43,7 +44,7 @@ import { ProjectForm } from '../reusable-project-form/project-form.type';
     </dasch-swiss-centered-layout>
   `,
 })
-export class CreateProjectFormPageComponent {
+export class CreateProjectFormPageComponent extends FormBase implements AfterViewInit {
   form: ProjectForm;
   loading = false;
 
@@ -52,8 +53,12 @@ export class CreateProjectFormPageComponent {
     private _store: Store,
     private _router: Router,
     private _location: Location,
-    private _route: ActivatedRoute
-  ) {}
+    private _route: ActivatedRoute,
+    protected el: ElementRef,
+    protected renderer: Renderer2
+  ) {
+    super(el, renderer);
+  }
 
   submitForm() {
     this.loading = true;

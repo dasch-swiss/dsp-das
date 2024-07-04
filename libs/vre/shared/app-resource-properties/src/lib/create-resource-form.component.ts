@@ -1,4 +1,15 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+} from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   ApiResponseError,
@@ -12,7 +23,7 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { FormBase, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -25,12 +36,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-create-resource-form',
   template: `
-    <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
+    <form *ngIf="!loading; else loadingTemplate" [formGroup]="formGroup" appInvalidControlScroll>
       <app-upload-2
-        *ngIf="form.controls.file && fileRepresentation"
-        [formControl]="form.controls.file"
+        *ngIf="formGroup.controls.file && fileRepresentation"
+        [formControl]="formGroup.controls.file"
         [representation]="fileRepresentation"
-        style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
+        style="display: block; margin-form?: unknownbottom: 16px;     max-width: 700px;"></app-upload-2>
 
       <div class="my-grid">
         <div style="display: flex">
@@ -40,7 +51,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             matTooltipPosition="above">
             Resource label *
           </h3>
-          <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
+          <app-common-input
+            [control]="formGroup.controls.label"
+            style="flex: 1"
+            data-cy="label-input"
+            label="Text value" />
         </div>
       </div>
 
@@ -55,7 +70,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           <div style="flex: 1">
             <app-property-value-switcher
               [myProperty]="prop"
-              [formArray]="form.controls.properties.controls[prop.propDef.id]"
+              [formArray]="formGroup.controls.properties.controls[prop.propDef.id]"
               [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
           </div>
         </div>
@@ -86,14 +101,14 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
   ],
 })
-export class CreateResourceFormComponent implements OnInit {
+export class CreateResourceFormComponent extends FormBase implements OnInit, AfterViewInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
   @Input({ required: true }) resourceType!: string;
 
   @Output() createdResourceIri = new EventEmitter<string>();
 
-  form: FormGroup<{
+  override formGroup: FormGroup<{
     label: FormControl<string>;
     properties: FormGroup<{ [key: string]: FormValueArray }>;
     file?: FormControl<CreateFileValue | null>;
@@ -132,16 +147,20 @@ export class CreateResourceFormComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
     private _store: Store,
-    private _cd: ChangeDetectorRef
-  ) {}
+    private _cd: ChangeDetectorRef,
+    el: ElementRef,
+    renderer: Renderer2
+  ) {
+    super(el, renderer);
+  }
 
   ngOnInit(): void {
     this._getResourceProperties();
   }
 
   submitData() {
-    this.form.markAllAsTouched();
-    if (this.form.invalid) {
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
       return;
     }
     this.loading = true;
@@ -165,6 +184,7 @@ export class CreateResourceFormComponent implements OnInit {
         finalize(() => {
           this.loading = false;
           this._cd.detectChanges();
+          super.ngAfterViewInit();
         })
       )
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
@@ -185,7 +205,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _buildForm() {
     if (this.fileRepresentation) {
-      this.form.addControl('file', this._fb.control(null, [Validators.required]));
+      this.formGroup.addControl('file', this._fb.control(null, [Validators.required]));
     }
 
     this.properties
@@ -196,7 +216,7 @@ export class CreateResourceFormComponent implements OnInit {
           control.addValidators(Validators.required);
         }
 
-        this.form.controls.properties.addControl(
+        this.formGroup.controls.properties.addControl(
           prop.propDef.id,
           this._fb.array([
             this._fb.group({
@@ -220,7 +240,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _getPayload() {
     const createResource = new CreateResource();
-    createResource.label = this.form.controls.label.value;
+    createResource.label = this.formGroup.controls.label.value;
     createResource.type = this.resourceClass.id;
     createResource.attachedToProject = this.projectIri;
     createResource.properties = this._getPropertiesObj();
@@ -230,8 +250,10 @@ export class CreateResourceFormComponent implements OnInit {
   private _getPropertiesObj() {
     const propertiesObj: { [index: string]: CreateValue[] } = {};
 
-    Object.keys(this.form.controls.properties.controls)
-      .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
+    Object.keys(this.formGroup.controls.properties.controls)
+      .filter(iri =>
+        this.formGroup.controls.properties.controls[iri].controls.some(control => control.value.item !== null)
+      )
       .forEach(iri => {
         propertiesObj[iri] = this._getValue(iri);
       });
@@ -247,7 +269,7 @@ export class CreateResourceFormComponent implements OnInit {
     if (!foundProperty) throw new Error(`Property ${iri} not found`);
     const propertyDefinition = foundProperty.propDef as ResourcePropertyDefinition;
 
-    const controls = this.form.controls.properties.controls[iri].controls;
+    const controls = this.formGroup.controls.properties.controls[iri].controls;
     return controls
       .filter(group => group.value.item !== null)
       .map(group => {
@@ -263,7 +285,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _getFileValue(fileRepresentation: FileRepresentationType) {
     const FileValue = new (fileValueMapping.get(fileRepresentation)!.UploadClass)();
-    FileValue.filename = this.form.controls.file!.value!.filename;
+    FileValue.filename = this.formGroup.controls.file!.value!.filename;
     return FileValue;
   }
 }
