@@ -42,6 +42,8 @@ export interface NewOntology {
 export class OntologyFormComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
+  private initialData: string;
+
   // project uuid
   @Input() projectUuid: string;
 
@@ -106,10 +108,13 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   error = false;
 
-  @Select(OntologiesSelectors.currentProjectOntologies)
-  currentProjectOntologies$: Observable<ReadOntology[]>;
-  @Select(OntologiesSelectors.currentOntology)
-  currentOntology$: Observable<ReadOntology>;
+  @Select(OntologiesSelectors.currentProjectOntologies) currentProjectOntologies$: Observable<ReadOntology[]>;
+  @Select(OntologiesSelectors.currentOntology) currentOntology$: Observable<ReadOntology>;
+
+  get hasChanges(): boolean {
+    const newLocal = JSON.stringify(this.ontologyForm.getRawValue());
+    return this.initialData !== newLocal;
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -153,6 +158,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
         // disable name input
 
         this.lastModificationDate = response.lastModificationDate;
+        this.initialData = JSON.stringify(this.ontologyForm.getRawValue());
       });
     }
   }

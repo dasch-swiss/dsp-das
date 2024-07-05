@@ -53,7 +53,7 @@
           data-cy="submit-button"
           type="submit"
           [color]="error ? 'warn' : 'primary'"
-          [disabled]="!ontologyForm.valid">
+          [disabled]="!ontologyForm.valid || !hasChanges">
           <div class="progress-button-content">
             <dasch-swiss-app-progress-indicator
               *ngIf="loading"
