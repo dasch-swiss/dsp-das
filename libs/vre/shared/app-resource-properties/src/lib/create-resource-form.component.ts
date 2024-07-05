@@ -66,6 +66,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           type="submit"
           color="primary"
           appLoadingButton
+          [disabled]="!form || !form.valid"
           data-cy="submit-button"
           [isLoading]="loading"
           (click)="submitData()">

@@ -53,13 +53,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           [control]="group.controls.comment"></app-property-value-comment>
       </div>
       <button
+        type="submit"
         (click)="onSave()"
         mat-icon-button
         data-cy="save-button"
         *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
         [disabled]="
           (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
-          (initialFormValue.comment === null && group.value.comment === '')
+          (initialFormValue.comment === null && group.value.comment === '') ||
+          group.value.item === null ||
+          group.value.item === ''
         ">
         <mat-icon>save</mat-icon>
       </button>

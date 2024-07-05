@@ -22,9 +22,10 @@ export interface EditResourceLabelDialogProps {
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
+        type="submit"
         mat-raised-button
         color="primary"
-        [disabled]="control.invalid"
+        [disabled]="control.invalid || control.pristine || control.value === initialValue"
         appLoadingButton
         [isLoading]="loading"
         (click)="submit()">

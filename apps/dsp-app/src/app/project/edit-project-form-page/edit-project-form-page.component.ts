@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UpdateProjectRequest } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
@@ -10,6 +10,7 @@ import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ProjectForm } from '../reusable-project-form/project-form.type';
+import { ReusableProjectFormComponent } from '../reusable-project-form/reusable-project-form.component';
 
 @Component({
   selector: 'app-edit-project-form-page',
@@ -17,14 +18,16 @@ import { ProjectForm } from '../reusable-project-form/project-form.type';
     <app-reusable-project-form
       *ngIf="formData$ | async as formData"
       [formData]="formData"
-      (afterFormInit)="form = $event"></app-reusable-project-form>
+      (afterFormInit)="form = $event"
+      #formComponent>
+    </app-reusable-project-form>
 
     <div style="display: flex; justify-content: space-between">
       <button
         mat-raised-button
         type="submit"
         color="primary"
-        [disabled]="form?.invalid"
+        [disabled]="form?.invalid || form?.pristine || !formComponent?.hasChanges"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="loading"
@@ -52,6 +55,8 @@ export class EditProjectFormPageComponent {
       };
     })
   );
+
+  @ViewChild('formComponent') formComponent: ReusableProjectFormComponent;
 
   constructor(
     private _projectApiService: ProjectApiService,

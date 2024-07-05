@@ -56,7 +56,10 @@ export class ReusableProjectFormComponent implements OnInit {
   };
   @Output() afterFormInit = new EventEmitter<ProjectForm>();
 
+  private initialData: string;
+
   form: ProjectForm;
+
   readonly shortcodePatternError = {
     errorKey: 'pattern',
     message: 'This field must contain letters from A to F and 0 to 9',
@@ -65,6 +68,10 @@ export class ReusableProjectFormComponent implements OnInit {
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
 
+  get hasChanges(): boolean {
+    return this.initialData !== JSON.stringify(this.form.getRawValue());
+  }
+
   constructor(
     private _fb: FormBuilder,
     private _store: Store
@@ -72,6 +79,7 @@ export class ReusableProjectFormComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
+    this.initialData = JSON.stringify(this.form.getRawValue());
     this.afterFormInit.emit(this.form);
   }
 
