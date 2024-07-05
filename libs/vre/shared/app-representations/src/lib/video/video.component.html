@@ -4,7 +4,6 @@
   <div style="margin-bottom: -4px" class="video-container">
     <video
       style="width: 100%"
-      #videoEle
       id="video"
       *ngIf="video; else loading"
       [src]="video"
@@ -13,7 +12,6 @@
       [muted]="false"
       (canplay)="onVideoPlayerReady()"
       (click)="videoPlayer.togglePlay()"
-      (timeupdate)="timeUpdate()"
       (error)="handleVideoError($event)"></video>
     <app-video-overlay *ngIf="false" />
   </div>
@@ -35,7 +33,7 @@
         (dimension)="timelineDimension = $event"
         (mouseleave)="displayPreview(false)"
         (changed)="videoPlayer.navigate($event)"
-        [disabled]="!videoEle" />
+        [disabled]="!isPlayerReady" />
     </mat-toolbar-row>
   </mat-toolbar>
   <app-media-slider

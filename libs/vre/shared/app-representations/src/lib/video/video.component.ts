@@ -32,9 +32,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) parentResource!: ReadResource;
   @Output() loaded = new EventEmitter<boolean>();
 
-  @ViewChild('videoEle') videoEle!: ElementRef;
-  @ViewChild('timeline') timeline!: ElementRef;
-  @ViewChild('progress') progress!: ElementRef;
   @ViewChild('preview') preview!: ElementRef;
 
   start = 0;
@@ -129,30 +126,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
     this._mediaControl.watchForPause$.subscribe(seconds => {
       this.watchForPause = seconds;
     });
-  }
-
-  timeUpdate() {
-    this.currentTime = this.videoEle.nativeElement.currentTime;
-
-    let range = 0;
-    const bf = this.videoEle.nativeElement.buffered;
-
-    while (!(bf.start(range) <= this.currentTime && this.currentTime <= bf.end(range))) {
-      range += 1;
-    }
-
-    if (this.watchForPause !== null && this.watchForPause === Math.floor(this.currentTime)) {
-      this.videoPlayer.pause();
-      this.watchForPause = null;
-      return;
-    }
-
-    if (this.currentTime === this.videoPlayer.duration() && this.play) {
-      this.play = false;
-      this.reachedTheEnd = true;
-    } else {
-      this.reachedTheEnd = false;
-    }
   }
 
   updatePreview(ev: PointerValue) {
