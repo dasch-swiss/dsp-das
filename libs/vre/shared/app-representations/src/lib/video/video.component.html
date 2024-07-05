@@ -14,8 +14,6 @@
       (canplay)="onVideoPlayerReady()"
       (click)="videoPlayer.togglePlay()"
       (timeupdate)="timeUpdate()"
-      (loadedmetadata)="loadedMetadata()"
-      (canplaythrough)="loadedVideo()"
       (error)="handleVideoError($event)"></video>
     <app-video-overlay *ngIf="false" />
   </div>
@@ -46,7 +44,7 @@
     [currentTime]="myCurrentTime"
     (afterNavigation)="videoPlayer.navigate($event)" />
   <app-video-toolbar
-    *ngIf="fileInfo"
+    *ngIf="fileInfo && isPlayerReady"
     [src]="src"
     [parentResource]="parentResource"
     [fileInfo]="fileInfo"

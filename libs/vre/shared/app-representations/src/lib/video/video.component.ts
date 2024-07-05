@@ -51,15 +51,13 @@ export class VideoComponent implements OnChanges, OnDestroy {
   // size of progress bar / timeline
   timelineDimension?: DOMRect;
 
-  duration = 0;
   currentTime: number = this.start;
   myCurrentTime: number = 0;
   previewTime = 0;
 
+  duration = 0;
   play = false;
   reachedTheEnd = false;
-
-  readonly volume = 0.75;
 
   cinemaMode = false;
 
@@ -89,9 +87,12 @@ export class VideoComponent implements OnChanges, OnDestroy {
     }
 
     const player = document.getElementById('video') as HTMLVideoElement;
+    console.log('julien canplay', player);
     this.videoPlayer.onInit(player);
     this.isPlayerReady = true;
     this.loaded.emit(true);
+    this._mediaControl.mediaDurationSecs = this.videoPlayer.duration();
+    this.displayPreview(true);
     this.videoPlayer.onTimeUpdate$.subscribe(v => {
       this.myCurrentTime = v;
     });
@@ -147,28 +148,12 @@ export class VideoComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    if (this.currentTime === this.duration && this.play) {
+    if (this.currentTime === this.videoPlayer.duration() && this.play) {
       this.play = false;
       this.reachedTheEnd = true;
     } else {
       this.reachedTheEnd = false;
     }
-  }
-
-  loadedMetadata() {
-    // get video duration
-    this.duration = Math.floor(this.videoEle.nativeElement.duration);
-    this._mediaControl.mediaDurationSecs = this.duration;
-
-    // set default volume
-    this.videoEle.nativeElement.volume = this.volume;
-
-    // load preview file
-    this.displayPreview(true);
-  }
-
-  loadedVideo() {
-    this.play = !this.videoEle.nativeElement.paused;
   }
 
   /**

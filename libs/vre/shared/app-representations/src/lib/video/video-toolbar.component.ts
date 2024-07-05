@@ -14,10 +14,10 @@ import { MediaPlayerService } from './media-player.service';
     <div>
       <button
         mat-icon-button
-        (click)="videoPlayer.togglePlay()"
+        (click)="mediaPlayer.togglePlay()"
         [matTooltip]="play ? 'Pause' : 'Play'"
         [matTooltipPosition]="matTooltipPos">
-        <mat-icon>{{ videoPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+        <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
       </button>
 
       <button
@@ -30,7 +30,7 @@ import { MediaPlayerService } from './media-player.service';
       <!-- TODO reached the end button "replay" -->
     </div>
 
-    <div>{{ videoPlayer.currentTime() | appTime }} / {{ videoPlayer.duration() | appTime }}</div>
+    <div>{{ mediaPlayer.currentTime() | appTime }} / {{ mediaPlayer.duration() | appTime }}</div>
 
     <div>
       <app-video-more-button [resource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
@@ -61,12 +61,11 @@ export class VideoToolbarComponent {
   play = false;
 
   currentTime = 0;
-  duration = 15;
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
     private _dialog: MatDialog,
-    public videoPlayer: MediaPlayerService
+    public mediaPlayer: MediaPlayerService
   ) {}
 
   createVideoSegment() {
@@ -74,7 +73,7 @@ export class VideoToolbarComponent {
       ...DspDialogConfig.dialogDrawerConfig({
         type: 'VideoSegment',
         resource: this.parentResource,
-        videoDurationSecs: this.duration,
+        videoDurationSecs: this.mediaPlayer.duration(),
       }),
       viewContainerRef: this._viewContainerRef,
     });
@@ -85,6 +84,6 @@ export class VideoToolbarComponent {
   }
 
   goToStart() {
-    this.videoPlayer.navigate(0);
+    this.mediaPlayer.navigate(0);
   }
 }
