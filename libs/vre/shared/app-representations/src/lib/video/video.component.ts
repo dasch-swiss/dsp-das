@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -56,7 +57,8 @@ export class VideoComponent implements OnChanges, OnDestroy {
     private _notification: NotificationService,
     public segmentsService: SegmentsService,
     public videoPlayer: MediaPlayerService,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
@@ -92,6 +94,7 @@ export class VideoComponent implements OnChanges, OnDestroy {
     this.displayPreview(true);
     this.videoPlayer.onTimeUpdate$.subscribe(v => {
       this.myCurrentTime = v;
+      this._cdr.detectChanges();
     });
   }
 
