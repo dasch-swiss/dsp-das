@@ -36,7 +36,7 @@ export class MediaPlayerService {
   }
 
   duration() {
-    return this._mediaPlayer.duration;
+    return Math.floor(this._mediaPlayer.duration);
   }
 
   playFromBeginning() {
