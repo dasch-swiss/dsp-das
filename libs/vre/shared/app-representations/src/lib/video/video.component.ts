@@ -35,32 +35,19 @@ export class VideoComponent implements OnChanges, OnDestroy {
   @ViewChild('preview') preview!: ElementRef;
 
   start = 0;
-
-  // video file url
   video?: SafeUrl;
-
   videoError?: string;
-
-  // preview image information
-  readonly frameWidth = 160;
-  readonly halfFrameWidth: number = Math.round(this.frameWidth / 2);
-
-  // size of progress bar / timeline
   timelineDimension?: DOMRect;
-
-  currentTime: number = this.start;
   myCurrentTime: number = 0;
   previewTime = 0;
-
   duration = 0;
-  play = false;
-  reachedTheEnd = false;
-
   cinemaMode = false;
-
   watchForPause: number | null = null;
   isPlayerReady = false;
   fileInfo?: MovingImageSidecar;
+
+  readonly frameWidth = 160;
+  readonly halfFrameWidth: number = Math.round(this.frameWidth / 2);
   private _ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -78,25 +65,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
     }
   }
 
-  onVideoPlayerReady() {
-    if (this.isPlayerReady) {
-      return;
-    }
-
-    const player = document.getElementById('video') as HTMLVideoElement;
-    console.log('julien canplay', player);
-
-    this.videoPlayer.onInit(player);
-    this.duration = this.videoPlayer.duration();
-    this.isPlayerReady = true;
-    this.loaded.emit(true);
-    this._mediaControl.mediaDurationSecs = this.videoPlayer.duration();
-    this.displayPreview(true);
-    this.videoPlayer.onTimeUpdate$.subscribe(v => {
-      this.myCurrentTime = v;
-    });
-  }
-
   ngOnChanges(): void {
     this._ngUnsubscribe.next();
 
@@ -106,6 +74,24 @@ export class VideoComponent implements OnChanges, OnDestroy {
     this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(file => {
       this.fileInfo = file as MovingImageSidecar;
+    });
+  }
+
+  onVideoPlayerReady() {
+    if (this.isPlayerReady) {
+      return;
+    }
+
+    const player = document.getElementById('video') as HTMLVideoElement;
+
+    this.videoPlayer.onInit(player);
+    this.duration = this.videoPlayer.duration();
+    this.isPlayerReady = true;
+    this.loaded.emit(true);
+    this._mediaControl.mediaDurationSecs = this.videoPlayer.duration();
+    this.displayPreview(true);
+    this.videoPlayer.onTimeUpdate$.subscribe(v => {
+      this.myCurrentTime = v;
     });
   }
 
