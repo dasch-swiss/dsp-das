@@ -27,7 +27,7 @@ import { ReusableProjectFormComponent } from '../reusable-project-form/reusable-
         mat-raised-button
         type="submit"
         color="primary"
-        [disabled]="form?.invalid || form?.pristine || !formComponent?.hasChanges"
+        [disabled]="form?.invalid || !formComponent?.hasChanges"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="loading"
