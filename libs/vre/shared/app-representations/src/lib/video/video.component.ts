@@ -88,7 +88,9 @@ export class VideoComponent implements OnChanges, OnDestroy {
 
     const player = document.getElementById('video') as HTMLVideoElement;
     console.log('julien canplay', player);
+
     this.videoPlayer.onInit(player);
+    this.duration = this.videoPlayer.duration();
     this.isPlayerReady = true;
     this.loaded.emit(true);
     this._mediaControl.mediaDurationSecs = this.videoPlayer.duration();
@@ -105,8 +107,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
     this.segmentsService.onInit(this.parentResource.id, 'VideoSegment');
     this.videoError = '';
     this.video = this._sanitizer.bypassSecurityTrustUrl(this.src.fileValue.fileUrl);
-    // set the file info first bc. browsers might queue and block requests
-    // if there are already six ongoing requests
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(file => {
       this.fileInfo = file as MovingImageSidecar;
     });
@@ -132,7 +132,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
   }
 
   timeUpdate() {
-    // current time
     this.currentTime = this.videoEle.nativeElement.currentTime;
 
     let range = 0;
@@ -155,12 +154,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
       this.reachedTheEnd = false;
     }
   }
-
-  /**
-   * video navigation from button (-/+ 10 sec)
-   *
-   * @param range positive or negative number value
-   */
 
   updatePreview(ev: PointerValue) {
     if (!this.timelineDimension) {
