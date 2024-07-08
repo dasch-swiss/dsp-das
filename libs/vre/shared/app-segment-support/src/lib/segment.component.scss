@@ -2,13 +2,8 @@
 
 .segment-container {
   position: absolute;
-  height: 30px;
+  height: 6px;
   cursor: pointer;
-}
-
-.segment {
-  width: 100%;
-  height: 25%;
   background: $primary;
   color: white;
   display: flex;
@@ -17,17 +12,8 @@
 
   align-items: center;
   overflow: hidden;
-
-  &:hover {
-    background: $primary_800;
-  }
 }
 
-.label {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 
 .hover-button {
   position: absolute;
