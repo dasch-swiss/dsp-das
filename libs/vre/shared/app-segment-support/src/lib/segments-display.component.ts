@@ -3,7 +3,7 @@ import { Segment } from './segment';
 
 @Component({
   selector: 'app-segments-display',
-  template: ` <div style="position: relative" [ngStyle]="{ height: height + 'px' }">
+  template: ` <div style="position: relative; background: black" [ngStyle]="{ height: height + 'px' }">
     <app-segment *ngFor="let segment of segments" [segment]="segment" [videoLengthSecs]="videoLengthSecs" />
   </div>`,
 })

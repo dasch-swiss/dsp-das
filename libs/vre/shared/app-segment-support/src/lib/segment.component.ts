@@ -12,13 +12,8 @@ import { SegmentsService } from './segments.service';
       [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false">
-      <div class="segment" (click)="playMedia()" [matTooltip]="segment.label">
-        <mat-icon style="margin-right: 4px; flex-shrink: 0">play_circle</mat-icon>
-        <span class="mat-body-2 label" *ngIf="myElement && myElement.nativeElement.offsetWidth > 100">{{
-          segment.label
-        }}</span>
-      </div>
-      <div class="hover-button" style="" *ngIf="showHover" (click)="segmentsService.highlightSegment(segment)">
+      <div class="segment" (click)="playMedia()" [matTooltip]="segment.label"></div>
+      <div class="hover-button" style="" *ngIf="false && showHover" (click)="segmentsService.highlightSegment(segment)">
         <mat-icon>arrow_downward</mat-icon>
       </div>
     </div>

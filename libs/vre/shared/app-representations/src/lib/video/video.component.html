@@ -40,6 +40,10 @@
     [max]="videoPlayer.duration()"
     [currentTime]="myCurrentTime"
     (afterNavigation)="videoPlayer.navigate($event)" />
+  <app-segments-display
+    *ngIf="segmentsService.segments.length > 0 && duration > 0"
+    [segments]="segmentsService.segments"
+    [videoLengthSecs]="duration" />
   <app-video-toolbar
     *ngIf="fileInfo && isPlayerReady"
     [src]="src"
@@ -47,11 +51,6 @@
     [fileInfo]="fileInfo"
     [(cinemaMode)]="cinemaMode" />
 </div>
-
-<app-segments-display
-  *ngIf="segmentsService.segments.length > 0 && duration > 0"
-  [segments]="segmentsService.segments"
-  [videoLengthSecs]="duration" />
 
 <ng-template #loading>
   <dasch-swiss-app-progress-indicator />
