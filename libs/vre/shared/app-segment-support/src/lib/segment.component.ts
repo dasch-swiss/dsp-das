@@ -7,13 +7,13 @@ import { SegmentsService } from './segments.service';
   selector: 'app-segment',
   template: `
     <div
-      class="segment-container"
+      class="segment"
       #segmentContainer
+      [appCustomTooltip]="segment"
       [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
       (mouseenter)="showHover = true"
       (mouseleave)="showHover = false"
-      (click)="playMedia()"
-      [matTooltip]="segment.label">
+      (click)="playMedia()">
       <div class="hover-button" style="" *ngIf="false && showHover" (click)="segmentsService.highlightSegment(segment)">
         <mat-icon>arrow_downward</mat-icon>
       </div>
