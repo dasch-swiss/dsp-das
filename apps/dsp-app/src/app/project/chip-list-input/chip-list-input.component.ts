@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -27,15 +27,20 @@ import { MatChipInputEvent } from '@angular/material/chips';
     <mat-error *ngIf="addChipFormError">New value: {{ addChipFormError | humanReadableError }}</mat-error>
   `,
 })
-export class ChipListInputComponent {
+export class ChipListInputComponent implements OnInit {
   @Input() formArray: FormArray<FormControl<string>>;
   @Input() chipsRequired = true;
   @Input() validators: ValidatorFn[];
 
   separatorKeyCodes = [ENTER, COMMA];
   addChipFormError: ValidationErrors | null = null;
+  initialControls: FormControl<string>[];
 
   constructor(private _fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.initialControls = [...this.formArray.controls];
+  }
 
   addKeyword(event: MatChipInputEvent): void {
     this.addChipFormError = null;
@@ -59,11 +64,25 @@ export class ChipListInputComponent {
     } else {
       this.addChipFormError = newFormControl.errors;
     }
+
+    this.setFormArrayState();
   }
 
   removeKeyword(index: number): void {
     this.formArray.removeAt(index);
+    this.setFormArrayState();
   }
 
   trackByFn = (index: number, item: string) => `${index}-${item}`;
+
+  private setFormArrayState() {
+    const hasNewValues = this.formArray.controls.some(
+      formControl => !this.initialControls.find(c => c.value === formControl.value)
+    );
+    if (hasNewValues) {
+      this.formArray.markAsDirty();
+    } else {
+      this.formArray.markAsPristine();
+    }
+  }
 }

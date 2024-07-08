@@ -8,7 +8,7 @@
         autocomplete="off"
         data-cy="name-input"
         [maxlength]="nameMaxLength"
-        [formControl]="ontologyForm.controls['name']"
+        [formControl]="ontologyForm?.controls['name']"
         [placeholder]="'Set a unique name'" />
       <mat-icon
         matSuffix
@@ -18,33 +18,11 @@
         >help</mat-icon
       >
       <mat-hint *ngIf="formErrors.name" class="medium-field"> {{ formErrors.name }} </mat-hint>
-      <mat-hint align="end">{{ ontologyForm.controls['name'].value.length }} / {{ nameMaxLength }}</mat-hint>
+      <mat-hint align="end">{{ ontologyForm?.controls['name'].value.length }} / {{ nameMaxLength }}</mat-hint>
     </mat-form-field>
 
-    <mat-form-field class="large-field ontology-label">
-      <span *ngIf="!iri" matPrefix>{{ project.shortname }}:&nbsp;</span>
-      <input
-        matInput
-        data-cy="label-input"
-        placeholder="Label"
-        [formControl]="ontologyForm.controls['label']"
-        [value]="ontologyLabel" />
-      <mat-hint *ngIf="formErrors.label"> {{ formErrors.label }} </mat-hint>
-    </mat-form-field>
-
-    <mat-form-field class="large-field ontology-comment">
-      <textarea
-        matInput
-        data-cy="comment-textarea"
-        placeholder="Comment"
-        [value]="ontologyComment"
-        [formControl]="ontologyForm.controls['comment']"
-        [cdkTextareaAutosize]="true"
-        [cdkAutosizeMinRows]="6"
-        [cdkAutosizeMaxRows]="12">
-      </textarea>
-    </mat-form-field>
-
+    <app-common-input label="Label" [control]="ontologyForm?.controls['label']" data-cy="label-input" />
+    <app-common-textarea label="Comment" [control]="ontologyForm?.controls['comment']" data-cy="comment-textarea" />
     <div class="form-panel form-action">
       <span class="fill-remaining-space"></span>
       <span>
@@ -53,7 +31,7 @@
           data-cy="submit-button"
           type="submit"
           [color]="error ? 'warn' : 'primary'"
-          [disabled]="!ontologyForm.valid || !hasChanges">
+          [disabled]="!ontologyForm?.valid || !ontologyForm?.dirty">
           <div class="progress-button-content">
             <dasch-swiss-app-progress-indicator
               *ngIf="loading"

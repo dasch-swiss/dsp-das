@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormControlOptions } from '@angular/forms';
 import { arrayLengthGreaterThanZeroValidator, atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
@@ -56,8 +56,6 @@ export class ReusableProjectFormComponent implements OnInit {
   };
   @Output() afterFormInit = new EventEmitter<ProjectForm>();
 
-  private initialData: string;
-
   form: ProjectForm;
 
   readonly shortcodePatternError = {
@@ -68,10 +66,6 @@ export class ReusableProjectFormComponent implements OnInit {
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
 
-  get hasChanges(): boolean {
-    return this.initialData !== JSON.stringify(this.form.getRawValue());
-  }
-
   constructor(
     private _fb: FormBuilder,
     private _store: Store
@@ -79,16 +73,16 @@ export class ReusableProjectFormComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.initialData = JSON.stringify(this.form.getRawValue());
     this.afterFormInit.emit(this.form);
   }
 
   public noWhitespaceValidator(control: FormControl) {
-    return (control.value || '').trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
+    return (control.value || '').value.trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
   }
 
   private _buildForm() {
     const existingShortcodes = this._store.selectSnapshot(ProjectsSelectors.allProjectShortcodes);
+    const opts: FormControlOptions = { nonNullable: true };
 
     this.form = this._fb.group({
       shortcode: [
@@ -111,13 +105,17 @@ export class ReusableProjectFormComponent implements OnInit {
           Validators.pattern(/^[a-zA-Z]+\S*$/),
         ],
       ],
-      longname: [this.formData.longname, [Validators.required, Validators.minLength(3), Validators.maxLength(256)]],
+      longname: [
+        this.formData.longname,
+        opts,
+        [Validators.required, Validators.minLength(3), Validators.maxLength(256)],
+      ],
       description: DEFAULT_MULTILANGUAGE_FORM(this.formData.description, this.descriptionValidators, [
         atLeastOneStringRequired('value'),
       ]),
       keywords: this._fb.array(
         this.formData.keywords.map(keyword => {
-          return [keyword, this.keywordsValidators];
+          return [keyword, opts, this.keywordsValidators];
         }),
         arrayLengthGreaterThanZeroValidator()
       ),

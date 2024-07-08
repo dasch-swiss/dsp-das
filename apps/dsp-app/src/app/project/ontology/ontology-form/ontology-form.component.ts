@@ -1,5 +1,11 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  FormControlOptions,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiResponseError,
@@ -42,8 +48,6 @@ export interface NewOntology {
 export class OntologyFormComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private initialData: string;
-
   // project uuid
   @Input() projectUuid: string;
 
@@ -63,7 +67,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   ontologyForm: UntypedFormGroup;
 
-  ontologyLabel: string;
+  ontologyLabel: string = '';
   ontologyComment: string;
 
   lastModificationDate: string;
@@ -111,11 +115,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   @Select(OntologiesSelectors.currentProjectOntologies) currentProjectOntologies$: Observable<ReadOntology[]>;
   @Select(OntologiesSelectors.currentOntology) currentOntology$: Observable<ReadOntology>;
 
-  get hasChanges(): boolean {
-    const newLocal = JSON.stringify(this.ontologyForm.getRawValue());
-    return this.initialData !== newLocal;
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -143,23 +142,22 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     }
 
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    this.buildForm();
-
     if (this.iri) {
       // edit mode: get current ontology
       this.currentOntology$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((response: ReadOntology) => {
+        this.ontologyLabel = response.label;
+        this.ontologyComment = response.comment;
+        this.buildForm();
         // add values to the ontology form
         this.ontologyForm.controls['name'].disable();
         const name = OntologyService.getOntologyName(this.iri);
         this.ontologyForm.controls['name'].setValue(name);
-        this.ontologyForm.controls['label'].setValue(response.label);
         this.ontologyForm.controls['label'].setValidators([Validators.required]);
-        this.ontologyForm.controls['comment'].setValue(response.comment);
-        // disable name input
 
         this.lastModificationDate = response.lastModificationDate;
-        this.initialData = JSON.stringify(this.ontologyForm.getRawValue());
       });
+    } else {
+      this.buildForm();
     }
   }
 
@@ -169,6 +167,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   }
 
   buildForm() {
+    const opts: FormControlOptions = { nonNullable: true };
     // reset existing names
     this.existingNames = [new RegExp('anEmptyRegularExpressionWasntPossible')];
 
@@ -182,8 +181,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     for (const name of this.forbiddenNames) {
       this.existingNames.push(new RegExp(name));
     }
-
-    this.ontologyLabel = '';
 
     this.ontologyForm = this._fb.group({
       name: new UntypedFormControl(
@@ -199,17 +196,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
           Validators.pattern(CustomRegex.ID_NAME_REGEX),
         ]
       ),
-      label: new UntypedFormControl(
-        {
-          value: this.ontologyLabel,
-          disabled: false,
-        },
-        [Validators.required, Validators.minLength(this.nameMinLength)]
-      ),
-      comment: new UntypedFormControl({
-        value: this.ontologyComment,
-        disabled: false,
-      }),
+      label: [this.ontologyLabel, opts, [Validators.required, Validators.minLength(this.nameMinLength)]],
+      comment: [this.ontologyComment, opts],
     });
 
     this.ontologyForm.valueChanges.subscribe(() => this.onValueChanged());

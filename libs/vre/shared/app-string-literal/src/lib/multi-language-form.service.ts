@@ -84,6 +84,12 @@ export class MultiLanguageFormService {
       );
     }
 
+    if (this.selectedLanguageControl.defaultValue !== newText) {
+      this.formArray.markAsDirty();
+    } else {
+      this.formArray.markAsPristine();
+    }
+
     this.selectedLanguageControl.setValue(newText);
     this.inputValue = newText;
   }

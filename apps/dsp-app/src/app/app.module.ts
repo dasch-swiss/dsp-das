@@ -85,6 +85,7 @@ import { AddUserComponent } from './project/collaboration/add-user/add-user.comp
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
 import { CommonInputComponent } from './project/common-input/common-input.component';
+import { CommonTextareaComponent } from './project/common-textarea/common-textarea.component';
 import { CreateProjectFormPageComponent } from './project/create-project-form-page/create-project-form-page.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
@@ -171,6 +172,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CollaborationComponent,
     ColorPickerComponent,
     CommonInputComponent,
+    CommonTextareaComponent,
     ComparisonComponent,
     CookiePolicyComponent,
     CreateUserDialogComponent,
