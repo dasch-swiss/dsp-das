@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
-import { SegmentsService } from './segments.service';
 
 @Component({
   selector: 'app-segment',
@@ -11,13 +10,7 @@ import { SegmentsService } from './segments.service';
       #segmentContainer
       [appCustomTooltip]="segment"
       [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
-      (mouseenter)="showHover = true"
-      (mouseleave)="showHover = false"
-      (click)="playMedia()">
-      <div class="hover-button" style="" *ngIf="false && showHover" (click)="segmentsService.highlightSegment(segment)">
-        <mat-icon>arrow_downward</mat-icon>
-      </div>
-    </div>
+      (click)="playMedia()"></div>
   `,
   styleUrls: ['./segment.component.scss'],
 })
@@ -29,7 +22,6 @@ export class SegmentComponent implements OnInit {
 
   width!: number;
   start!: number;
-  showHover = false;
 
   readonly rowHeight = 8;
 
@@ -37,10 +29,7 @@ export class SegmentComponent implements OnInit {
 
   play = false;
 
-  constructor(
-    public mediaControl: MediaControlService,
-    public segmentsService: SegmentsService
-  ) {}
+  constructor(public mediaControl: MediaControlService) {}
 
   ngOnInit() {
     this.width =
