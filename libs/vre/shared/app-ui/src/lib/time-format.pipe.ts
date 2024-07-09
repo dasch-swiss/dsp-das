@@ -11,7 +11,7 @@ export class TimeFormatPipe implements PipeTransform {
     const minutes = Math.floor(value / 60);
 
     if (minutes > 2) {
-      return `${minutes} mins`;
+      return `~${minutes} mins`;
     }
     const seconds = value % 60;
     return seconds === 0 ? `${minutes} mins` : `${minutes} mins ${seconds} secs`;
