@@ -65,6 +65,7 @@ export class ReusableProjectFormComponent implements OnInit {
   readonly shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
+  readonly longNAmeValidators = [Validators.required, Validators.minLength(3), Validators.maxLength(256)];
 
   constructor(
     private _fb: FormBuilder,
@@ -77,7 +78,9 @@ export class ReusableProjectFormComponent implements OnInit {
   }
 
   public noWhitespaceValidator(control: FormControl) {
-    return (control.value || '').value.trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
+    return !control.value || (control.value || '').value.trim().length
+      ? null
+      : { errorKey: 'whitespace', message: 'no whitespace' };
   }
 
   private _buildForm() {
@@ -107,8 +110,10 @@ export class ReusableProjectFormComponent implements OnInit {
       ],
       longname: [
         this.formData.longname,
-        opts,
-        [Validators.required, Validators.minLength(3), Validators.maxLength(256)],
+        {
+          nonNullable: true,
+          validators: [Validators.required, Validators.minLength(3), Validators.maxLength(256)],
+        } as FormControlOptions,
       ],
       description: DEFAULT_MULTILANGUAGE_FORM(this.formData.description, this.descriptionValidators, [
         atLeastOneStringRequired('value'),

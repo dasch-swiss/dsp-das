@@ -76,10 +76,12 @@ export class ChipListInputComponent implements OnInit {
   trackByFn = (index: number, item: string) => `${index}-${item}`;
 
   private setFormArrayState() {
-    const hasNewValues = this.formArray.controls.some(
-      formControl => !this.initialControls.find(c => c.value === formControl.value)
+    const hasChangedValues = this.formArray.controls.some(
+      formControl =>
+        !this.initialControls.find(c => c.value === formControl.value) ||
+        this.initialControls.length !== this.formArray.controls.length
     );
-    if (hasNewValues) {
+    if (hasChangedValues) {
       this.formArray.markAsDirty();
     } else {
       this.formArray.markAsPristine();
