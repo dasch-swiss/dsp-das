@@ -109,7 +109,7 @@ export class SegmentApiService {
     );
   }
 
-  getSegment(type: 'VideoSegment' | 'AudioSegment', resourceIri: string) {
+  getSegment(type: 'VideoSegment' | 'AudioSegment', resourceIri: string, page: number) {
     const payload = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -147,7 +147,7 @@ CONSTRUCT {
   }
 
 }
-OFFSET 0
+OFFSET ${page}
 `;
 
     return this._dspApiConnection.v2.search.doExtendedSearch(payload).pipe(
