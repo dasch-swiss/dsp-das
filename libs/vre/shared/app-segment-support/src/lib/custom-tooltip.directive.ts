@@ -48,7 +48,7 @@ export class CustomTooltipDirective implements OnDestroy {
       this.clearHideTimeout();
     });
     componentRef.instance.mouseLeave.subscribe(() => {
-      this.startHideTimeout();
+      this.overlayRef?.dispose();
     });
   }
 
