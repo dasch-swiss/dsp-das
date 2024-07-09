@@ -8,3 +8,4 @@ export * from './lib/time-input/time-format.directive';
 export * from './lib/time-input/time-input.component';
 export * from './lib/time-input/time-string-to-seconds';
 export * from './lib/time-input/time-validator';
+export * from './lib/time-format.pipe';

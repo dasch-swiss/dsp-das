@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { secondsToTimeString } from '@dasch-swiss/vre/shared/app-ui';
 import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
 
@@ -6,7 +7,8 @@ import { SegmentsService } from './segments.service';
   selector: 'app-custom-tooltip',
   template: ` <div class="tooltip">
     <div class="mat-h5" style="margin-bottom: 0!important">
-      {{ segment.label }} {{ segment.hasSegmentBounds.end - segment.hasSegmentBounds.start }}
+      <div>{{ segment.label }}</div>
+      {{ segment.hasSegmentBounds.end - segment.hasSegmentBounds.start | timeFormat }}
     </div>
     <button mat-icon-button (click)="highlightSegment()">
       <mat-icon>arrow_downward</mat-icon>
@@ -47,4 +49,6 @@ export class CustomTooltipComponent {
     this.segmentsService.highlightSegment(this.segment);
     this.mouseLeave.emit();
   }
+
+  protected readonly secondsToTimeString = secondsToTimeString;
 }

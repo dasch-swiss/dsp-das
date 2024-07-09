@@ -13,9 +13,9 @@
     [max]="mediaPlayer.duration()"
     [currentTime]="currentTime"
     (afterNavigation)="mediaPlayer.navigate($event)" />
-  <app-audio-toolbar [parentResource]="parentResource" />
   <app-segments-display
     *ngIf="segmentsService.segments.length > 0 && duration > 0"
     [segments]="segmentsService.segments"
     [videoLengthSecs]="duration" />
+  <app-audio-toolbar [parentResource]="parentResource" />
 </ng-container>

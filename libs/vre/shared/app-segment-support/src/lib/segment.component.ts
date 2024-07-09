@@ -31,7 +31,7 @@ export class SegmentComponent implements OnInit {
   start!: number;
   showHover = false;
 
-  readonly rowHeight = 40;
+  readonly rowHeight = 8;
 
   readonly segmentRightMargin = 0.2;
 
