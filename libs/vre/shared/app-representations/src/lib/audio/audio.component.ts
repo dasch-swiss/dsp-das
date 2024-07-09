@@ -97,7 +97,6 @@ export class AudioComponent implements OnChanges, OnDestroy {
     });
 
     this._mediaControl.watchForPause$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
-      console.log('pause', seconds);
       this.watchForPause = seconds;
     });
   }

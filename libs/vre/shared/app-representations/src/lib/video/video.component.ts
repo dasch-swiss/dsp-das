@@ -92,29 +92,19 @@ export class VideoComponent implements OnChanges, OnDestroy {
     this.loaded.emit(true);
     this._mediaControl.mediaDurationSecs = this.videoPlayer.duration();
     this.displayPreview(true);
-    this.videoPlayer.onTimeUpdate$.subscribe(v => {
-      this.myCurrentTime = v;
+    this.videoPlayer.onTimeUpdate$.subscribe(seconds => {
+      this.myCurrentTime = seconds;
       this._cdr.detectChanges();
+
+      if (this.watchForPause !== null && this.watchForPause === Math.floor(seconds)) {
+        this.videoPlayer.pause();
+        this.watchForPause = null;
+      }
     });
   }
 
   ngOnDestroy() {
     this._ngUnsubscribe.next();
-  }
-
-  private _watchForMediaEvents() {
-    this._mediaControl.play$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
-      if (seconds >= this.duration) {
-        this._notification.openSnackBar('The video cannot be played at this time.');
-        return;
-      }
-      this.videoPlayer.navigate(seconds);
-      this.videoPlayer.play();
-    });
-
-    this._mediaControl.watchForPause$.subscribe(seconds => {
-      this.watchForPause = seconds;
-    });
   }
 
   updatePreview(ev: PointerValue) {
@@ -176,5 +166,20 @@ export class VideoComponent implements OnChanges, OnDestroy {
       }
       this.videoError = vErr;
     }
+  }
+
+  private _watchForMediaEvents() {
+    this._mediaControl.play$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
+      if (seconds >= this.duration) {
+        this._notification.openSnackBar('The video cannot be played at this time.');
+        return;
+      }
+      this.videoPlayer.navigate(seconds);
+      this.videoPlayer.play();
+    });
+
+    this._mediaControl.watchForPause$.subscribe(seconds => {
+      this.watchForPause = seconds;
+    });
   }
 }
