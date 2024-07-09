@@ -13,8 +13,6 @@ export class CustomTooltipDirective implements OnDestroy {
   private overlayRef!: OverlayRef;
   private hideTimeout: any;
 
-  index = 0;
-
   constructor(
     private overlay: Overlay,
     private elementRef: ElementRef,
@@ -23,7 +21,9 @@ export class CustomTooltipDirective implements OnDestroy {
 
   @HostListener('mouseenter')
   show() {
-    this.index++;
+    if (this.overlayRef?.hasAttached()) {
+      this.overlayRef.dispose();
+    }
     this.clearHideTimeout();
 
     const positionStrategy = this.overlay
@@ -35,6 +35,7 @@ export class CustomTooltipDirective implements OnDestroy {
           originY: 'bottom',
           overlayX: 'center',
           overlayY: 'top',
+          offsetY: 10,
         },
       ]);
 
@@ -42,28 +43,24 @@ export class CustomTooltipDirective implements OnDestroy {
     const tooltipPortal = new ComponentPortal(CustomTooltipComponent, this._viewContainerRef);
     const componentRef = this.overlayRef.attach(tooltipPortal);
     componentRef.instance.segment = this.appCustomTooltip;
-    componentRef.instance.index = this.index;
 
     componentRef.instance.mouseEnter.subscribe(() => {
-      console.log('enter');
       this.clearHideTimeout();
     });
     componentRef.instance.mouseLeave.subscribe(() => {
-      console.log('leave');
       this.startHideTimeout();
     });
   }
 
   @HostListener('mouseleave')
   hide() {
-    console.log('TT LEAVE', this.hideTimeout);
     this.startHideTimeout();
   }
 
   private startHideTimeout() {
     this.hideTimeout = setTimeout(() => {
       this.overlayRef?.dispose();
-    }, 1000); // Adjust delay as needed
+    }, 300);
   }
 
   private clearHideTimeout() {

@@ -4,14 +4,29 @@ import { SegmentsService } from './segments.service';
 
 @Component({
   selector: 'app-custom-tooltip',
-  template: ` <div style="display: flex; align-items: center; background: red; padding: 20px">
-    <div>{{ segment.label }} {{ index }}</div>
-    <mat-icon (click)="segmentsService.highlightSegment(segment)">arrow_downward</mat-icon>
+  template: ` <div class="tooltip">
+    <div class="mat-h5" style="margin-bottom: 0!important">
+      {{ segment.label }} {{ segment.hasSegmentBounds.end - segment.hasSegmentBounds.start }}
+    </div>
+    <button mat-icon-button (click)="highlightSegment()">
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
   </div>`,
+  styles: [
+    `
+      .tooltip {
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        border-radius: 5px;
+        background-color: #616161;
+        color: white;
+      }
+    `,
+  ],
 })
 export class CustomTooltipComponent {
   segment!: Segment;
-  index!: number;
 
   constructor(public segmentsService: SegmentsService) {}
 
@@ -25,6 +40,11 @@ export class CustomTooltipComponent {
 
   @HostListener('mouseleave')
   onMouseLeave() {
+    this.mouseLeave.emit();
+  }
+
+  highlightSegment() {
+    this.segmentsService.highlightSegment(this.segment);
     this.mouseLeave.emit();
   }
 }
