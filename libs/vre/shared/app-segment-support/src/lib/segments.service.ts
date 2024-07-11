@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { expand, reduce } from 'rxjs/operators';
 import { Segment } from './segment';
@@ -11,7 +11,10 @@ export class SegmentsService {
   private _highlightSegment = new BehaviorSubject<Segment | null>(null);
   highlightSegment$ = this._highlightSegment.asObservable();
 
-  constructor(private _segmentApi: SegmentApiService) {}
+  constructor(
+    private _segmentApi: SegmentApiService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   onInit(resourceIri: string, type: 'VideoSegment' | 'AudioSegment') {
     this.getSegment(resourceIri, type);
@@ -34,6 +37,7 @@ export class SegmentsService {
       )
       .subscribe(v => {
         this.segments = v;
+        this._cdr.detectChanges();
       });
   }
 
