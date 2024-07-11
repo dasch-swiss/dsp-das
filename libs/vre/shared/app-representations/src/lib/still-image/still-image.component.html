@@ -46,7 +46,12 @@
 
     <!-- right side buttons -->
     <span>
-      <button mat-icon-button id="DSP_OSD_SETTINGS" matTooltip="Settings" [matMenuTriggerFor]="settings" [disabled]="failedToLoad">
+      <button
+        mat-icon-button
+        id="DSP_OSD_SETTINGS"
+        matTooltip="Settings"
+        [matMenuTriggerFor]="settings"
+        [disabled]="failedToLoad">
         <mat-icon>settings</mat-icon>
       </button>
       <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out" [disabled]="failedToLoad">
