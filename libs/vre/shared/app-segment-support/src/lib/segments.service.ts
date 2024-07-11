@@ -26,13 +26,13 @@ export class SegmentsService {
   }
 
   getSegmentFromPage(resourceIri: string, type: 'VideoSegment' | 'AudioSegment', page: number) {
-    return this._segmentApi.getSegment(type, resourceIri, page).pipe(
+    return this._segmentApi.getSegment(type, resourceIri, 0).pipe(
       expand(data => {
         console.log('z', data);
-        if (data.length > 25) {
+        if (page < 3) {
           return this.getSegmentFromPage(resourceIri, type, page + 1);
         } else {
-          return of([]);
+          return of(data);
         }
       }),
       tap(v => console.log(v)),
