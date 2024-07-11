@@ -46,16 +46,11 @@
     </span>
     <span class="fill-remaining-space center"></span>
     <span class="cardinality-toggles">
-      <app-multiple-slide-toggle
-        [control]="cardinalityControl"
-        [label]="'multiple'"
-        [disabled]="!userCanEdit"
-        (afterCardinalityChange)="afterCardinalityChange($event)"></app-multiple-slide-toggle>
-      <app-required-slide-toggle
-        [control]="cardinalityControl"
-        [label]="'required'"
-        [disabled]="!userCanEdit"
-        (afterCardinalityChange)="afterCardinalityChange($event)"></app-required-slide-toggle>
+      <app-cardinality
+        [cardinality]="propCard.cardinality"
+        [classIri]="resourceClass.id"
+        [propertyInfo]="{ propDef: this.propDef, propType: this.propType }"
+        (cardinalityChange)="submitCardinalitiesChange($event)"></app-cardinality>
     </span>
   </div>
 </div>
