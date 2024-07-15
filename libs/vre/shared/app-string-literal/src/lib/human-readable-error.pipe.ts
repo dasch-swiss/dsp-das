@@ -7,6 +7,7 @@ import { ValidatorError } from './validator-error.interface';
 })
 export class HumanReadableErrorPipe implements PipeTransform {
   transform(error: object, params: ValidatorError[] | null = null): string {
+    console.log('err', error);
     if (error.hasOwnProperty('required')) {
       return 'This field is required';
     }

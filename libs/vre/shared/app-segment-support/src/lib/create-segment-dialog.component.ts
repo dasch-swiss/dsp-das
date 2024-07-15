@@ -45,13 +45,11 @@ export class CreateSegmentDialogComponent {
   loading = false;
 
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
-  readonly timeInputValidator = Validators.pattern(/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/g);
-
   form = this._fb.group(
     {
       label: ['', Validators.required],
-      start: [0, [Validators.required, this.timeInputValidator, Validators.min(0)]],
-      end: [0, [Validators.required, this.timeInputValidator, Validators.max(this.data.videoDurationSecs)]],
+      start: [0, [Validators.required, Validators.min(0)]],
+      end: [0, [Validators.required, Validators.max(this.data.videoDurationSecs)]],
       title: null as string | null,
       description: null as string | null,
       comment: null as string | null,
