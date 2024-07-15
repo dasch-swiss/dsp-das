@@ -16,6 +16,7 @@ import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
 import { RepresentationService } from '../representation.service';
+import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
   selector: 'app-audio-more-button',
@@ -44,7 +45,8 @@ export class AudioMoreButtonComponent {
     private _dialog: MatDialog,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _resourceFetcher: ResourceFetcherService
   ) {}
 
   openReplaceFileDialog() {
@@ -97,7 +99,7 @@ export class AudioMoreButtonComponent {
         )
       )
       .subscribe(() => {
-        window.location.reload();
+        this._resourceFetcher.reload();
       });
   }
 }

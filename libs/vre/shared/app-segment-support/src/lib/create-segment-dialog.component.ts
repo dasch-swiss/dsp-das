@@ -1,6 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { SegmentApiService } from './segment-api.service';
@@ -45,16 +45,20 @@ export class CreateSegmentDialogComponent {
   loading = false;
 
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
+  readonly timeInputValidator = Validators.pattern(/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/g);
 
-  form = this._fb.group({
-    label: ['', Validators.required],
-    start: [0, [Validators.required, Validators.min(0)]],
-    end: [0, [Validators.required, Validators.max(this.data.videoDurationSecs)]],
-    title: null as string | null,
-    description: null as string | null,
-    comment: null as string | null,
-    keywords: this._fb.array([], this.keywordsValidators),
-  });
+  form = this._fb.group(
+    {
+      label: ['', Validators.required],
+      start: [0, [Validators.required, this.timeInputValidator, Validators.min(0)]],
+      end: [0, [Validators.required, this.timeInputValidator, Validators.max(this.data.videoDurationSecs)]],
+      title: null as string | null,
+      description: null as string | null,
+      comment: null as string | null,
+      keywords: this._fb.array([], this.keywordsValidators),
+    },
+    { validators: [this.rangeValidator] }
+  );
 
   constructor(
     private _fb: FormBuilder,
@@ -63,6 +67,13 @@ export class CreateSegmentDialogComponent {
     private _dialogRef: DialogRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateSegmentDialogProps
   ) {}
+
+  rangeValidator(formGroup: FormGroup) {
+    const start = formGroup.get('start')?.value;
+    const end = formGroup.get('end')?.value;
+
+    return end > start ? null : { rangeError: true };
+  }
 
   onSubmit() {
     if (this.form.invalid) return;
