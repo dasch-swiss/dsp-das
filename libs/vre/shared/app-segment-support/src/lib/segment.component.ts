@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
 
@@ -7,9 +7,8 @@ import { Segment } from './segment';
   template: `
     <div
       class="segment"
-      #segmentContainer
       [appCustomTooltip]="segment"
-      [ngStyle]="{ width: width + '%', left: start + '%', top: segment.row * rowHeight + 'px' }"
+      [ngStyle]="{ width: width + '%', left: start + '%' }"
       (click)="playMedia()"></div>
   `,
   styleUrls: ['./segment.component.scss'],
@@ -18,12 +17,8 @@ export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;
   @Input({ required: true }) videoLengthSecs!: number;
 
-  @ViewChild('segmentContainer') myElement!: ElementRef;
-
   width!: number;
   start!: number;
-
-  readonly rowHeight = 8;
 
   readonly segmentRightMargin = 0.2;
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { Segment, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { Subscription } from 'rxjs';
@@ -23,7 +23,10 @@ export class SegmentTabComponent implements OnInit, OnDestroy {
   selectedSegment: Segment | null = null;
   subscription!: Subscription;
 
-  constructor(public segmentsService: SegmentsService) {}
+  constructor(
+    public segmentsService: SegmentsService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.subscription = this.segmentsService.highlightSegment$
@@ -35,6 +38,7 @@ export class SegmentTabComponent implements OnInit, OnDestroy {
         if (segment !== null) {
           this._openSegment(segment.resource.res.id);
         }
+        this._cdr.detectChanges();
       });
   }
 

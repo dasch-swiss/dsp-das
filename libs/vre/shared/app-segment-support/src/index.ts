@@ -7,4 +7,4 @@ export * from './lib/segment-api.service';
 export * from './lib/media-control.service';
 export * from './lib/segment';
 export * from './lib/custom-tooltip.directive';
-export * from './lib/custom-tooltip.component';
+export * from './lib/segment-tooltip.component';

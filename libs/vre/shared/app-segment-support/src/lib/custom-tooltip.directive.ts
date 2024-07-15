@@ -2,8 +2,8 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Directive, ElementRef, HostListener, Input, OnDestroy, ViewContainerRef } from '@angular/core';
-import { CustomTooltipComponent } from './custom-tooltip.component';
 import { Segment } from './segment';
+import { SegmentTooltipComponent } from './segment-tooltip.component';
 
 @Directive({
   selector: '[appCustomTooltip]',
@@ -40,7 +40,7 @@ export class CustomTooltipDirective implements OnDestroy {
       ]);
 
     this.overlayRef = this.overlay.create({ positionStrategy });
-    const tooltipPortal = new ComponentPortal(CustomTooltipComponent, this._viewContainerRef);
+    const tooltipPortal = new ComponentPortal(SegmentTooltipComponent, this._viewContainerRef);
     const componentRef = this.overlayRef.attach(tooltipPortal);
     componentRef.instance.segment = this.appCustomTooltip;
 

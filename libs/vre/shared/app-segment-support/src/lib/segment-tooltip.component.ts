@@ -4,7 +4,7 @@ import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
 
 @Component({
-  selector: 'app-custom-tooltip',
+  selector: 'app-segment-tooltip',
   template: ` <div class="tooltip">
     <div class="mat-h5" style="margin-bottom: 0!important">
       <div>{{ segment.label }}</div>
@@ -27,7 +27,7 @@ import { SegmentsService } from './segments.service';
     `,
   ],
 })
-export class CustomTooltipComponent {
+export class SegmentTooltipComponent {
   segment!: Segment;
 
   constructor(public segmentsService: SegmentsService) {}
