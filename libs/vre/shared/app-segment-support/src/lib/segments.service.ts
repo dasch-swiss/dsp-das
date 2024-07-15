@@ -20,7 +20,6 @@ export class SegmentsService {
   getSegment(resourceIri: string, type: 'VideoSegment' | 'AudioSegment') {
     const page = 0;
     this.getSegmentFromPage(resourceIri, type, page).subscribe(v => {
-      console.log('received', v);
       this.segments = v;
     });
   }
@@ -28,14 +27,12 @@ export class SegmentsService {
   getSegmentFromPage(resourceIri: string, type: 'VideoSegment' | 'AudioSegment', page: number) {
     return this._segmentApi.getSegment(type, resourceIri, 0).pipe(
       expand(data => {
-        console.log('z', data);
-        if (page < 3) {
+        if (data.length >= 25) {
           return this.getSegmentFromPage(resourceIri, type, page + 1);
         } else {
           return of(data);
         }
       }),
-      tap(v => console.log(v)),
       filter(v => (v as Segment[]).length > 0)
     );
   }
