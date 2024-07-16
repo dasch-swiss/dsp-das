@@ -27,6 +27,6 @@ export default async function () {
     }
     await page.screenshot({ path: 'screenshots/homepage.png' });
   } finally {
-    page.close();
+    await page.close();
   }
 }

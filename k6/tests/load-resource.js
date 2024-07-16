@@ -18,13 +18,13 @@ export default async function () {
     await page.waitForNavigation();
     const resourceLabel = await page.resourcelabel.textContent();
     const success = check(homepage, {
-      resourcelabel: resourcelabel => resourcelabel == '1723-02-06_Scheuchzer_Johann_Jakob-Bernoulli_Johann_I',
+      resourceLabel: resourceLabel => resourceLabel == '1723-02-06_Scheuchzer_Johann_Jakob-Bernoulli_Johann_I',
     });
     if (!success) {
       errorCounter.add(1);
     }
     await page.screenshot({ path: 'screenshots/resource-page.png' });
   } finally {
-    page.close();
+    await page.close();
   }
 }
