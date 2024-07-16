@@ -29,7 +29,7 @@ grafana-up:
 
 # Stop grafana
 grafana-down:
-    docker-compose down
+    docker compose down
 
 # Run the test and export to local grafana
 run-grafana testToRun=testToRun:
