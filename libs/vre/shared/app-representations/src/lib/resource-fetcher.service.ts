@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable, Output } from '@angular/core';
 import { KnoraApiConnection, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
@@ -9,6 +9,8 @@ import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
+  @Output() resourceInitStarted = new EventEmitter<void>();
+
   private _resourceIri!: string;
   private _loadResourceSubject = new BehaviorSubject(null);
 
@@ -26,6 +28,7 @@ export class ResourceFetcherService {
   ) {}
 
   onInit(resourceIri: string) {
+    this.resourceInitStarted.emit();
     this._resourceIri = resourceIri;
     this._subscription = this._loadResourceSubject
       .asObservable()

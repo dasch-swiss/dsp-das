@@ -1,11 +1,12 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { getFileValue, RegionService } from '@dasch-swiss/vre/shared/app-representations';
-import { take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 
 @Component({
@@ -52,8 +53,12 @@ import { CompoundService } from './compound/compound.service';
   styleUrls: ['./resource.component.scss'],
   providers: [CompoundService, RegionService],
 })
-export class ResourceComponent implements OnChanges {
+export class ResourceComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
+  @Input() resetCompoundPositionEvent: EventEmitter<void> | undefined;
+
+  destroyed: Subject<void> = new Subject<void>();
+
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean | null = null;
   showRestrictedMessage = true;
@@ -79,6 +84,10 @@ export class ResourceComponent implements OnChanges {
   }
 
   onInit(resource: DspResource) {
+    this.resetCompoundPositionEvent?.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this._compoundService.compoundPosition = undefined;
+    });
+
     if (this._isObjectWithoutRepresentation(resource)) {
       this._checkForCompoundNavigation(resource);
       return;
@@ -90,6 +99,11 @@ export class ResourceComponent implements OnChanges {
     if (this._isImageWithRegions(resource)) {
       this._regionService.onInit(resource);
     }
+  }
+
+  ngOnDestroy() {
+    this.destroyed.next();
+    this.destroyed.complete();
   }
 
   pageIsLoaded() {
@@ -118,7 +132,7 @@ export class ResourceComponent implements OnChanges {
           this.isCompoundNavigation = true;
           this._compoundService.onInit(
             this._compoundService.exists
-              ? this._compoundService.compoundPosition
+              ? this._compoundService.compoundPosition!
               : new DspCompoundPosition(countQuery_.numberOfResults),
             this.resource
           );
