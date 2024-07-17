@@ -27,7 +27,7 @@ export class DspResource {
 export class DspCompoundPosition {
   offset = 1; // current offset of search requests
   maxOffsets: number; // max offsets in relation to totalPages
-  position: number; // current item position in offset sequence
+  position: number = 1; // current item position in offset sequence
   page = 1; // current and real page number in compound object
   totalPages: number; // total pages (part of) in compound object
 

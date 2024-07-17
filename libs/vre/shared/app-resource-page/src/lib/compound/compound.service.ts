@@ -8,7 +8,7 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 
 @Injectable()
 export class CompoundService {
-  compoundPosition!: DspCompoundPosition;
+  compoundPosition: DspCompoundPosition | undefined;
   incomingResource: DspResource | undefined;
   private _resource!: DspResource;
 
@@ -32,6 +32,10 @@ export class CompoundService {
   }
 
   openPage(page: number) {
+    if (this.compoundPosition === undefined) {
+      return;
+    }
+
     const offset = Math.ceil(page / 25) - 1;
     const position = Math.floor(page - offset * 25 - 1);
 
@@ -41,15 +45,15 @@ export class CompoundService {
       this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
     } else {
       this.compoundPosition.offset = offset;
-      this._loadIncomingResourcesPage(offset);
+      this._loadIncomingResourcesPage(this.compoundPosition, offset);
     }
 
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
   }
 
-  private _loadIncomingResourcesPage(offset: number): void {
-    if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
+  private _loadIncomingResourcesPage(compoundPosition: DspCompoundPosition, offset: number): void {
+    if (offset < 0 || offset > compoundPosition.maxOffsets) {
       this._notification.openSnackBar(`Offset of ${offset} is invalid`);
       return;
     }
@@ -63,7 +67,7 @@ export class CompoundService {
           return;
         }
         this._resource.incomingRepresentations = incomingImageRepresentations.resources;
-        this._loadIncomingResource(this._resource.incomingRepresentations[this.compoundPosition.position].id);
+        this._loadIncomingResource(this._resource.incomingRepresentations[compoundPosition.position].id);
       });
   }
 
