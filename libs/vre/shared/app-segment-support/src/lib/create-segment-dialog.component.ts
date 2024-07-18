@@ -53,7 +53,7 @@ export class CreateSegmentDialogComponent {
       title: null as string | null,
       description: null as string | null,
       comment: null as string | null,
-      keywords: this._fb.array([], this.keywordsValidators),
+      keywords: this._fb.array([]),
     },
     { validators: [this.rangeValidator] }
   );
