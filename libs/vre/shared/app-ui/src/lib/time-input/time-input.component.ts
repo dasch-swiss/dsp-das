@@ -1,13 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ValidatorError } from '@dasch-swiss/vre/shared/app-string-literal';
+import { MyErrorStateMatcher } from './my-error-state-matcher';
 
 @Component({
   selector: 'app-time-input',
   template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ label }}</mat-label>
-      <input matInput [formControl]="control" appTimeFormat placeholder="hh:mm:ss" />
+      <input
+        matInput
+        [errorStateMatcher]="errorStateMatcher"
+        [formControl]="control"
+        appTimeFormat
+        placeholder="hh:mm:ss" />
       <mat-error *ngIf="control.errors as errors">
         {{ errors | humanReadableError: possibleErrors }}
       </mat-error>
@@ -20,6 +26,7 @@ export class TimeInputComponent implements OnInit {
   @Input() validatorErrors: ValidatorError[] | null = null;
 
   possibleErrors!: ValidatorError[];
+  errorStateMatcher = new MyErrorStateMatcher();
 
   ngOnInit() {
     this.possibleErrors = [
