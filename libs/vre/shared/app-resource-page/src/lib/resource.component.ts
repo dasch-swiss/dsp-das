@@ -75,12 +75,12 @@ export class ResourceComponent implements OnChanges {
     this.showRestrictedMessage = true;
     this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
 
-    this.onInit(this.resource, changes['resource'].currentValue !== changes['resource'].previousValue);
+    this.onInit(this.resource, changes['resource']?.currentValue.res.id !== changes['resource']?.previousValue?.res.id);
   }
 
-  onInit(resource: DspResource, differentResource: boolean) {
+  onInit(resource: DspResource, isDifferentResource: boolean) {
     if (this._isObjectWithoutRepresentation(resource)) {
-      this._checkForCompoundNavigation(resource, differentResource);
+      this._checkForCompoundNavigation(resource, isDifferentResource);
       return;
     }
 
