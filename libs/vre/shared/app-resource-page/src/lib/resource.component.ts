@@ -107,7 +107,7 @@ export class ResourceComponent implements OnChanges {
     return getFileValue(resource) === null;
   }
 
-  private _checkForCompoundNavigation(resource: DspResource, differentResource: boolean) {
+  private _checkForCompoundNavigation(resource: DspResource, isDifferentResource: boolean) {
     this._incomingService
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .pipe(take(1))
@@ -117,7 +117,7 @@ export class ResourceComponent implements OnChanges {
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
           this._compoundService.onInit(
-            this._compoundService.exists && !differentResource
+            this._compoundService.exists && !isDifferentResource
               ? this._compoundService.compoundPosition
               : new DspCompoundPosition(countQuery_.numberOfResults),
             this.resource
