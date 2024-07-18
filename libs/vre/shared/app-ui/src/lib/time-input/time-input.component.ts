@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ValidatorError } from '@dasch-swiss/vre/shared/app-string-literal';
-import { MyErrorStateMatcher } from './my-error-state-matcher';
+import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 
 @Component({
   selector: 'app-time-input',
@@ -26,7 +26,7 @@ export class TimeInputComponent implements OnInit {
   @Input() validatorErrors: ValidatorError[] | null = null;
 
   possibleErrors!: ValidatorError[];
-  errorStateMatcher = new MyErrorStateMatcher();
+  readonly errorStateMatcher = new TimeInputErrorStateMatcher();
 
   ngOnInit() {
     this.possibleErrors = [
