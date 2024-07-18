@@ -35,7 +35,7 @@ import { MediaPlayerService } from './media-player.service';
     <div>
       <app-video-more-button [resource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
 
-      <button mat-icon-button (click)="createVideoSegment()" [matTooltip]="'Create a segment'">
+      <button mat-icon-button (click)="createVideoSegment()" [matTooltip]="'Create a segment'" *ngIf="isAdmin">
         <mat-icon>view_timeline</mat-icon>
       </button>
 
@@ -54,6 +54,7 @@ export class VideoToolbarComponent {
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
   @Input({ required: true }) cinemaMode!: boolean;
+  @Input({ required: true }) isAdmin!: boolean;
 
   @Output() cinemaModeChange = new EventEmitter<boolean>();
 

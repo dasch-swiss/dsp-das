@@ -31,6 +31,7 @@ import { MediaPlayerService } from './media-player.service';
 export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
+  @Input({ required: true }) isAdmin!: boolean;
   @Output() loaded = new EventEmitter<boolean>();
 
   @ViewChild('preview') preview!: ElementRef;

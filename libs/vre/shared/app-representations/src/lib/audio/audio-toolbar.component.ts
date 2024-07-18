@@ -23,7 +23,7 @@ import { MediaPlayerService } from '../video/media-player.service';
       <div>{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
 
       <div>
-        <button mat-icon-button (click)="createAudioSegment()">
+        <button mat-icon-button (click)="createAudioSegment()" *ngIf="isAdmin">
           <mat-icon>view_timeline</mat-icon>
         </button>
         <app-audio-more-button [parentResource]="parentResource" />
@@ -33,6 +33,7 @@ import { MediaPlayerService } from '../video/media-player.service';
 })
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;
+  @Input({ required: true }) isAdmin!: boolean;
 
   durationString!: string;
 
