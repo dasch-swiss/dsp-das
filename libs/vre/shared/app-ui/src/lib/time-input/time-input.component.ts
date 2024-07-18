@@ -31,7 +31,7 @@ export class TimeInputComponent implements OnInit {
   ngOnInit() {
     this.possibleErrors = [
       {
-        errorKey: 'format',
+        errorKey: 'pattern',
         message: 'Please enter a valid time in format hh:mm:ss',
       },
       ...(this.validatorErrors ?? []),

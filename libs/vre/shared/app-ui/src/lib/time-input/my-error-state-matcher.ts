@@ -3,9 +3,10 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    if (isNaN(control.value)) {
-      return;
+    if (Number.isNaN(control.value)) {
+      control?.setErrors({ pattern: true });
+      return true;
     }
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 }
