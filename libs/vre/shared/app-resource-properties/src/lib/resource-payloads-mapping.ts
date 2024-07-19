@@ -101,7 +101,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
 
       createValue: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();
-        newBooleanValue.bool = value;
+        newBooleanValue.bool = value ?? false; // 'false' - is the default value
         return newBooleanValue;
       },
       updateValue: (id: string, value: boolean) => {
