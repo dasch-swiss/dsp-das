@@ -97,11 +97,14 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.BooleanValue,
     {
-      control: (value?: ReadBooleanValue) => new FormControl(value?.bool),
+      control: (value?: ReadBooleanValue) => {
+        const booleanValue = value ? value.bool : false;
+        return new FormControl(booleanValue);
+      },
 
       createValue: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();
-        newBooleanValue.bool = value ?? false; // 'false' - is the default value
+        newBooleanValue.bool = value;
         return newBooleanValue;
       },
       updateValue: (id: string, value: boolean) => {
