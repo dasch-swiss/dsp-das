@@ -22,16 +22,16 @@ export interface CardinalityInfo {
       "></app-dialog-header>
     <mat-dialog-content>
       <div class="cando-headline">
-        <dasch-swiss-app-progress-indicator [status]="loadingStatus"></dasch-swiss-app-progress-indicator>
-        <div *ngIf="loadingStatus > 0" class="mat-headline-6">
-          Changing the cardinality is{{ loadingStatus === 2 ? ' not' : '' }} possible.
-        </div>
+        <dasch-swiss-app-progress-indicator
+          *ngIf="canSetCardinality === undefined"
+          [status]="0"></dasch-swiss-app-progress-indicator>
+        <div *ngIf="canSetCardinality === false" class="mat-headline-6">Changing the cardinality is not possible.</div>
       </div>
-      <div *ngIf="loadingStatus === 2">
+      <div *ngIf="canSetCardinality === false">
         <p>{{ canNotSetCardinalityUiReason.detail }}</p>
         <p>{{ canNotSetCardinalityUiReason.hint }}</p>
       </div>
-      <div *ngIf="loadingStatus === 1">
+      <div *ngIf="canSetCardinality">
         <div class="cando-headline">
           <mat-icon aria-label="warn icon" fontIcon="warning_amber" color="accent"></mat-icon>
           <div class="mat-headline-6">Attention</div>
@@ -39,14 +39,15 @@ export interface CardinalityInfo {
         <div>Please note that this change may not be reversible. Do you want to change the cardinality?</div>
       </div>
       <div mat-dialog-actions align="end">
-        <button mat-button (click)="dialogRef.close(false)">No</button>
+        <button mat-button (click)="dialogRef.close(false)" *ngIf="canSetCardinality">No</button>
         <button
+          *ngIf="canSetCardinality"
           mat-raised-button
-          [disabled]="loadingStatus !== 1"
           (click)="dialogRef.close(true)"
           data-cy="confirmation-button">
           Yes
         </button>
+        <button mat-button (click)="dialogRef.close(false)" *ngIf="canSetCardinality === false">Close</button>
       </div>
     </mat-dialog-content>
   `,
@@ -54,9 +55,15 @@ export interface CardinalityInfo {
     `
       .cando-headline {
         display: flex;
+        align-items: center;
       }
       .cando-headline mat-icon {
+        vertical-align: middle;
         margin-right: 8px;
+      }
+
+      .mat-headline-6 {
+        margin: 0;
       }
     `,
   ],
@@ -68,9 +75,6 @@ export class CardinalityChangeDialogComponent implements OnInit {
     detail: '',
     hint: '',
   };
-  get loadingStatus(): 0 | 1 | 2 {
-    return this.canSetCardinality === undefined ? 0 : this.canSetCardinality ? 1 : 2;
-  }
 
   get changeToMultiple() {
     return this.data.targetCardinality && this.data?.targetCardinality > 1 && this.data.currentCardinality < 2;
