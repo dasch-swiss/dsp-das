@@ -1,5 +1,46 @@
 # Changelog
 
+## [11.15.0](https://github.com/dasch-swiss/dsp-das/compare/v11.14.0...v11.15.0) (2024-07-12)
+
+
+### Enhancements
+
+* resource image format settings (DEV-3834) ([#1687](https://github.com/dasch-swiss/dsp-das/issues/1687)) ([2a4175d](https://github.com/dasch-swiss/dsp-das/commit/2a4175db7a122e9d145624c9032dcd1f342eae07))
+
+
+### Bug Fixes
+
+* does not preserve image format on resource change (DEV-3834) ([#1692](https://github.com/dasch-swiss/dsp-das/issues/1692)) ([ff35be7](https://github.com/dasch-swiss/dsp-das/commit/ff35be7ff25b191d79adc271d5364d5315ea8ad5))
+* opening Salsah links  (DEV-3830) ([#1689](https://github.com/dasch-swiss/dsp-das/issues/1689)) ([c54a249](https://github.com/dasch-swiss/dsp-das/commit/c54a2496f6cbd5eb0691959dc2c88fb8b354dcfc))
+* remove link value that is marked as deleted ([#1685](https://github.com/dasch-swiss/dsp-das/issues/1685)) ([8b74f0a](https://github.com/dasch-swiss/dsp-das/commit/8b74f0a56463e3557687a3fd5f64a2b0045ccb69))
+* Url encode ingest upload url in order to support special characters in filenames (DEV-3865) ([#1691](https://github.com/dasch-swiss/dsp-das/issues/1691)) ([b6c1f4c](https://github.com/dasch-swiss/dsp-das/commit/b6c1f4cc37eaba6fe01a4dfafb957863fff66d3a))
+
+
+### Maintenance
+
+* **test:** Use docker compose in justfile instead of deprecated docker-compose ([#1690](https://github.com/dasch-swiss/dsp-das/issues/1690)) ([0536a23](https://github.com/dasch-swiss/dsp-das/commit/0536a23287c7bbc2e2b4ee6e441fd9ed47f31845))
+
+## [11.14.0](https://github.com/dasch-swiss/dsp-das/compare/v11.13.0...v11.14.0) (2024-07-08)
+
+
+### Enhancements
+
+* Add k6 brower performance test ([#1666](https://github.com/dasch-swiss/dsp-das/issues/1666)) ([6fb4787](https://github.com/dasch-swiss/dsp-das/commit/6fb478788af1f868e5ea0f63d7c91c21f247993b))
+* erase project confirmation dialog + translations (DEV-3734) ([#1679](https://github.com/dasch-swiss/dsp-das/issues/1679)) ([e4b7ef0](https://github.com/dasch-swiss/dsp-das/commit/e4b7ef0341bd7fb711a8317e9da40fd7b6b313ff))
+
+
+### Bug Fixes
+
+* **cardinality change:** include other properties, set the new cardinality ([#1678](https://github.com/dasch-swiss/dsp-das/issues/1678)) ([3ce729e](https://github.com/dasch-swiss/dsp-das/commit/3ce729e4f2a36da39e4b5f0116cb4a7a5a09da09))
+* editing a stillimage properties keep the same page active ([#1677](https://github.com/dasch-swiss/dsp-das/issues/1677)) ([acfa48e](https://github.com/dasch-swiss/dsp-das/commit/acfa48e247197c0d8cbebeeff78b69ec25d47256))
+* erase project short code validation (DEV-3734) ([#1683](https://github.com/dasch-swiss/dsp-das/issues/1683)) ([ce13e25](https://github.com/dasch-swiss/dsp-das/commit/ce13e2502064646fd68f20ca51df3f7ba32b4064))
+* remove closed bracket in href link ([#1682](https://github.com/dasch-swiss/dsp-das/issues/1682)) ([aebd0ed](https://github.com/dasch-swiss/dsp-das/commit/aebd0ed35378fba459245dccb29aec691fc27de6))
+
+
+### Maintenance
+
+* **add user form:** remove validation and error msgs ([#1675](https://github.com/dasch-swiss/dsp-das/issues/1675)) ([ada9505](https://github.com/dasch-swiss/dsp-das/commit/ada950568e6a3488062c1da3753a0dbdeb402c8e))
+
 ## [11.13.0](https://github.com/dasch-swiss/dsp-das/compare/v11.12.1...v11.13.0) (2024-07-01)
 
 
