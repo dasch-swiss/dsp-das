@@ -1,5 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import de_CH from '@angular/common/locales/de-CH';
+import en from '@angular/common/locales/en';
 import fr_CH from '@angular/common/locales/fr-CH';
 import it_CH from '@angular/common/locales/it-CH';
 import { Injectable } from '@angular/core';
@@ -38,6 +39,7 @@ export class LocalizationService extends BaseService {
   }
 
   availableLocales = [
+    { locale: 'en', localeData: en },
     { locale: 'fr-CH', localeData: fr_CH },
     { locale: 'de-CH', localeData: de_CH },
     { locale: 'it-CH', localeData: it_CH },
@@ -50,7 +52,7 @@ export class LocalizationService extends BaseService {
 
   init() {
     this.setDefaultLanguage();
-    this.locale = 'de-CH';
+    this.locale = 'en';
   }
 
   getCurrentLanguage(): string {
@@ -73,7 +75,7 @@ export class LocalizationService extends BaseService {
 
   private getLanguageFromBrowser(): string {
     const browserLang = this.translateService.getBrowserLang();
-    return browserLang?.match(/de|fr|it/) ? browserLang : this.defaultLanguage;
+    return browserLang?.match(/en|de|fr|it/) ? browserLang : this.defaultLanguage;
   }
 
   private setDefaultLanguage() {
@@ -91,7 +93,7 @@ export class LocalizationService extends BaseService {
     let localeItem = this.availableLocales.find(item => item.locale === locale);
 
     if (!localeItem) {
-      localeItem = { locale: 'de-CH', localeData: de_CH };
+      localeItem = { locale: 'en', localeData: en };
     }
 
     registerLocaleData(localeItem.localeData, locale);
