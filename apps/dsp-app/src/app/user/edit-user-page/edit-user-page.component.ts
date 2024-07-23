@@ -13,13 +13,13 @@ import { UserForm } from '../user-form/user-form.type';
     <app-user-form *ngIf="user" [user]="user" (afterFormInit)="form = $event" />
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'appLabels.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'form.action.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
         [disabled]="!form?.valid || (form && form.pristine)"
         (click)="updateUser()">
-        {{ 'appLabels.form.action.update' | translate }}
+        {{ 'form.action.update' | translate }}
       </button>
     </div>
   `,
