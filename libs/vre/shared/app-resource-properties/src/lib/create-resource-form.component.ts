@@ -172,7 +172,7 @@ export class CreateResourceFormComponent implements OnInit {
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.guiOrder !== undefined || !v.propertyIndex.indexOf(this.resourceClassIri.split('#')[0]))
           .map(v => {
             return { guiDef: v, propDef: v.propertyDefinition, values: [] };
           });
