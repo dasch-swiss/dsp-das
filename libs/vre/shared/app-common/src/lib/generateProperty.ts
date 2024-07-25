@@ -5,8 +5,8 @@ import {
   ReadResource,
   ReadStillImageFileValue,
 } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues } from './property-info-values.interface';
 import { ApiConstants } from '@dasch-swiss/vre/shared/app-config';
+import { PropertyInfoValues } from './property-info-values.interface';
 
 /**
  * Contains every changes needed for displaying properties without bug.
