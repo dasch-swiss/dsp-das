@@ -6,6 +6,7 @@ import {
   ReadStillImageFileValue,
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from './property-info-values.interface';
+import { ApiConstants } from '@dasch-swiss/vre/shared/app-config';
 
 /**
  * Contains every changes needed for displaying properties without bug.
@@ -15,20 +16,20 @@ export class GenerateProperty {
   public static commonProperty(resource: ReadResource) {
     return this._initProps(resource)
       .filter(prop => !prop.propDef['isLinkProperty'])
-      .filter(prop => !prop.propDef.subPropertyOf.includes('http://api.knora.org/ontology/knora-api/v2#hasFileValue'))
+      .filter(prop => !prop.propDef.subPropertyOf.includes(`${ApiConstants.apiKnoraOntologyUrl}#hasFileValue`))
       .map(this._displayExistingLinkedValues);
   }
 
   public static incomingRessourceProperty(resource: ReadResource) {
     return this.commonProperty(resource).filter(
-      v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue'
+      v => v.propDef.id !== `${ApiConstants.apiKnoraOntologyUrl}#hasStillImageFileValue`
     );
   }
 
   public static regionProperty(resource: ReadResource) {
     return this.commonProperty(resource)
-      .filter(v => v.propDef.objectType !== 'http://api.knora.org/ontology/knora-api/v2#Representation')
-      .filter(v => v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#isRegionOfValue');
+      .filter(v => v.propDef.objectType !== `${ApiConstants.apiKnoraOntologyUrl}#Representation`)
+      .filter(v => v.propDef.id !== `${ApiConstants.apiKnoraOntologyUrl}#isRegionOfValue`);
   }
 
   private static _initProps(resource: ReadResource): PropertyInfoValues[] {
