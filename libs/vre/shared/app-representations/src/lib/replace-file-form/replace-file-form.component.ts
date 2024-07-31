@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UpdateFileValue } from '@dasch-swiss/dsp-js';
 import { UploadComponent } from '../upload/upload.component';
+import { FileRepresentationType } from './file-representation-type';
 
 @Component({
   selector: 'app-replace-file-form',
@@ -8,15 +9,15 @@ import { UploadComponent } from '../upload/upload.component';
   styleUrls: ['./replace-file-form.component.scss'],
 })
 export class ReplaceFileFormComponent implements OnInit {
-  @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
-  @Input() propId: string;
+  @Input({ required: true }) representation!: FileRepresentationType;
+  @Input({ required: true }) propId!: string;
 
-  @Output() closeDialog: EventEmitter<UpdateFileValue> = new EventEmitter<UpdateFileValue>();
+  @Output() closeDialog = new EventEmitter<UpdateFileValue>();
 
-  @ViewChild('upload') uploadComponent: UploadComponent;
+  @ViewChild('upload') uploadComponent!: UploadComponent;
 
   fileValue: UpdateFileValue;
-  warningMessages: string[];
+  warningMessages: string[] = [];
 
   ngOnInit(): void {
     this._generateWarningMessage(this.representation);
@@ -38,7 +39,6 @@ export class ReplaceFileFormComponent implements OnInit {
     }
   }
 
-  // generate the warning message strings with the correct representation type
   _generateWarningMessage(representationType: string) {
     this.warningMessages = [];
 
