@@ -32,11 +32,12 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
 import { RegionService } from '../region.service';
+import { ReplaceFileDialogComponent } from '../replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { osdViewerConfig } from './osd-viewer.config';
@@ -192,30 +193,22 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   openReplaceFileDialog() {
-    const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
-
-    const dialogConfig: MatDialogConfig = {
-      width: '800px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'replaceFile',
-        title: '2D Image (Still Image)',
-        subtitle: 'Update image of the resource',
-        representation: 'stillImage',
-        id: propId,
-      },
-      disableClose: true,
-    };
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this._replaceFile(data);
-      }
-    });
+    this._dialog
+      .open(ReplaceFileDialogComponent, {
+        data: {
+          title: '2D Image (Still Image)',
+          subtitle: 'Update image of the resource',
+          representation: 'stillImage',
+          id: this.parentResource.properties[Constants.HasStillImageFileValue][0].id,
+        },
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe(data => {
+        if (data) {
+          this._replaceFile(data);
+        }
+      });
   }
 
   openImageInNewTab(url: string) {

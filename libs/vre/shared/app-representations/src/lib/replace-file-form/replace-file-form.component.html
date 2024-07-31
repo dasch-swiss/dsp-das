@@ -16,16 +16,9 @@
   (fileInfo)="setFileValue($event)"
   (forceReload)="closeDialog.emit(undefined);"></app-upload>
 
-<div class="form-panel form-action">
-  <span>
-    <button mat-button type="button" (click)="closeDialog.emit()">
-      {{ 'appLabels.form.action.cancel' | translate }}
-    </button>
-  </span>
-  <span class="fill-remaining-space"></span>
-  <span>
-    <button mat-raised-button type="submit" [disabled]="!fileValue" [color]="'primary'" (click)="saveFile()">
-      {{ 'appLabels.form.action.submit' | translate }}
-    </button>
-  </span>
+<div style="display: flex; justify-content: space-between">
+  <button mat-button (click)="closeDialog.emit()">{{ 'appLabels.form.action.cancel' | translate }}</button>
+  <button mat-raised-button type="submit" [disabled]="!fileValue" [color]="'primary'" (click)="saveFile()">
+    {{ 'appLabels.form.action.submit' | translate }}
+  </button>
 </div>
