@@ -54,7 +54,7 @@ export class ListValueComponent implements OnInit {
         this.listRootNode = response as ListNodeV2;
         this._lookForNode(response as ListNodeV2);
         if (!this.isRequired && !this.hasInitialValue) {
-          // add an empty option if there is no value yet (editing) and the field is not required
+          // add an empty option if there is no value yet (creating a new value) and the field is not required
           this.listRootNode.children.unshift({
             id: '',
             label: '',
