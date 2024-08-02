@@ -49,20 +49,12 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
-      <mat-icon
+      <mat-slide-toggle
         @replaceAnimation
-        *ngIf="displayMode && item.value"
-        [title]="'appLabels.uiControls.icon.true' | translate"
-        class="material-icons-outlined"
-        >toggle_off</mat-icon
-      >
-      <mat-icon
-        @replaceAnimation
-        *ngIf="displayMode && !item.value"
-        [title]="'appLabels.uiControls.icon.false' | translate"
-        class="material-icons-outlined"
-        >toggle_on</mat-icon
-      >
+        *ngIf="displayMode"
+        [disabled]="displayMode"
+        [(ngModel)]="item.value"
+        data-cy="bool-toggle"></mat-slide-toggle>
       <mat-slide-toggle *ngIf="!displayMode" [formControl]="item" data-cy="bool-toggle"></mat-slide-toggle>
     </ng-template>
 
