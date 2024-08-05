@@ -141,7 +141,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(takeUntil(this.destroyed))
       .subscribe((isPng: boolean) => {
         this.isPng = isPng;
-        this._loadImages();
+        // this._loadImages();
       });
   }
 
@@ -220,7 +220,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     updateRes.id = this.resource.id;
     updateRes.type = this.resource.type;
     updateRes.property = this.isReadStillImageExternalFileValue
-      ? Constants.StillImageFileValueHasExternalUrlRead
+      ? Constants.StillImageFileValueHasExternalUrl
       : Constants.HasStillImageFileValue;
     updateRes.value = file;
     this._dspApiConnection.v2.values
@@ -478,6 +478,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadImages() {
     this._viewer?.close();
+
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       this._loadInternalImages();
     } else if (
@@ -489,6 +490,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadInternalImages() {
     if (this.imageFileValue instanceof ReadStillImageFileValue) {
+      console.log('loading internal image');
       this._rs
         .getFileInfo(this.imageFileValue?.fileUrl || '', this.imageFileValue?.filename)
         .pipe(take(1))
@@ -511,7 +513,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       const iiif = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
       if (iiif) {
         if (this.failedToLoad) {
-          console.log('failed to load image, trying again');
           this._onSuccessAfterFailedImageLoad();
         }
         this._viewer?.open(iiif.infoJsonUrl);
@@ -583,7 +584,4 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._viewer.clearOverlays();
     }
   }
-
-  protected readonly ReadStillImageFileValue = ReadStillImageFileValue;
-  protected readonly ReadStillImageExternalFileValue = ReadStillImageExternalFileValue;
 }

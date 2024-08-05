@@ -60,7 +60,7 @@
         id="DSP_OSD_SETTINGS"
         matTooltip="Settings"
         [matMenuTriggerFor]="settings"
-        [disabled]="failedToLoad">
+        [disabled]="failedToLoad || this.isReadStillImageExternalFileValue">
         <mat-icon>settings</mat-icon>
       </button>
       <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out" [disabled]="failedToLoad">
