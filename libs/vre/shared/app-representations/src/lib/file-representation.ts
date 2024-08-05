@@ -5,6 +5,7 @@ import {
   ReadDocumentFileValue,
   ReadMovingImageFileValue,
   ReadStillImageFileValue,
+  ReadStillImageExternalFileValue,
 } from '@dasch-swiss/dsp-js';
 import { Region } from './region';
 
@@ -23,6 +24,7 @@ export class FileRepresentation {
       | ReadDocumentFileValue
       | ReadMovingImageFileValue
       | ReadStillImageFileValue
+      | ReadStillImageExternalFileValue
       | ReadArchiveFileValue,
     readonly annotations?: Region[]
   ) {}
@@ -33,6 +35,7 @@ export class RepresentationConstants {
   static document = Constants.DocumentFileValue;
   static movingImage = Constants.MovingImageFileValue;
   static stillImage = Constants.StillImageFileValue;
+  static externalStillImage = Constants.StillImageExternalFileValue;
   static archive = Constants.ArchiveFileValue;
   static text = Constants.TextFileValue;
   static region = Constants.Region;

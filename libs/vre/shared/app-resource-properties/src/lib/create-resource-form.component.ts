@@ -18,7 +18,6 @@ import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
-import { fileValueMapping } from './file-value-mapping';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -27,11 +26,23 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <app-upload-2
-        *ngIf="form.controls.file && fileRepresentation"
+        *ngIf="form.controls.file && fileRepresentation && fileRepresentation !== Constants.HasStillImageFileValue"
         [formControl]="form.controls.file"
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
-
+      <div *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file">
+        <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;">
+          <mat-tab label="Upload Image">
+            <app-upload-2
+              [formControl]="form.controls.file"
+              [representation]="fileRepresentation"
+              style="max-width: 700px;"></app-upload-2>
+          </mat-tab>
+          <mat-tab label="External IIIF URL">
+            <app-third-part-iiif [formControl]="form.controls.file"></app-third-part-iiif>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
       <div class="my-grid">
         <div style="display: flex">
           <h3
@@ -93,7 +104,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
-  @Input({ required: true }) resourceType!: string;
 
   @Output() createdResourceIri = new EventEmitter<string>();
 
@@ -108,6 +118,7 @@ export class CreateResourceFormComponent implements OnInit {
 
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
+
   properties!: PropertyInfoValues[];
   loading = false;
 
@@ -122,6 +133,8 @@ export class CreateResourceFormComponent implements OnInit {
   ];
 
   readonly cardinality = Cardinality;
+
+  protected readonly Constants = Constants;
 
   get ontologyIri() {
     return this.resourceClassIri.split('#')[0];
@@ -240,8 +253,8 @@ export class CreateResourceFormComponent implements OnInit {
         propertiesObj[iri] = this._getValue(iri);
       });
 
-    if (this.fileRepresentation) {
-      propertiesObj[this.fileRepresentation] = [this._getFileValue(this.fileRepresentation)];
+    if (this.fileRepresentation && this.form.controls.file!.value) {
+      propertiesObj[this.fileRepresentation] = [this.form.controls.file!.value];
     }
     return propertiesObj;
   }
@@ -263,11 +276,5 @@ export class CreateResourceFormComponent implements OnInit {
         }
         return entity;
       });
-  }
-
-  private _getFileValue(fileRepresentation: FileRepresentationType) {
-    const FileValue = new (fileValueMapping.get(fileRepresentation)!.UploadClass)();
-    FileValue.filename = this.form.controls.file!.value!.filename;
-    return FileValue;
   }
 }

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Inject,
@@ -17,7 +18,6 @@ import {
   KnoraApiConnection,
   Point2D,
   ReadColorValue,
-  ReadFileValue,
   ReadResource,
   ReadStillImageFileValue,
   RegionGeometry,
@@ -26,18 +26,17 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, mergeMap, switchMap } from 'rxjs/operators';
-import { FileRepresentation } from '../file-representation';
-import { getFileValue } from '../get-file-value';
+import { combineLatest, Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map, mergeMap, switchMap, take } from 'rxjs/operators';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
@@ -52,47 +51,44 @@ export interface PolygonsForRegion {
   selector: 'app-still-image',
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
-  @Input({ required: true }) resource!: DspResource;
+  @Input({ required: true }) resource!: ReadResource;
 
-  get parentResource() {
-    return this.resource.res;
+  get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
+    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
+      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
+    }
+    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue) {
+      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageExternalFileValue;
+    } else return undefined;
   }
 
-  get image() {
-    return new FileRepresentation(getFileValue(this.resource)!);
+  get isReadStillImageExternalFileValue(): boolean {
+    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
   }
 
-  get resourceIri() {
-    return this.parentResource.id;
-  }
-
-  get attachedToProjectResource() {
-    return this.parentResource.attachedToProject;
-  }
-
-  isEditor$: Observable<boolean> = combineLatest([
+  private _isEditor$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
     this._store.select(UserSelectors.userProjectAdminGroups),
   ]).pipe(
     map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.attachedToProjectResource)
+      if (!user) {
+        return false;
+      }
+      return this.resource.attachedToProject
+        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.resource.attachedToProject)
         : false;
     })
   );
   editorPermissions = false;
 
-  imagesSub: Subscription | undefined;
-  fileInfoSub: Subscription | undefined;
-
-  loading = true;
   failedToLoad = false;
 
   regionDrawMode = false; // stores whether viewer is currently drawing a region
   private _regionDragInfo; // stores the information of the first click for drawing a region
-  private _viewer: OpenSeadragon.Viewer;
+  private _viewer: OpenSeadragon.Viewer | undefined;
   private _regions: PolygonsForRegion = {};
 
   constructor(
@@ -124,8 +120,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this._setupViewer();
     this._loadImages();
-
-    this.isEditor$.subscribe(isEditor => {
+    this._isEditor$.pipe(take(1)).subscribe(isEditor => {
       this.editorPermissions = isEditor;
     });
 
@@ -154,7 +149,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['resource'].isFirstChange()) {
+    if (changes['resource'].isFirstChange() || !changes['resource']) {
       return;
     }
     this._loadImages();
@@ -165,13 +160,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._viewer.destroy();
       this._viewer = undefined;
     }
-    if (this.imagesSub) {
-      this.imagesSub.unsubscribe();
-    }
-
-    if (this.fileInfoSub) {
-      this.fileInfoSub.unsubscribe();
-    }
   }
 
   /**
@@ -180,7 +168,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    */
   drawButtonClicked(): void {
     this.regionDrawMode = !this.regionDrawMode;
-    this._viewer.setMouseNavEnabled(!this.regionDrawMode);
+    this._viewer?.setMouseNavEnabled(!this.regionDrawMode);
   }
 
   /**
@@ -191,11 +179,13 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   download(url: string) {
-    this._rs.downloadFile(url, this.image.fileValue.filename);
+    if (this.imageFileValue instanceof ReadStillImageFileValue) {
+      this._rs.downloadFile(url, this.imageFileValue.filename);
+    }
   }
 
   openReplaceFileDialog() {
-    const propId = this.parentResource.properties[Constants.HasStillImageFileValue][0].id;
+    const propId = this.resource.properties[Constants.HasStillImageFileValue][0].id;
 
     const dialogConfig: MatDialogConfig = {
       width: '800px',
@@ -208,7 +198,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         title: '2D Image (Still Image)',
         subtitle: 'Update image of the resource',
         representation: 'stillImage',
-        id: propId,
+        propertyId: propId,
       },
       disableClose: true,
     };
@@ -227,16 +217,16 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _replaceFile(file: UpdateFileValue) {
     const updateRes = new UpdateResource();
-    updateRes.id = this.parentResource.id;
-    updateRes.type = this.parentResource.type;
-    updateRes.property = Constants.HasStillImageFileValue;
+    updateRes.id = this.resource.id;
+    updateRes.type = this.resource.type;
+    updateRes.property = this.isReadStillImageExternalFileValue
+      ? Constants.StillImageFileValueHasExternalUrlRead
+      : Constants.HasStillImageFileValue;
     updateRes.value = file;
     this._dspApiConnection.v2.values
       .updateValue(updateRes as UpdateResource<UpdateValue>)
       .pipe(
-        mergeMap(res =>
-          this._dspApiConnection.v2.values.getValue(this.parentResource.id, (res as WriteValueResponse).uuid)
-        )
+        mergeMap(res => this._dspApiConnection.v2.values.getValue(this.resource.id, (res as WriteValueResponse).uuid))
       )
       .subscribe(res2 => {
         this._resourceFetcherService.reload();
@@ -261,7 +251,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         mode: 'addRegion',
         title: 'Create a region',
         subtitle: 'Add further properties',
-        id: this.resourceIri,
+        id: this.resource.id,
       },
       disableClose: true,
     };
@@ -295,8 +285,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._dspApiConnection.v2.res
       .createResource(
         StillImageHelper.getPayloadUploadRegion(
-          this.resourceIri,
-          this.parentResource.attachedToProject,
+          this.resource.id,
+          this.resource.attachedToProject,
           startPoint,
           endPoint,
           imageSize,
@@ -411,22 +401,24 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * adds all images in this.images to the _viewer.
    * Images are positioned in a horizontal row next to each other.
    */
-  private _openImages(): void {
+  private _openInternalImages(): void {
     this.failedToLoad = false;
 
-    const fileValues: ReadFileValue[] = [this.image.fileValue]; // TODO this was this.images.
+    const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
 
     // display only the defined range of this.images
     const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues);
 
     this._viewer.addOnceHandler('open', args => {
       // check if the current image exists
-      if (this.image.fileValue.fileUrl.includes(args.source['id'])) {
+      if (
+        this.imageFileValue instanceof ReadStillImageFileValue &&
+        this.imageFileValue.fileUrl.includes(args.source['id'])
+      ) {
         // enable mouse navigation incl. zoom
         this._viewer.setMouseNavEnabled(true);
         // enable the navigator
         this._viewer.navigator.element.style.display = 'block';
-        this.loading = false;
         this._regionService.imageIsLoaded();
       }
     });
@@ -486,31 +478,69 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _loadImages() {
-    this._viewer.close();
-
-    if (this.imagesSub) {
-      this.imagesSub.unsubscribe();
+    this._viewer?.close();
+    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
+      this._loadInternalImages();
+    } else if (
+      this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue
+    ) {
+      this._loadExternalIIIF();
     }
-    this.imagesSub = this._rs.getFileInfo(this.image.fileValue.fileUrl, this.image.fileValue.filename).subscribe(
-      () => {
-        this._openImages();
-      },
-      () => {
-        this.failedToLoad = true;
-        this._viewer.setMouseNavEnabled(false);
-        this._viewer.navigator.element.style.display = 'none';
-        this.regionDrawMode = false;
-        this._viewer.removeAllHandlers('open');
-        this.loading = false;
+  }
+
+  private _loadInternalImages() {
+    if (this.imageFileValue instanceof ReadStillImageFileValue) {
+      this._rs
+        .getFileInfo(this.imageFileValue?.fileUrl || '', this.imageFileValue?.filename)
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            if (this.failedToLoad) {
+              this._onSuccessAfterFailedImageLoad();
+            }
+            this._openInternalImages();
+          },
+          () => {
+            this._onFailedImageLoad();
+          }
+        );
+    }
+  }
+
+  private _loadExternalIIIF() {
+    if (this.imageFileValue instanceof ReadStillImageExternalFileValue) {
+      const iiif = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
+      if (iiif) {
+        if (this.failedToLoad) {
+          console.log('failed to load image, trying again');
+          this._onSuccessAfterFailedImageLoad();
+        }
+        this._viewer?.open(iiif.infoJsonUrl);
+      } else {
+        this._onFailedImageLoad();
       }
-    );
+    }
+  }
+
+  private _onFailedImageLoad() {
+    this.failedToLoad = true;
+    this._viewer.setMouseNavEnabled(false);
+    this._viewer.navigator.element.style.display = 'none';
+    this.regionDrawMode = false;
+    this._viewer?.removeAllHandlers('open');
+  }
+
+  private _onSuccessAfterFailedImageLoad() {
+    this.failedToLoad = false;
+    this._viewer.setMouseNavEnabled(true);
+    this._viewer.navigator.element.style.display = 'block';
+    this._regionService.imageIsLoaded();
   }
 
   private _renderRegions() {
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
-    const image = this.image;
-    const stillImage = image.fileValue as ReadStillImageFileValue;
+    const stillImage = this.imageFileValue as ReadStillImageFileValue;
     const aspectRatio = stillImage.dimY / stillImage.dimX;
 
     const geometries = StillImageHelper.collectAndSortGeometries(this._regionService.regions, this._regions);
@@ -531,7 +561,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         : '';
 
       if (!this.failedToLoad) {
-        this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue);
+        this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue || '');
       }
 
       imageXOffset++;
@@ -550,6 +580,11 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this._regions = {};
-    this._viewer.clearOverlays();
+    if (this._viewer) {
+      this._viewer.clearOverlays();
+    }
   }
+
+  protected readonly ReadStillImageFileValue = ReadStillImageFileValue;
+  protected readonly ReadStillImageExternalFileValue = ReadStillImageExternalFileValue;
 }
