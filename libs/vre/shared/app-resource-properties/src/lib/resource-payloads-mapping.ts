@@ -79,7 +79,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.DecimalValue,
     {
-      control: (value?: ReadDecimalValue) => new FormControl(value?.decimal ?? 0),
+      control: (value?: ReadDecimalValue) => new FormControl(value?.decimal),
 
       createValue: (value: number) => {
         const newDecimalValue = new CreateDecimalValue();
@@ -97,7 +97,10 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.BooleanValue,
     {
-      control: (value?: ReadBooleanValue) => new FormControl(value?.bool),
+      control: (value?: ReadBooleanValue) => {
+        const booleanValue = value ? value.bool : false;
+        return new FormControl(booleanValue);
+      },
 
       createValue: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();

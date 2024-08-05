@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -22,6 +23,12 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  CreateListInfoPageComponent,
+  ReusableListInfoFormComponent,
+  ListComponents,
+} from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
@@ -38,6 +45,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -48,7 +56,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfirmDialogComponent } from './main/action/confirm-dialog/confirm-dialog.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
@@ -71,7 +78,6 @@ import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/s
 import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
-import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { ChipListInputComponent } from './project/chip-list-input/chip-list-input.component';
@@ -86,17 +92,6 @@ import { EditProjectFormPageComponent } from './project/edit-project-form-page/e
 import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
-import { ActionBubbleComponent } from './project/list/action-bubble/action-bubble.component';
-import { ListItemComponent } from './project/list/list-item/list-item.component';
-import { ListItemElementComponent } from './project/list/list-item-element/list-item-element.component';
-import { CreateListItemDialogComponent } from './project/list/list-item-form/edit-list-item/create-list-item-dialog.component';
-import { EditListItemDialogComponent } from './project/list/list-item-form/edit-list-item/edit-list-item-dialog.component';
-import { ListItemFormComponent } from './project/list/list-item-form/list-item-form.component';
-import { ReusableListItemFormComponent } from './project/list/list-item-form/reusable-list-item-form.component';
-import { ListComponent } from './project/list/list.component';
-import { CreateListInfoPageComponent } from './project/list/reusable-list-info-form/create-list-info-page.component';
-import { EditListInfoDialogComponent } from './project/list/reusable-list-info-form/edit-list-info-dialog.component';
-import { ReusableListInfoFormComponent } from './project/list/reusable-list-info-form/reusable-list-info-form.component';
 import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
@@ -116,13 +111,14 @@ import { ReusableProjectFormComponent } from './project/reusable-project-form/re
 import { SettingsComponent } from './project/settings/settings.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
+import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
 import { AccountComponent } from './user/account/account.component';
-import { CreateUserPageComponent } from './user/create-user-page/create-user-page.component';
+import { CreateUserDialogComponent } from './user/create-user-page/create-user-dialog.component';
 import { EditUserPageComponent } from './user/edit-user-page/edit-user-page.component';
 import { MembershipComponent } from './user/membership/membership.component';
 import { OverviewComponent } from './user/overview/overview.component';
@@ -162,8 +158,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePageComponents,
     ...RepresentationsComponents,
     ...CommonToMoveComponents,
+    ...ListComponents,
+    ...UiComponents,
     AccountComponent,
-    ActionBubbleComponent,
     AddUserComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
@@ -175,9 +172,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ColorPickerComponent,
     CommonInputComponent,
     ComparisonComponent,
-    ConfirmDialogComponent,
     CookiePolicyComponent,
-    CreateUserPageComponent,
+    CreateUserDialogComponent,
     CreateResourceClassDialogComponent,
     DateValueHandlerComponent,
     DisableContextMenuDirective,
@@ -200,15 +196,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     KnoraDatePipe,
     LoadingButtonDirective,
     LinkifyPipe,
-    ListComponent,
-    EditListInfoDialogComponent,
-    EditListItemDialogComponent,
     CreateListInfoPageComponent,
     ReusableListInfoFormComponent,
-    ReusableListItemFormComponent,
-    ListItemComponent,
-    ListItemElementComponent,
-    ListItemFormComponent,
     ListViewComponent,
     LoginFormComponent,
     MembershipComponent,
@@ -234,7 +223,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SearchPanelComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,
-    SelectLanguageComponent,
     SelectProjectComponent,
     SortButtonComponent,
     SplitPipe,
@@ -260,11 +248,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectTileComponent,
     DataModelsComponent,
     IsFalsyPipe,
-    CreateListItemDialogComponent,
     ImageDisplayAbsoluteComponent,
     MultipleViewerComponent,
+    EraseProjectDialogComponent,
   ],
   imports: [
+    ...UiStandaloneComponents,
     AngularSplitModule,
     AppDatePickerComponent,
     AppProgressIndicatorComponent,
@@ -351,6 +340,13 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       deps: [Sentry.TraceService],
       multi: true,
     },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: {
+        hideRequiredMarker: true,
+      },
+    },
+    LocalizationService,
   ],
   bootstrap: [AppComponent],
 })

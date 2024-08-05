@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteResourceResponse, PermissionUtil, ReadProject } from '@dasch-swiss/dsp-js';
+import { DeleteResourceResponse, ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
-import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import {
   Events as CommsEvents,
   ComponentCommunicationEventService,
@@ -10,7 +10,7 @@ import {
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService, ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
@@ -158,9 +158,15 @@ export class ResourceToolbarComponent implements OnInit {
   @Input() lastModificationDate!: string;
   @Input() linkToNewTab?: string;
 
-  userCanDelete!: boolean;
-  userCanEdit!: boolean;
   canReadComments!: boolean;
+
+  get userCanEdit() {
+    return ResourceUtil.userCanEdit(this.resource.res);
+  }
+
+  get userCanDelete() {
+    return ResourceUtil.userCanDelete(this.resource.res);
+  }
 
   constructor(
     private _notification: NotificationService,
@@ -172,21 +178,11 @@ export class ResourceToolbarComponent implements OnInit {
     private _adminProjectsApi: AdminProjectsApiService,
     private _store: Store,
     private _viewContainerRef: ViewContainerRef,
-    private _regionService: RegionService
+    private _regionService: RegionService,
+    private _resourceFetcher: ResourceFetcherService
   ) {}
 
   ngOnInit(): void {
-    if (this.resource.res) {
-      // get user permissions
-      const allPermissions = PermissionUtil.allUserPermissions(
-        this.resource.res.userHasPermission as 'RV' | 'V' | 'M' | 'D' | 'CR'
-      );
-
-      this.canReadComments = true; // allPermissions.indexOf(PermissionUtil.Permissions.RV) === -1; // TODO permissions to show comments should be provided
-      // if user has modify permissions, set addButtonIsVisible to true so the user see's the add button
-      this.userCanEdit = allPermissions.indexOf(PermissionUtil.Permissions.M) !== -1;
-      this.userCanDelete = allPermissions.indexOf(PermissionUtil.Permissions.D) !== -1;
-    }
     if (!this.attachedProject && this.resource.res.attachedToProject) {
       this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
         this.attachedProject = res.project as ReadProject;
@@ -217,7 +213,7 @@ export class ResourceToolbarComponent implements OnInit {
       .afterClosed()
       .pipe(filter(answer => !!answer))
       .subscribe(answer => {
-        this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceChanged));
+        this._resourceFetcher.reload();
         this._cd.markForCheck();
       });
   }

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
-import { Common, DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -28,7 +28,7 @@ export class CompoundService {
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
     this.compoundPosition = _compound;
     this._resource = resource;
-    this.openPage(1);
+    this.openPage(_compound.page);
   }
 
   openPage(page: number) {
@@ -36,13 +36,14 @@ export class CompoundService {
     const position = Math.floor(page - offset * 25 - 1);
 
     // get incoming still image representations, if the offset changed
-    if (offset !== this.compoundPosition.offset) {
-      this.compoundPosition.offset = offset;
-      this._loadIncomingResourcesPage(offset);
-    } else {
+    if (offset === this.compoundPosition.offset && this._resource.incomingRepresentations.length > 0) {
       // get incoming resource, if the offset is the same but page changed
       this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
+    } else {
+      this.compoundPosition.offset = offset;
+      this._loadIncomingResourcesPage(offset);
     }
+
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
   }
@@ -71,12 +72,7 @@ export class CompoundService {
       const response = res as ReadResource;
 
       const incomingResource = new DspResource(response);
-      incomingResource.resProps = Common.initProps(response).filter(
-        v =>
-          v.values.length > 0 &&
-          v.propDef.label &&
-          v.propDef.id !== 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue'
-      );
+      incomingResource.resProps = GenerateProperty.incomingRessourceProperty(response);
       incomingResource.systemProps =
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 

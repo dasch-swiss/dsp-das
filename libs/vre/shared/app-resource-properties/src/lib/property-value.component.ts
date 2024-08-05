@@ -58,15 +58,30 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         data-cy="save-button"
         *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
         [disabled]="
+          group.value.item === null ||
+          group.value.item === '' ||
           (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
           (initialFormValue.comment === null && group.value.comment === '')
         ">
         <mat-icon>save</mat-icon>
       </button>
-      <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+      <dasch-swiss-app-progress-indicator *ngIf="loading" />
     </div>
   </div>`,
-  styles: ['.item {flex: 1; &.hover:hover{background: #f5f5f5}}'],
+  styles: [
+    `
+      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
+      .item {
+        flex: 1;
+        &.hover:hover {
+          background: $primary_100;
+        }
+      }
+      :host ::ng-deep .app-progress-indicator {
+        margin: 0 auto !important;
+      }
+    `,
+  ],
 })
 export class PropertyValueComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;

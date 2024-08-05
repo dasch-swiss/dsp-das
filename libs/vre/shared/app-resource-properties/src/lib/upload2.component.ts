@@ -13,8 +13,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
+import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 
@@ -107,6 +107,7 @@ export class Upload2Component implements ControlValueAccessor {
     private _sanitizer: DomSanitizer,
     private _cdr: ChangeDetectorRef,
     private _store: Store,
+    private _actions$: Actions,
     @Self() public ngControl: NgControl
   ) {
     ngControl.valueAccessor = this;
@@ -146,13 +147,34 @@ export class Upload2Component implements ControlValueAccessor {
 
   private _uploadFile(file: File): void {
     this.loading = true;
+    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
+    const project = this._store.selectSnapshot(ProjectsSelectors.contextProject);
+    if (resource && !project) {
+      this._actions$
+        .pipe(ofActionSuccessful(LoadProjectAction))
+        .pipe(take(1))
+        .subscribe(() => {
+          const contextProject = this._store.selectSnapshot(ProjectsSelectors.contextProject);
+          this._uploadProjectFile(file);
+        });
+      this._store.dispatch([new LoadProjectAction(resource.res.attachedToProject, false)]);
+    } else {
+      this._uploadProjectFile(file);
+    }
+
+    this.fileInput.nativeElement.value = '';
+  }
+
+  private _uploadProjectFile = (file: File) =>
     this._store
-      .select(ProjectsSelectors.currentProject)
+      .select(ProjectsSelectors.contextProject)
       .pipe(
         filter(v => v !== undefined),
         take(1),
         map(prj => prj!.shortcode),
-        mergeMap(sc => this._upload.upload(file, sc)),
+        mergeMap(sc => {
+          return this._upload.upload(file, sc);
+        }),
         finalize(() => {
           this.loading = false;
           this._cdr.detectChanges();
@@ -177,7 +199,6 @@ export class Upload2Component implements ControlValueAccessor {
       });
 
     this.fileInput.nativeElement.value = '';
-  }
 
   private get _createFileValue(): CreateFileValue {
     switch (this.representation) {

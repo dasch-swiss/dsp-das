@@ -9,9 +9,23 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values',
+  styles: [
+    `
+      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
+      .add-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+      div.property-value {
+        display: flex;
+        padding: 5px 0;
+      }
+    `,
+  ],
   template: ` <div
       *ngFor="let group of propertyValueService.formArray.controls; let index = index"
-      style="display: flex">
+      class="property-value">
       <app-property-value style="width: 100%" [itemTpl]="itemTpl" [index]="index"></app-property-value>
     </div>
     <button
@@ -24,7 +38,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
         propertyValueService.propertyDefinition.isEditable
       ">
-      <mat-icon style="font-size: 18px; width: 18px; height: 18px">add_box</mat-icon>
+      <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
 })
 export class PropertyValuesComponent implements OnInit {

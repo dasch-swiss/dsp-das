@@ -36,7 +36,7 @@ import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map, mergeMap, switchMap, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil } from 'rxjs/operators';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
@@ -65,6 +65,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     } else return undefined;
   }
 
+  isPng: boolean = false;
+
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
   }
@@ -84,8 +86,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   );
   editorPermissions = false;
 
+  imagesSub: Subscription | undefined;
+  fileInfoSub: Subscription | undefined;
+
+  loading = true;
+
   failedToLoad = false;
 
+  imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
   regionDrawMode = false; // stores whether viewer is currently drawing a region
   private _regionDragInfo; // stores the information of the first click for drawing a region
   private _viewer: OpenSeadragon.Viewer | undefined;
@@ -146,6 +154,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       }
       this._highlightRegion(region);
     });
+
+    this._resourceFetcherService.settings.imageFormatIsPng
+      .asObservable()
+      .pipe(take(1))
+      .subscribe((isPng: boolean) => {
+        this.isPng = isPng;
+        this._loadImages();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -407,8 +423,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
 
     // display only the defined range of this.images
-    const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues);
-
+    const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues, this.isPng);
     this._viewer.addOnceHandler('open', args => {
       // check if the current image exists
       if (

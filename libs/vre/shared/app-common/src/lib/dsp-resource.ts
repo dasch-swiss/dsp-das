@@ -1,4 +1,4 @@
-import { Constants, ReadResource, ReadValue, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from './property-info-values.interface';
 
 export class DspResource {
@@ -22,10 +22,6 @@ export class DspResource {
   get isRegion() {
     return this.res.entityInfo.classes[Constants.Region];
   }
-
-  get hasOutgoingReferences() {
-    return this.res.outgoingReferences.length > 0;
-  }
 }
 
 export class DspCompoundPosition {
@@ -39,12 +35,4 @@ export class DspCompoundPosition {
     this.totalPages = totalPages;
     this.maxOffsets = Math.ceil(totalPages / 25) - 1;
   }
-}
-
-export interface PropIriToNameMapping {
-  [index: string]: string;
-}
-
-export interface PropertyValues {
-  [index: string]: ReadValue[];
 }
