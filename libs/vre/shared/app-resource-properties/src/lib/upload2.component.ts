@@ -165,7 +165,8 @@ export class Upload2Component implements ControlValueAccessor {
     this.fileInput.nativeElement.value = '';
   }
 
-  private _uploadProjectFile = (file: File) =>
+  private _uploadProjectFile(file: File): void {
+    this.loading = true;
     this._store
       .select(ProjectsSelectors.contextProject)
       .pipe(
@@ -199,6 +200,7 @@ export class Upload2Component implements ControlValueAccessor {
       });
 
     this.fileInput.nativeElement.value = '';
+  }
 
   private get _createFileValue(): CreateFileValue {
     switch (this.representation) {
