@@ -34,7 +34,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil } from 'rxjs/operators';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
@@ -54,6 +54,8 @@ export interface PolygonsForRegion {
 })
 export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
+
+  destroyed: Subject<void> = new Subject<void>();
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -93,7 +95,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _renderer: Renderer2,
     private _rs: RepresentationService,
     private _regionService: RegionService,
-    private _store: Store,
     private _resourceFetcherService: ResourceFetcherService
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
@@ -137,7 +138,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
     this._resourceFetcherService.settings.imageFormatIsPng
       .asObservable()
-      .pipe(take(1))
+      .pipe(takeUntil(this.destroyed))
       .subscribe((isPng: boolean) => {
         this.isPng = isPng;
         this._loadImages();
@@ -156,6 +157,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._viewer.destroy();
       this._viewer = undefined;
     }
+    this._resourceFetcherService.onDestroy();
+    this.destroyed.next();
+    this.destroyed.complete();
   }
 
   /**
