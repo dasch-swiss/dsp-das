@@ -27,15 +27,14 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { IIIFUrl } from '@dsp-app/src/app/workspace/resource/values/third-party-iiif/third-party-iiif';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil } from 'rxjs/operators';
 import { RegionService } from '../region.service';
 import { RepresentationService } from '../representation.service';
@@ -71,25 +70,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
   }
 
-  private _isEditor$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    map(([user, userProjectGroups]) => {
-      if (!user) {
-        return false;
-      }
-      return this.resource.attachedToProject
-        ? ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, this.resource.attachedToProject)
-        : false;
-    })
-  );
-  editorPermissions = false;
-
-  imagesSub: Subscription | undefined;
-  fileInfoSub: Subscription | undefined;
-
-  loading = true;
+  get usercanEdit() {
+    return ResourceUtil.userCanEdit(this.resource);
+  }
 
   failedToLoad = false;
 
@@ -128,9 +111,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this._setupViewer();
     this._loadImages();
-    this._isEditor$.pipe(take(1)).subscribe(isEditor => {
-      this.editorPermissions = isEditor;
-    });
 
     this._regionService.imageIsLoaded$
       .pipe(

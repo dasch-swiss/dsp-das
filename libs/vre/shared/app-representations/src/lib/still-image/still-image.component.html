@@ -38,7 +38,7 @@
         mat-icon-button
         id="DSP_OSD_DRAW_REGION"
         matTooltip="Draw Region"
-        [disabled]="failedToLoad || !editorPermissions || isReadStillImageExternalFileValue"
+        [disabled]="failedToLoad || !usercanEdit || isReadStillImageExternalFileValue"
         (click)="drawButtonClicked()"
         [class.active]="regionDrawMode">
         <mat-icon svgIcon="draw_region_icon"></mat-icon>
@@ -86,7 +86,7 @@
   <button
     class="menu-content"
     mat-menu-item
-    [disabled]="failedToLoad || !editorPermissions || isReadStillImageExternalFileValue"
+    [disabled]="failedToLoad || !usercanEdit || isReadStillImageExternalFileValue"
     (click)="openReplaceFileDialog()">
     {{isReadStillImageExternalFileValue ? 'Replace external file url':'Replace file'}}
   </button>

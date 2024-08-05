@@ -12,7 +12,6 @@ export * from './lib/video/video.component';
 export * from './lib/video-preview/video-preview.component';
 export * from './lib/representation.service';
 export * from './lib/file-representation';
-export * from './lib/representation-constants';
 export * from './lib/region';
 export * from './lib/region.service';
 export * from './lib/get-file-value';
