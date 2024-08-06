@@ -43,14 +43,10 @@ import { sortByKeys } from './sortByKeys';
 
     <!-- list of properties -->
     <ng-container>
-      <ng-container *ngIf="properties.length > 0; else noProperties">
+      <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
         <app-property-row
-          [ngClass]="
-            (showAllProperties$ | async) || (prop.values && prop.values.length > 0)
-              ? 'show-property-row'
-              : 'hide-property-row'
-          "
-          *ngFor="let prop of properties; let last = last; trackBy: trackByPropertyInfoFn"
+          [class]="getRowClass(showAllProperties$ | async, prop.values.length)"
+          *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
           [borderBottom]="true"
           [tooltip]="prop.propDef.comment"
           [label]="
@@ -69,11 +65,7 @@ import { sortByKeys } from './sortByKeys';
         tooltip=" Represent a link in standoff markup from one resource to another"
         label="has Standoff link"
         [borderBottom]="true"
-        [ngClass]="
-          (showAllProperties$ | async) || (incomingLinks$ | async).length > 0
-            ? 'show-property-row'
-            : 'hide-property-row'
-        ">
+        [class]="getRowClass(showAllProperties$ | async, (incomingLinks$ | async).length)">
         <app-incoming-standoff-link-value [links]="standoffLinks"></app-incoming-standoff-link-value>
       </app-property-row>
     </ng-container>
@@ -85,9 +77,7 @@ import { sortByKeys } from './sortByKeys';
       label="has incoming link"
       [borderBottom]="true"
       class="incoming-link"
-      [ngClass]="
-        (showAllProperties$ | async) || (incomingLinks$ | async)?.length > 0 ? 'show-property-row' : 'hide-property-row'
-      ">
+      [class]="getRowClass(showAllProperties$ | async, (incomingLinks$ | async).length)">
       <app-incoming-standoff-link-value
         *ngIf="(incomingLinks$ | async)?.length > 0"
         [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
@@ -142,7 +132,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   @ViewChild('pager', { static: false })
   pagerComponent: PagerComponent | undefined;
-  numberOfAllResults: number = 0;
   isIncomingLinksLoading = false;
 
   protected readonly cardinality = Cardinality;
@@ -153,6 +142,8 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       attachedUsers[this.resource.res.id]?.value.find(u => u.id === this.resource.res.attachedToUser)
     )
   );
+
+  editableProperties: PropertyInfoValues[] = [];
   incomingLinks$ = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
   incomingLinks: IncomingOrStandoffLink[] = [];
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
@@ -176,6 +167,8 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   }
 
   private _setupProperties(offset: number = 0) {
+    this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
+
     this.incomingLinks$.next([]);
     if (this.pagerComponent) {
       this.pagerComponent!.initPager();
@@ -226,5 +219,9 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       };
     });
     this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
+  }
+
+  getRowClass(showAllProperties: boolean, valuesLength: number): string {
+    return showAllProperties || valuesLength > 0 ? 'show-property-row' : 'hide-property-row';
   }
 }
