@@ -4,7 +4,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
