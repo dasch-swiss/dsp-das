@@ -94,13 +94,10 @@ import { sortByKeys } from './sortByKeys';
       <dasch-swiss-app-pager #pager (pageChanged)="pageChanged()"> </dasch-swiss-app-pager>
     </app-property-row>
 
-    <ng-container *ngIf="false">
+    <ng-template #noProperties>
       <app-property-row label="info" [borderBottom]="false">
         This resource has no defined properties.
       </app-property-row>
-    </ng-container>
-
-    <ng-template #noProperties>
       <div *ngIf="resource.res.isDeleted">
         <app-property-row label="Deleted on" [borderBottom]="true">
           {{ resource.res.deleteDate | date }}
