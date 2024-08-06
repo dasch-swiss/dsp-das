@@ -42,10 +42,15 @@ import { sortByKeys } from './sortByKeys';
     </div>
 
     <!-- list of properties -->
-    <ng-container *ngIf="myProperties$ | async as myProperties">
-      <ng-container *ngIf="myProperties.length > 0; else noProperties">
+    <ng-container>
+      <ng-container *ngIf="properties.length > 0; else noProperties">
         <app-property-row
-          *ngFor="let prop of myProperties; let last = last; trackBy: trackByPropertyInfoFn"
+          [ngClass]="
+            (showAllProperties$ | async) || (prop.values && prop.values.length > 0)
+              ? 'show-property-row'
+              : 'hide-property-row'
+          "
+          *ngFor="let prop of properties; let last = last; trackBy: trackByPropertyInfoFn"
           [borderBottom]="true"
           [tooltip]="prop.propDef.comment"
           [label]="
@@ -58,12 +63,17 @@ import { sortByKeys } from './sortByKeys';
     </ng-container>
 
     <!-- standoff link -->
-    <ng-container *ngIf="showStandoffLinks$ | async">
+    <ng-container>
       <app-property-row
         *ngIf="incomingLinks$ | async as incomingLinks"
         tooltip=" Represent a link in standoff markup from one resource to another"
         label="has Standoff link"
-        [borderBottom]="true">
+        [borderBottom]="true"
+        [ngClass]="
+          (showAllProperties$ | async) || (incomingLinks$ | async).length > 0
+            ? 'show-property-row'
+            : 'hide-property-row'
+        ">
         <app-incoming-standoff-link-value [links]="standoffLinks"></app-incoming-standoff-link-value>
       </app-property-row>
     </ng-container>
@@ -75,8 +85,12 @@ import { sortByKeys } from './sortByKeys';
       label="has incoming link"
       [borderBottom]="true"
       class="incoming-link"
-      *ngIf="(showAllProperties$ | async) || (incomingLinks$ | async)?.length > 0">
-      <app-incoming-standoff-link-value [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
+      [ngClass]="
+        (showAllProperties$ | async) || (incomingLinks$ | async)?.length > 0 ? 'show-property-row' : 'hide-property-row'
+      ">
+      <app-incoming-standoff-link-value
+        *ngIf="(incomingLinks$ | async)?.length > 0"
+        [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
       <dasch-swiss-app-pager #pager (pageChanged)="pageChanged()"> </dasch-swiss-app-pager>
     </app-property-row>
 
@@ -109,6 +123,13 @@ import { sortByKeys } from './sortByKeys';
           border-bottom: none;
         }
       }
+      .show-property-row {
+        display: block;
+      }
+
+      .hide-property-row {
+        display: none;
+      }
     `,
   ],
   providers: [PropertiesDisplayService, PropertiesDisplayIncomingLinkService],
@@ -135,7 +156,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       attachedUsers[this.resource.res.id]?.value.find(u => u.id === this.resource.res.attachedToUser)
     )
   );
-  myProperties$: Observable<PropertyInfoValues[]> = of([]);
   incomingLinks$ = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
   incomingLinks: IncomingOrStandoffLink[] = [];
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
@@ -164,15 +184,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     if (this.pagerComponent) {
       this.pagerComponent!.initPager();
     }
-    this.myProperties$ = this._propertiesDisplayService.showAllProperties$.pipe(
-      map(showAllProps =>
-        this.properties
-          .filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable)
-          .filter(prop => {
-            return showAllProps || (prop.values && prop.values.length > 0);
-          })
-      )
-    );
 
     this.doIncomingLinkSearch(offset);
     this.setStandOffLinks();
