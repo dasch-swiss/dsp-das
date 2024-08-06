@@ -161,7 +161,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
 
   standoffLinks: IncomingOrStandoffLink[] = [];
-  showStandoffLinks$ = of(false);
 
   constructor(
     private _cd: ChangeDetectorRef,
@@ -230,8 +229,5 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       };
     });
     this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
-    this.showStandoffLinks$ = this._propertiesDisplayService.showAllProperties$.pipe(
-      map(showAllProps => (this.standoffLinks.length > 0 ? true : showAllProps))
-    );
   }
 }
