@@ -1,5 +1,8 @@
 {
-  "dashboardComponent": {
+  "overview": {
+    "title": "Forschungsprojekte durchsuchen",
+    "myProjects": "Meine Projekte",
+    "browseOtherResearchProjects": "Andere Forschungsprojekte durchsuchen",
     "firstParagraph": "Willkommen bei DSP-APP – einer web-basierten virtuellen Forschungsumgebung, die Forschern in den Humanities bei der Arbeit mit digitalen Daten unterstützt. DSP-APP erlaubt die Annotation und die Verknüpfung mit beliebigen Quellen, seien es digitale Texte, bewegte oder unbewegte Bilder oder Ton.",
     "secondParagraph": "DSP-APP ist eine (generische) Benutzerschnittstelle um auf Daten von einem Haupt-Repository zuzugreifen, das hier beschrieben ist: ",
     "projectsIntro": "Öffentliche Projekte in DSP"
@@ -57,6 +60,8 @@
       "cancel": "Abbrechen",
       "close": "Schliessen",
       "submit": "Speichern",
+      "submitting": "Speichern ...",
+      "retry": "Wiederholen",
       "add": "Hinzufügen",
       "update": "Aktualisieren",
       "next": "Weiter",
@@ -66,6 +71,8 @@
       "activate": "Aktivieren",
       "deactivate": "Deaktivieren",
       "confirm": "Ja",
+      "danger": "Gefahrenzone",
+      "deleted": "Bereits gelöscht",
       "searchHelp": "Gebe 3 Zeichen ein um nach einer existierender Resource zu suchen.",
       "login": "Anmelden"
     },
@@ -81,16 +88,21 @@
         "passwordHint": "Mindestens 8 Zeichen, wobein ein Grossbuchstabe und eine Zahl vorhanden sein müssen.",
         "oldPassword": "Altes Passwort",
         "newPassword": "Neues Passwort",
+        "confirmPassword": "Passwort bestätigen",
         "requesterPassword": "Dein Passwort",
         "avatar": "Profilbild hochladen",
-        "language": "Sprache"
+        "language": "Sprache",
+        "sysAdmin": "Systemadministratorregeln",
+        "updateSuccess": "Das Profil wurde erfolgreich aktualisiert"
       },
       "title": {
         "new": "Neuen Benutzer erstellen",
         "edit": "Benutzer anpassen",
+        "profile": "Profil",
         "editSuccess": "Das Profil wurde erfolgreich aktualisiert",
         "delete": "Benutzer löschen",
         "deleteHint": "Bist du sicher, dass du diesen Benutzer löschen willst?",
+        "deleteButton": "Benutzerkonto jetzt sperren",
         "password": "Passwort ändern",
         "passwordSuccess": "Du hast das Passwort erfolgreich geändert.",
         "select": "Neuen Benutzer zum Projekt hinzufügen (eMail Adresse oder Benutzername)",
@@ -160,5 +172,37 @@
   "resource": {
     "properties": "Eigenschaften",
     "comment": "Kommentar"
+  },
+  "searchPanel": {
+    "howToSearch": "Wie suchen?",
+    "expert": "Experte",
+    "advancedSearch": "Erweiterte Suche",
+    "expertSearch": "Experte suchen"
+  },
+  "fullTextSearch": {
+    "filterByProject": "Nach Projekt filtern",
+    "search": "Suche",
+    "allProjects": "All projects"
+  },
+  "header": {
+    "help": "Hilfe"
+  },
+  "user": {
+    "navigation": {
+      "myProjects": "Meine Projekte",
+      "myAccount": "Mein Konto"
+    },
+    "profile": {
+      "systemAdmin": "Systemadministrator",
+      "editMyProfile": "Mein Profil bearbeiten"
+    },
+    "userMenu": {
+      "signedInAs": "Angemeldet als",
+      "systemAdministration": "Systemadministration",
+      "logout": "Abmelden",
+      "login": "ANMELDEN",
+      "home": "DSP-App Startseite",
+      "myAccount": "Mein Konto"
+    }
   }
 }
