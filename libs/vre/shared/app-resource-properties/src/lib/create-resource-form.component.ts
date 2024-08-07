@@ -13,7 +13,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
@@ -89,7 +89,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) resourceType!: string;
-
+  @Input({ required: true }) projectIri!: string;
   @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<{
@@ -172,7 +172,7 @@ export class CreateResourceFormComponent implements OnInit {
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.propertyIndex.indexOf(ApiConstants.apiKnoraOntologyUrl))
           .map(v => {
             return { guiDef: v, propDef: v.propertyDefinition, values: [] };
           });
@@ -223,9 +223,7 @@ export class CreateResourceFormComponent implements OnInit {
     createResource.type = this.resourceClass.id;
     createResource.properties = this._getPropertiesObj();
     const resource = this._store.selectSnapshot(ResourceSelectors.resource);
-    if (resource) {
-      createResource.attachedToProject = resource.res.attachedToProject;
-    }
+    createResource.attachedToProject = this.projectIri ? this.projectIri : resource!.res.attachedToProject;
 
     return createResource;
   }
@@ -234,7 +232,17 @@ export class CreateResourceFormComponent implements OnInit {
     const propertiesObj: { [index: string]: CreateValue[] } = {};
 
     Object.keys(this.form.controls.properties.controls)
-      .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
+      .filter(iri => {
+        const hasPropertyControlValue = this.form.controls.properties.controls[iri].controls.some(
+          control => control.value.item !== null && control.value.item !== ''
+        );
+
+        return hasPropertyControlValue === true &&
+          this.getInvalidValueItems(iri, this.form.controls.properties.controls[iri].controls, this.properties)
+            .length === 0
+          ? false
+          : hasPropertyControlValue;
+      })
       .forEach(iri => {
         propertiesObj[iri] = this._getValue(iri);
       });
@@ -244,6 +252,19 @@ export class CreateResourceFormComponent implements OnInit {
     }
     return propertiesObj;
   }
+
+  private getInvalidValueItems = (iri: string, controls: FormValueGroup[], properties: PropertyInfoValues[]) =>
+    controls.filter(group => {
+      let hasNotTouchedBoolean = false;
+      if (group.value) {
+        const foundProperty = properties.find(property => property.guiDef.propertyIndex === iri);
+        hasNotTouchedBoolean =
+          foundProperty && (foundProperty.propDef as ResourcePropertyDefinition).objectType === Constants.BooleanValue
+            ? group.pristine
+            : hasNotTouchedBoolean;
+      }
+      return !hasNotTouchedBoolean && group.value.item !== null;
+    });
 
   private _getValue(iri: string) {
     const foundProperty = this.properties.find(property => property.guiDef.propertyIndex === iri);
