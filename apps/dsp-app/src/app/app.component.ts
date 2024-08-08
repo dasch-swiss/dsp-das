@@ -5,6 +5,7 @@ import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/shared/app-session';
+import { UpdateService } from '@dsp-app/src/app/main/services/update.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private _autoLoginService: AutoLoginService,
     private _pendo: PendoAnalyticsService,
     private _localStorageWatcher: LocalStorageWatcherService,
-    private _localizationService: LocalizationService
+    private _localizationService: LocalizationService,
+    private _updateService: UpdateService
   ) {
     this._pendo.setup();
     this._autoLoginService.setup();

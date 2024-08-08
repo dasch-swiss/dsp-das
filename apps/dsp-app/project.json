@@ -44,7 +44,9 @@
         ],
         "scripts": [
           "node_modules/openseadragon/build/openseadragon/openseadragon.min.js"
-        ]
+        ],
+        "serviceWorker": true,
+        "ngswConfigPath": "ngsw-config.json"
       },
       "configurations": {
         "production": {

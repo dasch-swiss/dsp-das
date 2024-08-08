@@ -46,6 +46,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import { UpdateService } from '@dsp-app/src/app/main/services/update.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -351,6 +352,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       },
     },
     LocalizationService,
+    UpdateService,
   ],
   bootstrap: [AppComponent],
 })
