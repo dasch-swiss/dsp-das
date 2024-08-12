@@ -14,7 +14,7 @@ export class MathJaxParagraphComponent {
   ngOnInit() {
     this.mathJaxService.getMathJaxLoadedPromise().then(() => {
       this.paragraphElement.nativeElement.innerHTML = this.mathString;
-      this.mathJaxService.render();
+      // this.mathJaxService.render(this.paragraphElement.nativeElement);
     });
   }
 }

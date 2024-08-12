@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 declare global {
   interface Window {
     MathJax: {
-      typesetPromise: () => void;
+      typesetPromise: (elements: any[]) => void;
       startup: {
         promise: Promise<any>;
+        typeset: boolean;
       };
     };
   }
@@ -34,6 +35,12 @@ export class MathJaxService {
 
   private async loadMathJax(): Promise<any> {
     return new Promise((resolve, reject) => {
+      window.MathJax = {
+        startup: {
+          elements: null,
+          typeset: false,
+        },
+      } as any;
       const script: HTMLScriptElement = document.createElement('script');
       script.type = 'text/javascript';
       script.src = this.mathJax.source;
@@ -51,10 +58,9 @@ export class MathJaxService {
     });
   }
 
-  render() {
+  render(element: HTMLElement) {
     window.MathJax.startup.promise.then(() => {
-      console.log('Typesetting LaTex');
-      window.MathJax.typesetPromise();
+      window.MathJax.typesetPromise([element]);
     });
   }
 }

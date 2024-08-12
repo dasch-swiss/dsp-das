@@ -21,7 +21,7 @@ export class TextSwitchComponent implements IsSwitchComponent, OnInit, OnDestroy
   @Input() control!: FormControl<string | null>;
   @Input() displayMode = true;
 
-  readonly mathMode = true;
+  readonly mathMode = false;
   get myControl() {
     return this.control as FormControl<string>;
   }
