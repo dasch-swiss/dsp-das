@@ -27,6 +27,7 @@ export class OverviewComponent implements OnInit {
 
   loadingTiles = new Array(8);
 
+  readonly math = '\\(x^2 + y^2 = z^2\\)';
   constructor(
     private _titleService: Title,
     private _router: Router,
