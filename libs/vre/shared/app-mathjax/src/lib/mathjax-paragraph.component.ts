@@ -6,7 +6,7 @@ import { MathJaxService } from './mathjax.service';
   template: '<p #mathParagraph></p>',
 })
 export class MathJaxParagraphComponent {
-  @ViewChild('mathParagraph') paragraphElement: any;
+  @ViewChild('mathParagraph') paragraphElement!: ElementRef<HTMLParagraphElement>;
   @Input({ required: true }) mathString!: string;
 
   constructor(private mathJaxService: MathJaxService) {}

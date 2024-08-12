@@ -34,8 +34,6 @@ export class MathJaxService {
 
   private async loadMathJax(): Promise<any> {
     return new Promise((resolve, reject) => {
-      console.log('loading MathJax');
-
       const script: HTMLScriptElement = document.createElement('script');
       script.type = 'text/javascript';
       script.src = this.mathJax.source;
