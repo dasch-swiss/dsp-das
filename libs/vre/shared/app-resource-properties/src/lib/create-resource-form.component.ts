@@ -237,11 +237,12 @@ export class CreateResourceFormComponent implements OnInit {
           control => control.value.item !== null && control.value.item !== ''
         );
 
-        return hasPropertyControlValue === true &&
-          this.getInvalidValueItems(iri, this.form.controls.properties.controls[iri].controls, this.properties)
-            .length === 0
-          ? false
-          : hasPropertyControlValue;
+        const invalidItems = this.getInvalidValueItems(
+          iri,
+          this.form.controls.properties.controls[iri].controls,
+          this.properties
+        );
+        return hasPropertyControlValue === true && invalidItems.length === 0 ? hasPropertyControlValue : false;
       })
       .forEach(iri => {
         propertiesObj[iri] = this._getValue(iri);

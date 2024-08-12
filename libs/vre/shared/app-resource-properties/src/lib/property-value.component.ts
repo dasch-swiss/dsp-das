@@ -23,7 +23,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
-import { finalize, startWith, take, tap } from 'rxjs/operators';
+import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -46,11 +46,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <div style="display: flex">
       <div class="item" [ngClass]="{ hover: displayMode }">
         <ng-container
-          *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
+          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
         <app-property-value-comment
           [displayMode]="displayMode"
-          [control]="group.controls.comment"></app-property-value-comment>
+          [control]="group?.controls.comment"></app-property-value-comment>
       </div>
       <button
         (click)="onSave()"
@@ -138,13 +138,18 @@ export class PropertyValueComponent implements OnInit {
   }
 
   private _watchAndSetupCommentStatus() {
-    this.subscription = this.group.controls.item.statusChanges.pipe(startWith(null)).subscribe(status => {
-      if (status === 'INVALID' || this.group.controls.item.value === null) {
-        this.group.controls.comment.disable();
-      } else if (status === 'VALID') {
-        this.group.controls.comment.enable();
-      }
-    });
+    this.subscription = this.group.controls.item.statusChanges
+      .pipe(
+        startWith(null),
+        takeWhile(() => this.group !== undefined)
+      )
+      .subscribe(status => {
+        if (status === 'INVALID' || this.group.controls.item.value === null) {
+          this.group.controls.comment.disable();
+        } else if (status === 'VALID') {
+          this.group.controls.comment.enable();
+        }
+      });
   }
 
   private _addItem() {
@@ -205,7 +210,7 @@ export class PropertyValueComponent implements OnInit {
         return;
       }
 
-      if (value === null) {
+      if (value === null && this.propertyValueService.formArray.length > 0) {
         this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
       }
 
