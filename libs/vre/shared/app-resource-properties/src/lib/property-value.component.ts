@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
   Cardinality,
+  Constants,
   CreateValue,
   KnoraApiConnection,
   ReadResource,
@@ -60,8 +61,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         [disabled]="
           group.value.item === null ||
           group.value.item === '' ||
-          (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
-          (initialFormValue.comment === null && group.value.comment === '')
+          (!isBoolean && valueIsUnchanged) ||
+          (isBoolean && isRequired && valueIsUnchanged)
         ">
         <mat-icon>save</mat-icon>
       </button>
@@ -99,6 +100,22 @@ export class PropertyValueComponent implements OnInit {
 
   get group() {
     return this.propertyValueService.formArray.at(this.index);
+  }
+
+  get isRequired() {
+    return [Cardinality._1, Cardinality._1_n].includes(this.propertyValueService.cardinality);
+  }
+
+  get isBoolean() {
+    return this.propertyValueService.propertyDefinition.objectType === Constants.BooleanValue;
+  }
+
+  get valueIsUnchanged(): boolean {
+    return (
+      (this.initialFormValue.item === this.group?.controls.item.value &&
+        this.initialFormValue.comment === this.group.value.comment) ||
+      (this.initialFormValue.comment === null && this.group.value.comment === '')
+    );
   }
 
   constructor(
