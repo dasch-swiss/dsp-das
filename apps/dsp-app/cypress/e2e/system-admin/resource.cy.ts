@@ -95,12 +95,14 @@ describe('Resource', () => {
     });
 
     it('boolean', () => {
+      const addBoolToggle = () => cy.get('[data-cy=add-bool-toggle]');
       const boolToggle = () => cy.get('[data-cy=bool-toggle]');
       createHTTP(ResourceCreationPayloads.boolean(finalLastModificationDate));
       po.visitAddPage();
 
       // create
       po.addInitialLabel();
+      addBoolToggle().click();
       boolToggle().click();
       po.clickOnSubmit();
 

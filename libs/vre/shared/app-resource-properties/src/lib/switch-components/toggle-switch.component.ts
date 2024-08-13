@@ -26,6 +26,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
     <button
       mat-icon-button
       (click)="add()"
+      data-cy="add-bool-toggle"
       *ngIf="!isCreatingBoolean && editModeData === null && !currentlyAdding && !isRequired && !displayMode">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>
