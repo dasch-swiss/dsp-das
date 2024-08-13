@@ -80,7 +80,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           data-cy="submit-button"
           [isLoading]="loading"
           (click)="submitData()">
-          {{ 'appLabels.form.action.submit' | translate }}
+          {{ 'form.action.submit' | translate }}
         </button>
       </div>
     </form>
