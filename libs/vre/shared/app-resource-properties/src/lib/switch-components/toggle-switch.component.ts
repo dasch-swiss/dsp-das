@@ -69,6 +69,10 @@ export class ToggleSwitchComponent implements IsSwitchComponent, OnInit, OnDestr
   constructor(private _propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
+    if (!this.isRequired && this.editModeData === null) {
+      this.control.patchValue(null);
+    }
+
     this.toggleControl(this.displayMode);
     this.displayModeChanged$
       .pipe(takeUntil(this.destroyed), last())
@@ -82,6 +86,7 @@ export class ToggleSwitchComponent implements IsSwitchComponent, OnInit, OnDestr
   }
 
   add() {
+    this.control.patchValue(false);
     this.isCreatingBoolean = true;
     this.control.enable();
   }
