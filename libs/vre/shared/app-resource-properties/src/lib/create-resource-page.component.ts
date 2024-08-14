@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Project } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-resource-page',
@@ -17,19 +21,13 @@ import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-hel
 export class CreateResourcePageComponent {
   private _projectUuid = this._route.snapshot.params['uuid'] ?? this._route.parent!.snapshot.params['uuid'];
 
-  get ontoId() {
-    const iriBase = this._ontologyService.getIriBaseUrl();
-    const ontologyName = this._route.snapshot.params[RouteConstants.ontoParameter];
-    return `${iriBase}/ontology/${this._projectUuid}/${ontologyName}/v2`;
-  }
+  @Select(ProjectsSelectors.currentProject) project$!: Observable<Project>;
 
-  get resourceClassIri() {
-    const className = this._route.snapshot.params[RouteConstants.classParameter];
-    return `${this.ontoId}#${className}`;
-  }
+  ontologyId = '';
+  resourceClassIri = '';
 
   get classLabel() {
-    return this.resourceClassIri?.split('#')[1];
+    return this.resourceClassIri ? this.resourceClassIri.split('#')[1] : '';
   }
 
   get projectIri() {
@@ -42,7 +40,15 @@ export class CreateResourcePageComponent {
     protected _projectService: ProjectService,
     private _router: Router,
     private _resourceService: ResourceService
-  ) {}
+  ) {
+    this.project$.subscribe(project => {
+      if (!project) {
+        return;
+      }
+      this.ontologyId = this._ontologyService.getOntologyIriFromRoute(project.shortcode) || '';
+      this.resourceClassIri = `${this.ontologyId}#${this._route.snapshot.params[RouteConstants.classParameter]}`;
+    });
+  }
 
   afterCreation(resourceIri: string) {
     const uuid = this._resourceService.getResourceUuid(resourceIri);
