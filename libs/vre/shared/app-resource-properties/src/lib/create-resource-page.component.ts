@@ -7,6 +7,7 @@ import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-hel
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-resource-page',
@@ -41,7 +42,7 @@ export class CreateResourcePageComponent {
     private _router: Router,
     private _resourceService: ResourceService
   ) {
-    this.project$.subscribe(project => {
+    this.project$.pipe(take(1)).subscribe(project => {
       if (!project) {
         return;
       }
