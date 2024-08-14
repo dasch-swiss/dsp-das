@@ -6,16 +6,12 @@ import { IsSwitchComponent } from './is-switch-component.interface';
 @Component({
   selector: 'app-text-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode">
-      <ng-container *ngIf="mathMode; else textMode">
-        <app-math-jax-paragraph [mathString]="control.value" />
-      </ng-container>
+      {{ control.value }}
     </ng-container>
 
     <ng-template #editMode>
       <app-common-input [control]="myControl" style="width: 100%" data-cy="text-input" label="Text value" />
-    </ng-template>
-
-    <ng-template #textMode>{{ control.value }}</ng-template>`,
+    </ng-template>`,
 })
 export class TextSwitchComponent implements IsSwitchComponent, OnInit, OnDestroy {
   @Input() control!: FormControl<string | null>;
