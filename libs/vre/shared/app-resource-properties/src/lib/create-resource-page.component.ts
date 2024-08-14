@@ -1,56 +1,48 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResourceClassDefinition } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
-import { combineLatest } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { ResourceClassIriService } from './resource-class-iri.service';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   selector: 'app-create-resource-page',
-  template: ` <h3>Create new resource of type: {{ (resClass$ | async)?.label }}</h3>
+  template: ` <h3>Create new resource of type: {{ classLabel }}</h3>
     <app-create-resource-form
-      *ngIf="resourceClassIriService.resourceClassIriFromParamSubject.asObservable() | async as classIri"
-      [resourceType]="(resClass$ | async)?.label"
-      [resourceClassIri]="classIri"
+      *ngIf="resourceClassIri"
+      [resourceType]="classLabel"
+      [resourceClassIri]="resourceClassIri"
       [projectIri]="projectIri"
       (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
-  providers: [ResourceClassIriService],
 })
 export class CreateResourcePageComponent {
-  projectOntologies$ = this._store.select(OntologiesSelectors.projectOntologies);
-  projectUuid = this._route.snapshot.params['uuid'] ?? this._route.parent!.snapshot.params['uuid'];
+  private _projectUuid = this._route.snapshot.params['uuid'] ?? this._route.parent!.snapshot.params['uuid'];
+
+  get ontoId() {
+    const iriBase = this._ontologyService.getIriBaseUrl();
+    const ontologyName = this._route.snapshot.params[RouteConstants.ontoParameter];
+    return `${iriBase}/ontology/${this._projectUuid}/${ontologyName}/v2`;
+  }
+
+  get resourceClassIri() {
+    const className = this._route.snapshot.params[RouteConstants.classParameter];
+    return `${this.ontoId}#${className}`;
+  }
+
+  get classLabel() {
+    return this.resourceClassIri?.split('#')[1];
+  }
+
+  get projectIri() {
+    return this._projectService.uuidToIri(this._projectUuid);
+  }
 
   constructor(
     private _route: ActivatedRoute,
-    private _store: Store,
+    private _ontologyService: OntologyService,
     protected _projectService: ProjectService,
     private _router: Router,
-    private _resourceService: ResourceService,
-    public resourceClassIriService: ResourceClassIriService
+    private _resourceService: ResourceService
   ) {}
-
-  get projectIri() {
-    return this._projectService.uuidToIri(this.projectUuid);
-  }
-
-  resClass$ = combineLatest([
-    this.projectOntologies$.pipe(filter(v => Object.keys(v).length !== 0)),
-    this.resourceClassIriService.resourceClassIriFromParamSubject.asObservable(),
-    this.resourceClassIriService.ontoId$,
-  ]).pipe(
-    map(([projectOntologies, classId, ontoId]) => {
-      const ontology = projectOntologies[this.projectIri].readOntologies.find(onto => onto.id === ontoId);
-      if (!ontology) return undefined;
-      // find ontology of current resource class to get the class label
-      const classes = getAllEntityDefinitionsAsArray(ontology.classes);
-      return <ResourceClassDefinition>classes[classes.findIndex(res => res.id === classId)];
-    })
-  );
 
   afterCreation(resourceIri: string) {
     const uuid = this._resourceService.getResourceUuid(resourceIri);
