@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -6,8 +6,8 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-resource-page',
@@ -19,7 +19,9 @@ import { take } from 'rxjs/operators';
       [projectIri]="projectIri"
       (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
 })
-export class CreateResourcePageComponent {
+export class CreateResourcePageComponent implements OnDestroy {
+  private _destroy = new Subject<void>();
+
   private _projectUuid = this._route.snapshot.params['uuid'] ?? this._route.parent!.snapshot.params['uuid'];
 
   @Select(ProjectsSelectors.currentProject) project$!: Observable<Project>;
@@ -42,7 +44,7 @@ export class CreateResourcePageComponent {
     private _router: Router,
     private _resourceService: ResourceService
   ) {
-    this.project$.pipe(take(1)).subscribe(project => {
+    this.project$.pipe(takeUntil(this._destroy)).subscribe(project => {
       if (!project) {
         return;
       }
@@ -54,5 +56,10 @@ export class CreateResourcePageComponent {
   afterCreation(resourceIri: string) {
     const uuid = this._resourceService.getResourceUuid(resourceIri);
     this._router.navigate(['..', uuid], { relativeTo: this._route });
+  }
+
+  ngOnDestroy() {
+    this._destroy.next();
+    this._destroy.complete();
   }
 }
