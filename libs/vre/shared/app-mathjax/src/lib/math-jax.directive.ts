@@ -1,4 +1,4 @@
-import { Component, Directive, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 import { MathJaxService } from './math-jax.service';
 
 @Directive({
@@ -11,8 +11,10 @@ export class MathJaxDirective {
   ) {}
 
   ngOnInit() {
-    this.mathJaxService.getMathJaxLoadedPromise().then(() => {
-      this.mathJaxService.render(this._ele.nativeElement);
-    });
+    if (MathJaxService.containsLatex(this._ele.nativeElement.innerHTML)) {
+      this.mathJaxService.getMathJaxLoadedPromise().then(() => {
+        this.mathJaxService.render(this._ele.nativeElement);
+      });
+    }
   }
 }

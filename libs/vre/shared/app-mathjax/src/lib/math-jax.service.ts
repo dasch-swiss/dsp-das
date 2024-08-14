@@ -16,20 +16,23 @@ declare global {
   providedIn: 'root',
 })
 export class MathJaxService {
-  private mathJaxLoaded: Promise<void>;
+  static containsLatex(text: string) {
+    return text.includes('\\(');
+  }
+
+  private mathJaxLoaded?: Promise<void>;
 
   private mathJax: any = {
     source: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js',
   };
 
-  constructor() {
-    this.mathJaxLoaded = this.loadMathJax().catch(err => {
-      console.log('MathJax failed to load', err);
-    });
-  }
-
-  // This method is used by the MathJaxDirective to check if MathJax is loaded
   public getMathJaxLoadedPromise(): Promise<void> {
+    if (!this.mathJaxLoaded) {
+      this.mathJaxLoaded = this.loadMathJax().catch(err => {
+        console.log('MathJax failed to load', err);
+      });
+    }
+
     return this.mathJaxLoaded;
   }
 
