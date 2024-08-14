@@ -29,7 +29,7 @@ import {
   ReusableListInfoFormComponent,
   ListComponents,
 } from '@dasch-swiss/vre/shared/app-list';
-import { MathjaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
+import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
@@ -163,7 +163,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...CommonToMoveComponents,
     ...ListComponents,
     ...UiComponents,
-    ...MathjaxComponents,
+    ...MathJaxComponents,
     AccountComponent,
     AddUserComponent,
     AdminImageDirective,

@@ -1,10 +1,10 @@
 import { Component, Directive, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { MathJaxService } from './mathjax.service';
+import { MathJaxService } from './math-jax.service';
 
 @Directive({
   selector: '[appMathjax]',
 })
-export class MathjaxDirective {
+export class MathJaxDirective {
   constructor(
     private _ele: ElementRef,
     private mathJaxService: MathJaxService

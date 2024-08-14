@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { MathJaxService } from './mathjax.service';
+import { MathJaxService } from './math-jax.service';
 
 @Component({
-  selector: 'app-mathjax-paragraph',
+  selector: 'app-math-jax-paragraph',
   template: '<p #mathParagraph></p>',
 })
 export class MathJaxParagraphComponent {

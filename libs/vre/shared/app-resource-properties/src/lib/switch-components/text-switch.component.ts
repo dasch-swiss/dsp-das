@@ -7,7 +7,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   selector: 'app-text-switch',
   template: ` <ng-container *ngIf="displayMode; else editMode">
       <ng-container *ngIf="mathMode; else textMode">
-        <app-mathjax-paragraph [mathString]="control.value" />
+        <app-math-jax-paragraph [mathString]="control.value" />
       </ng-container>
     </ng-container>
 
