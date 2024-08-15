@@ -54,7 +54,7 @@ export class MathJaxService {
       };
 
       script.onerror = () => {
-        reject('Error loading MathJax');
+        reject(new Error('Error loading MathJax'));
       };
 
       document.head.appendChild(script); // Append the script to start loading it
