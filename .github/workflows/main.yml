@@ -93,9 +93,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.ORG_GITHUB_PACKAGES_PAT }}" > ~/.npmrc
-          echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
       - run: npm install
       - run: npx nx run jdnconvertiblecalendar:lint
       - run: npx nx run jdnconvertiblecalendar:test:ci
@@ -110,9 +107,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.ORG_GITHUB_PACKAGES_PAT }}" > ~/.npmrc
-          echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
       - run: npm install
       - run: npx nx run jdnconvertiblecalendardateadapter:lint
       - run: npx nx run jdnconvertiblecalendardateadapter:test:ci
@@ -127,9 +121,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.ORG_GITHUB_PACKAGES_PAT }}" > ~/.npmrc
-          echo "registry=https://npm.pkg.github.com/dasch-swiss" >> ~/.npmrc
       - run: npm install
       - run: npx nx run vre-shared-app-config:lint
       - run: npx nx run vre-shared-app-config:test:ci
