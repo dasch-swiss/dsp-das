@@ -43,7 +43,7 @@ In terminal fo to DSP-API repository and start the API by running following comm
 $ make init-db-test
 $ make stack-without-app
 ```
-Oonce backend is up and running, in the second terminal instance start DSP-APP by running:
+Once backend is up and running, in the second terminal instance start DSP-APP by running:
 ```shell
 # come back to this repository and start the DSP-APP
 $ npx nx run dsp-app:serve
