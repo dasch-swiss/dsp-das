@@ -36,14 +36,16 @@ under [GNU Affero General Public](http://www.gnu.org/licenses/agpl-3.0.en.html) 
 
 ## User Quickstart
 
-To try DSP-APP out you first need to start the backend - [DSP-API](https://github.com/dasch-swiss/dsp-api):
+To try DSP-APP out the [DSP-API](https://github.com/dasch-swiss/dsp-api) backend should be started first:
 
+In terminal fo to DSP-API repository and start the API by running following commands:
 ```shell
-# go the dsp-api repository in a terminal and start the api
 $ make init-db-test
 $ make stack-without-app
-
-# come back to this repository and start the app
+```
+Oonce backend is up and running, in the second terminal instance start DSP-APP by running:
+```shell
+# come back to this repository and start the DSP-APP
 $ npx nx run dsp-app:serve
 ```
 
