@@ -205,7 +205,6 @@ export class AddPropertyMenuComponent {
       .selectSnapshot(OntologiesSelectors.currentProjectOntologies)
       .filter(p => !classProps.some(c => c.propertyIndex === p.id));
     ontoProperties.forEach((op: OntologyProperties, i: number) => {
-      console.log(op);
       const onto = currentProjectOntologies.find(j => j?.id === op.ontology);
       existingProperties.push({
         ontologyId: op.ontology,
