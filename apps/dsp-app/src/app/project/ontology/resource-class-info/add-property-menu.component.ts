@@ -205,6 +205,7 @@ export class AddPropertyMenuComponent {
       .selectSnapshot(OntologiesSelectors.currentProjectOntologies)
       .filter(p => !classProps.some(c => c.propertyIndex === p.id));
     ontoProperties.forEach((op: OntologyProperties, i: number) => {
+      console.log(op);
       const onto = currentProjectOntologies.find(j => j?.id === op.ontology);
       existingProperties.push({
         ontologyId: op.ontology,
@@ -246,7 +247,8 @@ export class AddPropertyMenuComponent {
       classProps.findIndex(x => x.propertyIndex === availableProp.id) === -1 &&
       ((availableProp.subjectType &&
         !availableProp.subjectType.includes('Standoff') &&
-        availableProp.objectType !== Constants.LinkValue) ||
+        availableProp.objectType !== Constants.LinkValue &&
+        availableProp.subjectType !== this.resourceClass.id) ||
         !availableProp.isLinkValueProperty)
     );
   }
