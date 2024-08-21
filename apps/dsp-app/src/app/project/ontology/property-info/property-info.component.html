@@ -88,17 +88,6 @@
         </button>
       </span>
       <span
-        *ngIf="linkPropertyIsBoundToClass && false"
-        matTooltipPosition="above"
-        matTooltip="Remove the restriction on this property and make it usable by other classes">
-        <button
-          mat-button
-          class="edit"
-          (click)="removeSubjectClassConstraint.emit({propDef: propDef, propType: propType})">
-          <mat-icon>lock_open</mat-icon>
-        </button>
-      </span>
-      <span
         matTooltipPosition="above"
         [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
         <button
