@@ -69,7 +69,6 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
   @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
   @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
-  @Output() removeSubjectClassConstraint: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
 
   // submit res class iri to open res class (not yet implemented)
   @Output() clickedOnClass: EventEmitter<ShortInfo> = new EventEmitter<ShortInfo>();
