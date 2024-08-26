@@ -22,7 +22,7 @@
 
 <mat-form-field class="third-party-iiif-field">
   <mat-label>IIIF Image URL</mat-label>
-  <input matInput [formControl]="iiifUrlControl" placeholder="Enter IIIF image URL" />
+  <input matInput [formControl]="iiifUrlControl" placeholder="Enter IIIF image URL" data-cy="external-iiif-input" />
   <mat-error *ngIf="iiifUrlControl.errors as errors"> {{ errors | humanReadableError: validatorErrors }} </mat-error>
   <button
     *ngIf="iiifUrlControl.value"
@@ -31,7 +31,8 @@
     mat-icon-button
     matSuffix
     type="button"
-    color="primary">
+    color="primary"
+    data-cy="external-iiif-reset">
     <mat-icon>{{ iiifUrlControl.valid ? 'check' : 'close'}}</mat-icon>
   </button>
   <button
@@ -40,7 +41,8 @@
     mat-icon-button
     matSuffix
     matTooltip="Paste from clipboard"
-    (click)="pasteFromClipboard()">
+    (click)="pasteFromClipboard()"
+    data-cy="external-iiif-paste">
     <mat-icon>content_paste</mat-icon>
   </button>
 </mat-form-field>

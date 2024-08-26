@@ -31,7 +31,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 16px;     max-width: 700px;"></app-upload-2>
       <div *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file">
-        <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;">
+        <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;" data-cy="stillimage-tab-group">
           <mat-tab label="Upload Image">
             <app-upload-2
               [formControl]="form.controls.file"

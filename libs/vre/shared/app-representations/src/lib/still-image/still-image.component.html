@@ -19,6 +19,7 @@
 
     <span class="action-buttons">
       <button
+        data-cy="still-image-share-button"
         mat-icon-button
         [matMenuTriggerFor]="share"
         [disabled]="isReadStillImageExternalFileValue"
@@ -28,6 +29,7 @@
       </button>
 
       <button
+        data-cy="still-image-download-button"
         mat-icon-button
         matTooltip="Download"
         [disabled]="isReadStillImageExternalFileValue"
@@ -35,6 +37,7 @@
         <mat-icon>download</mat-icon>
       </button>
       <button
+        data-cy="still-image-region-button"
         mat-icon-button
         id="DSP_OSD_DRAW_REGION"
         matTooltip="Draw Region"
@@ -56,6 +59,7 @@
     <!-- right side buttons -->
     <span>
       <button
+        data-cy="still-image-settings-button"
         mat-icon-button
         id="DSP_OSD_SETTINGS"
         matTooltip="Settings"
