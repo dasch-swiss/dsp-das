@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ckEditor } from '@dasch-swiss/vre/shared/app-ui';
 import * as Editor from 'ckeditor5-custom-build';
-import { ckEditor } from '../ck-editor';
 
 @Component({
   selector: 'app-rich-text-value',
