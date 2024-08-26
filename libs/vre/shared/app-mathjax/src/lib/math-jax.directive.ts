@@ -7,13 +7,13 @@ import { MathJaxService } from './math-jax.service';
 export class MathJaxDirective implements OnInit {
   constructor(
     private _ele: ElementRef,
-    private mathJaxService: MathJaxService
+    private _mathJaxService: MathJaxService
   ) {}
 
   ngOnInit() {
     if (MathJaxService.containsLatex(this._ele.nativeElement.innerHTML)) {
-      this.mathJaxService.getMathJaxLoadedPromise().then(() => {
-        this.mathJaxService.render(this._ele.nativeElement);
+      this._mathJaxService.getMathJaxLoadedPromise().then(() => {
+        this._mathJaxService.render(this._ele.nativeElement);
       });
     }
   }
