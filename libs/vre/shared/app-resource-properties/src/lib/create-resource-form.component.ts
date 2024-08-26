@@ -13,8 +13,8 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { LoadClassItemsCountAction } from '@dasch-swiss/vre/shared/app-state';
+import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
@@ -69,7 +69,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           data-cy="submit-button"
           [isLoading]="loading"
           (click)="submitData()">
-          {{ 'appLabels.form.action.submit' | translate }}
+          {{ 'form.action.submit' | translate }}
         </button>
       </div>
     </form>
@@ -88,9 +88,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 })
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
-  @Input({ required: true }) projectIri!: string;
   @Input({ required: true }) resourceType!: string;
-
+  @Input({ required: true }) projectIri!: string;
   @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<{
@@ -173,7 +172,7 @@ export class CreateResourceFormComponent implements OnInit {
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
-          .filter(v => v.guiOrder !== undefined)
+          .filter(v => v.propertyIndex.indexOf(ApiConstants.apiKnoraOntologyUrl))
           .map(v => {
             return { guiDef: v, propDef: v.propertyDefinition, values: [] };
           });
@@ -222,8 +221,10 @@ export class CreateResourceFormComponent implements OnInit {
     const createResource = new CreateResource();
     createResource.label = this.form.controls.label.value;
     createResource.type = this.resourceClass.id;
-    createResource.attachedToProject = this.projectIri;
     createResource.properties = this._getPropertiesObj();
+    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
+    createResource.attachedToProject = this.projectIri ? this.projectIri : resource!.res.attachedToProject;
+
     return createResource;
   }
 
@@ -231,7 +232,18 @@ export class CreateResourceFormComponent implements OnInit {
     const propertiesObj: { [index: string]: CreateValue[] } = {};
 
     Object.keys(this.form.controls.properties.controls)
-      .filter(iri => this.form.controls.properties.controls[iri].controls.some(control => control.value.item !== null))
+      .filter(iri => {
+        const hasPropertyControlValue = this.form.controls.properties.controls[iri].controls.some(
+          control => control.value.item !== null && control.value.item !== ''
+        );
+
+        const optionalItems = this.getOptionalValueItems(
+          iri,
+          this.form.controls.properties.controls[iri].controls,
+          this.properties
+        );
+        return hasPropertyControlValue === true && optionalItems.length === 0 ? hasPropertyControlValue : false;
+      })
       .forEach(iri => {
         propertiesObj[iri] = this._getValue(iri);
       });
@@ -240,6 +252,25 @@ export class CreateResourceFormComponent implements OnInit {
       propertiesObj[this.fileRepresentation] = [this._getFileValue(this.fileRepresentation)];
     }
     return propertiesObj;
+  }
+
+  private getOptionalValueItems = (iri: string, controls: FormValueGroup[], properties: PropertyInfoValues[]) =>
+    controls.filter(group => {
+      let hasOptionalBoolean = false;
+      if (group.value) {
+        const foundProperty = properties.find(property => property.guiDef.propertyIndex === iri);
+        hasOptionalBoolean = !!(
+          foundProperty &&
+          (foundProperty.propDef as ResourcePropertyDefinition).objectType === Constants.BooleanValue &&
+          !this.isRequired(foundProperty.guiDef.cardinality) &&
+          group.value.item === null
+        );
+      }
+      return hasOptionalBoolean;
+    });
+
+  isRequired(cardinality: Cardinality): boolean {
+    return [Cardinality._1, Cardinality._1_n].includes(cardinality);
   }
 
   private _getValue(iri: string) {

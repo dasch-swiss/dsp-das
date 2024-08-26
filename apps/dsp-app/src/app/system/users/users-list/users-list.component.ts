@@ -17,9 +17,9 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, combineLatest, from, merge } from 'rxjs';
+import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
 import { CreateUserDialogComponent } from '../../../user/create-user-page/create-user-dialog.component';
 import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
@@ -170,46 +170,40 @@ export class UsersListComponent {
   /**
    * update user's group memebership
    */
-  updateGroupsMembership(id: string, groups: string[]): void {
+  updateGroupsMembership(userIri: string, groups: string[]): void {
     if (!groups) {
       return;
     }
 
     const currentUserGroups: string[] = [];
-    this._userApiService.getGroupMembershipsForUser(id).subscribe(response => {
+    this._userApiService.getGroupMembershipsForUser(userIri).subscribe(response => {
       for (const group of response.groups) {
         currentUserGroups.push(group.id);
       }
 
-      if (currentUserGroups.length === 0) {
-        // add user to group
-        // console.log('add user to group');
-        for (const newGroup of groups) {
-          this.addUserToGroupMembership(id, newGroup);
-        }
-      } else {
-        // which one is deselected?
-        // find id in groups --> if not exists: remove from group
-        for (const oldGroup of currentUserGroups) {
-          if (groups.indexOf(oldGroup) === -1) {
-            // console.log('remove from group', oldGroup);
-            // the old group is not anymore one of the selected groups --> remove user from group
-            this._userApiService
-              .removeFromGroupMembership(id, oldGroup)
-              .pipe(take(1))
-              .subscribe(() => {
-                if (this.projectUuid) {
-                  this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
-                }
-              });
-          }
-        }
-        for (const newGroup of groups) {
-          if (currentUserGroups.indexOf(newGroup) === -1) {
-            this.addUserToGroupMembership(id, newGroup);
-          }
-        }
-      }
+      const removeOldGroup$ = from(currentUserGroups).pipe(
+        filter(oldGroup => groups.indexOf(oldGroup) === -1), // Filter out groups that are no longer in 'groups'
+        mergeMap(oldGroup => {
+          return this._userApiService.removeFromGroupMembership(userIri, oldGroup).pipe(take(1));
+        })
+      );
+
+      const addNewGroup$ = from(groups).pipe(
+        filter(newGroup => currentUserGroups.indexOf(newGroup) === -1), // Filter out groups that are already in 'currentUserGroups'
+        mergeMap(newGroup => {
+          return this._userApiService.addToGroupMembership(userIri, newGroup).pipe(take(1));
+        })
+      );
+
+      merge(removeOldGroup$, addNewGroup$)
+        .pipe(takeLast(1))
+        .subscribe({
+          next: () => {
+            if (this.projectUuid) {
+              this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
+            }
+          },
+        });
     });
   }
 
@@ -312,14 +306,14 @@ export class UsersListComponent {
   }
 
   createUser() {
-    const dialogRef = this._matDialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig());
+    const dialogRef = this._matDialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig({}, true));
     dialogRef.afterClosed().subscribe(() => {
       this.refreshParent.emit();
     });
   }
 
   editUser(user: ReadUser) {
-    const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user);
+    const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true);
     const dialogRef = this._matDialog.open(EditUserPageComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => {
       this.refreshParent.emit();
@@ -327,7 +321,7 @@ export class UsersListComponent {
   }
 
   openDialog(mode: string, user?: ReadUser): void {
-    const dialogRef = this._matDialog.open(DialogComponent, DspDialogConfig.dialogDrawerConfig({ user, mode }));
+    const dialogRef = this._matDialog.open(DialogComponent, DspDialogConfig.dialogDrawerConfig({ user, mode }, true));
 
     dialogRef.afterClosed().subscribe(response => {
       if (response === true) {

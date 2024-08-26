@@ -18,7 +18,7 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues, ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
@@ -49,21 +49,7 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #booleanTpl let-item="item" let-displayMode="displayMode">
-      <mat-icon
-        @replaceAnimation
-        *ngIf="displayMode && item.value"
-        [title]="'appLabels.uiControls.icon.true' | translate"
-        class="material-icons-outlined"
-        >toggle_off</mat-icon
-      >
-      <mat-icon
-        @replaceAnimation
-        *ngIf="displayMode && !item.value"
-        [title]="'appLabels.uiControls.icon.false' | translate"
-        class="material-icons-outlined"
-        >toggle_on</mat-icon
-      >
-      <mat-slide-toggle *ngIf="!displayMode" [formControl]="item" data-cy="bool-toggle"></mat-slide-toggle>
+      <app-toggle-switch [control]="item" [displayMode]="displayMode"></app-toggle-switch>
     </ng-template>
 
     <ng-template #listTpl let-item="item" let-displayMode="displayMode">
@@ -130,17 +116,11 @@ import { PropertyValueService } from './property-value.service';
   `,
   styles: [
     `
-      .mat-icon {
-        margin: 5px 0 0 10px;
-        transform: scale(-1.5, 1.5);
-      }
-
       mat-form-field {
         width: 100%;
       }
     `,
   ],
-  animations: [ReplaceAnimation.animationLong],
 })
 export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterViewInit {
   @Input({ required: true }) formArray!: FormValueArray;

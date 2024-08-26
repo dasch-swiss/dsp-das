@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
   Cardinality,
+  Constants,
   CreateValue,
   KnoraApiConnection,
   ReadResource,
@@ -23,7 +24,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
-import { finalize, startWith, take, tap } from 'rxjs/operators';
+import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -46,11 +47,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <div style="display: flex">
       <div class="item" [ngClass]="{ hover: displayMode }">
         <ng-container
-          *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: displayMode }"></ng-container>
+          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
         <app-property-value-comment
           [displayMode]="displayMode"
-          [control]="group.controls.comment"></app-property-value-comment>
+          [control]="group?.controls.comment"></app-property-value-comment>
       </div>
       <button
         (click)="onSave()"
@@ -58,8 +59,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         data-cy="save-button"
         *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
         [disabled]="
-          (initialFormValue.item === group.value.item && initialFormValue.comment === group.value.comment) ||
-          (initialFormValue.comment === null && group.value.comment === '')
+          group.value.item === null ||
+          group.value.item === '' ||
+          (!isBoolean && valueIsUnchanged) ||
+          (isBoolean && isRequired && valueIsUnchanged)
         ">
         <mat-icon>save</mat-icon>
       </button>
@@ -99,6 +102,22 @@ export class PropertyValueComponent implements OnInit {
     return this.propertyValueService.formArray.at(this.index);
   }
 
+  get isRequired() {
+    return [Cardinality._1, Cardinality._1_n].includes(this.propertyValueService.cardinality);
+  }
+
+  get isBoolean() {
+    return this.propertyValueService.propertyDefinition.objectType === Constants.BooleanValue;
+  }
+
+  get valueIsUnchanged(): boolean {
+    return (
+      (this.initialFormValue.item === this.group?.controls.item.value &&
+        this.initialFormValue.comment === this.group.value.comment) ||
+      (this.initialFormValue.comment === null && this.group.value.comment === '')
+    );
+  }
+
   constructor(
     public propertyValueService: PropertyValueService,
     @Inject(DspApiConnectionToken)
@@ -136,13 +155,18 @@ export class PropertyValueComponent implements OnInit {
   }
 
   private _watchAndSetupCommentStatus() {
-    this.subscription = this.group.controls.item.statusChanges.pipe(startWith(null)).subscribe(status => {
-      if (status === 'INVALID' || this.group.controls.item.value === null) {
-        this.group.controls.comment.disable();
-      } else if (status === 'VALID') {
-        this.group.controls.comment.enable();
-      }
-    });
+    this.subscription = this.group.controls.item.statusChanges
+      .pipe(
+        startWith(null),
+        takeWhile(() => this.group !== undefined)
+      )
+      .subscribe(status => {
+        if (status === 'INVALID' || this.group.controls.item.value === null) {
+          this.group.controls.comment.disable();
+        } else if (status === 'VALID') {
+          this.group.controls.comment.enable();
+        }
+      });
   }
 
   private _addItem() {
@@ -203,7 +227,7 @@ export class PropertyValueComponent implements OnInit {
         return;
       }
 
-      if (value === null) {
+      if (value === null && this.propertyValueService.formArray.length > 0) {
         this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
       }
 

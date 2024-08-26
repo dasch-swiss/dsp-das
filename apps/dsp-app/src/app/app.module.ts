@@ -23,11 +23,13 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   CreateListInfoPageComponent,
   ListComponents,
   ReusableListInfoFormComponent,
 } from '@dasch-swiss/vre/shared/app-list';
+import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   AppProgressIndicatorComponent,
@@ -78,7 +80,6 @@ import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/s
 import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
-import { SelectLanguageComponent } from './main/select-language/select-language.component';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { ChipListInputComponent } from './project/chip-list-input/chip-list-input.component';
@@ -102,6 +103,8 @@ import { ResourceClassFormComponent } from './project/ontology/resource-class-fo
 import { AddPropertyMenuComponent } from './project/ontology/resource-class-info/add-property-menu.component';
 import { ResourceClassInfoElementComponent } from './project/ontology/resource-class-info/resource-class-info-element.component';
 import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
+import { CardinalityChangeDialogComponent } from './project/ontology/resource-class-info/resource-class-property-info/cardinality-component/cardinality-change-dialog.component';
+import { CardinalityComponent } from './project/ontology/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';
 import { ResourceClassPropertyInfoComponent } from './project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { MultipleViewerComponent } from './project/ontology-classes/multiple-viewer.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
@@ -162,12 +165,15 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...CommonToMoveComponents,
     ...ListComponents,
     ...UiComponents,
+    ...MathJaxComponents,
     AccountComponent,
     AddUserComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
     AppComponent,
     DescriptionComponent,
+    CardinalityComponent,
+    CardinalityChangeDialogComponent,
     CenteredLayoutComponent,
     ChipListInputComponent,
     CollaborationComponent,
@@ -225,7 +231,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SearchPanelComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,
-    SelectLanguageComponent,
     SelectProjectComponent,
     SortButtonComponent,
     SplitPipe,
@@ -349,6 +354,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         hideRequiredMarker: true,
       },
     },
+    LocalizationService,
   ],
   bootstrap: [AppComponent],
 })

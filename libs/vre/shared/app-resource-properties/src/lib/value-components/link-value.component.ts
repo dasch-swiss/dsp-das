@@ -65,7 +65,7 @@ import { LinkValueDataService } from './link-value-data.service';
           <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
         </mat-option>
       </mat-autocomplete>
-      <mat-hint>{{ 'appLabels.form.action.searchHelp' | translate }}</mat-hint>
+      <mat-hint>{{ 'form.action.searchHelp' | translate }}</mat-hint>
       <mat-error *ngIf="control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </mat-form-field>
   `,
@@ -123,7 +123,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nextPageNumber = 0;
     this.resources = [];
     const searchTerm = this._getTextInput();
-    if (searchTerm?.length < 3) {
+    if (!this.readResource || searchTerm?.length < 3) {
       return;
     }
 
@@ -142,7 +142,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
     let myResourceId: string;
     event.stopPropagation();
-    const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject).id;
+    const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject)?.id;
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         data: {
@@ -246,6 +246,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _getResourceProperties() {
     const ontologyIri = this.resourceClassIri.split('#')[0];
+    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
@@ -256,6 +257,8 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.readResource = readResource;
         this.useDefaultValue = false;
+        this.loading = false;
+        this._cd.markForCheck();
       });
   }
 

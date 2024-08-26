@@ -1,5 +1,101 @@
 # Changelog
 
+## [11.17.1](https://github.com/dasch-swiss/dsp-das/compare/v11.17.0...v11.17.1) (2024-08-19)
+
+
+### Maintenance
+
+* fix publishing to Docker Hub ([#1740](https://github.com/dasch-swiss/dsp-das/issues/1740)) ([4eb3ab1](https://github.com/dasch-swiss/dsp-das/commit/4eb3ab1d7af4feb29cc0e98bf038ef6000f1e098))
+
+## [11.17.0](https://github.com/dasch-swiss/dsp-das/compare/v11.16.4...v11.17.0) (2024-08-19)
+
+
+### Enhancements
+
+* nullable switch toggle (DEV-3954) ([#1727](https://github.com/dasch-swiss/dsp-das/issues/1727)) ([fe1fae3](https://github.com/dasch-swiss/dsp-das/commit/fe1fae3452259810e760daada30be96726ccdb46))
+* update dsp-js to 10.1.0 from npm registry ([#1736](https://github.com/dasch-swiss/dsp-das/issues/1736)) ([9c3b9a9](https://github.com/dasch-swiss/dsp-das/commit/9c3b9a9917bda75b422467de7d14b97e07dcbb6f))
+
+
+### Bug Fixes
+
+* **add resource component:** display label, remove whole unnecessary logic and simplify ([#1730](https://github.com/dasch-swiss/dsp-das/issues/1730)) ([a7b0cfb](https://github.com/dasch-swiss/dsp-das/commit/a7b0cfb5dd94d4e654237c8037b1437061698642))
+* allows to add list item without comments (DEV-4016) ([#1739](https://github.com/dasch-swiss/dsp-das/issues/1739)) ([0c347b2](https://github.com/dasch-swiss/dsp-das/commit/0c347b2b4d3944179a3337edaeec68ed8228199d))
+* **cardinality toggles:** disable if not project or sys admin ([#1734](https://github.com/dasch-swiss/dsp-das/issues/1734)) ([d0a0205](https://github.com/dasch-swiss/dsp-das/commit/d0a02051db1589e82e77b1581bafbc06bc862fad))
+* create new property type (DEV-4008) ([#1735](https://github.com/dasch-swiss/dsp-das/issues/1735)) ([32314f3](https://github.com/dasch-swiss/dsp-das/commit/32314f3e133c4306304b3f950dcc3683bad5b9b1))
+* Remove redundant brace from Content-Type ([#1731](https://github.com/dasch-swiss/dsp-das/issues/1731)) ([b9f5797](https://github.com/dasch-swiss/dsp-das/commit/b9f57974348435374c55f65856dc54a356947371))
+* **update group membership:** trigger update after each change (DEV-3857) ([#1741](https://github.com/dasch-swiss/dsp-das/issues/1741)) ([05ee687](https://github.com/dasch-swiss/dsp-das/commit/05ee687e73398a255c462ec7f10866ac650f1be0))
+* update user membership (DEV-3857) ([#1733](https://github.com/dasch-swiss/dsp-das/issues/1733)) ([2e5efee](https://github.com/dasch-swiss/dsp-das/commit/2e5efee21b14b7a57b5b429b916788ff64522b47))
+
+
+### Documentation
+
+* improve README ([#1738](https://github.com/dasch-swiss/dsp-das/issues/1738)) ([24e92d4](https://github.com/dasch-swiss/dsp-das/commit/24e92d412486c6e932deb5b02e3318dc29b1b7eb))
+
+## [11.16.4](https://github.com/dasch-swiss/dsp-das/compare/v11.16.3...v11.16.4) (2024-08-07)
+
+
+### Bug Fixes
+
+* reimplement cardinality change ([#1688](https://github.com/dasch-swiss/dsp-das/issues/1688)) ([9c8d94c](https://github.com/dasch-swiss/dsp-das/commit/9c8d94c0cd18f54c7be91ce224b39bd188eec573))
+* updated localization service, translations, language switching (DEV-3961) ([#1726](https://github.com/dasch-swiss/dsp-das/issues/1726)) ([19cdf99](https://github.com/dasch-swiss/dsp-das/commit/19cdf999e3bd77b6a904db5b0c4b6a1d5e651355))
+
+
+### Maintenance
+
+* separate display logic from business logic ([#1723](https://github.com/dasch-swiss/dsp-das/issues/1723)) ([a5227eb](https://github.com/dasch-swiss/dsp-das/commit/a5227ebfdac37564ceed8c6f402f912da990649d))
+
+## [11.16.3](https://github.com/dasch-swiss/dsp-das/compare/v11.16.2...v11.16.3) (2024-07-31)
+
+
+### Bug Fixes
+
+* added check for invalidValueItems before creating a resource (DE… ([#1718](https://github.com/dasch-swiss/dsp-das/issues/1718)) ([d7d3880](https://github.com/dasch-swiss/dsp-das/commit/d7d3880371345d548126197ad0080a89614ac1b1))
+* added linked resource autocomplete loading progress bar (DEV-3938) ([#1717](https://github.com/dasch-swiss/dsp-das/issues/1717)) ([d3b1ccb](https://github.com/dasch-swiss/dsp-das/commit/d3b1ccbd5d77bf319eeafbfadde6fe07752cb453))
+* create resource with edited properties only (DEV-3937) ([#1715](https://github.com/dasch-swiss/dsp-das/issues/1715)) ([c9f2644](https://github.com/dasch-swiss/dsp-das/commit/c9f26441df42d678a9fb87642015bd560f13db5a))
+* **list property:** introduce an empty option for new values ([#1719](https://github.com/dasch-swiss/dsp-das/issues/1719)) ([24926a5](https://github.com/dasch-swiss/dsp-das/commit/24926a581496182f8f06eb945a3e3c93c423bf48))
+
+## [11.16.2](https://github.com/dasch-swiss/dsp-das/compare/v11.16.1...v11.16.2) (2024-07-29)
+
+
+### Bug Fixes
+
+* create user as system administrator (DEV-3934) ([#1713](https://github.com/dasch-swiss/dsp-das/issues/1713)) ([26853e9](https://github.com/dasch-swiss/dsp-das/commit/26853e97a413c17a8552cdc88628868448ee4419))
+
+## [11.16.1](https://github.com/dasch-swiss/dsp-das/compare/v11.16.0...v11.16.1) (2024-07-29)
+
+
+### Bug Fixes
+
+* allows resource property types to be added and used properly (DE… ([#1711](https://github.com/dasch-swiss/dsp-das/issues/1711)) ([a23eeab](https://github.com/dasch-swiss/dsp-das/commit/a23eeab730bb5a98aa39541c01a7ea9e5dce442f))
+* create resource issue (DEV-3913) ([#1705](https://github.com/dasch-swiss/dsp-das/issues/1705)) ([79cd6de](https://github.com/dasch-swiss/dsp-das/commit/79cd6def4a07e1cfda8eccaaced41f091c77c69b))
+* creating resource issue (DEV-3915)  ([#1708](https://github.com/dasch-swiss/dsp-das/issues/1708)) ([963d5fa](https://github.com/dasch-swiss/dsp-das/commit/963d5fab1395de81887db6c88adcb127fd1de3f1))
+* displays all data model properties when new resource is created … ([#1710](https://github.com/dasch-swiss/dsp-das/issues/1710)) ([e2d88e4](https://github.com/dasch-swiss/dsp-das/commit/e2d88e48480afd4673a3268d755942357de0dcce))
+* prevents from saving empty property values (DEV-3919) ([#1709](https://github.com/dasch-swiss/dsp-das/issues/1709)) ([dd30cff](https://github.com/dasch-swiss/dsp-das/commit/dd30cfff9bb94fa64c21ee467e5a6fd1d20b1fce))
+* removed decimal property default value (DEV-3923) ([#1712](https://github.com/dasch-swiss/dsp-das/issues/1712)) ([53f85ce](https://github.com/dasch-swiss/dsp-das/commit/53f85ce21601afa7a3cbb019ab5b2652a81d0c6e))
+* side dialog position (DEV-3914) ([#1707](https://github.com/dasch-swiss/dsp-das/issues/1707)) ([14a7e14](https://github.com/dasch-swiss/dsp-das/commit/14a7e14641c58a29b071a6e9fb7dbddf8183c6bc))
+
+## [11.16.0](https://github.com/dasch-swiss/dsp-das/compare/v11.15.0...v11.16.0) (2024-07-23)
+
+
+### Enhancements
+
+* recursive incoming links loading (DEV-3792) ([#1699](https://github.com/dasch-swiss/dsp-das/issues/1699)) ([58072ad](https://github.com/dasch-swiss/dsp-das/commit/58072adf5ec5f603418cc5cc23b4ecd0f815a0fa))
+
+
+### Bug Fixes
+
+* added localization service ([#1702](https://github.com/dasch-swiss/dsp-das/issues/1702)) ([b2d3df3](https://github.com/dasch-swiss/dsp-das/commit/b2d3df360ceff609b2577234a2ab2e212c851708))
+* adding new property boolean value (DEV-3833) ([#1700](https://github.com/dasch-swiss/dsp-das/issues/1700)) ([281212d](https://github.com/dasch-swiss/dsp-das/commit/281212d9ae28078d68a0430f589d8a00baa93232))
+* compound object page reset when loading a new resource  ([#1698](https://github.com/dasch-swiss/dsp-das/issues/1698)) ([8680542](https://github.com/dasch-swiss/dsp-das/commit/868054281cf952ab9c37e9b3b8d9c061ee37d8a9))
+* in seach, reload the selected resource after editing ([#1703](https://github.com/dasch-swiss/dsp-das/issues/1703)) ([3e92399](https://github.com/dasch-swiss/dsp-das/commit/3e92399399cc831d62857a1ed1e247bdd33b2e03))
+* projectRestrictedViewSettings selector (DEV-3888) ([#1696](https://github.com/dasch-swiss/dsp-das/issues/1696)) ([6ca419c](https://github.com/dasch-swiss/dsp-das/commit/6ca419ca5615d7fc4a9411bf44daddfda1d7cd1d))
+* resource property create dialog, resource info bar project data … ([#1701](https://github.com/dasch-swiss/dsp-das/issues/1701)) ([199e585](https://github.com/dasch-swiss/dsp-das/commit/199e585f0da33b7fbbca26b90b0c21766d36222a))
+
+
+### Maintenance
+
+* remove unused ([#1684](https://github.com/dasch-swiss/dsp-das/issues/1684)) ([b4932aa](https://github.com/dasch-swiss/dsp-das/commit/b4932aa0f5a394f70368dbf027e9ab4565644a37))
+
 ## [11.15.0](https://github.com/dasch-swiss/dsp-das/compare/v11.14.0...v11.15.0) (2024-07-12)
 
 
