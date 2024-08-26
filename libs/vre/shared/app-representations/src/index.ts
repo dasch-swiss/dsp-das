@@ -20,3 +20,4 @@ export * from './lib/upload/upload-file-response.interface';
 export * from './lib/upload/upload-file.service';
 export * from './lib/resource-fetcher.service';
 export * from './lib/video/video-more-button.component';
+export * from './lib/third-party-iiif/third-party-iiif.component';

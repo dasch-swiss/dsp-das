@@ -3,11 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   forwardRef,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Output,
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js';
