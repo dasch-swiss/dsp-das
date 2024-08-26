@@ -38,8 +38,8 @@
       matTooltipPosition="above"
       matTooltipClass="wide-tooltip"
       class="mat-caption"
-      [matTooltipDisabled]="isLockHovered"
-      >> {{propDef.id | split: '#':1}}
+      [matTooltipDisabled]="isLockHovered">
+      {{propDef.id | split: '#':1}}
     </span>
     <span class="fill-remaining-space center"></span>
     <!-- in case of ontology property: display corresponding resource classes -->
