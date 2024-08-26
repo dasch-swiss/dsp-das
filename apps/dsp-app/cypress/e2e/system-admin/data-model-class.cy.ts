@@ -103,7 +103,7 @@ describe('Data Model Class', () => {
     cy.get('[data-cy=comment-textarea]').type(textProperty.comment);
     cy.get('[data-cy=submit-button]').click();
 
-    cy.wait('@createPropertyRequest');
+    cy.wait('@resourceRequest');
     cy.get('[data-cy=property-label]').should('be.visible').should('include.text', textProperty.label);
   });
 });
