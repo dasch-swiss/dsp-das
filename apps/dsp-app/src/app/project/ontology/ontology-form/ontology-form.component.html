@@ -2,20 +2,15 @@
   [title]="ontologyName ? ontologyName : 'Create new ontology'"
   [subtitle]="ontologyName ? 'Customize Data model' : ''">
 </app-dialog-header>
-<form [formGroup]="ontologyForm" (ngSubmit)="submitData()" class="form">
-  <form [formGroup]="ontologyForm" class="form-content user-form">
+<form [formGroup]="ontologyForm" (ngSubmit)="submitData()">
+  <form [formGroup]="ontologyForm" class="form-content">
     <app-common-input
-      class="large-field"
       [control]="ontologyForm.controls.name"
       [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
       [label]="'Set a unique name'"
       data-cy="name-input" />
-    <app-common-input
-      class="large-field"
-      [control]="ontologyForm.controls.label"
-      [label]="'Label'"
-      data-cy="label-input" />
-    <mat-form-field class="large-field ontology-comment">
+    <app-common-input [control]="ontologyForm.controls.label" [label]="'Label'" data-cy="label-input" />
+    <mat-form-field class="large-field">
       <mat-label>Comment</mat-label>
       <textarea
         matInput
