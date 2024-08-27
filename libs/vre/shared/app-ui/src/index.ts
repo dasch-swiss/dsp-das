@@ -13,3 +13,5 @@ export * from './lib/ck-editor/ck-editor';
 export * from './lib/ck-editor/ck-editor.component';
 export * from './lib/ck-editor/ck-editor-control.component';
 export * from './lib/invalid-control-scroll.directive';
+export * from './lib/chip-list-input.component';
+export * from './lib/common-input.component';

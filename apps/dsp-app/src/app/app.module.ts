@@ -78,11 +78,9 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { ChipListInputComponent } from './project/chip-list-input/chip-list-input.component';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
-import { CommonInputComponent } from './project/common-input/common-input.component';
 import { CreateProjectFormPageComponent } from './project/create-project-form-page/create-project-form-page.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
@@ -171,10 +169,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CardinalityComponent,
     CardinalityChangeDialogComponent,
     CenteredLayoutComponent,
-    ChipListInputComponent,
     CollaborationComponent,
     ColorPickerComponent,
-    CommonInputComponent,
     ComparisonComponent,
     CookiePolicyComponent,
     CreateUserDialogComponent,
