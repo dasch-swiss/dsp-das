@@ -9,10 +9,9 @@ import { FormBuilder, Validators } from '@angular/forms';
         <mat-label>Label</mat-label>
         <input matInput [formControl]="regionForm.controls.label" />
       </mat-form-field>
-      <mat-form-field class="large-field">
-        <mat-label>Comment</mat-label>
-        <textarea matInput rows="7" [formControl]="regionForm.controls.comment"></textarea>
-      </mat-form-field>
+
+      <app-ck-editor-control [control]="regionForm.controls.comment" [label]="'Comment'" />
+
       <mat-form-field class="large-field without-border color-field">
         <mat-label class="color-label">Color *</mat-label>
         <app-color-picker #colorInput [formControl]="regionForm.controls.color" class="value"></app-color-picker>

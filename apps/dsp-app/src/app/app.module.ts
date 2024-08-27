@@ -26,8 +26,8 @@ import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   CreateListInfoPageComponent,
-  ReusableListInfoFormComponent,
   ListComponents,
+  ReusableListInfoFormComponent,
 } from '@dasch-swiss/vre/shared/app-list';
 import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -40,6 +40,7 @@ import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-for
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   HumanReadableErrorPipe,
@@ -140,7 +141,6 @@ import { ResourceLinkFormComponent } from './workspace/resource/resource-link-fo
 import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
-import { ThirdPartyIiifComponent } from './workspace/resource/values/third-party-iiif/third-party-iiif.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
@@ -158,6 +158,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
+    ...SegmentSupportComponents,
     ...ResourcePageComponents,
     ...RepresentationsComponents,
     ...CommonToMoveComponents,
@@ -236,7 +237,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     StringifyStringLiteralPipe,
     SystemComponent,
     TextValueHtmlLinkDirective,
-    ThirdPartyIiifComponent,
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
