@@ -19,7 +19,7 @@ import { OntologyFormComponent } from './project/ontology/ontology-form/ontology
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { ProjectComponent } from './project/project.component';
-import { SettingsComponent } from './project/settings/settings.component';
+import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';
@@ -95,7 +95,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.settings,
-        component: SettingsComponent,
+        component: SettingsPageComponent,
         canActivate: [AuthGuard],
         children: [
           {

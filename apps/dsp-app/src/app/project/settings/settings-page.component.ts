@@ -30,7 +30,7 @@ import { MenuItem } from '../../main/declarations/menu-item';
     </mat-tab-nav-panel>
   `,
 })
-export class SettingsComponent {
+export class SettingsPageComponent {
   navigation: MenuItem[] = [
     {
       label: 'Project Description',

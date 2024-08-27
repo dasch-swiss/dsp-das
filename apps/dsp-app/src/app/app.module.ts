@@ -106,7 +106,7 @@ import { OntologyClassItemComponent } from './project/ontology-classes/ontology-
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { ProjectComponent } from './project/project.component';
 import { ReusableProjectFormComponent } from './project/reusable-project-form/reusable-project-form.component';
-import { SettingsComponent } from './project/settings/settings.component';
+import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
@@ -237,7 +237,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     OntologyClassesComponent,
     OntologyClassItemComponent,
     OntologyClassInstanceComponent,
-    SettingsComponent,
+    SettingsPageComponent,
     OverviewComponent,
     ProjectTileComponent,
     DataModelsComponent,
