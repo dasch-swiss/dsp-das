@@ -123,14 +123,16 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it.skip('place', () => {
+    it('place', () => {
       const initialValue = 'Basel';
       const editedValue = 'Allschwil';
 
       const enterAutocomplete = (value: string) => {
-        cy.get('[data-cy=geoname-autocomplete]').type(value).click();
-        cy.wait(2000);
-        cy.get('[data-cy=geoname-autocomplete]').type('{downarrow}{enter}');
+        cy.get('[data-cy=geoname-autocomplete]')
+          .type(value)
+          .click({ force: true })
+          .wait(1000)
+          .type('{downarrow}{enter}');
       };
 
       ResourceRequests.resourceRequest(ClassPropertyPayloads.place(finalLastModificationDate));
@@ -296,7 +298,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it.skip('timestamp BUGS', () => {
+    it('timestamp', () => {
       ResourceRequests.resourceRequest(ClassPropertyPayloads.timestamp(finalLastModificationDate));
       po.visitAddPage();
 
