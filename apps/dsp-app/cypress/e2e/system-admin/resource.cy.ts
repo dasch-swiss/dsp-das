@@ -239,7 +239,7 @@ describe('Resource', () => {
         });
     });
 
-    xit('link BUGS BECAUSE OF DISPLAY EDIT 2 TEMPLINK SERVICE', () => {
+    it('link', () => {
       // create John Smith person
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
@@ -265,9 +265,9 @@ describe('Resource', () => {
 
           // create
           po.addInitialLabel();
-          input.type('John').click();
+          input.type('John').click({ force: true });
           cy.wait(2000);
-          input.type('{downarrow}{downarrow}{enter}');
+          input.type('{downarrow}{downarrow}{downarrow}{enter}');
           po.clickOnSubmit();
 
           // edit
