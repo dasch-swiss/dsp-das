@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ListGetResponseADM } from '../../../../../libs/vre/open-api/src';
 import { ClassDefinitionPayloads } from '../../fixtures/class-definition-payloads';
 import { ClassPropertyPayloads } from '../../fixtures/property-definition-payloads';
-import { ResponseUtil, ResourceRequests } from '../../fixtures/requests';
+import { ResourceRequests, ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
 describe('Resource', () => {
@@ -318,7 +318,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    xit('time sequence', () => {
+    it('time sequence', () => {
       ResourceRequests.resourceRequest(ClassPropertyPayloads.timesequence(finalLastModificationDate));
       po.visitAddPage();
       const start = () => cy.get('[data-cy=start-input] input');
