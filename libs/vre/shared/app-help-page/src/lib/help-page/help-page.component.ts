@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConnectionToken, DspConfig } from '@dasch-swiss/vre/shared/app-config';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../../../../apps/dsp-app/src/environments/environment';
 import { GridItem } from '../grid/grid.component';
 
 @Component({
   selector: 'app-help',
-  templateUrl: './help.component.html',
-  styleUrls: ['./help.component.scss'],
+  templateUrl: './help-page.component.html',
+  styleUrls: ['./help-page.component.scss'],
 })
-export class HelpComponent implements OnInit {
+export class HelpPageComponent implements OnInit {
   loading = true;
 
   dsp: DspConfig;

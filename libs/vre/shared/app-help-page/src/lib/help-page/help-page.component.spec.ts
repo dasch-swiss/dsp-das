@@ -7,19 +7,19 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
-import { TestConfig } from '@dsp-app/src/test.config';
+import { TestConfig } from 'apps/dsp-app/src/test.config';
+import { DialogComponent } from 'libs/vre/shared/app-common-to-move/src';
+import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from 'libs/vre/shared/app-config/src';
 import { MockProvider } from 'ng-mocks';
+import { StatusComponent } from '../../../../../../../apps/dsp-app/src/app/main/status/status.component';
 import { FooterComponent } from '../footer/footer.component';
 import { GridComponent } from '../grid/grid.component';
-import { StatusComponent } from '../status/status.component';
-import { HelpComponent } from './help.component';
+import { HelpPageComponent } from './help-page.component';
 
 describe('HelpComponent', () => {
-  let component: HelpComponent;
-  let fixture: ComponentFixture<HelpComponent>;
+  let component: HelpPageComponent;
+  let fixture: ComponentFixture<HelpPageComponent>;
 
   const appInitSpy = {
     dspConfig: {
@@ -30,7 +30,7 @@ describe('HelpComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HelpComponent, FooterComponent, GridComponent, DialogComponent, StatusComponent],
+      declarations: [HelpPageComponent, FooterComponent, GridComponent, DialogComponent, StatusComponent],
       imports: [
         BrowserAnimationsModule,
         MatButtonModule,
@@ -59,7 +59,7 @@ describe('HelpComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HelpComponent);
+    fixture = TestBed.createComponent(HelpPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

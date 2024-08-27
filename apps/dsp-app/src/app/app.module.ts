@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { HelpPageComponents } from '@dasch-swiss/app-help-page';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
@@ -65,10 +66,7 @@ import { SortButtonComponent } from './main/action/sort-button/sort-button.compo
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
-import { FooterComponent } from './main/footer/footer.component';
-import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
-import { HelpComponent } from './main/help/help.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
@@ -164,6 +162,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ListComponents,
     ...UiComponents,
     ...MathJaxComponents,
+    ...HelpPageComponents,
     AccountComponent,
     AddUserComponent,
     AdminImageDirective,
@@ -187,14 +186,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     EditResourceClassDialogComponent,
     EditUserPageComponent,
     ExpertSearchComponent,
-    FooterComponent,
     FormattedBooleanPipe,
     FulltextSearchComponent,
     ResourceClassInfoElementComponent,
     AddPropertyMenuComponent,
-    GridComponent,
     HeaderComponent,
-    HelpComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
     JDNDatepickerDirective,

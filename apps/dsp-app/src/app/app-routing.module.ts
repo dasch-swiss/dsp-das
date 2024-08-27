@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HelpPageComponent } from '@dasch-swiss/app-help-page';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { CreateListInfoPageComponent, ListComponent } from '@dasch-swiss/vre/shared/app-list';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
@@ -7,7 +8,6 @@ import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resourc
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
-import { HelpComponent } from './main/help/help.component';
 import { StatusComponent } from './main/status/status.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { CreateProjectFormPageComponent } from './project/create-project-form-page/create-project-form-page.component';
@@ -35,7 +35,7 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.help,
-    component: HelpComponent,
+    component: HelpPageComponent,
   },
   {
     path: `${RouteConstants.createNewProjectRelative}`,

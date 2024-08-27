@@ -59,6 +59,9 @@
       "@dasch-swiss/vre/shared/app-error-handler": [
         "libs/vre/shared/app-error-handler/src/index.ts"
       ],
+      "@dasch-swiss/app-help-page": [
+        "libs/vre/shared/app-help-page/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-helper-services": [
         "libs/vre/shared/app-helper-services/src/index.ts"
       ],
