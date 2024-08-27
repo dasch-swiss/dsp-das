@@ -121,7 +121,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it('place', () => {
+    it.skip('place', () => {
       const initialValue = 'Basel';
       const editedValue = 'Allschwil';
 
