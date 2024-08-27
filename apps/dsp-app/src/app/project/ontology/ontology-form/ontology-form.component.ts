@@ -141,7 +141,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
     ontologyData.comment = this.ontologyForm.controls.comment.value;
 
-    this._dspApiConnection.v2.onto
+    const update = this._dspApiConnection.v2.onto
       .updateOntology(ontologyData)
       .pipe(
         take(1),
@@ -153,11 +153,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       )
       .subscribe((response: OntologyMetadata) => {
         this.dialogRef.close(true);
-      }),
-      (error: ApiResponseError) => {
-        // in case of an error... e.g. because the ontolog iri is not unique, rebuild the form including the error message
-        this.loading = false;
-      };
+      });
   }
 
   private _createOntology() {
