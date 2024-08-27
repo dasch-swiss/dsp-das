@@ -53,6 +53,10 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import {
+  OntologyFormComponent,
+  OntologyFormProps,
+} from '@dsp-app/src/app/project/ontology/ontology-form/ontology-form.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -370,38 +374,24 @@ export class OntologyComponent extends ProjectBase implements OnInit, OnDestroy 
     ]);
   }
 
-  /**
-   * opens ontology form to create or edit ontology info
-   * @param mode
-   * @param [iri] only in edit mode
-   */
-  openOntologyForm(mode: 'createOntology' | 'editOntology', iri?: string): void {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    const title = iri ? ontology.label : 'Data model';
-
-    const uuid = ProjectService.IriToUuid(this.projectUuid);
-    const existingOntologyNames = this._store.selectSnapshot(OntologiesSelectors.currentProjectExistingOntologyNames);
-
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode,
-        title,
-        id: iri,
-        project: uuid,
-        existing: existingOntologyNames,
-      },
-    };
-
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.initOntologiesList();
-    });
+  openOntologyForm(iri = ''): void {
+    this._dialog
+      .open<OntologyFormComponent, OntologyFormProps, true>(
+        OntologyFormComponent,
+        DspDialogConfig.dialogDrawerConfig(
+          {
+            ontologyIri: iri,
+            projectIri: this.projectIri,
+          },
+          true
+        )
+      )
+      .afterClosed()
+      .subscribe(event => {
+        if (event === true) {
+          this.initOntologiesList();
+        }
+      });
   }
 
   createResourceClass(resClassInfo: DefaultClass): void {

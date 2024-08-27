@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
-import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import {
+  OntologyFormComponent,
+  OntologyFormProps,
+} from '@dsp-app/src/app/project/ontology/ontology-form/ontology-form.component';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,6 +46,7 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
   @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 
   constructor(
+    private _dialog: MatDialog,
     protected _route: ActivatedRoute,
     protected _router: Router,
     protected _appInit: AppConfigService,
@@ -83,6 +89,18 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
       {
         relativeTo: this._route.parent,
       }
+    );
+  }
+  createNewOntology() {
+    this._dialog.open<OntologyFormComponent, OntologyFormProps, null>(
+      OntologyFormComponent,
+      DspDialogConfig.dialogDrawerConfig(
+        {
+          ontologyIri: null,
+          projectIri: this.projectIri,
+        },
+        true
+      )
     );
   }
 }
