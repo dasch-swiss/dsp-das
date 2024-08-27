@@ -13,9 +13,9 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
+import { IMask } from 'angular-imask';
 import { Observable } from 'rxjs';
 import { switchMap, take, takeWhile } from 'rxjs/operators';
-import { InputMasks } from '../../main/directive/input-masks';
 
 enum ImageSettingsEnum {
   Off = 'Off',
@@ -32,7 +32,6 @@ enum ImageSettingsEnum {
 export class ImageSettingsComponent implements OnInit {
   readonly minWidth = 128;
   readonly maxWidth = 1024;
-  readonly inputMasks = InputMasks;
   readonly imageSettingsEnum = ImageSettingsEnum;
 
   currentSettings: ProjectRestrictedViewSettings | RestrictedViewResponse;
@@ -40,6 +39,15 @@ export class ImageSettingsComponent implements OnInit {
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
   percentage: string = '99';
   fixedWidth: string;
+
+  minMaxInputMask(min: number, max: number) {
+    return {
+      mask: IMask.MaskedNumber,
+      min,
+      max,
+      autofix: true,
+    };
+  }
 
   get hasChanges(): boolean {
     return JSON.stringify(this.currentSettings) !== JSON.stringify(this.getRequest());

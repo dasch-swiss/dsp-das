@@ -23,23 +23,23 @@
         <div class="mb-2 mt-2">
           <mat-form-field>
             <input
-              [imask]="inputMasks.minMaxInputMask(1, 99)"
+              [imask]="minMaxInputMask(1, 99)"
               (ngModelChange)="onPercentageInputChange()"
               matInput
               [(ngModel)]="percentage" />
-            <mat-label>{{ 'form.project.imageSettings.percentage' | translate }} </mat-label>
+            <mat-label>{{ 'form.project.imageSettings.percentage' | translate }}</mat-label>
           </mat-form-field>
           <mat-label> %</mat-label>
         </div>
         <div class="mb-2">
           <mat-form-field [floatLabel]="'always'" class="large-field">
             <input
-              [imask]="inputMasks.minMaxInputMask(minWidth, maxWidth)"
+              [imask]="minMaxInputMask(minWidth, maxWidth)"
               (ngModelChange)="onFixedWidthInputChange()"
               matInput
               [(ngModel)]="fixedWidth" />
             <mat-label>
-              {{ 'form.project.imageSettings.absoluteWidth' | translate: {min: minWidth, max: maxWidth} }}
+              {{ 'form.project.imageSettings.absoluteWidth' | translate: { min: minWidth, max: maxWidth } }}
             </mat-label>
           </mat-form-field>
           <mat-label class="nowrap"> x {{ fixedWidth }} Px</mat-label>
@@ -56,7 +56,7 @@
         type="submit"
         color="primary"
         [disabled]="!hasChanges
-          || (imageSettings === imageSettingsEnum.RestrictImageSize 
+          || (imageSettings === imageSettingsEnum.RestrictImageSize
             && ((isPercentageSize && ratio <= 0) || (!isPercentageSize && !fixedWidth)))"
         (click)="onSubmit()"
         appLoadingButton
