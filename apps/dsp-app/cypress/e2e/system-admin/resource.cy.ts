@@ -45,8 +45,6 @@ describe('Resource', () => {
       po.delete();
     });
 
-    xit('rich text BUGS');
-
     it('number', () => {
       const intInput = () => cy.get('[data-cy=int-input]');
       const initialValue = faker.number.int({ min: 0, max: 100 });
