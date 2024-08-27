@@ -65,7 +65,6 @@ import { SortButtonComponent } from './main/action/sort-button/sort-button.compo
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
-import { InvalidControlScrollDirective } from './main/directive/invalid-control-scroll.directive';
 import { FooterComponent } from './main/footer/footer.component';
 import { GridComponent } from './main/grid/grid.component';
 import { HeaderComponent } from './main/header/header.component';
@@ -198,7 +197,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HelpComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
-    InvalidControlScrollDirective,
     JDNDatepickerDirective,
     KnoraDatePipe,
     LoadingButtonDirective,
