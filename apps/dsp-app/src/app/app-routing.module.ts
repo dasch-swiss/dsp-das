@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
-import { CreateListInfoPageComponent, ListComponent } from '@dasch-swiss/vre/shared/app-list';
+import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/shared/app-list';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
@@ -90,7 +90,7 @@ const routes: Routes = [
       },
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
-        component: ListComponent,
+        component: ListPageComponent,
         canActivate: [AuthGuard],
       },
       {

@@ -24,11 +24,11 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  templateUrl: './list-page.component.html',
+  styleUrls: ['./list-page.component.scss'],
   providers: [ProjectBaseService],
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListPageComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   disableContent = false;
