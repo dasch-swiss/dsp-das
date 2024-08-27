@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HelpPageComponent } from '@dasch-swiss/app-help-page';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { CreateListInfoPageComponent, ListComponent } from '@dasch-swiss/vre/shared/app-list';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';

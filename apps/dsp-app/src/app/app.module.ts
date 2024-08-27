@@ -8,7 +8,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { HelpPageComponents } from '@dasch-swiss/app-help-page';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
@@ -24,6 +23,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   CreateListInfoPageComponent,
@@ -49,6 +49,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import { KnoraDatePipe } from '@dsp-app/src/app/main/pipes/formatting/knoradate.pipe';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -69,8 +70,6 @@ import { DisableContextMenuDirective } from './main/directive/disable-context-me
 import { HeaderComponent } from './main/header/header.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
-import { FormattedBooleanPipe } from './main/pipes/formatting/formatted-boolean.pipe';
-import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
 import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
 import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';
@@ -186,7 +185,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     EditResourceClassDialogComponent,
     EditUserPageComponent,
     ExpertSearchComponent,
-    FormattedBooleanPipe,
     FulltextSearchComponent,
     ResourceClassInfoElementComponent,
     AddPropertyMenuComponent,
@@ -194,7 +192,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ImageDisplayRatioComponent,
     IntermediateComponent,
     JDNDatepickerDirective,
-    KnoraDatePipe,
     LoadingButtonDirective,
     LinkifyPipe,
     CreateListInfoPageComponent,
@@ -202,6 +199,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListViewComponent,
     LoginFormComponent,
     MembershipComponent,
+    KnoraDatePipe,
     OntologyComponent,
     OntologyFormComponent,
     PasswordFormComponent,
