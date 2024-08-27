@@ -8,7 +8,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -21,7 +21,6 @@ import {
   ResourceClassDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
-import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import {
   DefaultClass,
@@ -53,10 +52,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-state';
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
-import {
-  OntologyFormComponent,
-  OntologyFormProps,
-} from '@dsp-app/src/app/project/ontology/ontology-form/ontology-form.component';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -69,6 +64,8 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from './edit-resource-class-dialog/edit-resource-class-dialog.component';
+import { OntologyFormComponent } from './ontology-form/ontology-form.component';
+import { OntologyFormProps } from './ontology-form/ontology-form.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

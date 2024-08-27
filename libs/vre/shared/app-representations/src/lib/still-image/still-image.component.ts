@@ -31,7 +31,6 @@ import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil } from 'rxjs/operators';

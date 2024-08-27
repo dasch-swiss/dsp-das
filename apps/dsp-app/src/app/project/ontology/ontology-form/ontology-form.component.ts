@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
@@ -23,22 +23,11 @@ import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
 import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
-
-export interface OntologyFormProps {
-  projectIri: string;
-  ontologyIri?: string;
-}
-
-export type OntologyForm = FormGroup<{
-  name: FormControl<string>;
-  label: FormControl<string>;
-  comment: FormControl<string>;
-}>;
+import { OntologyForm, OntologyFormProps } from './ontology-form.type';
 
 @Component({
   selector: 'app-ontology-form',
   templateUrl: './ontology-form.component.html',
-  styleUrls: ['./ontology-form.component.scss'],
 })
 export class OntologyFormComponent implements OnInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();

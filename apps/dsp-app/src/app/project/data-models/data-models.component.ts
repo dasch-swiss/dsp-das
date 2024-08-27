@@ -6,13 +6,11 @@ import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import {
-  OntologyFormComponent,
-  OntologyFormProps,
-} from '@dsp-app/src/app/project/ontology/ontology-form/ontology-form.component';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OntologyFormComponent } from '../ontology/ontology-form/ontology-form.component';
+import { OntologyFormProps } from '../ontology/ontology-form/ontology-form.type';
 import { ProjectBase } from '../project-base';
 
 @Component({
