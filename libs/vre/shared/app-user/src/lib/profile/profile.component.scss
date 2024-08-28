@@ -1,4 +1,4 @@
-@use "../../../styles/responsive" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
 
 // tablet and desktop
 @media (min-width: map-get($grid-breakpoints, phone)) {
@@ -72,17 +72,21 @@
 
     .user-profile-headline {
       width: 50%;
+
       h2.mat-headline-6 {
         margin: -3px 0 -3px 0;
         font-size: 1em;
       }
+
       h3.subtitle {
         font-size: 0.8em;
         margin: 0;
       }
+
       ul.user-profile-lang {
         margin: 0;
         padding-inline-start: 0 !important;
+
         li {
           list-style-type: none;
           font-weight: bold;
@@ -102,9 +106,11 @@
     .user-profile-status {
       width: 25%;
       display: flex;
+
       .fill-in-space {
         width: 50%;
       }
+
       .status {
         width: 25%;
         height: 30px;
@@ -115,6 +121,7 @@
         height: 30px;
         padding: 0;
         min-width: 48px;
+
         .mat-icon {
           vertical-align: top;
         }

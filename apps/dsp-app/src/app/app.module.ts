@@ -58,7 +58,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
-import { DataModelsComponent } from '@dsp-app/src/app/project/ontology/data-models/data-models.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -92,6 +91,7 @@ import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-di
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
+import { DataModelsComponent } from './project/ontology/data-models/data-models.component';
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
