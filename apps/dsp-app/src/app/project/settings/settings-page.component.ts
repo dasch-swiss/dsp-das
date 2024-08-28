@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { MenuItem } from '../../main/declarations/menu-item';
+import { MenuItem } from '@dasch-swiss/vre/shared/app-user';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
