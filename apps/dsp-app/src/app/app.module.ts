@@ -40,6 +40,7 @@ import {
 import {
   AddUserComponent,
   CollaborationComponent,
+  DescriptionComponent,
   ProjectComponent,
   ProjectComponents,
   SelectGroupComponent,
@@ -56,7 +57,8 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
-import { apiConnectionTokenProvider, UserComponents, ProjectTileComponent } from '@dasch-swiss/vre/shared/app-user';
+import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
+import { DataModelsComponent } from '@dsp-app/src/app/project/ontology/data-models/data-models.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -86,8 +88,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { DataModelsComponent } from './project/data-models/data-models.component';
-import { DescriptionComponent } from './project/description/description.component';
 import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';

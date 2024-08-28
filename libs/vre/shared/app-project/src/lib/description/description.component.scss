@@ -1,6 +1,6 @@
-@use "../../../styles/config" as *;
-@use "../../../styles/responsive" as *;
-@use "../../../styles/theme";
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/theme";
 
 section {
   margin: 24px 0px;
@@ -48,9 +48,11 @@ mat-form-field.large-field {
     .fill-remaining-space-action {
       flex: 1 1 auto;
     }
+
     .app-toolbar-action-status {
       padding: 12px 0 0 16px;
     }
+
     .app-toolbar-action-edit {
       padding-right: 16px;
     }

@@ -7,3 +7,4 @@ export * from './lib/project/project.component';
 export * from './lib/collaboration/collaboration.component';
 export * from './lib/collaboration/add-user/add-user.component';
 export * from './lib/collaboration/select-group/select-group.component';
+export * from './lib/description/description.component';
