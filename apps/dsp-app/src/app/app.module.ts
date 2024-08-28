@@ -56,8 +56,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
-import { UserComponents } from '@dasch-swiss/vre/shared/app-user';
-import { KnoraDatePipe } from '@dsp-app/src/app/main/pipes/formatting/knoradate.pipe';
+import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -66,7 +65,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { apiConnectionTokenProvider } from '../../../../libs/vre/shared/app-user/src/lib/account/api-connection-token.provider';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
@@ -79,6 +77,7 @@ import { DisableContextMenuDirective } from './main/directive/disable-context-me
 import { HeaderComponent } from './main/header/header.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
+import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
 import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
 import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';

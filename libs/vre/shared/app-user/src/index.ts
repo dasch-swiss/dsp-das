@@ -1,6 +1,7 @@
 export * from './user.components';
 export * from './lib/user.component';
 export * from './lib/account/account.component';
+export * from './lib/account/api-connection-token.provider';
 export * from './lib/create-user-page/create-user-dialog.component';
 export * from './lib/edit-user-page/edit-user-page.component';
 export * from './lib/membership/membership.component';
