@@ -3,15 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/shared/app-list';
-import { CreateProjectFormPageComponent, EditProjectFormPageComponent } from '@dasch-swiss/vre/shared/app-project';
+import {
+  CreateProjectFormPageComponent,
+  EditProjectFormPageComponent,
+  ProjectComponent,
+  CollaborationComponent,
+} from '@dasch-swiss/vre/shared/app-project';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { ProjectComponent } from '../../../../libs/vre/shared/app-project/src/lib/project/project.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { StatusComponent } from './main/status/status.component';
-import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';

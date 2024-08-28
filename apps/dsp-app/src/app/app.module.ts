@@ -37,6 +37,12 @@ import {
   CenteredLayoutComponent,
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import {
+  ProjectComponent,
+  AddUserComponent,
+  CollaborationComponent,
+  SelectGroupComponent,
+} from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
@@ -58,7 +64,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ProjectComponent } from '../../../../libs/vre/shared/app-project/src/lib/project/project.component';
 import { ProjectComponents } from '../../../../libs/vre/shared/app-project/src/project.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -80,9 +85,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
-import { CollaborationComponent } from './project/collaboration/collaboration.component';
-import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
 import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';

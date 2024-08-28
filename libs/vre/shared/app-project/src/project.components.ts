@@ -1,3 +1,6 @@
+import { AddUserComponent } from './lib/collaboration/add-user/add-user.component';
+import { CollaborationComponent } from './lib/collaboration/collaboration.component';
+import { SelectGroupComponent } from './lib/collaboration/select-group/select-group.component';
 import { CreateProjectFormPageComponent } from './lib/create-project-form-page.component';
 import { EditProjectFormPageComponent } from './lib/edit-project-form-page.component';
 import { ProjectComponent } from './lib/project/project.component';
@@ -8,4 +11,7 @@ export const ProjectComponents = [
   EditProjectFormPageComponent,
   ReusableProjectFormComponent,
   ProjectComponent,
+  CollaborationComponent,
+  AddUserComponent,
+  SelectGroupComponent,
 ];
