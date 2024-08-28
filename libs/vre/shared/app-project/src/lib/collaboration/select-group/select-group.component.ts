@@ -11,10 +11,10 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { ReadGroup } from '@dasch-swiss/dsp-js';
 import { IKeyValuePairs, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AutocompleteItem } from '@dasch-swiss/vre/shared/app-user';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { AutocompleteItem } from '../../../../../app-user/src/lib/autocomplete-item.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

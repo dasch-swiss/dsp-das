@@ -18,11 +18,11 @@ import {
   Events,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
 import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
+import { ProjectBase } from '../project-base';
 
 type AvailableRoute =
   | typeof RouteConstants.project

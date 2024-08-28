@@ -5,11 +5,10 @@ import { ApiResponseData, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { CreateUserDialogComponent } from '@dasch-swiss/vre/shared/app-user';
+import { AutocompleteItem, CreateUserDialogComponent } from '@dasch-swiss/vre/shared/app-user';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, take, takeUntil } from 'rxjs/operators';
-import { AutocompleteItem } from '../../../../../app-user/src/lib/autocomplete-item.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

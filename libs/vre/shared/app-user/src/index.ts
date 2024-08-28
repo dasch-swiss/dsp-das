@@ -12,3 +12,4 @@ export * from './lib/user-form/password-form/password-form.component';
 export * from './lib/user-menu/user-menu.component';
 export * from './lib/menu-item';
 export * from './lib/existing-names.validator';
+export * from './lib/autocomplete-item.interface';

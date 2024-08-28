@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
 import {
   IKeyValuePairs,
   LoadProjectMembersAction,
@@ -13,6 +12,7 @@ import {
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { ProjectBase } from '../project-base';
 import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
