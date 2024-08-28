@@ -6,10 +6,10 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/shared/app-user';
-import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, take, takeUntil } from 'rxjs/operators';
+import { AutocompleteItem } from '../../../../../app-user/src/lib/autocomplete-item.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -23,10 +23,10 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/shared/app-state';
+import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
-import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 
 export interface NewOntology {
   projectIri: string;

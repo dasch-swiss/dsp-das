@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/shared/app-api';
-import { CustomRegex, atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
+import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';
 import { Store } from '@ngxs/store';
-import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { ResourceClassForm } from './resource-class-form.type';
 
 @Component({
