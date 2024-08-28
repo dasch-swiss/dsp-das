@@ -38,9 +38,10 @@ import {
   LoadingButtonDirective,
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import {
-  ProjectComponent,
   AddUserComponent,
   CollaborationComponent,
+  ProjectComponent,
+  ProjectComponents,
   SelectGroupComponent,
 } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
@@ -55,6 +56,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import { UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { KnoraDatePipe } from '@dsp-app/src/app/main/pipes/formatting/knoradate.pipe';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -64,7 +66,6 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ProjectComponents } from '../../../../libs/vre/shared/app-project/src/project.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
@@ -115,16 +116,6 @@ import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersListComponent } from './system/users/users-list/users-list.component';
 import { UsersComponent } from './system/users/users.component';
-import { AccountComponent } from './user/account/account.component';
-import { CreateUserDialogComponent } from './user/create-user-page/create-user-dialog.component';
-import { EditUserPageComponent } from './user/edit-user-page/edit-user-page.component';
-import { MembershipComponent } from './user/membership/membership.component';
-import { OverviewComponent } from './user/overview/overview.component';
-import { ProfileComponent } from './user/profile/profile.component';
-import { PasswordFormComponent } from './user/user-form/password-form/password-form.component';
-import { UserFormComponent } from './user/user-form/user-form.component';
-import { UserMenuComponent } from './user/user-menu/user-menu.component';
-import { UserComponent } from './user/user.component';
 import { ComparisonComponent } from './workspace/comparison/comparison.component';
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
@@ -161,7 +152,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...MathJaxComponents,
     ...HelpPageComponents,
     ...ProjectComponents,
-    AccountComponent,
+    ...UserComponents,
     AddUserComponent,
     AdminImageDirective,
     AdvancedSearchContainerComponent,
@@ -174,13 +165,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ColorPickerComponent,
     ComparisonComponent,
     CookiePolicyComponent,
-    CreateUserDialogComponent,
     CreateResourceClassDialogComponent,
     DateValueHandlerComponent,
     DisableContextMenuDirective,
     DragDropDirective,
     EditResourceClassDialogComponent,
-    EditUserPageComponent,
     ExpertSearchComponent,
     FulltextSearchComponent,
     ResourceClassInfoElementComponent,
@@ -195,12 +184,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ReusableListInfoFormComponent,
     ListViewComponent,
     LoginFormComponent,
-    MembershipComponent,
     KnoraDatePipe,
     OntologyComponent,
     OntologyFormComponent,
-    PasswordFormComponent,
-    ProfileComponent,
     ProjectComponent,
     ImageSettingsComponent,
     PermissionInfoComponent,
@@ -226,9 +212,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
-    UserComponent,
-    UserFormComponent,
-    UserMenuComponent,
     UsersComponent,
     UsersListComponent,
     HintComponent,
@@ -236,7 +219,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     OntologyClassItemComponent,
     OntologyClassInstanceComponent,
     SettingsPageComponent,
-    OverviewComponent,
     ProjectTileComponent,
     DataModelsComponent,
     IsFalsyPipe,
