@@ -56,7 +56,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
-import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
+import { apiConnectionTokenProvider, UserComponents, ProjectTileComponent } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';
@@ -108,7 +108,6 @@ import { OntologyClassInstanceComponent } from './project/ontology-classes/ontol
 import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { SettingsPageComponent } from './project/settings/settings-page.component';
-import { ProjectTileComponent } from './system/project-tile/project-tile.component';
 import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';

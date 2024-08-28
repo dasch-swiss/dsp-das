@@ -13,3 +13,4 @@ export * from './lib/user-menu/user-menu.component';
 export * from './lib/menu-item';
 export * from './lib/existing-names.validator';
 export * from './lib/autocomplete-item.interface';
+export * from './lib/project-tile/project-tile.component';
