@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConnectionToken, DspConfig } from '@dasch-swiss/vre/shared/app-config';
-import { environment } from '@dsp-app/src/environments/environment';
+import packageJson from '../../../../../../../package.json';
 import { GridItem } from '../grid/grid.component';
 
 @Component({
@@ -15,7 +15,7 @@ export class HelpPageComponent implements OnInit {
   dsp: DspConfig;
   releaseNotesUrl: string;
 
-  appVersion: string = environment.version;
+  appVersion: string = packageJson.version;
   apiStatus: HealthResponse;
   apiVersion: VersionResponse;
 
