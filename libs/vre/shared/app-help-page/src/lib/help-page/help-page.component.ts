@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ApiResponseData, HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConnectionToken, DspConfig } from '@dasch-swiss/vre/shared/app-config';
-import { environment } from '../../../../../../../apps/dsp-app/src/environments/environment';
+import { environment } from '@dsp-app/src/environments/environment';
 import { GridItem } from '../grid/grid.component';
 
 @Component({
