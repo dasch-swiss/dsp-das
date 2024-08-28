@@ -9,7 +9,7 @@ import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/shared
 import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';
-import { ProjectForm } from '../reusable-project-form/project-form.type';
+import { ProjectForm } from './reusable-project-form/project-form.type';
 
 @Component({
   selector: 'app-edit-project-form-page',

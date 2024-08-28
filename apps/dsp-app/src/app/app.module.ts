@@ -58,6 +58,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProjectComponents } from '../../../../libs/vre/shared/app-project/src/project.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
@@ -81,10 +82,8 @@ import { MaterialModule } from './material-module';
 import { AddUserComponent } from './project/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './project/collaboration/collaboration.component';
 import { SelectGroupComponent } from './project/collaboration/select-group/select-group.component';
-import { CreateProjectFormPageComponent } from './project/create-project-form-page/create-project-form-page.component';
 import { DataModelsComponent } from './project/data-models/data-models.component';
 import { DescriptionComponent } from './project/description/description.component';
-import { EditProjectFormPageComponent } from './project/edit-project-form-page/edit-project-form-page.component';
 import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
 import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
@@ -105,7 +104,6 @@ import { OntologyClassInstanceComponent } from './project/ontology-classes/ontol
 import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
 import { ProjectComponent } from './project/project.component';
-import { ReusableProjectFormComponent } from './project/reusable-project-form/reusable-project-form.component';
 import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';
@@ -160,6 +158,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...UiComponents,
     ...MathJaxComponents,
     ...HelpPageComponents,
+    ...ProjectComponents,
     AccountComponent,
     AddUserComponent,
     AdminImageDirective,
@@ -201,9 +200,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PasswordFormComponent,
     ProfileComponent,
     ProjectComponent,
-    CreateProjectFormPageComponent,
-    ReusableProjectFormComponent,
-    EditProjectFormPageComponent,
     ImageSettingsComponent,
     PermissionInfoComponent,
     ProjectsComponent,

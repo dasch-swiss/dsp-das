@@ -1,6 +1,7 @@
 import { ChipListInputComponent } from './lib/chip-list-input.component';
 import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.component';
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
+import { CommonInputComponent } from './lib/common-input.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { PagerComponent } from './lib/pager/pager.component';
@@ -17,5 +18,6 @@ export const UiComponents = [
   CkEditorControlComponent,
   InvalidControlScrollDirective,
   ChipListInputComponent,
+  CommonInputComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];
