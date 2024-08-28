@@ -157,7 +157,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._viewer.destroy();
       this._viewer = undefined;
     }
-    this._resourceFetcherService.onDestroy();
     this.destroyed.next();
     this.destroyed.complete();
   }
@@ -198,7 +197,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         title: '2D Image (Still Image)',
         subtitle: 'Update image of the resource',
         representation: 'stillImage',
-        propertyId: propId,
+        id: propId,
       },
       disableClose: true,
     };
