@@ -5,10 +5,10 @@ import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { AvailableLanguages } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { existingNamesAsyncValidator } from '@dsp-app/src/app/main/directive/existing-name/existing-names.validator';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { existingNamesAsyncValidator } from '../../main/directive/existing-name/existing-names.validator';
 import { UserForm } from './user-form.type';
 
 @Component({

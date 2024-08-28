@@ -17,11 +17,10 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, combineLatest, from, merge } from 'rxjs';
+import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/shared/app-user';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
-import { CreateUserDialogComponent } from '../../../user/create-user-page/create-user-dialog.component';
-import { EditUserPageComponent } from '../../../user/edit-user-page/edit-user-page.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -321,7 +320,16 @@ export class UsersListComponent {
   }
 
   openDialog(mode: string, user?: ReadUser): void {
-    const dialogRef = this._matDialog.open(DialogComponent, DspDialogConfig.dialogDrawerConfig({ user, mode }, true));
+    const dialogRef = this._matDialog.open(
+      DialogComponent,
+      DspDialogConfig.dialogDrawerConfig(
+        {
+          user,
+          mode,
+        },
+        true
+      )
+    );
 
     dialogRef.afterClosed().subscribe(response => {
       if (response === true) {

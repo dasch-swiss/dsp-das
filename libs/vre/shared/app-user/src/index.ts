@@ -7,4 +7,5 @@ export * from './lib/membership/membership.component';
 export * from './lib/overview/overview.component';
 export * from './lib/profile/profile.component';
 export * from './lib/user-form/user-form.component';
+export * from './lib/user-form/password-form/password-form.component';
 export * from './lib/user-menu/user-menu.component';

@@ -5,7 +5,7 @@ import { ApiResponseData, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { CreateUserDialogComponent } from '@dsp-app/src/app/user/create-user-page/create-user-dialog.component';
+import { CreateUserDialogComponent } from '@dasch-swiss/vre/shared/app-user';
 import { AutocompleteItem } from '@dsp-app/src/app/workspace/search/operator';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';

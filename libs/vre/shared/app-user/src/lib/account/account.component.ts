@@ -5,10 +5,10 @@ import { UserApiService } from '@dasch-swiss/vre/shared/app-api';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { apiConnectionTokenProvider } from '@dsp-app/src/app/providers/api-connection-token.provider';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { apiConnectionTokenProvider } from '../../providers/api-connection-token.provider';
 
 @Component({
   selector: 'app-account',

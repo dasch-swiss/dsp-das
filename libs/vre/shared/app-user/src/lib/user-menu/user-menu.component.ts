@@ -4,11 +4,11 @@ import { User } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MenuItem } from '../../main/declarations/menu-item';
 
 @Component({
   selector: 'app-user-menu',

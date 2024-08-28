@@ -3,11 +3,11 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { MenuItem } from '@dsp-app/src/app/main/declarations/menu-item';
 import { TranslateService } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MenuItem } from '../main/declarations/menu-item';
 
 @Component({
   selector: 'app-user',
