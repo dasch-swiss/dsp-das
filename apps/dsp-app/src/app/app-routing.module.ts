@@ -6,6 +6,7 @@ import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre
 import { CreateProjectFormPageComponent, EditProjectFormPageComponent } from '@dasch-swiss/vre/shared/app-project';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { ProjectComponent } from '../../../../libs/vre/shared/app-project/src/lib/project/project.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
@@ -17,7 +18,6 @@ import { ImageSettingsComponent } from './project/image-settings/image-settings.
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { ProjectComponent } from './project/project.component';
 import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';

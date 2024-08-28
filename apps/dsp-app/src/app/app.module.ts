@@ -58,6 +58,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProjectComponent } from '../../../../libs/vre/shared/app-project/src/lib/project/project.component';
 import { ProjectComponents } from '../../../../libs/vre/shared/app-project/src/project.components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -103,7 +104,6 @@ import { MultipleViewerComponent } from './project/ontology-classes/multiple-vie
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
-import { ProjectComponent } from './project/project.component';
 import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { apiConnectionTokenProvider } from './providers/api-connection-token.provider';
 import { ProjectTileComponent } from './system/project-tile/project-tile.component';

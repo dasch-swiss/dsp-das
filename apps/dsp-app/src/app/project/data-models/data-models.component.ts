@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
 import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectBase } from '../project-base';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +18,7 @@ import { ProjectBase } from '../project-base';
 })
 export class DataModelsComponent extends ProjectBase implements OnInit {
   protected readonly RouteConstants = RouteConstants;
+
   get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
     const uuid = this._route.parent.snapshot.params.uuid;
     const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;

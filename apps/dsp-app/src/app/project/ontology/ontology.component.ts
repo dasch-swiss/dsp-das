@@ -33,6 +33,7 @@ import {
   PropertyInfoObject,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
 import {
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,
@@ -56,7 +57,6 @@ import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { ProjectBase } from '../project-base';
 import {
   CreateResourceClassDialogComponent,
   CreateResourceClassDialogProps,
