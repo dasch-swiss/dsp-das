@@ -77,6 +77,9 @@
       "@dasch-swiss/vre/shared/app-notification": [
         "libs/vre/shared/app-notification/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/app-ontology-classes": [
+        "libs/vre/shared/app-ontology-classes/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-progress-indicator": [
         "libs/vre/shared/app-progress-indicator/src/index.ts"
       ],
