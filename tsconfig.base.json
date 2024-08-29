@@ -104,6 +104,9 @@
       "@dasch-swiss/vre/shared/app-session": [
         "libs/vre/shared/app-session/src/index.ts"
       ],
+      "@dasch-swiss/vre/shared/app-settings-page": [
+        "libs/vre/shared/app-settings-page/src/index.ts"
+      ],
       "@dasch-swiss/vre/shared/app-state": [
         "libs/vre/shared/app-state/src/index.ts"
       ],
