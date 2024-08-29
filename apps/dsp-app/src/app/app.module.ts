@@ -51,7 +51,12 @@ import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-pag
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
-import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
+import {
+  SettingsPageComponents,
+  ImageSettingsComponent,
+  ImageDisplayAbsoluteComponent,
+  ImageDisplayRatioComponent,
+} from '@dasch-swiss/vre/shared/app-settings-page';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   HumanReadableErrorPipe,
@@ -89,9 +94,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { ImageDisplayAbsoluteComponent } from './project/image-settings/image-display-absolute.component';
-import { ImageDisplayRatioComponent } from './project/image-settings/image-display-ratio.component';
-import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
 import { DataModelsComponent } from './project/ontology/data-models/data-models.component';
 import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';

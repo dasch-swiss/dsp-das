@@ -13,13 +13,12 @@ import {
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
-import { SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
+import { SettingsPageComponent, ImageSettingsComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { StatusComponent } from './main/status/status.component';
-import { ImageSettingsComponent } from './project/image-settings/image-settings.component';
 import { DataModelsComponent } from './project/ontology/data-models/data-models.component';
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
