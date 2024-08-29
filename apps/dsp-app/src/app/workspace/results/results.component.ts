@@ -5,11 +5,6 @@ import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface SplitSize {
-  gutterNum: number;
-  sizes: Array<number>;
-}
-
 @Component({
   selector: 'app-results',
   template: ' <app-multiple-viewer [searchParams]="searchParams" />',
