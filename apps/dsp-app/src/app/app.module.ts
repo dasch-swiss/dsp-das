@@ -32,6 +32,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-list';
 import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
   AppProgressIndicatorComponent,
@@ -95,19 +96,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { CreateResourceClassDialogComponent } from './project/ontology/create-resource-class-dialog/create-resource-class-dialog.component';
-import { DataModelsComponent } from './project/ontology/data-models/data-models.component';
-import { EditResourceClassDialogComponent } from './project/ontology/edit-resource-class-dialog/edit-resource-class-dialog.component';
-import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
-import { OntologyComponent } from './project/ontology/ontology.component';
-import { PropertyInfoComponent } from './project/ontology/property-info/property-info.component';
-import { ResourceClassFormComponent } from './project/ontology/resource-class-form/resource-class-form.component';
-import { AddPropertyMenuComponent } from './project/ontology/resource-class-info/add-property-menu.component';
-import { ResourceClassInfoElementComponent } from './project/ontology/resource-class-info/resource-class-info-element.component';
-import { ResourceClassInfoComponent } from './project/ontology/resource-class-info/resource-class-info.component';
-import { CardinalityChangeDialogComponent } from './project/ontology/resource-class-info/resource-class-property-info/cardinality-component/cardinality-change-dialog.component';
-import { CardinalityComponent } from './project/ontology/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';
-import { ResourceClassPropertyInfoComponent } from './project/ontology/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
@@ -150,24 +138,19 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SearchComponents,
     ...SettingsPageComponents,
     ...OntologyClassesComponents,
+    ...OntologyComponents,
     AddUserComponent,
     AdminImageDirective,
     AppComponent,
     DescriptionComponent,
-    CardinalityComponent,
-    CardinalityChangeDialogComponent,
     CenteredLayoutComponent,
     CollaborationComponent,
     ColorPickerComponent,
     ComparisonComponent,
     CookiePolicyComponent,
-    CreateResourceClassDialogComponent,
     DateValueHandlerComponent,
     DisableContextMenuDirective,
     DragDropDirective,
-    EditResourceClassDialogComponent,
-    ResourceClassInfoElementComponent,
-    AddPropertyMenuComponent,
     HeaderComponent,
     ImageDisplayRatioComponent,
     IntermediateComponent,
@@ -179,17 +162,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ListViewComponent,
     LoginFormComponent,
     KnoraDatePipe,
-    OntologyComponent,
-    OntologyFormComponent,
     ProjectComponent,
     ImageSettingsComponent,
     PermissionInfoComponent,
     ProjectsComponent,
     ProjectsListComponent,
-    PropertyInfoComponent,
-    ResourceClassFormComponent,
-    ResourceClassInfoComponent,
-    ResourceClassPropertyInfoComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResultsComponent,
@@ -209,7 +186,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     UsersListComponent,
     HintComponent,
     ProjectTileComponent,
-    DataModelsComponent,
     IsFalsyPipe,
     ImageDisplayAbsoluteComponent,
     EraseProjectDialogComponent,

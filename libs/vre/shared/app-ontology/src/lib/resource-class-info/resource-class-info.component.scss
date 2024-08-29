@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@use "../../../../styles/config" as *;
-@use "../../../../styles/mixins" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/mixins" as *;
 
 .resource-class {
   min-height: 60px;
@@ -104,6 +104,7 @@
   background-color: rgba(254, 254, 254, 1);
   @include box-shadow();
   cursor: move;
+
   .gui-order {
     .display-on-hover {
       display: block;
@@ -113,6 +114,7 @@
       display: none;
     }
   }
+
   .property-info {
     position: fixed;
     left: 32px;

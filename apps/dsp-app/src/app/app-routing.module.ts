@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/shared/app-list';
+import { DataModelsComponent, OntologyComponent, OntologyFormComponent } from '@dasch-swiss/vre/shared/app-ontology';
+import { OntologyClassInstanceComponent } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
   CollaborationComponent,
   CreateProjectFormPageComponent,
@@ -15,14 +17,10 @@ import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resourc
 import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
-import { OntologyClassInstanceComponent } from '../../../../libs/vre/shared/app-ontology-classes/src/lib/ontology-class-instance/ontology-class-instance.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { StatusComponent } from './main/status/status.component';
-import { DataModelsComponent } from './project/ontology/data-models/data-models.component';
-import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
-import { OntologyComponent } from './project/ontology/ontology.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';

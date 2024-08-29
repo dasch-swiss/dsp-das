@@ -1,4 +1,4 @@
-@use "../../../../styles/config" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
 
 :host {
   width: 100%;
@@ -25,6 +25,7 @@
 .mat-line {
   &.title {
     line-height: 1.8;
+
     .mat-icon {
       top: 4px;
       position: relative;

@@ -1,4 +1,4 @@
-@use "../../../styles/config" as *;
+@use "../../../../../../apps/dsp-app/src/styles/config" as *;
 
 $width: 429px;
 
@@ -68,6 +68,7 @@ $width: 429px;
     }
   }
 }
+
 .ontology-viewer {
   width: 98vw;
   min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 100px);
@@ -112,6 +113,7 @@ $width: 429px;
       grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
       grid-gap: 6px;
     }
+
     .ontology-editor-list {
       margin: 16px;
 
@@ -124,9 +126,11 @@ $width: 429px;
           min-height: 56px !important;
           margin: 4px 0;
           padding: 16px 0;
+
           &.odd {
             background-color: $primary_50;
           }
+
           &:hover {
             background-color: $black-14-opacity;
           }
