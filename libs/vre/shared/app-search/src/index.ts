@@ -4,3 +4,4 @@ export * from './lib/expert-search/expert-search.component';
 export * from './lib/fulltext-search/fulltext-search.component';
 export * from './lib/search-panel/search-panel.component';
 export * from './lib/services/search-params.service';
+export * from './lib/search-params.interface';

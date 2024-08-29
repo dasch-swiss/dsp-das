@@ -22,9 +22,9 @@ import {
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { SearchParams } from '../search-params.interface';
 
 export interface PrevSearchItem {
   projectIri?: string;

@@ -3,7 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { SearchParams } from '../../workspace/results/list-view/list-view.component';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 
 @Component({
   selector: 'app-header',

@@ -11,7 +11,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
+import { SearchParams } from '../search-params.interface';
 
 @Component({
   selector: 'app-search-panel',

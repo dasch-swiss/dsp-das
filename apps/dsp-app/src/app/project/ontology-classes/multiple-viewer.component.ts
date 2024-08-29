@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { SearchParams } from '../../workspace/results/list-view/list-view.component';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import { SplitSize } from '../../workspace/results/results.component';
 
 @Component({

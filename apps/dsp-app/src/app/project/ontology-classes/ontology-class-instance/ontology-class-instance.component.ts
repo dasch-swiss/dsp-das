@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import {
   IProjectOntologiesKeyValuePairs,
   OntologiesSelectors,
@@ -13,7 +14,6 @@ import { Actions, Select, Store } from '@ngxs/store';
 import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
-import { SearchParams } from '../../../workspace/results/list-view/list-view.component';
 
 @Component({
   selector: 'app-ontology-class-instance',

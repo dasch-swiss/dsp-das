@@ -7,12 +7,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
-import { CountQueryResponse, MockResource, ReadResourceSequence, SearchEndpointV2 } from '@dasch-swiss/dsp-js';
+import { CountQueryResponse, ReadResourceSequence, SearchEndpointV2 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
-import { ListViewComponent, SearchParams } from './list-view.component';
+import { ListViewComponent } from './list-view.component';
 
 /**
  * test component to simulate child component, here resource-list.

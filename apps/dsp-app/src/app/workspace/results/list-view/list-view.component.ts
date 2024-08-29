@@ -12,13 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ApiResponseError,
-  CountQueryResponse,
-  IFulltextSearchParams,
-  KnoraApiConnection,
-  ReadResourceSequence,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, CountQueryResponse, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -26,24 +20,6 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
-
-/**
- * query: search query. It can be gravserch query or fulltext string query.
- * The query value is expected to have at least length of 3 characters.
- *
- * mode: search mode "fulltext" OR "gravsearch"
- *
- * filter: Optional fulltext search parameter with following (optional) properties:
- *   - limitToResourceClass: string; Iri of resource class the fulltext search is restricted to, if any.
- *   - limitToProject: string; Iri of the project the fulltext search is restricted to, if any.
- *   - limitToStandoffClass: string; Iri of standoff class the fulltext search is restricted to, if any.
- */
-export interface SearchParams {
-  query: string;
-  mode: 'fulltext' | 'gravsearch';
-  filter?: IFulltextSearchParams;
-  projectUuid?: string;
-}
 
 export interface ShortResInfo {
   id: string;
