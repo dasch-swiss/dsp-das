@@ -13,6 +13,7 @@ import {
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
+import { SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
@@ -23,7 +24,6 @@ import { DataModelsComponent } from './project/ontology/data-models/data-models.
 import { OntologyFormComponent } from './project/ontology/ontology-form/ontology-form.component';
 import { OntologyComponent } from './project/ontology/ontology.component';
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
-import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';

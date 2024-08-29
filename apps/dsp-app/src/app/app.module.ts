@@ -51,6 +51,7 @@ import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-pag
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
+import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   HumanReadableErrorPipe,
@@ -108,7 +109,6 @@ import { MultipleViewerComponent } from './project/ontology-classes/multiple-vie
 import { OntologyClassInstanceComponent } from './project/ontology-classes/ontology-class-instance/ontology-class-instance.component';
 import { OntologyClassItemComponent } from './project/ontology-classes/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './project/ontology-classes/ontology-classes.component';
-import { SettingsPageComponent } from './project/settings/settings-page.component';
 import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './system/projects/projects.component';
@@ -149,6 +149,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ProjectComponents,
     ...UserComponents,
     ...SearchComponents,
+    ...SettingsPageComponents,
     AddUserComponent,
     AdminImageDirective,
     AppComponent,
@@ -210,7 +211,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     OntologyClassesComponent,
     OntologyClassItemComponent,
     OntologyClassInstanceComponent,
-    SettingsPageComponent,
     ProjectTileComponent,
     DataModelsComponent,
     IsFalsyPipe,
