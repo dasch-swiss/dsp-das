@@ -7,7 +7,7 @@ import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
@@ -37,17 +37,17 @@ export class ResourceFetcherService {
       .pipe(switchMap(() => this._getResource()))
       .subscribe(res => this._resourceSubject.next(res));
 
-    this._onLangChangeSubscription = this._translateService.onLangChange.subscribe(() => {
-      const currentOntologyIri = this._store.selectSnapshot(OntologiesSelectors.currentOntologyIri);
-      if (currentOntologyIri) {
-        this._dspApiConnection.v2.ontologyCache
-          .reloadCachedItem(currentOntologyIri)
-          .pipe(take(1))
-          .subscribe(() => {
-            this._componentCommsService.emit(new EmitEvent(Events.resourceLanguageChanged));
-          });
-      }
-    });
+    this._onLangChangeSubscription = this._translateService.onLangChange
+      .pipe(
+        switchMap(() => this._store.select(OntologiesSelectors.currentOntologyIri)),
+        filter(currentOntologyIri => !!currentOntologyIri),
+        switchMap(currentOntologyIri =>
+          this._dspApiConnection.v2.ontologyCache.reloadCachedItem(currentOntologyIri!).pipe(take(1))
+        )
+      )
+      .subscribe(() => {
+        this._componentCommsService.emit(new EmitEvent(Events.resourceLanguageChanged));
+      });
   }
 
   onDestroy() {
