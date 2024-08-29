@@ -12,6 +12,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-project';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
@@ -27,7 +28,6 @@ import { ProjectsComponent } from './system/projects/projects.component';
 import { SystemComponent } from './system/system.component';
 import { UsersComponent } from './system/users/users.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
 
 const routes: Routes = [
   {

@@ -10,8 +10,8 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { SearchParams } from '../../results/list-view/list-view.component';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 
 @Component({
   selector: 'app-search-panel',

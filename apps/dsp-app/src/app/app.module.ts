@@ -49,6 +49,7 @@ import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-for
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
+import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
@@ -127,10 +128,6 @@ import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepick
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
-import { AdvancedSearchContainerComponent } from './workspace/search/advanced-search/advanced-search-container.component';
-import { ExpertSearchComponent } from './workspace/search/expert-search/expert-search.component';
-import { FulltextSearchComponent } from './workspace/search/fulltext-search/fulltext-search.component';
-import { SearchPanelComponent } from './workspace/search/search-panel/search-panel.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -151,9 +148,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...HelpPageComponents,
     ...ProjectComponents,
     ...UserComponents,
+    ...SearchComponents,
     AddUserComponent,
     AdminImageDirective,
-    AdvancedSearchContainerComponent,
     AppComponent,
     DescriptionComponent,
     CardinalityComponent,
@@ -168,8 +165,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DisableContextMenuDirective,
     DragDropDirective,
     EditResourceClassDialogComponent,
-    ExpertSearchComponent,
-    FulltextSearchComponent,
     ResourceClassInfoElementComponent,
     AddPropertyMenuComponent,
     HeaderComponent,
@@ -197,7 +192,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResultsComponent,
-    SearchPanelComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,
     SelectProjectComponent,

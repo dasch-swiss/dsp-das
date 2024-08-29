@@ -17,7 +17,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { SearchParams } from '../../results/list-view/list-view.component';
+import { SearchParams } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { GravsearchSearchParams, SearchParamsService } from '../services/search-params.service';
 
 /**
