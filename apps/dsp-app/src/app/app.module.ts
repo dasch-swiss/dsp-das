@@ -60,10 +60,10 @@ import {
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import {
   DateValueHandlerComponent,
-  UiComponents,
-  UiStandaloneComponents,
   DragDropDirective,
   TextValueHtmlLinkDirective,
+  UiComponents,
+  UiStandaloneComponents,
 } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -77,7 +77,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
-import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
 import { HeaderComponent } from './main/header/header.component';
@@ -130,7 +129,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     LinkifyPipe,
     CreateListInfoPageComponent,
     ListViewComponent,
-    LoginFormComponent,
     KnoraDatePipe,
     ProjectComponent,
     ImageSettingsComponent,
