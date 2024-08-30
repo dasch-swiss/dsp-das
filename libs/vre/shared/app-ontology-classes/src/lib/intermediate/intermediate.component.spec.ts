@@ -7,12 +7,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
-import { DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppLoggingService } from '@dasch-swiss/vre/shared/app-logging';
+import { FilteredResources } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
 import { TestConfig } from '@dsp-app/src/test.config';
 import { MockProvider } from 'ng-mocks';
-import { FilteredResources } from '../results/list-view/list-view.component';
 import { IntermediateComponent } from './intermediate.component';
 
 /**

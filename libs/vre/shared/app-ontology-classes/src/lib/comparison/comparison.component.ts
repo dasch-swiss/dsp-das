@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { SplitSize } from '@dasch-swiss/vre/shared/app-ontology-classes';
-import { ShortResInfo } from '../results/list-view/list-view.component';
+import { ShortResInfo } from '@dsp-app/src/app/workspace/results/list-view/list-view.component';
+import { SplitSize } from '../split-size.interface';
 
 @Component({
   selector: 'app-comparison',
@@ -9,7 +9,7 @@ import { ShortResInfo } from '../results/list-view/list-view.component';
       <as-split direction="vertical">
         <as-split-area>
           <!-- note: This part is repeating twice (not added as component) because angular-split
-                                                                        library does not support addition div inside as-split -->
+                                                                                  library does not support addition div inside as-split -->
           <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
             <as-split-area *ngFor="let res of topRow">
               <app-resource-fetcher [resourceIri]="res" />

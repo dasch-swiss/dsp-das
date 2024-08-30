@@ -65,7 +65,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { SystemComponents, SortButtonComponent } from '@dasch-swiss/vre/shared/app-system';
+import { SortButtonComponent, SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { DateValueHandlerComponent, UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -96,8 +96,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { ComparisonComponent } from './workspace/comparison/comparison.component';
-import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
@@ -136,14 +134,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DescriptionComponent,
     CenteredLayoutComponent,
     CollaborationComponent,
-    ComparisonComponent,
     CookiePolicyComponent,
     DateValueHandlerComponent,
     DisableContextMenuDirective,
     DragDropDirective,
     HeaderComponent,
     ImageDisplayRatioComponent,
-    IntermediateComponent,
     LoadingButtonDirective,
     LinkifyPipe,
     CreateListInfoPageComponent,

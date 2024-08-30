@@ -1,3 +1,5 @@
+import { ComparisonComponent } from './lib/comparison/comparison.component';
+import { IntermediateComponent } from './lib/intermediate/intermediate.component';
 import { MultipleViewerComponent } from './lib/multiple-viewer.component';
 import { OntologyClassInstanceComponent } from './lib/ontology-class-instance/ontology-class-instance.component';
 import { OntologyClassItemComponent } from './lib/ontology-class-item/ontology-class-item.component';
@@ -8,4 +10,6 @@ export const OntologyClassesComponents = [
   MultipleViewerComponent,
   OntologyClassItemComponent,
   OntologyClassInstanceComponent,
+  ComparisonComponent,
+  IntermediateComponent,
 ];
