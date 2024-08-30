@@ -109,7 +109,6 @@ import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
-import { ColorPickerComponent } from './workspace/resource/values/color-value/color-picker/color-picker.component';
 import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
@@ -145,7 +144,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DescriptionComponent,
     CenteredLayoutComponent,
     CollaborationComponent,
-    ColorPickerComponent,
     ComparisonComponent,
     CookiePolicyComponent,
     DateValueHandlerComponent,
