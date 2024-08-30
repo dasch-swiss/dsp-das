@@ -61,6 +61,8 @@ import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import {
   DateValueHandlerComponent,
   DragDropDirective,
+  KnoraDatePipe,
+  StringifyStringLiteralPipe,
   TextValueHtmlLinkDirective,
   UiComponents,
   UiStandaloneComponents,
@@ -82,13 +84,6 @@ import { DisableContextMenuDirective } from './main/directive/disable-context-me
 import { HeaderComponent } from './main/header/header.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
-import { KnoraDatePipe } from './main/pipes/formatting/knoradate.pipe';
-import { IsFalsyPipe } from './main/pipes/isFalsy.piipe';
-import { LinkifyPipe } from './main/pipes/string-transformation/linkify.pipe';
-import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/stringify-string-literal.pipe';
-import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
-import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
-import { TimePipe } from './main/pipes/time.pipe';
 import { MaterialModule } from './material-module';
 
 // translate: AoT requires an exported function for factories
@@ -126,7 +121,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     HeaderComponent,
     ImageDisplayRatioComponent,
     LoadingButtonDirective,
-    LinkifyPipe,
     CreateListInfoPageComponent,
     ListViewComponent,
     KnoraDatePipe,
@@ -138,11 +132,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SplitPipe,
     StringifyStringLiteralPipe,
     TextValueHtmlLinkDirective,
-    TimePipe,
-    TitleFromCamelCasePipe,
-    TruncatePipe,
     HintComponent,
-    IsFalsyPipe,
     ImageDisplayAbsoluteComponent,
   ],
   imports: [

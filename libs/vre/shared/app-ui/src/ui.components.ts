@@ -12,6 +12,12 @@ import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-lin
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
+import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
+import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
+import { LinkifyPipe } from './lib/pipes/string-transformation/linkify.pipe';
+import { TitleFromCamelCasePipe } from './lib/pipes/string-transformation/title-from-camel-case.pipe';
+import { TruncatePipe } from './lib/pipes/string-transformation/truncate.pipe';
+import { TimePipe } from './lib/pipes/time.pipe';
 import { StatusComponent } from './lib/status/status.component';
 import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
@@ -35,5 +41,11 @@ export const UiComponents = [
   CenteredLayoutComponent,
   TextValueHtmlLinkDirective,
   DragDropDirective,
+  KnoraDatePipe,
+  IsFalsyPipe,
+  TimePipe,
+  TitleFromCamelCasePipe,
+  LinkifyPipe,
+  TruncatePipe,
 ];
 export const UiStandaloneComponents = [PagerComponent];
