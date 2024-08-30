@@ -49,7 +49,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
-import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourcePageComponents, PermissionInfoComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
@@ -106,7 +106,6 @@ import { ComparisonComponent } from './workspace/comparison/comparison.component
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
-import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
