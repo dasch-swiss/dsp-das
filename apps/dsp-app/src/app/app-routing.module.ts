@@ -16,14 +16,12 @@ import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
+import { ProjectsComponent, SystemComponent, UsersComponent } from '@dasch-swiss/vre/shared/app-system';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 import { StatusComponent } from './main/status/status.component';
-import { ProjectsComponent } from './system/projects/projects.component';
-import { SystemComponent } from './system/system.component';
-import { UsersComponent } from './system/users/users.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
 const routes: Routes = [

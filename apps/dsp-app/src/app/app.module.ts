@@ -49,7 +49,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
-import { ResourcePageComponents, PermissionInfoComponent } from '@dasch-swiss/vre/shared/app-resource-page';
+import { PermissionInfoComponent, ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
@@ -65,6 +65,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
+import { SystemComponents, SortButtonComponent } from '@dasch-swiss/vre/shared/app-system';
 import { DateValueHandlerComponent, UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -80,7 +81,6 @@ import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
 import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
-import { SortButtonComponent } from './main/action/sort-button/sort-button.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
@@ -96,12 +96,6 @@ import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
-import { EraseProjectDialogComponent } from './system/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
-import { ProjectsListComponent } from './system/projects/projects-list/projects-list.component';
-import { ProjectsComponent } from './system/projects/projects.component';
-import { SystemComponent } from './system/system.component';
-import { UsersListComponent } from './system/users/users-list/users-list.component';
-import { UsersComponent } from './system/users/users.component';
 import { ComparisonComponent } from './workspace/comparison/comparison.component';
 import { IntermediateComponent } from './workspace/intermediate/intermediate.component';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
@@ -135,6 +129,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SettingsPageComponents,
     ...OntologyClassesComponents,
     ...OntologyComponents,
+    ...SystemComponents,
     AddUserComponent,
     AdminImageDirective,
     AppComponent,
@@ -159,8 +154,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectComponent,
     ImageSettingsComponent,
     PermissionInfoComponent,
-    ProjectsComponent,
-    ProjectsListComponent,
     ResourceLinkFormComponent,
     ResourceListComponent,
     ResultsComponent,
@@ -171,18 +164,14 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     SplitPipe,
     StatusComponent,
     StringifyStringLiteralPipe,
-    SystemComponent,
     TextValueHtmlLinkDirective,
     TimePipe,
     TitleFromCamelCasePipe,
     TruncatePipe,
-    UsersComponent,
-    UsersListComponent,
     HintComponent,
     ProjectTileComponent,
     IsFalsyPipe,
     ImageDisplayAbsoluteComponent,
-    EraseProjectDialogComponent,
   ],
   imports: [
     ...UiStandaloneComponents,

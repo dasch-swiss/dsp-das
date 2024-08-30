@@ -10,9 +10,9 @@ import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-st
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { SortProp } from '../../../main/action/sort-button/sort-button.component';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { SortProp } from '../../sort-button/sort-button.component';
 import {
   EraseProjectDialogComponent,
   IEraseProjectDialogProps,
