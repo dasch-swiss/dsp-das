@@ -1,3 +1,5 @@
+import { AdminImageDirective } from './lib/admin-image/admin-image.directive';
+import { CenteredLayoutComponent } from './lib/centered-layout.component';
 import { ChipListInputComponent } from './lib/chip-list-input.component';
 import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.component';
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
@@ -27,5 +29,7 @@ export const UiComponents = [
   DateValueHandlerComponent,
   JDNDatepickerDirective,
   StatusComponent,
+  AdminImageDirective,
+  CenteredLayoutComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];

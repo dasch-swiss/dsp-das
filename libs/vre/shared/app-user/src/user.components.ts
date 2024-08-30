@@ -4,6 +4,7 @@ import { EditUserPageComponent } from './lib/edit-user-page/edit-user-page.compo
 import { MembershipComponent } from './lib/membership/membership.component';
 import { OverviewComponent } from './lib/overview/overview.component';
 import { ProfileComponent } from './lib/profile/profile.component';
+import { ProjectTileComponent } from './lib/project-tile/project-tile.component';
 import { PasswordFormComponent } from './lib/user-form/password-form/password-form.component';
 import { UserFormComponent } from './lib/user-form/user-form.component';
 import { UserMenuComponent } from './lib/user-menu/user-menu.component';
@@ -20,4 +21,5 @@ export const UserComponents = [
   UserMenuComponent,
   UserComponent,
   PasswordFormComponent,
+  ProjectTileComponent,
 ];
