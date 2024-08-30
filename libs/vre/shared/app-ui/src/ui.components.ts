@@ -3,6 +3,7 @@ import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.comp
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
 import { ColorPickerComponent } from './lib/color-picker/color-picker.component';
 import { CommonInputComponent } from './lib/common-input.component';
+import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-handler.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { PagerComponent } from './lib/pager/pager.component';
@@ -21,5 +22,6 @@ export const UiComponents = [
   ChipListInputComponent,
   CommonInputComponent,
   ColorPickerComponent,
+  DateValueHandlerComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];

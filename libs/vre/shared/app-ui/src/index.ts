@@ -16,3 +16,4 @@ export * from './lib/invalid-control-scroll.directive';
 export * from './lib/chip-list-input.component';
 export * from './lib/common-input.component';
 export * from './lib/color-picker/color-picker.component';
+export * from './lib/date-value-handler/date-value-handler.component';

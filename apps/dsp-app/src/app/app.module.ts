@@ -65,7 +65,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
-import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import { UiComponents, UiStandaloneComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -109,7 +109,6 @@ import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text
 import { PermissionInfoComponent } from './workspace/resource/permission-info/permission-info.component';
 import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
 import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
-import { DateValueHandlerComponent } from './workspace/resource/values/date-value/date-value-handler/date-value-handler.component';
 import { JDNDatepickerDirective } from './workspace/resource/values/jdn-datepicker-directive/jdndatepicker.directive';
 import { ListViewComponent } from './workspace/results/list-view/list-view.component';
 import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';

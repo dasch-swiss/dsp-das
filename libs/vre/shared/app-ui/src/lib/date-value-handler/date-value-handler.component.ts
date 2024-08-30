@@ -7,27 +7,27 @@ import { Component, DoCheck, ElementRef, HostBinding, Input, OnDestroy, OnInit, 
 import {
   AbstractControl,
   ControlValueAccessor,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
   FormGroupDirective,
   NgControl,
   NgForm,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
+  _AbstractConstructor,
+  _Constructor,
   CanUpdateErrorState,
   ErrorStateMatcher,
   mixinErrorState,
-  _AbstractConstructor,
-  _Constructor,
 } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { JDNConvertibleCalendar } from '@dasch-swiss/jdnconvertiblecalendar';
+import { ValueService } from '@dsp-app/src/app/workspace/resource/services/value.service';
 import { Subject, Subscription } from 'rxjs';
-import { ValueService } from '../../../services/value.service';
 
 /** if a period is defined, start date must be before end date */
 export function periodStartEndValidator(
