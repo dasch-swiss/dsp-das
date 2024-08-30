@@ -34,8 +34,8 @@ import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
 import {
-  OntologyClassesComponents,
   ListViewComponent,
+  OntologyClassesComponents,
   ResourceListComponent,
 } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
@@ -70,7 +70,12 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { SortButtonComponent, SystemComponents } from '@dasch-swiss/vre/shared/app-system';
-import { DateValueHandlerComponent, UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import {
+  DateValueHandlerComponent,
+  UiComponents,
+  UiStandaloneComponents,
+  StatusComponent,
+} from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, ProjectTileComponent, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -84,7 +89,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HintComponent } from './main/action/hint/hint.component';
 import { LoginFormComponent } from './main/action/login-form/login-form.component';
-import { SelectedResourcesComponent } from './main/action/selected-resources/selected-resources.component';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AdminImageDirective } from './main/directive/admin-image/admin-image.directive';
 import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
@@ -98,7 +102,6 @@ import { StringifyStringLiteralPipe } from './main/pipes/string-transformation/s
 import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
-import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
@@ -152,7 +155,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PermissionInfoComponent,
     ResourceListComponent,
     ResultsComponent,
-    SelectedResourcesComponent,
     SelectGroupComponent,
     SortButtonComponent,
     SplitPipe,

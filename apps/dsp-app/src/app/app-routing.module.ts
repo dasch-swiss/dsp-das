@@ -17,11 +17,11 @@ import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resourc
 import { AdvancedSearchContainerComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import { ProjectsComponent, SystemComponent, UsersComponent } from '@dasch-swiss/vre/shared/app-system';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
-import { StatusComponent } from './main/status/status.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
 const routes: Routes = [

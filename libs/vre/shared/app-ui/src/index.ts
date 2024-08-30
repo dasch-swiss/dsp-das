@@ -18,3 +18,4 @@ export * from './lib/common-input.component';
 export * from './lib/color-picker/color-picker.component';
 export * from './lib/date-value-handler/date-value-handler.component';
 export * from './lib/jdn-datepicker-directive/jdndatepicker.directive';
+export * from './lib/status/status.component';

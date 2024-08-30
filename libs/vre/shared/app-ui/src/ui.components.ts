@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
+import { StatusComponent } from './lib/status/status.component';
 import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
 import { TimeInputComponent } from './lib/time-input/time-input.component';
@@ -25,5 +26,6 @@ export const UiComponents = [
   ColorPickerComponent,
   DateValueHandlerComponent,
   JDNDatepickerDirective,
+  StatusComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];
