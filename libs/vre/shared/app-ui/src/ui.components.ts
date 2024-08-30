@@ -7,6 +7,8 @@ import { ColorPickerComponent } from './lib/color-picker/color-picker.component'
 import { CommonInputComponent } from './lib/common-input.component';
 import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-handler.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
+import { DragDropDirective } from './lib/directives/drag-drop.directive';
+import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
@@ -31,5 +33,7 @@ export const UiComponents = [
   StatusComponent,
   AdminImageDirective,
   CenteredLayoutComponent,
+  TextValueHtmlLinkDirective,
+  DragDropDirective,
 ];
 export const UiStandaloneComponents = [PagerComponent];

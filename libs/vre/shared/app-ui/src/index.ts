@@ -21,3 +21,5 @@ export * from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 export * from './lib/status/status.component';
 export * from './lib/admin-image/admin-image.directive';
 export * from './lib/centered-layout.component';
+export * from './lib/directives/text-value-html-link.directive';
+export * from './lib/directives/drag-drop.directive';

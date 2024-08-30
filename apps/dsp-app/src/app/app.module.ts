@@ -43,7 +43,7 @@ import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-for
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { PermissionInfoComponent, ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { SearchComponents, ResultsComponent } from '@dasch-swiss/vre/shared/app-search';
+import { ResultsComponent, SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
 import {
   ImageDisplayAbsoluteComponent,
@@ -58,7 +58,13 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
-import { DateValueHandlerComponent, UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
+import {
+  DateValueHandlerComponent,
+  UiComponents,
+  UiStandaloneComponents,
+  DragDropDirective,
+  TextValueHtmlLinkDirective,
+} from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -85,8 +91,6 @@ import { TitleFromCamelCasePipe } from './main/pipes/string-transformation/title
 import { TruncatePipe } from './main/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './main/pipes/time.pipe';
 import { MaterialModule } from './material-module';
-import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
-import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {

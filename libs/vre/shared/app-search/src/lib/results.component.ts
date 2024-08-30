@@ -1,9 +1,9 @@
 import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SearchParams } from './search-params.interface';
 
 @Component({
   selector: 'app-results',
