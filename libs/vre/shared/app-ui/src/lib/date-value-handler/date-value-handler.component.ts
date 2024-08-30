@@ -26,8 +26,8 @@ import {
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { JDNConvertibleCalendar } from '@dasch-swiss/jdnconvertiblecalendar';
-import { ValueService } from '@dsp-app/src/app/workspace/resource/services/value.service';
 import { Subject, Subscription } from 'rxjs';
+import { ValueService } from './value.service';
 
 /** if a period is defined, start date must be before end date */
 export function periodStartEndValidator(
