@@ -43,7 +43,7 @@ import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-for
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { PermissionInfoComponent, ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
+import { SearchComponents, ResultsComponent } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
 import {
   ImageDisplayAbsoluteComponent,
@@ -87,7 +87,6 @@ import { TimePipe } from './main/pipes/time.pipe';
 import { MaterialModule } from './material-module';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
-import { ResultsComponent } from './workspace/results/results.component';
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
