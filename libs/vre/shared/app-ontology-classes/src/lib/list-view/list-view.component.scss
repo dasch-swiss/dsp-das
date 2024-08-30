@@ -1,4 +1,4 @@
-@use "../../../../styles/config" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
 
 .list-view-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -12,9 +12,9 @@
     padding: 3% 0%;
 
     .back-button {
-        border: 1px solid $primary;
-        margin-right: 2%;
-        color: $primary;
+      border: 1px solid $primary;
+      margin-right: 2%;
+      color: $primary;
     }
   }
 }
@@ -38,9 +38,9 @@
     padding: 0% 0% 3% 0%;
 
     .back-button {
-        border: 1px solid $primary;
-        margin-right: 2%;
-        color: $primary;
+      border: 1px solid $primary;
+      margin-right: 2%;
+      color: $primary;
     }
   }
 }

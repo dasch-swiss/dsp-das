@@ -33,7 +33,11 @@ import {
 import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
-import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
+import {
+  OntologyClassesComponents,
+  ListViewComponent,
+  ResourceListComponent,
+} from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
   AppProgressIndicatorComponent,
   CenteredLayoutComponent,
@@ -98,10 +102,6 @@ import { StatusComponent } from './main/status/status.component';
 import { MaterialModule } from './material-module';
 import { DragDropDirective } from './workspace/resource/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './workspace/resource/directives/text-value-html-link.directive';
-import { SelectProjectComponent } from './workspace/resource/resource-instance-form/select-project/select-project.component';
-import { ResourceLinkFormComponent } from './workspace/resource/resource-link-form/resource-link-form.component';
-import { ListViewComponent } from './workspace/results/list-view/list-view.component';
-import { ResourceListComponent } from './workspace/results/list-view/resource-list/resource-list.component';
 import { ResultsComponent } from './workspace/results/results.component';
 
 // translate: AoT requires an exported function for factories
@@ -150,12 +150,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ProjectComponent,
     ImageSettingsComponent,
     PermissionInfoComponent,
-    ResourceLinkFormComponent,
     ResourceListComponent,
     ResultsComponent,
     SelectedResourcesComponent,
     SelectGroupComponent,
-    SelectProjectComponent,
     SortButtonComponent,
     SplitPipe,
     StatusComponent,

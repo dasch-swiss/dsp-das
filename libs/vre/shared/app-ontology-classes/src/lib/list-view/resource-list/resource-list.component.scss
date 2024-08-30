@@ -1,7 +1,8 @@
-@use "../../../../../styles/config" as *;
+@use "../../../../../../../../apps/dsp-app/src/styles/config" as *;
 
 .resource-list {
   cursor: default;
+
   .mat-mdc-list-item {
     cursor: default;
     height: auto;
@@ -29,7 +30,7 @@
   overflow: hidden;
 }
 
-.res-list-item-text{
+.res-list-item-text {
   overflow: hidden;
   flex-grow: 1;
   padding-top: 8px;
