@@ -6,6 +6,7 @@ import { CommonInputComponent } from './lib/common-input.component';
 import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-handler.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
+import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
 import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
@@ -23,5 +24,6 @@ export const UiComponents = [
   CommonInputComponent,
   ColorPickerComponent,
   DateValueHandlerComponent,
+  JDNDatepickerDirective,
 ];
 export const UiStandaloneComponents = [PagerComponent];
