@@ -15,6 +15,7 @@ import { PagerComponent } from './lib/pager/pager.component';
 import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
 import { LinkifyPipe } from './lib/pipes/string-transformation/linkify.pipe';
+import { StringifyStringLiteralPipe } from './lib/pipes/string-transformation/stringify-string-literal.pipe';
 import { TitleFromCamelCasePipe } from './lib/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './lib/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './lib/pipes/time.pipe';
@@ -47,5 +48,7 @@ export const UiComponents = [
   TitleFromCamelCasePipe,
   LinkifyPipe,
   TruncatePipe,
+  StringifyStringLiteralPipe,
+  TextValueHtmlLinkDirective,
 ];
 export const UiStandaloneComponents = [PagerComponent];

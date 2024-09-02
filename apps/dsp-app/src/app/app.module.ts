@@ -12,7 +12,7 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
-import { CommonToMoveComponents, SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   AppConfigService,
   buildTagFactory,
@@ -25,32 +25,23 @@ import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker'
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CreateListInfoPageComponent, ListComponents } from '@dasch-swiss/vre/shared/app-list';
+import { ListComponents } from '@dasch-swiss/vre/shared/app-list';
 import { MathJaxComponents } from '@dasch-swiss/vre/shared/app-mathjax';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
-import { ListViewComponent, OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
-import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
-  AddUserComponent,
-  CollaborationComponent,
-  DescriptionComponent,
-  ProjectComponent,
-  ProjectComponents,
-  SelectGroupComponent,
-} from '@dasch-swiss/vre/shared/app-project';
+  AppProgressIndicatorComponent,
+  ProgressIndicatorComponents,
+} from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
-import { PermissionInfoComponent, ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
+import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/shared/app-resource-properties';
-import { ResultsComponent, SearchComponents } from '@dasch-swiss/vre/shared/app-search';
+import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/shared/app-segment-support';
-import {
-  ImageDisplayAbsoluteComponent,
-  ImageDisplayRatioComponent,
-  ImageSettingsComponent,
-  SettingsPageComponents,
-} from '@dasch-swiss/vre/shared/app-settings-page';
+import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
 import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
 import {
   HumanReadableErrorPipe,
@@ -58,15 +49,7 @@ import {
   MutiLanguageInputComponent,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
-import {
-  DateValueHandlerComponent,
-  DragDropDirective,
-  KnoraDatePipe,
-  StringifyStringLiteralPipe,
-  TextValueHtmlLinkDirective,
-  UiComponents,
-  UiStandaloneComponents,
-} from '@dasch-swiss/vre/shared/app-ui';
+import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -110,30 +93,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...OntologyClassesComponents,
     ...OntologyComponents,
     ...SystemComponents,
-    AddUserComponent,
+    ...ProgressIndicatorComponents,
     AppComponent,
-    DescriptionComponent,
-    CollaborationComponent,
     CookiePolicyComponent,
-    DateValueHandlerComponent,
     DisableContextMenuDirective,
-    DragDropDirective,
     HeaderComponent,
-    ImageDisplayRatioComponent,
-    LoadingButtonDirective,
-    CreateListInfoPageComponent,
-    ListViewComponent,
-    KnoraDatePipe,
-    ProjectComponent,
-    ImageSettingsComponent,
-    PermissionInfoComponent,
-    ResultsComponent,
-    SelectGroupComponent,
-    SplitPipe,
-    StringifyStringLiteralPipe,
-    TextValueHtmlLinkDirective,
     HintComponent,
-    ImageDisplayAbsoluteComponent,
   ],
   imports: [
     ...UiStandaloneComponents,
