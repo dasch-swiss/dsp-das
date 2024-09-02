@@ -1,6 +1,6 @@
 <app-dialog-header
-  [title]="ontologyName ? ontologyName : 'Create new data model'"
-  [subtitle]="ontologyName ? 'Customize data model' : ''">
+  [title]="ontologyName ? ontologyName : ('form.ontology.title.create' | translate)"
+  [subtitle]="ontologyName ? ('form.ontology.title.edit' | translate) : ''">
 </app-dialog-header>
 <form [formGroup]="ontologyForm" class="form-content">
   <app-common-input
