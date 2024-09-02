@@ -6,3 +6,4 @@ export * from './lib/projects/projects-list/erase-project-dialog/erase-project-d
 export * from './lib/users/users.component';
 export * from './lib/users/users-list/users-list.component';
 export * from './lib/sort-button/sort-button.component';
+export * from './lib/cookie-policy/cookie-policy.component';

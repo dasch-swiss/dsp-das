@@ -11,6 +11,7 @@ import { StillImageComponent } from './lib/still-image/still-image.component';
 import { TextComponent } from './lib/text/text.component';
 import { ThirdPartyIiifComponent } from './lib/third-party-iiif/third-party-iiif.component';
 import { UploadComponent } from './lib/upload/upload.component';
+import { DisableContextMenuDirective } from './lib/video/disable-context-menu.directive';
 import { VideoMoreButtonComponent } from './lib/video/video-more-button.component';
 import { VideoOverlayComponent } from './lib/video/video-overlay.component';
 import { VideoToolbarComponent } from './lib/video/video-toolbar.component';
@@ -36,4 +37,5 @@ export const RepresentationsComponents = [
   VideoToolbarComponent,
   VideoOverlayComponent,
   ThirdPartyIiifComponent,
+  DisableContextMenuDirective,
 ];

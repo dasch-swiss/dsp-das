@@ -9,6 +9,8 @@ import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-h
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
+import { HeaderComponent } from './lib/header/header.component';
+import { HintComponent } from './lib/hint/hint.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
@@ -50,5 +52,7 @@ export const UiComponents = [
   TruncatePipe,
   StringifyStringLiteralPipe,
   TextValueHtmlLinkDirective,
+  HintComponent,
+  HeaderComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];

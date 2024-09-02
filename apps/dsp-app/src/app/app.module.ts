@@ -61,10 +61,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HintComponent } from './main/action/hint/hint.component';
-import { CookiePolicyComponent } from './main/cookie-policy/cookie-policy.component';
-import { DisableContextMenuDirective } from './main/directive/disable-context-menu.directive';
-import { HeaderComponent } from './main/header/header.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { MaterialModule } from './material-module';
@@ -76,6 +72,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 
 @NgModule({
   declarations: [
+    AppComponent,
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...SegmentSupportComponents,
@@ -94,11 +91,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...OntologyComponents,
     ...SystemComponents,
     ...ProgressIndicatorComponents,
-    AppComponent,
-    CookiePolicyComponent,
-    DisableContextMenuDirective,
-    HeaderComponent,
-    HintComponent,
   ],
   imports: [
     ...UiStandaloneComponents,

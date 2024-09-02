@@ -30,3 +30,5 @@ export * from './lib/pipes/string-transformation/stringify-string-literal.pipe';
 export * from './lib/pipes/string-transformation/truncate.pipe';
 export * from './lib/pipes/string-transformation/title-from-camel-case.pipe';
 export * from './lib/pipes/string-transformation/linkify.pipe';
+export * from './lib/hint/hint.component';
+export * from './lib/header/header.component';
