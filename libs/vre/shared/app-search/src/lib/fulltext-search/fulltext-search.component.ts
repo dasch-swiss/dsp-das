@@ -16,6 +16,7 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ApiResponseError, Constants, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   ComponentCommunicationEventService,
   Events,
@@ -24,7 +25,6 @@ import {
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SearchParams } from '../search-params.interface';
 
 export interface PrevSearchItem {
   projectIri?: string;

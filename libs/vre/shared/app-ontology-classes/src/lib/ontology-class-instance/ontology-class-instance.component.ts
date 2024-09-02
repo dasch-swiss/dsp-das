@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import {
   IProjectOntologiesKeyValuePairs,
   OntologiesSelectors,

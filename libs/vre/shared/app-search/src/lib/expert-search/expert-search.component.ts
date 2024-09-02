@@ -16,8 +16,8 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { SearchParams } from '../search-params.interface';
 import { GravsearchSearchParams, SearchParamsService } from '../services/search-params.service';
 
 /**

@@ -11,7 +11,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { SearchParams } from '../search-params.interface';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 @Component({
   selector: 'app-search-panel',

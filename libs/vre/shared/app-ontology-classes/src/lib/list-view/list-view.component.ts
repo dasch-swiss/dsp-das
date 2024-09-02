@@ -13,11 +13,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SearchParams } from '@dasch-swiss/vre/shared/app-search';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
