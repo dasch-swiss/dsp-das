@@ -16,8 +16,6 @@ export * from './lib/invalid-control-scroll.directive';
 export * from './lib/chip-list-input.component';
 export * from './lib/common-input.component';
 export * from './lib/color-picker/color-picker.component';
-export * from './lib/date-value-handler/date-value-handler.component';
-export * from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 export * from './lib/admin-image/admin-image.directive';
 export * from './lib/centered-layout.component';
 export * from './lib/directives/text-value-html-link.directive';

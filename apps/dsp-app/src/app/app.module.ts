@@ -21,7 +21,7 @@ import {
   DspAppConfigToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
-import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -91,6 +91,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...OntologyComponents,
     ...SystemComponents,
     ...ProgressIndicatorComponents,
+    ...DatePickerComponents,
   ],
   imports: [
     ...UiStandaloneComponents,

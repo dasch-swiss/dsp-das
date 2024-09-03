@@ -5,13 +5,11 @@ import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.comp
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
 import { ColorPickerComponent } from './lib/color-picker/color-picker.component';
 import { CommonInputComponent } from './lib/common-input.component';
-import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-handler.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
 import { HintComponent } from './lib/hint/hint.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
-import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
 import { PagerComponent } from './lib/pager/pager.component';
 import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
@@ -34,8 +32,6 @@ export const UiComponents = [
   ChipListInputComponent,
   CommonInputComponent,
   ColorPickerComponent,
-  DateValueHandlerComponent,
-  JDNDatepickerDirective,
   AdminImageDirective,
   CenteredLayoutComponent,
   TextValueHtmlLinkDirective,
