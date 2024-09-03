@@ -30,8 +30,8 @@ import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -185,6 +185,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   openReplaceFileDialog() {
     const propId = this.resource.properties[Constants.HasStillImageFileValue][0].id;
+    const projectUuid = ProjectService.IriToUuid(this.resource.attachedToProject);
 
     const dialogConfig: MatDialogConfig = {
       width: '800px',
@@ -194,6 +195,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       },
       data: {
         mode: 'replaceFile',
+        projectUuid,
         title: '2D Image (Still Image)',
         subtitle: 'Update image of the resource',
         representation: 'stillImage',
