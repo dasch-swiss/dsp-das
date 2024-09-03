@@ -1,7 +1,7 @@
 export class IIIFUrl {
   private _url: URL;
 
-  private readonly qualform_ex = /^(color|gray|grey|bitonal|default)\.(jpg|tif|png|jp2|jpeg)$/;
+  private readonly qualform_ex = /^(color|gray|grey|bitonal|default|native)\.(jpg|tif|png|jp2|jpeg)$/;
   private readonly rotation_ex = /^[-+]?[0-9]*\.?[0-9]+$|^![-+]?[0-9]*\.?[0-9]+$/;
   private readonly size_ex =
     /^(full|(\^?max)|(\^?pct:[0-9]*\.?[0-9]*)|(\^?[0-9]*,)|(\^?,[0-9]*)|(\^?!?[0-9]*,[0-9]*))$/;
