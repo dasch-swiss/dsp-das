@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from 'cypress';
+import { checkUnusedENTranslations, compareTranslationFileWithEn, templateFiles } from './cypress/plugins/translations';
 
 export default defineConfig({
   projectId: 'n5b5id',
@@ -13,6 +14,14 @@ export default defineConfig({
     experimentalStudio: true,
     env: {
       apiUrl: 'http://0.0.0.0:3333',
+    },
+    setupNodeEvents(on, config) {
+      on('task', {
+        templateFiles,
+        checkUnusedENTranslations,
+        compareTranslationFileWithEn,
+      });
+      return config;
     },
   },
 });
