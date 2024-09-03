@@ -9,7 +9,6 @@ import { DateValueHandlerComponent } from './lib/date-value-handler/date-value-h
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
 import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
-import { HeaderComponent } from './lib/header/header.component';
 import { HintComponent } from './lib/hint/hint.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { JDNDatepickerDirective } from './lib/jdn-datepicker-directive/jdndatepicker.directive';
@@ -17,11 +16,9 @@ import { PagerComponent } from './lib/pager/pager.component';
 import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
 import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
 import { LinkifyPipe } from './lib/pipes/string-transformation/linkify.pipe';
-import { StringifyStringLiteralPipe } from './lib/pipes/string-transformation/stringify-string-literal.pipe';
 import { TitleFromCamelCasePipe } from './lib/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './lib/pipes/string-transformation/truncate.pipe';
 import { TimePipe } from './lib/pipes/time.pipe';
-import { StatusComponent } from './lib/status/status.component';
 import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
 import { TimeInputComponent } from './lib/time-input/time-input.component';
@@ -39,7 +36,6 @@ export const UiComponents = [
   ColorPickerComponent,
   DateValueHandlerComponent,
   JDNDatepickerDirective,
-  StatusComponent,
   AdminImageDirective,
   CenteredLayoutComponent,
   TextValueHtmlLinkDirective,
@@ -50,9 +46,7 @@ export const UiComponents = [
   TitleFromCamelCasePipe,
   LinkifyPipe,
   TruncatePipe,
-  StringifyStringLiteralPipe,
   TextValueHtmlLinkDirective,
   HintComponent,
-  HeaderComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];
