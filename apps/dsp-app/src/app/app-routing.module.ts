@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/shared/app-list';
@@ -17,12 +18,11 @@ import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resourc
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import {
+  CookiePolicyComponent,
   ProjectsComponent,
   SystemComponent,
   UsersComponent,
-  CookiePolicyComponent,
 } from '@dasch-swiss/vre/shared/app-system';
-import { StatusComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';

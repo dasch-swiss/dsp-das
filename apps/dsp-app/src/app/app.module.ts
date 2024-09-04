@@ -47,6 +47,7 @@ import {
   HumanReadableErrorPipe,
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
+  StringLiteralComponents,
 } from '@dasch-swiss/vre/shared/app-string-literal';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
@@ -92,6 +93,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SystemComponents,
     ...ProgressIndicatorComponents,
     ...DatePickerComponents,
+    ...StringLiteralComponents,
   ],
   imports: [
     ...UiStandaloneComponents,
