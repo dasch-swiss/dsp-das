@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { SearchParams } from '../search-params.interface';
 
 @Component({
   selector: 'app-header',

@@ -65,7 +65,7 @@ class MatInputBase {
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
-  selector: 'app-date-value-handler',
+  selector: 'dasch-swiss-date-value-handler',
   templateUrl: './date-value-handler.component.html',
   styleUrls: ['./date-value-handler.component.scss'],
   providers: [

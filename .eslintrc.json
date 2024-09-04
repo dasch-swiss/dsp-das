@@ -103,12 +103,6 @@
                 "onlyDependOnLibsWithTags": [
                   "*"
                 ]
-              },
-              {
-                "sourceTag": "type:ui",
-                "onlyDependOnLibsWithTags": [
-                  "type:ui"
-                ]
               }
             ]
           }
