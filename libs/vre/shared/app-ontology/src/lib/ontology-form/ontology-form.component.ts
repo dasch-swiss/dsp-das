@@ -3,7 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
-  ApiResponseError,
   CreateOntology,
   KnoraApiConnection,
   OntologyMetadata,
@@ -23,7 +22,6 @@ import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
-import { existingNamesValidator } from '../../../main/directive/existing-name/existing-names.validator';
 import { OntologyForm, OntologyFormProps } from './ontology-form.type';
 
 export interface NewOntology {

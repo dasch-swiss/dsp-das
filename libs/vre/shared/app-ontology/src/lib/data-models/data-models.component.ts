@@ -10,9 +10,8 @@ import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OntologyFormComponent } from '../ontology/ontology-form/ontology-form.component';
-import { OntologyFormProps } from '../ontology/ontology-form/ontology-form.type';
-import { ProjectBase } from '../project-base';
+import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
+import { OntologyFormProps } from '../ontology-form/ontology-form.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,6 +90,7 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
       }
     );
   }
+
   createNewOntology() {
     this._dialog.open<OntologyFormComponent, OntologyFormProps, null>(
       OntologyFormComponent,
