@@ -18,7 +18,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/a
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
-import { combineLatest, of, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, combineLatest, of } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 
 export interface ShortResInfo {
@@ -95,6 +95,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.componentCommsSubscriptions.push(
+      this._componentCommsService.on([Events.resourceLanguageChanged], () => this.doSearch()),
       this._componentCommsService.on([Events.loginSuccess], () => this.initSearch()),
       this._componentCommsService.on([Events.resourceDeleted], () => this.doSearch())
     );

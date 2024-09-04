@@ -50,11 +50,6 @@ const routes: Routes = [
         component: DescriptionComponent,
       },
       {
-        path: RouteConstants.addOntology,
-        component: OntologyFormComponent,
-        canActivate: [AuthGuard],
-      },
-      {
         path: RouteConstants.dataModels,
         component: DataModelsComponent,
       },
