@@ -72,7 +72,7 @@ describe('AppConfigService with dev config', () => {
     expect(service.dspInstrumentationConfig.environment).toEqual('dev-server');
     expect(service.dspInstrumentationConfig.rollbar.enabled).toEqual(false);
     expect(service.dspInstrumentationConfig.rollbar.accessToken).toBeUndefined();
-    expect(service.dspFeatureFlagsConfig.allowEraseProject).toEqual(true);
+    expect(service.dspFeatureFlagsConfig.allowEraseProjects).toEqual(true);
   });
 });
 
@@ -143,6 +143,6 @@ describe('AppConfigService with prod config', () => {
     expect(service.dspInstrumentationConfig.environment).toEqual('prod');
     expect(service.dspInstrumentationConfig.rollbar.enabled).toEqual(true);
     expect(service.dspInstrumentationConfig.rollbar.accessToken).toEqual('rollbar_token');
-    expect(service.dspFeatureFlagsConfig.allowEraseProject).toEqual(true);
+    expect(service.dspFeatureFlagsConfig.allowEraseProjects).toEqual(true);
   });
 });
