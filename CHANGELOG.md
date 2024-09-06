@@ -1,5 +1,33 @@
 # Changelog
 
+## [11.19.0](https://github.com/dasch-swiss/dsp-das/compare/v11.18.2...v11.19.0) (2024-09-05)
+
+
+### Enhancements
+
+* **iiif validation:** fetch retry without HEAD (DEV-4075) ([#1762](https://github.com/dasch-swiss/dsp-das/issues/1762)) ([dc06c81](https://github.com/dasch-swiss/dsp-das/commit/dc06c81a519bacb211dd0131d7146e4dc1102a53))
+
+
+### Bug Fixes
+
+* add missing brackets (DEV-4069) ([#1763](https://github.com/dasch-swiss/dsp-das/issues/1763)) ([9bd2df5](https://github.com/dasch-swiss/dsp-das/commit/9bd2df50203655ebb0c798e83e89cc21c9c91094))
+* DEV-4069 ([#1765](https://github.com/dasch-swiss/dsp-das/issues/1765)) ([7af6eb8](https://github.com/dasch-swiss/dsp-das/commit/7af6eb88df084591a0fb00658feefb2e7701c0a6))
+* **iiif url validation:** add support for V1 (DEV-4074) ([#1761](https://github.com/dasch-swiss/dsp-das/issues/1761)) ([050e289](https://github.com/dasch-swiss/dsp-das/commit/050e289a7867030a5df5e9875906146737239efc))
+* reloads resources when language is changed (DEV-4059) ([#1756](https://github.com/dasch-swiss/dsp-das/issues/1756)) ([d8b057f](https://github.com/dasch-swiss/dsp-das/commit/d8b057f77513c24a286cfea995d6e9d435e42347))
+
+
+### Maintenance
+
+* ontology edit dialog (DEV-3966) ([#1750](https://github.com/dasch-swiss/dsp-das/issues/1750)) ([f610a6c](https://github.com/dasch-swiss/dsp-das/commit/f610a6cb15826f0ffb218208b3f0ee48bec29f04))
+
+## [11.18.2](https://github.com/dasch-swiss/dsp-das/compare/v11.18.1...v11.18.2) (2024-09-02)
+
+
+### Bug Fixes
+
+* display asterisks for marking a field as required (DEV-4053) ([#1759](https://github.com/dasch-swiss/dsp-das/issues/1759)) ([756cb2a](https://github.com/dasch-swiss/dsp-das/commit/756cb2a055603107f253b3ad16c79b41e18314eb))
+* pass projectUuid via input (DEV-4055) ([#1757](https://github.com/dasch-swiss/dsp-das/issues/1757)) ([d84fed5](https://github.com/dasch-swiss/dsp-das/commit/d84fed5b86c9b4c221bfd97bfd18a9e492b78aca))
+
 ## [11.18.1](https://github.com/dasch-swiss/dsp-das/compare/v11.18.0...v11.18.1) (2024-08-29)
 
 
