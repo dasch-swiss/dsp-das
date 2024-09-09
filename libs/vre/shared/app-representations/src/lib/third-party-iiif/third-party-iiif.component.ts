@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js';
-import { CreateStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/create/create-file-value';
-import { UpdateExternalStillImageFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
+import {
+  ReadStillImageExternalFileValue,
+  UpdateExternalStillImageFileValue,
+  CreateStillImageExternalFileValue,
+} from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { iiifUrlValidator, infoJsonUrlValidatorAsync, previewImageUrlValidatorAsync } from './iiif-url-validator';
@@ -72,7 +74,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
       const iiifUrl = IIIFUrl.createUrl(urlStr || '');
       this.previewImageUrl = iiifUrl?.previewImageUrl;
-
     });
 
     this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
