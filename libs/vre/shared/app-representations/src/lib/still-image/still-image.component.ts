@@ -29,7 +29,6 @@ import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
@@ -90,7 +89,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _dialogService: DialogService,
     private _domSanitizer: DomSanitizer,
     private _elementRef: ElementRef,
     private _matIconRegistry: MatIconRegistry,
@@ -189,7 +187,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   replaceImage() {
     let dialogRef;
     if (this.isReadStillImageExternalFileValue) {
-      dialogRef = this._dialog.open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps, UpdateFileValue>(
+      dialogRef = this._dialog.open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps>(
         EditThirdPartyIiifFormComponent,
         DspDialogConfig.dialogDrawerConfig({
           resourceId: this.resource.id,
@@ -201,21 +199,21 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       const projectUuid = ProjectService.IriToUuid(this.resource.attachedToProject);
 
       const dialogConfig: MatDialogConfig = {
-      width: '800px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'replaceFile',
-        projectUuid,
-        title: '2D Image (Still Image)',
-        subtitle: 'Update image of the resource',
-        representation: 'stillImage',
-        id: propId,
-      },
-      disableClose: true,
-    };
+        width: '800px',
+        maxHeight: '80vh',
+        position: {
+          top: '112px',
+        },
+        data: {
+          mode: 'replaceFile',
+          projectUuid,
+          title: '2D Image (Still Image)',
+          subtitle: 'Update image of the resource',
+          representation: 'stillImage',
+          id: propId,
+        },
+        disableClose: true,
+      };
       dialogRef = this._dialog.open(DialogComponent, dialogConfig);
     }
 
@@ -504,7 +502,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadInternalImages() {
     if (this.imageFileValue instanceof ReadStillImageFileValue) {
-      console.log('loading internal image');
       this._rs
         .getFileInfo(this.imageFileValue?.fileUrl || '', this.imageFileValue?.filename)
         .pipe(take(1))
