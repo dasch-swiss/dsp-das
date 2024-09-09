@@ -87,11 +87,7 @@
   <button class="menu-content" mat-menu-item (click)="openImageInNewTab(imageFileValue?.fileUrl)">
     Open IIIF URL in new tab
   </button>
-  <button
-    class="menu-content"
-    mat-menu-item
-    [disabled]="failedToLoad || !usercanEdit || isReadStillImageExternalFileValue"
-    (click)="openReplaceFileDialog()">
+  <button class="menu-content" mat-menu-item [disabled]="failedToLoad || !usercanEdit" (click)="replaceImage()">
     {{isReadStillImageExternalFileValue ? 'Replace external file url':'Replace file'}}
   </button>
 </mat-menu>
