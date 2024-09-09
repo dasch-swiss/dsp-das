@@ -14,9 +14,10 @@ export interface TranslationKeyComp {
 }
 
 const templatePattern = '../../src/**/*.html';
+const tsPattern = '../../src/**/*.ts';
 
-export const templateFiles = (): string[] => {
-  const absolutePattern = path.resolve(__dirname, templatePattern);
+export const getFiles = (pattern: string): string[] => {
+  const absolutePattern = path.resolve(__dirname, pattern);
   return glob.sync(absolutePattern);
 };
 
@@ -30,6 +31,10 @@ const extractKeys = (obj: any, prefix = ''): Record<string, boolean> =>
     }
     return res;
   }, {});
+
+export const templateFiles = (): string[] => {
+  return getFiles(templatePattern);
+};
 
 export const checkUnusedENTranslations = (): TranslationUsage => {
   const fPath = path.join(__dirname, '../../src/assets/i18n/en.json');
@@ -50,7 +55,8 @@ export const checkUnusedENTranslations = (): TranslationUsage => {
     });
   };
 
-  searchInFiles(templateFiles());
+  searchInFiles(getFiles(templatePattern));
+  searchInFiles(getFiles(tsPattern));
 
   const allKeys = Object.keys(translationKeysSet);
   const unusedKeys = allKeys.filter(key => !usedKeys.has(key));

@@ -17,6 +17,7 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/shared/app-state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { TranslateService } from '@ngx-translate/core';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, combineLatest, from, merge } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
@@ -74,11 +75,11 @@ export class UsersListComponent {
   sortProps: any = [
     {
       key: 'familyName',
-      label: 'Last name',
+      label: this._translateService.instant('usersList.sortProps.familyName'),
     },
     {
       key: 'givenName',
-      label: 'First name',
+      label: this._translateService.instant('usersList.sortProps.givenName'),
     },
     {
       key: 'email',
@@ -86,7 +87,7 @@ export class UsersListComponent {
     },
     {
       key: 'username',
-      label: 'Username',
+      label: this._translateService.instant('usersList.sortProps.userName'),
     },
   ];
 
@@ -122,7 +123,8 @@ export class UsersListComponent {
     private _sortingService: SortingService,
     private _store: Store,
     private _actions$: Actions,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _translateService: TranslateService
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe((params: Params) => {
