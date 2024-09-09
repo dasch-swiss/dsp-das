@@ -65,6 +65,9 @@ describe('File representation', () => {
 
         po.clickOnSubmit();
 
+        cy.intercept('GET', '**/iiif/24209711/info.json').as('iiifInfoRequest');
+        cy.wait('@iiifInfoRequest').its('response.statusCode').should('eq', 200);
+
         cy.get('[data-cy=resource-header-label]').should('contain.text', 'label');
         cy.get('app-still-image').should('be.visible');
         cy.get('.osd-container canvas').should('be.visible');
