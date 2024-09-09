@@ -24,18 +24,18 @@ import { ResourceClassForm } from './resource-class-form.type';
 
       <dasch-swiss-multi-language-input
         data-cy="label-input"
-        placeholder="Label *"
+        placeholder="Label"
         [formArray]="form.controls.labels"
-        [validators]="labelsValidators">
-      </dasch-swiss-multi-language-input>
+        [validators]="labelsValidators"
+        [isRequired]="true" />
 
       <dasch-swiss-multi-language-textarea
         data-cy="comment-textarea"
-        placeholder="Comment *"
+        placeholder="Comment"
         [formArray]="form.controls.comments"
         [editable]="true"
-        [validators]="commentsValidators">
-      </dasch-swiss-multi-language-textarea>
+        [validators]="commentsValidators"
+        [isRequired]="true" />
     </form>
   `,
   styles: [':host ::ng-deep .name-input .mat-icon { padding-right: 24px; }'],
