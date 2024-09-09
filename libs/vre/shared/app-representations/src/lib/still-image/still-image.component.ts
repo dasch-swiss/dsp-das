@@ -29,8 +29,9 @@ import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -197,24 +198,27 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       );
     } else {
       const propId = this.resource.properties[Constants.HasStillImageFileValue][0].id;
+      const projectUuid = ProjectService.IriToUuid(this.resource.attachedToProject);
 
       const dialogConfig: MatDialogConfig = {
-        width: '800px',
-        maxHeight: '80vh',
-        position: {
-          top: '112px',
-        },
-        data: {
-          mode: 'replaceFile',
-          title: '2D Image (Still Image)',
-          subtitle: 'Update image of the resource',
-          representation: 'stillImage',
-          id: propId,
-        },
-        disableClose: true,
-      };
+      width: '800px',
+      maxHeight: '80vh',
+      position: {
+        top: '112px',
+      },
+      data: {
+        mode: 'replaceFile',
+        projectUuid,
+        title: '2D Image (Still Image)',
+        subtitle: 'Update image of the resource',
+        representation: 'stillImage',
+        id: propId,
+      },
+      disableClose: true,
+    };
       dialogRef = this._dialog.open(DialogComponent, dialogConfig);
     }
+
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
         this._replaceFile(data);

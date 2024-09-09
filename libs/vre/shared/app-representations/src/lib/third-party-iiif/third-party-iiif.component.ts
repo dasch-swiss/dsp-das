@@ -72,6 +72,7 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
       const iiifUrl = IIIFUrl.createUrl(urlStr || '');
       this.previewImageUrl = iiifUrl?.previewImageUrl;
+
     });
 
     this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
