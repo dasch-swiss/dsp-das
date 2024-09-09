@@ -7,7 +7,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
   selector: 'app-chip-list-input',
   template: `
     <mat-form-field style="width: 100%">
-      <mat-label>{{ ('form.project.general.keywords' | translate) + (chipsRequired ? '' : '*') }}</mat-label>
+      <mat-label>{{ 'form.project.general.keywords' | translate }}</mat-label>
       <mat-chip-grid #chipList>
         <mat-chip-row
           *ngFor="let tag of formArray.value; let index = index; trackBy: trackByFn"
@@ -29,7 +29,6 @@ import { MatChipInputEvent } from '@angular/material/chips';
 })
 export class ChipListInputComponent {
   @Input() formArray: FormArray<FormControl<string>>;
-  @Input() chipsRequired = true;
   @Input() validators: ValidatorFn[];
 
   separatorKeyCodes = [ENTER, COMMA];
