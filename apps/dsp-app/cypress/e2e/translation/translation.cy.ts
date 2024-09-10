@@ -24,7 +24,7 @@ describe('Translations', () => {
     });
   });
 
-  it('should have the same translation keys like the en.json in all translation files', () => {
+  it('should have the same translation keys in all translation files', () => {
     const translationFiles = ['de.json', 'fr.json', 'it.json', 'rm.json'];
     translationFiles.forEach(file => {
       cy.task('compareTranslationFileWithEn', file).then((keys: TranslationKeyComp) => {
