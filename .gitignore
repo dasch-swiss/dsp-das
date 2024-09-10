@@ -63,4 +63,3 @@ apps/dsp-app/cypress/screenshots
 
 # Sentry Config File
 .sentryclirc
-apps/dsp-app/src/assets/i18n/de.json
