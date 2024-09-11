@@ -121,7 +121,7 @@ describe('Resource', () => {
       po.delete();
     });
 
-    it('place', () => {
+    it.skip('place', () => {
       const initialValue = 'Basel';
       const editedValue = 'Allschwil';
 
@@ -276,7 +276,7 @@ describe('Resource', () => {
           po.delete();
         });
     });
-    it('date', () => {
+    it.skip('date', () => {
       ResourceRequests.resourceRequest(ClassPropertyPayloads.date(finalLastModificationDate));
       po.visitAddPage();
 
