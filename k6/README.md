@@ -19,6 +19,26 @@ You can run the tests using the following command:
 k6 run tests/<test_script.js>
 ```
 
+### Tests Which Require Authentication
+
+Test that require authentication need to be run with the correct environment variables set.
+
+For example locally you can store the credentials in a `.env` file:
+
+```sh
+export DSP_APP_USERNAME='admin'
+export DSP_APP_PASSWORD='password'
+export DSP_APP_FULLNAME='Admin User'
+```
+
+Before running the tests you can source the file:
+
+```sh
+source .env
+```
+
+Then you can run the test as described above.
+
 ### Using `just`
 
 We provide a `justfile` to make it easier to run the tests.
@@ -99,3 +119,7 @@ just run-grafana <test_name>
 - [GitHub: k6-learn, a nice Tutorial](https://github.com/grafana/k6-learn/blob/main/Modules/II-k6-Foundations/01-Getting-started-with-k6-OSS.md)
 - [youtube: Nice introduction to k6 (Grafana setup comes from here)](https://www.youtube.com/watch?v=Hu1K2ZGJ_K4)
 - [Google: Web Vitals](https://web.dev/vitals/)
+
+```
+
+```
