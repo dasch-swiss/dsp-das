@@ -23,9 +23,11 @@ import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
+import { Store } from '@ngxs/store';
 import { Subject, Subscription, combineLatest, of } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 
 /**
  * query: search query. It can be gravserch query or fulltext string query.
@@ -114,13 +116,25 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     private _notification: NotificationService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
     this.componentCommsSubscriptions.push(
       this._componentCommsService.on([Events.resourceLanguageChanged], () => this.doSearch()),
-      this._componentCommsService.on([Events.loginSuccess], () => this.initSearch()),
+      this._componentCommsService.on([Events.loginSuccess], () => {
+        const currentOntologyClass = this._store.selectSnapshot(OntologiesSelectors.currentOntologyClass);
+        if (currentOntologyClass) {
+          const currentOntology = this._store.selectSnapshot(OntologiesSelectors.projectOntology);
+          this._dspApiConnection.v2.ontologyCache
+            .reloadCachedItem(currentOntology.id)
+            .pipe(take(1))
+            .subscribe(() => {
+              this.initSearch();
+            });
+        }
+      }),
       this._componentCommsService.on([Events.resourceDeleted], () => this.doSearch())
     );
   }
