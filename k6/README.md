@@ -119,7 +119,3 @@ just run-grafana <test_name>
 - [GitHub: k6-learn, a nice Tutorial](https://github.com/grafana/k6-learn/blob/main/Modules/II-k6-Foundations/01-Getting-started-with-k6-OSS.md)
 - [youtube: Nice introduction to k6 (Grafana setup comes from here)](https://www.youtube.com/watch?v=Hu1K2ZGJ_K4)
 - [Google: Web Vitals](https://web.dev/vitals/)
-
-```
-
-```
