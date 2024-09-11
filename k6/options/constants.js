@@ -1,0 +1,6 @@
+const BEOL_PROJECT_ID = 'yTerZGyxjZVqFMNNKXCDPF';
+const BEOL_PROJECT_SHORTCODE = '0801';
+export const BEOL = {
+  id: BEOL_PROJECT_ID,
+  shortcode: BEOL_PROJECT_SHORTCODE,
+};
