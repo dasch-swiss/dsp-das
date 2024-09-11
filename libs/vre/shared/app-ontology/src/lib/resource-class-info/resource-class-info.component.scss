@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
-@use "../../../../../../../apps/dsp-app/src/styles/mixins" as *;
+@use "config" as *;
+@use "mixins" as *;
 
 .resource-class {
   min-height: 60px;

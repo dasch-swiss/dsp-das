@@ -1,4 +1,4 @@
-@use "../../../../../../apps/dsp-app/src/styles/responsive" as *;
+@use "responsive" as *;
 
 // phone devices
 @media (max-width: map-get($grid-breakpoints, phone)) {

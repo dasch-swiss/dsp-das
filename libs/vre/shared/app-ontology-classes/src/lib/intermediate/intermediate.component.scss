@@ -1,5 +1,5 @@
-@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
-@use "../../../../../../../apps/dsp-app/src/styles/mixins";
+@use "config" as *;
+@use "mixins";
 
 .card-container {
   position: relative;

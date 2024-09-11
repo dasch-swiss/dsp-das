@@ -1,5 +1,5 @@
-@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
-@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
+@use "responsive" as *;
+@use "config" as *;
 
 .status-page {
   background: $white;

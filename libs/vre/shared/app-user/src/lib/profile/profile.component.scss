@@ -1,4 +1,4 @@
-@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
+@use "responsive" as *;
 
 // tablet and desktop
 @media (min-width: map-get($grid-breakpoints, phone)) {
