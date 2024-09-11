@@ -20,7 +20,7 @@ export default async function () {
     expect(await homePage.loggedInUser.textContent()).to.equal(LOGIN_DATA.fullname);
     console.log('Checked logged in user');
   } finally {
-    await page.screenshot({ path: 'screenshots/project-overview-page.png' });
+    await page.screenshot({ path: 'screenshots/workflow-login-success-page.png' });
     await page.close();
   }
 }
