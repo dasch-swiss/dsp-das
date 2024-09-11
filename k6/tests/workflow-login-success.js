@@ -1,8 +1,7 @@
 import { browser } from 'k6/browser';
 import { defaultOptions } from '../options/options.js';
 import { HomePage } from '../pages/home-page.js';
-import { OntologyEditorPage } from '../pages/ontology-editor-page.js';
-import { LOGIN_DATA, BEOL } from '../options/constants.js';
+import { LOGIN_DATA } from '../options/constants.js';
 import { expect } from 'https://jslib.k6.io/k6chaijs/4.3.4.3/index.js';
 
 export const options = defaultOptions;
