@@ -11,7 +11,7 @@ export default async function () {
 
   try {
     await projectOverviewPage.goto();
-    expect(await projectOverviewPage.projectLongname()).to.equal('Bernoulli-Euler Online');
+    expect(await projectOverviewPage.projectLongname(), 'project name').to.equal('Bernoulli-Euler Online');
     await page.screenshot({ path: 'screenshots/project-overview-page.png' });
   } finally {
     await page.close();

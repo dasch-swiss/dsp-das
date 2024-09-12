@@ -1,4 +1,4 @@
-import { BEOL } from '../options/constants';
+import { BEOL } from '../options/constants.js';
 
 export class SingleResourcePage {
   constructor(page) {
