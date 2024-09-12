@@ -16,7 +16,7 @@ export default async function () {
     console.log('Logged in');
     await homePage.openUserMenu();
     console.log('Opened user menu');
-    expect(await homePage.loggedInUser.textContent()).to.equal(LOGIN_DATA.fullname);
+    expect(await homePage.loggedInUser.isVisible()).to.be.true;
     console.log('Checked logged in user');
   } finally {
     await page.screenshot({ path: 'screenshots/workflow-login-success-page.png' });

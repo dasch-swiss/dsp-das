@@ -8,7 +8,6 @@ export class HomePage {
     this.passwordInput = this.page.locator('[data-cy=password-input] input');
     this.submitButton = this.page.locator('[data-cy=submit-button]');
     this.userMenu = this.page.locator('[data-cy=user-button]');
-    this.signedIn = this.page.locator('div.menu-title:nth-child(1)');
     this.loggedInUser = this.page.locator('div.menu-title:nth-child(2)');
   }
 
