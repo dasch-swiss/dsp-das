@@ -22,6 +22,7 @@ run testToRun=testToRun k6_browser_headless=k6_browser_headless:
 # Run all tests locally
 run-all:
     APP_URL={{appUrl}} k6 run tests/first-page-load.js
+    APP_URL={{appUrl}} k6 run tests/load-project-overview.js
     APP_URL={{appUrl}} k6 run tests/load-resource.js
     APP_URL={{appUrl}} k6 run tests/load-single-resource.js
     APP_URL={{appUrl}} k6 run tests/workflow-login-success.js
