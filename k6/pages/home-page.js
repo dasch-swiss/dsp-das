@@ -24,10 +24,9 @@ export class HomePage {
     await this.usernameInput.fill(LOGIN_DATA.username);
     await this.passwordInput.fill(LOGIN_DATA.password);
     await this.submitButton.click();
-    Promise.all([this.page.waitForNavigation(), this.page.waitForSelector('img.avatar')]);
   }
 
   async openUserMenu() {
-    this.userMenu.click();
+    await this.userMenu.click();
   }
 }

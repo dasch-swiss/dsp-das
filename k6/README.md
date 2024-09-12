@@ -28,7 +28,6 @@ For example locally you can store the credentials in a `.env` file:
 ```sh
 export DSP_APP_USERNAME='admin'
 export DSP_APP_PASSWORD='password'
-export DSP_APP_FULLNAME='Admin User'
 ```
 
 Before running the tests you can source the file:
