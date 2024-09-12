@@ -100,10 +100,6 @@ export class PropertyValueComponent implements OnInit {
     this._watchAndSetupCommentStatus();
   }
 
-  private _setInitialValue() {
-    this.initialFormValue = this.group.getRawValue();
-  }
-
   onSave() {
     if (this.propertyValueService.currentlyAdding && this.index === this.propertyValueService.formArray.length - 1) {
       this._addItem();
@@ -127,6 +123,10 @@ export class PropertyValueComponent implements OnInit {
         this.group.controls.comment.enable();
       }
     });
+  }
+
+  private _setInitialValue() {
+    this.initialFormValue = this.group.getRawValue();
   }
 
   private _addItem() {
@@ -193,7 +193,7 @@ export class PropertyValueComponent implements OnInit {
     });
   }
 
-  _update() {
+  private _update() {
     if (this.group.invalid) return;
 
     this.loading = true;
