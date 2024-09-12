@@ -4,10 +4,10 @@ export class HomePage {
   constructor(page) {
     this.page = page;
     this.loginButton = this.page.locator('[data-cy=login-button]');
-    this.usernameInput = this.page.locator('#mat-input-1');
-    this.passwordInput = this.page.locator('#mat-input-0');
-    this.submitButton = this.page.locator('button.mdc-button--raised:nth-child(3)');
-    this.userMenu = this.page.locator('.user-menu');
+    this.usernameInput = this.page.locator('[data-cy=username-input] input');
+    this.passwordInput = this.page.locator('[data-cy=password-input] input');
+    this.submitButton = this.page.locator('[data-cy=submit-button]');
+    this.userMenu = this.page.locator('[data-cy=user-button]');
     this.signedIn = this.page.locator('div.menu-title:nth-child(1)');
     this.loggedInUser = this.page.locator('div.menu-title:nth-child(2)');
   }
