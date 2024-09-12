@@ -3,7 +3,7 @@ import { LOGIN_DATA } from '../options/constants.js';
 export class HomePage {
   constructor(page) {
     this.page = page;
-    this.loginButton = this.page.locator('button.login-button');
+    this.loginButton = this.page.locator('[data-cy=login-button]');
     this.usernameInput = this.page.locator('#mat-input-1');
     this.passwordInput = this.page.locator('#mat-input-0');
     this.submitButton = this.page.locator('button.mdc-button--raised:nth-child(3)');
