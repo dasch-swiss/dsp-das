@@ -26,12 +26,6 @@ run-all:
     APP_URL={{appUrl}} k6 run tests/load-single-resource.js
     APP_URL={{appUrl}} k6 run tests/workflow-login-success.js
 
-# Run all tests locally
-run-all:
-    APP_URL={{appUrl}} k6 run tests/first-page-load.js
-    APP_URL={{appUrl}} k6 run tests/load-resource.js
-    APP_URL={{appUrl}} k6 run tests/load-single-resource.js
-
 # Run the test in k6 cloud
 run-cloud testToRun=testToRun:
     k6 cloud tests/{{testToRun}}.js
