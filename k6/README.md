@@ -21,7 +21,7 @@ k6 run tests/<test_script.js>
 
 ### Tests Which Require Authentication
 
-Test that require authentication need to be run with the correct environment variables set.
+Tests that require authentication need to be run with the correct environment variables set.
 
 For example locally you can store the credentials in a `.env` file:
 
