@@ -85,6 +85,6 @@ export class IIIFUrl {
   }
 
   get isExternalHost(): boolean {
-    return this._url.host !== 'iiif.dasch.swiss' && this._url.host !== 'iiif.ls-prod.dasch.swiss';
+    return !this._url.host.endsWith('dasch.swiss');
   }
 }
