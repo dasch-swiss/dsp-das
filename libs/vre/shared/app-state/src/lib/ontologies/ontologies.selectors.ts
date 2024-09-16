@@ -1,5 +1,12 @@
 import { Params } from '@angular/router';
-import { OntologyMetadata, ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
+import {
+  ClassDefinition,
+  OntologyMetadata,
+  ReadOntology,
+  ReadProject,
+  ResourceClassDefinition,
+  ResourceClassDefinitionWithAllLanguages,
+} from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -65,20 +72,35 @@ export class OntologiesSelectors {
   }
 
   @Selector([OntologiesState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
-  static currentOntologyIri(
+  static projectOntology(
     state: OntologiesStateModel,
     resource: DspResource,
     dspApiConfig: DspAppConfig,
     params: Params
-  ): string | undefined {
+  ): ReadOntology | undefined {
     const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
-    if (!projectIri) return undefined;
+    if (!projectIri || Object.values(state.projectOntologies).length === 0) return undefined;
 
     const projectReadOntologies = state.projectOntologies[projectIri].readOntologies;
     const projectReadOntologiesIndex = projectReadOntologies.findIndex(
       o => o.id.indexOf(`/${params[RouteConstants.ontoParameter]}/`) !== -1
     );
 
-    return projectReadOntologiesIndex === -1 ? undefined : projectReadOntologies[projectReadOntologiesIndex].id;
+    return projectReadOntologiesIndex === -1 ? undefined : projectReadOntologies[projectReadOntologiesIndex];
+  }
+
+  @Selector([RouterSelectors.params, OntologiesSelectors.projectOntology])
+  static currentOntologyClass(
+    params: Params,
+    projectOntology: ReadOntology | undefined
+  ): ClassDefinition | ResourceClassDefinition | ResourceClassDefinitionWithAllLanguages | undefined {
+    if (!projectOntology) {
+      return undefined;
+    } else {
+      const currentOntoClass = Object.values(projectOntology.classes).find(
+        c => c.id.indexOf(`#${params[RouteConstants.classParameter]}`) !== -1
+      );
+      return currentOntoClass;
+    }
   }
 }
