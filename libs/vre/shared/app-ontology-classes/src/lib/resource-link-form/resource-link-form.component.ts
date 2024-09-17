@@ -34,9 +34,7 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./resource-link-form.component.scss'],
 })
 export class ResourceLinkFormComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-  @Input() resources: FilteredResources;
+  @Input({ required: true }) resources!: FilteredResources;
 
   @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
@@ -55,6 +53,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     },
   };
 
+  private ngUnsubscribe = new Subject<void>();
   selectedProject: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
