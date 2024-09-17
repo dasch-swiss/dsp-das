@@ -43,6 +43,7 @@ export class ResourceLinkFormComponent implements OnDestroy {
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
     map(([currentProject, currentUserProjects, isSysAdmin]) => {
+      console.log('julilen', currentProject, currentUserProjects, isSysAdmin);
       let projects: any;
       if (isSysAdmin) {
         projects = currentProject ? [currentProject] : currentUserProjects;
