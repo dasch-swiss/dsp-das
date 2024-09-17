@@ -24,12 +24,12 @@ import { Observable, Subject } from 'rxjs';
 })
 export class ResourceLinkFormComponent implements OnDestroy {
   @Input({ required: true }) resources!: FilteredResources;
+  @Input({ required: true }) project!: string;
   @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
   form = this._fb.group({
     label: ['', Validators.required],
     comment: ['', Validators.required],
-    project: ['', Validators.required],
   });
 
   private ngUnsubscribe = new Subject<void>();
@@ -58,7 +58,7 @@ export class ResourceLinkFormComponent implements OnDestroy {
 
     linkObj.label = this.form.controls.label.value!;
     linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.form.controls.project.value!;
+    linkObj.attachedToProject = this.project;
 
     const hasLinkToValue: CreateValue[] = [];
 

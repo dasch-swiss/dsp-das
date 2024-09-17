@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogComponent, FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { MatDialog } from '@angular/material/dialog';
+import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ResourceLinkFormDialogComponent, ResourceLinkFormDialogProps } from '../resource-link-form-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,22 +23,9 @@ export class IntermediateComponent {
 
   constructor(private _dialog: MatDialog) {}
 
-  openDialog(type: 'link', data: FilteredResources) {
-    const title = `Create a collection of ${data.count} resources`;
-
-    const dialogConfig: MatDialogConfig = {
-      width: '640px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'linkResources',
-        title,
-        selectedResources: data,
-      },
-    };
-
-    this._dialog.open(DialogComponent, dialogConfig);
+  openDialog() {
+    this._dialog.open<ResourceLinkFormDialogComponent, ResourceLinkFormDialogProps>(ResourceLinkFormDialogComponent, {
+      data: { resources: this.resources },
+    });
   }
 }

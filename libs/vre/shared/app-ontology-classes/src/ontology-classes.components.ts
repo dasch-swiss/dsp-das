@@ -7,6 +7,7 @@ import { OntologyClassInstanceComponent } from './lib/ontology-class-instance/on
 import { OntologyClassItemComponent } from './lib/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './lib/ontology-classes.component';
 import { ResourceLinkFormComponent } from './lib/resource-link-form/resource-link-form.component';
+import { ResourceLinkFormDialogComponent } from './lib/resource-link-form-dialog.component';
 
 export const OntologyClassesComponents = [
   OntologyClassesComponent,
@@ -18,4 +19,5 @@ export const OntologyClassesComponents = [
   ResourceLinkFormComponent,
   ListViewComponent,
   ResourceListComponent,
+  ResourceLinkFormDialogComponent,
 ];
