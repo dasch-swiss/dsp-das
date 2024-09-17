@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Constants, ReadLinkValue, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { CheckboxUpdate } from '../list-view.component';
@@ -12,36 +12,11 @@ import { ListViewService } from '../list-view.service';
   styleUrls: ['./resource-list.component.scss'],
 })
 export class ResourceListComponent implements OnInit {
-  /**
-   * list of all resource checkboxes. This list is used to
-   * unselect all checkboxes when single selection to view
-   * resource is used
-   */
-  @ViewChildren('ckbox') resChecks: MatCheckbox[];
-
-  /**
-   * list of resources of type ReadResourceSequence
-   *
-   * @param  {ReadResourceSequence} resources
-   */
-  @Input() resources: ReadResourceSequence;
-
-  /**
-   * list of all selected resources indices
-   */
-  @Input() selectedResourceIdx: number[];
-
-  /**
-   * set to true if multiple resources can be selected for comparison
-   */
-  @Input() withMultipleSelection?: boolean = false;
-
-  /**
-   * click on checkbox will emit the resource info
-   *
-   * @param  {EventEmitter<FilteredResources>} resourcesSelected
-   */
-  @Output() resourcesSelected?: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
+  @Input({ required: true }) resources!: ReadResourceSequence;
+  @Input({ required: true }) selectedResourceIdx!: number[];
+  @Input({ required: true }) withMultipleSelection!: boolean;
+  @Output() resourcesSelected = new EventEmitter<FilteredResources>();
+  @ViewChildren('ckbox') resChecks!: MatCheckbox[];
 
   constructor(
     private _listView: ListViewService,
@@ -49,7 +24,6 @@ export class ResourceListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // select the first item in the list
     if (this.resources.resources.length) {
       this.selectResource({
         checked: true,
@@ -61,13 +35,8 @@ export class ResourceListComponent implements OnInit {
     }
   }
 
-  /**
-   * opens a clicked internal link
-   * @param linkValue
-   */
-  openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
+  openResource(linkValue: string) {
+    const path = this._resourceService.getResourcePath(linkValue);
     window.open(`/resource${path}`, '_blank');
   }
 
@@ -80,15 +49,9 @@ export class ResourceListComponent implements OnInit {
     );
 
     this.selectedResourceIdx = selection.resListIndex;
-
     this.resourcesSelected.emit(selection);
   }
 
-  /**
-   * given a resource, return the corresponding mat-icon for the subclass
-   *
-   * @returns mat-icon name as string
-   */
   getIcon(resource: ReadResource): string {
     const subclass = resource.entityInfo.classes[resource.type].subClassOf[0];
 
