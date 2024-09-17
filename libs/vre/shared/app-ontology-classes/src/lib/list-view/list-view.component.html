@@ -9,19 +9,17 @@
     </button>
   </div>
 </div>
-<dasch-swiss-app-pager #pager (pageChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults">
-</dasch-swiss-app-pager>
+<dasch-swiss-app-pager #pager (pageChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults" />
 
 <!-- container with search results -->
 <div class="list-view-container">
-  <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
+  <dasch-swiss-app-progress-indicator *ngIf="loading" />
   <div *ngIf="!loading && (numberOfAllResults > 0 && resources)">
     <app-resource-list
       [withMultipleSelection]="true"
       [resources]="resources"
       [selectedResourceIdx]="selectedResourceIdx"
-      (resourcesSelected)="emitSelectedResources($event)">
-    </app-resource-list>
+      (resourcesSelected)="emitSelectedResources($event)" />
   </div>
   <!-- In case of 0 result -->
   <div
@@ -30,7 +28,7 @@
     *ngIf="!loading && (!(resources?.resources) || resources?.resources?.length === 0)">
     <!-- Case A: user did a fulltext search -->
     <div *ngIf="search.mode === 'fulltext'">
-      <p>Your search - <strong> {{search.query}}</strong> - did not match any documents.</p>
+      <p>Your search - <strong> {{ search.query }}</strong> - did not match any documents.</p>
       <p>Suggestions:</p>
       <ul>
         <li *ngIf="numberOfAllResults > 0">
@@ -41,8 +39,8 @@
         <li>Try more general keywords.</li>
         <li>Try fewer keywords.</li>
       </ul>
-      <mat-divider></mat-divider>
-      <app-hint [topic]="'search'"></app-hint>
+      <mat-divider />
+      <app-hint [topic]="'search'" />
     </div>
     <!-- Case B: user clicked on the class item -->
     <div *ngIf="search.mode !== 'fulltext'">

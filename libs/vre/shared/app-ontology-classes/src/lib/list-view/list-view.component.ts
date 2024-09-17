@@ -87,15 +87,12 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges(): void {
-    if (this.isCurrentSearch()) {
+    if (this._isCurrentSearch()) {
       this.currentSearch = this.search;
       this.initSearch();
       this.pagerComponent.initPager();
     }
   }
-
-  isCurrentSearch = (): boolean =>
-    this.search.query !== this.currentSearch?.query || this.currentSearch.query === undefined;
 
   initSearch(): void {
     // reset
@@ -265,5 +262,9 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
         this.loading = false;
         this._cd.markForCheck();
       });
+  }
+
+  private _isCurrentSearch() {
+    return this.search.query !== this.currentSearch?.query || this.currentSearch.query === undefined;
   }
 }
