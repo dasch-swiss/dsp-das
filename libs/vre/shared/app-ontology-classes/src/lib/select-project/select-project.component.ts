@@ -22,7 +22,7 @@ export class SelectProjectComponent implements OnInit, OnDestroy, AfterViewInit 
 
   form: UntypedFormGroup;
 
-  projectChangesSubscription: Subscription;
+  projectChangesSubscription!: Subscription;
 
   constructor(@Inject(UntypedFormBuilder) private _fb: UntypedFormBuilder) {}
 

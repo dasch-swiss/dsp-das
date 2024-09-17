@@ -31,9 +31,8 @@ export class ResourceLinkFormComponent implements OnDestroy {
   form = this._fb.group({
     label: ['', Validators.required],
     comment: ['', Validators.required],
+    project: ['', Validators.required],
   });
-
-  selectedProject?: string;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -80,7 +79,7 @@ export class ResourceLinkFormComponent implements OnDestroy {
 
     linkObj.label = this.form.controls.label.value!;
     linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.selectedProject!;
+    linkObj.attachedToProject = this.form.controls.project.value!;
 
     const hasLinkToValue: CreateValue[] = [];
 
@@ -91,7 +90,7 @@ export class ResourceLinkFormComponent implements OnDestroy {
       hasLinkToValue.push(linkVal);
     });
 
-    const comment = this.form.controls['comment'].value;
+    const comment = this.form.controls.comment.value;
     if (comment) {
       const commentVal = new CreateTextValueAsString();
       commentVal.type = Constants.TextValue;
