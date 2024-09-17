@@ -20,7 +20,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { Store } from '@ngxs/store';
-import { Subject, Subscription, combineLatest, of } from 'rxjs';
+import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';
 
 export interface ShortResInfo {
@@ -28,17 +28,6 @@ export interface ShortResInfo {
   label: string;
 }
 
-/* return the selected resources in below format
- *
- * count: total number of resources selected
- * selectedIds: list of selected resource's ids
- */
-
-/* return the checkbox value
- *
- * checked: checkbox value
- * resIndex: resource index from the list
- */
 export interface CheckboxUpdate {
   checked: boolean;
   resIndex: number;
@@ -54,35 +43,17 @@ export interface CheckboxUpdate {
   styleUrls: ['./list-view.component.scss'],
 })
 export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
+  @Input({ required: true }) search!: SearchParams;
+  @Input() withMultipleSelection = false;
+  @Output() selectedResources = new EventEmitter<FilteredResources>();
+  @ViewChild('pager', { static: false }) pagerComponent!: PagerComponent;
+
   private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-  @Input() search: SearchParams;
-  currentSearch: SearchParams;
-
-  /**
-   * set to true if multiple resources can be selected for comparison
-   */
-  @Input() withMultipleSelection?: boolean = false;
-
-  /**
-   * emits the selected resources 1-n
-   */
-  @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
-
-  @ViewChild('pager', { static: false }) pagerComponent: PagerComponent;
-
-  resources: ReadResourceSequence;
-
+  currentSearch?: SearchParams;
+  resources?: ReadResourceSequence;
   selectedResourceIdx: number[] = [];
-
   componentCommsSubscriptions: Subscription[] = [];
-
-  resetCheckBoxes = false;
-
-  // number of all results including the ones not included as resources in the response bc. the user does not have the permissions to see them
   numberOfAllResults: number = 0;
-
-  // progress status
   loading = true;
 
   constructor(
@@ -157,7 +128,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   handleBackButtonClicked() {
-    const projectUuid = this._route.parent.snapshot.paramMap.get('uuid');
+    const projectUuid = this._route.parent!.snapshot.paramMap.get('uuid');
     if (projectUuid) {
       this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.advancedSearch]);
     }
@@ -239,9 +210,8 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
 
     // request the count query if the page index is zero otherwise it is already stored in the numberOfAllResults
     const numberOfAllResults$ =
-      index !== 0
-        ? of(this.numberOfAllResults)
-        : this._dspApiConnection.v2.search
+      index === 0
+        ? this._dspApiConnection.v2.search
             .doExtendedSearchCountQuery(this.search.query)
             .pipe(takeUntil(this.ngUnsubscribe))
             .pipe(
@@ -257,7 +227,8 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
 
                 return count.numberOfResults;
               })
-            );
+            )
+        : of(this.numberOfAllResults);
 
     let gravsearch = this.search.query;
     gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
