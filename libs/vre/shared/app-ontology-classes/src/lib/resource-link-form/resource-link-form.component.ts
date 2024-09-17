@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -15,6 +6,7 @@ import {
   CreateLinkValue,
   CreateResource,
   CreateTextValueAsString,
+  CreateValue,
   KnoraApiConnection,
   ReadResource,
   StoredProject,
@@ -31,23 +23,19 @@ import { map, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-link-form',
   templateUrl: './resource-link-form.component.html',
-  styleUrls: ['./resource-link-form.component.scss'],
 })
-export class ResourceLinkFormComponent implements OnInit, OnDestroy {
+export class ResourceLinkFormComponent implements OnDestroy {
   @Input({ required: true }) resources!: FilteredResources;
-
   @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
 
-  /**
-   * form group, errors and validation messages
-   */
   form = this._fb.group({
     label: ['', Validators.required],
     comment: ['', Validators.required],
   });
 
-  private ngUnsubscribe = new Subject<void>();
   selectedProject?: string;
+
+  private ngUnsubscribe = new Subject<void>();
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -56,11 +44,12 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
     map(([currentProject, currentUserProjects, isSysAdmin]) => {
-      const projects = currentProject
-        ? isSysAdmin
-          ? [currentProject]
-          : currentUserProjects.find(x => x.id === currentProject.id)
-        : currentUserProjects;
+      let projects: any;
+      if (isSysAdmin) {
+        projects = currentProject ? [currentProject] : currentUserProjects;
+      } else {
+        projects = currentProject ? currentUserProjects.find(x => x.id === currentProject.id) : currentUserProjects;
+      }
       return projects as StoredProject[];
     })
   );
@@ -79,8 +68,6 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     private _store: Store
   ) {}
 
-  ngOnInit() {}
-
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -88,18 +75,14 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
 
   trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
 
-  /**
-   * submits the data
-   */
   submitData() {
-    // build link resource as type CreateResource
     const linkObj = new CreateResource();
 
-    linkObj.label = this.form.controls['label'].value;
+    linkObj.label = this.form.controls.label.value!;
     linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.selectedProject;
+    linkObj.attachedToProject = this.selectedProject!;
 
-    const hasLinkToValue = [];
+    const hasLinkToValue: CreateValue[] = [];
 
     this.resources.resInfo.forEach(res => {
       const linkVal = new CreateLinkValue();
