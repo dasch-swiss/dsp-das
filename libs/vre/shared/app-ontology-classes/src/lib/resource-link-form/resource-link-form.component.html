@@ -16,7 +16,7 @@
     <button mat-button (click)="closeDialog.emit()">{{ 'form.action.cancel' | translate }}</button>
 
     <button mat-raised-button type="submit" appLoadingButton [isLoading]="isLoading$ | async" [disabled]="form.invalid">
-      {{ 'form.action.save' | translate }}
+      {{ 'form.action.submit' | translate }}
     </button>
   </div>
 </form>

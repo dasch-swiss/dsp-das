@@ -9,7 +9,7 @@ export interface ResourceLinkFormDialogProps {
 @Component({
   selector: 'app-resource-link-form-dialog',
   template: ` <app-dialog-header
-      [title]="'Create a collection of ' + data.resources.count + 'resources'"
+      [title]="'Create a collection of ' + data.resources.count + ' resources'"
       [subtitle]="'Link resources'" />
     <mat-dialog-content>
       <app-resource-link-form [resources]="data.resources" [project]="'test'" (closeDialog)="dialogRef.close($event)" />
