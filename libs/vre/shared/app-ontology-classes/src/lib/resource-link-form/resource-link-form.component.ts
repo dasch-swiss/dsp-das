@@ -9,15 +9,13 @@ import {
   CreateValue,
   KnoraApiConnection,
   ReadResource,
-  StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,37 +34,16 @@ export class ResourceLinkFormComponent implements OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  usersProjects$: Observable<StoredProject[]> = combineLatest([
-    this._store.select(ProjectsSelectors.currentProject),
-    this._store.select(UserSelectors.userProjects),
-    this._store.select(UserSelectors.isSysAdmin),
-  ]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([currentProject, currentUserProjects, isSysAdmin]) => {
-      console.log('julilen', currentProject, currentUserProjects, isSysAdmin);
-      let projects: any;
-      if (isSysAdmin) {
-        projects = currentProject ? [currentProject] : currentUserProjects;
-      } else {
-        projects = currentProject ? currentUserProjects.find(x => x.id === currentProject.id) : currentUserProjects;
-      }
-      return projects as StoredProject[];
-    }),
-    tap(v => console.log(v))
-  );
-
   @Select(UserSelectors.isSysAdmin) isSysAdmin$!: Observable<boolean>;
   @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
   @Select(ProjectsSelectors.isProjectsLoading) isLoading$!: Observable<boolean>;
-  @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$!: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
-    private _router: Router,
-    private _store: Store
+    private _router: Router
   ) {}
 
   ngOnDestroy() {

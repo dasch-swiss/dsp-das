@@ -1,19 +1,7 @@
 <form
   [formGroup]="form"
   (ngSubmit)="submitData()"
-  *ngIf="((isSysAdmin$ | async) === true) || ((usersProjects$ | async)?.length && (isCurrentProjectAdminOrSysAdmin$ | async) === true); else notProjectMember">
-  <mat-form-field>
-    <mat-label>Select a project</mat-label>
-    <mat-select placeholder="Select a project" [formControl]="form.controls.project">
-      <mat-option *ngFor="let project of usersProjects$ | async" [value]="project.id">
-        {{ project.shortcode }} | {{ project.shortname }}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="form.controls.project.touched && form.controls.project.errors as errors"
-      >{{ errors | humanReadableError }}
-    </mat-error>
-  </mat-form-field>
-
+  *ngIf="(isSysAdmin$ | async)  && (isCurrentProjectAdminOrSysAdmin$ | async); else notProjectMember">
   <app-common-input [control]="form.controls.label" [label]="'Collection label'" />
   <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
 
@@ -27,13 +15,7 @@
   <div style="display: flex; justify-content: space-between">
     <button mat-button (click)="closeDialog.emit()">{{ 'form.action.cancel' | translate }}</button>
 
-    <button
-      mat-raised-button
-      type="submit"
-      [color]="(hasLoadingErrors$ | async) ? 'warn' : 'primary'"
-      appLoadingButton
-      [isLoading]="isLoading$ | async"
-      [disabled]="form.invalid">
+    <button mat-raised-button type="submit" appLoadingButton [isLoading]="isLoading$ | async" [disabled]="form.invalid">
       {{ 'form.action.save' | translate }}
     </button>
   </div>
