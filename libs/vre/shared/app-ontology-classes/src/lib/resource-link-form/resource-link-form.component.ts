@@ -8,7 +8,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   Constants,
@@ -41,20 +41,13 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
   /**
    * form group, errors and validation messages
    */
-  form: UntypedFormGroup;
-
-  formErrors = {
-    label: '',
-  };
-
-  validationMessages = {
-    label: {
-      required: 'A label is required.',
-    },
-  };
+  form = this._fb.group({
+    label: ['', Validators.required],
+    comment: ['', Validators.required],
+  });
 
   private ngUnsubscribe = new Subject<void>();
-  selectedProject: string;
+  selectedProject?: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -72,61 +65,25 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     })
   );
 
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isProjectsLoading) isLoading$: Observable<boolean>;
-  @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$!: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
+  @Select(ProjectsSelectors.isProjectsLoading) isLoading$!: Observable<boolean>;
+  @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$!: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _fb: UntypedFormBuilder,
+    private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
     private _store: Store
   ) {}
 
-  ngOnInit(): void {
-    this.form = this._fb.group({
-      label: new UntypedFormControl(
-        {
-          value: '',
-          disabled: false,
-        },
-        [Validators.required]
-      ),
-      comment: new UntypedFormControl(),
-      project: new UntypedFormControl(),
-    });
-
-    this.form.valueChanges.subscribe(() => this.onValueChanged());
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  /**
-   * this method is for the form error handling
-   */
-  onValueChanged() {
-    if (!this.form) {
-      return;
-    }
-
-    const form = this.form;
-
-    Object.keys(this.formErrors).forEach(field => {
-      this.formErrors[field] = '';
-      const control = form.get(field);
-      if (control && control.dirty && !control.valid) {
-        const messages = this.validationMessages[field];
-        Object.keys(control.errors).forEach(key => {
-          this.formErrors[field] += `${messages[key]} `;
-        });
-      }
-    });
   }
 
   trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
@@ -139,9 +96,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     const linkObj = new CreateResource();
 
     linkObj.label = this.form.controls['label'].value;
-
     linkObj.type = Constants.LinkObj;
-
     linkObj.attachedToProject = this.selectedProject;
 
     const hasLinkToValue = [];
