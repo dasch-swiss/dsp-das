@@ -17,7 +17,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +51,8 @@ export class ResourceLinkFormComponent implements OnDestroy {
         projects = currentProject ? currentUserProjects.find(x => x.id === currentProject.id) : currentUserProjects;
       }
       return projects as StoredProject[];
-    })
+    }),
+    tap(v => console.log(v))
   );
 
   @Select(UserSelectors.isSysAdmin) isSysAdmin$!: Observable<boolean>;
