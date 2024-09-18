@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import {
   CreateArchiveFileValue,
   CreateAudioFileValue,
@@ -17,10 +18,11 @@ import {
   UpdateStillImageFileValue,
   UpdateTextFileValue,
 } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { map, mergeMap, take } from 'rxjs/operators';
 import { UploadFileService } from './upload-file.service';
 
 // https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
@@ -61,7 +63,8 @@ export class UploadComponent implements OnInit {
     private _notification: NotificationService,
     private _sanitizer: DomSanitizer,
     private _upload: UploadFileService,
-    private _store: Store
+    private _store: Store,
+    protected _route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -96,9 +99,13 @@ export class UploadComponent implements OnInit {
         this._store
           .select(ProjectsSelectors.contextProject)
           .pipe(
-            filter(v => v !== undefined),
             take(1),
-            map(prj => prj!.shortcode),
+            map(contextProject => {
+              const params = this._route.snapshot.firstChild?.firstChild?.params;
+              return params[`${RouteConstants.project}`]
+                ? params[`${RouteConstants.project}`]
+                : contextProject!.shortcode;
+            }),
             mergeMap(shortcode => {
               return this._upload.upload(this.file, shortcode);
             })
