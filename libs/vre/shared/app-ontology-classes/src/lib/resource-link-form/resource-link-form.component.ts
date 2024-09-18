@@ -11,11 +11,12 @@ import {
   ReadResource,
 } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
+import { ShortResInfo } from '../list-view/list-view.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

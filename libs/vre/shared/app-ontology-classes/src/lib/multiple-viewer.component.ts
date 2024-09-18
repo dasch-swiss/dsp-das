@@ -22,7 +22,6 @@ import { SplitSize } from './split-size.interface';
             <app-intermediate
               *ngSwitchCase="'intermediate'"
               [resources]="selectedResources"
-              [projectIri]="'test'"
               (action)="viewMode = $event" />
             <!-- TODO change projectIri='test'-->
 

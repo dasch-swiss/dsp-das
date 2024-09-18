@@ -1,4 +1,4 @@
-import { ShortResInfo } from './short-res-info.interface';
+import { ShortResInfo } from '@dasch-swiss/vre/shared/app-ontology-classes';
 
 export interface FilteredResources {
   count: number;
