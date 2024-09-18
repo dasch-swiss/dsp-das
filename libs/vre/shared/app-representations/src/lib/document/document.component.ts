@@ -1,5 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
   Constants,
@@ -54,7 +64,8 @@ export class DocumentComponent implements OnInit, AfterViewInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -203,6 +214,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
 
         this.zoomFactor = 1.0;
         this.pdfQuery = '';
+        this._cd.markForCheck();
       });
   }
 }
