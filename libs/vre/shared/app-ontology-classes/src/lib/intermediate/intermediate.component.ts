@@ -27,7 +27,7 @@ export class IntermediateComponent {
     private _notification: NotificationService
   ) {}
 
-  openDialog() {
+  openLinkDialog() {
     const currentProjectIri = this.resources.resInfo.reduce(
       (acc, curr, index) => {
         if (index === 0) {
