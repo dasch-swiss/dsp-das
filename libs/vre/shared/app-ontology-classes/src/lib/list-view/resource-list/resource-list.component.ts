@@ -25,13 +25,17 @@ export class ResourceListComponent implements OnInit {
 
   ngOnInit() {
     if (this.resources.resources.length) {
-      this.selectResource({
-        checked: true,
-        resIndex: 0,
-        resId: this.resources.resources[0].id,
-        resLabel: this.resources.resources[0].label,
-        isCheckbox: false,
-      });
+      this.selectResource(
+        {
+          checked: true,
+          resIndex: 0,
+          resId: this.resources.resources[0].id,
+          resLabel: this.resources.resources[0].label,
+          attachedToProject: this.resources.resources[0].attachedToProject,
+          isCheckbox: false,
+        },
+        this.resources.resources[0]
+      );
     }
   }
 
@@ -40,7 +44,8 @@ export class ResourceListComponent implements OnInit {
     window.open(`/resource${path}`, '_blank');
   }
 
-  selectResource(status: CheckboxUpdate) {
+  selectResource(status: CheckboxUpdate, resource: ReadResource) {
+    console.log(resource, 'a');
     const selection = this._listView.viewResource(
       status,
       this.withMultipleSelection,

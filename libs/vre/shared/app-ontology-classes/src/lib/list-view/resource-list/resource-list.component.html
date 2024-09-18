@@ -19,8 +19,9 @@
                             resIndex: i,
                             resId: resource.id,
                             resLabel: resource.label,
+                            attachedToProject: resource.attachedToProject,
                             isCheckbox: false
-                        })
+                        }, resource)
                     ">
           <mat-icon matListItemIcon>{{ getIcon(resource) }}</mat-icon>
           <div matLine class="res-list-item-text">
@@ -54,8 +55,9 @@
                                 resIndex: i,
                                 resId: resource.id,
                                 resLabel: resource.label,
-                                isCheckbox: true
-                            })
+                                attachedToProject: resource.attachedToProject,
+                                isCheckbox: true,
+                            }, resource)
                         ">
           </mat-checkbox>
         </div>

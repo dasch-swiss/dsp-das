@@ -33,6 +33,7 @@ export interface CheckboxUpdate {
   resIndex: number;
   resId: string;
   resLabel: string;
+  attachedToProject: string;
   isCheckbox: boolean;
 }
 
@@ -104,24 +105,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  // the child component send the selected resources to the parent of this component directly;
-  // but when this component is initialized, it should select the first item in the list and
-  // emit this selected resource to the parent.
-  emitSelectedResources(res?: FilteredResources) {
-    if (!res || res.count === 0) {
-      // no resource is selected: In case of an error or no search results
-      this.selectedResources.emit({
-        count: 0,
-        resListIndex: [],
-        resInfo: [],
-        selectionType: 'single',
-      });
-    } else if (res.count > 0) {
-      this.selectedResourceIdx = res.resListIndex;
-      this.selectedResources.emit(res);
-    }
   }
 
   handleBackButtonClicked() {
@@ -262,6 +245,21 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
         this.loading = false;
         this._cd.markForCheck();
       });
+  }
+
+  emitSelectedResources(res?: FilteredResources) {
+    if (!res || res.count === 0) {
+      // no resource is selected: In case of an error or no search results
+      this.selectedResources.emit({
+        count: 0,
+        resListIndex: [],
+        resInfo: [],
+        selectionType: 'single',
+      });
+    } else if (res.count > 0) {
+      this.selectedResourceIdx = res.resListIndex;
+      this.selectedResources.emit(res);
+    }
   }
 
   private _isCurrentSearch() {
