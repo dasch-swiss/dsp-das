@@ -41,7 +41,7 @@ export class ResourceListComponent implements OnInit {
   }
 
   selectResource(status: CheckboxUpdate) {
-    const selection: FilteredResources = this._listView.viewResource(
+    const selection = this._listView.viewResource(
       status,
       this.withMultipleSelection,
       this.selectedResourceIdx,

@@ -4,6 +4,7 @@ import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 export interface ResourceLinkFormDialogProps {
   resources: FilteredResources;
+  projectIri: string;
 }
 
 @Component({
@@ -12,7 +13,10 @@ export interface ResourceLinkFormDialogProps {
       [title]="'Create a collection of ' + data.resources.count + ' resources'"
       [subtitle]="'Link resources'" />
     <mat-dialog-content>
-      <app-resource-link-form [resources]="data.resources" [project]="'test'" (closeDialog)="dialogRef.close($event)" />
+      <app-resource-link-form
+        [resources]="data.resources"
+        [project]="data.projectIri"
+        (closeDialog)="dialogRef.close($event)" />
     </mat-dialog-content>`,
 })
 export class ResourceLinkFormDialogComponent {

@@ -11,6 +11,7 @@ import { ResourceLinkFormDialogComponent, ResourceLinkFormDialogProps } from '..
 })
 export class IntermediateComponent {
   @Input({ required: true }) resources!: FilteredResources;
+  @Input({ required: true }) projectIri!: string;
   @Output() action = new EventEmitter<string>();
 
   itemPluralMapping = {
@@ -25,7 +26,7 @@ export class IntermediateComponent {
 
   openDialog() {
     this._dialog.open<ResourceLinkFormDialogComponent, ResourceLinkFormDialogProps>(ResourceLinkFormDialogComponent, {
-      data: { resources: this.resources },
+      data: { resources: this.resources, projectIri: this.projectIri },
     });
   }
 }
