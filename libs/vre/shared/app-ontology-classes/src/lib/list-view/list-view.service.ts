@@ -28,6 +28,7 @@ export class ListViewService {
     const resInfo: ShortResInfo = {
       id: status.resId,
       label: status.resLabel,
+      attachedToProject: status.attachedToProject,
     };
 
     // when multiple selection and checkbox is used to select more

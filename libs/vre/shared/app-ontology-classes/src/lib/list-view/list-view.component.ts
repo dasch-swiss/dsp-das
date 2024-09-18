@@ -26,6 +26,7 @@ import { map, take, takeUntil, tap } from 'rxjs/operators';
 export interface ShortResInfo {
   id: string;
   label: string;
+  attachedToProject: string;
 }
 
 export interface CheckboxUpdate {
