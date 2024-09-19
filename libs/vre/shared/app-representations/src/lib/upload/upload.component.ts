@@ -10,6 +10,7 @@ import {
   CreateMovingImageFileValue,
   CreateStillImageFileValue,
   CreateTextFileValue,
+  ReadProject,
   UpdateArchiveFileValue,
   UpdateAudioFileValue,
   UpdateDocumentFileValue,
@@ -18,7 +19,6 @@ import {
   UpdateStillImageFileValue,
   UpdateTextFileValue,
 } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -35,14 +35,14 @@ const resolvedPromise = Promise.resolve(null);
 })
 export class UploadComponent implements OnInit {
   @Input() parentForm?: UntypedFormGroup;
-
   @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+  @Input() attachedProject: ReadProject;
 
   @Output() fileInfo = new EventEmitter<CreateFileValue>();
-
   @Output() forceReload = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInput: ElementRef;
+
   file: File;
   form: UntypedFormGroup;
   fileControl: UntypedFormControl;
@@ -101,10 +101,7 @@ export class UploadComponent implements OnInit {
           .pipe(
             take(1),
             map(contextProject => {
-              const params = this._route.snapshot.firstChild?.firstChild?.params;
-              return params[`${RouteConstants.project}`]
-                ? params[`${RouteConstants.project}`]
-                : contextProject!.shortcode;
+              return this.attachedProject ? this.attachedProject.shortcode : contextProject!.shortcode;
             }),
             mergeMap(shortcode => {
               return this._upload.upload(this.file, shortcode);

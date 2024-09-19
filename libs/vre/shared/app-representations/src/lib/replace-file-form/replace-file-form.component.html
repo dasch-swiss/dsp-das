@@ -13,6 +13,7 @@
 <app-upload
   #upload
   [representation]="representation"
+  [attachedProject]="attachedProject"
   (fileInfo)="setFileValue($event)"
   (forceReload)="closeDialog.emit(undefined);"></app-upload>
 
