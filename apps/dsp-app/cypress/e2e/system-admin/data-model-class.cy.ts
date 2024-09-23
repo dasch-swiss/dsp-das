@@ -82,7 +82,7 @@ describe('Data Model Class', () => {
     cy.get('.mat-mdc-dialog-container').should('not.exist');
   });
 
-  it.only('should delete a data model class', () => {
+  it('should delete a data model class', () => {
     cy.createDataModelClass(projectPage);
     const classCard = cy.get('[data-cy=class-card]');
 
