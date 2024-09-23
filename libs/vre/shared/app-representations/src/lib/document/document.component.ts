@@ -25,7 +25,6 @@ import {
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
@@ -39,8 +38,8 @@ import { RepresentationService } from '../representation.service';
 })
 export class DocumentComponent implements OnInit, AfterViewInit {
   @Input() src: FileRepresentation;
-
   @Input() parentResource: ReadResource;
+  @Input() attachedProject: ReadProject | undefined;
 
   @Output() loaded = new EventEmitter<boolean>();
 
@@ -125,7 +124,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
         title: 'Document',
         subtitle: 'Update the document file of this resource',
         representation: 'document',
-        attachedProject: this.getAttachedProject(this.parentResource),
+        attachedProject: this.attachedProject,
         id: propId,
       },
       disableClose: true,
@@ -173,15 +172,6 @@ export class DocumentComponent implements OnInit, AfterViewInit {
           break;
         }
     }
-  }
-
-  private getAttachedProject(parentResource: ReadResource): ReadProject | undefined {
-    const attachedProjects = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const attachedProject =
-      attachedProjects[parentResource.id] && attachedProjects[parentResource.id].value.length > 0
-        ? attachedProjects[parentResource.id].value.find(u => u.id === parentResource.attachedToProject)
-        : undefined;
-    return attachedProject;
   }
 
   private _getFileType(filename: string): string {
