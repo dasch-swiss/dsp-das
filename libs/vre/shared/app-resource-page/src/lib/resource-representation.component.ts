@@ -2,7 +2,12 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { FileRepresentation, RepresentationConstants, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
+import {
+  FileRepresentation,
+  RepresentationConstants,
+  RepresentationService,
+  getFileValue,
+} from '@dasch-swiss/vre/shared/app-representations';
 import { ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
@@ -89,14 +94,7 @@ export class ResourceRepresentationComponent implements OnChanges {
 
   attachedProject$: Observable<ReadProject | undefined> = this._store.select(ResourceSelectors.attachedProjects).pipe(
     filter(attachedProjects => !!attachedProjects && Object.values(attachedProjects).length > 0),
-    map(attachedProjects => {
-      const parentResource = this.resource.res;
-      const attachedProject =
-        attachedProjects[parentResource.id] && attachedProjects[parentResource.id].value.length > 0
-          ? attachedProjects[parentResource.id].value.find(u => u.id === parentResource.attachedToProject)
-          : undefined;
-      return attachedProject;
-    })
+    map(attachedProjects => this._rs.getParentResourceAttachedProject(attachedProjects, this.resource.res))
   );
 
   isAdmin$: Observable<boolean> = combineLatest([
@@ -110,7 +108,10 @@ export class ResourceRepresentationComponent implements OnChanges {
     })
   );
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _store: Store,
+    private _rs: RepresentationService
+  ) {}
 
   ngOnChanges() {
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
