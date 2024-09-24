@@ -21,16 +21,6 @@
     <app-add-region-form [resourceIri]="data.id"></app-add-region-form>
   </div>
 
-  <div *ngSwitchCase="'replaceFile'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-    <mat-dialog-content class="form-content">
-      <app-replace-file-dialog
-        [representation]="data.representation"
-        [propId]="data.id"
-        [projectUuid]="data.projectUuid"
-        (closeDialog)="dialogRef.close($event)"></app-replace-file-dialog>
-    </mat-dialog-content>
-  </div>
   <div *ngSwitchCase="'linkResources'">
     <app-dialog-header [title]="data.title" [subtitle]="'Link resources'"></app-dialog-header>
     <mat-dialog-content>
