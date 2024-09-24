@@ -24,11 +24,11 @@
   <div *ngSwitchCase="'replaceFile'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
     <mat-dialog-content class="form-content">
-      <app-replace-file-form
+      <app-replace-file-dialog
         [representation]="data.representation"
         [propId]="data.id"
         [projectUuid]="data.projectUuid"
-        (closeDialog)="dialogRef.close($event)"></app-replace-file-form>
+        (closeDialog)="dialogRef.close($event)"></app-replace-file-dialog>
     </mat-dialog-content>
   </div>
   <div *ngSwitchCase="'linkResources'">

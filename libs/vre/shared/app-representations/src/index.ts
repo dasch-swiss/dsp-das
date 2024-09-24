@@ -4,7 +4,7 @@ export * from './lib/archive/archive.component';
 export * from './lib/audio/audio.component';
 export * from './lib/av-timeline/av-timeline.component';
 export * from './lib/document/document.component';
-export * from './lib/replace-file-form/replace-file-form.component';
+export * from './lib/replace-file-dialog/replace-file-dialog.component';
 export * from './lib/still-image/still-image.component';
 export * from './lib/text/text.component';
 export * from './lib/upload/upload.component';

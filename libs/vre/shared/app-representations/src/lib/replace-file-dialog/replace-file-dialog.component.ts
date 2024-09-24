@@ -3,11 +3,11 @@ import { UpdateFileValue } from '@dasch-swiss/dsp-js';
 import { UploadComponent } from '../upload/upload.component';
 
 @Component({
-  selector: 'app-replace-file-form',
-  templateUrl: './replace-file-form.component.html',
-  styleUrls: ['./replace-file-form.component.scss'],
+  selector: 'app-replace-file-dialog',
+  templateUrl: './replace-file-dialog.component.html',
+  styleUrls: ['./replace-file-dialog.component.scss'],
 })
-export class ReplaceFileFormComponent implements OnInit {
+export class ReplaceFileDialogComponent implements OnInit {
   @Input() representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
   @Input() propId: string;
   @Input() projectUuid: string;
