@@ -33,7 +33,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
-import { Subject, combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
@@ -75,6 +75,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
+  }
+
+  get userCanView() {
+    return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
 
   get usercanEdit() {
@@ -184,8 +188,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._notification.openSnackBar(message);
   }
 
-  download(url: string) {
-    this._rs.downloadFile(url, this.imageFileInfo?.originalFilename);
+  download() {
+    if (this.imageFileValue?.fileUrl) {
+      this._rs.downloadFile(this.imageFileValue?.fileUrl, this.imageFileInfo?.originalFilename);
+    }
   }
 
   replaceImage() {
