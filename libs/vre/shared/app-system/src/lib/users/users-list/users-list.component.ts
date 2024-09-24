@@ -21,6 +21,7 @@ import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/v
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
+import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -353,6 +354,10 @@ export class UsersListComponent {
       }
       this._cd.markForCheck();
     });
+  }
+
+  openManageProjectMembershipDialog(user: ReadUser): void {
+    this._matDialog.open(ManageProjectMembershipDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
   /**
