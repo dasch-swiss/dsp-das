@@ -10,7 +10,7 @@ import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
   incomingResource: DspResource | undefined;
-  private _resource!: DspResource;
+  resource!: DspResource;
 
   get exists() {
     return this.compoundPosition !== undefined;
@@ -32,7 +32,7 @@ export class CompoundService {
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
     this.compoundPosition = _compound;
-    this._resource = resource;
+    this.resource = resource;
     this.openPage(_compound.page);
   }
 
@@ -45,9 +45,13 @@ export class CompoundService {
     const position = Math.floor(page - offset * 25 - 1);
 
     // get incoming still image representations, if the offset changed
-    if (offset === this.compoundPosition.offset && this._resource.incomingRepresentations.length > 0) {
+    if (
+      offset === this.compoundPosition.offset &&
+      this.resource.incomingRepresentations.length > 0 &&
+      this.resource.incomingRepresentations[position]
+    ) {
       // get incoming resource, if the offset is the same but page changed
-      this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
+      this._loadIncomingResource(this.resource.incomingRepresentations[position].id);
     } else {
       this.compoundPosition.offset = offset;
       this._loadIncomingResourcesPage(offset);
@@ -57,6 +61,16 @@ export class CompoundService {
     this.compoundPosition.page = page;
   }
 
+  // incoming representation is not provided due to lack of permissions
+  isNextPageAvailable(page: number) {
+    if (!page || !this.compoundPosition) {
+      return false;
+    }
+
+    const offset = Math.ceil(page / 25) - 1;
+    return offset === this.compoundPosition.offset && this.resource.incomingRepresentations.length >= page + 1;
+  }
+
   private _loadIncomingResourcesPage(offset: number): void {
     if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
       this._notification.openSnackBar(`Offset of ${offset} is invalid`);
@@ -64,15 +78,15 @@ export class CompoundService {
     }
 
     this._incomingService
-      .getStillImageRepresentationsForCompoundResource(this._resource.res.id, offset)
+      .getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset)
       .subscribe(res => {
         const incomingImageRepresentations = res as ReadResourceSequence;
 
         if (incomingImageRepresentations.resources.length === 0) {
           return;
         }
-        this._resource.incomingRepresentations = incomingImageRepresentations.resources;
-        this._loadIncomingResource(this._resource.incomingRepresentations[this.compoundPosition.position].id);
+        this.resource.incomingRepresentations = incomingImageRepresentations.resources;
+        this._loadIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
       });
   }
 
