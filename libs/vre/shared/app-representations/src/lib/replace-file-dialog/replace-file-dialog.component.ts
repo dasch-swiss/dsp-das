@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReadProject, UpdateFileValue } from '@dasch-swiss/dsp-js';
-import { UploadComponent } from '../upload/upload.component';
+import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
+import { FileRepresentationType } from '@dasch-swiss/vre/shared/app-resource-properties';
 
 export interface ReplaceFileDialogProps {
-  representation: 'stillImage' | 'movingImage' | 'audio' | 'document' | 'text' | 'archive';
+  representation: FileRepresentationType;
   propId: string;
   projectUuid: string;
   title: string;
@@ -17,48 +18,28 @@ export interface ReplaceFileDialogProps {
   styleUrls: ['./replace-file-dialog.component.scss'],
 })
 export class ReplaceFileDialogComponent implements OnInit {
-  @Output() closeDialog: EventEmitter<UpdateFileValue> = new EventEmitter<UpdateFileValue>();
-  @ViewChild('upload') uploadComponent!: UploadComponent;
-
-  fileValue?: UpdateFileValue;
   warningMessages: string[] = [];
+  form = this._fb.control<UpdateFileValue | null>(null);
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: ReplaceFileDialogProps,
-    public dialogRef: MatDialogRef<ReplaceFileDialogComponent>
+    public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this._generateWarningMessage(this.data.representation);
   }
 
-  setFileValue(file: UpdateFileValue) {
-    this.fileValue = file;
-  }
-
   saveFile() {
-    const updateVal = this.uploadComponent.getUpdatedValue(this.data.propId);
-
-    if (updateVal instanceof UpdateFileValue) {
-      updateVal.filename = this.fileValue.filename;
-      updateVal.id = this.data.propId;
-      this.closeDialog.emit(updateVal);
-    } else {
-      console.error('expected UpdateFileValue, got: ', updateVal);
-    }
+    this.dialogRef.close(this.form.getRawValue());
   }
 
-  // generate the warning message strings with the correct representation type
-  _generateWarningMessage(representationType: string) {
-    if (representationType === undefined) {
-      this.warningMessages.push('File will be replaced.');
-      this.warningMessages.push('Please note that you are about to replace the file');
-    }
-
+  private _generateWarningMessage(representationType: string) {
     let repType = representationType;
 
-    if (representationType === 'stillImage' || representationType === 'movingImage') {
+    if (representationType === 'stillImag   e' || representationType === 'movingImage') {
       switch (representationType) {
         case 'stillImage':
           repType = 'image';

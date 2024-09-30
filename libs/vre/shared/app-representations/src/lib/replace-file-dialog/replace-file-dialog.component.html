@@ -12,22 +12,13 @@
       </div>
     </div>
   </div>
-  <app-upload
-    #upload
-    [representation]="data.representation"
-    [projectUuid]="data.projectUuid"
-    (fileInfo)="setFileValue($event)"
-    (forceReload)="dialogRef.close(undefined);"></app-upload>
 
-  <div class="form-panel form-action">
-    <span>
-      <button mat-button type="button" (click)="closeDialog.emit()">{{ 'form.action.cancel' | translate }}</button>
-    </span>
-    <span class="fill-remaining-space"></span>
-    <span>
-      <button mat-raised-button type="submit" [disabled]="!fileValue" [color]="'primary'" (click)="saveFile()">
-        {{ 'form.action.submit' | translate }}
-      </button>
-    </span>
-  </div>
+  <app-upload-2 [representation]="data.representation" [formControl]="form" />
 </mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button type="button" (click)="dialogRef.close()">{{ 'form.action.cancel' | translate }}</button>
+  <button mat-raised-button type="submit" [disabled]="form.disabled" [color]="'primary'" (click)="saveFile()">
+    {{ 'form.action.submit' | translate }}
+  </button>
+</mat-dialog-actions>

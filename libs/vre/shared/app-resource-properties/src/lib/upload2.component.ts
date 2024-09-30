@@ -14,7 +14,7 @@ import {
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 
@@ -96,6 +96,7 @@ export class Upload2Component implements ControlValueAccessor {
   } as const;
 
   get allowedFileTypes() {
+    console.log(this);
     return this._fileTypesMapping[this.representation];
   }
 
@@ -152,10 +153,9 @@ export class Upload2Component implements ControlValueAccessor {
         .pipe(ofActionSuccessful(LoadProjectAction))
         .pipe(take(1))
         .subscribe(() => {
-          const contextProject = this._store.selectSnapshot(ProjectsSelectors.contextProject);
           this._uploadProjectFile(file);
         });
-      this._store.dispatch([new LoadProjectAction(resource.res.attachedToProject, false)]);
+      this._store.dispatch(new LoadProjectAction(resource.res.attachedToProject, false));
     } else {
       this._uploadProjectFile(file);
     }

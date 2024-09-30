@@ -58,8 +58,8 @@ export class AudioMoreButtonComponent {
         data: {
           title: 'Audio',
           subtitle: 'Update the audio file of this resource',
-          representation: 'audio',
-          projectUuid: this._rs.getAttachedProject(this.parentResource),
+          representation: Constants.HasAudioFileValue,
+          projectUuid: this._rs.getAttachedProject(this.parentResource)!.id,
           propId: this.parentResource.properties[Constants.HasAudioFileValue][0].id,
         },
       })
