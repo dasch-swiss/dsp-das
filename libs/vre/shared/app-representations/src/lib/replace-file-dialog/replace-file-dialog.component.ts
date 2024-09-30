@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UpdateFileValue } from '@dasch-swiss/dsp-js';
+import { ReadProject, UpdateFileValue } from '@dasch-swiss/dsp-js';
 import { UploadComponent } from '../upload/upload.component';
 
 export interface ReplaceFileDialogProps {
