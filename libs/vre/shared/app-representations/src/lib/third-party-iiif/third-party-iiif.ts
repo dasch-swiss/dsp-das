@@ -57,15 +57,15 @@ export class IIIFUrl {
       return false;
     }
 
-    if (!this.rotation_ex.test(this._rotationSegment)) {
+    if (!this.rotation_ex.test(this._rotationSegment) && this.rotation_ex.test(decodeURI(this._rotationSegment))) {
       return false;
     }
 
-    if (!this.size_ex.test(this._sizeSegment)) {
+    if (!this.size_ex.test(this._sizeSegment) && this.size_ex.test(decodeURI(this._sizeSegment))) {
       return false;
     }
 
-    if (!this.region_ex.test(this._regionSegment)) {
+    if (!this.region_ex.test(this._regionSegment) && this.region_ex.test(decodeURI(this._regionSegment))) {
       return false;
     }
 
