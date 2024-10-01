@@ -37,11 +37,7 @@ export class CompoundNavigationComponent {
   }
 
   get isForwardButtonDisabled() {
-    return (
-      !this.compoundNavigation ||
-      this.compoundNavigation.isLastPage ||
-      !this.compoundService.isNextPageAvailable(this.compoundNavigation.page)
-    );
+    return !this.compoundNavigation || this.compoundNavigation.isLastPage;
   }
 
   openPage(page: number) {

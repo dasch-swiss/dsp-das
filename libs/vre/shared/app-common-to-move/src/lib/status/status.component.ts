@@ -20,7 +20,14 @@ export interface StatusMsg {
   styleUrls: ['./status.component.scss'],
 })
 export class StatusComponent implements OnInit {
-  @Input() status: number;
+  _status: number = 404;
+  get status(): number {
+    return this._status;
+  }
+  @Input() set status(value: number) {
+    this._status = value;
+    this.message = this.getMsgByStatus(this.status);
+  }
 
   @Input() comment?: string;
   @Input() url?: string;
@@ -90,7 +97,7 @@ export class StatusComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _titleService: Title,
     private _route: ActivatedRoute,
-    private _status: HttpStatusMsg
+    private _httpStatus: HttpStatusMsg
   ) {}
 
   ngOnInit() {
@@ -120,7 +127,7 @@ export class StatusComponent implements OnInit {
     let msg = this.errorMessages.filter(x => x.status === status)[0];
 
     if (!msg) {
-      msg = this._status.default[status];
+      msg = this._httpStatus.default[status];
       msg.status = status;
       msg.image = 'dsp-error.svg';
       msg.action = this.url ? 'goto' : undefined;

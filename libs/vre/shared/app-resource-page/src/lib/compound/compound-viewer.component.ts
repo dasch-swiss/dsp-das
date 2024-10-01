@@ -7,9 +7,6 @@ import { CompoundService } from './compound.service';
   template: `
     <ng-container *ngIf="compoundService.compoundPosition">
       <ng-container *ngIf="compoundService.incomingResource as incomingResource">
-        <div *ngIf="!isNextPageAvailable" class="note warning">
-          Some incoming resources may not be accessible due to the lack of permissions.
-        </div>
         <app-still-image
           class="dsp-representation stillimage"
           *ngIf="imageIsAccessible"
@@ -49,18 +46,6 @@ export class CompoundViewerComponent {
 
   get imageIsAccessible() {
     return this.fileRepresentation.fileValue;
-  }
-
-  get isNextPageAvailable() {
-    if (!this.compoundService || !this.compoundService.compoundPosition) {
-      return false;
-    }
-
-    return (
-      !this.compoundService.compoundPosition ||
-      this.compoundService.compoundPosition.isLastPage ||
-      this.compoundService.isNextPageAvailable(this.compoundService.compoundPosition.page)
-    );
   }
 
   constructor(public compoundService: CompoundService) {}

@@ -5,12 +5,15 @@ import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
   incomingResource: DspResource | undefined;
   resource!: DspResource;
+
+  onOpenNotLoadedIncomingResourcePage$: Subject<void> = new Subject<void>();
 
   get exists() {
     return this.compoundPosition !== undefined;
@@ -52,6 +55,12 @@ export class CompoundService {
     ) {
       // get incoming resource, if the offset is the same but page changed
       this._loadIncomingResource(this.resource.incomingRepresentations[position].id);
+    } else if (
+      offset === this.compoundPosition.offset &&
+      this.resource.incomingRepresentations.length > 0 &&
+      !this.resource.incomingRepresentations[position]
+    ) {
+      this.onOpenNotLoadedIncomingResourcePage$.next();
     } else {
       this.compoundPosition.offset = offset;
       this._loadIncomingResourcesPage(offset);
@@ -59,16 +68,6 @@ export class CompoundService {
 
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
-  }
-
-  // incoming representation is not provided due to lack of permissions
-  isNextPageAvailable(page: number) {
-    if (!page || !this.compoundPosition) {
-      return false;
-    }
-
-    const offset = Math.ceil(page / 25) - 1;
-    return offset === this.compoundPosition.offset && this.resource.incomingRepresentations.length >= page + 1;
   }
 
   private _loadIncomingResourcesPage(offset: number): void {
