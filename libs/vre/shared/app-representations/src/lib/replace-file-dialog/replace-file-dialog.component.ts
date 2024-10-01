@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
 import { FileRepresentationType } from '@dasch-swiss/vre/shared/app-resource-properties';
@@ -19,7 +19,7 @@ export interface ReplaceFileDialogProps {
 })
 export class ReplaceFileDialogComponent implements OnInit {
   warningMessages: string[] = [];
-  form = this._fb.control<UpdateFileValue | null>(null);
+  form = this._fb.control<UpdateFileValue | null>(null, [Validators.required]);
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -33,6 +33,7 @@ export class ReplaceFileDialogComponent implements OnInit {
   }
 
   saveFile() {
+    console.log(this.form);
     this.dialogRef.close(this.form.getRawValue());
   }
 

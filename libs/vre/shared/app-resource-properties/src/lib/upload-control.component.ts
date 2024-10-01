@@ -16,9 +16,9 @@ import { Actions, Store } from '@ngxs/store';
 import { FileRepresentationType } from './file-representation.type';
 
 @Component({
-  selector: 'app-upload-2',
+  selector: 'app-upload-control',
   template: `
-    <app-upload-basic
+    <app-upload
       [representation]="representation"
       (afterFileRemoved)="removeFile()"
       (afterFileUploaded)="doWithFile($event)"
@@ -30,7 +30,7 @@ import { FileRepresentationType } from './file-representation.type';
     </ng-template>
   `,
 })
-export class Upload2Component implements ControlValueAccessor {
+export class UploadControlComponent implements ControlValueAccessor {
   @Input() resourceId?: string;
   @Input({ required: true }) representation!: FileRepresentationType;
 
@@ -63,12 +63,14 @@ export class Upload2Component implements ControlValueAccessor {
     if (this.resourceId) {
       const uploadedFile = new UpdateAudioFileValue();
       uploadedFile.id = this.resourceId;
+      uploadedFile.filename = res.internalFilename;
+      this.onChange(uploadedFile);
     } else {
       const createFile = this._createFileValue;
       createFile.filename = res.internalFilename;
       this.onChange(createFile);
-      this.onTouched();
     }
+    this.onTouched();
 
     this._cdr.detectChanges();
   }

@@ -9,7 +9,7 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 import { FileRepresentationType } from './file-representation.type';
 
 @Component({
-  selector: 'app-upload-basic',
+  selector: 'app-upload',
   template: `
     <ng-container *ngIf="!loading; else loadingTpl">
       <div
@@ -62,7 +62,7 @@ import { FileRepresentationType } from './file-representation.type';
   `,
   styles: ['td {padding: 8px; text-align: center}'],
 })
-export class UploadBasicComponent {
+export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
   @Output() afterFileRemoved = new EventEmitter<void>();
   @Output() afterFileUploaded = new EventEmitter<UploadedFile>();
@@ -165,6 +165,7 @@ export class UploadBasicComponent {
   }
 
   removeFile() {
+    this.fileToUpload = undefined;
     this.afterFileRemoved.emit();
   }
 }

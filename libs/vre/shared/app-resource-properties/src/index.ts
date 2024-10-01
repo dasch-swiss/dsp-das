@@ -44,6 +44,6 @@ export * from './lib/property-values.component';
 export * from './lib/resource-info-bar.component';
 export * from './lib/resource-payloads-mapping';
 export * from './lib/sortByKeys';
-export * from './lib/upload2.component';
+export * from './lib/upload-control.component';
 export * from './resource-properties.components';
-export * from './lib/upload-basic.component';
+export * from './lib/upload.component';
