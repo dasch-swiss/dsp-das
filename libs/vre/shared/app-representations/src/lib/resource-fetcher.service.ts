@@ -7,7 +7,7 @@ import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
@@ -18,7 +18,6 @@ export class ResourceFetcherService {
   resource$ = this._resourceSubject.asObservable();
 
   private _subscription: Subscription | undefined;
-  private _onLangChangeSubscription: Subscription | undefined;
 
   settings = { imageFormatIsPng: new BehaviorSubject(false) };
 
@@ -37,13 +36,14 @@ export class ResourceFetcherService {
       .pipe(switchMap(() => this._getResource()))
       .subscribe(res => this._resourceSubject.next(res));
 
-    this._onLangChangeSubscription = this._translateService.onLangChange
+    this._translateService.onLangChange
       .pipe(
-        switchMap(() => this._store.select(OntologiesSelectors.currentOntologyIri)),
-        filter(currentOntologyIri => !!currentOntologyIri),
-        switchMap(currentOntologyIri =>
-          this._dspApiConnection.v2.ontologyCache.reloadCachedItem(currentOntologyIri!).pipe(take(1))
-        )
+        switchMap(() => this._store.select(OntologiesSelectors.projectOntology)),
+        map(currentOntology => {
+          if (currentOntology !== undefined && !!currentOntology.id) {
+            this._dspApiConnection.v2.ontologyCache.reloadCachedItem(currentOntology!.id).pipe(take(1));
+          }
+        })
       )
       .subscribe(() => {
         this._componentCommsService.emit(new EmitEvent(Events.resourceLanguageChanged));
@@ -51,8 +51,8 @@ export class ResourceFetcherService {
   }
 
   onDestroy() {
+    this._store.dispatch(new SetCurrentResourceAction(null));
     this._subscription?.unsubscribe();
-    this._onLangChangeSubscription?.unsubscribe();
   }
 
   reload() {

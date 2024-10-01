@@ -1,5 +1,77 @@
 # Changelog
 
+## [11.20.4](https://github.com/dasch-swiss/dsp-das/compare/v11.20.3...v11.20.4) (2024-09-27)
+
+
+### Bug Fixes
+
+* add support for uppercase file extensions (DEV-4148) ([#1827](https://github.com/dasch-swiss/dsp-das/issues/1827)) ([0fe1b1b](https://github.com/dasch-swiss/dsp-das/commit/0fe1b1b5d029060d96ac47471addfcafcb588a45))
+* compound resource is refreshed on change ([#1831](https://github.com/dasch-swiss/dsp-das/issues/1831)) ([4d6ed80](https://github.com/dasch-swiss/dsp-das/commit/4d6ed80cee80d2dafc786410dcbdbd842870a48f))
+* renamed usages of app-date-value-handler to dasch-swiss-date-val… ([#1830](https://github.com/dasch-swiss/dsp-das/issues/1830)) ([6d03420](https://github.com/dasch-swiss/dsp-das/commit/6d03420b3f9e82ff53b9ca42460e0b237b3f2ff2))
+
+## [11.20.3](https://github.com/dasch-swiss/dsp-das/compare/v11.20.2...v11.20.3) (2024-09-26)
+
+
+### Bug Fixes
+
+* annotations are reset on resource change ([#1825](https://github.com/dasch-swiss/dsp-das/issues/1825)) ([08bb85f](https://github.com/dasch-swiss/dsp-das/commit/08bb85f702ad408a85b95678d610a62bb4660bcb))
+* restored image format change (DEV-4143) ([#1822](https://github.com/dasch-swiss/dsp-das/issues/1822)) ([4d2f37c](https://github.com/dasch-swiss/dsp-das/commit/4d2f37cfa18fa9fb87f0527da088c3a5e6afea7b))
+* updates parent resource after replacing resource file (DEV-4172) ([#1824](https://github.com/dasch-swiss/dsp-das/issues/1824)) ([da81631](https://github.com/dasch-swiss/dsp-das/commit/da81631349e3242e96714bbe014e28b31ac5e255))
+
+## [11.20.2](https://github.com/dasch-swiss/dsp-das/compare/v11.20.1...v11.20.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* can replace a file in representations (DEV-4118) ([#1804](https://github.com/dasch-swiss/dsp-das/issues/1804)) ([c5a1d85](https://github.com/dasch-swiss/dsp-das/commit/c5a1d850db37170166f49c42467c58fde5ae782b))
+* deletes current resource data from the state when resource fetch… ([#1818](https://github.com/dasch-swiss/dsp-das/issues/1818)) ([a2e64b1](https://github.com/dasch-swiss/dsp-das/commit/a2e64b1287d6c11610e29b9f534002fe8ae008e5))
+
+## [11.20.1](https://github.com/dasch-swiss/dsp-das/compare/v11.20.0...v11.20.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* advanced search order by not list properties only (DEV-4096) ([#1800](https://github.com/dasch-swiss/dsp-das/issues/1800)) ([4b650cf](https://github.com/dasch-swiss/dsp-das/commit/4b650cfd9bb1bad9eb0173858dfc0b5ae2115fe0))
+* can create a property with a link to another class ([#1810](https://github.com/dasch-swiss/dsp-das/issues/1810)) ([6baafd9](https://github.com/dasch-swiss/dsp-das/commit/6baafd9e56910a93b5e53baadd8e01a527e1e12f))
+* disables download button, if resource is not loaded (DEV-4020) ([#1811](https://github.com/dasch-swiss/dsp-das/issues/1811)) ([e13a364](https://github.com/dasch-swiss/dsp-das/commit/e13a3649bc753579ea8d3421c8a7f79ec0fb0b9a))
+* display condition of outgoing standoff links  (DEV-4032) ([#1813](https://github.com/dasch-swiss/dsp-das/issues/1813)) ([68267d4](https://github.com/dasch-swiss/dsp-das/commit/68267d46248c7072c2d31832d2cc9bc453ca6f91))
+* encode filename properly during the file upload (DEV-4099) ([#1801](https://github.com/dasch-swiss/dsp-das/issues/1801)) ([7cc2c42](https://github.com/dasch-swiss/dsp-das/commit/7cc2c4259cb312ce4524786bd2ea2a6f468065b4))
+* prevents from throwing viewer exceptions (DEV-4083) ([#1809](https://github.com/dasch-swiss/dsp-das/issues/1809)) ([c920bd3](https://github.com/dasch-swiss/dsp-das/commit/c920bd3c186b6e6bc20c3944671606adb9eaf1c3))
+* resets link value control if linked value is not saved using dia… ([#1802](https://github.com/dasch-swiss/dsp-das/issues/1802)) ([780d9d4](https://github.com/dasch-swiss/dsp-das/commit/780d9d4a7cba4235783ee2076b5bf0ca60d61ee9))
+* type error in link property ([#1799](https://github.com/dasch-swiss/dsp-das/issues/1799)) ([d351f44](https://github.com/dasch-swiss/dsp-das/commit/d351f447b43f2d7f8df33ed8a3473a6ed92232f1))
+
+## [11.20.0](https://github.com/dasch-swiss/dsp-das/compare/v11.19.0...v11.20.0) (2024-09-16)
+
+
+### Enhancements
+
+* added feature flags configurations, allowEraseProjects variable (DEV-4011) ([#1766](https://github.com/dasch-swiss/dsp-das/issues/1766)) ([eca4222](https://github.com/dasch-swiss/dsp-das/commit/eca422202fd5653569b6cff2abdf6a327aa2b49f))
+* implement editing of third party iiif images (DEV-3967) ([#1770](https://github.com/dasch-swiss/dsp-das/issues/1770)) ([b5ba0ba](https://github.com/dasch-swiss/dsp-das/commit/b5ba0baadb88711abadee32d0a45159170d57ccb))
+
+
+### Bug Fixes
+
+* all input fields have an asterisk when required ([#1768](https://github.com/dasch-swiss/dsp-das/issues/1768)) ([1603e6c](https://github.com/dasch-swiss/dsp-das/commit/1603e6c5477d93f0951ffe1b1bb0b9f2b6398927))
+* allows sysadmin to create link object from search (DEV-4054) ([#1771](https://github.com/dasch-swiss/dsp-das/issues/1771)) ([04a3d39](https://github.com/dasch-swiss/dsp-das/commit/04a3d3960461a7f2eebb06deeda34844652723ef))
+* cache reloaded only when ontology is available (DEV-4089) ([#1793](https://github.com/dasch-swiss/dsp-das/issues/1793)) ([8baa413](https://github.com/dasch-swiss/dsp-das/commit/8baa413d393fed15d7051df3095e909fac89c61a))
+* clears dsp-js cache before loading the resource (DEV-4059) ([#1775](https://github.com/dasch-swiss/dsp-das/issues/1775)) ([6abfd72](https://github.com/dasch-swiss/dsp-das/commit/6abfd723593890a0f860091b5a4bca67429bdfd6))
+* geoname displayName exception (DEV-4105) ([#1797](https://github.com/dasch-swiss/dsp-das/issues/1797)) ([cd96451](https://github.com/dasch-swiss/dsp-das/commit/cd964514961f1437216ff222feceed929b05dcb9))
+* gravSearch does not equal operator for list value (DEV-4097) ([#1794](https://github.com/dasch-swiss/dsp-das/issues/1794)) ([92db185](https://github.com/dasch-swiss/dsp-das/commit/92db18538eec857011484fa506673f920d85327c))
+* returns false if user is logging out and permissions is unavaila… ([#1796](https://github.com/dasch-swiss/dsp-das/issues/1796)) ([6148a61](https://github.com/dasch-swiss/dsp-das/commit/6148a6108ce82f013cc1d7be65f8f9d70e60ef58))
+* revert "fix: sentry typeerror: cannot read properties of undefined re… ([#1795](https://github.com/dasch-swiss/dsp-das/issues/1795)) ([96b10bf](https://github.com/dasch-swiss/dsp-das/commit/96b10bfdb0136405d7d094e45a104fcd369e95e5))
+* sentry typeerror: cannot read properties of undefined reading ([#1778](https://github.com/dasch-swiss/dsp-das/issues/1778)) ([073ebf7](https://github.com/dasch-swiss/dsp-das/commit/073ebf711478b429a14af4fe9de912f2a5cd985d))
+
+
+### Maintenance
+
+* **deps-dev:** bump cypress to 13.14.2 (fixes compatability with Firefox 130) ([#1779](https://github.com/dasch-swiss/dsp-das/issues/1779)) ([84a5d01](https://github.com/dasch-swiss/dsp-das/commit/84a5d01aa849c95ba991a5ee52901d9ea02de45d))
+* Fix nginx configuration to provide the right value for the Permission-Policy header ([#1791](https://github.com/dasch-swiss/dsp-das/issues/1791)) ([e679186](https://github.com/dasch-swiss/dsp-das/commit/e679186b1088313abd36b6a38caa8a9834fe60c7))
+* move logic from app to nx libs ([#1764](https://github.com/dasch-swiss/dsp-das/issues/1764)) ([1c09e2f](https://github.com/dasch-swiss/dsp-das/commit/1c09e2fa910f98f0858c4b3610e959b025031772))
+* Remove Feature-Policy header ([#1792](https://github.com/dasch-swiss/dsp-das/issues/1792)) ([645e19a](https://github.com/dasch-swiss/dsp-das/commit/645e19ae09ae6bf0d026e9b6c6cc547b03d9621a))
+* show tooltip on parent div, position on the cursor (DEV-4051) ([#1772](https://github.com/dasch-swiss/dsp-das/issues/1772)) ([56c04f4](https://github.com/dasch-swiss/dsp-das/commit/56c04f45495af7f1e0b4882481092d0d5ff89764))
+* Use k6chaijs for assertions ([#1773](https://github.com/dasch-swiss/dsp-das/issues/1773)) ([292e3ee](https://github.com/dasch-swiss/dsp-das/commit/292e3eee15f70ce7379c90ca237717ee65c7d34a))
+* use local nx runner ([#1777](https://github.com/dasch-swiss/dsp-das/issues/1777)) ([454eac6](https://github.com/dasch-swiss/dsp-das/commit/454eac65dccb4fae61419e74130463031520a349))
+
 ## [11.19.0](https://github.com/dasch-swiss/dsp-das/compare/v11.18.2...v11.19.0) (2024-09-05)
 
 
