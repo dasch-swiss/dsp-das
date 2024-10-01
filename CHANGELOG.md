@@ -1,5 +1,45 @@
 # Changelog
 
+## [11.20.4](https://github.com/dasch-swiss/dsp-das/compare/v11.20.3...v11.20.4) (2024-09-27)
+
+
+### Bug Fixes
+
+* add support for uppercase file extensions (DEV-4148) ([#1827](https://github.com/dasch-swiss/dsp-das/issues/1827)) ([0fe1b1b](https://github.com/dasch-swiss/dsp-das/commit/0fe1b1b5d029060d96ac47471addfcafcb588a45))
+* compound resource is refreshed on change ([#1831](https://github.com/dasch-swiss/dsp-das/issues/1831)) ([4d6ed80](https://github.com/dasch-swiss/dsp-das/commit/4d6ed80cee80d2dafc786410dcbdbd842870a48f))
+* renamed usages of app-date-value-handler to dasch-swiss-date-val… ([#1830](https://github.com/dasch-swiss/dsp-das/issues/1830)) ([6d03420](https://github.com/dasch-swiss/dsp-das/commit/6d03420b3f9e82ff53b9ca42460e0b237b3f2ff2))
+
+## [11.20.3](https://github.com/dasch-swiss/dsp-das/compare/v11.20.2...v11.20.3) (2024-09-26)
+
+
+### Bug Fixes
+
+* annotations are reset on resource change ([#1825](https://github.com/dasch-swiss/dsp-das/issues/1825)) ([08bb85f](https://github.com/dasch-swiss/dsp-das/commit/08bb85f702ad408a85b95678d610a62bb4660bcb))
+* restored image format change (DEV-4143) ([#1822](https://github.com/dasch-swiss/dsp-das/issues/1822)) ([4d2f37c](https://github.com/dasch-swiss/dsp-das/commit/4d2f37cfa18fa9fb87f0527da088c3a5e6afea7b))
+* updates parent resource after replacing resource file (DEV-4172) ([#1824](https://github.com/dasch-swiss/dsp-das/issues/1824)) ([da81631](https://github.com/dasch-swiss/dsp-das/commit/da81631349e3242e96714bbe014e28b31ac5e255))
+
+## [11.20.2](https://github.com/dasch-swiss/dsp-das/compare/v11.20.1...v11.20.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* can replace a file in representations (DEV-4118) ([#1804](https://github.com/dasch-swiss/dsp-das/issues/1804)) ([c5a1d85](https://github.com/dasch-swiss/dsp-das/commit/c5a1d850db37170166f49c42467c58fde5ae782b))
+* deletes current resource data from the state when resource fetch… ([#1818](https://github.com/dasch-swiss/dsp-das/issues/1818)) ([a2e64b1](https://github.com/dasch-swiss/dsp-das/commit/a2e64b1287d6c11610e29b9f534002fe8ae008e5))
+
+## [11.20.1](https://github.com/dasch-swiss/dsp-das/compare/v11.20.0...v11.20.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* advanced search order by not list properties only (DEV-4096) ([#1800](https://github.com/dasch-swiss/dsp-das/issues/1800)) ([4b650cf](https://github.com/dasch-swiss/dsp-das/commit/4b650cfd9bb1bad9eb0173858dfc0b5ae2115fe0))
+* can create a property with a link to another class ([#1810](https://github.com/dasch-swiss/dsp-das/issues/1810)) ([6baafd9](https://github.com/dasch-swiss/dsp-das/commit/6baafd9e56910a93b5e53baadd8e01a527e1e12f))
+* disables download button, if resource is not loaded (DEV-4020) ([#1811](https://github.com/dasch-swiss/dsp-das/issues/1811)) ([e13a364](https://github.com/dasch-swiss/dsp-das/commit/e13a3649bc753579ea8d3421c8a7f79ec0fb0b9a))
+* display condition of outgoing standoff links  (DEV-4032) ([#1813](https://github.com/dasch-swiss/dsp-das/issues/1813)) ([68267d4](https://github.com/dasch-swiss/dsp-das/commit/68267d46248c7072c2d31832d2cc9bc453ca6f91))
+* encode filename properly during the file upload (DEV-4099) ([#1801](https://github.com/dasch-swiss/dsp-das/issues/1801)) ([7cc2c42](https://github.com/dasch-swiss/dsp-das/commit/7cc2c4259cb312ce4524786bd2ea2a6f468065b4))
+* prevents from throwing viewer exceptions (DEV-4083) ([#1809](https://github.com/dasch-swiss/dsp-das/issues/1809)) ([c920bd3](https://github.com/dasch-swiss/dsp-das/commit/c920bd3c186b6e6bc20c3944671606adb9eaf1c3))
+* resets link value control if linked value is not saved using dia… ([#1802](https://github.com/dasch-swiss/dsp-das/issues/1802)) ([780d9d4](https://github.com/dasch-swiss/dsp-das/commit/780d9d4a7cba4235783ee2076b5bf0ca60d61ee9))
+* type error in link property ([#1799](https://github.com/dasch-swiss/dsp-das/issues/1799)) ([d351f44](https://github.com/dasch-swiss/dsp-das/commit/d351f447b43f2d7f8df33ed8a3473a6ed92232f1))
+
 ## [11.20.0](https://github.com/dasch-swiss/dsp-das/compare/v11.19.0...v11.20.0) (2024-09-16)
 
 
