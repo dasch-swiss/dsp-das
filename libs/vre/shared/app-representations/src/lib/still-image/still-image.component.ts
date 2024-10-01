@@ -33,7 +33,6 @@ import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { CompoundService } from '@dasch-swiss/vre/shared/app-resource-page';
 import * as OpenSeadragon from 'openseadragon';
 import { Subject, combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -61,7 +60,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input() attachedProject: ReadProject | undefined;
 
   destroyed: Subject<void> = new Subject<void>();
-  status: number = 404;
+  defaultFailureStatus: number = 404;
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -102,8 +101,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _rs: RepresentationService,
     private _regionService: RegionService,
     private _resourceFetcherService: ResourceFetcherService,
-    private _cd: ChangeDetectorRef,
-    private _compoundService: CompoundService
+    private _cd: ChangeDetectorRef
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -168,6 +166,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  resetStatus() {
+    this.defaultFailureStatus = 404;
   }
 
   /**
@@ -235,6 +237,11 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   openImageInNewTab(url: string) {
     window.open(url, '_blank');
+  }
+
+  setForbiddenStatus() {
+    this.defaultFailureStatus = 403;
+    this._onFailedImageLoad();
   }
 
   private _replaceFile(file: UpdateFileValue) {
@@ -416,11 +423,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this._addRegionDrawer();
-
-    this._compoundService.onOpenNotLoadedIncomingResourcePage$.pipe(takeUntil(this.destroyed)).subscribe(() => {
-      this.status = 403;
-      this._onFailedImageLoad();
-    });
   }
 
   /**
@@ -504,6 +506,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadImages() {
     this._viewer?.close();
+    this.resetStatus();
 
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       this._loadInternalImages();
