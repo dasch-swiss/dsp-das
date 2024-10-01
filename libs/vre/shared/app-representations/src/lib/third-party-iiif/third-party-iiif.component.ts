@@ -58,9 +58,9 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
   private _destroy$ = new Subject<void>();
 
   readonly validatorErrors = [
-    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL' },
-    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server' },
-    { errorKey: 'infoJsonError', message: 'The iiif info json cannot be loaded from the third party server' },
+    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL.' },
+    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server.' },
+    { errorKey: 'infoJsonError', message: 'The IIIF info JSON can not be loaded from the third party server.' },
     { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
   ];
 
