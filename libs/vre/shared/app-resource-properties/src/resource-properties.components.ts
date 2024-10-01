@@ -30,6 +30,7 @@ import { TextTypesSelectorComponent } from './lib/switch-components/text-types-s
 import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
 import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
+import { UploadBasicComponent } from './lib/upload-basic.component';
 import { Upload2Component } from './lib/upload2.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { LinkValueComponent } from './lib/value-components/link-value.component';
@@ -84,4 +85,5 @@ export const ResourcePropertiesComponents = [
   PropertyRowComponent,
   ResourceInfoBarComponent,
   PropertiesDisplayComponent,
+  UploadBasicComponent,
 ];

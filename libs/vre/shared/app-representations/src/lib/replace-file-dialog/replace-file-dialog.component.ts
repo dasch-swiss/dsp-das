@@ -39,7 +39,7 @@ export class ReplaceFileDialogComponent implements OnInit {
   private _generateWarningMessage(representationType: string) {
     let repType = representationType;
 
-    if (representationType === 'stillImag   e' || representationType === 'movingImage') {
+    if (representationType === 'stillImage' || representationType === 'movingImage') {
       switch (representationType) {
         case 'stillImage':
           repType = 'image';
