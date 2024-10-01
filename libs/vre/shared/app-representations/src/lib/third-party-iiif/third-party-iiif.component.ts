@@ -102,7 +102,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
       navigator.clipboard.readText().then(text => {
         this.iiifUrlControl.setValue(text);
         this.iiifUrlControl.markAsTouched();
-        this.iiifUrlControl.updateValueAndValidity();
       });
     }
   }
