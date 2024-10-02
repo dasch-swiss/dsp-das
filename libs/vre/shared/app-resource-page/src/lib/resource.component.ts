@@ -113,6 +113,9 @@ export class ResourceComponent implements OnChanges {
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .pipe(take(1))
       .subscribe(countQuery => {
+        this._regionService.reset();
+        this._compoundService.reset();
+
         const countQuery_ = countQuery as CountQueryResponse;
 
         if (countQuery_.numberOfResults > 0) {
