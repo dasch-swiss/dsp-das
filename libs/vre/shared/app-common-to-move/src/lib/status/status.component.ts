@@ -59,10 +59,9 @@ export class StatusComponent implements OnInit {
     {
       status: 403,
       message: 'Forbidden',
-      description: `Invalid Permissions.<br>
-            Your request was valid but you do not have the
-            necessary permissions to access it.`,
-      action: 'goback',
+      description: `It seems like you don’t have the necessary permissions.<br />
+      Check with a project admin if you have the necessary permission or if you are logged in.`,
+      action: undefined,
       image: 'dsp-error-403.svg',
     },
     {
