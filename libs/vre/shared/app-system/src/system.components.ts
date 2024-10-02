@@ -5,6 +5,7 @@ import { ProjectsComponent } from './lib/projects/projects.component';
 import { SortButtonComponent } from './lib/sort-button/sort-button.component';
 import { SystemComponent } from './lib/system.component';
 import { ManageProjectMembershipDialogComponent } from './lib/users/manage-project-membership-dialog.component';
+import { EditPasswordDialogComponent } from './lib/users/edit-password-dialog.component';
 import { UsersListComponent } from './lib/users/users-list/users-list.component';
 import { UsersComponent } from './lib/users/users.component';
 
@@ -18,4 +19,5 @@ export const SystemComponents = [
   SortButtonComponent,
   CookiePolicyComponent,
   ManageProjectMembershipDialogComponent,
+  EditPasswordDialogComponent,
 ];
