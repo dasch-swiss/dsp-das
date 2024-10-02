@@ -81,8 +81,6 @@ jobs:
         env:
           CYPRESS_RECORD_KEY_SECRET: ${{ secrets.CYPRESS_RECORD_KEY }}
 
-
-
   jdnconvertiblecalendar-tests:
     name: JDNConvertibleCalendar
     runs-on: ubuntu-latest
@@ -173,6 +171,17 @@ jobs:
                -X POST "${JENKINS_DEV_WEBHOOK}" \
                -d "Service=app&Version=${IMAGE_TAG}"
 
+  send-chat-notification:
+    name: Send google chat notification
+    needs: [publish]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags')
+    steps:
+      - name: Send notification to google chat room "DSP releases"
+        uses: lakto/google-chat-action@main
+        with:
+          url: ${{ secrets.GOOGLE_CHAT_DSP_RELEASES_WEBHOOK_URL }}
+
   release-please:
     name: Prepare next release
     runs-on: ubuntu-latest
@@ -186,13 +195,14 @@ jobs:
           release-type: node
           package-name: DSP-APP
           changelog-types: '[
-            {"type": "feat", "section": "Enhancements", "hidden": false },
-            {"type": "fix", "section": "Bug Fixes", "hidden": false },
-            {"type": "chore", "section": "Maintenance", "hidden": false },
-            {"type": "refactor", "section": "Maintenance", "hidden": false },
-            {"type": "style", "section": "Maintenance", "hidden": false },
-            {"type": "docs", "section": "Documentation", "hidden": false }
-            ]'
+            {"type": "feat", "section": "Enhancements"},
+            {"type": "fix", "section": "Bug Fixes"},
+            {"type": "chore", "section": "Maintenances"},
+            {"type": "refactor", "section": "Maintenances"},
+            {"type": "style", "section": "Maintenances"},
+            {"type": "docs", "section": "Documentation"},
+            {"type": "test", "section": "Tests"}
+          ]'
 
   # build documentation
   docs-build-test:
