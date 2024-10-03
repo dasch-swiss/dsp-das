@@ -120,7 +120,7 @@ export class DocumentComponent implements OnInit, AfterViewInit {
         data: {
           title: 'Document',
           subtitle: 'Update the document file of this resource',
-          representation: 'document',
+          representation: Constants.HasDocumentFileValue,
           projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasDocumentFileValue][0].id,
         },

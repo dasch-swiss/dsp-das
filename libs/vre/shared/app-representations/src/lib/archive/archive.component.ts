@@ -73,7 +73,7 @@ export class ArchiveComponent implements OnInit, AfterViewInit {
         data: {
           title: 'Archive',
           subtitle: 'Update the archive file of this resource',
-          representation: 'archive',
+          representation: Constants.HasArchiveFileValue,
           projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasArchiveFileValue][0].id,
         },

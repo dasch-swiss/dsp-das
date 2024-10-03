@@ -212,9 +212,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
           projectUuid: ProjectService.IriToUuid(this.resource.attachedToProject),
-          title: '2D Image (Still Image)',
+          title: 'Image',
           subtitle: 'Update image of the resource',
-          representation: 'stillImage',
+          representation: Constants.HasStillImageFileValue,
           propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
         },
       });
