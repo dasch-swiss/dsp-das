@@ -34,8 +34,9 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
-import { Subject, combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import { RegionService } from '../region.service';
@@ -60,6 +61,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input() attachedProject: ReadProject | undefined;
 
   destroyed: Subject<void> = new Subject<void>();
+  defaultFailureStatus: number = 404;
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -167,6 +169,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyed.complete();
   }
 
+  resetStatus() {
+    this.defaultFailureStatus = 404;
+  }
+
   /**
    * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
    * prevents navigation by mouse (so that the region can be accurately drawn).
@@ -234,6 +240,11 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     window.open(url, '_blank');
   }
 
+  setForbiddenStatus() {
+    this.defaultFailureStatus = 403;
+    this._onFailedImageLoad();
+  }
+
   private _replaceFile(file: UpdateFileValue) {
     const updateRes = new UpdateResource();
     updateRes.id = this.resource.id;
@@ -259,28 +270,22 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * @param overlay the overlay element that represents the region
    */
   private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'addRegion',
-        title: 'Create a region',
-        subtitle: 'Add further properties',
-        id: this.resource.id,
-      },
-      disableClose: true,
-    };
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(data => {
-      this._viewer.removeOverlay(overlay);
-      if (data) {
-        this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-      }
-    });
+    if (!this._viewer) {
+      return;
+    }
+    this._dialog
+      .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
+        data: {
+          resourceIri: this.resource.id,
+        },
+      })
+      .afterClosed()
+      .subscribe(data => {
+        this._viewer!.removeOverlay(overlay);
+        if (data) {
+          this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+        }
+      });
   }
 
   /**
@@ -496,6 +501,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadImages() {
     this._viewer?.close();
+    this.resetStatus();
 
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       this._loadInternalImages();
