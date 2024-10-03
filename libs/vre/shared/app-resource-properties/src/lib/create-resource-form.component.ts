@@ -14,10 +14,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { FileRepresentationType } from '@dasch-swiss/vre/shared/app-representations';
 import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
-import { FileRepresentationType } from './file-representation.type';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 

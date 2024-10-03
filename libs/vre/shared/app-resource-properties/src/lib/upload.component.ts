@@ -2,11 +2,10 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
+import { UploadedFile, UploadFileService, FileRepresentationType } from '@dasch-swiss/vre/shared/app-representations';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
-import { FileRepresentationType } from './file-representation.type';
 
 @Component({
   selector: 'app-upload',

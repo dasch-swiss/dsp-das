@@ -11,9 +11,8 @@ import {
   CreateTextFileValue,
   UpdateAudioFileValue,
 } from '@dasch-swiss/dsp-js';
-import { UploadedFile } from '@dasch-swiss/vre/shared/app-representations';
+import { UploadedFile, FileRepresentationType } from '@dasch-swiss/vre/shared/app-representations';
 import { Actions, Store } from '@ngxs/store';
-import { FileRepresentationType } from './file-representation.type';
 
 @Component({
   selector: 'app-upload-control',

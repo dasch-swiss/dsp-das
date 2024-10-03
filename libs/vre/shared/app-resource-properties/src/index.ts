@@ -29,7 +29,6 @@ export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
 export * from './lib/erase-resource-dialog.component';
 export * from './lib/existing-property-value.component';
-export * from './lib/file-representation.type';
 export * from './lib/form-value-array.type';
 export * from './lib/incoming-link.interface';
 export * from './lib/incoming-standoff-link-value.component';
