@@ -1,9 +1,4 @@
 <div [ngSwitch]="data.mode">
-  <div *ngSwitchCase="'addRegion'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-    <app-add-region-form [resourceIri]="data.id"></app-add-region-form>
-  </div>
-
   <div *ngSwitchCase="'replaceFile'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
     <mat-dialog-content class="form-content">
