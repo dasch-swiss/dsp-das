@@ -21,8 +21,8 @@ import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/v
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
-import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
+import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
