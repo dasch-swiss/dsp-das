@@ -11,7 +11,7 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -29,7 +29,6 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -40,6 +39,10 @@ import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-r
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import { RegionService } from '../region.service';
+import {
+  ReplaceFileDialogComponent,
+  ReplaceFileDialogProps,
+} from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
@@ -206,27 +209,15 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         })
       );
     } else {
-      const propId = this.resource.properties[Constants.HasStillImageFileValue][0].id;
-      const projectUuid = ProjectService.IriToUuid(this.resource.attachedToProject);
-
-      const dialogConfig: MatDialogConfig = {
-        width: '800px',
-        maxHeight: '80vh',
-        position: {
-          top: '112px',
-        },
+      dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
-          mode: 'replaceFile',
-          projectUuid,
+          projectUuid: ProjectService.IriToUuid(this.resource.attachedToProject),
           title: '2D Image (Still Image)',
           subtitle: 'Update image of the resource',
           representation: 'stillImage',
-          attachedProject: this.attachedProject,
-          id: propId,
+          propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
         },
-        disableClose: true,
-      };
-      dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+      });
     }
 
     dialogRef.afterClosed().subscribe(data => {
