@@ -21,6 +21,8 @@ import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/v
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
+import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
+import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -319,6 +321,25 @@ export class UsersListComponent {
     });
   }
 
+  openEditPasswordDialog(user: ReadUser) {
+    this._matDialog
+      .open(
+        EditPasswordDialogComponent,
+        DspDialogConfig.dialogDrawerConfig(
+          {
+            user,
+          },
+          true
+        )
+      )
+      .afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.refreshParent.emit();
+        }
+      });
+  }
+
   openDialog(mode: string, user?: ReadUser): void {
     const dialogRef = this._matDialog.open(
       DialogComponent,
@@ -353,6 +374,10 @@ export class UsersListComponent {
       }
       this._cd.markForCheck();
     });
+  }
+
+  openManageProjectMembershipDialog(user: ReadUser): void {
+    this._matDialog.open(ManageProjectMembershipDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
   /**
