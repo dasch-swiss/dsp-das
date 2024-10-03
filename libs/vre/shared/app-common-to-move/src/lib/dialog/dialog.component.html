@@ -1,11 +1,5 @@
 <div [ngSwitch]="data.mode">
   <!-- Update password -->
-  <div *ngSwitchCase="'editPassword'">
-    <app-dialog-header [title]="data.user.username" [subtitle]="'form.user.title.password' | translate">
-    </app-dialog-header>
-    <app-password-form [user]="data.user" (closeDialog)="dialogRef.close()"></app-password-form>
-  </div>
-
   <!-- Manage user project membership -->
   <div *ngSwitchCase="'manageProjectMembership'">
     <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'"></app-dialog-header>
@@ -14,11 +8,6 @@
       <span class="fill-remaining-space"></span>
       <button mat-button color="primary" class="cancel-button center" [mat-dialog-close]="false">Close</button>
     </mat-dialog-actions>
-  </div>
-
-  <div *ngSwitchCase="'addRegion'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-    <app-add-region-form [resourceIri]="data.id"></app-add-region-form>
   </div>
 
   <div *ngSwitchCase="'replaceFile'">
