@@ -33,7 +33,6 @@ export class ReplaceFileDialogComponent implements OnInit {
   }
 
   saveFile() {
-    console.log(this.form);
     this.dialogRef.close(this.form.getRawValue());
   }
 
