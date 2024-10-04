@@ -1,18 +1,7 @@
 import { ChangeDetectorRef, Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import {
-  Constants,
-  CreateArchiveFileValue,
-  CreateAudioFileValue,
-  CreateDocumentFileValue,
-  CreateFileValue,
-  CreateMovingImageFileValue,
-  CreateStillImageFileValue,
-  CreateTextFileValue,
-  UpdateAudioFileValue,
-} from '@dasch-swiss/dsp-js';
-import { UploadedFile, FileRepresentationType } from '@dasch-swiss/vre/shared/app-representations';
-import { Actions, Store } from '@ngxs/store';
+import { FileRepresentationType, UploadedFile } from '@dasch-swiss/vre/shared/app-representations';
+import { fileValueMapping } from './file-value-mapping';
 
 @Component({
   selector: 'app-upload-control',
@@ -40,8 +29,6 @@ export class UploadControlComponent implements ControlValueAccessor {
   file: File | null = null;
 
   constructor(
-    private _store: Store,
-    private _actions$: Actions,
     private _cdr: ChangeDetectorRef,
     @Self() public ngControl: NgControl
   ) {
@@ -60,12 +47,12 @@ export class UploadControlComponent implements ControlValueAccessor {
 
   doWithFile(res: UploadedFile) {
     if (this.resourceId) {
-      const uploadedFile = new UpdateAudioFileValue();
+      const uploadedFile = fileValueMapping.get(this.representation)!.update();
       uploadedFile.id = this.resourceId;
       uploadedFile.filename = res.internalFilename;
       this.onChange(uploadedFile);
     } else {
-      const createFile = this._createFileValue;
+      const createFile = fileValueMapping.get(this.representation)!.create();
       createFile.filename = res.internalFilename;
       this.onChange(createFile);
     }
@@ -77,24 +64,5 @@ export class UploadControlComponent implements ControlValueAccessor {
   removeFile() {
     this.ngControl.control!.setValue(null);
     this.ngControl.control!.markAsUntouched();
-  }
-
-  private get _createFileValue(): CreateFileValue {
-    switch (this.representation) {
-      case Constants.HasStillImageFileValue:
-        return new CreateStillImageFileValue();
-      case Constants.HasMovingImageFileValue:
-        return new CreateMovingImageFileValue();
-      case Constants.HasAudioFileValue:
-        return new CreateAudioFileValue();
-      case Constants.HasDocumentFileValue:
-        return new CreateDocumentFileValue();
-      case Constants.HasTextFileValue:
-        return new CreateTextFileValue();
-      case Constants.HasArchiveFileValue:
-        return new CreateArchiveFileValue();
-      default:
-        throw new Error(`File type ${this.representation} not supported`);
-    }
   }
 }
