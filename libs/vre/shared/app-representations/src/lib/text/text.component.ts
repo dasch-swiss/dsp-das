@@ -73,7 +73,7 @@ export class TextComponent implements OnInit, AfterViewInit {
         data: {
           title: 'Text (csv, txt, xml)',
           subtitle: 'Update the text file of this resource',
-          representation: 'text',
+          representation: Constants.HasTextFileValue,
           projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasTextFileValue][0].id,
         },
