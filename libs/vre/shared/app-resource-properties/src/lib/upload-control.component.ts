@@ -9,7 +9,7 @@ import { fileValueMapping } from './file-value-mapping';
     <app-upload
       [representation]="representation"
       (afterFileRemoved)="removeFile()"
-      (afterFileUploaded)="doWithFile($event)"
+      (afterFileUploaded)="afterFileUploaded($event)"
       *ngIf="!loading; else loadingTpl" />
     <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
 
@@ -45,7 +45,7 @@ export class UploadControlComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  doWithFile(res: UploadedFile) {
+  afterFileUploaded(res: UploadedFile) {
     if (this.resourceId) {
       const uploadedFile = fileValueMapping.get(this.representation)!.update();
       uploadedFile.id = this.resourceId;

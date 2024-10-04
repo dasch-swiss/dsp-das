@@ -1,12 +1,14 @@
 import {
   Constants,
   CreateArchiveFileValue,
+  CreateAudioFileValue,
   CreateDocumentFileValue,
   CreateFileValue,
   CreateMovingImageFileValue,
   CreateStillImageFileValue,
   CreateTextFileValue,
   UpdateArchiveFileValue,
+  UpdateAudioFileValue,
   UpdateDocumentFileValue,
   UpdateMovingImageFileValue,
   UpdateStillImageFileValue,
@@ -27,6 +29,17 @@ export const fileValueMapping = new Map<string, FileValueParameters>([
       },
       update: () => {
         return new UpdateStillImageFileValue();
+      },
+    },
+  ],
+  [
+    Constants.HasAudioFileValue,
+    {
+      create: () => {
+        return new CreateAudioFileValue();
+      },
+      update: () => {
+        return new UpdateAudioFileValue();
       },
     },
   ],
