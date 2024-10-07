@@ -44,6 +44,7 @@ import {
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
+import { FileInfo } from '../representation.types';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { osdViewerConfig } from './osd-viewer.config';
@@ -77,8 +78,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   isPng: boolean = false;
 
+  imageFileInfo: FileInfo | undefined = undefined;
+
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
+  }
+
+  get userCanView() {
+    return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
 
   get usercanEdit() {
@@ -192,9 +199,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._notification.openSnackBar(message);
   }
 
-  download(url: string) {
-    if (this.imageFileValue instanceof ReadStillImageFileValue) {
-      this._rs.downloadFile(url, this.imageFileValue.filename);
+  download() {
+    if (this.imageFileValue?.fileUrl) {
+      this._rs.downloadFile(this.imageFileValue?.fileUrl, this.imageFileInfo?.originalFilename);
     }
   }
 
@@ -504,22 +511,29 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _loadInternalImages() {
-    if (this.imageFileValue instanceof ReadStillImageFileValue) {
-      this._rs
-        .getFileInfo(this.imageFileValue?.fileUrl || '', this.imageFileValue?.filename)
-        .pipe(take(1))
-        .subscribe(
-          () => {
-            if (this.failedToLoad) {
-              this._onSuccessAfterFailedImageLoad();
-            }
-            this._openInternalImages();
-          },
-          () => {
-            this._onFailedImageLoad();
-          }
-        );
+    const projectShort = this.resource.attachedToProject.split('/').pop();
+    const assetId = this.imageFileValue?.filename.split('.')[0] || '';
+
+    if (!projectShort || !assetId) {
+      this._onFailedImageLoad();
+      return;
     }
+
+    this._rs
+      .getIngestFileInfo(projectShort, assetId)
+      .pipe(take(1))
+      .subscribe(
+        (fileInfo: FileInfo) => {
+          this.imageFileInfo = fileInfo;
+          if (this.failedToLoad) {
+            this._onSuccessAfterFailedImageLoad();
+          }
+          this._openInternalImages();
+        },
+        () => {
+          this._onFailedImageLoad();
+        }
+      );
   }
 
   private _loadExternalIIIF() {
