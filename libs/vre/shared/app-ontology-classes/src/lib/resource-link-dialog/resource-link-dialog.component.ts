@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   Constants,
-  CreateLinkValue,
   CreateResource,
   CreateTextValueAsString,
   KnoraApiConnection,
@@ -79,36 +78,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
   trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
 
   submitData() {
-    const linkObj = new CreateResource();
-
-    linkObj.label = this.form.controls.label.value;
-    linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.selectedProject;
-
-    const hasLinkToValue: CreateLinkValue[] = [];
-
-    this.data.resources.resInfo.forEach(res => {
-      const linkVal = new CreateLinkValue();
-      linkVal.type = Constants.LinkValue;
-      linkVal.linkedResourceIri = res.id;
-      hasLinkToValue.push(linkVal);
-    });
-
-    const comment = this.form.controls.comment.value;
-
-    if (comment) {
-      const commentVal = new CreateTextValueAsString();
-      commentVal.type = Constants.TextValue;
-      commentVal.text = comment;
-      linkObj.properties = {
-        [Constants.HasLinkToValue]: hasLinkToValue,
-        [Constants.HasComment]: [commentVal],
-      };
-    } else {
-      linkObj.properties = {
-        [Constants.HasLinkToValue]: hasLinkToValue,
-      };
-    }
+    const linkObj = this._createPayload();
 
     this._dspApiConnection.v2.res.createResource(linkObj).subscribe((res: ReadResource) => {
       const path = this._resourceService.getResourcePath(res.id);
@@ -116,5 +86,29 @@ export class ResourceLinkDialogComponent implements OnDestroy {
       this._router.navigate([]).then(() => window.open(goto, '_blank'));
       this.dialogRef.close();
     });
+  }
+
+  private _createPayload() {
+    const linkObj = new CreateResource();
+
+    linkObj.label = this.form.controls.label.value;
+    linkObj.type = Constants.LinkObj;
+    linkObj.attachedToProject = this.selectedProject;
+
+    linkObj.properties[Constants.HasLinkToValue] = this.data.resources.resInfo.map(res => ({
+      type: Constants.LinkValue,
+      linkedResourceIri: res.id,
+    }));
+
+    const comment = this.form.controls.comment.value;
+
+    if (comment) {
+      const commentVal = new CreateTextValueAsString();
+      commentVal.type = Constants.TextValue;
+      commentVal.text = comment;
+      linkObj.properties[Constants.HasComment] = [commentVal];
+    }
+
+    return linkObj;
   }
 }

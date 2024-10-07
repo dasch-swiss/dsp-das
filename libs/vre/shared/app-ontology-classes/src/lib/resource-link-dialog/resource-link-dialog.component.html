@@ -6,7 +6,7 @@
     *ngIf="((isSysAdmin$ | async) === true) || ((usersProjects$ | async)?.length && (isCurrentProjectAdminOrSysAdmin$ | async) === true); else notProjectMember">
     <app-common-input [control]="form.controls.label" label="Collection label" />
 
-    <app-ck-editor-control [control]="form.controls['comment']" [label]="'Comment'" />
+    <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
 
     <div class="resource-container">
       <p>The following resources will be connected:</p>
