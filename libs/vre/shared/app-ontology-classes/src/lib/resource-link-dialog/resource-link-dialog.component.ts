@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   Constants,
@@ -27,19 +27,17 @@ import { map, takeUntil } from 'rxjs/operators';
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
-  @Input() resources: FilteredResources;
-
+  @Input({ required: true }) resources!: FilteredResources;
   @Output() closeDialog = new EventEmitter<any>();
 
-  /**
-   * form group, errors and validation messages
-   */
+  data = { title: `Create a collection of ${this.resources.count} resources` };
+
   form = this._fb.group({
     label: ['', [Validators.required]],
     comment: [''],
   });
 
-  selectedProject: string;
+  selectedProject?: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -60,12 +58,11 @@ export class ResourceLinkDialogComponent implements OnDestroy {
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
-  hasLoadingErrors$ = this._store.select(ProjectsSelectors.hasLoadingErrors);
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _fb: UntypedFormBuilder,
+    private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
     private _store: Store
@@ -79,16 +76,13 @@ export class ResourceLinkDialogComponent implements OnDestroy {
   trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
 
   submitData() {
-    // build link resource as type CreateResource
     const linkObj = new CreateResource();
 
-    linkObj.label = this.form.controls['label'].value;
-
+    linkObj.label = this.form.controls.label.value;
     linkObj.type = Constants.LinkObj;
-
     linkObj.attachedToProject = this.selectedProject;
 
-    const hasLinkToValue = [];
+    const hasLinkToValue: CreateLinkValue[] = [];
 
     this.resources.resInfo.forEach(res => {
       const linkVal = new CreateLinkValue();
