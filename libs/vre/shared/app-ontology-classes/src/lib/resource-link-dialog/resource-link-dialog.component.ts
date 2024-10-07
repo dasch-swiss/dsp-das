@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   Constants,
+  CreateLinkValue,
   CreateResource,
   CreateTextValueAsString,
   KnoraApiConnection,
@@ -31,7 +32,7 @@ export interface ResourceLinkDialogProps {
 export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
-  title = `Create a collection of ${this.data.resources.count} resources`;
+  readonly title = `Create a collection of ${this.data.resources.count} resources`;
   form = this._fb.group({
     label: ['', [Validators.required]],
     comment: [''],
@@ -99,14 +100,16 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   private _createPayload() {
     const linkObj = new CreateResource();
 
-    linkObj.label = this.form.controls.label.value;
+    linkObj.label = this.form.controls.label.value!;
     linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.selectedProject;
+    linkObj.attachedToProject = this.selectedProject!;
 
-    linkObj.properties[Constants.HasLinkToValue] = this.data.resources.resInfo.map(res => ({
-      type: Constants.LinkValue,
-      linkedResourceIri: res.id,
-    }));
+    linkObj.properties[Constants.HasLinkToValue] = this.data.resources.resInfo.map(res => {
+      const linkVal = new CreateLinkValue();
+      linkVal.type = Constants.LinkValue;
+      linkVal.linkedResourceIri = res.id;
+      return linkVal;
+    });
 
     const comment = this.form.controls.comment.value;
 
