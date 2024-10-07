@@ -2,9 +2,9 @@
   <div *ngSwitchCase="'linkResources'">
     <app-dialog-header [title]="data.title" [subtitle]="'Link resources'"></app-dialog-header>
     <mat-dialog-content>
-      <app-resource-link-form
+      <app-resource-link-dialog
         [resources]="data.selectedResources"
-        (closeDialog)="dialogRef.close($event)"></app-resource-link-form>
+        (closeDialog)="dialogRef.close($event)"></app-resource-link-dialog>
     </mat-dialog-content>
   </div>
 

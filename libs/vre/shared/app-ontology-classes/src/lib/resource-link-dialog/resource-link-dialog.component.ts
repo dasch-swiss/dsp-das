@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   Constants,
@@ -23,37 +14,30 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-resource-link-form',
-  templateUrl: './resource-link-form.component.html',
-  styleUrls: ['./resource-link-form.component.scss'],
+  selector: 'app-resource-link-dialog',
+  templateUrl: './resource-link-dialog.component.html',
+  styleUrls: ['./resource-link-dialog.component.scss'],
 })
-export class ResourceLinkFormComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+export class ResourceLinkDialogComponent implements OnDestroy {
+  private _ngUnsubscribe = new Subject<void>();
 
   @Input() resources: FilteredResources;
 
-  @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
+  @Output() closeDialog = new EventEmitter<any>();
 
   /**
    * form group, errors and validation messages
    */
-  form: UntypedFormGroup;
-
-  formErrors = {
-    label: '',
-  };
-
-  validationMessages = {
-    label: {
-      required: 'A label is required.',
-    },
-  };
+  form = this._fb.group({
+    label: ['', [Validators.required]],
+    comment: [''],
+  });
 
   selectedProject: string;
 
@@ -62,7 +46,7 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     this._store.select(UserSelectors.userProjects),
     this._store.select(UserSelectors.isSysAdmin),
   ]).pipe(
-    takeUntil(this.ngUnsubscribe),
+    takeUntil(this._ngUnsubscribe),
     map(([currentProject, currentUserProjects, isSysAdmin]) => {
       const projects = currentProject
         ? isSysAdmin
@@ -73,10 +57,10 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     })
   );
 
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isProjectsLoading) isLoading$: Observable<boolean>;
-  @Select(ProjectsSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
+  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
+  hasLoadingErrors$ = this._store.select(ProjectsSelectors.hasLoadingErrors);
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -87,54 +71,13 @@ export class ResourceLinkFormComponent implements OnInit, OnDestroy {
     private _store: Store
   ) {}
 
-  ngOnInit(): void {
-    this.form = this._fb.group({
-      label: new UntypedFormControl(
-        {
-          value: '',
-          disabled: false,
-        },
-        [Validators.required]
-      ),
-      comment: new UntypedFormControl(),
-      project: new UntypedFormControl(),
-    });
-
-    this.form.valueChanges.subscribe(() => this.onValueChanged());
-  }
-
   ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
-  /**
-   * this method is for the form error handling
-   */
-  onValueChanged() {
-    if (!this.form) {
-      return;
-    }
-
-    const form = this.form;
-
-    Object.keys(this.formErrors).forEach(field => {
-      this.formErrors[field] = '';
-      const control = form.get(field);
-      if (control && control.dirty && !control.valid) {
-        const messages = this.validationMessages[field];
-        Object.keys(control.errors).forEach(key => {
-          this.formErrors[field] += `${messages[key]} `;
-        });
-      }
-    });
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
 
-  /**
-   * submits the data
-   */
   submitData() {
     // build link resource as type CreateResource
     const linkObj = new CreateResource();

@@ -6,7 +6,7 @@ import { MultipleViewerComponent } from './lib/multiple-viewer.component';
 import { OntologyClassInstanceComponent } from './lib/ontology-class-instance/ontology-class-instance.component';
 import { OntologyClassItemComponent } from './lib/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './lib/ontology-classes.component';
-import { ResourceLinkFormComponent } from './lib/resource-link-form/resource-link-form.component';
+import { ResourceLinkDialogComponent } from './lib/resource-link-dialog/resource-link-dialog.component';
 import { SelectProjectComponent } from './lib/select-project/select-project.component';
 
 export const OntologyClassesComponents = [
@@ -16,7 +16,7 @@ export const OntologyClassesComponents = [
   OntologyClassInstanceComponent,
   ComparisonComponent,
   IntermediateComponent,
-  ResourceLinkFormComponent,
+  ResourceLinkDialogComponent,
   SelectProjectComponent,
   ListViewComponent,
   ResourceListComponent,
