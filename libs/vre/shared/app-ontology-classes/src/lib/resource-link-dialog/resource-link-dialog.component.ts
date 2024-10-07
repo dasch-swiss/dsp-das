@@ -18,6 +18,10 @@ import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
+export interface ResourceLinkDialogProps {
+  resources: FilteredResources;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-link-dialog',
