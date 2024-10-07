@@ -1,4 +1,4 @@
-import { MiscClass } from '../models/incunabula-data-models';
+import { MiscClass, SidebandClass } from '../models/incunabula-data-models';
 
 export class ExistingClassResourcePayloads {
   private static label(className: string, value: string) {
@@ -27,6 +27,14 @@ export class ExistingClassResourcePayloads {
     const request = {
       ...this.label(className, data.label),
       ...this.hasColor(className, data.color, data.colorComment),
+    };
+    return request;
+  }
+
+  static sideband(data: SidebandClass) {
+    const className = 'sideband';
+    const request = {
+      ...this.label(className, data.label),
     };
     return request;
   }

@@ -12,5 +12,7 @@ declare namespace Cypress {
     logout(): void;
     // logs system admin in
     loginAdmin(): void;
+    //creates resource request
+    createResource(payload: any): void;
   }
 }

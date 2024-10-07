@@ -18,10 +18,4 @@ export class ResourceRequests {
       );
     });
   };
-
-  static createResourceRequest = (payload: any): Cypress.Chainable => {
-    return cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, payload).then(response => {
-      console.log(response);
-    });
-  };
 }

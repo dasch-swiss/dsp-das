@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ExistingClassResourcePayloads } from '../../fixtures/existing-class-resource-payloads';
-import { ResourceRequests } from '../../fixtures/requests';
-import { MiscClass } from '../../models/incunabula-data-models';
+import { MiscClass, SidebandClass } from '../../models/incunabula-data-models';
 import { ExistingOntologyClassPage } from '../../support/pages/existing-ontology-class-page';
 
 describe('View Existing Resource', () => {
@@ -16,12 +15,18 @@ describe('View Existing Resource', () => {
     bookComment: faker.lorem.sentence(),
   };
 
+  const sidebandData: SidebandClass = {
+    label: faker.lorem.word(),
+    file: '',
+    title: faker.lorem.sentence(),
+  };
+
   beforeEach(() => {
     ontoClassPage = new ExistingOntologyClassPage();
     cy.loginAdmin();
-    ResourceRequests.createResourceRequest(ExistingClassResourcePayloads.misc(miscData)).then(() => {
-      cy.logout();
-    });
+    cy.createResource(ExistingClassResourcePayloads.misc(miscData));
+    //cy.createResource(ExistingClassResourcePayloads.sideband(sidebandData));
+    cy.logout();
   });
 
   it('should not be accessible and return to page', () => {
@@ -30,7 +35,17 @@ describe('View Existing Resource', () => {
     cy.url().should('match', regex);
   });
 
-  it.only('text property should be present', () => {
+  it.only('label, color, comment properties should be present', () => {
+    ontoClassPage.visitClass('misc');
+    cy.get('[data-cy=resource-header-label]').contains(miscData.label);
+    cy.get('[data-cy=color-box]')
+      .should('have.css', 'background-color')
+      .should('contain', onecolor(miscData.color).css().replaceAll(',', ', '));
+    cy.get('[data-cy=show-all-comments]').click();
+    cy.get('[data-cy=property-value-comment]').contains(miscData.colorComment);
+  });
+
+  it('still image should be present', () => {
     ontoClassPage.visitClass('misc');
     cy.get('[data-cy=resource-header-label]').contains(miscData.label);
     cy.get('[data-cy=color-box]')
