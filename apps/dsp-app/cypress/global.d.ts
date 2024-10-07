@@ -8,5 +8,11 @@ declare namespace Cypress {
   interface Chainable<Subject> {
     // logs user in via the API
     login(user: User): void;
+    // logs user out
+    logout(): void;
+    // logs system admin in
+    loginAdmin(): void;
+    //creates resource request
+    createResource(payload: any): void;
   }
 }

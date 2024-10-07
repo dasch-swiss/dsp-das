@@ -51,7 +51,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
         <app-property-value-comment
           [displayMode]="displayMode"
-          [control]="group?.controls.comment"></app-property-value-comment>
+          [control]="group?.controls.comment"
+          data-cy="property-value-comment">
+        </app-property-value-comment>
       </div>
       <button
         (click)="onSave()"
