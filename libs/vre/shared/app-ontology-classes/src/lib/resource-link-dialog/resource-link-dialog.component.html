@@ -25,8 +25,8 @@
     </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button type="button" (click)="closeDialog.emit()">{{ 'form.action.cancel' | translate }}</button>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="dialogRef.close()">{{ 'form.action.cancel' | translate }}</button>
 
   <button
     mat-raised-button

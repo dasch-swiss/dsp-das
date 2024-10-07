@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   Constants,
@@ -32,10 +32,7 @@ export interface ResourceLinkDialogProps {
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
-  @Output() closeDialog = new EventEmitter<any>();
-
   title = `Create a collection of ${this.data.resources.count} resources`;
-
   form = this._fb.group({
     label: ['', [Validators.required]],
     comment: [''],
@@ -70,6 +67,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     private _resourceService: ResourceService,
     private _router: Router,
     private _store: Store,
+    public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
 
@@ -97,6 +95,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     });
 
     const comment = this.form.controls['comment'].value;
+
     if (comment) {
       const commentVal = new CreateTextValueAsString();
       commentVal.type = Constants.TextValue;
@@ -115,7 +114,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
       const path = this._resourceService.getResourcePath(res.id);
       const goto = `/resource${path}`;
       this._router.navigate([]).then(() => window.open(goto, '_blank'));
-      this.closeDialog.emit();
+      this.dialogRef.close();
     });
   }
 }
