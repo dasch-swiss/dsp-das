@@ -1,33 +1,11 @@
 <div [ngSwitch]="data.mode">
-  <!-- Update password -->
-  <div *ngSwitchCase="'editPassword'">
-    <app-dialog-header [title]="data.user.username" [subtitle]="'form.user.title.password' | translate">
-    </app-dialog-header>
-    <app-password-form [user]="data.user" (closeDialog)="dialogRef.close()"></app-password-form>
-  </div>
-
-  <!-- Manage user project membership -->
-  <div *ngSwitchCase="'manageProjectMembership'">
-    <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'"></app-dialog-header>
-    <app-membership [user]="data.user" (closeDialog)="dialogRef.close()"></app-membership>
-    <mat-dialog-actions>
-      <span class="fill-remaining-space"></span>
-      <button mat-button color="primary" class="cancel-button center" [mat-dialog-close]="false">Close</button>
-    </mat-dialog-actions>
-  </div>
-
-  <div *ngSwitchCase="'addRegion'">
-    <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
-    <app-add-region-form [resourceIri]="data.id"></app-add-region-form>
-  </div>
-
   <div *ngSwitchCase="'replaceFile'">
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle"></app-dialog-header>
     <mat-dialog-content class="form-content">
       <app-replace-file-form
         [representation]="data.representation"
         [propId]="data.id"
-        [projectUuid]="data.projectUuid"
+        [attachedProject]="data.attachedProject"
         (closeDialog)="dialogRef.close($event)"></app-replace-file-form>
     </mat-dialog-content>
   </div>

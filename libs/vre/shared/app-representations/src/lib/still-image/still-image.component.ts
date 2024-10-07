@@ -19,6 +19,7 @@ import {
   KnoraApiConnection,
   Point2D,
   ReadColorValue,
+  ReadProject,
   ReadResource,
   ReadStillImageFileValue,
   RegionGeometry,
@@ -35,6 +36,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import { RegionService } from '../region.service';
@@ -57,8 +59,10 @@ export interface PolygonsForRegion {
 })
 export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() attachedProject: ReadProject | undefined;
 
   destroyed: Subject<void> = new Subject<void>();
+  defaultFailureStatus: number = 404;
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -152,12 +156,12 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(takeUntil(this.destroyed))
       .subscribe((isPng: boolean) => {
         this.isPng = isPng;
-        // this._loadImages();
+        this._loadImages();
       });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['resource'].isFirstChange() || !changes['resource']) {
+    if (!changes['resource'] || changes['resource'].isFirstChange()) {
       return;
     }
     this._loadImages();
@@ -170,6 +174,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  resetStatus() {
+    this.defaultFailureStatus = 404;
   }
 
   /**
@@ -220,6 +228,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
           title: '2D Image (Still Image)',
           subtitle: 'Update image of the resource',
           representation: 'stillImage',
+          attachedProject: this.attachedProject,
           id: propId,
         },
         disableClose: true,
@@ -236,6 +245,11 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   openImageInNewTab(url: string) {
     window.open(url, '_blank');
+  }
+
+  setForbiddenStatus() {
+    this.defaultFailureStatus = 403;
+    this._onFailedImageLoad();
   }
 
   private _replaceFile(file: UpdateFileValue) {
@@ -263,28 +277,22 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * @param overlay the overlay element that represents the region
    */
   private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'addRegion',
-        title: 'Create a region',
-        subtitle: 'Add further properties',
-        id: this.resource.id,
-      },
-      disableClose: true,
-    };
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(data => {
-      this._viewer.removeOverlay(overlay);
-      if (data) {
-        this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-      }
-    });
+    if (!this._viewer) {
+      return;
+    }
+    this._dialog
+      .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
+        data: {
+          resourceIri: this.resource.id,
+        },
+      })
+      .afterClosed()
+      .subscribe(data => {
+        this._viewer!.removeOverlay(overlay);
+        if (data) {
+          this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+        }
+      });
   }
 
   /**
@@ -500,6 +508,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadImages() {
     this._viewer?.close();
+    this.resetStatus();
 
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       this._loadInternalImages();
