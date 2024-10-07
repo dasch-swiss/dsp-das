@@ -34,7 +34,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <div *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file">
         <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;" data-cy="stillimage-tab-group">
           <mat-tab label="Upload Image">
-            <app-upload-control [formControl]="form.controls.file" [representation]="fileRepresentation" />
+            <app-upload-control
+              [formControl]="form.controls.file"
+              [representation]="fileRepresentation"
+              data-cy="upload-control" />
           </mat-tab>
           <mat-tab label="External IIIF URL">
             <app-third-part-iiif [formControl]="form.controls.file"></app-third-part-iiif>
