@@ -30,8 +30,7 @@ export class RepresentationService {
 
   getAttachedProject(parentResource: ReadResource): ReadProject | undefined {
     const attachedProjects = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
-    const attachedProject = this.getParentResourceAttachedProject(attachedProjects, parentResource);
-    return attachedProject;
+    return this.getParentResourceAttachedProject(attachedProjects, parentResource);
   }
 
   getParentResourceAttachedProject(attachedProjects: IKeyValuePairs<ReadProject>, parentResource: ReadResource) {
