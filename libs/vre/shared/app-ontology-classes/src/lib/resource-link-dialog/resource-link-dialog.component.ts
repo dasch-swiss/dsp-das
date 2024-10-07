@@ -94,7 +94,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
       hasLinkToValue.push(linkVal);
     });
 
-    const comment = this.form.controls['comment'].value;
+    const comment = this.form.controls.comment.value;
 
     if (comment) {
       const commentVal = new CreateTextValueAsString();

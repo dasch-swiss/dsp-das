@@ -1,18 +1,9 @@
-<app-dialog-header [title]="title" [subtitle]="'Link resources'"></app-dialog-header>
+<app-dialog-header [title]="title" [subtitle]="'Link resources'" />
 
 <mat-dialog-content>
   <form
     [formGroup]="form"
-    class="form"
     *ngIf="((isSysAdmin$ | async) === true) || ((usersProjects$ | async)?.length && (isCurrentProjectAdminOrSysAdmin$ | async) === true); else notProjectMember">
-    <app-select-project
-      matTooltip="The link resource has to be added to a project. Please select one of yours."
-      [matTooltipPosition]="'above'"
-      [formGroup]="form"
-      [usersProjects]="usersProjects$ | async"
-      (projectSelected)="selectedProject = $event">
-    </app-select-project>
-
     <app-common-input [control]="form.controls.label" label="Collection label" />
 
     <app-ck-editor-control [control]="form.controls['comment']" [label]="'Comment'" />

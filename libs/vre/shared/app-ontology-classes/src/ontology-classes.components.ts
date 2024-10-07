@@ -7,7 +7,6 @@ import { OntologyClassInstanceComponent } from './lib/ontology-class-instance/on
 import { OntologyClassItemComponent } from './lib/ontology-class-item/ontology-class-item.component';
 import { OntologyClassesComponent } from './lib/ontology-classes.component';
 import { ResourceLinkDialogComponent } from './lib/resource-link-dialog/resource-link-dialog.component';
-import { SelectProjectComponent } from './lib/select-project/select-project.component';
 
 export const OntologyClassesComponents = [
   OntologyClassesComponent,
@@ -17,7 +16,6 @@ export const OntologyClassesComponents = [
   ComparisonComponent,
   IntermediateComponent,
   ResourceLinkDialogComponent,
-  SelectProjectComponent,
   ListViewComponent,
   ResourceListComponent,
 ];
