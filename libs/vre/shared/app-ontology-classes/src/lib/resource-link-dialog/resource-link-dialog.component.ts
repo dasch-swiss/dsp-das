@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   Constants,
@@ -31,10 +32,9 @@ export interface ResourceLinkDialogProps {
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
-  @Input({ required: true }) resources!: FilteredResources;
   @Output() closeDialog = new EventEmitter<any>();
 
-  data = { title: `Create a collection of ${this.resources.count} resources` };
+  title = `Create a collection of ${this.data.resources.count} resources`;
 
   form = this._fb.group({
     label: ['', [Validators.required]],
@@ -69,7 +69,8 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
+    @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
 
   ngOnDestroy() {
@@ -88,7 +89,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
 
     const hasLinkToValue: CreateLinkValue[] = [];
 
-    this.resources.resInfo.forEach(res => {
+    this.data.resources.resInfo.forEach(res => {
       const linkVal = new CreateLinkValue();
       linkVal.type = Constants.LinkValue;
       linkVal.linkedResourceIri = res.id;

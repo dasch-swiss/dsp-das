@@ -1,4 +1,4 @@
-<app-dialog-header [title]="data.title" [subtitle]="'Link resources'"></app-dialog-header>
+<app-dialog-header [title]="title" [subtitle]="'Link resources'"></app-dialog-header>
 
 <mat-dialog-content>
   <form
@@ -20,7 +20,7 @@
     <div class="resource-container">
       <p>The following resources will be connected:</p>
       <ul>
-        <li *ngFor="let res of resources.resInfo; trackBy: trackByFn">{{ res.label }}</li>
+        <li *ngFor="let res of data.resources.resInfo; trackBy: trackByFn">{{ res.label }}</li>
       </ul>
     </div>
   </form>
