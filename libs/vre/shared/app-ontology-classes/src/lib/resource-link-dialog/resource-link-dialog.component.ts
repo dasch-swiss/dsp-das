@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ export interface ResourceLinkDialogProps {
   templateUrl: './resource-link-dialog.component.html',
   styleUrls: ['./resource-link-dialog.component.scss'],
 })
-export class ResourceLinkDialogComponent implements OnDestroy {
+export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
   title = `Create a collection of ${this.data.resources.count} resources`;
@@ -69,6 +69,14 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
+
+  ngOnInit() {
+    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(projects => {
+      if (projects.length > 0) {
+        this.selectedProject = projects[0].id;
+      }
+    });
+  }
 
   ngOnDestroy() {
     this._ngUnsubscribe.next();
