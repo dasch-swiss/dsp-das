@@ -27,9 +27,6 @@ export class ExistingClassResourcePayloads {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
         'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
         'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
-        'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
-          '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
-        },
       },
     };
   }
