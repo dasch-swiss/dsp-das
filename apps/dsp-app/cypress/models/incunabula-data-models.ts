@@ -10,10 +10,10 @@ export interface SidebandClass {
   label: string;
   file: string;
   title: string;
-  // titleComment: string;
-  // description: string;
-  // descriptionComment: string;
-  // comments: [Comment];
+  titleComment: string;
+  description: string;
+  descriptionComment: string;
+  comments: [Comment];
 }
 
 export interface Comment {

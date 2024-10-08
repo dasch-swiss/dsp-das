@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
 import { ExistingClassResourcePayloads } from '../../fixtures/existing-class-resource-payloads';
 import { MiscClass, SidebandClass } from '../../models/incunabula-data-models';
 import { ExistingOntologyClassPage } from '../../support/pages/existing-ontology-class-page';
@@ -19,13 +20,24 @@ describe('View Existing Resource', () => {
     label: faker.lorem.word(),
     file: '',
     title: faker.lorem.sentence(),
+    titleComment: faker.lorem.sentence(),
+    description: faker.lorem.sentence(),
+    descriptionComment: faker.lorem.sentence(),
+    comments: [{ text: faker.lorem.sentence(), comment: faker.lorem.sentence() }],
   };
 
   beforeEach(() => {
     ontoClassPage = new ExistingOntologyClassPage();
-    cy.loginAdmin();
+    cy.loginAdmin().then(() => {
+      cy.uploadFile(
+        '../uploads/Fingerprint_Logo_coloured.png',
+        ExistingOntologyClassPage.existingProjectShortCode
+      ).then(response => {
+        sidebandData.file = (response as UploadedFileResponse).internalFilename;
+        cy.createResource(ExistingClassResourcePayloads.sideband(sidebandData));
+      });
+    });
     cy.createResource(ExistingClassResourcePayloads.misc(miscData));
-    //cy.createResource(ExistingClassResourcePayloads.sideband(sidebandData));
     cy.logout();
   });
 
@@ -35,7 +47,7 @@ describe('View Existing Resource', () => {
     cy.url().should('match', regex);
   });
 
-  it.only('label, color, comment properties should be present', () => {
+  it('label, color, comment properties should be present', () => {
     ontoClassPage.visitClass('misc');
     cy.get('[data-cy=resource-header-label]').contains(miscData.label);
     cy.get('[data-cy=color-box]')
@@ -46,11 +58,8 @@ describe('View Existing Resource', () => {
   });
 
   it('still image should be present', () => {
-    ontoClassPage.visitClass('misc');
+    ontoClassPage.visitClass('Sideband');
     cy.get('[data-cy=resource-header-label]').contains(miscData.label);
-    cy.get('[data-cy=color-box]')
-      .should('have.css', 'background-color')
-      .should('contain', onecolor(miscData.color).css().replaceAll(',', ', '));
     cy.get('[data-cy=show-all-comments]').click();
     cy.get('[data-cy=property-value-comment]').contains(miscData.colorComment);
   });
