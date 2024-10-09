@@ -20,13 +20,7 @@ import { filter, map } from 'rxjs/operators';
       <app-still-image
         #stillImage
         class="dsp-representation stillimage"
-        [attachedProject]="attachedProject"
-        *ngSwitchCase="representationConstants.stillImage"
-        [resource]="resource.res" />
-      <app-still-image
-        #stillImage
-        class="dsp-representation stillimage"
-        *ngSwitchCase="representationConstants.externalStillImage"
+        *ngSwitchCase="representationConstants.stillImage || representationConstants.externalStillImage"
         [attachedProject]="attachedProject"
         [resource]="resource.res" />
     </ng-container>
