@@ -32,8 +32,10 @@ import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest, Subject } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
@@ -112,7 +114,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _rs: RepresentationService,
     private _regionService: RegionService,
     private _resourceFetcherService: ResourceFetcherService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _store: Store
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -501,17 +504,17 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._viewer?.close();
     this.resetStatus();
 
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
+    const type = this.resource.properties[Constants.HasStillImageFileValue][0].type;
+    const isLoggedIn = this._store.selectSnapshot(UserSelectors.isLoggedIn);
+    if (type === Constants.StillImageFileValue && isLoggedIn) {
       this._loadInternalImages();
-    } else if (
-      this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue
-    ) {
+    } else {
       this._loadExternalIIIF();
     }
   }
 
   private _loadInternalImages() {
-    const projectShort = this.resource.attachedToProject.split('/').pop();
+    const projectShort = this.attachedProject?.shortcode;
     const assetId = this.imageFileValue?.filename.split('.')[0] || '';
 
     if (!projectShort || !assetId) {
@@ -537,16 +540,23 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _loadExternalIIIF() {
+    let externalUrl: string;
     if (this.imageFileValue instanceof ReadStillImageExternalFileValue) {
-      const iiif = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
-      if (iiif) {
-        if (this.failedToLoad) {
-          this._onSuccessAfterFailedImageLoad();
-        }
-        this._viewer?.open(iiif.infoJsonUrl);
-      } else {
-        this._onFailedImageLoad();
+      externalUrl = this.imageFileValue.externalUrl;
+    } else if (this.imageFileValue instanceof ReadStillImageFileValue) {
+      externalUrl = this.imageFileValue.fileUrl;
+    } else {
+      return;
+    }
+
+    const iiif = IIIFUrl.createUrl(externalUrl);
+    if (iiif) {
+      if (this.failedToLoad) {
+        this._onSuccessAfterFailedImageLoad();
       }
+      this._viewer?.open(iiif.infoJsonUrl);
+    } else {
+      this._onFailedImageLoad();
     }
   }
 

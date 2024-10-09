@@ -16,19 +16,20 @@ import { filter, map } from 'rxjs/operators';
 @Component({
   selector: 'app-resource-representation',
   template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay.fileValue.type">
-    <app-still-image
-      #stillImage
-      class="dsp-representation stillimage"
-      [attachedProject]="attachedProject$ | async"
-      *ngSwitchCase="representationConstants.stillImage"
-      [resource]="resource.res" />
-    <app-still-image
-      #stillImage
-      class="dsp-representation stillimage"
-      *ngSwitchCase="representationConstants.externalStillImage"
-      [attachedProject]="attachedProject$ | async"
-      [resource]="resource.res" />
-
+    <ng-container *ngIf="attachedProject$ | async as attachedProject">
+      <app-still-image
+        #stillImage
+        class="dsp-representation stillimage"
+        [attachedProject]="attachedProject"
+        *ngSwitchCase="representationConstants.stillImage"
+        [resource]="resource.res" />
+      <app-still-image
+        #stillImage
+        class="dsp-representation stillimage"
+        *ngSwitchCase="representationConstants.externalStillImage"
+        [attachedProject]="attachedProject"
+        [resource]="resource.res" />
+    </ng-container>
     <app-document
       #document
       class="dsp-representation document"
