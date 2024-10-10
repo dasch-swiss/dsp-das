@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
@@ -39,11 +38,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         return;
       }
 
-      if (resource.isRegion) {
-        this._renderAsRegion(resource);
-        return;
-      }
-
       this.resource = undefined;
       this._cdr.detectChanges();
       this.resource = resource;
@@ -53,16 +47,5 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this._resourceFetcherService.onDestroy();
-  }
-
-  private _renderAsRegion(region: DspResource) {
-    const annotatedRepresentationIri = (region.res.properties[Constants.IsRegionOfValue] as ReadLinkValue[])[0]
-      .linkedResourceIri;
-
-    /* TODO
-                                            this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-                                              this.resource = dspResource;
-                                            });
-                                            */
   }
 }
