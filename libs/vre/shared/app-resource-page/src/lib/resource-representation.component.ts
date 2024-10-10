@@ -15,12 +15,15 @@ import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-representation',
-  template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay.fileValue.type">
+  template: ` <div class="representation-container center" [ngSwitch]="true">
     <ng-container *ngIf="attachedProject$ | async as attachedProject">
       <app-still-image
         #stillImage
         class="dsp-representation stillimage"
-        *ngSwitchCase="representationConstants.stillImage || representationConstants.externalStillImage"
+        *ngSwitchCase="
+          representationToDisplay.fileValue.type === representationConstants.stillImage ||
+          representationToDisplay.fileValue.type === representationConstants.externalStillImage
+        "
         [attachedProject]="attachedProject"
         [resource]="resource.res" />
     </ng-container>
@@ -28,7 +31,7 @@ import { filter, map } from 'rxjs/operators';
       #document
       class="dsp-representation document"
       [class.pdf]="representationToDisplay.fileValue.filename.split('.').pop() === 'pdf'"
-      *ngSwitchCase="representationConstants.document"
+      *ngSwitchCase="representationToDisplay.fileValue.type === representationConstants.document"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
       [attachedProject]="attachedProject$ | async"
@@ -38,7 +41,7 @@ import { filter, map } from 'rxjs/operators';
     <app-audio
       #audio
       class="dsp-representation audio"
-      *ngSwitchCase="representationConstants.audio"
+      *ngSwitchCase="representationToDisplay.fileValue.type === representationConstants.audio"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
       [isAdmin]="isAdmin$ | async"
@@ -48,7 +51,7 @@ import { filter, map } from 'rxjs/operators';
     <app-video
       #video
       class="dsp-representation video"
-      *ngSwitchCase="representationConstants.movingImage"
+      *ngSwitchCase="representationToDisplay.fileValue.type === representationConstants.movingImage"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
       [isAdmin]="isAdmin$ | async"
@@ -58,7 +61,7 @@ import { filter, map } from 'rxjs/operators';
     <app-archive
       #archive
       class="dsp-representation archive"
-      *ngSwitchCase="representationConstants.archive"
+      *ngSwitchCase="representationToDisplay.fileValue.type === representationConstants.archive"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
       [attachedProject]="attachedProject$ | async"
@@ -68,7 +71,7 @@ import { filter, map } from 'rxjs/operators';
     <app-text
       #text
       class="dsp-representation text"
-      *ngSwitchCase="representationConstants.text"
+      *ngSwitchCase="representationToDisplay.fileValue.type === representationConstants.text"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
       [attachedProject]="attachedProject$ | async"
