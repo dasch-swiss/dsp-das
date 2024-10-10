@@ -44,6 +44,8 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         return;
       }
 
+      this.resource = undefined;
+      this._cdr.detectChanges();
       this.resource = resource;
       this._cdr.detectChanges();
     });
@@ -58,9 +60,9 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
       .linkedResourceIri;
 
     /* TODO
-                                    this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
-                                      this.resource = dspResource;
-                                    });
-                                    */
+                                            this._getResource(annotatedRepresentationIri).subscribe(dspResource => {
+                                              this.resource = dspResource;
+                                            });
+                                            */
   }
 }
