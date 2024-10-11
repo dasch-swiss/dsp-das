@@ -25,7 +25,6 @@ import {
   RegionGeometry,
   UpdateFileValue,
   UpdateResource,
-  WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
@@ -34,7 +33,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, switchMap, take, takeUntil } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
@@ -249,15 +248,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     updateRes.type = this.resource.type;
     updateRes.property = Constants.HasStillImageFileValue;
     updateRes.value = file;
-    this._dspApiConnection.v2.values
-      .updateValue(updateRes as UpdateResource<UpdateFileValue>)
-      .pipe(
-        tap(res => {}),
-        mergeMap(res => this._dspApiConnection.v2.values.getValue(this.resource.id, (res as WriteValueResponse).uuid))
-      )
-      .subscribe(res2 => {
-        this._resourceFetcherService.reload();
-      });
+    this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>).subscribe(() => {
+      this._resourceFetcherService.reload();
+    });
   }
 
   /**

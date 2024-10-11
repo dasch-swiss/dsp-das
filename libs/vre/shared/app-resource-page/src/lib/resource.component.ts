@@ -1,6 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -49,21 +47,13 @@ export class ResourceComponent implements OnInit {
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
-    private _router: Router,
-    private _titleService: Title,
     private _incomingService: IncomingService,
     private _compoundService: CompoundService,
     private _regionService: RegionService
-  ) {
-    this._router.events.subscribe(() => {
-      this._titleService.setTitle('Resource view');
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    this.showRestrictedMessage = true;
     this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
-
     this._onInit(this.resource, true); // TODO isDifferentResource: true
   }
 
