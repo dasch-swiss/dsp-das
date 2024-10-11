@@ -32,10 +32,6 @@ export class RegionService {
     private _cd: ChangeDetectorRef
   ) {}
 
-  reset() {
-    this._regionsSubject.next([]);
-  }
-
   onInit(resource: DspResource) {
     this._resource = resource;
     this.updateRegions();

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
@@ -12,7 +12,7 @@ import { CompoundService } from './compound/compound.service';
 @Component({
   selector: 'app-resource',
   template: `
-    <div class="restricted-message" *ngIf="resource?.res?.userHasPermission === 'RV' && showRestrictedMessage">
+    <div class="restricted-message" *ngIf="resource.res.userHasPermission === 'RV' && showRestrictedMessage">
       <mat-icon>report_problem</mat-icon>
       <p>
         This resource is restricted, file representations may be of lower quality and some properties may be hidden.
@@ -21,7 +21,7 @@ import { CompoundService } from './compound/compound.service';
     </div>
 
     <div class="content large middle">
-      <div class="resource-view" *ngIf="resource; else noResourceTpl">
+      <div class="resource-view">
         <app-resource-header [resource]="resource" />
 
         <ng-container *ngIf="isCompoundNavigation === false; else compoundViewerTpl">
@@ -37,23 +37,11 @@ import { CompoundService } from './compound/compound.service';
     <ng-template #compoundViewerTpl>
       <app-compound-viewer />
     </ng-template>
-
-    <ng-template #noResourceTpl>
-      <div>
-        <p>The resource could not be found.</p>
-        <p>Reasons:</p>
-        <ul>
-          <li>It could be a deleted resource and does not exist anymore.</li>
-          <li>You don't have the permissions to open this resource.</li>
-          <li>The identifier or the ARK URL is wrong.</li>
-        </ul>
-      </div>
-    </ng-template>
   `,
   styleUrls: ['./resource.component.scss'],
   providers: [CompoundService, RegionService, SegmentsService],
 })
-export class ResourceComponent implements OnChanges {
+export class ResourceComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean | null = null;
@@ -72,14 +60,21 @@ export class ResourceComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() {
     this.showRestrictedMessage = true;
     this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
 
-    this.onInit(this.resource, changes['resource']?.currentValue.res.id !== changes['resource']?.previousValue?.res.id);
+    this._onInit(this.resource, true); // TODO isDifferentResource: true
   }
 
-  onInit(resource: DspResource, isDifferentResource: boolean) {
+  pageIsLoaded() {
+    return (
+      this.isCompoundNavigation === false ||
+      (this.isCompoundNavigation === true && this._compoundService.incomingResource !== undefined)
+    );
+  }
+
+  private _onInit(resource: DspResource, isDifferentResource: boolean) {
     if (this._isObjectWithoutRepresentation(resource)) {
       this._checkForCompoundNavigation(resource, isDifferentResource);
       return;
@@ -91,13 +86,6 @@ export class ResourceComponent implements OnChanges {
     if (this._isImageWithRegions(resource)) {
       this._regionService.onInit(resource);
     }
-  }
-
-  pageIsLoaded() {
-    return (
-      this.isCompoundNavigation === false ||
-      (this.isCompoundNavigation === true && this._compoundService.incomingResource !== undefined)
-    );
   }
 
   private _isImageWithRegions(resource: DspResource) {
@@ -113,9 +101,6 @@ export class ResourceComponent implements OnChanges {
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .pipe(take(1))
       .subscribe(countQuery => {
-        this._regionService.reset();
-        this._compoundService.reset();
-
         const countQuery_ = countQuery as CountQueryResponse;
 
         if (countQuery_.numberOfResults > 0) {
