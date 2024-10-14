@@ -23,26 +23,15 @@ import {
   ReadResource,
   ReadStillImageFileValue,
   RegionGeometry,
-  UpdateFileValue,
-  UpdateResource,
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, switchMap, take, takeUntil } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
-import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
-import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import { RegionService } from '../region.service';
-import {
-  ReplaceFileDialogComponent,
-  ReplaceFileDialogProps,
-} from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { FileInfo } from '../representation.types';
 import { ResourceFetcherService } from '../resource-fetcher.service';
@@ -68,10 +57,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   isPng: boolean = false;
   imageFileInfo: FileInfo | undefined = undefined;
   failedToLoad = false;
-  imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
   regionDrawMode = false; // stores whether viewer is currently drawing a region
 
-  private _regionDragInfo; // stores the information of the first click for drawing a region
+  private _regionDragInfo: { overlayElement: HTMLElement; startPos: OpenSeadragon.Point } | null = null; // stores the information of the first click for drawing a region
   private _viewer: OpenSeadragon.Viewer | undefined;
   private _regions: PolygonsForRegion = {};
   private _ngUnsubscribe = new Subject<void>();
@@ -85,20 +73,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     } else return undefined;
   }
 
-  get isReadStillImageExternalFileValue(): boolean {
-    return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
-  }
-
-  get userCanView() {
-    return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
-  }
-
-  get userCanEdit() {
-    return ResourceUtil.userCanEdit(this.resource);
-  }
-
   constructor(
-    public notification: NotificationService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
@@ -180,68 +155,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this.defaultFailureStatus = 404;
   }
 
-  /**
-   * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
-   * prevents navigation by mouse (so that the region can be accurately drawn).
-   */
-  drawButtonClicked(): void {
-    this.regionDrawMode = !this.regionDrawMode;
-    this._assertOSDViewer().setMouseNavEnabled(!this.regionDrawMode);
-  }
-
-  download() {
-    if (this.imageFileValue?.fileUrl) {
-      this._rs.downloadFile(this.imageFileValue?.fileUrl, this.imageFileInfo?.originalFilename);
-    }
-  }
-
-  replaceImage() {
-    let dialogRef;
-    if (this.isReadStillImageExternalFileValue) {
-      dialogRef = this._dialog.open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps>(
-        EditThirdPartyIiifFormComponent,
-        DspDialogConfig.dialogDrawerConfig({
-          resourceId: this.resource.id,
-          fileValue: this.imageFileValue as ReadStillImageExternalFileValue,
-        })
-      );
-    } else {
-      dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
-        data: {
-          projectUuid: ProjectService.IriToUuid(this.resource.attachedToProject),
-          title: 'Image',
-          subtitle: 'Update image of the resource',
-          representation: Constants.HasStillImageFileValue,
-          propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
-        },
-      });
-    }
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this._replaceFile(data);
-      }
-    });
-  }
-
-  openImageInNewTab(url: string) {
-    window.open(url, '_blank');
-  }
-
   setForbiddenStatus() {
     this.defaultFailureStatus = 403;
     this._onFailedImageLoad();
-  }
-
-  private _replaceFile(file: UpdateFileValue) {
-    const updateRes = new UpdateResource();
-    updateRes.id = this.resource.id;
-    updateRes.type = this.resource.type;
-    updateRes.property = Constants.HasStillImageFileValue;
-    updateRes.value = file;
-    this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>).subscribe(() => {
-      this._resourceFetcherService.reload();
-    });
   }
 
   /**
@@ -324,7 +240,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.regionDrawMode) {
           return;
         }
-        const overlayElement = this._renderer.createElement('div');
+        const overlayElement: HTMLElement = this._renderer.createElement('div');
         overlayElement.style.background = 'rgba(255,0,0,0.3)';
         const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
@@ -605,8 +521,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this._regions = {};
-    if (this._viewer) {
-      this._viewer.clearOverlays();
-    }
+    this._assertOSDViewer().clearOverlays();
   }
 }
