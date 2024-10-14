@@ -1,5 +1,5 @@
 <!-- openseadragon (osd) viewer -->
-<div class="osd-container" [class.drawing]="_osdDrawerService.regionDrawMode" #osdViewer>
+<div class="osd-container" [class.drawing]="osdDrawerService.regionDrawMode" #osdViewer>
   <!-- in case of an error -->
   <ng-content select="[navigationArrows]"></ng-content>
 </div>

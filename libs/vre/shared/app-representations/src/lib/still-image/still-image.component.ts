@@ -7,8 +7,6 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
@@ -51,27 +49,12 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  constructor(
-    private _domSanitizer: DomSanitizer,
-    private _matIconRegistry: MatIconRegistry,
-    public _osdDrawerService: OsdDrawerService
-  ) {
-    OpenSeadragon.setString('Tooltips.Home', '');
-    OpenSeadragon.setString('Tooltips.ZoomIn', '');
-    OpenSeadragon.setString('Tooltips.ZoomOut', '');
-    OpenSeadragon.setString('Tooltips.FullPage', '');
-
-    // own draw region icon; because it does not exist in the material icons
-    this._matIconRegistry.addSvgIcon(
-      'draw_region_icon',
-      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
-    );
-  }
+  constructor(public osdDrawerService: OsdDrawerService) {}
 
   ngAfterViewInit() {
     this._setupViewer();
-    this._osdDrawerService.onInit(this.viewer!);
-    this._osdDrawerService.addRegionDrawer();
+    this.osdDrawerService.onInit(this.viewer!);
+    this.osdDrawerService.addRegionDrawer();
     this._loadImages();
 
     /**  TODO should I move it or replace

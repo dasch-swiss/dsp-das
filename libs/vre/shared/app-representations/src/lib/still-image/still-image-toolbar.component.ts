@@ -1,5 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   KnoraApiConnection,
@@ -26,21 +28,21 @@ import {
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
+import { OsdDrawerService } from './osd-drawer.service';
 
 @Component({
   selector: 'app-still-image-toolbar',
-  template: ` <div class="toolbar-bottom">
-      <!-- vertical more button with menu to open and copy iiif url -->
-      <button
-        mat-icon-button
-        data-cy="more-vert-image-button"
-        [matMenuTriggerFor]="more"
-        matTooltip="More"
-        matTooltipPosition="above">
-        <mat-icon>more_vert</mat-icon>
-      </button>
+  template: ` <div style="display: flex; justify-content: space-between">
+      <span>
+        <button
+          mat-icon-button
+          data-cy="more-vert-image-button"
+          [matMenuTriggerFor]="more"
+          matTooltip="More"
+          matTooltipPosition="above">
+          <mat-icon>more_vert</mat-icon>
+        </button>
 
-      <span class="action-buttons">
         <button
           data-cy="still-image-share-button"
           mat-icon-button
@@ -66,18 +68,13 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           matTooltip="Draw Region"
           [disabled]="!userCanEdit || isReadStillImageExternalFileValue"
           (click)="drawButtonClicked()"
-          [class.active]="regionDrawMode">
+          [class.active]="osdDrawerService.regionDrawMode">
           <mat-icon svgIcon="draw_region_icon"></mat-icon>
         </button>
       </span>
 
-      <span class="fill-remaining-space"></span>
-
       <ng-content select="[navigation]"></ng-content>
 
-      <span class="fill-remaining-space"></span>
-
-      <!-- right side buttons -->
       <span>
         <button
           data-cy="still-image-settings-button"
@@ -147,7 +144,6 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) isPng!: boolean;
-  @Input({ required: true }) regionDrawMode!: boolean;
   @Input({ required: true }) viewer!: OpenSeadragon.Viewer;
 
   imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
@@ -183,16 +179,21 @@ export class StillImageToolbarComponent {
     private _store: Store,
     private _resourceFetcherService: ResourceFetcherService,
     private _rs: RepresentationService,
-    private _dialog: MatDialog
-  ) {}
+    private _dialog: MatDialog,
+    private _domSanitizer: DomSanitizer,
+    private _matIconRegistry: MatIconRegistry,
+    public osdDrawerService: OsdDrawerService
+  ) {
+    this._setupCssMaterialIcon();
+  }
 
   openImageInNewTab(url: string) {
     window.open(url, '_blank');
   }
 
   drawButtonClicked(): void {
-    this.regionDrawMode = !this.regionDrawMode;
-    this.viewer.setMouseNavEnabled(!this.regionDrawMode);
+    this.osdDrawerService.regionDrawMode = !this.osdDrawerService.regionDrawMode;
+    this.viewer.setMouseNavEnabled(!this.osdDrawerService.regionDrawMode);
   }
 
   download() {
@@ -248,5 +249,12 @@ export class StillImageToolbarComponent {
     this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>).subscribe(() => {
       this._resourceFetcherService.reload();
     });
+  }
+
+  private _setupCssMaterialIcon() {
+    this._matIconRegistry.addSvgIcon(
+      'draw_region_icon',
+      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
+    );
   }
 }
