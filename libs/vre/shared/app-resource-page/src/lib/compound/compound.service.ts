@@ -4,14 +4,13 @@ import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject } from 'rxjs';
 
 @Injectable()
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
-  incomingResource: DspResource | undefined;
+  incomingResource?: DspResource;
   resource!: DspResource;
 
   onOpenNotLoadedIncomingResourcePage$: Subject<void> = new Subject<void>();
@@ -24,7 +23,6 @@ export class CompoundService {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _incomingService: IncomingService,
-    private _notification: NotificationService,
     private _regionService: RegionService,
     private _cd: ChangeDetectorRef
   ) {}
@@ -51,17 +49,16 @@ export class CompoundService {
       }
     } else {
       this.compoundPosition.offset = offset;
-      this._loadIncomingResourcesPage(offset);
+      this._loadIncomingResourcesPage(this.compoundPosition, offset);
     }
 
     this.compoundPosition.position = position;
     this.compoundPosition.page = page;
   }
 
-  private _loadIncomingResourcesPage(offset: number): void {
-    if (offset < 0 || offset > this.compoundPosition.maxOffsets) {
-      this._notification.openSnackBar(`Offset of ${offset} is invalid`);
-      return;
+  private _loadIncomingResourcesPage(compoundPosition: DspCompoundPosition, offset: number): void {
+    if (offset < 0 || offset > compoundPosition.maxOffsets) {
+      throw new AppError(`Offset of ${offset} is invalid`);
     }
 
     this._incomingService
@@ -73,7 +70,7 @@ export class CompoundService {
           return;
         }
         this.resource.incomingRepresentations = incomingImageRepresentations.resources;
-        this._loadIncomingResource(this.resource.incomingRepresentations[this.compoundPosition.position].id);
+        this._loadIncomingResource(this.resource.incomingRepresentations[compoundPosition.position].id);
       });
   }
 
