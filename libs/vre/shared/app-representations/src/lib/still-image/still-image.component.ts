@@ -29,6 +29,7 @@ import {
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
@@ -304,7 +305,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         )
       )
       .subscribe(res => {
-        this._viewer.destroy(); // canvas-click event doesnt work anymore, is it viewer bug?
+        this._viewer?.destroy(); // canvas-click event doesnt work anymore, is it viewer bug?
         this._setupViewer();
         this._loadImages();
 
@@ -318,18 +319,19 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * set up function for the region drawer
    */
-  private _addRegionDrawer() {
+  private _addRegionDrawer(): void {
+    const viewer = this._assertViewer();
     // eslint-disable-next-line no-new
     new OpenSeadragon.MouseTracker({
-      element: this._viewer.canvas,
+      element: viewer.canvas,
       pressHandler: event => {
         if (!this.regionDrawMode) {
           return;
         }
         const overlayElement = this._renderer.createElement('div');
         overlayElement.style.background = 'rgba(255,0,0,0.3)';
-        const viewportPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
-        this._viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
+        const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+        viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
         this._regionDragInfo = {
           overlayElement,
           startPos: viewportPos,
@@ -339,7 +341,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         if (!this._regionDragInfo) {
           return;
         }
-        const viewPortPos = this._viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+        const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
         const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
         const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
         const location = new OpenSeadragon.Rect(
@@ -349,18 +351,18 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
           Math.abs(diffY)
         );
 
-        this._viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
+        viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
         this._regionDragInfo.endPos = viewPortPos;
       },
       releaseHandler: () => {
         if (this.regionDrawMode) {
-          const imageSize = this._viewer.world.getItemAt(0).getContentSize();
-          const startPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
-          const endPoint = this._viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
+          const imageSize = viewer.world.getItemAt(0).getContentSize();
+          const startPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
+          const endPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos);
           this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
           this._regionDragInfo = null;
           this.regionDrawMode = false;
-          this._viewer.setMouseNavEnabled(true);
+          viewer.setMouseNavEnabled(true);
         }
       },
     });
@@ -405,31 +407,39 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._addRegionDrawer();
   }
 
+  private _assertViewer(): OpenSeadragon.Viewer {
+    if (!this._viewer) {
+      throw new AppError('OpenSeadragon Viewer not initialized');
+    }
+    return this._viewer;
+  }
+
   /**
    * adds all images in this.images to the _viewer.
    * Images are positioned in a horizontal row next to each other.
    */
   private _openInternalImages(): void {
+    const viewer = this._assertViewer();
     this.failedToLoad = false;
 
     const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
 
     // display only the defined range of this.images
     const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues, this.isPng);
-    this._viewer.addOnceHandler('open', args => {
+    viewer.addOnceHandler('open', args => {
       // check if the current image exists
       if (
         this.imageFileValue instanceof ReadStillImageFileValue &&
         this.imageFileValue.fileUrl.includes(args.source['id'])
       ) {
         // enable mouse navigation incl. zoom
-        this._viewer.setMouseNavEnabled(true);
+        viewer.setMouseNavEnabled(true);
         // enable the navigator
-        this._viewer.navigator.element.style.display = 'block';
+        viewer.navigator.element.style.display = 'block';
         this._regionService.imageIsLoaded();
       }
     });
-    this._viewer.open(tileSources);
+    viewer.open(tileSources);
   }
 
   private _createSVGOverlay(
@@ -439,6 +449,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     regionLabel: string,
     regionComment: string
   ): void {
+    const viewer = this._assertViewer();
     const lineColor = geometry.lineColor;
     const lineWidth = geometry.lineWidth;
 
@@ -459,7 +470,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
     loc.y *= aspectRatio;
 
-    this._viewer
+    viewer
       .addOverlay({
         element: regEle,
         location: loc,
@@ -538,18 +549,20 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _onFailedImageLoad() {
+    const viewer = this._assertViewer();
     this.failedToLoad = true;
-    this._viewer.setMouseNavEnabled(false);
-    this._viewer.navigator.element.style.display = 'none';
+    viewer.setMouseNavEnabled(false);
+    viewer.navigator.element.style.display = 'none';
     this.regionDrawMode = false;
     this._viewer?.removeAllHandlers('open');
     this._cd.markForCheck();
   }
 
   private _onSuccessAfterFailedImageLoad() {
+    const viewer = this._assertViewer();
     this.failedToLoad = false;
-    this._viewer.setMouseNavEnabled(true);
-    this._viewer.navigator.element.style.display = 'block';
+    viewer.setMouseNavEnabled(true);
+    viewer.navigator.element.style.display = 'block';
     this._regionService.imageIsLoaded();
   }
 
