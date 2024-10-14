@@ -10,15 +10,9 @@ import { CompoundService } from './compound/compound.service';
 @Component({
   selector: 'app-resource',
   template: `
-    <div class="restricted-message" *ngIf="resource.res.userHasPermission === 'RV' && showRestrictedMessage">
-      <mat-icon>report_problem</mat-icon>
-      <p>
-        This resource is restricted, file representations may be of lower quality and some properties may be hidden.
-      </p>
-      <mat-icon class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
-    </div>
+    <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
 
-    <div class="content large middle">
+    <div class=" content large middle">
       <div class="resource-view">
         <app-resource-header [resource]="resource" />
 
@@ -43,7 +37,6 @@ export class ResourceComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean | null = null;
-  showRestrictedMessage = true;
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
