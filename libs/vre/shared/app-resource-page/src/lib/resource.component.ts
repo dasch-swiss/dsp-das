@@ -66,12 +66,12 @@ export class ResourceComponent implements OnInit {
     this.isCompoundNavigation = false;
     this.representationsToDisplay = getFileValue(resource)!;
 
-    if (this._isImageWithRegions(resource)) {
+    if (this._isStillImage(resource)) {
       this._regionService.onInit(resource);
     }
   }
 
-  private _isImageWithRegions(resource: DspResource) {
+  private _isStillImage(resource: DspResource) {
     return resource.res.properties[Constants.HasStillImageFileValue] !== undefined;
   }
 
@@ -88,6 +88,7 @@ export class ResourceComponent implements OnInit {
 
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
+
           this._compoundService.onInit(
             this._compoundService.exists && !isDifferentResource
               ? this._compoundService.compoundPosition!
