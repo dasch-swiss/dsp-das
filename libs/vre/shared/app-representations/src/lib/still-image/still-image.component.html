@@ -1,14 +1,10 @@
 <!-- openseadragon (osd) viewer -->
-<div class="osd-container" [class.drawing]="_osdDrawerService.regionDrawMode" [class.on-error]="failedToLoad">
+<div class="osd-container" [class.drawing]="_osdDrawerService.regionDrawMode" #osdViewer>
   <!-- in case of an error -->
   <ng-content select="[navigationArrows]"></ng-content>
-  <app-status
-    [status]="defaultFailureStatus"
-    [url]="imageFileValue?.fileUrl"
-    [representation]="'still-image'"
-    *ngIf="failedToLoad"></app-status>
 </div>
 
 <div class="toolbar">
   <ng-content select="[slider]" />
+  <app-still-image-toolbar [resource]="resource" [isPng]="isPng" [viewer]="viewer" />
 </div>

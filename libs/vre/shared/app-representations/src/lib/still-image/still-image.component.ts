@@ -1,27 +1,19 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
-  OnChanges,
   OnDestroy,
-  OnInit,
-  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
-import { RegionService } from '../region.service';
-import { RepresentationService } from '../representation.service';
-import { FileInfo } from '../representation.types';
-import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OsdDrawerService } from './osd-drawer.service';
 import { osdViewerConfig } from './osd-viewer.config';
@@ -38,36 +30,31 @@ export interface PolygonsForRegion {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService],
 })
-export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
+export class StillImageComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
-  @Input() attachedProject: ReadProject | undefined;
+  @ViewChild('osdViewer') osdViewer!: ElementRef;
 
-  defaultFailureStatus: number = 404;
   isPng: boolean = false;
-  imageFileInfo: FileInfo | undefined = undefined;
-  failedToLoad = false;
 
-  private _viewer: OpenSeadragon.Viewer | undefined;
+  public viewer!: OpenSeadragon.Viewer;
   private _ngUnsubscribe = new Subject<void>();
 
-  get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
-      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
+  get imageFileValue() {
+    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+    switch (image.type) {
+      case Constants.StillImageFileValue:
+        return image as ReadStillImageFileValue;
+      case Constants.StillImageExternalFileValue:
+        return image as ReadStillImageExternalFileValue;
+      default:
+        throw new AppError('Unknown image type');
     }
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue) {
-      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageExternalFileValue;
-    } else return undefined;
   }
 
   constructor(
     private _domSanitizer: DomSanitizer,
-    private _elementRef: ElementRef,
     private _matIconRegistry: MatIconRegistry,
-    private _rs: RepresentationService,
-    private _regionService: RegionService,
-    private _resourceFetcherService: ResourceFetcherService,
-    public _osdDrawerService: OsdDrawerService,
-    private _store: Store
+    public _osdDrawerService: OsdDrawerService
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -81,88 +68,56 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this._setupViewer();
-    this._osdDrawerService.onInit(this._viewer!);
+    this._osdDrawerService.onInit(this.viewer!);
     this._osdDrawerService.addRegionDrawer();
     this._loadImages();
 
-    this._resourceFetcherService.settings.imageFormatIsPng
-      .asObservable()
-      .pipe(takeUntil(this._ngUnsubscribe))
-      .subscribe((isPng: boolean) => {
-        this.isPng = isPng;
-        this._loadImages();
-      });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes['resource'] || changes['resource'].isFirstChange()) {
-      return;
-    }
-    this._loadImages();
+    /**  TODO should I move it or replace
+         this._resourceFetcherService.settings.imageFormatIsPng
+         .asObservable()
+         .pipe(takeUntil(this._ngUnsubscribe))
+         .subscribe((isPng: boolean) => {
+         this.isPng = isPng;
+         this._loadImages();
+         });
+         */
   }
 
   ngOnDestroy() {
-    if (this._viewer) {
-      this._viewer.destroy();
-      this._viewer = undefined;
-    }
+    this.viewer?.destroy();
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
   }
 
   private _setupViewer(): void {
-    const viewerContainer = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
-
-    this._viewer = new OpenSeadragon.Viewer({
-      element: viewerContainer,
+    const viewer = this.osdViewer.nativeElement;
+    this.viewer = new OpenSeadragon.Viewer({
+      element: viewer,
       ...osdViewerConfig,
     });
-
-    this._viewer.addHandler('full-screen', args => {
+    // TODO does the following need to be unsubscribed ?
+    this.viewer.addHandler('full-screen', args => {
       if (args.fullScreen) {
-        viewerContainer.classList.add('fullscreen');
+        viewer.classList.add('fullscreen');
       } else {
-        viewerContainer.classList.remove('fullscreen');
+        viewer.classList.remove('fullscreen');
       }
     });
-  }
-
-  private _assertOSDViewer(): OpenSeadragon.Viewer {
-    if (!this._viewer) {
-      throw new AppError('OpenSeaDragon Viewer not initialized');
-    }
-    return this._viewer;
   }
 
   private _openInternalImages(): void {
-    const viewer = this._assertOSDViewer();
-    const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
-
-    const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues, this.isPng);
-    viewer.addOnceHandler('open', args => {
-      // check if the current image exists
-      if (this.imageFileValue instanceof ReadStillImageFileValue) {
-        /** TODO there was this weird condition inside
-                 this.imageFileValue.fileUrl.includes(args.source!['id']!)
-                 */
-
-        // enable mouse navigation incl. zoom
-        viewer.setMouseNavEnabled(true);
-        // enable the navigator
-        viewer.navigator.element.style.display = 'block';
-        // TODO was this._regionService.imageIsLoaded();
-      }
-    });
-    viewer.open(tileSources);
+    const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
+      [this.imageFileValue as ReadStillImageFileValue],
+      this.isPng
+    );
+    this.viewer.open(tiles);
   }
 
   private _loadImages() {
-    this._assertOSDViewer().close();
-
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
-      this._loadInternalImages();
+      this._openInternalImages();
     } else if (
       this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue
     ) {
@@ -170,40 +125,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private _loadInternalImages() {
-    const projectShort = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortcode;
-    const assetId = this.imageFileValue?.filename.split('.')[0] || '';
-
-    if (!projectShort) {
-      throw new AppError('Error with project shortcode');
-    }
-
-    this._rs
-      .getIngestFileInfo(projectShort, assetId)
-      .pipe(take(1))
-      .subscribe((fileInfo: FileInfo) => {
-        this.imageFileInfo = fileInfo;
-        this._openInternalImages();
-      });
-  }
-
   private _loadExternalIIIF() {
     if (this.imageFileValue instanceof ReadStillImageExternalFileValue) {
-      const iiif = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
-      if (iiif) {
-        if (this.failedToLoad) {
-          this._onSuccessAfterFailedImageLoad();
-        }
-        this._viewer?.open(iiif.infoJsonUrl);
+      const i3f = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
+      if (!i3f) {
+        throw new AppError('Error with IIIF URL');
       }
-    }
-  }
 
-  private _onSuccessAfterFailedImageLoad() {
-    const viewer = this._assertOSDViewer();
-    this.failedToLoad = false;
-    viewer.setMouseNavEnabled(true);
-    viewer.navigator.element.style.display = 'block';
-    this._regionService.imageIsLoaded();
+      this.viewer.open(i3f.infoJsonUrl);
+    }
   }
 }

@@ -11,9 +11,13 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
+import { take } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import {
@@ -21,7 +25,6 @@ import {
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
-import { FileInfo } from '../representation.types';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
@@ -52,7 +55,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           data-cy="still-image-download-button"
           mat-icon-button
           matTooltip="Download"
-          [disabled]="isReadStillImageExternalFileValue || failedToLoad || !userCanView"
+          [disabled]="isReadStillImageExternalFileValue || !userCanView"
           (click)="download()">
           <mat-icon>download</mat-icon>
         </button>
@@ -61,7 +64,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           mat-icon-button
           id="DSP_OSD_DRAW_REGION"
           matTooltip="Draw Region"
-          [disabled]="failedToLoad || !userCanEdit || isReadStillImageExternalFileValue"
+          [disabled]="!userCanEdit || isReadStillImageExternalFileValue"
           (click)="drawButtonClicked()"
           [class.active]="regionDrawMode">
           <mat-icon svgIcon="draw_region_icon"></mat-icon>
@@ -82,33 +85,33 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
           id="DSP_OSD_SETTINGS"
           matTooltip="Settings"
           [matMenuTriggerFor]="settings"
-          [disabled]="failedToLoad || this.isReadStillImageExternalFileValue">
+          [disabled]="this.isReadStillImageExternalFileValue">
           <mat-icon>settings</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out" [disabled]="failedToLoad">
+        <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out">
           <mat-icon>zoom_out</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_IN" matTooltip="Zoom in" [disabled]="failedToLoad">
+        <button mat-icon-button id="DSP_OSD_ZOOM_IN" matTooltip="Zoom in">
           <mat-icon>zoom_in</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_HOME" matTooltip="Reset zoom" [disabled]="failedToLoad">
+        <button mat-icon-button id="DSP_OSD_HOME" matTooltip="Reset zoom">
           <mat-icon>other_houses</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_FULL_PAGE" matTooltip="Open in fullscreen" [disabled]="failedToLoad">
+        <button mat-icon-button id="DSP_OSD_FULL_PAGE" matTooltip="Open in fullscreen">
           <mat-icon>fullscreen</mat-icon>
         </button>
       </span>
     </div>
 
     <mat-menu #more="matMenu" class="representation-menu">
-      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(imageFileValue?.fileUrl)">
+      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(imageFileValue.fileUrl)">
         Open IIIF URL in new tab
       </button>
       <button
         class="menu-content"
         data-cy="replace-image-button"
         mat-menu-item
-        [disabled]="failedToLoad || !userCanEdit"
+        [disabled]="!userCanEdit"
         (click)="replaceImage()">
         {{ isReadStillImageExternalFileValue ? 'Replace external file url' : 'Replace file' }}
       </button>
@@ -118,13 +121,13 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
       <button
         mat-menu-item
         (click)="notification.openSnackBar('IIIF URL copied to clipboard!')"
-        [cdkCopyToClipboard]="imageFileValue?.fileUrl">
+        [cdkCopyToClipboard]="imageFileValue.fileUrl">
         <mat-icon>content_copy</mat-icon>
         Copy IIIF URL to clipboard
       </button>
       <button
         mat-menu-item
-        [cdkCopyToClipboard]="imageFileValue?.arkUrl"
+        [cdkCopyToClipboard]="imageFileValue.arkUrl"
         (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
@@ -135,7 +138,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         <mat-icon *ngIf="!isPng">check</mat-icon>
         JPG
       </button>
-      <button mat-menu-item [disabled]="failedToLoad" (click)="imageFormatIsPng.next(true)">
+      <button mat-menu-item (click)="imageFormatIsPng.next(true)">
         <mat-icon *ngIf="isPng">check</mat-icon>
         PNG
       </button>
@@ -143,14 +146,23 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 })
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
-  @Input({ required: true }) imageFileValue!: ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined;
-  @Input({ required: true }) failedToLoad!: boolean; // TODO maybe not load this component if failedToLoad is true
   @Input({ required: true }) isPng!: boolean;
   @Input({ required: true }) regionDrawMode!: boolean;
   @Input({ required: true }) viewer!: OpenSeadragon.Viewer;
-  @Input({ required: true }) imageFileInfo!: FileInfo | undefined;
 
   imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
+
+  get imageFileValue() {
+    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+    switch (image.type) {
+      case Constants.StillImageFileValue:
+        return image as ReadStillImageFileValue;
+      case Constants.StillImageExternalFileValue:
+        return image as ReadStillImageExternalFileValue;
+      default:
+        throw new AppError('Unknown image type');
+    }
+  }
 
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
@@ -168,6 +180,7 @@ export class StillImageToolbarComponent {
     public notification: NotificationService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
+    private _store: Store,
     private _resourceFetcherService: ResourceFetcherService,
     private _rs: RepresentationService,
     private _dialog: MatDialog
@@ -177,19 +190,24 @@ export class StillImageToolbarComponent {
     window.open(url, '_blank');
   }
 
-  /**
-   * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
-   * prevents navigation by mouse (so that the region can be accurately drawn).
-   */
   drawButtonClicked(): void {
     this.regionDrawMode = !this.regionDrawMode;
     this.viewer.setMouseNavEnabled(!this.regionDrawMode);
   }
 
   download() {
-    if (this.imageFileValue?.fileUrl) {
-      this._rs.downloadFile(this.imageFileValue?.fileUrl, this.imageFileInfo?.originalFilename);
+    const projectShort = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortcode;
+    const assetId = this.imageFileValue.filename.split('.')[0] || '';
+
+    if (!projectShort) {
+      throw new AppError('Error with project shortcode');
     }
+    this._rs
+      .getIngestFileInfo(projectShort, assetId)
+      .pipe(take(1))
+      .subscribe(response => {
+        this._rs.downloadFile(this.imageFileValue.fileUrl, response.originalFilename);
+      });
   }
 
   replaceImage() {
