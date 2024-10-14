@@ -63,19 +63,17 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
   @Input() attachedProject: ReadProject | undefined;
 
-  destroyed: Subject<void> = new Subject<void>();
   defaultFailureStatus: number = 404;
-
   isPng: boolean = false;
-
   imageFileInfo: FileInfo | undefined = undefined;
-
   failedToLoad = false;
   imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
   regionDrawMode = false; // stores whether viewer is currently drawing a region
+
   private _regionDragInfo; // stores the information of the first click for drawing a region
   private _viewer: OpenSeadragon.Viewer | undefined;
   private _regions: PolygonsForRegion = {};
+  private _ngUnsubscribe = new Subject<void>();
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -154,7 +152,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
     this._resourceFetcherService.settings.imageFormatIsPng
       .asObservable()
-      .pipe(takeUntil(this.destroyed))
+      .pipe(takeUntil(this._ngUnsubscribe))
       .subscribe((isPng: boolean) => {
         this.isPng = isPng;
         this._loadImages();
@@ -173,8 +171,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       this._viewer.destroy();
       this._viewer = undefined;
     }
-    this.destroyed.next();
-    this.destroyed.complete();
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   resetStatus() {
@@ -190,9 +188,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._viewer?.setMouseNavEnabled(!this.regionDrawMode);
   }
 
-  /**
-   * display message to confirm the copy of the citation link (ARK URL)
-   */
   openSnackBar(message: string) {
     this._notification.openSnackBar(message);
   }
