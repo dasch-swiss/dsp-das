@@ -79,6 +79,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.viewer = new OpenSeadragon.Viewer({
       element: viewer,
       ...osdViewerConfig,
+      // TODO try to add Authorization: Bearer token (Christian said it should work)
     });
     // TODO does the following need to be unsubscribed ?
     this.viewer.addHandler('full-screen', args => {
