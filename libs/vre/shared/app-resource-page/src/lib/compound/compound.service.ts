@@ -45,7 +45,7 @@ export class CompoundService {
       if (this._resource.incomingRepresentations[position]) {
         this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
       } else {
-        this.onOpenNotLoadedIncomingResourcePage$.next();
+        this.onOpenNotLoadedIncomingResourcePage$.next(); // TODO remove, this is terrible
       }
     } else {
       this.compoundPosition.offset = offset;

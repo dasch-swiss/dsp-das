@@ -1,5 +1,5 @@
 <!-- openseadragon (osd) viewer -->
-<div class="osd-container" [class.drawing]="regionDrawMode" [class.on-error]="failedToLoad">
+<div class="osd-container" [class.drawing]="_osdDrawerService.regionDrawMode" [class.on-error]="failedToLoad">
   <!-- in case of an error -->
   <ng-content select="[navigationArrows]"></ng-content>
   <app-status
