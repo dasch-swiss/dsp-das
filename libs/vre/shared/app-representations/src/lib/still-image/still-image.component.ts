@@ -13,6 +13,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -64,7 +66,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _rs: RepresentationService,
     private _regionService: RegionService,
     private _resourceFetcherService: ResourceFetcherService,
-    public _osdDrawerService: OsdDrawerService
+    public _osdDrawerService: OsdDrawerService,
+    private _store: Store
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -135,14 +138,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _openInternalImages(): void {
     const viewer = this._assertOSDViewer();
-    this.failedToLoad = false;
-
     const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
 
-    // display only the defined range of this.images
     const tileSources: object[] = StillImageHelper.prepareTileSourcesFromFileValues(fileValues, this.isPng);
     viewer.addOnceHandler('open', args => {
-      console.log('arg', args);
       // check if the current image exists
       if (this.imageFileValue instanceof ReadStillImageFileValue) {
         /** TODO there was this weird condition inside
@@ -153,7 +152,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         viewer.setMouseNavEnabled(true);
         // enable the navigator
         viewer.navigator.element.style.display = 'block';
-        this._regionService.imageIsLoaded();
+        // TODO was this._regionService.imageIsLoaded();
       }
     });
     viewer.open(tileSources);
@@ -172,7 +171,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _loadInternalImages() {
-    const projectShort = this.resource.attachedToProject.split('/').pop();
+    const projectShort = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortcode;
     const assetId = this.imageFileValue?.filename.split('.')[0] || '';
 
     if (!projectShort) {
@@ -184,9 +183,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(take(1))
       .subscribe((fileInfo: FileInfo) => {
         this.imageFileInfo = fileInfo;
-        if (this.failedToLoad) {
-          this._onSuccessAfterFailedImageLoad();
-        }
         this._openInternalImages();
       });
   }
