@@ -3,6 +3,7 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyD
 import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject } from 'rxjs';
@@ -17,11 +18,6 @@ export class CompoundService {
 
   get exists() {
     return this.compoundPosition !== undefined;
-  }
-
-  reset() {
-    this.compoundPosition = undefined;
-    this.incomingResource = undefined;
   }
 
   constructor(
@@ -41,26 +37,18 @@ export class CompoundService {
 
   openPage(page: number) {
     if (!this.compoundPosition) {
-      return;
+      throw new AppError('Compound position is not set');
     }
 
     const offset = Math.ceil(page / 25) - 1;
     const position = Math.floor(page - offset * 25 - 1);
 
-    // get incoming still image representations, if the offset changed
-    if (
-      offset === this.compoundPosition.offset &&
-      this.resource.incomingRepresentations.length > 0 &&
-      this.resource.incomingRepresentations[position]
-    ) {
-      // get incoming resource, if the offset is the same but page changed
-      this._loadIncomingResource(this.resource.incomingRepresentations[position].id);
-    } else if (
-      offset === this.compoundPosition.offset &&
-      this.resource.incomingRepresentations.length > 0 &&
-      !this.resource.incomingRepresentations[position]
-    ) {
-      this.onOpenNotLoadedIncomingResourcePage$.next();
+    if (offset === this.compoundPosition.offset && this.resource.incomingRepresentations.length > 0) {
+      if (this.resource.incomingRepresentations[position]) {
+        this._loadIncomingResource(this.resource.incomingRepresentations[position].id);
+      } else {
+        this.onOpenNotLoadedIncomingResourcePage$.next();
+      }
     } else {
       this.compoundPosition.offset = offset;
       this._loadIncomingResourcesPage(offset);

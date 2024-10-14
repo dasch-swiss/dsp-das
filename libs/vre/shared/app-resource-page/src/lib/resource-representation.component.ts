@@ -1,16 +1,16 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   FileRepresentation,
+  getFileValue,
   RepresentationConstants,
   RepresentationService,
-  getFileValue,
 } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
@@ -81,7 +81,7 @@ import { filter, map } from 'rxjs/operators';
     </app-text>
   </div>`,
 })
-export class ResourceRepresentationComponent implements OnChanges {
+export class ResourceRepresentationComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   representationToDisplay!: FileRepresentation;
 
@@ -113,7 +113,7 @@ export class ResourceRepresentationComponent implements OnChanges {
     private _rs: RepresentationService
   ) {}
 
-  ngOnChanges() {
+  ngOnInit() {
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
   }
 
