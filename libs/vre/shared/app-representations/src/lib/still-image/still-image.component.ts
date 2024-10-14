@@ -66,6 +66,17 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   destroyed: Subject<void> = new Subject<void>();
   defaultFailureStatus: number = 404;
 
+  isPng: boolean = false;
+
+  imageFileInfo: FileInfo | undefined = undefined;
+
+  failedToLoad = false;
+  imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
+  regionDrawMode = false; // stores whether viewer is currently drawing a region
+  private _regionDragInfo; // stores the information of the first click for drawing a region
+  private _viewer: OpenSeadragon.Viewer | undefined;
+  private _regions: PolygonsForRegion = {};
+
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
@@ -75,10 +86,6 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     } else return undefined;
   }
 
-  isPng: boolean = false;
-
-  imageFileInfo: FileInfo | undefined = undefined;
-
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
   }
@@ -87,17 +94,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
 
-  get usercanEdit() {
+  get userCanEdit() {
     return ResourceUtil.userCanEdit(this.resource);
   }
-
-  failedToLoad = false;
-
-  imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
-  regionDrawMode = false; // stores whether viewer is currently drawing a region
-  private _regionDragInfo; // stores the information of the first click for drawing a region
-  private _viewer: OpenSeadragon.Viewer | undefined;
-  private _regions: PolygonsForRegion = {};
 
   constructor(
     @Inject(DspApiConnectionToken)

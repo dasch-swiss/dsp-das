@@ -46,7 +46,7 @@
         mat-icon-button
         id="DSP_OSD_DRAW_REGION"
         matTooltip="Draw Region"
-        [disabled]="failedToLoad || !usercanEdit || isReadStillImageExternalFileValue"
+        [disabled]="failedToLoad || !userCanEdit || isReadStillImageExternalFileValue"
         (click)="drawButtonClicked()"
         [class.active]="regionDrawMode">
         <mat-icon svgIcon="draw_region_icon"></mat-icon>
@@ -96,9 +96,9 @@
     class="menu-content"
     data-cy="replace-image-button"
     mat-menu-item
-    [disabled]="failedToLoad || !usercanEdit"
+    [disabled]="failedToLoad || !userCanEdit"
     (click)="replaceImage()">
-    {{isReadStillImageExternalFileValue ? 'Replace external file url':'Replace file'}}
+    {{ isReadStillImageExternalFileValue ? 'Replace external file url' : 'Replace file' }}
   </button>
 </mat-menu>
 
@@ -120,9 +120,11 @@
 </mat-menu>
 <mat-menu #settings="matMenu" class="settings-menu">
   <button class="menu-content" mat-menu-item (click)="imageFormatIsPng.next(false)">
-    <mat-icon *ngIf="!isPng">check</mat-icon>JPG
+    <mat-icon *ngIf="!isPng">check</mat-icon>
+    JPG
   </button>
   <button mat-menu-item [disabled]="failedToLoad" (click)="imageFormatIsPng.next(true)">
-    <mat-icon *ngIf="isPng">check</mat-icon>PNG
+    <mat-icon *ngIf="isPng">check</mat-icon>
+    PNG
   </button>
 </mat-menu>
