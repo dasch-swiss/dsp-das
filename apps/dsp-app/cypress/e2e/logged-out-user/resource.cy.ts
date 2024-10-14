@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
 import { ExistingClassResourcePayloads } from '../../fixtures/existing-class-resource-payloads';
 import { MiscClass, SidebandClass } from '../../models/incunabula-data-models';
 import { ExistingOntologyClassPage } from '../../support/pages/existing-ontology-class-page';
@@ -29,13 +28,13 @@ describe('View Existing Resource', () => {
   beforeEach(() => {
     ontoClassPage = new ExistingOntologyClassPage();
     cy.loginAdmin().then(() => {
-      cy.uploadFile(
-        '../uploads/Fingerprint_Logo_coloured.png',
-        ExistingOntologyClassPage.existingProjectShortCode
-      ).then(response => {
-        sidebandData.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(ExistingClassResourcePayloads.sideband(sidebandData));
-      });
+      // cy.uploadFile(
+      //   '../uploads/Fingerprint_Logo_coloured.png',
+      //   ExistingOntologyClassPage.existingProjectShortCode
+      // ).then(response => {
+      //   sidebandData.file = (response as UploadedFileResponse).internalFilename;
+      //   cy.createResource(ExistingClassResourcePayloads.sideband(sidebandData));
+      // });
     });
     cy.createResource(ExistingClassResourcePayloads.misc(miscData));
     cy.logout();
@@ -49,18 +48,23 @@ describe('View Existing Resource', () => {
 
   it('label, color, comment properties should be present', () => {
     ontoClassPage.visitClass('misc');
+    cy.get('[data-cy=resource-list-item]').should('have.length.greaterThan', 0);
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(miscData.label).click();
     cy.get('[data-cy=resource-header-label]').contains(miscData.label);
     cy.get('[data-cy=color-box]')
       .should('have.css', 'background-color')
       .should('contain', onecolor(miscData.color).css().replaceAll(',', ', '));
-    cy.get('[data-cy=show-all-comments]').click();
+    cy.get('[data-cy=show-all-comments]').should('be.visible').click();
     cy.get('[data-cy=property-value-comment]').contains(miscData.colorComment);
   });
 
   it('still image should be present', () => {
     ontoClassPage.visitClass('Sideband');
-    cy.get('[data-cy=resource-header-label]').contains(miscData.label);
-    cy.get('[data-cy=show-all-comments]').click();
-    cy.get('[data-cy=property-value-comment]').contains(miscData.colorComment);
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
+    cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
+    cy.get('[data-cy=show-all-comments]').should('be.visible').click();
+    cy.get('[data-cy=property-value-comment]').should('have.length.greaterThan', 0);
+    cy.get('[data-cy=rich-text-switch p]').contains(sidebandData.comments[0].text);
+    cy.get('[data-cy=property-value-comment]').contains(sidebandData.comments[0].comment);
   });
 });

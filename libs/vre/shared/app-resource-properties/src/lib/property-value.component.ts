@@ -49,10 +49,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
-        <app-property-value-comment
-          [displayMode]="displayMode"
-          [control]="group?.controls.comment"
-          data-cy="property-value-comment">
+        <app-property-value-comment [displayMode]="displayMode" [control]="group?.controls.comment">
         </app-property-value-comment>
       </div>
       <button
