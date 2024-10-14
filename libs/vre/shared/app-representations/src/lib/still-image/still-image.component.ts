@@ -281,10 +281,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _highlightRegion(regionIri: string) {
-    const activeRegion: HTMLElement[] = this._regions[regionIri];
+    const activeRegions: HTMLElement[] = this._regions[regionIri];
 
-    if (activeRegion !== undefined) {
-      for (const pol of activeRegion) {
+    if (activeRegions !== undefined) {
+      for (const pol of activeRegions) {
         pol.setAttribute('class', 'region active');
       }
     }
