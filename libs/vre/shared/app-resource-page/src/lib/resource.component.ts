@@ -97,7 +97,7 @@ export class ResourceComponent implements OnInit {
           this.isCompoundNavigation = true;
           this._compoundService.onInit(
             this._compoundService.exists && !isDifferentResource
-              ? this._compoundService.compoundPosition
+              ? this._compoundService.compoundPosition!
               : new DspCompoundPosition(countQuery_.numberOfResults),
             this.resource
           );
