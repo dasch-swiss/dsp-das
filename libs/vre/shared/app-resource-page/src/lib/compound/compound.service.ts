@@ -11,9 +11,9 @@ import { Subject } from 'rxjs';
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
   incomingResource?: DspResource;
-  resource!: DspResource;
-
   onOpenNotLoadedIncomingResourcePage$: Subject<void> = new Subject<void>();
+
+  private _resource!: DspResource;
 
   get exists() {
     return this.compoundPosition !== undefined;
@@ -29,7 +29,7 @@ export class CompoundService {
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
     this.compoundPosition = _compound;
-    this.resource = resource;
+    this._resource = resource;
     this.openPage(_compound.page);
   }
 
@@ -41,9 +41,9 @@ export class CompoundService {
     const offset = Math.ceil(page / 25) - 1;
     const position = Math.floor(page - offset * 25 - 1);
 
-    if (offset === this.compoundPosition.offset && this.resource.incomingRepresentations.length > 0) {
-      if (this.resource.incomingRepresentations[position]) {
-        this._loadIncomingResource(this.resource.incomingRepresentations[position].id);
+    if (offset === this.compoundPosition.offset && this._resource.incomingRepresentations.length > 0) {
+      if (this._resource.incomingRepresentations[position]) {
+        this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
       } else {
         this.onOpenNotLoadedIncomingResourcePage$.next();
       }
@@ -62,15 +62,15 @@ export class CompoundService {
     }
 
     this._incomingService
-      .getStillImageRepresentationsForCompoundResource(this.resource.res.id, offset)
+      .getStillImageRepresentationsForCompoundResource(this._resource.res.id, offset)
       .subscribe(res => {
         const incomingImageRepresentations = res as ReadResourceSequence;
 
         if (incomingImageRepresentations.resources.length === 0) {
           return;
         }
-        this.resource.incomingRepresentations = incomingImageRepresentations.resources;
-        this._loadIncomingResource(this.resource.incomingRepresentations[compoundPosition.position].id);
+        this._resource.incomingRepresentations = incomingImageRepresentations.resources;
+        this._loadIncomingResource(this._resource.incomingRepresentations[compoundPosition.position].id);
       });
   }
 
