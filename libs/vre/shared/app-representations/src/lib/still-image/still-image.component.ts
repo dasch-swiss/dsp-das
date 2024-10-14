@@ -330,7 +330,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         }
         const overlayElement = this._renderer.createElement('div');
         overlayElement.style.background = 'rgba(255,0,0,0.3)';
-        const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+        const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
         this._regionDragInfo = {
           overlayElement,
@@ -341,7 +341,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         if (!this._regionDragInfo) {
           return;
         }
-        const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position);
+        const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
         const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
         const location = new OpenSeadragon.Rect(
@@ -492,7 +492,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     regEle.addEventListener('mouseleave', () => {
       comEle.setAttribute('style', 'display: none');
     });
-    regEle.dataset.regionIri = regionIri;
+    regEle.dataset['regionIri'] = regionIri;
   }
 
   private _loadImages() {
