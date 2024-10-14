@@ -103,7 +103,7 @@
 <mat-menu #share="matMenu" class="res-share-menu">
   <button
     mat-menu-item
-    (click)="openSnackBar('IIIF URL copied to clipboard!')"
+    (click)="notification.openSnackBar('IIIF URL copied to clipboard!')"
     [cdkCopyToClipboard]="imageFileValue?.fileUrl">
     <mat-icon>content_copy</mat-icon>
     Copy IIIF URL to clipboard
@@ -111,7 +111,7 @@
   <button
     mat-menu-item
     [cdkCopyToClipboard]="imageFileValue?.arkUrl"
-    (click)="openSnackBar('ARK URL copied to clipboard!')">
+    (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
     <mat-icon>content_copy</mat-icon>
     Copy ARK url to clipboard
   </button>

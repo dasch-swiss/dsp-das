@@ -98,13 +98,13 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   constructor(
+    public notification: NotificationService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     private _domSanitizer: DomSanitizer,
     private _elementRef: ElementRef,
     private _matIconRegistry: MatIconRegistry,
-    private _notification: NotificationService,
     private _renderer: Renderer2,
     private _rs: RepresentationService,
     private _regionService: RegionService,
@@ -186,11 +186,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    */
   drawButtonClicked(): void {
     this.regionDrawMode = !this.regionDrawMode;
-    this._viewer?.setMouseNavEnabled(!this.regionDrawMode);
-  }
-
-  openSnackBar(message: string) {
-    this._notification.openSnackBar(message);
+    this._assertOSDViewer().setMouseNavEnabled(!this.regionDrawMode);
   }
 
   download() {
@@ -320,7 +316,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * set up function for the region drawer
    */
   private _addRegionDrawer(): void {
-    const viewer = this._assertViewer();
+    const viewer = this._assertOSDViewer();
     // eslint-disable-next-line no-new
     new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
@@ -407,7 +403,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._addRegionDrawer();
   }
 
-  private _assertViewer(): OpenSeadragon.Viewer {
+  private _assertOSDViewer(): OpenSeadragon.Viewer {
     if (!this._viewer) {
       throw new AppError('OpenSeadragon Viewer not initialized');
     }
@@ -419,7 +415,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * Images are positioned in a horizontal row next to each other.
    */
   private _openInternalImages(): void {
-    const viewer = this._assertViewer();
+    const viewer = this._assertOSDViewer();
     this.failedToLoad = false;
 
     const fileValues: ReadStillImageFileValue[] = [this.imageFileValue as ReadStillImageFileValue]; // TODO this was this.images.
@@ -449,7 +445,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     regionLabel: string,
     regionComment: string
   ): void {
-    const viewer = this._assertViewer();
+    const viewer = this._assertOSDViewer();
     const lineColor = geometry.lineColor;
     const lineWidth = geometry.lineWidth;
 
@@ -549,7 +545,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _onFailedImageLoad() {
-    const viewer = this._assertViewer();
+    const viewer = this._assertOSDViewer();
     this.failedToLoad = true;
     viewer.setMouseNavEnabled(false);
     viewer.navigator.element.style.display = 'none';
@@ -559,7 +555,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _onSuccessAfterFailedImageLoad() {
-    const viewer = this._assertViewer();
+    const viewer = this._assertOSDViewer();
     this.failedToLoad = false;
     viewer.setMouseNavEnabled(true);
     viewer.navigator.element.style.display = 'block';
