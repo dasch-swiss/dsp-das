@@ -12,7 +12,6 @@ import {
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
@@ -56,12 +55,11 @@ export class OsdDrawerService {
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
-        switchMap(() =>
-          combineLatest([this._regionService.showRegions$.pipe(distinctUntilChanged()), this._regionService.regions$])
-        )
+        switchMap(() => this._regionService.showRegions$),
+        distinctUntilChanged(),
+        filter(() => !!this.viewer)
       )
-      .pipe(filter(() => !!this.viewer))
-      .subscribe(([showRegion, regions]) => {
+      .subscribe(showRegion => {
         this._removeOverlays();
 
         if (showRegion) {
