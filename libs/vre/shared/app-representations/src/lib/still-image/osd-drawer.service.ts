@@ -11,6 +11,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import * as OpenSeadragon from 'openseadragon';
 import { filter, switchMap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
@@ -74,6 +75,53 @@ export class OsdDrawerService {
         return;
       }
       this._highlightRegion(region);
+    });
+  }
+
+  public trackClickEvents(): void {
+    const viewer = this.viewer;
+    new OpenSeadragon.MouseTracker({
+      element: viewer.canvas,
+      pressHandler: event => {
+        const overlayElement: HTMLElement = this._renderer.createElement('div');
+        overlayElement.style.background = this._REGION_COLOR;
+        const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
+        viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
+        this._regionDragInfo = {
+          overlayElement,
+          startPos: viewportPos,
+        };
+      },
+      dragHandler: event => {
+        if (!this._regionDragInfo) {
+          throw new AppError('Region drag info is not set');
+        }
+
+        const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
+        const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
+        const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
+        const location = new OpenSeadragon.Rect(
+          Math.min(this._regionDragInfo.startPos.x, this._regionDragInfo.startPos.x + diffX),
+          Math.min(this._regionDragInfo.startPos.y, this._regionDragInfo.startPos.y + diffY),
+          Math.abs(diffX),
+          Math.abs(diffY)
+        );
+
+        viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
+        this._regionDragInfo.endPos = viewPortPos;
+      },
+      releaseHandler: () => {
+        if (!(this.regionDrawMode && this._regionDragInfo)) {
+          throw new AppError('Region drag info and draw mode are not set');
+        }
+        const imageSize = viewer.world.getItemAt(0).getContentSize();
+        const startPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
+        const endPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos!);
+        this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
+        this._regionDragInfo = null;
+        this.regionDrawMode = false;
+        viewer.setMouseNavEnabled(true);
+      },
     });
   }
 
@@ -142,54 +190,6 @@ export class OsdDrawerService {
 
     this._regions[regionIri].push(regEle);
     this._createTooltip(regionLabel, regionComment, regEle, regionIri);
-  }
-
-  public trackClickEvents(): void {
-    const viewer = this.viewer;
-    new OpenSeadragon.MouseTracker({
-      element: viewer.canvas,
-      pressHandler: event => {
-        if (!this.regionDrawMode) {
-          return;
-        }
-        const overlayElement: HTMLElement = this._renderer.createElement('div');
-        overlayElement.style.background = this._REGION_COLOR;
-        const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
-        viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
-        this._regionDragInfo = {
-          overlayElement,
-          startPos: viewportPos,
-        };
-      },
-      dragHandler: event => {
-        if (!this._regionDragInfo) {
-          return;
-        }
-        const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
-        const diffX = viewPortPos.x - this._regionDragInfo.startPos.x;
-        const diffY = viewPortPos.y - this._regionDragInfo.startPos.y;
-        const location = new OpenSeadragon.Rect(
-          Math.min(this._regionDragInfo.startPos.x, this._regionDragInfo.startPos.x + diffX),
-          Math.min(this._regionDragInfo.startPos.y, this._regionDragInfo.startPos.y + diffY),
-          Math.abs(diffX),
-          Math.abs(diffY)
-        );
-
-        viewer.updateOverlay(this._regionDragInfo.overlayElement, location);
-        this._regionDragInfo.endPos = viewPortPos;
-      },
-      releaseHandler: () => {
-        if (this.regionDrawMode && this._regionDragInfo) {
-          const imageSize = viewer.world.getItemAt(0).getContentSize();
-          const startPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.startPos);
-          const endPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos!);
-          this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
-          this._regionDragInfo = null;
-          this.regionDrawMode = false;
-          viewer.setMouseNavEnabled(true);
-        }
-      },
-    });
   }
 
   private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
