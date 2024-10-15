@@ -68,7 +68,7 @@ import { OsdDrawerService } from './osd-drawer.service';
           matTooltip="Draw Region"
           [disabled]="!userCanEdit || isReadStillImageExternalFileValue"
           (click)="drawButtonClicked()"
-          [class.active]="osdDrawerService.regionDrawMode">
+          [class.active]="osd.regionDrawMode">
           <mat-icon svgIcon="draw_region_icon"></mat-icon>
         </button>
       </span>
@@ -182,7 +182,7 @@ export class StillImageToolbarComponent {
     private _dialog: MatDialog,
     private _domSanitizer: DomSanitizer,
     private _matIconRegistry: MatIconRegistry,
-    public osdDrawerService: OsdDrawerService
+    public osd: OsdDrawerService
   ) {
     this._setupCssMaterialIcon();
   }
@@ -192,8 +192,8 @@ export class StillImageToolbarComponent {
   }
 
   drawButtonClicked(): void {
-    this.osdDrawerService.regionDrawMode = !this.osdDrawerService.regionDrawMode;
-    this.viewer.setMouseNavEnabled(!this.osdDrawerService.regionDrawMode);
+    this.osd.regionDrawMode = !this.osd.regionDrawMode;
+    this.viewer.setMouseNavEnabled(!this.osd.regionDrawMode);
   }
 
   download() {

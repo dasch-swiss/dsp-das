@@ -83,6 +83,10 @@ export class OsdDrawerService {
     new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {
+        if (!this.regionDrawMode) {
+          return;
+        }
+
         const overlayElement: HTMLElement = this._renderer.createElement('div');
         overlayElement.style.background = this._REGION_COLOR;
         const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
@@ -120,7 +124,7 @@ export class OsdDrawerService {
         this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
         this._regionDragInfo = null;
         this.regionDrawMode = false;
-        viewer.setMouseNavEnabled(true);
+        viewer.setMouseNavEnabled(false);
       },
     });
   }
