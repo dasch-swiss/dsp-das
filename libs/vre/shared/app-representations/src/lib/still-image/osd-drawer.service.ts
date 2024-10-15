@@ -262,9 +262,9 @@ export class OsdDrawerService {
         )
       )
       .subscribe(res => {
-        this.viewer.destroy(); // canvas-click event doesnt work anymore, is it viewer bug?
         // TODO RELOAD HERE
         /** BEFORE WAS
+                 this.viewer.destroy(); // canvas-click event doesnt work anymore, is it viewer bug?
                  this._setupViewer();
                  this._loadImages();
                  */
