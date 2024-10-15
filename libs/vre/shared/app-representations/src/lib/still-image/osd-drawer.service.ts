@@ -12,7 +12,7 @@ import {
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
-import { distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { StillImageHelper } from './still-image-helper';
@@ -58,9 +58,7 @@ export class OsdDrawerService {
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
-        switchMap(() => this._regionService.showRegions$),
-        distinctUntilChanged(),
-        filter(() => !!this.viewer)
+        switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
         this._removeOverlays();
@@ -177,9 +175,6 @@ export class OsdDrawerService {
     regEle.dataset['regionIri'] = regionIri;
   }
 
-  /**
-   * set up function for the region drawer
-   */
   public addRegionDrawer(): void {
     const viewer = this.viewer;
     // eslint-disable-next-line no-new

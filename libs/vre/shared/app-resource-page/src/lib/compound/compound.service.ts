@@ -7,6 +7,9 @@ import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject } from 'rxjs';
 
+/**
+ * Service to handle compound resources, which are resources that are composed of multiple resources.
+ */
 @Injectable()
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
