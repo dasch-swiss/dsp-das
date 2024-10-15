@@ -32,6 +32,8 @@ export class OsdDrawerService {
 
   public viewer!: OpenSeadragon.Viewer;
 
+  private readonly _drawerColor = 'rgba(255,0,0,0.3)';
+
   // TODO copied from still-image.component.ts TO REMOVE!
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -50,7 +52,8 @@ export class OsdDrawerService {
     private _dialog: MatDialog
   ) {}
 
-  onInit(viewer: OpenSeadragon.Viewer) {
+  onInit(viewer: OpenSeadragon.Viewer, resource: ReadResource): void {
+    this.resource = resource;
     this.viewer = viewer;
     this._regionService.imageIsLoaded$
       .pipe(
@@ -187,7 +190,7 @@ export class OsdDrawerService {
           return;
         }
         const overlayElement: HTMLElement = this._renderer.createElement('div');
-        overlayElement.style.background = 'rgba(255,0,0,0.3)';
+        overlayElement.style.background = this._drawerColor;
         const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
         this._regionDragInfo = {
