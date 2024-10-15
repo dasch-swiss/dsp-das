@@ -12,7 +12,7 @@ import {
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { StillImageHelper } from './still-image-helper';
@@ -58,7 +58,6 @@ export class OsdDrawerService {
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
-        tap(v => console.log('loaded', v)),
         switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
@@ -116,7 +115,6 @@ export class OsdDrawerService {
         ? geom.region.properties[Constants.HasComment][0].strval
         : '';
 
-      // TODO before was if (!this.failedToLoad) {
       this._createSVGOverlay(geom.region.id, geometry, aspectRatio, geom.region.label, commentValue || '');
 
       imageXOffset++;
@@ -146,9 +144,8 @@ export class OsdDrawerService {
     this._createTooltip(regionLabel, regionComment, regEle, regionIri);
   }
 
-  public addRegionDrawer(): void {
+  public trackClickEvents(): void {
     const viewer = this.viewer;
-    // eslint-disable-next-line no-new
     new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {

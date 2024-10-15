@@ -57,7 +57,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.osd.viewer = this.osdViewerElement.nativeElement;
     this.osdDrawerService.onInit(this.osd.viewer, this.resource);
-    this.osdDrawerService.addRegionDrawer();
+    this.osdDrawerService.trackClickEvents();
     this._loadImages();
 
     /**  TODO should I move it or replace
