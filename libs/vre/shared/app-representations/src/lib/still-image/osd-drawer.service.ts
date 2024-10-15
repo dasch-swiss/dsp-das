@@ -12,7 +12,7 @@ import {
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { StillImageHelper } from './still-image-helper';
@@ -32,7 +32,7 @@ export class OsdDrawerService {
 
   public viewer!: OpenSeadragon.Viewer;
 
-  private readonly _drawerColor = 'rgba(255,0,0,0.3)';
+  private readonly _REGION_COLOR = 'rgba(255,0,0,0.3)';
 
   // TODO copied from still-image.component.ts TO REMOVE!
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
@@ -58,6 +58,7 @@ export class OsdDrawerService {
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
+        tap(v => console.log('loaded', v)),
         switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
@@ -130,26 +131,8 @@ export class OsdDrawerService {
     regionComment: string
   ): void {
     const viewer = this.viewer;
-    const lineColor = geometry.lineColor;
-    const lineWidth = geometry.lineWidth;
 
-    const regEle: HTMLElement = this._renderer.createElement('div');
-    regEle.id = `region-overlay-${Math.random() * 10000}`;
-    regEle.className = 'region';
-    regEle.setAttribute('style', `outline: solid ${lineColor} ${lineWidth}px;`);
-
-    const diffX = geometry.points[1].x - geometry.points[0].x;
-    const diffY = geometry.points[1].y - geometry.points[0].y;
-
-    const loc = new OpenSeadragon.Rect(
-      Math.min(geometry.points[0].x, geometry.points[0].x + diffX),
-      Math.min(geometry.points[0].y, geometry.points[0].y + diffY),
-      Math.abs(diffX),
-      Math.abs(diffY * aspectRatio)
-    );
-
-    loc.y *= aspectRatio;
-
+    const { regEle, loc } = this._createRectangle(geometry, aspectRatio);
     viewer
       .addOverlay({
         element: regEle,
@@ -160,19 +143,7 @@ export class OsdDrawerService {
       });
 
     this._regions[regionIri].push(regEle);
-
-    const comEle: HTMLElement = this._renderer.createElement('div');
-    comEle.className = 'annotation-tooltip';
-    comEle.innerHTML = `<strong>${regionLabel}</strong><br>${regionComment}`;
-    regEle.append(comEle);
-
-    regEle.addEventListener('mousemove', (event: MouseEvent) => {
-      comEle.setAttribute('style', `display: block; left: ${event.clientX}px; top: ${event.clientY}px`);
-    });
-    regEle.addEventListener('mouseleave', () => {
-      comEle.setAttribute('style', 'display: none');
-    });
-    regEle.dataset['regionIri'] = regionIri;
+    this._createTooltip(regionLabel, regionComment, regEle, regionIri);
   }
 
   public addRegionDrawer(): void {
@@ -185,7 +156,7 @@ export class OsdDrawerService {
           return;
         }
         const overlayElement: HTMLElement = this._renderer.createElement('div');
-        overlayElement.style.background = this._drawerColor;
+        overlayElement.style.background = this._REGION_COLOR;
         const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
         this._regionDragInfo = {
@@ -293,5 +264,49 @@ export class OsdDrawerService {
         }
       }
     }
+  }
+
+  private _createRectangle(
+    geometry: RegionGeometry,
+    aspectRatio: number
+  ): {
+    regEle: HTMLElement;
+    loc: OpenSeadragon.Rect;
+  } {
+    const lineColor = geometry.lineColor;
+    const lineWidth = geometry.lineWidth;
+
+    const regEle: HTMLElement = this._renderer.createElement('div');
+    regEle.id = `region-overlay-${Math.random() * 10000}`;
+    regEle.className = 'region';
+    regEle.setAttribute('style', `outline: solid ${lineColor} ${lineWidth}px;`);
+
+    const diffX = geometry.points[1].x - geometry.points[0].x;
+    const diffY = geometry.points[1].y - geometry.points[0].y;
+
+    const loc = new OpenSeadragon.Rect(
+      Math.min(geometry.points[0].x, geometry.points[0].x + diffX),
+      Math.min(geometry.points[0].y, geometry.points[0].y + diffY),
+      Math.abs(diffX),
+      Math.abs(diffY * aspectRatio)
+    );
+
+    loc.y *= aspectRatio;
+    return { regEle, loc };
+  }
+
+  private _createTooltip(regionLabel: string, regionComment: string, regEle: HTMLElement, regionIri: string): void {
+    const comEle: HTMLElement = this._renderer.createElement('div');
+    comEle.className = 'annotation-tooltip';
+    comEle.innerHTML = `<strong>${regionLabel}</strong><br>${regionComment}`;
+    regEle.append(comEle);
+
+    regEle.addEventListener('mousemove', (event: MouseEvent) => {
+      comEle.setAttribute('style', `display: block; left: ${event.clientX}px; top: ${event.clientY}px`);
+    });
+    regEle.addEventListener('mouseleave', () => {
+      comEle.setAttribute('style', 'display: none');
+    });
+    regEle.dataset['regionIri'] = regionIri;
   }
 }

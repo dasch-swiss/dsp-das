@@ -11,6 +11,7 @@ import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/d
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { Subject } from 'rxjs';
+import { RegionService } from '../region.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
@@ -49,7 +50,8 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     public osdDrawerService: OsdDrawerService,
-    public osd: OpenSeaDragonService
+    public osd: OpenSeaDragonService,
+    private _region: RegionService
   ) {}
 
   ngAfterViewInit() {
@@ -91,6 +93,10 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     ) {
       this._loadExternalIIIF();
     }
+
+    this.osd.viewer.addHandler('open', () => {
+      this._region.imageIsLoaded();
+    });
   }
 
   private _loadExternalIIIF() {
