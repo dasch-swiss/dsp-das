@@ -21,7 +21,6 @@ import { PolygonsForRegion } from './still-image.component';
 
 @Injectable()
 export class OsdDrawerService {
-  regionDrawMode = false; // stores whether viewer is currently drawing a region
   resource!: ReadResource;
 
   private _regionDragInfo: {
@@ -83,7 +82,7 @@ export class OsdDrawerService {
     new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {
-        if (!this.regionDrawMode) {
+        if (!viewer.isMouseNavEnabled()) {
           return;
         }
 
@@ -115,7 +114,7 @@ export class OsdDrawerService {
         this._regionDragInfo.endPos = viewPortPos;
       },
       releaseHandler: () => {
-        if (!(this.regionDrawMode && this._regionDragInfo)) {
+        if (!(this.viewer.isMouseNavEnabled() && this._regionDragInfo)) {
           throw new AppError('Region drag info and draw mode are not set');
         }
         const imageSize = viewer.world.getItemAt(0).getContentSize();
@@ -123,7 +122,6 @@ export class OsdDrawerService {
         const endPoint = viewer.viewport.viewportToImageCoordinates(this._regionDragInfo.endPos!);
         this._openRegionDialog(startPoint, endPoint, imageSize, this._regionDragInfo.overlayElement);
         this._regionDragInfo = null;
-        this.regionDrawMode = false;
         viewer.setMouseNavEnabled(false);
       },
     });

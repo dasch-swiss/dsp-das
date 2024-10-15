@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -32,6 +33,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
+  isViewInitialized = false;
   isPng: boolean = false;
 
   private _ngUnsubscribe = new Subject<void>();
@@ -51,14 +53,17 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   constructor(
     public osdDrawerService: OsdDrawerService,
     public osd: OpenSeaDragonService,
-    private _region: RegionService
+    private _region: RegionService,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit() {
     this.osd.viewer = this.osdViewerElement.nativeElement;
+    this.isViewInitialized = true;
     this.osdDrawerService.onInit(this.osd.viewer, this.resource);
     this.osdDrawerService.trackClickEvents();
     this._loadImages();
+    this._cdr.detectChanges();
 
     /**  TODO should I move it or replace
          this._resourceFetcherService.settings.imageFormatIsPng

@@ -68,7 +68,7 @@ import { OsdDrawerService } from './osd-drawer.service';
           matTooltip="Draw Region"
           [disabled]="!userCanEdit || isReadStillImageExternalFileValue"
           (click)="drawButtonClicked()"
-          [class.active]="osd.regionDrawMode">
+          [class.active]="osd.viewer.isMouseNavEnabled()">
           <mat-icon svgIcon="draw_region_icon"></mat-icon>
         </button>
       </span>
@@ -192,8 +192,7 @@ export class StillImageToolbarComponent {
   }
 
   drawButtonClicked(): void {
-    this.osd.regionDrawMode = !this.osd.regionDrawMode;
-    this.viewer.setMouseNavEnabled(!this.osd.regionDrawMode);
+    this.viewer.setMouseNavEnabled(!this.viewer.isMouseNavEnabled());
   }
 
   download() {
