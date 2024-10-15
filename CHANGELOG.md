@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.22.0](https://github.com/dasch-swiss/dsp-das/compare/v11.21.0...v11.22.0) (2024-10-15)
+
+
+### Enhancements
+
+* Allow JSON files as text files (DEV-4222) ([#1854](https://github.com/dasch-swiss/dsp-das/issues/1854)) ([b6f698f](https://github.com/dasch-swiss/dsp-das/commit/b6f698f4ebf23f72bcf7cb46587bd587a0d49f30))
+
 ## [11.21.0](https://github.com/dasch-swiss/dsp-das/compare/v11.20.4...v11.21.0) (2024-10-07)
 
 
