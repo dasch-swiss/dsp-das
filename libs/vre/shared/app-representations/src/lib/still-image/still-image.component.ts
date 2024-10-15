@@ -10,11 +10,10 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import * as OpenSeadragon from 'openseadragon';
 import { Subject } from 'rxjs';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
+import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
-import { osdViewerConfig } from './osd-viewer.config';
 import { StillImageHelper } from './still-image-helper';
 
 export interface PolygonsForRegion {
@@ -26,15 +25,14 @@ export interface PolygonsForRegion {
   templateUrl: './still-image.component.html',
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [OsdDrawerService],
+  providers: [OsdDrawerService, OpenSeaDragonService],
 })
 export class StillImageComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
-  @ViewChild('osdViewer') osdViewer!: ElementRef;
+  @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
   isPng: boolean = false;
 
-  public viewer!: OpenSeadragon.Viewer;
   private _ngUnsubscribe = new Subject<void>();
 
   get imageFileValue() {
@@ -49,11 +47,14 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  constructor(public osdDrawerService: OsdDrawerService) {}
+  constructor(
+    public osdDrawerService: OsdDrawerService,
+    public osd: OpenSeaDragonService
+  ) {}
 
   ngAfterViewInit() {
-    this._setupViewer();
-    this.osdDrawerService.onInit(this.viewer!);
+    this.osd.viewer = this.osdViewerElement.nativeElement;
+    this.osdDrawerService.onInit(this.osd.viewer);
     this.osdDrawerService.addRegionDrawer();
     this._loadImages();
 
@@ -69,26 +70,9 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.viewer?.destroy();
+    this.osd.viewer.destroy();
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
-  }
-
-  private _setupViewer(): void {
-    const viewer = this.osdViewer.nativeElement;
-    this.viewer = new OpenSeadragon.Viewer({
-      element: viewer,
-      ...osdViewerConfig,
-      // TODO try to add Authorization: Bearer token (Christian said it should work)
-    });
-    // TODO does the following need to be unsubscribed ?
-    this.viewer.addHandler('full-screen', args => {
-      if (args.fullScreen) {
-        viewer.classList.add('fullscreen');
-      } else {
-        viewer.classList.remove('fullscreen');
-      }
-    });
   }
 
   private _openInternalImages(): void {
@@ -96,7 +80,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
       [this.imageFileValue as ReadStillImageFileValue],
       this.isPng
     );
-    this.viewer.open(tiles);
+    this.osd.viewer.open(tiles);
   }
 
   private _loadImages() {
@@ -116,7 +100,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
         throw new AppError('Error with IIIF URL');
       }
 
-      this.viewer.open(i3f.infoJsonUrl);
+      this.osd.viewer.open(i3f.infoJsonUrl);
     }
   }
 }
