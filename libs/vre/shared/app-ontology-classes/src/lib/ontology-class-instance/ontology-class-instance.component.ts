@@ -51,7 +51,6 @@ export class OntologyClassInstanceComponent implements OnDestroy {
     );
   }
 
-  // uuid of resource instance
   get instanceId$(): Observable<string> {
     return this._route.params.pipe(
       takeUntil(this.ngUnsubscribe),
