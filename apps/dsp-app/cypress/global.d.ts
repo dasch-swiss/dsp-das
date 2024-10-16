@@ -17,5 +17,7 @@ declare namespace Cypress {
     createResource(payload: any): Chainable<Subject>;
     //uploads file request
     uploadFile(filePath: string, projectShortCode: string): Chainable<Subject>;
+    //gets resource canvas element
+    getCanvas(selector: string): Chainable<Subject>;
   }
 }

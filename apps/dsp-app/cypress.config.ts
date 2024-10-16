@@ -15,5 +15,7 @@ export default defineConfig({
       apiUrl: 'http://0.0.0.0:3333',
       dspIngestUrl: 'http://0.0.0.0:3340',
     },
+    trashAssetsBeforeRuns: true,
+    screenshotsFolder: 'cypress/fixtures/screenshots',
   },
 });
