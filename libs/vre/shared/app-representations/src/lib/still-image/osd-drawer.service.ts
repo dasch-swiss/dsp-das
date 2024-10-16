@@ -77,9 +77,9 @@ export class OsdDrawerService {
     });
   }
 
-  public trackClickEvents(): void {
+  public trackClickEvents() {
     const viewer = this.viewer;
-    new OpenSeadragon.MouseTracker({
+    return new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {
         if (!viewer.isMouseNavEnabled()) {
