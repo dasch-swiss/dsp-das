@@ -3,8 +3,11 @@ import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { BehaviorSubject, of } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
+/**
+ * Regions, also called annotations, are used to mark specific areas on an image.
+ */
 @Injectable()
 export class RegionService {
   private _resource!: DspResource;
@@ -32,10 +35,6 @@ export class RegionService {
     private _cd: ChangeDetectorRef
   ) {}
 
-  reset() {
-    this._regionsSubject.next([]);
-  }
-
   onInit(resource: DspResource) {
     this._resource = resource;
     this.updateRegions();
@@ -46,12 +45,10 @@ export class RegionService {
   }
 
   updateRegions() {
-    this._getIncomingRegions()
-      .pipe(take(1))
-      .subscribe(res => {
-        this._regionsSubject.next(res);
-        this._cd.markForCheck();
-      });
+    this._getIncomingRegions().subscribe(res => {
+      this._regionsSubject.next(res);
+      this._cd.markForCheck();
+    });
   }
 
   highlightRegion(regionIri: string) {

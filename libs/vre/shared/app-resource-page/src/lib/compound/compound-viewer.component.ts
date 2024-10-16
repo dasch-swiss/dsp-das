@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FileRepresentation, StillImageComponent, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { FileRepresentation, getFileValue, StillImageComponent } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { CompoundService } from './compound.service';
 
 @Component({
@@ -42,7 +41,7 @@ import { CompoundService } from './compound.service';
     `,
   ],
 })
-export class CompoundViewerComponent implements OnInit, OnDestroy {
+export class CompoundViewerComponent implements OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();
 
   @ViewChild('stillImageComponent') stillImageComponent: StillImageComponent | undefined;
@@ -56,12 +55,6 @@ export class CompoundViewerComponent implements OnInit, OnDestroy {
   }
 
   constructor(public compoundService: CompoundService) {}
-
-  ngOnInit() {
-    this.compoundService.onOpenNotLoadedIncomingResourcePage$.pipe(takeUntil(this.destroyed$)).subscribe(() => {
-      this.stillImageComponent?.setForbiddenStatus();
-    });
-  }
 
   ngOnDestroy() {
     this.destroyed$.next();
