@@ -9,6 +9,7 @@ export function uploadProjectFile(filePath: string, mimeType: string, shortcode:
     'Content-Type': 'application/octet-stream',
     Authorization: `Bearer ${jwt}`,
     'Accept-Encoding': '*',
+    'X-Asset-Ingested': '1',
   };
   const encodedFilename = encodeURIComponent(fileName);
   const url = `${Cypress.env('dspIngestUrl')}/projects/${shortcode}/assets/ingest/${encodedFilename}`;
