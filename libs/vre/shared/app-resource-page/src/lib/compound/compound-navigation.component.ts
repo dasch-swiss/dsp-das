@@ -33,7 +33,7 @@ import { CompoundService } from './compound.service';
 })
 export class CompoundNavigationComponent {
   get compoundNavigation() {
-    // TODO is undefined, see html
+    // TODO is undefined, see html, should be fixed
     return this.compoundService.compoundPosition;
   }
 
