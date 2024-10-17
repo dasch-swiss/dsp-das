@@ -50,7 +50,7 @@ describe('View Existing Resource', () => {
   };
 
   const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
-  const fullUploadedImageFilePath = `cypress/${uploadedImageFilePath}`;
+  const fullUploadedImageFilePathScaled = 'cypress/uploads/Fingerprint_Logo_coloured1024x768.png';
   const uploadedVideoFilePath = '/uploads/dasch-short.mp4';
   const uploadedAudioFilePath = '/uploads/dasch-short.mp3';
 
@@ -114,12 +114,14 @@ describe('View Existing Resource', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.getCanvas('app-still-image canvas').screenshot('osd-canvas-screenshot', {
-      clip: { x: 0, y: 156, width: 300, height: 100 },
+      clip: { x: 0, y: 164, width: 300, height: 100 },
+      scale: false,
+      overwrite: true,
     });
     cy.fixture(screenshotPath, 'base64').then(expectedImageBase64 => {
       const expectedImageBuffer = Buffer.from(expectedImageBase64, 'base64');
       const expectedImg = PNG.sync.read(expectedImageBuffer);
-      cy.readFile(fullUploadedImageFilePath, 'base64').then(binary => {
+      cy.readFile(fullUploadedImageFilePathScaled, 'base64').then(binary => {
         expect(binary).to.exist;
         const imageBuffer = Cypress.Buffer.from(binary, 'base64');
         const pngImage = PNG.sync.read(imageBuffer);
