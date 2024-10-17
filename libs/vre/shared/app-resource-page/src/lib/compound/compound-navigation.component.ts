@@ -37,6 +37,7 @@ export class CompoundNavigationComponent {
     return this.compoundService.compoundPosition;
   }
 
+  // TODO check this too
   get isForwardButtonDisabled() {
     return !this.compoundNavigation || this.compoundNavigation.isLastPage;
   }
