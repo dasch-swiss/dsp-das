@@ -31,12 +31,16 @@ describe('View Existing Resource', () => {
     comments: [{ text: faker.lorem.sentence(), comment: faker.lorem.sentence() }],
   };
 
-  const videoThingData: VideoThingClass = {
-    label: faker.lorem.word(),
-    file: '6dxOL1bLhWv-YhnMtV6T8HK.mp4',
-    title: faker.lorem.sentence(),
-    titleComment: faker.lorem.sentence(),
-  };
+  const videoThingData: VideoThingClass = createVideoThingClass('zzLabel');
+
+  function createVideoThingClass(label: string): VideoThingClass {
+    return {
+      label: label,
+      file: '6dxOL1bLhWv-YhnMtV6T8HK.mp4',
+      title: faker.lorem.sentence(),
+      titleComment: faker.lorem.sentence(),
+    };
+  }
 
   const audioThingData: AudioThingClass = {
     label: faker.lorem.word(),
@@ -64,6 +68,11 @@ describe('View Existing Resource', () => {
       cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
         videoThingData.file = (response as UploadedFileResponse).internalFilename;
         cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData));
+      });
+      cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
+        const videoThingData2 = createVideoThingClass(faker.lorem.word());
+        videoThingData2.file = (response as UploadedFileResponse).internalFilename;
+        cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData2));
       });
       cy.uploadFile(`../${uploadedAudioFilePath}`, Project0001Page.projectShortCode).then(response => {
         audioThingData.file = (response as UploadedFileResponse).internalFilename;
@@ -99,7 +108,7 @@ describe('View Existing Resource', () => {
     cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
     cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
-    cy.get('[data-cy=representation-container]').should('exist');
+    cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
     cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
@@ -150,7 +159,7 @@ describe('View Existing Resource', () => {
 
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(videoThingData.label).click();
     cy.get('[data-cy=resource-header-label]').contains(videoThingData.label);
-    cy.get('[data-cy=representation-container]').should('exist');
+    cy.get('.representation-container').should('exist');
     cy.get('app-video').should('be.visible');
 
     // wait for selected resource file request to be intercepted
@@ -186,11 +195,7 @@ describe('View Existing Resource', () => {
   });
 
   it('audio representation should be present', () => {
-    let interceptCall = 1;
-    cy.intercept('GET', '**/file', req => {
-      req.alias = `call${interceptCall++}`;
-      req.continue();
-    });
+    cy.intercept('GET', '**/file').as('audioFileRequest');
     project0001Page.visitClass('AudioThing');
 
     cy.get('[data-cy=accept-cookies]').click();
@@ -198,7 +203,7 @@ describe('View Existing Resource', () => {
 
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(audioThingData.label).click();
     cy.get('[data-cy=resource-header-label]').contains(audioThingData.label);
-    cy.get('[data-cy=representation-container]').should('exist');
+    cy.get('.representation-container').should('exist');
     cy.get('app-audio').should('be.visible');
 
     cy.get('[data-cy=side-panel-collapse-btn]').click();
@@ -206,12 +211,10 @@ describe('View Existing Resource', () => {
     cy.intercept('GET', '**/file').as('audioFileRequest');
     cy.get('[data-cy=play-pause-button]').contains('play_arrow');
     cy.get('[data-cy=play-pause-button]').click();
-    // commented due to the bug in audio component
-    // wait for selected resource file request to be intercepted
-    // cy.wait('@call2').should(interception => {
-    //   expect(interception.request.url).to.include(videoThingData.file);
-    //   expect(interception.response?.statusCode).to.be.equal(206);
-    // });
+    cy.wait('@audioFileRequest').then(xhr => {
+      expect(xhr.request.url).to.include(audioThingData.file);
+      expect(xhr.response.statusCode).to.eq(206);
+    });
     cy.get('[data-cy=play-pause-button]').contains('pause');
     cy.wait(1000); //allow to play for 1 second
     cy.get('[data-cy=play-pause-button]').click();
