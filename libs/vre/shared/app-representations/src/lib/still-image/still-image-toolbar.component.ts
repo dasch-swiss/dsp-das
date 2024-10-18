@@ -85,16 +85,16 @@ import { OsdDrawerService } from './osd-drawer.service';
           [disabled]="this.isReadStillImageExternalFileValue">
           <mat-icon>settings</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_OUT" matTooltip="Zoom out">
+        <button mat-icon-button id="DSP_OSD_ZOOM_OUT" data-cy="zoom-out" matTooltip="Zoom out">
           <mat-icon>zoom_out</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_IN" matTooltip="Zoom in">
+        <button mat-icon-button id="DSP_OSD_ZOOM_IN" data-cy="zoom-in" matTooltip="Zoom in">
           <mat-icon>zoom_in</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_HOME" matTooltip="Reset zoom">
+        <button mat-icon-button id="DSP_OSD_HOME" data-ci="zoom-reset" matTooltip="Reset zoom">
           <mat-icon>other_houses</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_FULL_PAGE" matTooltip="Open in fullscreen">
+        <button mat-icon-button id="DSP_OSD_FULL_PAGE" data-ci="fullscreen" matTooltip="Open in fullscreen">
           <mat-icon>fullscreen</mat-icon>
         </button>
       </span>

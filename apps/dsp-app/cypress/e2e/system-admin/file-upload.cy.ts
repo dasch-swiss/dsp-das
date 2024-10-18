@@ -1,5 +1,5 @@
 describe('File Upload Test', () => {
-  it('Uploads a file via HTTP POST request', () => {
+  beforeEach(() => {
     const fileName = 'assets/screen.png'; // Your file path
 
     const token =
@@ -19,7 +19,6 @@ describe('File Upload Test', () => {
         body: Cypress.Blob.binaryStringToBlob(fileContent, 'application/octet-stream'),
       }).then(response => {
         const json = JSON.parse(new TextDecoder().decode(response.body));
-        console.log(response, response.body.internalFileName, json);
 
         cy.request({
           method: 'POST',
@@ -44,8 +43,22 @@ describe('File Upload Test', () => {
             'X-Asset-Ingested': '1',
           },
         });
-        expect(response.status).to.eq(200);
       });
     });
+    cy.visit('/project/0803/ontology/incunabula/Sideband');
   });
+  it('can see the image with the reader', () => {
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get('[data-cy="more-vert-image-button"]').should('be.visible');
+    cy.get('[data-cy="still-image-share-button"]').should('be.visible');
+    cy.get('[data-cy="still-image-settings-button"] > .mat-mdc-button-touch-target').should('be.visible');
+    cy.get('[data-cy="zoom-out"]').should('be.visible');
+    cy.get('[data-cy="zoom-in"]').should('be.visible');
+    cy.get('[data-cy="still-image-download-button"] > .mat-mdc-button-touch-target').should('be.visible');
+    cy.get('[data-cy="still-image-region-button"] > .mat-mdc-button-touch-target').should('be.visible');
+    cy.get('[data-ci="zoom-reset"]').should('be.visible');
+    cy.get('[data-ci="fullscreen"]').should('be.visible');
+  });
+
+  it.skip('can read image regions', () => {});
 });
