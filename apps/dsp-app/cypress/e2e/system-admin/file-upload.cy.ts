@@ -7,7 +7,7 @@ describe('File Upload Test', () => {
     cy.fixture(fileName, 'binary').then(fileContent => {
       cy.request({
         method: 'POST',
-        url: 'http://0.0.0.0:3340/projects/0803/assets/ingest/Screenshot%202024-10-16%20at%2014.50.14.png',
+        url: 'http://0.0.0.0:3340/projects/0803/assets/ingest/screen.png',
         headers: {
           Accept: 'application/json, text/plain, */*',
           Authorization: `Bearer ${token}`,
@@ -18,8 +18,31 @@ describe('File Upload Test', () => {
         },
         body: Cypress.Blob.binaryStringToBlob(fileContent, 'application/octet-stream'),
       }).then(response => {
-        // Assert the response
-        console.log(response);
+        const json = JSON.parse(new TextDecoder().decode(response.body));
+        console.log(response, response.body.internalFileName, json);
+
+        cy.request({
+          method: 'POST',
+          url: 'http://0.0.0.0:3333/v2/resources',
+          body: {
+            '@type': 'http://0.0.0.0:3333/ontology/0803/incunabula/v2#Sideband',
+            'http://www.w3.org/2000/01/rdf-schema#label': 'fff',
+            'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+              '@id': 'http://rdfh.ch/projects/0803',
+            },
+            'http://0.0.0.0:3333/ontology/0803/incunabula/v2#sbTitle': {
+              '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+              'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'fff',
+            },
+            'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue': {
+              '@type': 'http://api.knora.org/ontology/knora-api/v2#StillImageFileValue',
+              'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': json['internalFilename'],
+            },
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         expect(response.status).to.eq(200);
       });
     });
