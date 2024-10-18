@@ -12,6 +12,7 @@ describe('File Upload Test', () => {
           Accept: 'application/json, text/plain, */*',
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/octet-stream',
+          'X-Asset-Ingested': '1',
           Origin: 'http://localhost:4200',
           Referer: 'http://localhost:4200/',
           'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
