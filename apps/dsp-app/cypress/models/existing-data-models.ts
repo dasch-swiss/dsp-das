@@ -34,3 +34,9 @@ export interface AudioThingClass {
   title: string;
   titleComment: string;
 }
+
+export interface DocumentClass {
+  label: string;
+  file: string;
+  titleComments: Comment[];
+}

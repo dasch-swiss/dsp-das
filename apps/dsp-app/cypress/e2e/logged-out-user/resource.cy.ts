@@ -4,7 +4,13 @@ import { PNG } from 'pngjs';
 import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
 import { Project0001ResourcePayloads } from '../../fixtures/project0001-resource-payloads';
 import { Project0803ResourcePayloads } from '../../fixtures/project0803-resource-payloads';
-import { AudioThingClass, MiscClass, SidebandClass, VideoThingClass } from '../../models/existing-data-models';
+import {
+  AudioThingClass,
+  DocumentClass,
+  MiscClass,
+  SidebandClass,
+  VideoThingClass,
+} from '../../models/existing-data-models';
 import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('View Existing Resource', () => {
@@ -49,35 +55,55 @@ describe('View Existing Resource', () => {
     titleComment: faker.lorem.sentence(),
   };
 
+  const documentData: DocumentClass = {
+    label: faker.lorem.word(),
+    file: '',
+    titleComments: [
+      {
+        text: faker.lorem.sentence(),
+        comment: faker.lorem.sentence(),
+      },
+      {
+        text: faker.lorem.sentence(),
+        comment: faker.lorem.sentence(),
+      },
+    ],
+  };
+
   const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
   const fullUploadedImageFilePathScaled = 'cypress/uploads/Fingerprint_Logo_coloured1024x768.png';
   const uploadedVideoFilePath = '/uploads/dasch-short.mp4';
   const uploadedAudioFilePath = '/uploads/dasch-short.mp3';
-
-  const screenshotPath = 'screenshots/osd-canvas-screenshot.png';
+  const uploadedDocumentFilePath = '/uploads/UNIBE_DaSCH_Workshop.pdf';
+  const fullUploadedDocumentFilePathScaled = 'cypress/uploads/UNIBE_DaSCH_Workshop1024x768.png';
+  const imageScreenshotPath = 'screenshots/osd-canvas-screenshot.png';
+  const documentScreenshotPath = 'screenshots/pdf-screenshot.png';
 
   beforeEach(() => {
     project0803Page = new Project0803Page();
     project0001Page = new Project0001Page();
 
-    cy.loginAdmin().then(() => {
-      cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
-        sidebandData.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(Project0803ResourcePayloads.sideband(sidebandData));
-      });
-      cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
-        videoThingData.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData));
-      });
-      cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
-        const videoThingData2 = createVideoThingClass(faker.lorem.word());
-        videoThingData2.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData2));
-      });
-      cy.uploadFile(`../${uploadedAudioFilePath}`, Project0001Page.projectShortCode).then(response => {
-        audioThingData.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(Project0001ResourcePayloads.audioThing(audioThingData));
-      });
+    cy.loginAdmin();
+    cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
+      sidebandData.file = (response as UploadedFileResponse).internalFilename;
+      cy.createResource(Project0803ResourcePayloads.sideband(sidebandData));
+    });
+    cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
+      videoThingData.file = (response as UploadedFileResponse).internalFilename;
+      cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData));
+    });
+    cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
+      const videoThingData2 = createVideoThingClass(faker.lorem.word());
+      videoThingData2.file = (response as UploadedFileResponse).internalFilename;
+      cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData2));
+    });
+    cy.uploadFile(`../${uploadedAudioFilePath}`, Project0001Page.projectShortCode).then(response => {
+      audioThingData.file = (response as UploadedFileResponse).internalFilename;
+      cy.createResource(Project0001ResourcePayloads.audioThing(audioThingData));
+    });
+    cy.uploadFile(`../${uploadedDocumentFilePath}`, Project0001Page.projectShortCode).then(response => {
+      documentData.file = (response as UploadedFileResponse).internalFilename;
+      cy.createResource(Project0001ResourcePayloads.document(documentData));
     });
     cy.createResource(Project0803ResourcePayloads.misc(miscData));
     cy.logout();
@@ -118,7 +144,7 @@ describe('View Existing Resource', () => {
       scale: false,
       overwrite: true,
     });
-    cy.fixture(screenshotPath, 'base64').then(expectedImageBase64 => {
+    cy.fixture(imageScreenshotPath, 'base64').then(expectedImageBase64 => {
       const expectedImageBuffer = Buffer.from(expectedImageBase64, 'base64');
       const expectedImg = PNG.sync.read(expectedImageBuffer);
       cy.readFile(fullUploadedImageFilePathScaled, 'base64').then(binary => {
@@ -234,5 +260,56 @@ describe('View Existing Resource', () => {
     cy.get('[data-cy=show-all-comments]').scrollIntoView().click();
     cy.get('[data-cy=property-value-comment]').should('have.length.greaterThan', 0);
     cy.get('[data-cy=property-value-comment]').contains(audioThingData.titleComment).scrollIntoView();
+  });
+
+  it('document representation should be present', () => {
+    cy.intercept('GET', '**/file').as('documentFileRequest');
+    project0001Page.visitClass('ThingDocument');
+    cy.get('.loadingIcon').then(() => {
+      cy.get('.loadingIcon').should('not.exist');
+      cy.getCanvas('.canvasWrapper canvas').screenshot('pdf-screenshot', {
+        scale: false,
+        overwrite: true,
+      });
+    });
+
+    cy.get('[data-cy=accept-cookies]').click();
+    cy.get('rn-banner').shadow().find('.rn-close-btn').click();
+
+    cy.get('[data-cy=resource-header-label]').contains(documentData.label);
+    cy.get('.representation-container').should('exist');
+    cy.get('app-document').should('be.visible');
+
+    cy.get('[data-cy=side-panel-collapse-btn]').click();
+    cy.wait('@documentFileRequest').then(xhr => {
+      expect(xhr.request.url).to.include(documentData.file);
+      expect(xhr.response.statusCode).to.eq(200);
+    });
+
+    cy.fixture(documentScreenshotPath, 'base64').then(expectedImageBase64 => {
+      const expectedImageBuffer = Buffer.from(expectedImageBase64, 'base64');
+      const expectedImg = PNG.sync.read(expectedImageBuffer);
+      cy.readFile(fullUploadedDocumentFilePathScaled, 'base64').then(binary => {
+        expect(binary).to.exist;
+        const imageBuffer = Cypress.Buffer.from(binary, 'base64');
+        const pngImage = PNG.sync.read(imageBuffer);
+        expect(pngImage).to.exist;
+        expect(pngImage.width).to.be.greaterThan(0);
+        expect(pngImage.height).to.be.greaterThan(0);
+        const { width, height } = expectedImg;
+        const diff = new PNG({ width, height });
+        const pixelDiff = pixelmatch(expectedImg.data, pngImage.data, diff.data, width, height, {
+          threshold: 0.1,
+        });
+        expect(pixelDiff).to.be.lessThan(100);
+      });
+    });
+
+    cy.get('[data-cy=property-value]').contains(documentData.titleComments[0].text);
+    cy.get('[data-cy=property-value]').contains(documentData.titleComments[1].text);
+    cy.get('[data-cy=show-all-comments]').scrollIntoView().click();
+    cy.get('[data-cy=property-value-comment]').should('have.length', 2);
+    cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[0].comment);
+    cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[1].comment);
   });
 });
