@@ -7,7 +7,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { iiifUrlValidator, infoJsonUrlValidatorAsync, previewImageUrlValidatorAsync } from './iiif-url-validator';
+import {
+  iiifUrlValidator,
+  infoJsonUrlValidatorAsync,
+  isExternalHostValidator,
+  previewImageUrlValidatorAsync,
+} from './iiif-url-validator';
 import { IIIFUrl } from './third-party-iiif';
 
 @Component({
@@ -24,8 +29,8 @@ import { IIIFUrl } from './third-party-iiif';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  onChange!: (value: any) => void;
-  onTouched!: () => void;
+  onChange: (value: any) => void = () => {};
+  onTouched: () => void = () => {};
 
   writeValue(value: ReadStillImageExternalFileValue | null): void {
     if (value) {
@@ -48,14 +53,15 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
   iiifUrlControl: FormControl<string | null>;
 
   previewImageUrl: string | undefined;
-  formStatus: 'VALIDATING' | 'LOADING' | 'IDLE' = 'IDLE';
+  previewStatus: 'LOADING' | 'IDLE' = 'IDLE';
 
   private _destroy$ = new Subject<void>();
 
   readonly validatorErrors = [
-    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL' },
-    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server' },
-    { errorKey: 'infoJsonError', message: 'The iiif info json cannot be loaded from the third party server' },
+    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL.' },
+    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server.' },
+    { errorKey: 'infoJsonError', message: 'The IIIF info JSON can not be loaded from the third party server.' },
+    { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
   ];
 
   readonly exampleString = 'https://example.org/image-service/abcd1234/full/max/0/default.jpg';
@@ -65,7 +71,7 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     private _fb: FormBuilder
   ) {
     this.iiifUrlControl = this._fb.control('', {
-      validators: [Validators.required, iiifUrlValidator()],
+      validators: [Validators.required, iiifUrlValidator(), isExternalHostValidator()],
       asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
     });
   }
@@ -77,11 +83,13 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     });
 
     this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
-      this.formStatus = state === 'PENDING' ? 'VALIDATING' : 'IDLE';
-      if (this.formStatus === 'IDLE' && this.iiifUrlControl.value && this.iiifUrlControl.valid) {
+      this.previewStatus = state === 'PENDING' ? 'LOADING' : 'IDLE';
+      if (state !== 'PENDING' && this.iiifUrlControl.value && this.iiifUrlControl.valid) {
         const fileValue = this._getValue();
         fileValue.externalUrl = this.iiifUrlControl.value;
         this.onChange(fileValue);
+      } else {
+        this.onChange(null);
       }
       this._cdr.detectChanges();
     });
@@ -102,7 +110,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
       navigator.clipboard.readText().then(text => {
         this.iiifUrlControl.setValue(text);
         this.iiifUrlControl.markAsTouched();
-        this.iiifUrlControl.updateValueAndValidity();
       });
     }
   }

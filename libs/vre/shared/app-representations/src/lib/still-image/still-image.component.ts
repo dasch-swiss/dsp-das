@@ -11,7 +11,7 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -29,17 +29,22 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DialogComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import * as OpenSeadragon from 'openseadragon';
-import { Subject, combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, mergeMap, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import { RegionService } from '../region.service';
+import {
+  ReplaceFileDialogComponent,
+  ReplaceFileDialogProps,
+} from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
+import { FileInfo } from '../representation.types';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { osdViewerConfig } from './osd-viewer.config';
@@ -60,6 +65,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   @Input() attachedProject: ReadProject | undefined;
 
   destroyed: Subject<void> = new Subject<void>();
+  defaultFailureStatus: number = 404;
 
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
@@ -72,8 +78,14 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   isPng: boolean = false;
 
+  imageFileInfo: FileInfo | undefined = undefined;
+
   get isReadStillImageExternalFileValue(): boolean {
     return !!this.imageFileValue && this.imageFileValue.type === Constants.StillImageExternalFileValue;
+  }
+
+  get userCanView() {
+    return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
 
   get usercanEdit() {
@@ -167,6 +179,10 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyed.complete();
   }
 
+  resetStatus() {
+    this.defaultFailureStatus = 404;
+  }
+
   /**
    * when the draw region button is clicked, this method is called from the html. It sets the draw mode to true and
    * prevents navigation by mouse (so that the region can be accurately drawn).
@@ -183,9 +199,9 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     this._notification.openSnackBar(message);
   }
 
-  download(url: string) {
-    if (this.imageFileValue instanceof ReadStillImageFileValue) {
-      this._rs.downloadFile(url, this.imageFileValue.filename);
+  download() {
+    if (this.imageFileValue?.fileUrl) {
+      this._rs.downloadFile(this.imageFileValue?.fileUrl, this.imageFileInfo?.originalFilename);
     }
   }
 
@@ -200,27 +216,15 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
         })
       );
     } else {
-      const propId = this.resource.properties[Constants.HasStillImageFileValue][0].id;
-      const projectUuid = ProjectService.IriToUuid(this.resource.attachedToProject);
-
-      const dialogConfig: MatDialogConfig = {
-        width: '800px',
-        maxHeight: '80vh',
-        position: {
-          top: '112px',
-        },
+      dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
-          mode: 'replaceFile',
-          projectUuid,
-          title: '2D Image (Still Image)',
+          projectUuid: ProjectService.IriToUuid(this.resource.attachedToProject),
+          title: 'Image',
           subtitle: 'Update image of the resource',
-          representation: 'stillImage',
-          attachedProject: this.attachedProject,
-          id: propId,
+          representation: Constants.HasStillImageFileValue,
+          propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
         },
-        disableClose: true,
-      };
-      dialogRef = this._dialog.open(DialogComponent, dialogConfig);
+      });
     }
 
     dialogRef.afterClosed().subscribe(data => {
@@ -232,6 +236,11 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   openImageInNewTab(url: string) {
     window.open(url, '_blank');
+  }
+
+  setForbiddenStatus() {
+    this.defaultFailureStatus = 403;
+    this._onFailedImageLoad();
   }
 
   private _replaceFile(file: UpdateFileValue) {
@@ -259,28 +268,22 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
    * @param overlay the overlay element that represents the region
    */
   private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
-    const dialogConfig: MatDialogConfig = {
-      width: '560px',
-      maxHeight: '80vh',
-      position: {
-        top: '112px',
-      },
-      data: {
-        mode: 'addRegion',
-        title: 'Create a region',
-        subtitle: 'Add further properties',
-        id: this.resource.id,
-      },
-      disableClose: true,
-    };
-    const dialogRef = this._dialog.open(DialogComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(data => {
-      this._viewer.removeOverlay(overlay);
-      if (data) {
-        this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-      }
-    });
+    if (!this._viewer) {
+      return;
+    }
+    this._dialog
+      .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
+        data: {
+          resourceIri: this.resource.id,
+        },
+      })
+      .afterClosed()
+      .subscribe(data => {
+        this._viewer!.removeOverlay(overlay);
+        if (data) {
+          this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
+        }
+      });
   }
 
   /**
@@ -496,6 +499,7 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
 
   private _loadImages() {
     this._viewer?.close();
+    this.resetStatus();
 
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       this._loadInternalImages();
@@ -507,22 +511,29 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _loadInternalImages() {
-    if (this.imageFileValue instanceof ReadStillImageFileValue) {
-      this._rs
-        .getFileInfo(this.imageFileValue?.fileUrl || '', this.imageFileValue?.filename)
-        .pipe(take(1))
-        .subscribe(
-          () => {
-            if (this.failedToLoad) {
-              this._onSuccessAfterFailedImageLoad();
-            }
-            this._openInternalImages();
-          },
-          () => {
-            this._onFailedImageLoad();
-          }
-        );
+    const projectShort = this.resource.attachedToProject.split('/').pop();
+    const assetId = this.imageFileValue?.filename.split('.')[0] || '';
+
+    if (!projectShort || !assetId) {
+      this._onFailedImageLoad();
+      return;
     }
+
+    this._rs
+      .getIngestFileInfo(projectShort, assetId)
+      .pipe(take(1))
+      .subscribe(
+        (fileInfo: FileInfo) => {
+          this.imageFileInfo = fileInfo;
+          if (this.failedToLoad) {
+            this._onSuccessAfterFailedImageLoad();
+          }
+          this._openInternalImages();
+        },
+        () => {
+          this._onFailedImageLoad();
+        }
+      );
   }
 
   private _loadExternalIIIF() {

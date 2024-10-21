@@ -1,4 +1,4 @@
-import { AddRegionFormComponent } from './lib/add-region-form/add-region-form.component';
+import { AddRegionFormDialogComponent } from './lib/add-region-form-dialog.component';
 import { ArchiveComponent } from './lib/archive/archive.component';
 import { AudioMoreButtonComponent } from './lib/audio/audio-more-button.component';
 import { AudioToolbarComponent } from './lib/audio/audio-toolbar.component';
@@ -7,11 +7,10 @@ import { MediaSliderComponent } from './lib/audio/media-slider.component';
 import { AvTimelineComponent } from './lib/av-timeline/av-timeline.component';
 import { DocumentComponent } from './lib/document/document.component';
 import { EditThirdPartyIiifFormComponent } from './lib/edit-third-party-iiif-form/edit-third-party-iiif-form.component';
-import { ReplaceFileFormComponent } from './lib/replace-file-form/replace-file-form.component';
+import { ReplaceFileDialogComponent } from './lib/replace-file-dialog/replace-file-dialog.component';
 import { StillImageComponent } from './lib/still-image/still-image.component';
 import { TextComponent } from './lib/text/text.component';
 import { ThirdPartyIiifComponent } from './lib/third-party-iiif/third-party-iiif.component';
-import { UploadComponent } from './lib/upload/upload.component';
 import { DisableContextMenuDirective } from './lib/video/disable-context-menu.directive';
 import { VideoMoreButtonComponent } from './lib/video/video-more-button.component';
 import { VideoOverlayComponent } from './lib/video/video-overlay.component';
@@ -20,7 +19,7 @@ import { VideoComponent } from './lib/video/video.component';
 import { VideoPreviewComponent } from './lib/video-preview/video-preview.component';
 
 export const RepresentationsComponents = [
-  AddRegionFormComponent,
+  AddRegionFormDialogComponent,
   ArchiveComponent,
   AudioComponent,
   AudioToolbarComponent,
@@ -28,11 +27,10 @@ export const RepresentationsComponents = [
   AvTimelineComponent,
   DocumentComponent,
   MediaSliderComponent,
-  ReplaceFileFormComponent,
+  ReplaceFileDialogComponent,
   EditThirdPartyIiifFormComponent,
   StillImageComponent,
   TextComponent,
-  UploadComponent,
   VideoComponent,
   VideoPreviewComponent,
   VideoMoreButtonComponent,
