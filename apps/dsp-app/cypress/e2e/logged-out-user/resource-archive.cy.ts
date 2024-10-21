@@ -3,10 +3,10 @@ import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-represe
 import { Project00FFPayloads } from '../../fixtures/project00FF-payloads';
 import { ResponseUtil } from '../../fixtures/requests';
 import { ArchiveClass } from '../../models/existing-data-models';
-import { Project0001Page } from '../../support/pages/existing-ontology-class-page';
+import { Project00FFPage } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
-  let project0001Page: Project0001Page;
+  let projectPage: Project00FFPage;
   let finalLastModificationDate: string;
 
   const archiveData: ArchiveClass = {
@@ -22,7 +22,7 @@ describe('Create archive model, add new data and view it', () => {
   const uploadedArchiveFilePath = '/uploads/dummy.txt.zip';
 
   beforeEach(() => {
-    project0001Page = new Project0001Page();
+    projectPage = new Project00FFPage();
 
     cy.loginAdmin();
     cy.request(
@@ -34,7 +34,7 @@ describe('Create archive model, add new data and view it', () => {
       )
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
-      cy.uploadFile(`../${uploadedArchiveFilePath}`, Project0001Page.projectShortCode).then(response => {
+      cy.uploadFile(`../${uploadedArchiveFilePath}`, Project00FFPage.projectShortCode).then(response => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
         cy.createResource(Project00FFPayloads.archive(archiveData));
       });
@@ -45,7 +45,7 @@ describe('Create archive model, add new data and view it', () => {
 
   it('archive representation should be present', () => {
     cy.intercept('GET', '**/file').as('archiveFileRequest');
-    project0001Page.ontologyName = Project00FFPayloads.defaultOntology;
-    project0001Page.visitClass(archiveData.className);
+    projectPage.ontologyName = Project00FFPayloads.defaultOntology;
+    projectPage.visitClass(archiveData.className);
   });
 });
