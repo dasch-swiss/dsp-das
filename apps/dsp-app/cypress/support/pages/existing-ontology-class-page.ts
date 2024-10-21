@@ -22,9 +22,9 @@ export class Project0803Page extends ExistingOntologyClassPageBase {
 
 export class Project0001Page extends ExistingOntologyClassPageBase {
   static readonly projectShortCode = '0001';
-  static readonly ontologyName = 'anything';
+  static readonly defaultOntology = 'anything';
 
   constructor() {
-    super(Project0001Page.projectShortCode, Project0001Page.ontologyName);
+    super(Project0001Page.projectShortCode, Project0001Page.defaultOntology);
   }
 }

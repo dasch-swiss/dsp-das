@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ListGetResponseADM } from '../../../../../libs/vre/open-api/src';
-import { ClassDefinitionPayloads } from '../../fixtures/class-definition-payloads';
+import { Project00FFPayloads } from '../../fixtures/project00FF-payloads';
 import { ClassPropertyPayloads } from '../../fixtures/property-definition-payloads';
 import { ResourceRequests, ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
@@ -15,7 +15,7 @@ describe('Resource', () => {
     cy.request(
       'POST',
       `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      ClassDefinitionPayloads.createClassPayload()
+      Project00FFPayloads.createClassPayload('datamodelclass')
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
     });

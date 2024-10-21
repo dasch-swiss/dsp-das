@@ -1,46 +1,52 @@
 import { MiscClass, SidebandClass } from '../models/existing-data-models';
 
 export class Project0803ResourcePayloads {
+  static readonly project = '0803';
+  static readonly defaultOntology = 'incunabula';
+
   private static label(className: string, value: string) {
     return {
-      '@type': `http://0.0.0.0:3333/ontology/0803/incunabula/v2#${className}`,
+      '@type': `http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}`,
       'http://www.w3.org/2000/01/rdf-schema#label': value,
       'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-        '@id': 'http://rdfh.ch/projects/0803',
+        '@id': `http://rdfh.ch/projects/${Project0803ResourcePayloads.project}`,
       },
     };
   }
 
   private static hasColor(className: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/0803/incunabula/v2#${className}HasColor`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#ColorValue',
-        'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
-        'http://api.knora.org/ontology/knora-api/v2#colorValueAsColor': value,
-      },
+      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}HasColor`]:
+        {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#ColorValue',
+          'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
+          'http://api.knora.org/ontology/knora-api/v2#colorValueAsColor': value,
+        },
     };
   }
 
   private static textValue(propertyName: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/0803/incunabula/v2#${propertyName}`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-        'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
-        'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
-      },
+      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
+        {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
+          'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
+        },
     };
   }
 
   private static richTextValue(propertyName: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/0803/incunabula/v2#${propertyName}`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-        'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
-        'http://api.knora.org/ontology/knora-api/v2#textValueAsXml': `<?xml version=\"1.0\" encoding=\"UTF-8\"?><text><p>${value}</p></text>`,
-        'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
-          '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
+      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
+        {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
+          'http://api.knora.org/ontology/knora-api/v2#textValueAsXml': `<?xml version=\"1.0\" encoding=\"UTF-8\"?><text><p>${value}</p></text>`,
+          'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
+            '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
+          },
         },
-      },
     };
   }
 

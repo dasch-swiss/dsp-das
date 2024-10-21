@@ -1,4 +1,4 @@
-import { ClassDefinitionPayloads } from '../../fixtures/class-definition-payloads';
+import { Project00FFPayloads } from '../../fixtures/project00FF-payloads';
 import { ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 
@@ -21,7 +21,7 @@ describe('File representation', () => {
   });
 
   it('external iiif image', () => {
-    const classPayload = ClassDefinitionPayloads.stillImageRepresentation();
+    const classPayload = Project00FFPayloads.stillImageRepresentation();
     const invalidIifImageUrl = 'https://example.com/wrong.jpg';
     const validIifImageUrl = 'https://ids.lib.harvard.edu/ids/iiif/24209711/full/105,/0/default.jpg';
     const encodedValidIifImageUrl =

@@ -1,12 +1,15 @@
 import { AudioThingClass, Comment, DocumentClass, VideoThingClass } from '../models/existing-data-models';
 
 export class Project0001ResourcePayloads {
-  private static label(className: string, value: string) {
+  static readonly project = '0001';
+  static readonly defaultOntology = 'anything';
+
+  private static label(className: string, value: string, ontology = Project0001ResourcePayloads.defaultOntology) {
     return {
-      '@type': `http://0.0.0.0:3333/ontology/0001/anything/v2#${className}`,
+      '@type': `http://0.0.0.0:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${className}`,
       'http://www.w3.org/2000/01/rdf-schema#label': value,
       'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-        '@id': 'http://rdfh.ch/projects/0001',
+        '@id': `http://rdfh.ch/projects/${Project0001ResourcePayloads.project}`,
       },
     };
   }
@@ -19,9 +22,13 @@ export class Project0001ResourcePayloads {
     };
   }
 
-  private static propertySegment(propertyName: string, textValues: Comment[]) {
+  private static propertySegment(
+    propertyName: string,
+    textValues: Comment[],
+    ontology = Project0001ResourcePayloads.defaultOntology
+  ) {
     return {
-      [`http://0.0.0.0:3333/ontology/0001/anything/v2#${propertyName}`]: [
+      [`http://0.0.0.0:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${propertyName}`]: [
         ...textValues.map(textValue => {
           return { ...this.textValueSegment(textValue.text, textValue.comment) };
         }),
