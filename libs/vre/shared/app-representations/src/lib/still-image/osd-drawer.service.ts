@@ -279,6 +279,7 @@ export class OsdDrawerService {
     regEle.id = `region-overlay-${Math.random() * 10000}`;
     regEle.className = 'region';
     regEle.setAttribute('style', `outline: solid ${lineColor} ${lineWidth}px;`);
+    regEle.setAttribute('data-cy', 'annotation-rectangle');
 
     const diffX = geometry.points[1].x - geometry.points[0].x;
     const diffY = geometry.points[1].y - geometry.points[0].y;

@@ -1,4 +1,6 @@
 describe('File Upload Test', () => {
+  let resourceId: string;
+
   beforeEach(() => {
     const fileName = 'assets/screen.png'; // Your file path
 
@@ -42,6 +44,8 @@ describe('File Upload Test', () => {
             Authorization: `Bearer ${token}`,
             'X-Asset-Ingested': '1',
           },
+        }).then(v => {
+          resourceId = v.body['@id'];
         });
       });
     });
@@ -51,14 +55,45 @@ describe('File Upload Test', () => {
     /* ==== Generated with Cypress Studio ==== */
     cy.get('[data-cy="more-vert-image-button"]').should('be.visible');
     cy.get('[data-cy="still-image-share-button"]').should('be.visible');
-    cy.get('[data-cy="still-image-settings-button"] > .mat-mdc-button-touch-target').should('be.visible');
+    cy.get('[data-cy="still-image-settings-button"]').should('be.visible');
     cy.get('[data-cy="zoom-out"]').should('be.visible');
     cy.get('[data-cy="zoom-in"]').should('be.visible');
-    cy.get('[data-cy="still-image-download-button"] > .mat-mdc-button-touch-target').should('be.visible');
-    cy.get('[data-cy="still-image-region-button"] > .mat-mdc-button-touch-target').should('be.visible');
+    cy.get('[data-cy="still-image-download-button"]').should('be.visible');
+    cy.get('[data-cy="still-image-region-button"]').should('be.visible');
     cy.get('[data-ci="zoom-reset"]').should('be.visible');
     cy.get('[data-ci="fullscreen"]').should('be.visible');
   });
 
-  it.skip('can read image regions', () => {});
+  it.only('can read image regions', () => {
+    const label = 'mylabel';
+    const color = '#65ff33';
+    cy.request({
+      method: 'POST',
+      url: 'http://0.0.0.0:3333/v2/resources',
+      body: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#Region',
+        'http://www.w3.org/2000/01/rdf-schema#label': label,
+        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+          '@id': 'http://rdfh.ch/projects/0803',
+        },
+        'http://api.knora.org/ontology/knora-api/v2#hasColor': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#ColorValue',
+          'http://api.knora.org/ontology/knora-api/v2#colorValueAsColor': color,
+        },
+        'http://api.knora.org/ontology/knora-api/v2#isRegionOfValue': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#LinkValue',
+          'http://api.knora.org/ontology/knora-api/v2#linkValueHasTargetIri': {
+            '@id': resourceId,
+          },
+        },
+        'http://api.knora.org/ontology/knora-api/v2#hasGeometry': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#GeomValue',
+          'http://api.knora.org/ontology/knora-api/v2#geometryValueAsGeometry':
+            '{"status":"active","lineColor":"#65ff33","lineWidth":2,"points":[{"x":0.561919720794521,"y":0.5578800679215781},{"x":0.301563296862811,"y":0.8720048255452515}],"type":"rectangle"}',
+        },
+      },
+    }).then(() => {
+      cy.get('[data-cy="annotation-rectangle"]').click();
+    });
+  });
 });
