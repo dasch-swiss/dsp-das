@@ -1,8 +1,13 @@
-import { MiscClass, SidebandClass } from '../models/existing-data-models';
+import { ArchiveClass, MiscClass, SidebandClass } from '../models/existing-data-models';
+import { ProjectAssertionPageBase } from './project-assertion-payloads';
 
-export class Project0803ResourcePayloads {
+export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
   static readonly project = '0803';
   static readonly defaultOntology = 'incunabula';
+
+  constructor() {
+    super(Project0803ResourcePayloads.project, Project0803ResourcePayloads.defaultOntology);
+  }
 
   private static label(className: string, value: string) {
     return {
@@ -57,6 +62,23 @@ export class Project0803ResourcePayloads {
         'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
       },
     };
+  }
+
+  private static archiveSegment(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasArchiveFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#ArchiveFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  static archive(data: ArchiveClass) {
+    const request = {
+      ...this.label(data.className, data.label),
+      ...this.archiveSegment(data.file),
+    };
+    return request;
   }
 
   static misc(data: MiscClass) {

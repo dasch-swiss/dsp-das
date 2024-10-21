@@ -1,4 +1,4 @@
-export class AssertionPageBase {
+export class ProjectAssertionPageBase {
   projectShortCode: string;
   ontologyName: string;
 
@@ -11,7 +11,7 @@ export class AssertionPageBase {
     cy.visit(`/project/${this.projectShortCode}/ontology/${this.ontologyName}/${ontoClassName}`);
   };
 }
-export class Project0803Page extends AssertionPageBase {
+export class Project0803Page extends ProjectAssertionPageBase {
   static readonly projectShortCode = '0803';
   static readonly ontologyName = 'incunabula';
 
@@ -20,7 +20,7 @@ export class Project0803Page extends AssertionPageBase {
   }
 }
 
-export class Project0001Page extends AssertionPageBase {
+export class Project0001Page extends ProjectAssertionPageBase {
   static readonly projectShortCode = '0001';
   static readonly defaultOntology = 'anything';
 
@@ -29,7 +29,7 @@ export class Project0001Page extends AssertionPageBase {
   }
 }
 
-export class Project00FFPage extends AssertionPageBase {
+export class Project00FFPage extends ProjectAssertionPageBase {
   static readonly projectShortCode = '00FF';
   static readonly defaultOntology = 'images';
 

@@ -1,4 +1,4 @@
-import { Project00FFPayloads } from '../../fixtures/project00FF-payloads';
+import { Project00FFPayloads } from '../../fixtures/project00FF-resource-payloads';
 import { ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
 

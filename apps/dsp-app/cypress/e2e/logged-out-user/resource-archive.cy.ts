@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
-import { Project00FFPayloads } from '../../fixtures/project00FF-payloads';
+import { Project0803ResourcePayloads } from '../../fixtures/project0803-resource-payloads';
 import { ResponseUtil } from '../../fixtures/requests';
 import { ArchiveClass } from '../../models/existing-data-models';
-import { Project00FFPage } from '../../support/pages/existing-ontology-class-page';
+import { Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
-  let projectPage: Project00FFPage;
+  const projectPayloads = new Project0803ResourcePayloads();
+  let projectAssertionPage: Project0803Page;
   let finalLastModificationDate: string;
 
   const archiveData: ArchiveClass = {
@@ -22,21 +23,22 @@ describe('Create archive model, add new data and view it', () => {
   const uploadedArchiveFilePath = '/uploads/dummy.txt.zip';
 
   beforeEach(() => {
-    projectPage = new Project00FFPage();
+    projectAssertionPage = new Project0803Page();
 
     cy.loginAdmin();
     cy.request(
       'POST',
       `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      Project00FFPayloads.createClassPayload(
+      projectPayloads.createClassPayload(
         archiveData.className,
         'http://api.knora.org/ontology/knora-api/v2#ArchiveRepresentation'
       )
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
-      cy.uploadFile(`../${uploadedArchiveFilePath}`, Project00FFPage.projectShortCode).then(response => {
+      cy.uploadFile(`../${uploadedArchiveFilePath}`, projectAssertionPage.projectShortCode).then(response => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(Project00FFPayloads.archive(archiveData));
+        const data = Project0803ResourcePayloads.archive(archiveData);
+        cy.createResource(data);
       });
     });
 
@@ -44,8 +46,11 @@ describe('Create archive model, add new data and view it', () => {
   });
 
   it('archive representation should be present', () => {
-    cy.intercept('GET', '**/file').as('archiveFileRequest');
-    projectPage.ontologyName = Project00FFPayloads.defaultOntology;
-    projectPage.visitClass(archiveData.className);
+    projectAssertionPage.visitClass(archiveData.className);
+    cy.get('[data-cy=accept-cookies]').click();
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(archiveData.label).click();
+    cy.get('[data-cy=resource-header-label]').contains(archiveData.label);
+    cy.get('.representation-container').should('exist');
+    cy.get('app-archive').should('be.visible');
   });
 });

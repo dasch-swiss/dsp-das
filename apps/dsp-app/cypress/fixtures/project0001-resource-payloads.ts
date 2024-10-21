@@ -1,8 +1,13 @@
 import { AudioThingClass, Comment, DocumentClass, VideoThingClass } from '../models/existing-data-models';
+import { ProjectAssertionPageBase } from './project-assertion-payloads';
 
-export class Project0001ResourcePayloads {
+export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
   static readonly project = '0001';
   static readonly defaultOntology = 'anything';
+
+  constructor() {
+    super(Project0001ResourcePayloads.project, Project0001ResourcePayloads.defaultOntology);
+  }
 
   private static label(className: string, value: string, ontology = Project0001ResourcePayloads.defaultOntology) {
     return {
