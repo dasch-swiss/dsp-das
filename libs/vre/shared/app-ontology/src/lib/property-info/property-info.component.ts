@@ -161,9 +161,14 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
     currentProjectOntologies.forEach(onto => {
       const classes = getAllEntityDefinitionsAsArray(onto.classes);
-      const resClasses = [];
       classes.forEach(resClass => {
-        if (resClass.propertiesList.find(prop => prop.propertyIndex === this.propDef.id)) {
+        if (
+          resClass.propertiesList.find(
+            prop =>
+              prop.propertyIndex === this.propDef.id &&
+              this.resClasses.findIndex(info => info.id === resClass.id) === -1
+          )
+        ) {
           // build own resClass object with id, label and comment
           const propOfClass: ShortInfo = {
             id: resClass.id,
@@ -171,10 +176,9 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
             comment: onto.label + (resClass.comment ? `: ${resClass.comment}` : ''),
             restrictedToClass: this.propDef.isLinkProperty ? this.propDef.subjectType : null,
           };
-          resClasses.push(propOfClass);
+          this.resClasses.push(propOfClass);
         }
       });
-      this.resClasses = resClasses;
     });
   }
 
