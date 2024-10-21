@@ -58,7 +58,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.osd.viewer = this.osdViewerElement.nativeElement;
     this.isViewInitialized = true;
     this.osdDrawerService.onInit(this.osd.viewer, this.resource);
-    // this.osdDrawerService.trackClickEvents();
+    this.osdDrawerService.trackClickEvents();
     this._loadImages();
     this._cdr.detectChanges();
 

@@ -55,12 +55,14 @@ export class OsdDrawerService {
   onInit(viewer: OpenSeadragon.Viewer, resource: ReadResource): void {
     this.resource = resource;
     this.viewer = viewer;
+
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
         switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
+        console.log('in subscribe');
         this._removeOverlays();
 
         if (showRegion) {
@@ -82,7 +84,7 @@ export class OsdDrawerService {
     return new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {
-        if (!viewer.isMouseNavEnabled()) {
+        if (viewer.isMouseNavEnabled()) {
           return;
         }
 
@@ -114,7 +116,7 @@ export class OsdDrawerService {
         this._regionDragInfo.endPos = viewPortPos;
       },
       releaseHandler: () => {
-        if (!(this.viewer.isMouseNavEnabled() && this._regionDragInfo)) {
+        if (!this._regionDragInfo) {
           throw new AppError('Region drag info and draw mode are not set');
         }
         const imageSize = viewer.world.getItemAt(0).getContentSize();

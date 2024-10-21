@@ -1,7 +1,7 @@
 <!-- openseadragon (osd) viewer -->
 <div
   class="osd-container"
-  [class.drawing]="isViewInitialized && osdDrawerService.viewer.isMouseNavEnabled()"
+  [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
   #osdViewer>
   <!-- in case of an error -->
   <ng-content select="[navigationArrows]"></ng-content>
