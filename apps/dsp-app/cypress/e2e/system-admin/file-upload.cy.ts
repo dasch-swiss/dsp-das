@@ -64,7 +64,7 @@ describe('File Upload Test', () => {
     cy.get('[data-ci="fullscreen"]').should('be.visible');
   });
 
-  it.only('can read image regions', () => {
+  it.only('can display region on the image, and display it on click', () => {
     const label = 'mylabel';
     const color = '#65ff33';
     cy.request({
@@ -94,6 +94,7 @@ describe('File Upload Test', () => {
       },
     }).then(() => {
       cy.get('[data-cy="annotation-rectangle"]').click();
+      cy.get('[data-cy="property-header"]').should('contain', label);
     });
   });
 });
