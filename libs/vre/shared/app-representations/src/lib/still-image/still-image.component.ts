@@ -11,7 +11,6 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Subject } from 'rxjs';
 import { RegionService } from '../region.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
@@ -36,8 +35,6 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   isViewInitialized = false;
   isPng: boolean = false;
 
-  private _ngUnsubscribe = new Subject<void>();
-
   get imageFileValue() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
     switch (image.type) {
@@ -61,7 +58,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.osd.viewer = this.osdViewerElement.nativeElement;
     this.isViewInitialized = true;
     this.osdDrawerService.onInit(this.osd.viewer, this.resource);
-    this.osdDrawerService.trackClickEvents();
+    // this.osdDrawerService.trackClickEvents();
     this._loadImages();
     this._cdr.detectChanges();
 
@@ -78,8 +75,6 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.osd.viewer.destroy();
-    this._ngUnsubscribe.next();
-    this._ngUnsubscribe.complete();
   }
 
   private _openInternalImages(): void {

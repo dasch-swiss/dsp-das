@@ -192,6 +192,7 @@ export class StillImageToolbarComponent {
   }
 
   drawButtonClicked(): void {
+    console.log('drawButtonClicked');
     this.viewer.setMouseNavEnabled(!this.viewer.isMouseNavEnabled());
   }
 
