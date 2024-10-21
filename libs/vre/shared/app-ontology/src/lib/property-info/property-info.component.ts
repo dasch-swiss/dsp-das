@@ -155,29 +155,20 @@ export class PropertyInfoComponent implements OnChanges, AfterContentInit {
 
     // get all classes where the property is used
     this.resClasses = [];
-    if (!currentProjectOntologies || currentProjectOntologies.length === 0) {
+    if (!currentProjectOntologies) {
       return;
     }
 
     currentProjectOntologies.forEach(onto => {
-      const classes = getAllEntityDefinitionsAsArray(onto.classes);
-      classes.forEach(resClass => {
-        if (
-          resClass.propertiesList.find(
-            prop =>
-              prop.propertyIndex === this.propDef.id &&
-              this.resClasses.findIndex(info => info.id === resClass.id) === -1
-          )
-        ) {
-          // build own resClass object with id, label and comment
-          const propOfClass: ShortInfo = {
-            id: resClass.id,
-            label: resClass.label,
-            comment: onto.label + (resClass.comment ? `: ${resClass.comment}` : ''),
-            restrictedToClass: this.propDef.isLinkProperty ? this.propDef.subjectType : null,
-          };
-          this.resClasses.push(propOfClass);
-        }
+      getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
+        if (!resClass.propertiesList.some(prop => prop.propertyIndex === this.propDef.id)) return;
+
+        this.resClasses.push({
+          id: resClass.id,
+          label: resClass.label!,
+          comment: onto.label + (resClass.comment ? `: ${resClass.comment}` : ''),
+          restrictedToClass: this.propDef.isLinkProperty ? this.propDef.subjectType : undefined,
+        });
       });
     });
   }
