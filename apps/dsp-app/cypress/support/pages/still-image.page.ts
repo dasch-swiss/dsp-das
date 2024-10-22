@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-export default class StillImagePageObject {
+export default class StillImagePage {
   resourceId: string;
   label = faker.lorem.word();
 
