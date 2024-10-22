@@ -234,12 +234,6 @@ export class OsdDrawerService {
         )
       )
       .subscribe(res => {
-        // TODO RELOAD HERE
-        /** BEFORE WAS
-                 this.viewer.destroy(); // canvas-click event doesnt work anymore, is it viewer bug?
-                 this._setupViewer();
-                 this._loadImages();
-                 */
         const regionId = (res as ReadResource).id;
         this._regionService.showRegions(true);
         this._regionService.updateRegions();
