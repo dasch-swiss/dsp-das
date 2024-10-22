@@ -143,7 +143,7 @@ export class PropertyInfoComponent implements OnInit {
 
     if (this.propDef.objectType === Constants.ListValue) {
       const currentProjectsLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
-      const listIri = this.propDef.guiAttributes[0].split('<')[1].replace('>', '');
+      const listIri = this.propDef.guiAttributes[0].split('<')[1].replace(/>/g, '');
       const listUrl = `/project/${this.projectUuid}/lists/${encodeURIComponent(listIri)}`;
       const list = currentProjectsLists.find(i => i.id === listIri);
       this.propAttribute = `<a href="${listUrl}">${list?.labels[0].value}</a>`;
