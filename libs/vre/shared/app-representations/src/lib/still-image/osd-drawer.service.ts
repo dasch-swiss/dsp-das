@@ -34,7 +34,7 @@ export class OsdDrawerService {
 
   private readonly _REGION_COLOR = 'rgba(255,0,0,0.3)';
 
-  // TODO copied from still-image.component.ts TO REMOVE!
+  // TODO copied from still-image.component.ts TO REMOVE! TO DO 2
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
@@ -59,10 +59,10 @@ export class OsdDrawerService {
     this._regionService.imageIsLoaded$
       .pipe(
         filter(loaded => loaded),
+        switchMap(() => this._regionService.regions$),
         switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
-        console.log('in subscribe');
         this._removeOverlays();
 
         if (showRegion) {
@@ -241,9 +241,9 @@ export class OsdDrawerService {
                  this._loadImages();
                  */
         const regionId = (res as ReadResource).id;
+        this._regionService.showRegions(true);
         this._regionService.updateRegions();
         this._regionService.highlightRegion(regionId);
-        this._regionService.showRegions(true);
       });
   }
 
