@@ -131,9 +131,10 @@ describe('View Existing Resource', () => {
   });
 
   it('Sideband resource with still image, rich text and comments should be present', () => {
-    cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
+    cy.intercept('/dummy').as('dummy');
     project0803Page.visitClass('Sideband');
     cy.get('[data-cy=accept-cookies]').click();
+    cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
     cy.get('[data-cy=close-restricted-button]').click();
     cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
