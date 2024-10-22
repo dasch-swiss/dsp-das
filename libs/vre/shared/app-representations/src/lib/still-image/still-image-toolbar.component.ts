@@ -118,14 +118,16 @@ import { OsdDrawerService } from './osd-drawer.service';
       <button
         mat-menu-item
         (click)="notification.openSnackBar('IIIF URL copied to clipboard!')"
-        [cdkCopyToClipboard]="imageFileValue.fileUrl">
+        [cdkCopyToClipboard]="imageFileValue.fileUrl"
+        data-cy="copy-iiif-url">
         <mat-icon>content_copy</mat-icon>
         Copy IIIF URL to clipboard
       </button>
       <button
         mat-menu-item
         [cdkCopyToClipboard]="imageFileValue.arkUrl"
-        (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
+        (click)="notification.openSnackBar('ARK URL copied to clipboard!')"
+        data-cy="copy-ark-url">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
       </button>

@@ -1,8 +1,9 @@
 import StillImagePage from '../../support/pages/still-image.page';
 
-function assessToolbarVisibility() {
+function assessToolbarVisibility(buttons: Cypress.Chainable<JQuery<HTMLElement>>[]) {
   cy.log('Assess toolbar visibility');
-  cy.get('[data-cy="still-image-share-button"]').should('be.visible');
+  buttons.forEach(button => button.should('be.visible'));
+
   cy.get('[data-cy="still-image-settings-button"]').should('be.visible');
   cy.get('[data-cy="zoom-out"]').should('be.visible');
   cy.get('[data-cy="zoom-in"]').should('be.visible');
@@ -22,9 +23,9 @@ describe('Still image', () => {
     const page = new StillImagePage();
     page.init();
 
+    const shareButton = cy.get('[data-cy="still-image-share-button"]');
     const moreButton = cy.get('[data-cy="more-vert-image-button"]');
-    moreButton.should('be.visible');
-    assessToolbarVisibility();
+    assessToolbarVisibility([shareButton, moreButton]);
 
     const region = cy.get('[data-cy="annotation-rectangle"]');
     region.should('have.css', 'outline-color', color.rgb);
@@ -39,5 +40,7 @@ describe('Still image', () => {
       .should('have.attr', 'href')
       .and('match', /http:\/\/0\.0\.0\.0:1024\/0803\/.*\/full\/2002,1104\/0\/default\.jpg/);
     clickOutsideMenu();
+
+    cy.log('Click on the share button');
   });
 });
