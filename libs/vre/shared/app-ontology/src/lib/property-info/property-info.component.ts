@@ -55,13 +55,13 @@ export interface ShortInfo {
   ],
 })
 export class PropertyInfoComponent implements OnInit {
-  @Input() propDef!: ResourcePropertyDefinitionWithAllLanguages;
+  @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
   @Input() projectUuid!: string;
 
   @Input() projectStatus!: boolean;
 
-  @Input() userCanEdit!: boolean; // is user a project admin or sys admin?
+  @Input() userCanEdit = false;
 
   @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
 
