@@ -70,14 +70,16 @@ describe('View Existing Resource', () => {
     ],
   };
 
+  const headless = Cypress.browser.isHeadless ? 'headless' : '';
+  const screenshotsPath = Cypress.browser.isHeadless ? 'screenshots/resource.cy.ts' : 'screenshots';
   const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
-  const fullUploadedImageFilePathScaled = 'cypress/uploads/Fingerprint_Logo_coloured1024x768.png';
+  const fullUploadedImageFilePathScaled = `cypress/uploads/Fingerprint_Logo_coloured1024x768${headless}.png`;
   const uploadedVideoFilePath = '/uploads/dasch-short.mp4';
   const uploadedAudioFilePath = '/uploads/dasch-short.mp3';
   const uploadedDocumentFilePath = '/uploads/UNIBE_DaSCH_Workshop.pdf';
-  const fullUploadedDocumentFilePathScaled = 'cypress/uploads/UNIBE_DaSCH_Workshop1024x768.png';
-  const imageScreenshotPath = 'screenshots/osd-canvas-screenshot.png';
-  const documentScreenshotPath = 'screenshots/pdf-screenshot.png';
+  const fullUploadedDocumentFilePathScaled = `cypress/uploads/UNIBE_DaSCH_Workshop1024x768${headless}.png`;
+  const imageScreenshotPath = `${screenshotsPath}/osd-canvas-screenshot.png`;
+  const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
   beforeEach(() => {
     project0803Page = new Project0803Page();
@@ -143,6 +145,7 @@ describe('View Existing Resource', () => {
       clip: { x: 0, y: 164, width: 300, height: 100 },
       scale: false,
       overwrite: true,
+      capture: 'viewport',
     });
     cy.fixture(imageScreenshotPath, 'base64').then(expectedImageBase64 => {
       const expectedImageBuffer = Buffer.from(expectedImageBase64, 'base64');
@@ -267,14 +270,13 @@ describe('View Existing Resource', () => {
     project0001Page.visitClass('ThingDocument');
     cy.get('.loadingIcon').then(() => {
       cy.get('.loadingIcon').should('not.exist');
+      cy.get('[data-cy=accept-cookies]').click();
+      cy.get('rn-banner').shadow().find('.rn-close-btn').click();
       cy.getCanvas('.canvasWrapper canvas').screenshot('pdf-screenshot', {
         scale: false,
         overwrite: true,
       });
     });
-
-    cy.get('[data-cy=accept-cookies]').click();
-    cy.get('rn-banner').shadow().find('.rn-close-btn').click();
 
     cy.get('[data-cy=resource-header-label]').contains(documentData.label);
     cy.get('.representation-container').should('exist');

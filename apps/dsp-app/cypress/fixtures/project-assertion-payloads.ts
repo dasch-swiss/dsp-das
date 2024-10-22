@@ -29,7 +29,7 @@ export class ProjectAssertionPageBase {
     };
   };
 
-  stillImageRepresentation = () => {
-    return this.createClassPayload('http://api.knora.org/ontology/knora-api/v2#StillImageRepresentation');
+  stillImageRepresentation = (className: string) => {
+    return this.createClassPayload(className, 'http://api.knora.org/ontology/knora-api/v2#StillImageRepresentation');
   };
 }

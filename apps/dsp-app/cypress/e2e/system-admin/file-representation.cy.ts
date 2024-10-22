@@ -5,6 +5,7 @@ import { AddResourceInstancePage } from '../../support/pages/add-resource-instan
 describe('File representation', () => {
   let lastModDate: string;
   let po: AddResourceInstancePage;
+  const projectPayloads = new Project00FFPayloads();
 
   beforeEach(() => {
     po = new AddResourceInstancePage();
@@ -21,7 +22,7 @@ describe('File representation', () => {
   });
 
   it('external iiif image', () => {
-    const classPayload = Project00FFPayloads.stillImageRepresentation();
+    const classPayload = projectPayloads.stillImageRepresentation('datamodelclass');
     const invalidIifImageUrl = 'https://example.com/wrong.jpg';
     const validIifImageUrl = 'https://ids.lib.harvard.edu/ids/iiif/24209711/full/105,/0/default.jpg';
     const encodedValidIifImageUrl =
