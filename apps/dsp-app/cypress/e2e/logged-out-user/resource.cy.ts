@@ -71,7 +71,7 @@ describe('View Existing Resource', () => {
   };
 
   const headless = Cypress.browser.isHeadless ? 'headless' : '';
-  const screenshotsPath = Cypress.browser.isHeadless ? 'screenshots/resource.cy.ts' : 'screenshots';
+  const screenshotsPath = Cypress.browser.isHeadless ? 'screenshots/logged-out-user/resource.cy.ts' : 'screenshots';
   const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
   const fullUploadedImageFilePathScaled = `cypress/uploads/Fingerprint_Logo_coloured1024x768${headless}.png`;
   const uploadedVideoFilePath = '/uploads/dasch-short.mp4';
