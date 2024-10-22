@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
   template: ` <div
     *ngFor="let annotation of regionService.regions; trackBy: trackAnnotationByFn"
     [id]="annotation.res.id"
-    [class.active]="annotation.res.id === selectedRegion">
+    [class.active]="annotation.res.id === selectedRegion"
+    data-cy="annotation-border">
     <app-properties-display
       [resource]="annotation"
       [properties]="annotation.resProps"

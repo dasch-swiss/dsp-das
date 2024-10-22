@@ -12,6 +12,10 @@ function assessToolbarVisibility() {
   cy.get('[data-ci="fullscreen"]').should('be.visible');
 }
 
+function clickOutsideMenu() {
+  cy.get('body').click(0, 0);
+}
+
 describe('Still image', () => {
   const color = { hex: '#65ff33', rgb: 'rgb(101, 255, 51)' };
   it('can see the image with the reader, the toolbar is visible, display a region and click', () => {
@@ -26,6 +30,7 @@ describe('Still image', () => {
     region.should('have.css', 'outline-color', color.rgb);
     region.click();
     cy.get('[data-cy="property-header"]').should('contain', page.label);
+    cy.get('[data-cy="annotation-border"]').first().should('have.css', 'border-width', '1px');
 
     cy.log('Click on the more button');
     moreButton.click();
@@ -33,6 +38,6 @@ describe('Still image', () => {
       .should('be.visible')
       .should('have.attr', 'href')
       .and('match', /http:\/\/0\.0\.0\.0:1024\/0803\/.*\/full\/2002,1104\/0\/default\.jpg/);
-    cy.get('body').click(0, 0); // click outside
+    clickOutsideMenu();
   });
 });
