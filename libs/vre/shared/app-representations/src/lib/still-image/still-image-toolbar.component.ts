@@ -101,9 +101,9 @@ import { OsdDrawerService } from './osd-drawer.service';
     </div>
 
     <mat-menu #more="matMenu" class="representation-menu">
-      <button class="menu-content" mat-menu-item (click)="openImageInNewTab(imageFileValue.fileUrl)">
+      <a class="menu-content" mat-menu-item [href]="imageFileValue.fileUrl" target="_blank" data-cy="open-iiif-new-tab">
         Open IIIF URL in new tab
-      </button>
+      </a>
       <button
         class="menu-content"
         data-cy="replace-image-button"
@@ -185,10 +185,6 @@ export class StillImageToolbarComponent {
     public osd: OsdDrawerService
   ) {
     this._setupCssMaterialIcon();
-  }
-
-  openImageInNewTab(url: string) {
-    window.open(url, '_blank');
   }
 
   drawButtonClicked(): void {

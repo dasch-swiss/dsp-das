@@ -23,7 +23,18 @@ export interface PolygonsForRegion {
 
 @Component({
   selector: 'app-still-image',
-  templateUrl: './still-image.component.html',
+  template: ` <div
+      class="osd-container"
+      [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
+      #osdViewer>
+      <!-- in case of an error -->
+      <ng-content select="[navigationArrows]"></ng-content>
+    </div>
+
+    <div class="toolbar">
+      <ng-content select="[slider]" />
+      <app-still-image-toolbar *ngIf="isViewInitialized" [resource]="resource" [isPng]="isPng" [viewer]="osd.viewer" />
+    </div>`,
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService, OpenSeaDragonService],
