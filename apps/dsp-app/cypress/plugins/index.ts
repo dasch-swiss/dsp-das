@@ -1,8 +1,7 @@
-import { checkUnusedENTranslations, compareTranslationFileWithEn, templateFiles } from './translations';
+import { checkUnusedENTranslations, compareTranslationFileWithEn } from './translations';
 
 const pluginConfig = (on: Cypress.PluginEvents) => {
   on('task', {
-    templateFiles,
     checkUnusedENTranslations,
     compareTranslationFileWithEn,
   });

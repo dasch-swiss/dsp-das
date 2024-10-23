@@ -1,7 +1,5 @@
 import fs = require('fs');
-import { PathOrFileDescriptor } from 'node:fs';
 import path = require('path');
-import glob = require('glob');
 
 export interface TranslationUsage {
   usedKeys: string[];
@@ -12,14 +10,6 @@ export interface TranslationKeyComp {
   missingKeys: string[];
   additionalKeys: string[];
 }
-
-const templatePattern = '../../src/**/*.html';
-const tsPattern = '../../src/**/*.ts';
-
-export const getFiles = (pattern: string): string[] => {
-  const absolutePattern = path.resolve(__dirname, pattern);
-  return glob.sync(absolutePattern);
-};
 
 const extractKeys = (obj: any, prefix = ''): Record<string, boolean> =>
   Object.keys(obj).reduce((res, key) => {
@@ -32,31 +22,15 @@ const extractKeys = (obj: any, prefix = ''): Record<string, boolean> =>
     return res;
   }, {});
 
-export const templateFiles = (): string[] => {
-  return getFiles(templatePattern);
-};
-
 export const checkUnusedENTranslations = (): TranslationUsage => {
+  const translationsInUsePath = path.join(__dirname, '../../cypress/fixtures/temp/translations-in-use.json');
+  const translationKeysInUse = JSON.parse(fs.readFileSync(translationsInUsePath, 'utf8'));
+
   const fPath = path.join(__dirname, '../../src/assets/i18n/en.json');
   const translationKeys = JSON.parse(fs.readFileSync(fPath, 'utf8'));
-
-  const usedKeys = new Set<string>();
   const translationKeysSet = extractKeys(translationKeys);
 
-  const searchInFiles = (files: string[]): void => {
-    files.forEach((file: PathOrFileDescriptor) => {
-      const fileContent = fs.readFileSync(file, 'utf8');
-
-      Object.keys(translationKeysSet).forEach(key => {
-        if (fileContent.includes(key)) {
-          usedKeys.add(key);
-        }
-      });
-    });
-  };
-
-  searchInFiles(getFiles(templatePattern));
-  searchInFiles(getFiles(tsPattern));
+  const usedKeys = new Set(Object.keys(translationKeysInUse));
 
   const allKeys = Object.keys(translationKeysSet);
   const unusedKeys = allKeys.filter(key => !usedKeys.has(key));
@@ -68,16 +42,17 @@ export const checkUnusedENTranslations = (): TranslationUsage => {
 };
 
 export const compareTranslationFileWithEn = (file: string): TranslationKeyComp => {
+  const translationsInUsePath = path.join(__dirname, '../../cypress/fixtures/temp/translations-in-use.json');
+  const translationKeysInUse = JSON.parse(fs.readFileSync(translationsInUsePath, 'utf8'));
+
   const fPath = path.join(__dirname, '../../src/assets/i18n/', file);
   const translationKeys = JSON.parse(fs.readFileSync(fPath, 'utf8'));
 
-  const enKeys = JSON.parse(fs.readFileSync(path.join(__dirname, '../../src/assets/i18n/en.json'), 'utf8'));
-
   const flatTranslationKeys = extractKeys(translationKeys);
-  const flatEnKeys = extractKeys(enKeys);
+  const usedKeys = Object.keys(translationKeysInUse);
 
-  const missingKeys = Object.keys(flatEnKeys).filter(key => !Object.keys(flatTranslationKeys).includes(key));
-  const additionalKeys = Object.keys(flatTranslationKeys).filter(key => !Object.keys(flatEnKeys).includes(key));
+  const missingKeys = usedKeys.filter(key => !Object.keys(flatTranslationKeys).includes(key));
+  const additionalKeys = Object.keys(flatTranslationKeys).filter(key => !usedKeys.includes(key));
 
   return { missingKeys, additionalKeys };
 };
