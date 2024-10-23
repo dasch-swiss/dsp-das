@@ -80,6 +80,12 @@ jobs:
           npm run e2e-cloud
         env:
           CYPRESS_RECORD_KEY_SECRET: ${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@latest
+        if: failure()
+        with:
+          name: cypress-snapshots
+          path: cypress/snapshots
 
   jdnconvertiblecalendar-tests:
     name: JDNConvertibleCalendar
