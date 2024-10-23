@@ -81,7 +81,7 @@ jobs:
         env:
           CYPRESS_RECORD_KEY_SECRET: ${{ secrets.CYPRESS_RECORD_KEY }}
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-snapshots
