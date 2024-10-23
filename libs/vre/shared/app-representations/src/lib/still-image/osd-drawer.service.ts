@@ -34,7 +34,7 @@ export class OsdDrawerService {
 
   private readonly _REGION_COLOR = 'rgba(255,0,0,0.3)';
 
-  // TODO copied from still-image.component.ts TO REMOVE! TO DO 2
+  // TODO copied from still-image.component.ts TO REMOVE! TO DO!!
   get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
     if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
