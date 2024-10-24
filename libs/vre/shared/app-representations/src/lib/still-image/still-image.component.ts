@@ -20,10 +20,6 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
 import { StillImageHelper } from './still-image-helper';
 
-export interface PolygonsForRegion {
-  [key: string]: HTMLElement[];
-}
-
 @Component({
   selector: 'app-still-image',
   template: ` <div

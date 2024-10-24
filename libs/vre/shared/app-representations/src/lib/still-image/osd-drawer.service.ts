@@ -9,15 +9,14 @@ import {
   ReadStillImageFileValue,
   RegionGeometry,
 } from '@dasch-swiss/dsp-js';
-import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import * as OpenSeadragon from 'openseadragon';
 import { filter, switchMap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
+import { PolygonsForRegion } from './polygons-for-region.interface';
 import { StillImageHelper } from './still-image-helper';
-import { PolygonsForRegion } from './still-image.component';
 
 @Injectable()
 export class OsdDrawerService {
@@ -34,16 +33,6 @@ export class OsdDrawerService {
 
   public readonly ZOOM_FACTOR = 0.2;
   private readonly _REGION_COLOR = 'rgba(255,0,0,0.3)';
-
-  // TODO copied from still-image.component.ts TO REMOVE! TO DO!!
-  get imageFileValue(): ReadStillImageFileValue | ReadStillImageExternalFileValue | undefined {
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
-      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
-    }
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue) {
-      return this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageExternalFileValue;
-    } else return undefined;
-  }
 
   constructor(
     private _renderer: Renderer2,
@@ -148,7 +137,7 @@ export class OsdDrawerService {
   private _renderRegions() {
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
-    const stillImage = this.imageFileValue as ReadStillImageFileValue;
+    const stillImage = this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
     const aspectRatio = stillImage.dimY / stillImage.dimX;
 
     const geometries = StillImageHelper.collectAndSortGeometries(this._regionService.regions, this._regions);
