@@ -11,6 +11,8 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { RegionService } from '../region.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
@@ -28,7 +30,6 @@ export interface PolygonsForRegion {
       class="osd-container"
       [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
       #osdViewer>
-      <!-- in case of an error -->
       <ng-content select="[navigationArrows]"></ng-content>
     </div>
 
@@ -45,18 +46,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
   isViewInitialized = false;
-
-  get imageFileValue() {
-    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
-    switch (image.type) {
-      case Constants.StillImageFileValue:
-        return image as ReadStillImageFileValue;
-      case Constants.StillImageExternalFileValue:
-        return image as ReadStillImageExternalFileValue;
-      default:
-        throw new AppError('Unknown image type');
-    }
-  }
+  private _ngUnsubscribe = new Subject<void>();
 
   constructor(
     public osdDrawerService: OsdDrawerService,
@@ -76,45 +66,49 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
       this._region.imageIsLoaded();
     });
 
-    this._resourceFetcherService.settings.imageFormatIsPng.asObservable().subscribe(() => {
-      this._loadImages();
-      this._cdr.detectChanges();
-    });
+    this._resourceFetcherService.settings.imageFormatIsPng
+      .asObservable()
+      .pipe(takeUntil(this._ngUnsubscribe))
+      .subscribe(() => {
+        this._loadImages();
+        this._cdr.detectChanges();
+      });
   }
 
   ngOnDestroy() {
     this.osd.viewer.destroy();
+    this._ngUnsubscribe.complete();
   }
 
   private _loadImages() {
-    switch (this.resource.properties[Constants.HasStillImageFileValue][0].type) {
+    const image = this.resource.properties[Constants.HasStillImageFileValue][0];
+
+    switch (image.type) {
       case Constants.StillImageFileValue:
-        this._openInternalImages();
+        this._openInternalImage(image as ReadStillImageFileValue);
         break;
       case Constants.StillImageExternalFileValue:
-        this._loadExternalIIIF();
+        this._openExternal3iFImage(image as ReadStillImageExternalFileValue);
         break;
       default:
         throw new AppError('Unknown image type');
     }
   }
 
-  private _openInternalImages(): void {
+  private _openInternalImage(image: ReadStillImageFileValue): void {
     const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
-      [this.imageFileValue as ReadStillImageFileValue],
+      [image],
       this._resourceFetcherService.settings.imageFormatIsPng.value
     );
     this.osd.viewer.open(tiles);
   }
 
-  private _loadExternalIIIF() {
-    if (this.imageFileValue instanceof ReadStillImageExternalFileValue) {
-      const i3f = IIIFUrl.createUrl(this.imageFileValue.externalUrl);
-      if (!i3f) {
-        throw new AppError('Error with IIIF URL');
-      }
-
-      this.osd.viewer.open(i3f.infoJsonUrl);
+  private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
+    const i3f = IIIFUrl.createUrl(image.externalUrl);
+    if (!i3f) {
+      throw new AppError('Error with IIIF URL');
     }
+
+    this.osd.viewer.open(i3f.infoJsonUrl);
   }
 }
