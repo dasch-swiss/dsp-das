@@ -12,6 +12,7 @@ import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/d
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { RegionService } from '../region.service';
+import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
@@ -33,7 +34,7 @@ export interface PolygonsForRegion {
 
     <div class="toolbar">
       <ng-content select="[slider]" />
-      <app-still-image-toolbar *ngIf="isViewInitialized" [resource]="resource" [isPng]="isPng" [viewer]="osd.viewer" />
+      <app-still-image-toolbar *ngIf="isViewInitialized" [resource]="resource" [viewer]="osd.viewer" />
     </div>`,
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +45,6 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
   isViewInitialized = false;
-  isPng: boolean = false;
 
   get imageFileValue() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
@@ -62,7 +62,8 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     public osdDrawerService: OsdDrawerService,
     public osd: OpenSeaDragonService,
     private _region: RegionService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   ngAfterViewInit() {
@@ -70,18 +71,15 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.isViewInitialized = true;
     this.osdDrawerService.onInit(this.osd.viewer, this.resource);
     this.osdDrawerService.trackClickEvents();
-    this._loadImages();
-    this._cdr.detectChanges();
 
-    /**  TODO should I move it or replace
-         this._resourceFetcherService.settings.imageFormatIsPng
-         .asObservable()
-         .pipe(takeUntil(this._ngUnsubscribe))
-         .subscribe((isPng: boolean) => {
-         this.isPng = isPng;
-         this._loadImages();
-         });
-         */
+    this.osd.viewer.addHandler('open', () => {
+      this._region.imageIsLoaded();
+    });
+
+    this._resourceFetcherService.settings.imageFormatIsPng.asObservable().subscribe(() => {
+      this._loadImages();
+      this._cdr.detectChanges();
+    });
   }
 
   ngOnDestroy() {
@@ -91,7 +89,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   private _openInternalImages(): void {
     const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
       [this.imageFileValue as ReadStillImageFileValue],
-      this.isPng
+      this._resourceFetcherService.settings.imageFormatIsPng.value
     );
     this.osd.viewer.open(tiles);
   }
@@ -104,10 +102,6 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     ) {
       this._loadExternalIIIF();
     }
-
-    this.osd.viewer.addHandler('open', () => {
-      this._region.imageIsLoaded();
-    });
   }
 
   private _loadExternalIIIF() {

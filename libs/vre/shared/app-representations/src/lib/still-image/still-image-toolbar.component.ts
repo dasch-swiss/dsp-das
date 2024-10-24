@@ -144,22 +144,19 @@ import { OsdDrawerService } from './osd-drawer.service';
       </button>
     </mat-menu>
     <mat-menu #settings="matMenu" class="settings-menu">
-      <button class="menu-content" mat-menu-item (click)="imageFormatIsPng.next(false)">
-        <mat-icon *ngIf="!isPng">check</mat-icon>
+      <button class="menu-content" mat-menu-item (click)="resourceFetcherService.settings.imageFormatIsPng.next(false)">
+        <mat-icon *ngIf="!resourceFetcherService.settings.imageFormatIsPng.value">check</mat-icon>
         JPG
       </button>
-      <button mat-menu-item (click)="imageFormatIsPng.next(true)">
-        <mat-icon *ngIf="isPng">check</mat-icon>
+      <button mat-menu-item (click)="resourceFetcherService.settings.imageFormatIsPng.next(true)">
+        <mat-icon *ngIf="resourceFetcherService.settings.imageFormatIsPng.value">check</mat-icon>
         PNG
       </button>
     </mat-menu>`,
 })
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
-  @Input({ required: true }) isPng!: boolean;
   @Input({ required: true }) viewer!: OpenSeadragon.Viewer;
-
-  imageFormatIsPng = this._resourceFetcherService.settings.imageFormatIsPng;
 
   get imageFileValue() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
@@ -190,7 +187,7 @@ export class StillImageToolbarComponent {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _store: Store,
-    private _resourceFetcherService: ResourceFetcherService,
+    public resourceFetcherService: ResourceFetcherService,
     private _rs: RepresentationService,
     private _dialog: MatDialog,
     private _domSanitizer: DomSanitizer,
@@ -255,7 +252,7 @@ export class StillImageToolbarComponent {
     updateRes.property = Constants.HasStillImageFileValue;
     updateRes.value = file;
     this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>).subscribe(() => {
-      this._resourceFetcherService.reload();
+      this.resourceFetcherService.reload();
     });
   }
 
