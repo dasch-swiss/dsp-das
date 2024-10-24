@@ -45,5 +45,4 @@ export interface ArchiveClass {
   className: string;
   label: string;
   file: string;
-  title: Comment;
 }

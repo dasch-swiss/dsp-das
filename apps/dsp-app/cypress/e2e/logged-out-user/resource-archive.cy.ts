@@ -6,6 +6,7 @@ import { ArchiveClass } from '../../models/existing-data-models';
 import { Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
+  const path = require('path');
   const projectPayloads = new Project0803ResourcePayloads();
   let projectAssertionPage: Project0803Page;
   let finalLastModificationDate: string;
@@ -14,13 +15,9 @@ describe('Create archive model, add new data and view it', () => {
     className: faker.lorem.word(),
     label: faker.lorem.word(),
     file: '',
-    title: {
-      text: faker.lorem.sentence(),
-      comment: faker.lorem.sentence(),
-    },
   };
 
-  const uploadedArchiveFilePath = '/uploads/dummy.txt.zip';
+  const archiveFile = 'dummy.txt.zip';
 
   beforeEach(() => {
     projectAssertionPage = new Project0803Page();
@@ -35,7 +32,7 @@ describe('Create archive model, add new data and view it', () => {
       )
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
-      cy.uploadFile(`../${uploadedArchiveFilePath}`, projectAssertionPage.projectShortCode).then(response => {
+      cy.uploadFile(`../uploads/${archiveFile}`, projectAssertionPage.projectShortCode).then(response => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
         const data = Project0803ResourcePayloads.archive(archiveData);
         cy.createResource(data);
@@ -52,5 +49,9 @@ describe('Create archive model, add new data and view it', () => {
     cy.get('[data-cy=resource-header-label]').contains(archiveData.label);
     cy.get('.representation-container').should('exist');
     cy.get('app-archive').should('be.visible');
+    cy.get('[data-cy=original-file-name]').contains(archiveFile);
+    cy.get('[data-cy=more-button]').click();
+    cy.get('[data-cy=download-file-button]').click();
+    cy.readFile(path.join(Cypress.config('downloadsFolder'), 'file.zip')).should('exist');
   });
 });
