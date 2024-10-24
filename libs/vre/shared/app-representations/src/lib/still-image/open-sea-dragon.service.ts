@@ -12,22 +12,21 @@ export class OpenSeaDragonService {
   }
 
   set viewer(htmlElement: HTMLElement) {
-    this._viewer = new OpenSeadragon.Viewer({
+    const accessToken = this._accessToken.getAccessToken();
+
+    const viewerConfig: OpenSeadragon.Options = {
       ...osdViewerConfig,
       element: htmlElement,
       loadTilesWithAjax: true,
-      ajaxHeaders: {
-        Authorization: `Bearer ${this._accessToken.getAccessToken()}`,
-      },
-    });
+    };
 
-    this.viewer.addHandler('full-screen', args => {
-      if (args.fullScreen) {
-        htmlElement.classList.add('fullscreen');
-      } else {
-        htmlElement.classList.remove('fullscreen');
-      }
-    });
+    if (accessToken) {
+      viewerConfig.ajaxHeaders = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
+
+    this._viewer = new OpenSeadragon.Viewer(viewerConfig);
   }
 
   constructor(private _accessToken: AccessTokenService) {}
