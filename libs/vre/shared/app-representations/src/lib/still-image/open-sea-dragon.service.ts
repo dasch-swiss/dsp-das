@@ -13,8 +13,8 @@ export class OpenSeaDragonService {
 
   set viewer(htmlElement: HTMLElement) {
     this._viewer = new OpenSeadragon.Viewer({
-      element: htmlElement,
       ...osdViewerConfig,
+      element: htmlElement,
       loadTilesWithAjax: true,
       ajaxHeaders: {
         Authorization: `Bearer ${this._accessToken.getAccessToken()}`,

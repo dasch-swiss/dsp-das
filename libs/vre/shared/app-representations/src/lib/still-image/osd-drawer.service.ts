@@ -32,6 +32,7 @@ export class OsdDrawerService {
 
   public viewer!: OpenSeadragon.Viewer;
 
+  public readonly ZOOM_FACTOR = 0.2;
   private readonly _REGION_COLOR = 'rgba(255,0,0,0.3)';
 
   // TODO copied from still-image.component.ts TO REMOVE! TO DO!!

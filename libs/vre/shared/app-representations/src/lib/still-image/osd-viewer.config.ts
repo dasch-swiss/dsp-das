@@ -2,10 +2,10 @@ import OpenSeadragon from 'openseadragon';
 
 export const osdViewerConfig: OpenSeadragon.Options = {
   sequenceMode: false,
-  showNavigator: true,
   showZoomControl: false,
   showFullPageControl: false,
   showHomeControl: false,
+  showNavigator: true,
   navigatorPosition: 'ABSOLUTE' as const,
   navigatorTop: 'calc(100% - 136px)',
   navigatorLeft: 'calc(100% - 136px)',

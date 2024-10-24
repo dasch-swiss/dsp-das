@@ -84,10 +84,18 @@ import { OsdDrawerService } from './osd-drawer.service';
           [disabled]="this.isReadStillImageExternalFileValue">
           <mat-icon>settings</mat-icon>
         </button>
-        <button mat-icon-button data-cy="zoom-out" matTooltip="Zoom out" (click)="osd.viewer.viewport.zoomBy(1 / 2)">
+        <button
+          mat-icon-button
+          data-cy="zoom-out"
+          matTooltip="Zoom out"
+          (click)="osd.viewer.viewport.zoomBy(1 - osd.ZOOM_FACTOR)">
           <mat-icon>zoom_out</mat-icon>
         </button>
-        <button mat-icon-button data-cy="zoom-in" matTooltip="Zoom in" (click)="osd.viewer.viewport.zoomBy(2)">
+        <button
+          mat-icon-button
+          data-cy="zoom-in"
+          matTooltip="Zoom in"
+          (click)="osd.viewer.viewport.zoomBy(1 + osd.ZOOM_FACTOR)">
           <mat-icon>zoom_in</mat-icon>
         </button>
         <button mat-icon-button data-ci="zoom-reset" matTooltip="Reset zoom" (click)="osd.viewer.viewport.zoomTo(1)">
