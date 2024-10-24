@@ -2,6 +2,7 @@ import { UserProfiles } from '../models/user-profiles';
 import './commands/data-model-class-command';
 import './commands/login';
 import './commands/ontology-command';
+import './commands/resource-commands';
 
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
 Cypress.on('uncaught:exception', err => {

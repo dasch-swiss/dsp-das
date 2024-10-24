@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { getFileValue, RegionService } from '@dasch-swiss/vre/shared/app-representations';
+import { RegionService, getFileValue } from '@dasch-swiss/vre/shared/app-representations';
 import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
@@ -17,7 +17,7 @@ import { CompoundService } from './compound/compound.service';
       <p>
         This resource is restricted, file representations may be of lower quality and some properties may be hidden.
       </p>
-      <mat-icon class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
+      <mat-icon data-cy="close-restricted-button" class="close" (click)="showRestrictedMessage = false">clear</mat-icon>
     </div>
 
     <div class="content large middle">
