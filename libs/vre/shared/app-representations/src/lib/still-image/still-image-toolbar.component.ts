@@ -79,22 +79,25 @@ import { OsdDrawerService } from './osd-drawer.service';
         <button
           data-cy="still-image-settings-button"
           mat-icon-button
-          id="DSP_OSD_SETTINGS"
           matTooltip="Settings"
           [matMenuTriggerFor]="settings"
           [disabled]="this.isReadStillImageExternalFileValue">
           <mat-icon>settings</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_OUT" data-cy="zoom-out" matTooltip="Zoom out">
+        <button mat-icon-button data-cy="zoom-out" matTooltip="Zoom out" (click)="osd.viewer.viewport.zoomBy(1 / 2)">
           <mat-icon>zoom_out</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_ZOOM_IN" data-cy="zoom-in" matTooltip="Zoom in">
+        <button mat-icon-button data-cy="zoom-in" matTooltip="Zoom in" (click)="osd.viewer.viewport.zoomBy(2)">
           <mat-icon>zoom_in</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_HOME" data-ci="zoom-reset" matTooltip="Reset zoom">
+        <button mat-icon-button data-ci="zoom-reset" matTooltip="Reset zoom" (click)="osd.viewer.viewport.zoomTo(1)">
           <mat-icon>other_houses</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_OSD_FULL_PAGE" data-ci="fullscreen" matTooltip="Open in fullscreen">
+        <button
+          mat-icon-button
+          data-ci="fullscreen"
+          matTooltip="Open in fullscreen"
+          (click)="osd.viewer.setFullScreen(true)">
           <mat-icon>fullscreen</mat-icon>
         </button>
       </span>
