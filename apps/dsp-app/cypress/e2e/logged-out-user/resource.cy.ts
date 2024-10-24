@@ -141,6 +141,7 @@ describe('View Existing Resource', () => {
     cy.get('app-still-image').should('be.visible');
     cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
+
     cy.getCanvas('app-still-image canvas').screenshot('osd-canvas-screenshot', {
       clip: { x: 0, y: 164, width: 300, height: 100 },
       scale: false,
