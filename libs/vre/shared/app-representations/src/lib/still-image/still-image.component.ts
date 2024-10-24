@@ -86,22 +86,25 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.osd.viewer.destroy();
   }
 
+  private _loadImages() {
+    switch (this.resource.properties[Constants.HasStillImageFileValue][0].type) {
+      case Constants.StillImageFileValue:
+        this._openInternalImages();
+        break;
+      case Constants.StillImageExternalFileValue:
+        this._loadExternalIIIF();
+        break;
+      default:
+        throw new AppError('Unknown image type');
+    }
+  }
+
   private _openInternalImages(): void {
     const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
       [this.imageFileValue as ReadStillImageFileValue],
       this._resourceFetcherService.settings.imageFormatIsPng.value
     );
     this.osd.viewer.open(tiles);
-  }
-
-  private _loadImages() {
-    if (this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
-      this._openInternalImages();
-    } else if (
-      this.resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageExternalFileValue
-    ) {
-      this._loadExternalIIIF();
-    }
   }
 
   private _loadExternalIIIF() {
