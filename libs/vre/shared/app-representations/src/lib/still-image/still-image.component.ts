@@ -11,10 +11,9 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RegionService } from '../region.service';
-import { ResourceFetcherService } from '../resource-fetcher.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
@@ -31,7 +30,12 @@ import { StillImageHelper } from './still-image-helper';
 
     <div class="toolbar">
       <ng-content select="[slider]" />
-      <app-still-image-toolbar *ngIf="isViewInitialized" [resource]="resource" [viewer]="osd.viewer" />
+      <app-still-image-toolbar
+        *ngIf="isViewInitialized"
+        [resource]="resource"
+        [viewer]="osd.viewer"
+        [isPng]="settings.imageFormatIsPng.value"
+        (imageIsPng)="(isPng$)" />
     </div>`,
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,13 +47,13 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
 
   isViewInitialized = false;
   private _ngUnsubscribe = new Subject<void>();
+  settings = { imageFormatIsPng: new BehaviorSubject(false) };
 
   constructor(
     public osdDrawerService: OsdDrawerService,
     public osd: OpenSeaDragonService,
     private _region: RegionService,
-    private _cdr: ChangeDetectorRef,
-    private _resourceFetcherService: ResourceFetcherService
+    private _cdr: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit() {
@@ -62,7 +66,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
       this._region.imageIsLoaded();
     });
 
-    this._resourceFetcherService.settings.imageFormatIsPng
+    this.settings.imageFormatIsPng
       .asObservable()
       .pipe(takeUntil(this._ngUnsubscribe))
       .subscribe(() => {
@@ -92,10 +96,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   }
 
   private _openInternalImage(image: ReadStillImageFileValue): void {
-    const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
-      [image],
-      this._resourceFetcherService.settings.imageFormatIsPng.value
-    );
+    const tiles = StillImageHelper.prepareTileSourcesFromFileValues([image], this.settings.imageFormatIsPng.value);
     this.osd.viewer.open(tiles);
   }
 

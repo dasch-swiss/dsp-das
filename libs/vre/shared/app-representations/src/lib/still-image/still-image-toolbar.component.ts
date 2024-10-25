@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -144,12 +144,12 @@ import { OsdDrawerService } from './osd-drawer.service';
       </button>
     </mat-menu>
     <mat-menu #settings="matMenu" class="settings-menu">
-      <button class="menu-content" mat-menu-item (click)="resourceFetcherService.settings.imageFormatIsPng.next(false)">
-        <mat-icon *ngIf="!resourceFetcherService.settings.imageFormatIsPng.value">check</mat-icon>
+      <button class="menu-content" mat-menu-item (click)="imageIsPng.emit(false)">
+        <mat-icon *ngIf="!isPng">check</mat-icon>
         JPG
       </button>
-      <button mat-menu-item (click)="resourceFetcherService.settings.imageFormatIsPng.next(true)">
-        <mat-icon *ngIf="resourceFetcherService.settings.imageFormatIsPng.value">check</mat-icon>
+      <button mat-menu-item (click)="imageIsPng.emit(true)">
+        <mat-icon *ngIf="isPng">check</mat-icon>
         PNG
       </button>
     </mat-menu>`,
@@ -157,6 +157,8 @@ import { OsdDrawerService } from './osd-drawer.service';
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) viewer!: OpenSeadragon.Viewer;
+  @Input({ required: true }) isPng!: boolean;
+  @Output() imageIsPng = new EventEmitter<boolean>();
 
   get imageFileValue() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
