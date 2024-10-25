@@ -86,8 +86,11 @@ describe('View Existing Resource', () => {
     project0001Page = new Project0001Page();
 
     cy.intercept('GET', '**/test.html').as('sipiTestRequest');
-    cy.visit(`${Cypress.env('sipiIIIfUrl')}/server/test.html`);
-    cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
+    cy.origin(Cypress.env('sipiIIIfUrl'), () => {
+      cy.visit(`${Cypress.env('sipiIIIfUrl')}/server/test.html`);
+      cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
+    });
+
     cy.loginAdmin();
     cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
       sidebandData.file = (response as UploadedFileResponse).internalFilename;
