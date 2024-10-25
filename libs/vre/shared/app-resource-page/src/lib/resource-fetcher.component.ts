@@ -5,14 +5,13 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-resource-fetcher',
-  template: ' <app-resource *ngIf="resource" [resource]="resource"></app-resource>',
+  template: ' <app-resource *ngIf="resource" [resource]="resource" />',
   providers: [ResourceFetcherService],
 })
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
 
-  resource: DspResource | undefined;
-
+  resource?: DspResource;
   private _subscription?: Subscription;
 
   constructor(
@@ -23,7 +22,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this._resourceFetcherService.onDestroy();
     this._resourceFetcherService.onInit(this.resourceIri);
-    this._resourceFetcherService.settings.imageFormatIsPng.next(false);
 
     if (this._subscription) {
       this._subscription.unsubscribe();
@@ -38,11 +36,21 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         return;
       }
 
-      this.resource = undefined;
-      this._cdr.detectChanges();
-      this.resource = resource;
-      this._cdr.detectChanges();
+      this._reloadEditor(resource);
     });
+  }
+
+  /**
+   * Reload the editor with the new resource.
+   * Note: The double detection is necessary to reload the entire editor.
+   * @param resource
+   * @private
+   */
+  private _reloadEditor(resource: DspResource) {
+    this.resource = undefined;
+    this._cdr.detectChanges();
+    this.resource = resource;
+    this._cdr.detectChanges();
   }
 
   ngOnDestroy() {

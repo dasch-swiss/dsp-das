@@ -16,6 +16,7 @@ export class OpenSeaDragonService {
 
     const viewerConfig: OpenSeadragon.Options = {
       ...osdViewerConfig,
+      debugMode: true,
       element: htmlElement,
       loadTilesWithAjax: true,
     };
