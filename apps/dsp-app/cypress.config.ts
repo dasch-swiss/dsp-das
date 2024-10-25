@@ -22,6 +22,11 @@ export default defineConfig({
     reporterOptions: {
       mochaFile: 'cypress/fixtures/screenshots/test-output.xml',
       toConsole: true,
+      attachments: true,
+      reportDir: 'cypress/fixtures/screenshots',
+      overwrite: false,
+      html: false,
+      json: true,
     },
     video: true,
 
