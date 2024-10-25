@@ -81,15 +81,17 @@ describe('View Existing Resource', () => {
   const imageScreenshotPath = `${screenshotsPath}/osd-canvas-screenshot.png`;
   const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
-  beforeEach(() => {
-    project0803Page = new Project0803Page();
-    project0001Page = new Project0001Page();
-
+  before(() => {
     cy.intercept('GET', '**/test.html').as('sipiTestRequest');
     cy.origin(Cypress.env('sipiIIIfUrl'), () => {
       cy.visit(`${Cypress.env('sipiIIIfUrl')}/server/test.html`);
       cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
     });
+  });
+
+  beforeEach(() => {
+    project0803Page = new Project0803Page();
+    project0001Page = new Project0001Page();
 
     cy.loginAdmin();
     cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
