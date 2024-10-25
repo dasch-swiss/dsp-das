@@ -85,7 +85,9 @@ jobs:
         if: failure()
         with:
           name: cypress-snapshots
-          path: apps/dsp-app/cypress/fixtures/screenshots
+          path: |
+            apps/dsp-app/cypress/fixtures/screenshots
+            apps/dsp-app/cypress/test-output.xml
 
   jdnconvertiblecalendar-tests:
     name: JDNConvertibleCalendar

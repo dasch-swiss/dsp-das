@@ -18,6 +18,12 @@ export default defineConfig({
     },
     trashAssetsBeforeRuns: true,
     screenshotsFolder: 'cypress/fixtures/screenshots',
+    reporter: 'spec',
+    reporterOptions: {
+      mochaFile: 'cypress/test-output.xml',
+      toConsole: true,
+    },
+    video: true,
 
     setupNodeEvents(on, config) {
       on('before:browser:launch', (browser, launchOptions) => {
