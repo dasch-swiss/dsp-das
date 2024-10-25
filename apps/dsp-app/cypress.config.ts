@@ -14,6 +14,7 @@ export default defineConfig({
     env: {
       apiUrl: 'http://0.0.0.0:3333',
       dspIngestUrl: 'http://0.0.0.0:3340',
+      sipiIIIfUrl: 'http://0.0.0.0:1024',
     },
     trashAssetsBeforeRuns: true,
     screenshotsFolder: 'cypress/fixtures/screenshots',
