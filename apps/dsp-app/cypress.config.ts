@@ -20,7 +20,7 @@ export default defineConfig({
     screenshotsFolder: 'cypress/fixtures/screenshots',
     reporter: 'spec',
     reporterOptions: {
-      mochaFile: 'cypress/test-output.xml',
+      mochaFile: 'cypress/fixtures/screenshots/test-output.xml',
       toConsole: true,
     },
     video: true,

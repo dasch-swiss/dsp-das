@@ -86,6 +86,7 @@ describe('View Existing Resource', () => {
     cy.origin(Cypress.env('sipiIIIfUrl'), () => {
       cy.visit(`${Cypress.env('sipiIIIfUrl')}/server/test.html`);
       cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
+      cy.screenshot('sipi-test-screenshot', { overwrite: true });
     });
   });
 
