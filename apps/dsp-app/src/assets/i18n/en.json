@@ -11,7 +11,7 @@
 			"reset": "Reset",
 			"retry": "Retry",
 			"update": "Update",
-			"searchHelp": "",
+			"searchHelp": "Type 3 letters to search for an existing resource",
 			"login": "Login"
 		},
 		"ontology": {
@@ -115,9 +115,9 @@
 	},
 	"uiControls": {
 		"pager": {
-			"previous": "",
-			"of": "",
-			"next": ""
+			"previous": "previous",
+			"of": "of",
+			"next": "next"
 		}
 	},
 	"overview": {
@@ -145,6 +145,6 @@
 	},
 	"resource": {
 		"properties": "Properties",
-		"comment": ""
+		"comment": "Comment"
 	}
 }

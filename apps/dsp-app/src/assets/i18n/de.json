@@ -11,7 +11,7 @@
 			"reset": "Zurücksetzen",
 			"retry": "Wiederholen",
 			"update": "Aktualisieren",
-			"searchHelp": "",
+			"searchHelp": "Gebe 3 Zeichen ein um nach einer existierender Resource zu suchen",
 			"login": "Anmelden"
 		},
 		"ontology": {
@@ -145,6 +145,6 @@
 	},
 	"resource": {
 		"properties": "Eigenschaften",
-		"comment": ""
+		"comment": "Kommentar"
 	}
 }
