@@ -1,6 +1,6 @@
 import { TranslationKeyComp, TranslationUsage } from '../../plugins/translations';
 
-describe('Translations', () => {
+(Cypress.env('INCLUDE_TRANSLATIONS') ? describe : describe.skip)('Translations', () => {
   before(() => {
     Cypress.env('skipDatabaseCleanup', true);
   });
