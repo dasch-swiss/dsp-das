@@ -63,12 +63,13 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
     this.osd.viewer.addHandler('open', () => {
       this._region.imageIsLoaded();
     });
+
+    this.afterFormatChange(false);
   }
 
   afterFormatChange(value: boolean) {
     this.isPng = value;
     this._loadImages();
-    this._cdr.detectChanges();
   }
 
   ngOnDestroy() {
