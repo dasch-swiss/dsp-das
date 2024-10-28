@@ -13,7 +13,7 @@ describe('Translations', () => {
       );
       expect(translationKeys.unusedKeys.length).to.eq(
         0,
-        `There should be no unused translation keys. Found ${translationKeys.unusedKeys.length} unused.\n\nRemove all unused translations from the translation files (en.json, de.json, ...) by\n"npm run i18n:merge-translations"\n\nor adjust manually:\n\n${translationKeys.unusedKeys.join(',\n')}`
+        `There should be no unused translation keys. Found ${translationKeys.unusedKeys.length} unused.\n\nUnused translation keys:\n\n${translationKeys.unusedKeys.join(',\n')}`
       );
     });
   });

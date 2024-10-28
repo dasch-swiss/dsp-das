@@ -99,9 +99,7 @@ If there are tests for translations failing, you can merge the translations with
 | ----------------------------------------- | ------------------- |
 | `nx run dsp-app:i18n:merge-translations`        | `i18n:merge-translations`           |
 
-This will:
-- remove all unused translation keys from the translation files (e.g. `en.json`, `de.json`)
-- extract all translation keys from the source code and add missing translation keys to all translation files. The values will be empty strings.
+This will extract all translation keys from the source code and add missing translation keys to all translation files. The values of added keys will be empty strings.
 
 ## Further Documentation
 
