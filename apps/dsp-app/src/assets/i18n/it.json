@@ -1,149 +1,150 @@
 {
-  "overview": {
-    "title": "Browse Research Projects",
-    "myProjects": "My Projects",
-    "browseOtherResearchProjects": "Browse Other Research Projects"
-  },
-  "addProjectMember": {
-    "title": "Add project member",
-    "description": "Increase your team",
-    "select": "Select from list...",
-    "usersLoading": "Loading users ...",
-    "newUser": "New user"
-  },
-  "usersList": {
-    "sortProps": {
-      "familyName": "Last name",
-      "givenName": "First name",
-      "userName": "Username"
-    }
-  },
-  "projects": {
-    "list": {
-      "project": "Project",
-      "projects": "Projects",
-      "sortShortCode": "Short code",
-      "sortShortName": "Short name",
-      "sortProjectName": "Project name",
-      "statusActive": "Active",
-      "statusDeactivated": "Deactivated",
-      "createNew": "Create new project",
-      "projectAdmin": "Project Administrator",
-      "edit": "Edit project information",
-      "reactivate": "Reactivate project",
-      "deactivate": "Deactivate project",
-      "erase": "Erase project",
-      "eraseConfirmation": "Project “{{0}}” has been erased.",
-      "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-      "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
-      "eraseConfirmationDialog": {
-        "title": "Please enter required information to erase the project.",
-        "subtitle": "Erase project",
-        "warning": "WARNING: This action cannot be undone, so use it with care.",
-        "shortCode": "Project short code",
-        "systemAdminPassword": "System administrator password",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "shortCodeValidation": "Short code does not match",
-        "passwordValidation": "Password incorrect"
-      }
-    }
-  },
-  "form": {
-    "action": {
-      "cancel": "Cancel",
-      "submit": "Save",
-      "retry": "Retry",
-      "update": "Update",
-      "next": "Next",
-      "reset": "Reset",
-      "danger": "Danger zone",
-      "login": "Login"
-    },
-    "ontology": {
-      "title": {
-        "create": "Create new data model",
-        "edit": "Customize data model"
-      },
-      "label": {
-        "name": "Set a unique name"
-      }
-    },
-    "user": {
-      "general": {
-        "givenName": "First name",
-        "familyName": "Last name",
-        "email": "Email address",
-        "username": "Username",
-        "password": "Password",
-        "oldPassword": "Old password",
-        "confirmPassword": "Confirm password",
-        "requesterPassword": "Your password",
-        "language": "Default language",
-        "sysAdmin": "System administrator rules",
-        "updateSuccess": "You successfully updated the user's profile"
-      },
-      "title": {
-        "new": "Create new",
-        "edit": "Edit profile",
-        "profile": "User profile",
-        "delete": "Suspend user account",
-        "deleteButton": "Suspend user account now",
-        "password": "Update password"
-      }
-    },
-    "project": {
-      "general": {
-        "description": "Description",
-        "shortcode": "Short code",
-        "shortname": "Short name",
-        "longname": "Project name",
-        "keywords": "Keywords"
-      },
-      "imageSettings": {
-        "off": "Off",
-        "isWatermark": "Apply watermark",
-        "restrictImageSize": "Restrict image size",
-        "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
-        "percentage": "Percentage",
-        "updateConfirmation": "You have successfully updated the project image settings.",
-        "info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options.",
-        "restrictions": "Image settings can only be applied for the resources which have the restricted view permissions set."
-      }
-    }
-  },
-  "resource": {
-    "properties": "Properties"
-  },
-  "searchPanel": {
-    "howToSearch": "How to search",
-    "expert": "Expert",
-    "advancedSearch": "Advanced search",
-    "expertSearch": "Expert search"
-  },
-  "fullTextSearch": {
-    "filterByProject": "Filter by project",
-    "search": "Search"
-  },
-  "header": {
-    "help": "Help"
-  },
-  "user": {
-    "navigation": {
-      "myProjects": "My Projects",
-      "myAccount": "My Account"
-    },
-    "profile": {
-      "systemAdmin": "System admin",
-      "editMyProfile": "Edit my profile"
-    },
-    "userMenu": {
-      "signedInAs": "Signed in as",
-      "systemAdministration": "System Administration",
-      "logout": "Logout",
-      "login": "LOGIN",
-      "home": "DSP-App Home Page",
-      "myAccount": "My Account"
-    }
-  }
+	"header": {
+		"help": "Help"
+	},
+	"form": {
+		"action": {
+			"cancel": "Cancel",
+			"submit": "Save",
+			"danger": "Danger zone",
+			"next": "Next",
+			"reset": "Reset",
+			"retry": "Retry",
+			"update": "Update",
+			"searchHelp": "",
+			"login": "Login"
+		},
+		"ontology": {
+			"title": {
+				"create": "Create new data model",
+				"edit": "Customize data model"
+			},
+			"label": {
+				"name": "Set a unique name"
+			}
+		},
+		"project": {
+			"imageSettings": {
+				"restrictions": "Image settings can only be applied for the resources which have the restricted view permissions set.",
+				"off": "Off",
+				"isWatermark": "Apply watermark",
+				"restrictImageSize": "Restrict image size",
+				"info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options.",
+				"percentage": "Percentage",
+				"absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
+				"updateConfirmation": "You have successfully updated the project image settings."
+			},
+			"general": {
+				"shortcode": "Short code",
+				"shortname": "Short name",
+				"longname": "Project name",
+				"description": "Description",
+				"keywords": "Keywords"
+			}
+		},
+		"user": {
+			"title": {
+				"edit": "Edit profile",
+				"password": "Update password",
+				"delete": "Suspend user account",
+				"deleteButton": "Suspend user account now",
+				"profile": "User profile",
+				"new": "Create new"
+			},
+			"general": {
+				"requesterPassword": "Your password",
+				"oldPassword": "Old password",
+				"password": "Password",
+				"confirmPassword": "Confirm password",
+				"username": "Username",
+				"email": "Email address",
+				"givenName": "First name",
+				"familyName": "Last name",
+				"language": "Default language",
+				"sysAdmin": "System administrator rules",
+				"updateSuccess": "You successfully updated the user's profile"
+			}
+		}
+	},
+	"addProjectMember": {
+		"description": "Increase your team",
+		"title": "Add project member",
+		"select": "Select from list...",
+		"usersLoading": "Loading users ...",
+		"newUser": "New user"
+	},
+	"fullTextSearch": {
+		"filterByProject": "Filter by project",
+		"search": "Search"
+	},
+	"searchPanel": {
+		"howToSearch": "How to search",
+		"advancedSearch": "Advanced search",
+		"expertSearch": "Expert search"
+	},
+	"projects": {
+		"list": {
+			"eraseConfirmationDialog": {
+				"title": "Please enter required information to erase the project.",
+				"subtitle": "Erase project",
+				"warning": "WARNING: This action cannot be undone, so use it with care.",
+				"shortCode": "Project short code",
+				"shortCodeValidation": "Short code does not match",
+				"systemAdminPassword": "System administrator password",
+				"passwordValidation": "Password incorrect",
+				"cancel": "Cancel",
+				"confirm": "Confirm"
+			},
+			"statusActive": "Active",
+			"statusDeactivated": "Deactivated",
+			"createNew": "Create new project",
+			"projectAdmin": "Project Administrator",
+			"edit": "Edit project information",
+			"deactivate": "Deactivate project",
+			"erase": "Erase project",
+			"reactivate": "Reactivate project",
+			"project": "Project",
+			"projects": "Projects",
+			"sortShortCode": "Short code",
+			"sortShortName": "Short name",
+			"sortProjectName": "Project name",
+			"deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
+			"eraseConfirmation": "Project “{{0}}” has been erased.",
+			"reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?"
+		}
+	},
+	"uiControls": {
+		"pager": {
+			"previous": "",
+			"of": "",
+			"next": ""
+		}
+	},
+	"overview": {
+		"title": "Browse Research Projects",
+		"myProjects": "My Projects",
+		"browseOtherResearchProjects": "Browse Other Research Projects"
+	},
+	"user": {
+		"profile": {
+			"systemAdmin": "System admin",
+			"editMyProfile": "Edit my profile"
+		},
+		"userMenu": {
+			"signedInAs": "Signed in as",
+			"systemAdministration": "System Administration",
+			"logout": "Logout",
+			"login": "LOGIN",
+			"home": "DSP-App Home Page",
+			"myAccount": "My Account"
+		},
+		"navigation": {
+			"myProjects": "My Projects",
+			"myAccount": "My Account"
+		}
+	},
+	"resource": {
+		"properties": "Properties",
+		"comment": ""
+	}
 }

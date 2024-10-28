@@ -1,149 +1,150 @@
 {
-  "overview": {
-    "title": "Forschungsprojekte durchsuchen",
-    "myProjects": "Meine Projekte",
-    "browseOtherResearchProjects": "Andere Forschungsprojekte durchsuchen"
-  },
-  "addProjectMember": {
-    "title": "Projektmitglied hinzufügen",
-    "description": "Projektteam erweitern",
-    "select": "Aus der Liste wählen ...",
-    "usersLoading": "Lade Benutzer ...",
-    "newUser": "Neuer Benutzer"
-  },
-  "usersList": {
-    "sortProps": {
-      "familyName": "Nachname",
-      "givenName": "Vorname",
-      "userName": "Benutzername"
-    }
-  },
-  "projects": {
-    "list": {
-      "project": "Projekt",
-      "projects": "Projekte",
-      "sortShortCode": "Kurzcode",
-      "sortShortName": "Abkürzung",
-      "sortProjectName": "Projekttitel",
-      "statusActive": "Aktiv",
-      "statusDeactivated": "Deaktiviert",
-      "createNew": "Neues Projekt erstellen",
-      "projectAdmin": "Projekt Administrator",
-      "edit": "Projektinformationen bearbeiten",
-      "reactivate": "Projekt reaktivieren",
-      "deactivate": "Projekt deaktivieren",
-      "erase": "Löschen",
-      "eraseConfirmation": "Möchten Sie Projekt “{{0}}” löschen?",
-      "deactivateConfirmation": "Möchten Sie Projekt “{{0}}” deaktivieren?",
-      "reactivateConfirmation": "Möchten Sie Projekt “{{0}}” reaktivieren?",
-      "eraseConfirmationDialog": {
-        "title": "Bitte geben Sie die erforderlichen Informationen ein, um das Projekt zu löschen.",
-        "subtitle": "Projekt löschen",
-        "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden, gehen Sie also vorsichtig damit um.",
-        "shortCode": "Projektkurzcode",
-        "systemAdminPassword": "Systemadministrator-Passwort",
-        "cancel": "Abbrechen",
-        "confirm": "Bestätigen",
-        "shortCodeValidation": "Der Kurzcode stimmt nicht überein",
-        "passwordValidation": "Falsches Passwort"
-      }
-    }
-  },
-  "form": {
-    "action": {
-      "cancel": "Abbrechen",
-      "submit": "Speichern",
-      "retry": "Wiederholen",
-      "update": "Aktualisieren",
-      "next": "Weiter",
-      "reset": "Zurücksetzen",
-      "danger": "Gefahrenzone",
-      "login": "Anmelden"
-    },
-    "ontology": {
-      "title": {
-        "create": "Neues Datenmodell erstellen",
-        "edit": "Datenmodell bearbeiten"
-      },
-      "label": {
-        "name": "Eindeutiger Name"
-      }
-    },
-    "user": {
-      "general": {
-        "givenName": "Vorname",
-        "familyName": "Nachname",
-        "email": "Email Adresse",
-        "username": "Benutzername",
-        "password": "Passwort",
-        "oldPassword": "Altes Passwort",
-        "confirmPassword": "Passwort bestätigen",
-        "requesterPassword": "Dein Passwort",
-        "language": "Sprache",
-        "sysAdmin": "Systemadministratorregeln",
-        "updateSuccess": "Das Profil wurde erfolgreich aktualisiert"
-      },
-      "title": {
-        "new": "Neuen Benutzer erstellen",
-        "edit": "Benutzer anpassen",
-        "profile": "Profil",
-        "delete": "Benutzer löschen",
-        "deleteButton": "Benutzerkonto jetzt sperren",
-        "password": "Passwort ändern"
-      }
-    },
-    "project": {
-      "general": {
-        "description": "Projektbeschrieb",
-        "shortcode": "Kurzcode",
-        "shortname": "Abkürzung",
-        "longname": "Projekttitel",
-        "keywords": "Stichworte"
-      },
-      "imageSettings": {
-        "off": "Aus",
-        "isWatermark": "Wasserzeichen anwenden",
-        "restrictImageSize": "Bildgröße einschränken",
-        "absoluteWidth": "Absolute Breite in Pixel von: {{min}} bis: {{max}}",
-        "percentage": "Prozentsatz",
-        "updateConfirmation": "Sie haben die Projektbildeinstellungen erfolgreich aktualisiert.",
-        "info": "Um die Größe Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht für beide Optionen Werte angeben.",
-        "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind."
-      }
-    }
-  },
-  "resource": {
-    "properties": "Eigenschaften"
-  },
-  "searchPanel": {
-    "howToSearch": "Wie suchen?",
-    "expert": "Experte",
-    "advancedSearch": "Erweiterte Suche",
-    "expertSearch": "Experte suchen"
-  },
-  "fullTextSearch": {
-    "filterByProject": "Nach Projekt filtern",
-    "search": "Suche"
-  },
-  "header": {
-    "help": "Hilfe"
-  },
-  "user": {
-    "navigation": {
-      "myProjects": "Meine Projekte",
-      "myAccount": "Mein Konto"
-    },
-    "profile": {
-      "systemAdmin": "Systemadministrator",
-      "editMyProfile": "Mein Profil bearbeiten"
-    },
-    "userMenu": {
-      "signedInAs": "Angemeldet als",
-      "systemAdministration": "Systemadministration",
-      "logout": "Abmelden",
-      "login": "ANMELDEN",
-      "home": "DSP-App Startseite",
-      "myAccount": "Mein Konto"
-    }
-  }
+	"header": {
+		"help": "Hilfe"
+	},
+	"form": {
+		"action": {
+			"cancel": "Abbrechen",
+			"submit": "Speichern",
+			"danger": "Gefahrenzone",
+			"next": "Weiter",
+			"reset": "Zurücksetzen",
+			"retry": "Wiederholen",
+			"update": "Aktualisieren",
+			"searchHelp": "",
+			"login": "Anmelden"
+		},
+		"ontology": {
+			"title": {
+				"create": "Neues Datenmodell erstellen",
+				"edit": "Datenmodell bearbeiten"
+			},
+			"label": {
+				"name": "Eindeutiger Name"
+			}
+		},
+		"project": {
+			"imageSettings": {
+				"restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind.",
+				"off": "Aus",
+				"isWatermark": "Wasserzeichen anwenden",
+				"restrictImageSize": "Bildgröße einschränken",
+				"info": "Um die Größe Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht für beide Optionen Werte angeben.",
+				"percentage": "Prozentsatz",
+				"absoluteWidth": "Absolute Breite in Pixel von: {{min}} bis: {{max}}",
+				"updateConfirmation": "Sie haben die Projektbildeinstellungen erfolgreich aktualisiert."
+			},
+			"general": {
+				"shortcode": "Kurzcode",
+				"shortname": "Abkürzung",
+				"longname": "Projekttitel",
+				"description": "Projektbeschrieb",
+				"keywords": "Stichworte"
+			}
+		},
+		"user": {
+			"title": {
+				"edit": "Benutzer anpassen",
+				"password": "Passwort ändern",
+				"delete": "Benutzer löschen",
+				"deleteButton": "Benutzerkonto jetzt sperren",
+				"profile": "Profil",
+				"new": "Neuen Benutzer erstellen"
+			},
+			"general": {
+				"requesterPassword": "Dein Passwort",
+				"oldPassword": "Altes Passwort",
+				"password": "Passwort",
+				"confirmPassword": "Passwort bestätigen",
+				"username": "Benutzername",
+				"email": "Email Adresse",
+				"givenName": "Vorname",
+				"familyName": "Nachname",
+				"language": "Sprache",
+				"sysAdmin": "Systemadministratorregeln",
+				"updateSuccess": "Das Profil wurde erfolgreich aktualisiert"
+			}
+		}
+	},
+	"addProjectMember": {
+		"description": "Projektteam erweitern",
+		"title": "Projektmitglied hinzufügen",
+		"select": "Aus der Liste wählen ...",
+		"usersLoading": "Lade Benutzer ...",
+		"newUser": "Neuer Benutzer"
+	},
+	"fullTextSearch": {
+		"filterByProject": "Nach Projekt filtern",
+		"search": "Suche"
+	},
+	"searchPanel": {
+		"howToSearch": "Wie suchen?",
+		"advancedSearch": "Erweiterte Suche",
+		"expertSearch": "Experte suchen"
+	},
+	"projects": {
+		"list": {
+			"eraseConfirmationDialog": {
+				"title": "Bitte geben Sie die erforderlichen Informationen ein, um das Projekt zu löschen.",
+				"subtitle": "Projekt löschen",
+				"warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden, gehen Sie also vorsichtig damit um.",
+				"shortCode": "Projektkurzcode",
+				"shortCodeValidation": "Der Kurzcode stimmt nicht überein",
+				"systemAdminPassword": "Systemadministrator-Passwort",
+				"passwordValidation": "Falsches Passwort",
+				"cancel": "Abbrechen",
+				"confirm": "Bestätigen"
+			},
+			"statusActive": "Aktiv",
+			"statusDeactivated": "Deaktiviert",
+			"createNew": "Neues Projekt erstellen",
+			"projectAdmin": "Projekt Administrator",
+			"edit": "Projektinformationen bearbeiten",
+			"deactivate": "Projekt deaktivieren",
+			"erase": "Löschen",
+			"reactivate": "Projekt reaktivieren",
+			"project": "Projekt",
+			"projects": "Projekte",
+			"sortShortCode": "Kurzcode",
+			"sortShortName": "Abkürzung",
+			"sortProjectName": "Projekttitel",
+			"deactivateConfirmation": "Möchten Sie Projekt “{{0}}” deaktivieren?",
+			"eraseConfirmation": "Möchten Sie Projekt “{{0}}” löschen?",
+			"reactivateConfirmation": "Möchten Sie Projekt “{{0}}” reaktivieren?"
+		}
+	},
+	"uiControls": {
+		"pager": {
+			"previous": "",
+			"of": "",
+			"next": ""
+		}
+	},
+	"overview": {
+		"title": "Forschungsprojekte durchsuchen",
+		"myProjects": "Meine Projekte",
+		"browseOtherResearchProjects": "Andere Forschungsprojekte durchsuchen"
+	},
+	"user": {
+		"profile": {
+			"systemAdmin": "Systemadministrator",
+			"editMyProfile": "Mein Profil bearbeiten"
+		},
+		"userMenu": {
+			"signedInAs": "Angemeldet als",
+			"systemAdministration": "Systemadministration",
+			"logout": "Abmelden",
+			"login": "ANMELDEN",
+			"home": "DSP-App Startseite",
+			"myAccount": "Mein Konto"
+		},
+		"navigation": {
+			"myProjects": "Meine Projekte",
+			"myAccount": "Mein Konto"
+		}
+	},
+	"resource": {
+		"properties": "Eigenschaften",
+		"comment": ""
+	}
 }
