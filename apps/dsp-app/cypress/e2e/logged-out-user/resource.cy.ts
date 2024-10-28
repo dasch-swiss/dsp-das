@@ -93,7 +93,6 @@ describe('View Existing Resource', () => {
       ).should(response => {
         expect(response.status).to.eq(200);
       });
-      cy.screenshot('sipi-test-screenshot', { overwrite: true });
       cy.createResource(Project0803ResourcePayloads.sideband(sidebandData));
     });
     cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {

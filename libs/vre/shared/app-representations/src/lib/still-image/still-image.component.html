@@ -1,4 +1,5 @@
 <!-- openseadragon (osd) viewer -->
+<img [src]="this.imageFileValue?.fileUrl" />
 <div class="osd-container" [class.drawing]="regionDrawMode" [class.on-error]="failedToLoad">
   <!-- in case of an error -->
   <ng-content select="[navigationArrows]"></ng-content>
