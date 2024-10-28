@@ -52,6 +52,32 @@ describe('Translations', () => {
     });
   });
 
+  it('should have no empty translation strings in en.json', () => {
+    cy.readFile('src/assets/i18n/en.json').then(enTranslations => {
+      const findEmptyStrings = (obj: any, prefix = ''): string[] => {
+        const emptyKeys: string[] = [];
+        Object.keys(obj).forEach(key => {
+          const value = obj[key];
+          const fullKey = prefix ? `${prefix}.${key}` : key;
+
+          if (typeof value === 'object' && value !== null) {
+            emptyKeys.push(...findEmptyStrings(value, fullKey));
+          } else if (typeof value === 'string' && value.trim() === '') {
+            emptyKeys.push(fullKey);
+          }
+        });
+        return emptyKeys;
+      };
+
+      const emptyKeys = findEmptyStrings(enTranslations);
+
+      expect(emptyKeys.length).to.eq(
+        0,
+        `There are empty translation strings in en.json for the following keys:\n\n${emptyKeys.join(',\n')}`
+      );
+    });
+  });
+
   after(() => {
     Cypress.env('skipDatabaseCleanup', false);
   });
