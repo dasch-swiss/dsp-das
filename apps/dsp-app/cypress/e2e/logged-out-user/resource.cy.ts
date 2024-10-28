@@ -144,15 +144,16 @@ describe('View Existing Resource', () => {
     cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
     cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
+    cy.log('waiting for still image request');
+    cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
+    cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
+
+    cy.log('checking SIPI image request');
     cy.request(
       `${Cypress.env('sipiIIIfUrl')}/${project0803Page.projectShortCode}/${sidebandData.file}/full/135,45/0/default.jpg`
     ).should(response => {
-      cy.log('checking SIPI image url');
       expect(response.status).to.eq(200);
     });
-    cy.log('waiting for still image request');
-    //cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
-    cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.getCanvas('app-still-image canvas').screenshot('osd-canvas-screenshot', {
       clip: { x: 0, y: 164, width: 300, height: 100 },
