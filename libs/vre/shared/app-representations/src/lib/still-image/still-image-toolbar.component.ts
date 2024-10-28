@@ -19,7 +19,6 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { take } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import {
@@ -210,12 +209,9 @@ export class StillImageToolbarComponent {
     if (!projectShort) {
       throw new AppError('Error with project shortcode');
     }
-    this._rs
-      .getIngestFileInfo(projectShort, assetId)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._rs.downloadFile(this.imageFileValue.fileUrl, response.originalFilename);
-      });
+    this._rs.getIngestFileInfo(projectShort, assetId).subscribe(response => {
+      this._rs.downloadFile(this.imageFileValue.fileUrl, response.originalFilename);
+    });
   }
 
   replaceImage() {
