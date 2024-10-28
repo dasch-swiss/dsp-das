@@ -81,15 +81,6 @@ describe('View Existing Resource', () => {
   const imageScreenshotPath = `${screenshotsPath}/osd-canvas-screenshot.png`;
   const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
-  before(() => {
-    cy.intercept('GET', '**/test.html').as('sipiTestRequest');
-    cy.origin(Cypress.env('sipiIIIfUrl'), () => {
-      cy.visit(`${Cypress.env('sipiIIIfUrl')}/server/test.html`);
-      cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
-      cy.screenshot('sipi-test-screenshot', { overwrite: true });
-    });
-  });
-
   beforeEach(() => {
     project0803Page = new Project0803Page();
     project0001Page = new Project0001Page();
@@ -146,6 +137,16 @@ describe('View Existing Resource', () => {
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
     cy.get('[data-cy=close-restricted-button]').click();
     cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
+
+    cy.intercept('GET', '**/default.jpg').as('sipiTestRequest');
+    cy.origin(Cypress.env('sipiIIIfUrl'), () => {
+      cy.visit(
+        `${Cypress.env('sipiIIIfUrl')}/${project0803Page.projectShortCode}/${sidebandData.file}/full/135,45/0/default.jpg`
+      );
+      cy.wait('@sipiTestRequest').its('response.statusCode').should('eq', 200);
+      cy.screenshot('sipi-test-screenshot', { overwrite: true });
+    });
+
     cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
     cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
