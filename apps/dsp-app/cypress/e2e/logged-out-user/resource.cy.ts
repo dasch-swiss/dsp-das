@@ -82,6 +82,7 @@ describe('View Existing Resource', () => {
   const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
   before(() => {
+    cy.resetDatabase();
     Cypress.env('skipDatabaseCleanup', true);
 
     project0803Page = new Project0803Page();

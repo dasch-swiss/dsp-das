@@ -1,5 +1,12 @@
 import { User, UserProfiles } from '../../models/user-profiles';
 
+Cypress.Commands.add('resetDatabase', () =>
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('apiUrl')}/admin/store/ResetTriplestoreContent`,
+  })
+);
+
 Cypress.Commands.add('login', (user: User) =>
   cy
     .request({

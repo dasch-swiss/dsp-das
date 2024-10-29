@@ -6,6 +6,7 @@ declare namespace Cypress {
   }
 
   interface Chainable<Subject> {
+    resetDatabase(): void;
     // logs user in via the API
     login(user: User): Chainable<Subject>;
     login2(user: User): Chainable<Subject>;
