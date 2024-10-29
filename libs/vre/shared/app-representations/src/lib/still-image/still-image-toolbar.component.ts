@@ -19,6 +19,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import {
@@ -78,7 +79,8 @@ export class StillImageToolbarComponent {
     this._setupCssMaterialIcon();
   }
 
-  drawButtonClicked(): void {
+  toggleDrawMode(): void {
+    console.log('toggle', this.viewer.isMouseNavEnabled());
     this.viewer.setMouseNavEnabled(!this.viewer.isMouseNavEnabled());
   }
 
@@ -116,11 +118,19 @@ export class StillImageToolbarComponent {
       });
     }
 
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this._replaceFile(data);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(
+        tap(v => console.log('tap', v)),
+        filter(data => !!data),
+        switchMap((data: UpdateFileValue) => this._replaceFile(data))
+      )
+      .subscribe(() => {
+        this.resourceFetcherService.reload();
+        setTimeout(() => {
+          this.toggleDrawMode();
+        }, 2000);
+      });
   }
 
   private _replaceFile(file: UpdateFileValue) {
@@ -129,9 +139,7 @@ export class StillImageToolbarComponent {
     updateRes.type = this.resource.type;
     updateRes.property = Constants.HasStillImageFileValue;
     updateRes.value = file;
-    this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>).subscribe(() => {
-      this.resourceFetcherService.reload();
-    });
+    return this._dspApiConnection.v2.values.updateValue(updateRes as UpdateResource<UpdateFileValue>);
   }
 
   private _setupCssMaterialIcon() {

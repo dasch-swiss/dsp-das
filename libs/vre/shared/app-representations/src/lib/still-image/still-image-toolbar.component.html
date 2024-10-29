@@ -30,10 +30,9 @@
     <button
       data-cy="still-image-region-button"
       mat-icon-button
-      id="DSP_OSD_DRAW_REGION"
       matTooltip="Draw Region"
       [disabled]="!userCanEdit || isReadStillImageExternalFileValue"
-      (click)="drawButtonClicked()"
+      (click)="toggleDrawMode()"
       [class.active]="osd.viewer.isMouseNavEnabled()">
       <mat-icon svgIcon="draw_region_icon"></mat-icon>
     </button>
