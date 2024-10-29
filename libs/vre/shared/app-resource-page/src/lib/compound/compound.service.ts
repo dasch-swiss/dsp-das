@@ -5,7 +5,6 @@ import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
-import { Subject } from 'rxjs';
 
 /**
  * Service to handle compound resources, which are resources that are composed of multiple resources.
@@ -14,7 +13,6 @@ import { Subject } from 'rxjs';
 export class CompoundService {
   compoundPosition?: DspCompoundPosition;
   incomingResource?: DspResource;
-  onOpenNotLoadedIncomingResourcePage$: Subject<void> = new Subject<void>();
 
   private _resource!: DspResource;
 
@@ -47,8 +45,6 @@ export class CompoundService {
     if (offset === this.compoundPosition.offset && this._resource.incomingRepresentations.length > 0) {
       if (this._resource.incomingRepresentations[position]) {
         this._loadIncomingResource(this._resource.incomingRepresentations[position].id);
-      } else {
-        this.onOpenNotLoadedIncomingResourcePage$.next(); // TODO remove, this is terrible
       }
     } else {
       this.compoundPosition.offset = offset;
@@ -86,9 +82,15 @@ export class CompoundService {
       incomingResource.systemProps =
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-      this.incomingResource = incomingResource;
+      this._reloadViewer(incomingResource);
       this._regionService.onInit(incomingResource);
-      this._cd.markForCheck();
     });
+  }
+
+  private _reloadViewer(resource: DspResource) {
+    this.incomingResource = undefined;
+    this._cd.detectChanges();
+    this.incomingResource = resource;
+    this._cd.detectChanges();
   }
 }
