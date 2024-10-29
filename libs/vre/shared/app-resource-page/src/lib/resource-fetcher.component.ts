@@ -5,13 +5,15 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-resource-fetcher',
-  template: ' <app-resource *ngIf="resource" [resource]="resource" />',
+  template: ' <app-resource *ngIf="resource" [resource]="resource" [isDifferentResource]="isDifferentResource" />',
   providers: [ResourceFetcherService],
 })
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
 
   resource?: DspResource;
+  isDifferentResource = true;
+
   private _subscription?: Subscription;
 
   constructor(
@@ -35,6 +37,8 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
       if (resource.res.isDeleted) {
         return;
       }
+
+      this.isDifferentResource = resource.res.id !== this.resource?.res.id;
 
       this._reloadEditor(resource);
     });

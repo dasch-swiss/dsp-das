@@ -35,6 +35,7 @@ import { CompoundService } from './compound/compound.service';
 })
 export class ResourceComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
+  @Input({ required: true }) isDifferentResource!: boolean;
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean | null = null;
   resourceIsObjectWithoutRepresentation!: boolean;
@@ -47,7 +48,7 @@ export class ResourceComponent implements OnInit {
 
   ngOnInit() {
     this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
-    this._onInit(this.resource, true); // TODO isDifferentResource: true
+    this._onInit(this.resource, this.isDifferentResource);
   }
 
   pageIsLoaded() {
