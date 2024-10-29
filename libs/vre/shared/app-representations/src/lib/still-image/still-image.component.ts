@@ -32,6 +32,7 @@ import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
@@ -115,7 +116,8 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
     private _regionService: RegionService,
     private _resourceFetcherService: ResourceFetcherService,
     private _cd: ChangeDetectorRef,
-    private _store: Store
+    private _store: Store,
+    private _accessToken: AccessTokenService
   ) {
     OpenSeadragon.setString('Tooltips.Home', '');
     OpenSeadragon.setString('Tooltips.ZoomIn', '');
@@ -407,10 +409,21 @@ export class StillImageComponent implements OnInit, OnChanges, OnDestroy {
   private _setupViewer(): void {
     const viewerContainer = this._elementRef.nativeElement.getElementsByClassName('osd-container')[0];
 
-    this._viewer = new OpenSeadragon.Viewer({
-      element: viewerContainer,
+    const accessToken = this._accessToken.getAccessToken();
+
+    const viewerConfig: OpenSeadragon.Options = {
       ...osdViewerConfig,
-    });
+      element: viewerContainer,
+      loadTilesWithAjax: true,
+    };
+
+    if (accessToken) {
+      viewerConfig.ajaxHeaders = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
+
+    this._viewer = new OpenSeadragon.Viewer(viewerConfig);
 
     this._viewer.addHandler('full-screen', args => {
       if (args.fullScreen) {

@@ -58,12 +58,12 @@ export default defineConfig({
 
         return launchOptions;
       });
-    },
-    setupNodeEvents(on, config) {
+
       on('task', {
         checkUnusedENTranslations,
         compareTranslationFileWithEn,
       });
+
       return config;
     },
   },
