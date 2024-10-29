@@ -81,7 +81,9 @@ describe('View Existing Resource', () => {
   const imageScreenshotPath = `${screenshotsPath}/osd-canvas-screenshot.png`;
   const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
-  beforeEach(() => {
+  before(() => {
+    Cypress.env('skipDatabaseCleanup', true);
+
     project0803Page = new Project0803Page();
     project0001Page = new Project0001Page();
 
@@ -138,6 +140,7 @@ describe('View Existing Resource', () => {
   it('Sideband resource with still image, rich text and comments should be present', () => {
     project0803Page.visitClass('Sideband');
     cy.get('[data-cy=accept-cookies]').click();
+    cy.get('rn-banner').shadow().find('.rn-close-btn').click();
     cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
     cy.get('[data-cy=close-restricted-button]').click();
@@ -327,5 +330,9 @@ describe('View Existing Resource', () => {
     cy.get('[data-cy=property-value-comment]').should('have.length', 2);
     cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[0].comment);
     cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[1].comment);
+  });
+
+  after(() => {
+    Cypress.env('skipDatabaseCleanup', false);
   });
 });
