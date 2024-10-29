@@ -47,7 +47,7 @@ export class ResourceComponent implements OnInit {
 
   ngOnInit() {
     this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
-    this._onInit(this.resource);
+    this._onInit(this.resource, true); // TODO isDifferentResource: true
   }
 
   pageIsLoaded() {
@@ -57,9 +57,9 @@ export class ResourceComponent implements OnInit {
     );
   }
 
-  private _onInit(resource: DspResource) {
+  private _onInit(resource: DspResource, isDifferentResource: boolean) {
     if (this._isObjectWithoutRepresentation(resource)) {
-      this._checkForCompoundNavigation(resource);
+      this._checkForCompoundNavigation(resource, isDifferentResource);
       return;
     }
 
@@ -79,7 +79,7 @@ export class ResourceComponent implements OnInit {
     return getFileValue(resource) === null;
   }
 
-  private _checkForCompoundNavigation(resource: DspResource) {
+  private _checkForCompoundNavigation(resource: DspResource, isDifferentResource: boolean) {
     this._incomingService
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .pipe(take(1))
@@ -89,7 +89,12 @@ export class ResourceComponent implements OnInit {
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
 
-          this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);
+          this._compoundService.onInit(
+            this._compoundService.exists && !isDifferentResource
+              ? this._compoundService.compoundPosition!
+              : new DspCompoundPosition(countQuery_.numberOfResults),
+            this.resource
+          );
           return;
         }
 
