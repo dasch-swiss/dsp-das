@@ -6,7 +6,7 @@ import { CompoundService } from './compound.service';
   template: `
     <ng-container *ngIf="compoundService.compoundPosition">
       <ng-container *ngIf="compoundService.incomingResource as incomingResource">
-        <app-still-image [resource]="incomingResource.res" [compoundMode]="true" />
+        <app-still-image class="dsp-representation" [resource]="incomingResource.res" [compoundMode]="true" />
       </ng-container>
     </ng-container>
   `,
