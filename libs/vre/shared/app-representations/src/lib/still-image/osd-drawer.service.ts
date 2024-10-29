@@ -89,6 +89,10 @@ export class OsdDrawerService {
         };
       },
       dragHandler: event => {
+        if (viewer.isMouseNavEnabled()) {
+          return;
+        }
+
         if (!this._regionDragInfo) {
           throw new AppError('Region drag info is not set');
         }
@@ -107,6 +111,10 @@ export class OsdDrawerService {
         this._regionDragInfo.endPos = viewPortPos;
       },
       releaseHandler: () => {
+        if (viewer.isMouseNavEnabled()) {
+          return;
+        }
+
         if (!this._regionDragInfo) {
           throw new AppError('Region drag info and draw mode are not set');
         }
