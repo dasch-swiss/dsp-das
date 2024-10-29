@@ -19,7 +19,7 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import * as OpenSeadragon from 'openseadragon';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import {
@@ -81,7 +81,6 @@ export class StillImageToolbarComponent {
   }
 
   toggleDrawMode(): void {
-    console.log('toggle', this.viewer.isMouseNavEnabled());
     this.viewer.setMouseNavEnabled(!this.viewer.isMouseNavEnabled());
   }
 
@@ -122,15 +121,11 @@ export class StillImageToolbarComponent {
     dialogRef
       .afterClosed()
       .pipe(
-        tap(v => console.log('tap', v)),
         filter(data => !!data),
         switchMap((data: UpdateFileValue) => this._replaceFile(data))
       )
       .subscribe(() => {
         this.resourceFetcherService.reload();
-        setTimeout(() => {
-          this.toggleDrawMode();
-        }, 2000);
       });
   }
 

@@ -19,7 +19,8 @@ import { StillImageHelper } from './still-image-helper';
 
 @Component({
   selector: 'app-still-image',
-  template: ` <div
+  template: `<h1>{{ isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled() | json }}</h1>
+    <div
       class="osd-container"
       [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
       #osdViewer>

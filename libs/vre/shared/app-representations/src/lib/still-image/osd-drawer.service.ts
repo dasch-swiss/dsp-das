@@ -1,4 +1,4 @@
-import { Inject, Injectable, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
@@ -39,7 +39,8 @@ export class OsdDrawerService {
     private _regionService: RegionService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   onInit(viewer: OpenSeadragon.Viewer, resource: ReadResource): void {
@@ -195,6 +196,8 @@ export class OsdDrawerService {
       })
       .afterClosed()
       .subscribe(data => {
+        this.viewer.setMouseNavEnabled(true);
+        this._cdr.detectChanges();
         this.viewer.removeOverlay(overlay);
         if (data) {
           this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
