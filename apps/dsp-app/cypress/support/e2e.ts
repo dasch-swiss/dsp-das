@@ -15,6 +15,10 @@ Cypress.on('uncaught:exception', err => {
 // do things here before each test if needed
 // All active session data (cookies, localStorage and sessionStorage) across all domains are cleared.
 beforeEach(() => {
+  if (Cypress.env('skipDatabaseCleanup')) {
+    return; // Skip cleanup
+  }
+
   let users: UserProfiles;
 
   // clear database

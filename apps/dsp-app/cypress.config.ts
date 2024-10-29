@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from 'cypress';
+import { checkUnusedENTranslations, compareTranslationFileWithEn } from './cypress/plugins/translations';
 
 export default defineConfig({
   projectId: 'n5b5id',
@@ -57,6 +58,13 @@ export default defineConfig({
 
         return launchOptions;
       });
+    },
+    setupNodeEvents(on, config) {
+      on('task', {
+        checkUnusedENTranslations,
+        compareTranslationFileWithEn,
+      });
+      return config;
     },
   },
 });
