@@ -115,3 +115,17 @@
   filter: alpha(opacity=100);
   opacity: 1;
 }
+
+.arrow {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+
+  &:first-child {
+    left: 0;
+  }
+
+  &:nth-child(2) {
+    right: 0;
+  }
+}

@@ -23,14 +23,18 @@ import { StillImageHelper } from './still-image-helper';
       class="osd-container"
       [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
       #osdViewer>
-      <ng-content select="[navigationArrows]"></ng-content>
+      <div *ngIf="compoundMode">
+        <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
+        <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
+      </div>
     </div>
-
     <div class="toolbar">
-      <ng-content select="[slider]" />
+      <app-compound-slider *ngIf="compoundMode" />
+
       <app-still-image-toolbar
         *ngIf="isViewInitialized"
         [resource]="resource"
+        [compoundMode]="compoundMode"
         [viewer]="osd.viewer"
         [isPng]="isPng"
         (imageIsPng)="afterFormatChange($event)" />
@@ -40,6 +44,7 @@ import { StillImageHelper } from './still-image-helper';
   providers: [OsdDrawerService, OpenSeaDragonService],
 })
 export class StillImageComponent implements AfterViewInit, OnDestroy {
+  @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) resource!: ReadResource;
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 

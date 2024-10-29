@@ -19,10 +19,12 @@ import { filter, map } from 'rxjs/operators';
     <app-still-image
       #stillImage
       class="dsp-representation stillimage"
+      [compoundMode]="false"
       *ngSwitchCase="representationConstants.stillImage"
       [resource]="resource.res" />
     <app-still-image
       #stillImage
+      [compoundMode]="false"
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.externalStillImage"
       [resource]="resource.res" />

@@ -38,7 +38,7 @@
     </button>
   </span>
 
-  <ng-content select="[navigation]"></ng-content>
+  <app-compound-navigation *ngIf="compoundMode" />
 
   <span>
     <button

@@ -36,6 +36,7 @@ import { OsdDrawerService } from './osd-drawer.service';
 })
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
+  @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) viewer!: OpenSeadragon.Viewer;
   @Input({ required: true }) isPng!: boolean;
   @Output() imageIsPng = new EventEmitter<boolean>();
