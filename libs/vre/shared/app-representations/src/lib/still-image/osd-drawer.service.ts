@@ -54,7 +54,8 @@ export class OsdDrawerService {
         switchMap(() => this._regionService.showRegions$)
       )
       .subscribe(showRegion => {
-        this._removeOverlays();
+        this._regions = {};
+        this.viewer.clearOverlays();
 
         if (showRegion) {
           this._renderRegions();
@@ -126,21 +127,6 @@ export class OsdDrawerService {
         viewer.setMouseNavEnabled(false);
       },
     });
-  }
-
-  private _removeOverlays() {
-    for (const reg in this._regions) {
-      if (reg in this._regions) {
-        for (const pol of this._regions[reg]) {
-          if (pol instanceof HTMLElement) {
-            pol.remove();
-          }
-        }
-      }
-    }
-
-    this._regions = {};
-    this.viewer.clearOverlays();
   }
 
   private _renderRegions() {
