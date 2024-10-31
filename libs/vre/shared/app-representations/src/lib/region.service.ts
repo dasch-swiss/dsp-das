@@ -30,6 +30,9 @@ export class RegionService {
   private _imageIsLoadedSubject = new BehaviorSubject(false);
   imageIsLoaded$ = this._imageIsLoadedSubject.asObservable();
 
+  private _getIncomingRegions$ =
+  );
+
   constructor(
     private _incomingService: IncomingService,
     private _cd: ChangeDetectorRef
@@ -45,13 +48,17 @@ export class RegionService {
   }
 
   updateRegions() {
-    this._getIncomingRegions()
-      .pipe(take(1))
-      .subscribe(res => {
-        console.log('subscribed');
-        this._regionsSubject.next(res);
-        this._cd.markForCheck();
-      });
+      this._incomingService.getIncomingRegions(this._resource.res.id, 0).pipe(
+          map(regions =>
+              (regions as ReadResourceSequence).resources.map(_resource => {
+                  const z = new DspResource(_resource);
+                  z.resProps = GenerateProperty.regionProperty(_resource);
+                  return z;
+              })
+          )).subscribe(res => {
+      this._regionsSubject.next(res);
+      this._cd.markForCheck();
+    });
   }
 
   highlightRegion(regionIri: string) {
@@ -61,18 +68,5 @@ export class RegionService {
 
   imageIsLoaded() {
     this._imageIsLoadedSubject.next(true);
-  }
-
-  private _getIncomingRegions() {
-    const offset = 0;
-    return this._incomingService.getIncomingRegions(this._resource.res.id, offset).pipe(
-      map(regions =>
-        (regions as ReadResourceSequence).resources.map(_resource => {
-          const z = new DspResource(_resource);
-          z.resProps = GenerateProperty.regionProperty(_resource);
-          return z;
-        })
-      )
-    );
   }
 }

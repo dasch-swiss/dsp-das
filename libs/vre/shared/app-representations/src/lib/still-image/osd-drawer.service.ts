@@ -55,7 +55,6 @@ export class OsdDrawerService {
       )
       .subscribe(showRegion => {
         this._regions = {};
-        this.viewer.clearOverlays();
 
         if (showRegion) {
           this._renderRegions();
