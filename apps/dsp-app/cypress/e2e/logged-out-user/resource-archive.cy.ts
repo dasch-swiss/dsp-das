@@ -41,6 +41,11 @@ describe('Create archive model, add new data and view it', () => {
             expect(response.status).to.eq(200);
           }
         );
+        cy.screenshot('upload-resource-archive-screenshot', {
+          scale: false,
+          overwrite: true,
+          capture: 'runner',
+        });
       });
     });
 
