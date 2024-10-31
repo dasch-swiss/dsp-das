@@ -36,6 +36,16 @@ describe('Create archive model, add new data and view it', () => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
         const data = Project0803ResourcePayloads.archive(archiveData);
         cy.createResource(data);
+        cy.request(
+          `${Cypress.env('sipiIIIfUrl')}/${projectAssertionPage.projectShortCode}/${archiveData.file}/file`
+        ).then(response => {
+          expect(response.status).to.eq(200);
+        });
+        cy.screenshot('upload-resource-archive-screenshot', {
+          scale: false,
+          overwrite: true,
+          capture: 'runner',
+        });
       });
     });
 

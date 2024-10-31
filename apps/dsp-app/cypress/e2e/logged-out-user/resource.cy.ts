@@ -81,7 +81,10 @@ describe('View Existing Resource', () => {
   const imageScreenshotPath = `${screenshotsPath}/osd-canvas-screenshot.png`;
   const documentScreenshotPath = `${screenshotsPath}/pdf-screenshot.png`;
 
-  beforeEach(() => {
+  before(() => {
+    cy.resetDatabase();
+    Cypress.env('skipDatabaseCleanup', true);
+
     project0803Page = new Project0803Page();
     project0001Page = new Project0001Page();
 
@@ -108,6 +111,16 @@ describe('View Existing Resource', () => {
       cy.createResource(Project0001ResourcePayloads.document(documentData));
     });
     cy.createResource(Project0803ResourcePayloads.misc(miscData));
+    cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${audioThingData.file}/file`).then(
+      response => {
+        expect(response.status).to.eq(200);
+      }
+    );
+    cy.screenshot('sipi-test-screenshot', {
+      scale: false,
+      overwrite: true,
+      capture: 'runner',
+    });
     cy.logout();
   });
 
@@ -131,16 +144,25 @@ describe('View Existing Resource', () => {
   });
 
   it('Sideband resource with still image, rich text and comments should be present', () => {
+    cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
     project0803Page.visitClass('Sideband');
     cy.get('[data-cy=accept-cookies]').click();
-    cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
+    cy.get('rn-banner').shadow().find('.rn-close-btn').click();
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(sidebandData.label).click();
     cy.get('[data-cy=close-restricted-button]').click();
     cy.get('[data-cy=resource-header-label]').contains(sidebandData.label);
     cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
+    cy.log('waiting for still image request');
     cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
+
+    cy.log('checking SIPI image request');
+    cy.request(
+      `${Cypress.env('sipiIIIfUrl')}/${project0803Page.projectShortCode}/${sidebandData.file}/full/135,45/0/default.jpg`
+    ).should(response => {
+      expect(response.status).to.eq(200);
+    });
     cy.getCanvas('app-still-image canvas').screenshot('osd-canvas-screenshot', {
       clip: { x: 0, y: 164, width: 300, height: 100 },
       scale: false,
@@ -313,5 +335,9 @@ describe('View Existing Resource', () => {
     cy.get('[data-cy=property-value-comment]').should('have.length', 2);
     cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[0].comment);
     cy.get('[data-cy=property-value-comment]').contains(documentData.titleComments[1].comment);
+  });
+
+  after(() => {
+    Cypress.env('skipDatabaseCleanup', false);
   });
 });
