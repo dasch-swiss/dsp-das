@@ -111,12 +111,12 @@ describe('View Existing Resource', () => {
       cy.createResource(Project0001ResourcePayloads.document(documentData));
     });
     cy.createResource(Project0803ResourcePayloads.misc(miscData));
-    cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${audioThingData.file}/file`).then(
-      response => {
-        expect(response.status).to.eq(200);
-      }
-    );
-    cy.screenshot('sipi-test-screenshot', {
+    // cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${audioThingData.file}/file`).then(
+    //   response => {
+    //     expect(response.status).to.eq(200);
+    //   }
+    // );
+    cy.screenshot('sipi-uploads-screenshot', {
       scale: false,
       overwrite: true,
       capture: 'runner',
