@@ -21,6 +21,12 @@ export interface Comment {
   comment: string;
 }
 
+export interface ThingPictureClass {
+  label: string;
+  file: string;
+  titles: [Comment];
+}
+
 export interface VideoThingClass {
   label: string;
   file: string;

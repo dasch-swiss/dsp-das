@@ -1,13 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
-import { Project0803ResourcePayloads } from '../../fixtures/project0803-resource-payloads';
 import { ResponseUtil } from '../../fixtures/requests';
 import { ArchiveClass } from '../../models/existing-data-models';
 import { Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
   const path = require('path');
-  const projectPayloads = new Project0803ResourcePayloads();
   let projectAssertionPage: Project0803Page;
   let finalLastModificationDate: string;
 
@@ -26,7 +24,7 @@ describe('Create archive model, add new data and view it', () => {
     cy.request(
       'POST',
       `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      projectPayloads.createClassPayload(
+      projectAssertionPage.payloads.createClassPayload(
         archiveData.className,
         'http://api.knora.org/ontology/knora-api/v2#ArchiveRepresentation'
       )
@@ -34,7 +32,7 @@ describe('Create archive model, add new data and view it', () => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
       cy.uploadFile(`../uploads/${archiveFile}`, projectAssertionPage.projectShortCode).then(response => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
-        const data = Project0803ResourcePayloads.archive(archiveData);
+        const data = projectAssertionPage.payloads.archive(archiveData);
         cy.createResource(data);
         cy.request(
           `${Cypress.env('sipiIIIfUrl')}/${projectAssertionPage.projectShortCode}/${archiveData.file}/file`

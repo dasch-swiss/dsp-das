@@ -1,4 +1,10 @@
-import { AudioThingClass, Comment, DocumentClass, VideoThingClass } from '../models/existing-data-models';
+import {
+  AudioThingClass,
+  Comment,
+  DocumentClass,
+  ThingPictureClass,
+  VideoThingClass,
+} from '../models/existing-data-models';
 import { ProjectAssertionPageBase } from './project-assertion-payloads';
 
 export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
@@ -9,29 +15,7 @@ export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
     super(Project0001ResourcePayloads.project, Project0001ResourcePayloads.defaultOntology);
   }
 
-  private static label(className: string, value: string, ontology = Project0001ResourcePayloads.defaultOntology) {
-    return {
-      '@type': `http://0.0.0.0:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${className}`,
-      'http://www.w3.org/2000/01/rdf-schema#label': value,
-      'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-        '@id': `http://rdfh.ch/projects/${Project0001ResourcePayloads.project}`,
-      },
-    };
-  }
-
-  private static textValueSegment(value: string, comment: string) {
-    return {
-      '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-      'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
-      'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
-    };
-  }
-
-  private static propertySegment(
-    propertyName: string,
-    textValues: Comment[],
-    ontology = Project0001ResourcePayloads.defaultOntology
-  ) {
+  propertySegment(propertyName: string, textValues: Comment[], ontology = Project0001ResourcePayloads.defaultOntology) {
     return {
       [`http://0.0.0.0:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${propertyName}`]: [
         ...textValues.map(textValue => {
@@ -41,34 +25,17 @@ export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
     };
   }
 
-  private static movingImage(value: string) {
-    return {
-      [`http://api.knora.org/ontology/knora-api/v2#hasMovingImageFileValue`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#MovingImageFileValue',
-        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
-      },
+  picture(data: ThingPictureClass) {
+    const className = 'ThingPicture';
+    const request = {
+      ...this.label(className, data.label),
+      ...this.textValue('hasPictureTitle', data.titles[0].text, data.titles[0].comment),
+      ...this.stillImage(data.file),
     };
+    return request;
   }
 
-  private static audioSegment(value: string) {
-    return {
-      [`http://api.knora.org/ontology/knora-api/v2#hasAudioFileValue`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#AudioFileValue',
-        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
-      },
-    };
-  }
-
-  private static documentSegment(value: string) {
-    return {
-      [`http://api.knora.org/ontology/knora-api/v2#hasDocumentFileValue`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#DocumentFileValue',
-        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
-      },
-    };
-  }
-
-  static videoThing(data: VideoThingClass) {
+  videoThing(data: VideoThingClass) {
     const className = 'VideoThing';
     const request = {
       ...this.label(className, data.label),
@@ -78,7 +45,7 @@ export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
     return request;
   }
 
-  static audioThing(data: AudioThingClass) {
+  audioThing(data: AudioThingClass) {
     const className = 'AudioThing';
     const request = {
       ...this.label(className, data.label),
@@ -88,7 +55,7 @@ export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
     return request;
   }
 
-  static document(data: DocumentClass) {
+  document(data: DocumentClass) {
     const className = 'ThingDocument';
     const request = {
       ...this.label(className, data.label),

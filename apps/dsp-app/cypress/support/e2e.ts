@@ -37,13 +37,6 @@ beforeEach(() => {
         password: users.systemAdmin_password_root,
       });
     }
-
-    if (Cypress.spec.relative.startsWith('cypress/e2e/project-member')) {
-      cy.login({
-        username: users.projectMember_username,
-        password: users.projectMember_password,
-      });
-    }
   });
 });
 

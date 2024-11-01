@@ -32,4 +32,77 @@ export class ProjectAssertionPageBase {
   stillImageRepresentation = (className: string) => {
     return this.createClassPayload(className, 'http://api.knora.org/ontology/knora-api/v2#StillImageRepresentation');
   };
+
+  label(className: string, value: string) {
+    return {
+      '@type': `http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${className}`,
+      'http://www.w3.org/2000/01/rdf-schema#label': value,
+      'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+        '@id': `http://rdfh.ch/projects/${this.projectShortCode}`,
+      },
+    };
+  }
+
+  textValue(propertyName: string, value: string, comment: string) {
+    return {
+      [`http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${propertyName}`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+        'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
+        'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
+      },
+    };
+  }
+
+  archiveSegment(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasArchiveFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#ArchiveFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  stillImage(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#StillImageFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  movingImage(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasMovingImageFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#MovingImageFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  audioSegment(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasAudioFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#AudioFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  documentSegment(value: string) {
+    return {
+      [`http://api.knora.org/ontology/knora-api/v2#hasDocumentFileValue`]: {
+        '@type': 'http://api.knora.org/ontology/knora-api/v2#DocumentFileValue',
+        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
+      },
+    };
+  }
+
+  textValueSegment(value: string, comment: string) {
+    return {
+      '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+      'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
+      'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
+    };
+  }
 }

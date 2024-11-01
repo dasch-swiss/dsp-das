@@ -2,8 +2,6 @@ import { faker } from '@faker-js/faker';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
-import { Project0001ResourcePayloads } from '../../fixtures/project0001-resource-payloads';
-import { Project0803ResourcePayloads } from '../../fixtures/project0803-resource-payloads';
 import {
   AudioThingClass,
   DocumentClass,
@@ -91,42 +89,42 @@ describe('View Existing Resource', () => {
     cy.loginAdmin();
     cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
       sidebandData.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(Project0803ResourcePayloads.sideband(sidebandData));
+      cy.createResource(project0803Page.payloads.sideband(sidebandData));
     });
     cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
       videoThingData.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData));
+      cy.createResource(project0001Page.payloads.videoThing(videoThingData));
     });
     cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
       const videoThingData2 = createVideoThingClass(faker.lorem.word());
       videoThingData2.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(Project0001ResourcePayloads.videoThing(videoThingData2));
+      cy.createResource(project0001Page.payloads.videoThing(videoThingData2));
     });
     cy.uploadFile(`../${uploadedAudioFilePath}`, Project0001Page.projectShortCode).then(response => {
       audioThingData.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(Project0001ResourcePayloads.audioThing(audioThingData));
+      cy.createResource(project0001Page.payloads.audioThing(audioThingData));
     });
     cy.uploadFile(`../${uploadedDocumentFilePath}`, Project0001Page.projectShortCode).then(response => {
       documentData.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(Project0001ResourcePayloads.document(documentData));
-      cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${documentData.file}/file`).then(
-        response => {
-          expect(response.status).to.eq(200);
-        }
-      );
+      cy.createResource(project0001Page.payloads.document(documentData));
       cy.screenshot('sipi-uploads-screenshot', {
         scale: false,
         overwrite: true,
         capture: 'runner',
       });
+      cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${documentData.file}/file`).then(
+        response => {
+          expect(response.status).to.eq(200);
+        }
+      );
     });
-    cy.createResource(Project0803ResourcePayloads.misc(miscData));
+    cy.createResource(project0803Page.payloads.misc(miscData));
     cy.logout();
   });
 
   it('should not be accessible and return to page', () => {
-    cy.visit('/project/0803/ontology/incunabula/book/add');
-    const regex = new RegExp('/project/0803$');
+    cy.visit(`/project/${Project0803Page.projectShortCode}/ontology/${Project0803Page.ontologyName}/book/add`);
+    const regex = new RegExp(`/project/${Project0803Page.projectShortCode}$`);
     cy.url().should('match', regex);
   });
 

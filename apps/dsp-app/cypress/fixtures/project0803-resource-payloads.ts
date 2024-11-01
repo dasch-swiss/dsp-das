@@ -9,17 +9,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
     super(Project0803ResourcePayloads.project, Project0803ResourcePayloads.defaultOntology);
   }
 
-  private static label(className: string, value: string) {
-    return {
-      '@type': `http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}`,
-      'http://www.w3.org/2000/01/rdf-schema#label': value,
-      'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-        '@id': `http://rdfh.ch/projects/${Project0803ResourcePayloads.project}`,
-      },
-    };
-  }
-
-  private static hasColor(className: string, value: string, comment: string) {
+  private hasColor(className: string, value: string, comment: string) {
     return {
       [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}HasColor`]:
         {
@@ -30,18 +20,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
     };
   }
 
-  private static textValue(propertyName: string, value: string, comment: string) {
-    return {
-      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
-        {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
-          'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,
-        },
-    };
-  }
-
-  private static richTextValue(propertyName: string, value: string, comment: string) {
+  private richTextValue(propertyName: string, value: string, comment: string) {
     return {
       [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
         {
@@ -55,25 +34,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
     };
   }
 
-  private static stillImage(value: string) {
-    return {
-      [`http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#StillImageFileValue',
-        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
-      },
-    };
-  }
-
-  private static archiveSegment(value: string) {
-    return {
-      [`http://api.knora.org/ontology/knora-api/v2#hasArchiveFileValue`]: {
-        '@type': 'http://api.knora.org/ontology/knora-api/v2#ArchiveFileValue',
-        'http://api.knora.org/ontology/knora-api/v2#fileValueHasFilename': value,
-      },
-    };
-  }
-
-  static archive(data: ArchiveClass) {
+  archive(data: ArchiveClass) {
     const request = {
       ...this.label(data.className, data.label),
       ...this.archiveSegment(data.file),
@@ -81,7 +42,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
     return request;
   }
 
-  static misc(data: MiscClass) {
+  misc(data: MiscClass) {
     const className = 'misc';
     const request = {
       ...this.label(className, data.label),
@@ -90,7 +51,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
     return request;
   }
 
-  static sideband(data: SidebandClass) {
+  sideband(data: SidebandClass) {
     const className = 'Sideband';
     const request = {
       ...this.label(className, data.label),

@@ -1,3 +1,6 @@
+import { Project0001ResourcePayloads } from '../../fixtures/project0001-resource-payloads';
+import { Project0803ResourcePayloads } from '../../fixtures/project0803-resource-payloads';
+
 export class ProjectAssertionPageBase {
   projectShortCode: string;
   ontologyName: string;
@@ -14,6 +17,7 @@ export class ProjectAssertionPageBase {
 export class Project0803Page extends ProjectAssertionPageBase {
   static readonly projectShortCode = '0803';
   static readonly ontologyName = 'incunabula';
+  payloads = new Project0803ResourcePayloads();
 
   constructor() {
     super(Project0803Page.projectShortCode, Project0803Page.ontologyName);
@@ -23,6 +27,7 @@ export class Project0803Page extends ProjectAssertionPageBase {
 export class Project0001Page extends ProjectAssertionPageBase {
   static readonly projectShortCode = '0001';
   static readonly defaultOntology = 'anything';
+  payloads = new Project0001ResourcePayloads();
 
   constructor() {
     super(Project0001Page.projectShortCode, Project0001Page.defaultOntology);
