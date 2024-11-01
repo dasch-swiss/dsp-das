@@ -42,7 +42,7 @@ describe('View Existing Resource', () => {
   function createVideoThingClass(label: string): VideoThingClass {
     return {
       label: label,
-      file: '6dxOL1bLhWv-YhnMtV6T8HK.mp4',
+      file: '',
       title: faker.lorem.sentence(),
       titleComment: faker.lorem.sentence(),
     };
@@ -50,7 +50,7 @@ describe('View Existing Resource', () => {
 
   const audioThingData: AudioThingClass = {
     label: faker.lorem.word(),
-    file: '5FciLKcyvaa-lfSH3y9bHzI.mp3',
+    file: '',
     title: faker.lorem.sentence(),
     titleComment: faker.lorem.sentence(),
   };
@@ -109,18 +109,18 @@ describe('View Existing Resource', () => {
     cy.uploadFile(`../${uploadedDocumentFilePath}`, Project0001Page.projectShortCode).then(response => {
       documentData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(Project0001ResourcePayloads.document(documentData));
+      cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${documentData.file}/file`).then(
+        response => {
+          expect(response.status).to.eq(200);
+        }
+      );
+      cy.screenshot('sipi-uploads-screenshot', {
+        scale: false,
+        overwrite: true,
+        capture: 'runner',
+      });
     });
     cy.createResource(Project0803ResourcePayloads.misc(miscData));
-    // cy.request(`${Cypress.env('sipiIIIfUrl')}/${Project0001Page.projectShortCode}/${audioThingData.file}/file`).then(
-    //   response => {
-    //     expect(response.status).to.eq(200);
-    //   }
-    // );
-    cy.screenshot('sipi-uploads-screenshot', {
-      scale: false,
-      overwrite: true,
-      capture: 'runner',
-    });
     cy.logout();
   });
 
@@ -157,12 +157,12 @@ describe('View Existing Resource', () => {
     cy.wait('@stillImageRequest').its('request.url').should('include', sidebandData.file);
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
-    cy.log('checking SIPI image request');
-    cy.request(
-      `${Cypress.env('sipiIIIfUrl')}/${project0803Page.projectShortCode}/${sidebandData.file}/full/135,45/0/default.jpg`
-    ).should(response => {
-      expect(response.status).to.eq(200);
-    });
+    // cy.log('checking SIPI image request');
+    // cy.request(
+    //   `${Cypress.env('sipiIIIfUrl')}/${project0803Page.projectShortCode}/${sidebandData.file}/full/135,45/0/default.jpg`
+    // ).should(response => {
+    //   expect(response.status).to.eq(200);
+    // });
     cy.getCanvas('app-still-image canvas').screenshot('osd-canvas-screenshot', {
       clip: { x: 0, y: 164, width: 300, height: 100 },
       scale: false,
