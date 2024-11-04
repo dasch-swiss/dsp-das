@@ -47,7 +47,7 @@ export class ResourceComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.resourceIsObjectWithoutRepresentation = getFileValue(this.resource) === null;
+    this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource);
     this._onInit(this.resource, this.isDifferentResource);
   }
 
