@@ -69,7 +69,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=property-value-comment]').contains(thingPictureData.titles[0].comment);
   });
 
-  it.only('ThingPicture resource should be editable', () => {
+  it('ThingPicture resource should be editable', () => {
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
