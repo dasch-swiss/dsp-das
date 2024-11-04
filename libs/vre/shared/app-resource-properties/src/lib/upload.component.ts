@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
@@ -40,9 +39,6 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
     </ng-template>
 
     <ng-template #showFileTemplate>
-      <div *ngIf="previewUrl" style="display: flex; justify-content: center">
-        <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px; margin-bottom: 16px" />
-      </div>
       <table *ngIf="fileToUpload" style="text-align: center; width: 100%; border: 1px solid lightgray">
         <tr style="background: lightblue">
           <th>Name</th>
@@ -73,7 +69,6 @@ export class UploadComponent {
 
   readonly Math = Math;
 
-  previewUrl: SafeUrl | null = null;
   fileToUpload: File | undefined;
   loading = false;
 
