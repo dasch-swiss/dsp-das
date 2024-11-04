@@ -1,8 +1,12 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentationType, UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
+import {
+  FileRepresentationType,
+  UploadedFileResponse,
+  UploadFileService,
+} from '@dasch-swiss/vre/shared/app-representations';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
@@ -64,7 +68,7 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
   @Output() afterFileRemoved = new EventEmitter<void>();
-  @Output() afterFileUploaded = new EventEmitter<UploadedFile>();
+  @Output() afterFileUploaded = new EventEmitter<UploadedFileResponse>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly Math = Math;
@@ -91,7 +95,6 @@ export class UploadComponent {
     private _store: Store,
     private _upload: UploadFileService,
     private _cdr: ChangeDetectorRef,
-    private _sanitizer: DomSanitizer,
     private _actions$: Actions
   ) {}
 
@@ -148,15 +151,6 @@ export class UploadComponent {
         })
       )
       .subscribe(res => {
-        switch (this.representation) {
-          case Constants.HasStillImageFileValue:
-            this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(res.thumbnailUrl);
-            break;
-          case Constants.HasDocumentFileValue:
-            this.previewUrl = res.baseUrl;
-            break;
-        }
-
         this.afterFileUploaded.emit(res);
       });
 
