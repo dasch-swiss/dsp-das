@@ -12,7 +12,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, of, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
@@ -24,20 +24,6 @@ export class OsdDrawerService implements OnDestroy {
   resource!: ReadResource;
 
   private _paintedPolygons: PolygonsForRegion = {};
-
-  private _updateRegions$ = combineLatest([this._regionService.showRegions$, this._regionService.regions$]).pipe(
-    tap(([showRegions, regions]) => {
-      if (!showRegions) {
-        this._removeOverlays();
-      }
-
-      if (showRegions) {
-        this._removeOverlays(regions);
-        this._renderRegions();
-      }
-    })
-  );
-
   private _ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -54,7 +40,18 @@ export class OsdDrawerService implements OnDestroy {
     this.resource = resource;
     this._paintedPolygons = {};
 
-    this._updateRegions$.pipe(takeUntil(this._ngUnsubscribe)).subscribe();
+    combineLatest([this._regionService.showRegions$, this._regionService.regions$])
+      .pipe(takeUntil(this._ngUnsubscribe))
+      .subscribe(([showRegions, regions]) => {
+        if (!showRegions) {
+          this._removeOverlays();
+        }
+
+        if (showRegions) {
+          this._removeOverlays(regions);
+          this._renderRegions();
+        }
+      });
 
     this._regionService.highlightRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
       this._unhighlightAllRegions();

@@ -6,7 +6,7 @@ import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 
 @Component({
@@ -73,7 +73,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   ngOnInit() {
-    this._highlightAnnotationFromUri();
+    this._checkForAnnotationUri();
 
     this.segmentsService.highlightSegment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(segment => {
       if (segment) {
@@ -92,21 +92,13 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.unsubscribe();
   }
 
-  private _highlightAnnotationFromUri() {
+  private _checkForAnnotationUri() {
     const annotation = this._route.snapshot.queryParamMap.get(RouteConstants.annotationQueryParam);
     if (!annotation) {
       return;
     }
 
-    this.regionService.showRegions$
-      .pipe(
-        filter(loaded => loaded),
-        takeUntil(this.ngUnsubscribe)
-      )
-      .subscribe(() => {
-        this._openAnnotationTab();
-        this.regionService.highlightRegion(annotation);
-      });
+    this.regionService.highlightRegion(annotation);
   }
 
   onTabChange(event: any) {

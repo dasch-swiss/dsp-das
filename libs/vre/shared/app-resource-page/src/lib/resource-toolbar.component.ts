@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteResourceResponse } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
 import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
@@ -138,13 +137,6 @@ import { filter } from 'rxjs/operators';
 export class ResourceToolbarComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   @Input() adminPermissions = false;
-  /**
-   * in case properties belongs to an annotation (e.g. region in still images)
-   * in this case we don't have to display the isRegionOf property
-   */
-  @Input() isAnnotation = false;
-
-  @Input() showToggleProperties = false;
   @Input() showEditLabel = true;
 
   @Input() lastModificationDate!: string;
@@ -215,8 +207,8 @@ export class ResourceToolbarComponent implements OnInit {
       })
       .afterClosed()
       .pipe(filter(response => !!response))
-      .subscribe(response => {
-        this._onResourceDeleted(response);
+      .subscribe(() => {
+        this.afterResourceDeleted.emit();
       });
   }
 
@@ -230,17 +222,12 @@ export class ResourceToolbarComponent implements OnInit {
       })
       .afterClosed()
       .pipe(filter(response => !!response))
-      .subscribe(response => {
-        this._onResourceDeleted(response);
+      .subscribe(() => {
+        this.afterResourceDeleted.emit();
       });
   }
 
   openSnackBar(message: string) {
     this._notification.openSnackBar(message);
-  }
-
-  private _onResourceDeleted(response: DeleteResourceResponse) {
-    this._notification.openSnackBar(`${response.result}: ${this.resource.res.label}`);
-    this.afterResourceDeleted.emit();
   }
 }

@@ -41,7 +41,7 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
     this._subscription = this.regionService.highlightRegion$.subscribe(region => {
       this.selectedRegion = region;
       if (region !== null) {
-        this._openRegion(region);
+        this._scrollToRegion(region);
       }
     });
   }
@@ -55,7 +55,7 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
     this.regionService.showRegions(false);
   }
 
-  private _openRegion(iri: string) {
+  private _scrollToRegion(iri: string) {
     const region = document.getElementById(iri);
     if (region) {
       region.scrollIntoView({

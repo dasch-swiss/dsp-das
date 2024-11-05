@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { BehaviorSubject, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Regions, also called annotations, are used to mark specific areas on an image.
@@ -23,9 +23,7 @@ export class RegionService {
   showRegions$ = this._showRegions.asObservable();
 
   private _highlightRegion = new BehaviorSubject<string | null>(null);
-  highlightRegion$ = this.showRegions$.pipe(
-    switchMap(value => (value ? this._highlightRegion.asObservable() : of(null)))
-  );
+  highlightRegion$ = this._highlightRegion.asObservable();
 
   constructor(
     private _incomingService: IncomingService,
