@@ -31,7 +31,7 @@ export class OsdDrawerService implements OnDestroy {
         this._removeOverlays();
       }
 
-      if (showRegions && regions.length > 0) {
+      if (showRegions) {
         this._removeOverlays(regions);
         this._renderRegions();
       }
@@ -53,6 +53,8 @@ export class OsdDrawerService implements OnDestroy {
   onInit(resource: ReadResource): void {
     this.resource = resource;
     this._paintedPolygons = {};
+
+    this._updateRegions$.pipe(takeUntil(this._ngUnsubscribe)).subscribe();
 
     this._regionService.highlightRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
       this._unhighlightAllRegions();

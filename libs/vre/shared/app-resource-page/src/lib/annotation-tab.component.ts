@@ -21,7 +21,8 @@ import { Subscription } from 'rxjs';
         RouteConstants.annotationQueryParam +
         '=' +
         annotation.res.id
-      " />
+      "
+      (afterResourceDeleted)="afterResourceDeleted()" />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })
@@ -43,6 +44,10 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
         this._openRegion(region);
       }
     });
+  }
+
+  afterResourceDeleted() {
+    this.regionService.updateRegions();
   }
 
   ngOnDestroy() {
