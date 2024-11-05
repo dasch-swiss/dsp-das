@@ -100,11 +100,17 @@ export class OsdDrawerService implements OnDestroy {
           );
         }),
         filter(data => !!data),
-        takeUntil(this._ngUnsubscribe)
+        takeUntil(this._ngUnsubscribe),
+        switchMap(res =>
+          this._regionService.updateRegions$().pipe(
+            map(() => {
+              return res;
+            })
+          )
+        )
       )
       .subscribe(res => {
         const regionId = (res as ReadResource).id;
-        this._regionService.updateRegions();
         this._regionService.selectRegion(regionId);
       });
   }

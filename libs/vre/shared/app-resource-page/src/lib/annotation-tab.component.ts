@@ -3,6 +3,7 @@ import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-annotation-tab',
@@ -47,7 +48,7 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
   }
 
   afterResourceDeleted() {
-    this.regionService.updateRegions();
+    this.regionService.updateRegions$().pipe(take(1)).subscribe();
   }
 
   ngOnDestroy() {
