@@ -57,7 +57,7 @@ jobs:
       - run: npm install
       - name: Install Cypress dependencies
         run: |
-          cd dsp-das/apps/dsp-app/cypress
+          cd ../../../../dsp-das/apps/dsp-app/cypress
           npm install
       - name: Checkout DSP-API repo
         uses: actions/checkout@v3
