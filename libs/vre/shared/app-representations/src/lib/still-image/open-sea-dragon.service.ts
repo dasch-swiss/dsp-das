@@ -75,6 +75,10 @@ export class OpenSeaDragonService {
         };
       },
       dragHandler: event => {
+        if (viewer.isMouseNavEnabled()) {
+          return;
+        }
+
         if (!this._rectangleInDrawing) {
           throw new AppError('Rectangle is not set');
         }
@@ -93,6 +97,10 @@ export class OpenSeaDragonService {
         this._rectangleInDrawing.endPos = viewPortPos;
       },
       releaseHandler: () => {
+        if (viewer.isMouseNavEnabled()) {
+          return;
+        }
+
         if (!this._rectangleInDrawing) {
           throw new AppError('Rectangle is not set');
         }
