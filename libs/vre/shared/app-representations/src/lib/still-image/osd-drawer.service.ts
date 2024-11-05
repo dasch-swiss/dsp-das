@@ -12,8 +12,8 @@ import {
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
-import { combineLatest, Subject } from 'rxjs';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, of, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
@@ -77,24 +77,38 @@ export class OsdDrawerService implements OnDestroy {
             .pipe(map(data => ({ data, overlay })))
         )
       )
-      .subscribe(({ data, overlay }) => {
-        this._osd.viewer.setMouseNavEnabled(true);
-        this._osd.viewer.removeOverlay(overlay.overlay);
-        this._cdr.detectChanges();
+      .pipe(
+        switchMap(({ data, overlay }) => {
+          this._osd.viewer.setMouseNavEnabled(true);
+          this._osd.viewer.removeOverlay(overlay.overlay);
+          this._cdr.detectChanges();
 
-        if (data) {
-          this._uploadRegion(
-            overlay.startPoint,
-            overlay.endPoint,
-            overlay.imageSize,
-            data.color,
-            data.comment,
-            data.label
+          if (!data) {
+            // User pressed on cancel
+            return of(null);
+          }
+
+          return this._dspApiConnection.v2.res.createResource(
+            StillImageHelper.getPayloadUploadRegion(
+              this.resource.id,
+              this.resource.attachedToProject,
+              overlay.startPoint,
+              overlay.endPoint,
+              overlay.imageSize,
+              data.color,
+              data.comment,
+              data.label
+            )
           );
-        }
+        }),
+        filter(data => !!data),
+        takeUntil(this._ngUnsubscribe)
+      )
+      .subscribe(res => {
+        const regionId = (res as ReadResource).id;
+        this._regionService.updateRegions(this.resource.id);
+        this._regionService.highlightRegion(regionId);
       });
-
-    this._updateRegions$.pipe(takeUntil(this._ngUnsubscribe)).subscribe();
   }
 
   private _removeOverlays(keep: DspResource[] = []): void {
