@@ -74,12 +74,12 @@ jobs:
       - name: Run e2e tests in CI
         if: github.event_name == 'push'
         run: |
-          cd ../../../../dsp-das
+          cd ../dsp-das
           npm run e2e-ci
       - name: Run e2e tests on Cypress Cloud on push
         if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release-please') && github.event.pull_request.merged == true
         run: |
-          cd ../../../../dsp-das
+          cd ../dsp-das
           export CYPRESS_RECORD_KEY=$CYPRESS_RECORD_KEY_SECRET
           npm run e2e-cloud
         env:
