@@ -14,14 +14,14 @@ interface Overlay {
 
 @Injectable({ providedIn: 'root' })
 export class OpenSeaDragonService {
+  get viewer() {
+    return this._viewer;
+  }
+
   private readonly _OVERLAY_COLOR = 'rgba(255,0,0,0.3)';
   private readonly ZOOM_FACTOR = 0.2;
 
   private _viewer!: OpenSeadragon.Viewer;
-
-  get viewer() {
-    return this._viewer;
-  }
 
   private _overlay: {
     overlayElement: HTMLElement;
@@ -29,10 +29,12 @@ export class OpenSeaDragonService {
     endPos?: OpenSeadragon.Point;
   } | null = null;
 
-  private _overlayB: BehaviorSubject<Overlay | null> = new BehaviorSubject<Overlay | null>(null);
-  overlay$ = this._overlayB.asObservable();
+  private _overlaySubject = new BehaviorSubject<Overlay | null>(null);
+  overlay$ = this._overlaySubject.asObservable();
 
-  initViewer(htmlElement: HTMLElement) {
+  constructor(private _accessToken: AccessTokenService) {}
+
+  onInit(htmlElement: HTMLElement) {
     const viewerConfig: OpenSeadragon.Options = {
       ...osdViewerConfig,
       element: htmlElement,
@@ -47,12 +49,14 @@ export class OpenSeaDragonService {
     }
 
     this._viewer = new OpenSeadragon.Viewer(viewerConfig);
-    this.trackClickEvents(this._viewer);
+    this._trackClickEvents(this._viewer);
   }
 
-  constructor(private _accessToken: AccessTokenService) {}
+  zoom(direction: 1 | -1) {
+    this._viewer.viewport.zoomBy(1 + direction * this.ZOOM_FACTOR);
+  }
 
-  public trackClickEvents(viewer: OpenSeadragon.Viewer) {
+  private _trackClickEvents(viewer: OpenSeadragon.Viewer) {
     return new OpenSeadragon.MouseTracker({
       element: viewer.canvas,
       pressHandler: event => {
@@ -94,13 +98,9 @@ export class OpenSeaDragonService {
         const imageSize = viewer.world.getItemAt(0).getContentSize();
         const startPoint = viewer.viewport.viewportToImageCoordinates(this._overlay.startPos);
         const endPoint = viewer.viewport.viewportToImageCoordinates(this._overlay.endPos!);
-        this._overlayB.next({ startPoint, endPoint, imageSize, overlay: this._overlay.overlayElement });
+        this._overlaySubject.next({ startPoint, endPoint, imageSize, overlay: this._overlay.overlayElement });
         this._overlay = null;
       },
     });
-  }
-
-  zoom(direction: 1 | -1) {
-    this._viewer.viewport.zoomBy(1 + direction * this.ZOOM_FACTOR);
   }
 }

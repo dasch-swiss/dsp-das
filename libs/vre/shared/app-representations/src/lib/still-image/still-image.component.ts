@@ -11,7 +11,6 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { RegionService } from '../region.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
@@ -57,7 +56,7 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit() {
-    this.osd.initViewer(this.osdViewerElement.nativeElement);
+    this.osd.onInit(this.osdViewerElement.nativeElement);
     this._osdDrawerService.onInit(this.resource);
     this.isViewInitialized = true;
     this._cdr.detectChanges();
