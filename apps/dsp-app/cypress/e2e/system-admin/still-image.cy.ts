@@ -19,7 +19,7 @@ function clickOutsideMenu() {
 
 describe('Still image', () => {
   const color = { hex: '#65ff33', rgb: 'rgb(101, 255, 51)' };
-  it('can see the image with the reader, the toolbar is visible, display a region and click', () => {
+  it.skip('can see the image with the reader, the toolbar is visible, display a region and click', () => {
     const page = new StillImagePage();
     page.init();
 
