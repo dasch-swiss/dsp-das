@@ -10,7 +10,7 @@ import { map, switchMap } from 'rxjs/operators';
  */
 @Injectable()
 export class RegionService {
-  private _resource!: DspResource;
+  private _resourceId = '';
 
   private _regionsSubject = new BehaviorSubject<DspResource[]>([]);
   regions$ = this._regionsSubject.asObservable();
@@ -27,26 +27,19 @@ export class RegionService {
     switchMap(value => (value ? this._highlightRegion.asObservable() : of(null)))
   );
 
-  private _imageIsLoadedSubject = new BehaviorSubject(false);
-  imageIsLoaded$ = this._imageIsLoadedSubject.asObservable();
-
   constructor(
     private _incomingService: IncomingService,
     private _cd: ChangeDetectorRef
   ) {}
 
-  onInit(resource: DspResource) {
-    this._resource = resource;
-    this.updateRegions();
-  }
-
   showRegions(value: boolean) {
     this._showRegions.next(value);
   }
 
-  updateRegions() {
-    this._getIncomingRegions().subscribe(res => {
+  updateRegions(resourceId = this._resourceId) {
+    this._getIncomingRegions(resourceId).subscribe(res => {
       this._regionsSubject.next(res);
+      this._resourceId = resourceId;
       this._cd.markForCheck();
     });
   }
@@ -56,13 +49,9 @@ export class RegionService {
     this._cd.markForCheck();
   }
 
-  imageIsLoaded() {
-    this._imageIsLoadedSubject.next(true);
-  }
-
-  private _getIncomingRegions() {
+  private _getIncomingRegions(resourceId: string) {
     const offset = 0;
-    return this._incomingService.getIncomingRegions(this._resource.res.id, offset).pipe(
+    return this._incomingService.getIncomingRegions(resourceId, offset).pipe(
       map(regions =>
         (regions as ReadResourceSequence).resources.map(_resource => {
           const z = new DspResource(_resource);

@@ -21,7 +21,7 @@ import { StillImageHelper } from './still-image-helper';
   selector: 'app-still-image',
   template: ` <div
       class="osd-container"
-      [class.drawing]="isViewInitialized && !osdDrawerService.viewer.isMouseNavEnabled()"
+      [class.drawing]="isViewInitialized && !osd.viewer.isMouseNavEnabled()"
       #osdViewer>
       <div *ngIf="compoundMode">
         <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
@@ -35,7 +35,6 @@ import { StillImageHelper } from './still-image-helper';
         *ngIf="isViewInitialized"
         [resource]="resource"
         [compoundMode]="compoundMode"
-        [viewer]="osd.viewer"
         [isPng]="isPng"
         (imageIsPng)="afterFormatChange($event)" />
     </div>`,
@@ -52,24 +51,17 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   isPng = false;
 
   constructor(
-    public osdDrawerService: OsdDrawerService,
-    public osd: OpenSeaDragonService,
-    private _region: RegionService,
+    protected osd: OpenSeaDragonService,
+    private _osdDrawerService: OsdDrawerService,
     private _cdr: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit() {
-    this.osd.viewer = this.osdViewerElement.nativeElement;
+    this.osd.initViewer(this.osdViewerElement.nativeElement);
+    this._osdDrawerService.onInit(this.resource);
     this.isViewInitialized = true;
-    this.osdDrawerService.onInit(this.osd.viewer, this.resource);
-    this.osdDrawerService.trackClickEvents();
     this._cdr.detectChanges();
-
-    this.osd.viewer.addHandler('open', () => {
-      this._region.imageIsLoaded();
-    });
-
-    this.afterFormatChange(false);
+    this._loadImages();
   }
 
   afterFormatChange(value: boolean) {

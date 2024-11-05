@@ -12,7 +12,11 @@ import { CompoundService } from './compound/compound.service';
 @Component({
   selector: 'app-resource-tabs',
   template: `
-    <mat-tab-group *ngIf="!resource.res.isDeleted" animationDuration="0ms" [(selectedIndex)]="selectedTab">
+    <mat-tab-group
+      *ngIf="!resource.res.isDeleted"
+      animationDuration="0ms"
+      [(selectedIndex)]="selectedTab"
+      (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resource.properties' | translate">
         <app-properties-display *ngIf="resource" [resource]="resource" [properties]="resource.resProps" />
       </mat-tab>
@@ -94,7 +98,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.regionService.imageIsLoaded$
+    this.regionService.showRegions$
       .pipe(
         filter(loaded => loaded),
         takeUntil(this.ngUnsubscribe)
@@ -105,7 +109,19 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
       });
   }
 
+  onTabChange(event: any) {
+    if (
+      (this.compoundService.incomingResource && event.index === 2) ||
+      (!this.compoundService.incomingResource && event.index === 1)
+    ) {
+      this._openAnnotationTab();
+    } else {
+      this.regionService.showRegions(false);
+    }
+  }
+
   private _openAnnotationTab() {
     this.selectedTab = 2;
+    this.regionService.showRegions(true);
   }
 }

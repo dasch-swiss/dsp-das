@@ -68,7 +68,7 @@ export class ResourceComponent implements OnInit {
     this.representationsToDisplay = getFileValue(resource)!;
 
     if (this._isStillImage(resource)) {
-      this._regionService.onInit(resource);
+      this._regionService.updateRegions(resource.res.id);
     }
   }
 

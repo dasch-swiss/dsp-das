@@ -37,8 +37,6 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.regionService.showRegions(true);
-
     this._subscription = this.regionService.highlightRegion$.subscribe(region => {
       this.selectedRegion = region;
       if (region !== null) {
