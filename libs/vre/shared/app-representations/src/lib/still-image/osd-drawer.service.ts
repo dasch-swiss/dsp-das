@@ -104,7 +104,7 @@ export class OsdDrawerService implements OnDestroy {
       )
       .subscribe(res => {
         const regionId = (res as ReadResource).id;
-        this._regionService.updateRegions(this.resource.id);
+        this._regionService.updateRegions();
         this._regionService.selectRegion(regionId);
       });
   }

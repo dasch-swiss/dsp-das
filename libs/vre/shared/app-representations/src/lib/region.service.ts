@@ -31,10 +31,14 @@ export class RegionService {
     this._showRegions.next(value);
   }
 
-  updateRegions(resourceId = this._resourceId) {
-    this._getIncomingRegions(resourceId).subscribe(res => {
+  initialize(resourceId: string) {
+    this._resourceId = resourceId;
+    this.updateRegions();
+  }
+
+  updateRegions() {
+    this._getIncomingRegions(this._resourceId).subscribe(res => {
       this._regionsSubject.next(res);
-      this._resourceId = resourceId;
     });
   }
 
