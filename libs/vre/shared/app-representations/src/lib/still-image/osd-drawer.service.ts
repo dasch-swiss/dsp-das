@@ -13,7 +13,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
@@ -63,9 +63,36 @@ export class OsdDrawerService implements OnDestroy {
       this._highlightRegion(region);
     });
 
-    this._osd.createdRectangle$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(overlay => {
-      this._openRegionDialog(overlay.startPoint, overlay.endPoint, overlay.imageSize, overlay.overlay);
-    });
+    this._osd.createdRectangle$
+      .pipe(takeUntil(this._ngUnsubscribe))
+      .pipe(
+        switchMap(overlay =>
+          this._dialog
+            .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
+              data: {
+                resourceIri: this.resource.id,
+              },
+            })
+            .afterClosed()
+            .pipe(map(data => ({ data, overlay })))
+        )
+      )
+      .subscribe(({ data, overlay }) => {
+        this._osd.viewer.setMouseNavEnabled(true);
+        this._osd.viewer.removeOverlay(overlay.overlay);
+        this._cdr.detectChanges();
+
+        if (data) {
+          this._uploadRegion(
+            overlay.startPoint,
+            overlay.endPoint,
+            overlay.imageSize,
+            data.color,
+            data.comment,
+            data.label
+          );
+        }
+      });
 
     this._updateRegions$.pipe(takeUntil(this._ngUnsubscribe)).subscribe();
   }
@@ -140,24 +167,7 @@ export class OsdDrawerService implements OnDestroy {
     this._createTooltip(regionLabel, regionComment, regEle, regionIri);
   }
 
-  private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {
-    this._dialog
-      .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
-        data: {
-          resourceIri: this.resource.id,
-        },
-      })
-      .afterClosed()
-      .subscribe(data => {
-        this._osd.viewer.setMouseNavEnabled(true);
-        this._osd.viewer.removeOverlay(overlay);
-        this._cdr.detectChanges();
-
-        if (data) {
-          this._uploadRegion(startPoint, endPoint, imageSize, data.color, data.comment, data.label);
-        }
-      });
-  }
+  private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {}
 
   private _uploadRegion(
     startPoint: Point2D,
