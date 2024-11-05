@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Inject, Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injectable, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
@@ -28,7 +28,6 @@ export class OsdDrawerService implements OnDestroy {
 
   constructor(
     private _osd: OpenSeaDragonService,
-    private _renderer: Renderer2,
     private _regionService: RegionService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -38,8 +37,23 @@ export class OsdDrawerService implements OnDestroy {
 
   onInit(resource: ReadResource): void {
     this.resource = resource;
-    this._paintedPolygons = {};
 
+    this._subscribeToRegions();
+    this._subscribeToSelectedRegion();
+    this._subscribeToCreatedRectangle();
+  }
+
+  private _subscribeToSelectedRegion() {
+    this._regionService.selectedRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
+      this._unhighlightAllRegions();
+      if (region === null) {
+        return;
+      }
+      this._highlightRegion(region);
+    });
+  }
+
+  private _subscribeToRegions() {
     combineLatest([this._regionService.showRegions$, this._regionService.regions$])
       .pipe(takeUntil(this._ngUnsubscribe))
       .subscribe(([showRegions, regions]) => {
@@ -52,15 +66,9 @@ export class OsdDrawerService implements OnDestroy {
           this._renderRegions();
         }
       });
+  }
 
-    this._regionService.selectedRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
-      this._unhighlightAllRegions();
-      if (region === null) {
-        return;
-      }
-      this._highlightRegion(region);
-    });
-
+  private _subscribeToCreatedRectangle() {
     this._osd.createdRectangle$
       .pipe(takeUntil(this._ngUnsubscribe))
       .pipe(
@@ -216,7 +224,7 @@ export class OsdDrawerService implements OnDestroy {
     const lineColor = geometry.lineColor;
     const lineWidth = geometry.lineWidth;
 
-    const regEle: HTMLElement = this._renderer.createElement('div');
+    const regEle: HTMLElement = document.createElement('div');
     regEle.id = regionIri;
     regEle.className = 'region';
     regEle.setAttribute('style', `outline: solid ${lineColor} ${lineWidth}px;`);
@@ -237,7 +245,7 @@ export class OsdDrawerService implements OnDestroy {
   }
 
   private _createTooltip(regionLabel: string, regionComment: string, regEle: HTMLElement, regionIri: string): void {
-    const comEle: HTMLElement = this._renderer.createElement('div');
+    const comEle: HTMLElement = document.createElement('div');
     comEle.className = 'annotation-tooltip';
     comEle.innerHTML = `<strong>${regionLabel}</strong><br>${regionComment}`;
     regEle.append(comEle);

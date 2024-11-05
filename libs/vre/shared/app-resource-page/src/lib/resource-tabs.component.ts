@@ -1,8 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { Subject } from 'rxjs';
@@ -66,15 +64,12 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   constructor(
     public regionService: RegionService,
     public compoundService: CompoundService,
-    public segmentsService: SegmentsService,
-    private _route: ActivatedRoute
+    public segmentsService: SegmentsService
   ) {}
 
   resourceClassLabel = (resource: DspResource) => resource.res.entityInfo?.classes[resource.res.type].label;
 
   ngOnInit() {
-    this._checkForAnnotationUri();
-
     this.segmentsService.highlightSegment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(segment => {
       if (segment) {
         this.selectedTab = 1;
@@ -90,15 +85,6 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ngUnsubscribe.unsubscribe();
-  }
-
-  private _checkForAnnotationUri() {
-    const annotation = this._route.snapshot.queryParamMap.get(RouteConstants.annotationQueryParam);
-    if (!annotation) {
-      return;
-    }
-
-    this.regionService.selectRegion(annotation);
   }
 
   onTabChange(event: any) {
