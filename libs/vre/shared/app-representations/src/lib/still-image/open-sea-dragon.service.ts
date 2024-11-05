@@ -23,14 +23,14 @@ export class OpenSeaDragonService {
 
   private _viewer!: OpenSeadragon.Viewer;
 
-  private _overlay: {
+  private _rectangleInDrawing: {
     overlayElement: HTMLElement;
     startPos: OpenSeadragon.Point;
     endPos?: OpenSeadragon.Point;
   } | null = null;
 
-  private _overlaySubject = new BehaviorSubject<Overlay | null>(null);
-  overlay$ = this._overlaySubject.asObservable();
+  private _createdRectangleSubject = new BehaviorSubject<Overlay | null>(null);
+  createdRectangle$ = this._createdRectangleSubject.asObservable();
 
   constructor(private _accessToken: AccessTokenService) {}
 
@@ -68,38 +68,43 @@ export class OpenSeaDragonService {
         overlayElement.style.background = this._OVERLAY_COLOR;
         const viewportPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
         viewer.addOverlay(overlayElement, new OpenSeadragon.Rect(viewportPos.x, viewportPos.y, 0, 0));
-        this._overlay = {
+        this._rectangleInDrawing = {
           overlayElement,
           startPos: viewportPos,
         };
       },
       dragHandler: event => {
-        if (!this._overlay) {
+        if (!this._rectangleInDrawing) {
           return;
         }
 
         const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
-        const diffX = viewPortPos.x - this._overlay.startPos.x;
-        const diffY = viewPortPos.y - this._overlay.startPos.y;
+        const diffX = viewPortPos.x - this._rectangleInDrawing.startPos.x;
+        const diffY = viewPortPos.y - this._rectangleInDrawing.startPos.y;
         const location = new OpenSeadragon.Rect(
-          Math.min(this._overlay.startPos.x, this._overlay.startPos.x + diffX),
-          Math.min(this._overlay.startPos.y, this._overlay.startPos.y + diffY),
+          Math.min(this._rectangleInDrawing.startPos.x, this._rectangleInDrawing.startPos.x + diffX),
+          Math.min(this._rectangleInDrawing.startPos.y, this._rectangleInDrawing.startPos.y + diffY),
           Math.abs(diffX),
           Math.abs(diffY)
         );
 
-        viewer.updateOverlay(this._overlay.overlayElement, location);
-        this._overlay.endPos = viewPortPos;
+        viewer.updateOverlay(this._rectangleInDrawing.overlayElement, location);
+        this._rectangleInDrawing.endPos = viewPortPos;
       },
       releaseHandler: () => {
-        if (!this._overlay) {
+        if (!this._rectangleInDrawing) {
           return;
         }
         const imageSize = viewer.world.getItemAt(0).getContentSize();
-        const startPoint = viewer.viewport.viewportToImageCoordinates(this._overlay.startPos);
-        const endPoint = viewer.viewport.viewportToImageCoordinates(this._overlay.endPos!);
-        this._overlaySubject.next({ startPoint, endPoint, imageSize, overlay: this._overlay.overlayElement });
-        this._overlay = null;
+        const startPoint = viewer.viewport.viewportToImageCoordinates(this._rectangleInDrawing.startPos);
+        const endPoint = viewer.viewport.viewportToImageCoordinates(this._rectangleInDrawing.endPos!);
+        this._createdRectangleSubject.next({
+          startPoint,
+          endPoint,
+          imageSize,
+          overlay: this._rectangleInDrawing.overlayElement,
+        });
+        this._rectangleInDrawing = null;
       },
     });
   }

@@ -63,7 +63,7 @@ export class OsdDrawerService implements OnDestroy {
       this._highlightRegion(region);
     });
 
-    this._osd.overlay$.pipe(takeUntil(this._destroy)).subscribe(overlay => {
+    this._osd.createdRectangle$.pipe(takeUntil(this._destroy)).subscribe(overlay => {
       if (overlay) {
         this._openRegionDialog(overlay.startPoint, overlay.endPoint, overlay.imageSize, overlay.overlay);
       }
