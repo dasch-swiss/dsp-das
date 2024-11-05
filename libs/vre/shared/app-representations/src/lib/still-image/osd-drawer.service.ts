@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
   KnoraApiConnection,
-  Point2D,
   ReadColorValue,
   ReadResource,
   ReadStillImageFileValue,
@@ -179,36 +178,6 @@ export class OsdDrawerService implements OnDestroy {
 
     this._paintedPolygons[regionIri].push(regEle);
     this._createTooltip(regionLabel, regionComment, regEle, regionIri);
-  }
-
-  private _openRegionDialog(startPoint: Point2D, endPoint: Point2D, imageSize: Point2D, overlay: Element): void {}
-
-  private _uploadRegion(
-    startPoint: Point2D,
-    endPoint: Point2D,
-    imageSize: Point2D,
-    color: string,
-    comment: string,
-    label: string
-  ) {
-    this._dspApiConnection.v2.res
-      .createResource(
-        StillImageHelper.getPayloadUploadRegion(
-          this.resource.id,
-          this.resource.attachedToProject,
-          startPoint,
-          endPoint,
-          imageSize,
-          color,
-          comment,
-          label
-        )
-      )
-      .subscribe(res => {
-        const regionId = (res as ReadResource).id;
-        this._regionService.updateRegions(this.resource.id);
-        this._regionService.highlightRegion(regionId);
-      });
   }
 
   private _highlightRegion(regionIri: string) {
