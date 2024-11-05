@@ -53,7 +53,7 @@ export class OsdDrawerService implements OnDestroy {
         }
       });
 
-    this._regionService.highlightRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
+    this._regionService.selectedRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
       this._unhighlightAllRegions();
       if (region === null) {
         return;
@@ -105,7 +105,7 @@ export class OsdDrawerService implements OnDestroy {
       .subscribe(res => {
         const regionId = (res as ReadResource).id;
         this._regionService.updateRegions(this.resource.id);
-        this._regionService.highlightRegion(regionId);
+        this._regionService.selectRegion(regionId);
       });
   }
 
@@ -172,7 +172,7 @@ export class OsdDrawerService implements OnDestroy {
         location: loc,
       })
       .addHandler('canvas-click', event => {
-        this._regionService.highlightRegion((<any>event).originalTarget.dataset.regionIri);
+        this._regionService.selectRegion((<any>event).originalTarget.dataset.regionIri);
       });
 
     this._paintedPolygons[regionIri].push(regEle);

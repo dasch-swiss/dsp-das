@@ -81,7 +81,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.regionService.highlightRegion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(region => {
+    this.regionService.selectedRegion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(region => {
       if (region) {
         this.selectedTab = 2;
       }
@@ -98,7 +98,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.regionService.highlightRegion(annotation);
+    this.regionService.selectRegion(annotation);
   }
 
   onTabChange(event: any) {

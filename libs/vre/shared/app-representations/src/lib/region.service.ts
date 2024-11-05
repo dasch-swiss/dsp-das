@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -22,13 +22,10 @@ export class RegionService {
   private _showRegions = new BehaviorSubject(false);
   showRegions$ = this._showRegions.asObservable();
 
-  private _highlightRegion = new BehaviorSubject<string | null>(null);
-  highlightRegion$ = this._highlightRegion.asObservable();
+  private _selectedRegion = new BehaviorSubject<string | null>(null);
+  selectedRegion$ = this._selectedRegion.asObservable();
 
-  constructor(
-    private _incomingService: IncomingService,
-    private _cd: ChangeDetectorRef
-  ) {}
+  constructor(private _incomingService: IncomingService) {}
 
   showRegions(value: boolean) {
     this._showRegions.next(value);
@@ -38,13 +35,11 @@ export class RegionService {
     this._getIncomingRegions(resourceId).subscribe(res => {
       this._regionsSubject.next(res);
       this._resourceId = resourceId;
-      this._cd.markForCheck();
     });
   }
 
-  highlightRegion(regionIri: string) {
-    this._highlightRegion.next(regionIri);
-    this._cd.markForCheck();
+  selectRegion(regionIri: string) {
+    this._selectedRegion.next(regionIri);
   }
 
   private _getIncomingRegions(resourceId: string) {
