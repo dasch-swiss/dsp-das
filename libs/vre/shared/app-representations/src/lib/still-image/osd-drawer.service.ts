@@ -39,7 +39,7 @@ export class OsdDrawerService implements OnDestroy {
     })
   );
 
-  private _destroy = new Subject<void>();
+  private _ngUnsubscribe = new Subject<void>();
 
   constructor(
     private _osd: OpenSeaDragonService,
@@ -55,7 +55,7 @@ export class OsdDrawerService implements OnDestroy {
     this.resource = resource;
     this._paintedPolygons = {};
 
-    this._regionService.highlightRegion$.pipe(takeUntil(this._destroy)).subscribe(region => {
+    this._regionService.highlightRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
       this._unhighlightAllRegions();
       if (region === null) {
         return;
@@ -63,13 +63,11 @@ export class OsdDrawerService implements OnDestroy {
       this._highlightRegion(region);
     });
 
-    this._osd.createdRectangle$.pipe(takeUntil(this._destroy)).subscribe(overlay => {
-      if (overlay) {
-        this._openRegionDialog(overlay.startPoint, overlay.endPoint, overlay.imageSize, overlay.overlay);
-      }
+    this._osd.createdRectangle$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(overlay => {
+      this._openRegionDialog(overlay.startPoint, overlay.endPoint, overlay.imageSize, overlay.overlay);
     });
 
-    this._updateRegions$.pipe(takeUntil(this._destroy)).subscribe();
+    this._updateRegions$.pipe(takeUntil(this._ngUnsubscribe)).subscribe();
   }
 
   private _removeOverlays(keep: DspResource[] = []): void {
@@ -256,7 +254,6 @@ export class OsdDrawerService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._destroy.next();
-    this._destroy.complete();
+    this._ngUnsubscribe.complete();
   }
 }

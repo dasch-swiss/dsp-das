@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Point2D } from '@dasch-swiss/dsp-js';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import OpenSeadragon from 'openseadragon';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { osdViewerConfig } from './osd-viewer.config';
 
 interface Overlay {
@@ -29,7 +30,7 @@ export class OpenSeaDragonService {
     endPos?: OpenSeadragon.Point;
   } | null = null;
 
-  private _createdRectangleSubject = new BehaviorSubject<Overlay | null>(null);
+  private _createdRectangleSubject = new Subject<Overlay>();
   createdRectangle$ = this._createdRectangleSubject.asObservable();
 
   constructor(private _accessToken: AccessTokenService) {}
@@ -75,7 +76,7 @@ export class OpenSeaDragonService {
       },
       dragHandler: event => {
         if (!this._rectangleInDrawing) {
-          return;
+          throw new AppError('Rectangle is not set');
         }
 
         const viewPortPos = viewer.viewport.pointFromPixel((event as OpenSeadragon.ViewerEvent).position!);
@@ -93,17 +94,23 @@ export class OpenSeaDragonService {
       },
       releaseHandler: () => {
         if (!this._rectangleInDrawing) {
+          throw new AppError('Rectangle is not set');
+        }
+
+        if (!this._rectangleInDrawing.endPos) {
           return;
         }
+
         const imageSize = viewer.world.getItemAt(0).getContentSize();
         const startPoint = viewer.viewport.viewportToImageCoordinates(this._rectangleInDrawing.startPos);
-        const endPoint = viewer.viewport.viewportToImageCoordinates(this._rectangleInDrawing.endPos!);
+        const endPoint = viewer.viewport.viewportToImageCoordinates(this._rectangleInDrawing.endPos);
         this._createdRectangleSubject.next({
           startPoint,
           endPoint,
           imageSize,
           overlay: this._rectangleInDrawing.overlayElement,
         });
+
         this._rectangleInDrawing = null;
       },
     });
