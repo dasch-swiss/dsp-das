@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from 'cypress';
+import { checkUnusedENTranslations, compareTranslationFileWithEn } from './cypress/plugins/translations';
 
 export default defineConfig({
   projectId: 'n5b5id',
@@ -15,6 +16,13 @@ export default defineConfig({
       apiUrl: 'http://0.0.0.0:3333',
       authToken:
         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwLjAuMC4wOjMzMzMiLCJzdWIiOiJodHRwOi8vcmRmaC5jaC91c2Vycy9yb290IiwiYXVkIjpbIktub3JhIiwiU2lwaSIsImh0dHA6Ly9sb2NhbGhvc3Q6MzM0MCJdLCJleHAiOjE3MzE1NzAwNzcsImlhdCI6MTcyODk3ODA3NywianRpIjoiX09hYm15ZWFSSTZ0NlpzczNRQ0djUSIsInNjb3BlIjoiYWRtaW4ifQ.xZKAXIKfVk2F35CO1luzi1fZnZgyWUM65m0FZ7h67RA',
+    },
+    setupNodeEvents(on, config) {
+      on('task', {
+        checkUnusedENTranslations,
+        compareTranslationFileWithEn,
+      });
+      return config;
     },
   },
 });

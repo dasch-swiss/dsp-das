@@ -63,3 +63,4 @@ apps/dsp-app/cypress/screenshots
 
 # Sentry Config File
 .sentryclirc
+/apps/dsp-app/cypress/fixtures/temp/translations-in-use.json
