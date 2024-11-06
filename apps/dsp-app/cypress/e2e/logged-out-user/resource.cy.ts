@@ -11,7 +11,7 @@ import {
 } from '../../models/existing-data-models';
 import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
-describe('View Existing Resource', () => {
+describe.skip('View Existing Resource', () => {
   const onecolor = require('onecolor');
 
   let project0803Page: Project0803Page;

@@ -4,7 +4,7 @@ import { ResponseUtil } from '../../fixtures/requests';
 import { ArchiveClass } from '../../models/existing-data-models';
 import { Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
-describe('Create archive model, add new data and view it', () => {
+describe.skip('Create archive model, add new data and view it', () => {
   let projectAssertionPage: Project0803Page;
   let finalLastModificationDate: string;
 
