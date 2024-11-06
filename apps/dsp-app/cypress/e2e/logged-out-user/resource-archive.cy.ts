@@ -5,7 +5,6 @@ import { ArchiveClass } from '../../models/existing-data-models';
 import { Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
-  const path = require('path');
   let projectAssertionPage: Project0803Page;
   let finalLastModificationDate: string;
 
@@ -19,18 +18,18 @@ describe('Create archive model, add new data and view it', () => {
 
   beforeEach(() => {
     projectAssertionPage = new Project0803Page();
-
-    cy.loginAdmin();
-    cy.request(
-      'POST',
-      `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      projectAssertionPage.payloads.createClassPayload(
+    cy.postAuthenticated({
+      url: `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+      body: projectAssertionPage.payloads.createClassPayload(
         archiveData.className,
         'http://api.knora.org/ontology/knora-api/v2#ArchiveRepresentation'
-      )
-    ).then(response => {
+      ),
+    }).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
-      cy.uploadFile(`../uploads/${archiveFile}`, projectAssertionPage.projectShortCode).then(response => {
+      cy.uploadFile({
+        filePath: `../uploads/${archiveFile}`,
+        projectShortCode: projectAssertionPage.projectShortCode,
+      }).then(response => {
         archiveData.file = (response as UploadedFileResponse).internalFilename;
         const data = projectAssertionPage.payloads.archive(archiveData);
         cy.createResource(data);
@@ -46,8 +45,6 @@ describe('Create archive model, add new data and view it', () => {
         });
       });
     });
-
-    cy.logout();
   });
 
   it('archive representation should be present', () => {

@@ -86,25 +86,43 @@ describe('View Existing Resource', () => {
     project0803Page = new Project0803Page();
     project0001Page = new Project0001Page();
 
-    cy.loginAdmin();
-    cy.uploadFile(`../${uploadedImageFilePath}`, Project0803Page.projectShortCode).then(response => {
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedImageFilePath}`,
+      projectShortCode: Project0803Page.projectShortCode,
+      mimeType: 'image/png',
+    }).then(response => {
       sidebandData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0803Page.payloads.sideband(sidebandData));
     });
-    cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
+
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedVideoFilePath}`,
+      projectShortCode: Project0001Page.projectShortCode,
+    }).then(response => {
       videoThingData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.videoThing(videoThingData));
     });
-    cy.uploadFile(`../${uploadedVideoFilePath}`, Project0001Page.projectShortCode).then(response => {
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedVideoFilePath}`,
+      projectShortCode: Project0001Page.projectShortCode,
+    }).then(response => {
       const videoThingData2 = createVideoThingClass(faker.lorem.word());
       videoThingData2.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.videoThing(videoThingData2));
     });
-    cy.uploadFile(`../${uploadedAudioFilePath}`, Project0001Page.projectShortCode).then(response => {
+
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedAudioFilePath}`,
+      projectShortCode: Project0001Page.projectShortCode,
+    }).then(response => {
       audioThingData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.audioThing(audioThingData));
     });
-    cy.uploadFile(`../${uploadedDocumentFilePath}`, Project0001Page.projectShortCode).then(response => {
+
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedDocumentFilePath}`,
+      projectShortCode: Project0001Page.projectShortCode,
+    }).then(response => {
       documentData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.document(documentData));
       cy.screenshot('sipi-uploads-screenshot', {
@@ -118,8 +136,8 @@ describe('View Existing Resource', () => {
         }
       );
     });
+
     cy.createResource(project0803Page.payloads.misc(miscData));
-    cy.logout();
   });
 
   it('should not be accessible and return to page', () => {

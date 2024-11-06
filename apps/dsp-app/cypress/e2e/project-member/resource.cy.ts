@@ -18,15 +18,15 @@ describe('Check project admin existing resource functionality', () => {
   before(() => {
     cy.resetDatabase();
     Cypress.env('skipDatabaseCleanup', true);
-
     project0001Page = new Project0001Page();
-
-    cy.loginAdmin();
-    cy.uploadFile(`../${uploadedImageFilePath}`, Project0001Page.projectShortCode).then(response => {
+    cy.uploadFile(<Cypress.IUploadFileParameters>{
+      filePath: `../${uploadedImageFilePath}`,
+      projectShortCode: Project0001Page.projectShortCode,
+      mimeType: 'image/png',
+    }).then(response => {
       thingPictureData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.picture(thingPictureData));
     });
-    cy.logout();
   });
 
   beforeEach(() => {
