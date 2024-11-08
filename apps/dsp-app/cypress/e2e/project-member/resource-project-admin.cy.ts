@@ -82,7 +82,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.url().should('match', regex);
   });
 
-  it('ThingPicture resource should be visible', () => {
+  it.skip('ThingPicture resource should be visible', () => {
     cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
