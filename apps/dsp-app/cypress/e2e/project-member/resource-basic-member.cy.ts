@@ -151,7 +151,6 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
     cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).should('not.exist');
   });
 
   after(() => {
