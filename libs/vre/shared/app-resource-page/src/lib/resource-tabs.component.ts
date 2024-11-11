@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
@@ -19,11 +19,9 @@ import { CompoundService } from './compound/compound.service';
         <app-properties-display *ngIf="resource" [resource]="resource" [properties]="resource.resProps" />
       </mat-tab>
 
-      <mat-tab
-        *ngIf="compoundService.incomingResource as incomingResource"
-        #matTabIncoming
-        [label]="resourceClassLabel(incomingResource)">
+      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
         <app-properties-display
+          *ngIf="incomingResource"
           [resource]="incomingResource"
           [properties]="incomingResource.resProps"
           [displayLabel]="true" />
@@ -54,16 +52,18 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
 
   selectedTab = 0;
+  incomingResource: DspResource | undefined;
 
   private ngUnsubscribe = new Subject<void>();
 
   get displayAnnotations() {
-    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.compoundService.exists;
+    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.incomingResource;
   }
 
   constructor(
+    private _cdr: ChangeDetectorRef,
     public regionService: RegionService,
-    public compoundService: CompoundService,
+    private _compoundService: CompoundService,
     public segmentsService: SegmentsService
   ) {}
 
@@ -74,6 +74,11 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
       if (segment) {
         this.selectedTab = 1;
       }
+    });
+
+    this._compoundService.incomingResource$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(resource => {
+      this.incomingResource = resource;
+      this._cdr.detectChanges();
     });
 
     this.regionService.selectedRegion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(region => {
@@ -88,10 +93,8 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   }
 
   onTabChange(event: any) {
-    if (
-      (this.compoundService.incomingResource && event.index === 2) ||
-      (!this.compoundService.incomingResource && event.index === 1)
-    ) {
+    this.selectedTab = event.index;
+    if ((this.incomingResource && event.index === 2) || (!this.incomingResource && event.index === 1)) {
       this._openAnnotationTab();
     } else {
       this.regionService.showRegions(false);

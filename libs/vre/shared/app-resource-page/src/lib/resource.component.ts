@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -18,11 +18,9 @@ import { CompoundService } from './compound/compound.service';
       <div class="resource-view">
         <app-resource-header [resource]="resource" />
 
-        <ng-container *ngIf="isCompoundNavigation === false; else compoundViewerTpl">
+        <ng-container *ngIf="!isCompoundNavigation; else compoundViewerTpl">
           <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
         </ng-container>
-
-        <dasch-swiss-app-progress-indicator *ngIf="!pageIsLoaded()" />
 
         <app-resource-tabs [resource]="resource" />
       </div>
@@ -39,10 +37,11 @@ export class ResourceComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) isDifferentResource!: boolean;
   representationsToDisplay!: ReadFileValue;
-  isCompoundNavigation: boolean | null = null;
+  isCompoundNavigation: boolean = false;
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
+    private _cdr: ChangeDetectorRef,
     private _incomingService: IncomingService,
     private _compoundService: CompoundService,
     private _regionService: RegionService,
@@ -54,20 +53,12 @@ export class ResourceComponent implements OnInit {
     this._onInit(this.resource, this.isDifferentResource);
   }
 
-  pageIsLoaded() {
-    return (
-      this.isCompoundNavigation === false ||
-      (this.isCompoundNavigation === true && this._compoundService.incomingResource !== undefined)
-    );
-  }
-
   private _onInit(resource: DspResource, isDifferentResource: boolean) {
     if (this._isObjectWithoutRepresentation(resource)) {
       this._checkForCompoundNavigation(resource, isDifferentResource);
       return;
     }
 
-    this.isCompoundNavigation = false;
     this.representationsToDisplay = getFileValue(resource)!;
 
     if (this._isStillImage(resource)) {
@@ -103,17 +94,14 @@ export class ResourceComponent implements OnInit {
 
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
-
+          this._cdr.detectChanges();
           this._compoundService.onInit(
             this._compoundService.exists && !isDifferentResource
               ? this._compoundService.compoundPosition!
               : new DspCompoundPosition(countQuery_.numberOfResults),
             this.resource
           );
-          return;
         }
-
-        this.isCompoundNavigation = false;
       });
   }
 }
