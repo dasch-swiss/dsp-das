@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { FileRepresentationType, UploadedFile, UploadFileService } from '@dasch-swiss/vre/shared/app-representations';
+import {
+  FileRepresentationType,
+  UploadedFileResponse,
+  UploadFileService,
+} from '@dasch-swiss/vre/shared/app-representations';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
@@ -18,7 +21,7 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
         (fileDropped)="_addFile($event.item(0))"
         style="cursor: pointer">
         <div style="text-align: center; padding: 16px; border: 1px solid black">
-          <input hidden type="file" (change)="addFileFromClick($event)" #fileInput />
+          <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
           <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
           <div>Upload file</div>
           <div class="mat-subtitle-2">
@@ -36,9 +39,6 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
     </ng-template>
 
     <ng-template #showFileTemplate>
-      <div *ngIf="previewUrl" style="display: flex; justify-content: center">
-        <img [src]="previewUrl" alt="File Preview" style="max-width: 100%; max-height: 200px; margin-bottom: 16px" />
-      </div>
       <table *ngIf="fileToUpload" style="text-align: center; width: 100%; border: 1px solid lightgray">
         <tr style="background: lightblue">
           <th>Name</th>
@@ -64,12 +64,11 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
   @Output() afterFileRemoved = new EventEmitter<void>();
-  @Output() afterFileUploaded = new EventEmitter<UploadedFile>();
+  @Output() afterFileUploaded = new EventEmitter<UploadedFileResponse>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly Math = Math;
 
-  previewUrl: SafeUrl | null = null;
   fileToUpload: File | undefined;
   loading = false;
 
@@ -91,7 +90,6 @@ export class UploadComponent {
     private _store: Store,
     private _upload: UploadFileService,
     private _cdr: ChangeDetectorRef,
-    private _sanitizer: DomSanitizer,
     private _actions$: Actions
   ) {}
 
@@ -148,15 +146,6 @@ export class UploadComponent {
         })
       )
       .subscribe(res => {
-        switch (this.representation) {
-          case Constants.HasStillImageFileValue:
-            this.previewUrl = this._sanitizer.bypassSecurityTrustUrl(res.thumbnailUrl);
-            break;
-          case Constants.HasDocumentFileValue:
-            this.previewUrl = res.baseUrl;
-            break;
-        }
-
         this.afterFileUploaded.emit(res);
       });
 

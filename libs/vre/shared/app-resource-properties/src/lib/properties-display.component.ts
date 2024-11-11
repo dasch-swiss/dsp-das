@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
@@ -15,7 +24,7 @@ import { sortByKeys } from './sortByKeys';
   selector: 'app-properties-display',
   template: `
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">
-      <h3 style="margin: 0 16px" *ngIf="displayLabel">{{ resource.res.label }}</h3>
+      <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar
           [showToggleProperties]="true"
@@ -25,7 +34,8 @@ import { sortByKeys } from './sortByKeys';
           *ngIf="displayLabel"
           [adminPermissions]="adminPermissions"
           [resource]="resource"
-          [linkToNewTab]="linkToNewTab"></app-resource-toolbar>
+          [linkToNewTab]="linkToNewTab"
+          (afterResourceDeleted)="afterResourceDeleted.emit()" />
       </div>
     </div>
 
@@ -84,7 +94,7 @@ import { sortByKeys } from './sortByKeys';
       <app-incoming-standoff-link-value
         *ngIf="(incomingLinks$ | async)?.length > 0"
         [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
-      <dasch-swiss-app-pager #pager (pageChanged)="pageChanged()"> </dasch-swiss-app-pager>
+      <dasch-swiss-app-pager #pager (pageChanged)="pageChanged()"></dasch-swiss-app-pager>
     </app-property-row>
 
     <ng-template #noProperties>
@@ -113,6 +123,7 @@ import { sortByKeys } from './sortByKeys';
           border-bottom: none;
         }
       }
+
       .show-property-row {
         display: block;
       }
@@ -132,6 +143,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Input() displayLabel = false;
   @Input() adminPermissions = false;
   @Input() linkToNewTab?: string;
+  @Output() afterResourceDeleted = new EventEmitter();
 
   @ViewChild('pager', { static: false })
   pagerComponent: PagerComponent | undefined;

@@ -1,13 +1,17 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { BehaviorSubject, of } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 
+/**
+ * Regions, also called annotations, are used to mark specific areas on an image.
+ * This service handles the loading, display and selection of a resource's regions.
+ */
 @Injectable()
 export class RegionService {
-  private _resource!: DspResource;
+  private _resourceId!: string;
 
   private _regionsSubject = new BehaviorSubject<DspResource[]>([]);
   regions$ = this._regionsSubject.asObservable();
@@ -19,53 +23,38 @@ export class RegionService {
   private _showRegions = new BehaviorSubject(false);
   showRegions$ = this._showRegions.asObservable();
 
-  private _highlightRegion = new BehaviorSubject<string | null>(null);
-  highlightRegion$ = this.showRegions$.pipe(
-    switchMap(value => (value ? this._highlightRegion.asObservable() : of(null)))
-  );
+  private _selectedRegion = new BehaviorSubject<string | null>(null);
+  selectedRegion$ = this._selectedRegion.asObservable();
 
-  private _imageIsLoadedSubject = new BehaviorSubject(false);
-  imageIsLoaded$ = this._imageIsLoadedSubject.asObservable();
+  private _ngUnsubscribe = new Subject<void>();
 
-  constructor(
-    private _incomingService: IncomingService,
-    private _cd: ChangeDetectorRef
-  ) {}
+  constructor(private _incomingService: IncomingService) {}
 
-  reset() {
-    this._regionsSubject.next([]);
+  /** This method acts as a constructor. */
+  initialize(resourceId: string) {
+    this._resourceId = resourceId;
+    this.updateRegions$().pipe(takeUntil(this._ngUnsubscribe)).subscribe();
   }
 
-  onInit(resource: DspResource) {
-    this._resource = resource;
-    this.updateRegions();
+  updateRegions$() {
+    return this._getIncomingRegions(this._resourceId).pipe(
+      tap(res => {
+        this._regionsSubject.next(res);
+      })
+    );
   }
 
   showRegions(value: boolean) {
     this._showRegions.next(value);
   }
 
-  updateRegions() {
-    this._getIncomingRegions()
-      .pipe(take(1))
-      .subscribe(res => {
-        this._regionsSubject.next(res);
-        this._cd.markForCheck();
-      });
+  selectRegion(regionIri: string) {
+    this._selectedRegion.next(regionIri);
   }
 
-  highlightRegion(regionIri: string) {
-    this._highlightRegion.next(regionIri);
-    this._cd.markForCheck();
-  }
-
-  imageIsLoaded() {
-    this._imageIsLoadedSubject.next(true);
-  }
-
-  private _getIncomingRegions() {
+  private _getIncomingRegions(resourceId: string) {
     const offset = 0;
-    return this._incomingService.getIncomingRegions(this._resource.res.id, offset).pipe(
+    return this._incomingService.getIncomingRegions(resourceId, offset).pipe(
       map(regions =>
         (regions as ReadResourceSequence).resources.map(_resource => {
           const z = new DspResource(_resource);
