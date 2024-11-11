@@ -139,18 +139,21 @@ describe('Check project admin existing resource functionality', () => {
       filePath: `../${uploadedImageFilePath}`,
       projectShortCode: Project0001Page.projectShortCode,
       mimeType: 'image/png',
-    }).then(response => {
-      resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
-      cy.createResource(project0001Page.payloads.picture(resourceToDelete), true);
-    });
-    cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    project0001Page.visitClass('ThingPicture');
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
-    cy.get('[data-cy=resource-toolbar-more-button]').click();
-    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
-    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
-    cy.get('[data-cy=app-delete-resource-dialog-button]').click();
-    cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
+    })
+      .then(response => {
+        resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
+        cy.createResource(project0001Page.payloads.picture(resourceToDelete), true);
+      })
+      .then(() => {
+        cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
+        project0001Page.visitClass('ThingPicture');
+        cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
+        cy.get('[data-cy=resource-toolbar-more-button]').click();
+        cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
+        cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
+        cy.get('[data-cy=app-delete-resource-dialog-button]').click();
+        cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
+      });
   });
 
   after(() => {
