@@ -34,10 +34,6 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
   templateUrl: './still-image-toolbar.component.html',
   styles: [
     `
-      button {
-        width: 32px !important;
-      }
-
       .toolbar {
         display: flex;
         justify-content: space-between;
