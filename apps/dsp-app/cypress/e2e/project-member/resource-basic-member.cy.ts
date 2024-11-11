@@ -117,7 +117,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
-    cy.get('@resourceRequest.all').should('have.length', 3);
+    cy.get('@resourceRequest.all').should('have.length', 2);
 
     cy.get('[data-cy=property-value]').scrollIntoView();
     cy.get('[data-cy=property-value]').first().trigger('mouseenter');
