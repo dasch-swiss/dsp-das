@@ -13,7 +13,7 @@ import { CompoundService } from './compound/compound.service';
     <mat-tab-group
       *ngIf="!resource.res.isDeleted"
       animationDuration="0ms"
-      [(selectedIndex)]="selectedTab"
+      [selectedIndex]="selectedTab"
       (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resource.properties' | translate">
         <app-properties-display *ngIf="resource" [resource]="resource" [properties]="resource.resProps" />
