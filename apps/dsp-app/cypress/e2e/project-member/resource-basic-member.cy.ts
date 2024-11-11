@@ -33,6 +33,23 @@ describe('Check project admin existing resource functionality', () => {
       thingPictureData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.picture(thingPictureData));
     });
+
+    cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
+      const users: UserProfiles = json;
+      cy.login({
+        username: users.anythingProjectMember_username,
+        password: users.anythingProjectMember_password,
+      }).then(() => {
+        cy.uploadFile(<Cypress.IUploadFileParameters>{
+          filePath: `../${uploadedImageFilePath}`,
+          projectShortCode: Project0001Page.projectShortCode,
+          mimeType: 'image/png',
+        }).then(response => {
+          resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
+          cy.createResource(project0001Page.payloads.picture(resourceToDelete), true);
+        });
+      });
+    });
   });
 
   beforeEach(() => {
@@ -85,6 +102,7 @@ describe('Check project admin existing resource functionality', () => {
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
+    cy.intercept('GET', `**/resources/**`).as('resourceRequest');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
     cy.get('[data-cy=edit-label-button]').should('be.visible').click();
     const newLabel = faker.lorem.word();
@@ -98,6 +116,8 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
+    cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
+    cy.get('@resourceRequest.all').should('have.length', 3);
 
     cy.get('[data-cy=property-value]').scrollIntoView();
     cy.get('[data-cy=property-value]').first().trigger('mouseenter');
@@ -135,25 +155,14 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('Self created resource should be deleted', () => {
-    cy.uploadFile(<Cypress.IUploadFileParameters>{
-      filePath: `../${uploadedImageFilePath}`,
-      projectShortCode: Project0001Page.projectShortCode,
-      mimeType: 'image/png',
-    })
-      .then(response => {
-        resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
-        cy.createResource(project0001Page.payloads.picture(resourceToDelete), true);
-      })
-      .then(() => {
-        cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-        project0001Page.visitClass('ThingPicture');
-        cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
-        cy.get('[data-cy=resource-toolbar-more-button]').click();
-        cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
-        cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
-        cy.get('[data-cy=app-delete-resource-dialog-button]').click();
-        cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
-      });
+    cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
+    project0001Page.visitClass('ThingPicture');
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
+    cy.get('[data-cy=resource-toolbar-more-button]').click();
+    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
+    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
+    cy.get('[data-cy=app-delete-resource-dialog-button]').click();
+    cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
 
   after(() => {
