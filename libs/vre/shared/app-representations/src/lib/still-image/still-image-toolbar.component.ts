@@ -38,6 +38,10 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
         display: flex;
         justify-content: space-between;
         padding-right: 16px;
+
+        button {
+          width: 32px !important;
+        }
       }
     `,
   ],
