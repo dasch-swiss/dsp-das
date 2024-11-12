@@ -51,8 +51,8 @@ export class RepresentationService {
     this._http
       .get(url, {
         responseType: 'blob',
-        withCredentials: withCredentials,
-        headers: headers,
+        withCredentials,
+        headers,
       })
       .pipe(take(1))
       .subscribe(res => {
