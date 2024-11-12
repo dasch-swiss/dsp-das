@@ -51,8 +51,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
    * @private
    */
   private _reloadEditor(resource: DspResource) {
-    this.resource = undefined;
-    this._cdr.detectChanges();
     this.resource = resource;
     this._cdr.detectChanges();
   }
