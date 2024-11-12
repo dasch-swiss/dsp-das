@@ -4,13 +4,13 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   FileRepresentation,
-  getFileValue,
   RepresentationConstants,
   RepresentationService,
+  getFileValue,
 } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
@@ -21,12 +21,14 @@ import { filter, map } from 'rxjs/operators';
       class="dsp-representation stillimage"
       [compoundMode]="false"
       *ngSwitchCase="representationConstants.stillImage"
+      [attachedProject]="attachedProject$ | async"
       [resource]="resource.res" />
     <app-still-image
       #stillImage
       [compoundMode]="false"
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.externalStillImage"
+      [attachedProject]="attachedProject$ | async"
       [resource]="resource.res" />
 
     <app-document

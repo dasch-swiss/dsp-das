@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
+import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
@@ -33,6 +33,7 @@ import { StillImageHelper } from './still-image-helper';
       <app-still-image-toolbar
         *ngIf="isViewInitialized"
         [resource]="resource"
+        [attachedProject]="attachedProject"
         [compoundMode]="compoundMode"
         [isPng]="isPng"
         (imageIsPng)="afterFormatChange($event)" />
@@ -44,6 +45,7 @@ import { StillImageHelper } from './still-image-helper';
 export class StillImageComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) resource!: ReadResource;
+  @Input() attachedProject: ReadProject | undefined;
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
   isViewInitialized = false;
