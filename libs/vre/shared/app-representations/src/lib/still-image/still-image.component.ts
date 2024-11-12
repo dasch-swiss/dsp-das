@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -58,7 +57,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.isViewInitialized && changes['resource'] && this.resource) {
-      this._loadImages();
+      this._loadImage();
     }
   }
 
@@ -66,19 +65,19 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
     this.osd.onInit(this.osdViewerElement.nativeElement);
     this._osdDrawerService.onInit(this.resource);
     this.isViewInitialized = true;
-    this._loadImages();
+    this._loadImage();
   }
 
   afterFormatChange(value: boolean) {
     this.isPng = value;
-    this._loadImages();
+    this._loadImage();
   }
 
   ngOnDestroy() {
     this.osd.viewer.destroy();
   }
 
-  private _loadImages() {
+  private _loadImage() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
 
     switch (image.type) {
