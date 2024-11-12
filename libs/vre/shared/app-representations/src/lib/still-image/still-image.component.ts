@@ -11,6 +11,11 @@ import {
 import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RepresentationService } from '../representation.service';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
@@ -33,7 +38,7 @@ import { StillImageHelper } from './still-image-helper';
       <app-still-image-toolbar
         *ngIf="isViewInitialized"
         [resource]="resource"
-        [attachedProject]="attachedProject"
+        [attachedProject]="attachedProject$ | async"
         [compoundMode]="compoundMode"
         [isPng]="isPng"
         (imageIsPng)="afterFormatChange($event)" />
@@ -45,16 +50,23 @@ import { StillImageHelper } from './still-image-helper';
 export class StillImageComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) resource!: ReadResource;
-  @Input() attachedProject: ReadProject | undefined;
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
 
   isViewInitialized = false;
   isPng = false;
 
+  attachedProject$: Observable<ReadProject | undefined> = this._store.select(ResourceSelectors.attachedProjects).pipe(
+    map(attachedProjects => {
+      return this._rs.getParentResourceAttachedProject(attachedProjects, this.resource);
+    })
+  );
+
   constructor(
     protected osd: OpenSeaDragonService,
     private _osdDrawerService: OsdDrawerService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _store: Store,
+    private _rs: RepresentationService
   ) {}
 
   ngAfterViewInit() {

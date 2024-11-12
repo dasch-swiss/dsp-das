@@ -11,7 +11,7 @@ import {
 import { ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-representation',
@@ -21,14 +21,12 @@ import { filter, map } from 'rxjs/operators';
       class="dsp-representation stillimage"
       [compoundMode]="false"
       *ngSwitchCase="representationConstants.stillImage"
-      [attachedProject]="attachedProject$ | async"
       [resource]="resource.res" />
     <app-still-image
       #stillImage
       [compoundMode]="false"
       class="dsp-representation stillimage"
       *ngSwitchCase="representationConstants.externalStillImage"
-      [attachedProject]="attachedProject$ | async"
       [resource]="resource.res" />
 
     <app-document
@@ -94,10 +92,9 @@ export class ResourceRepresentationComponent implements OnInit {
     return this.resource.res.attachedToProject;
   }
 
-  attachedProject$: Observable<ReadProject | undefined> = this._store.select(ResourceSelectors.attachedProjects).pipe(
-    filter(attachedProjects => !!attachedProjects && Object.values(attachedProjects).length > 0),
-    map(attachedProjects => this._rs.getParentResourceAttachedProject(attachedProjects, this.resource.res))
-  );
+  attachedProject$: Observable<ReadProject | undefined> = this._store
+    .select(ResourceSelectors.attachedProjects)
+    .pipe(map(attachedProjects => this._rs.getParentResourceAttachedProject(attachedProjects, this.resource.res)));
 
   isAdmin$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
