@@ -90,8 +90,8 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   private _openInternalImage(image: ReadStillImageFileValue): void {
     const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
       [image],
-      this.isPng,
-      (this.osdService.viewer as any).ajaxHeaders
+      (this.osdService.viewer as any).ajaxHeaders,
+      this.isPng
     );
     this.osdService.viewer.open(tiles);
   }

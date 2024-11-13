@@ -60,8 +60,8 @@ export class StillImageHelper {
 
   static prepareTileSourcesFromFileValues(
     images: ReadStillImageFileValue[],
-    pngFormat = false,
-    ajaxHeaders: any
+    ajaxHeaders: any,
+    pngFormat = false
   ): object[] {
     let imageXOffset = 0;
     const imageYOffset = 0;
