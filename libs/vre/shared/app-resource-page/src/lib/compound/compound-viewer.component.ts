@@ -6,19 +6,12 @@ import { CompoundService } from './compound.service';
   selector: 'app-compound-viewer',
   template: `
     <ng-container *ngIf="compoundService.compoundPosition">
-      <ng-container *ngIf="incomingResource">
+      <ng-container *ngIf="compoundService.incomingResource$ | async as incomingResource">
         <app-still-image class="dsp-representation" [resource]="incomingResource.res" [compoundMode]="true" />
       </ng-container>
     </ng-container>
   `,
 })
-export class CompoundViewerComponent implements OnInit {
-  incomingResource: DspResource | undefined;
+export class CompoundViewerComponent {
   constructor(public compoundService: CompoundService) {}
-
-  ngOnInit() {
-    this.compoundService.incomingResource$.subscribe(resource => {
-      this.incomingResource = resource;
-    });
-  }
 }

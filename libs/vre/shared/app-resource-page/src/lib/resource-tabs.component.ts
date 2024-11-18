@@ -34,7 +34,7 @@ import { CompoundService } from './compound/compound.service';
             Annotations
           </span>
         </ng-template>
-        <app-annotation-tab *ngIf="regionService.regions.length > 0" [resource]="resource" />
+        <app-annotation-tab *ngIf="regionService.regions$ | async" [resource]="resource" />
       </mat-tab>
 
       <mat-tab label="Segments" *ngIf="segmentsService.segments && segmentsService.segments.length > 0">
@@ -73,6 +73,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
     this.segmentsService.highlightSegment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(segment => {
       if (segment) {
         this.selectedTab = 1;
+        this._cdr.detectChanges();
       }
     });
 
@@ -84,6 +85,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
     this.regionService.selectedRegion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(region => {
       if (region) {
         this.selectedTab = 2;
+        this._cdr.detectChanges();
       }
     });
   }

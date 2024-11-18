@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -17,25 +17,17 @@ import { CompoundService } from './compound/compound.service';
     <div class=" content large middle">
       <div class="resource-view">
         <app-resource-header [resource]="resource" />
-
-        <ng-container *ngIf="!isCompoundNavigation; else compoundViewerTpl">
-          <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
-        </ng-container>
-
+        <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
+        <app-compound-viewer *ngIf="isCompoundNavigation" />
         <app-resource-tabs [resource]="resource" />
       </div>
     </div>
-
-    <ng-template #compoundViewerTpl>
-      <app-compound-viewer />
-    </ng-template>
   `,
   styleUrls: ['./resource.component.scss'],
   providers: [CompoundService, RegionService, SegmentsService],
 })
-export class ResourceComponent implements OnInit {
+export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) isDifferentResource!: boolean;
   representationsToDisplay!: ReadFileValue;
   isCompoundNavigation: boolean = false;
   resourceIsObjectWithoutRepresentation!: boolean;
@@ -48,14 +40,14 @@ export class ResourceComponent implements OnInit {
     private _route: ActivatedRoute
   ) {}
 
-  ngOnInit() {
+  ngOnChanges() {
     this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource);
-    this._onInit(this.resource, this.isDifferentResource);
+    this._onInit(this.resource);
   }
 
-  private _onInit(resource: DspResource, isDifferentResource: boolean) {
+  private _onInit(resource: DspResource) {
     if (this._isObjectWithoutRepresentation(resource)) {
-      this._checkForCompoundNavigation(resource, isDifferentResource);
+      this._checkForCompoundNavigation(resource);
       return;
     }
 
@@ -85,7 +77,7 @@ export class ResourceComponent implements OnInit {
     this._regionService.selectRegion(annotation);
   }
 
-  private _checkForCompoundNavigation(resource: DspResource, isDifferentResource: boolean) {
+  private _checkForCompoundNavigation(resource: DspResource) {
     this._incomingService
       .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
       .pipe(take(1))
@@ -95,12 +87,7 @@ export class ResourceComponent implements OnInit {
         if (countQuery_.numberOfResults > 0) {
           this.isCompoundNavigation = true;
           this._cdr.detectChanges();
-          this._compoundService.onInit(
-            this._compoundService.exists && !isDifferentResource
-              ? this._compoundService.compoundPosition!
-              : new DspCompoundPosition(countQuery_.numberOfResults),
-            this.resource
-          );
+          this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);
         }
       });
   }
