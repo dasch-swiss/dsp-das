@@ -4,7 +4,7 @@ import { IKeyValuePairs } from '../model-interfaces';
 
 export class ReourceStateModel {
   isLoading = false;
-  attachedUsers: IKeyValuePairs<ReadUser> = {};
-  attachedProjects: IKeyValuePairs<ReadProject> = {};
-  resource: DspResource | null = null;
+  attachedUsers: IKeyValuePairs<ReadUser> = {}; // users attached to a resource
+  attachedProjects: IKeyValuePairs<ReadProject> = {}; // projects attached to a resource
+  resource: DspResource | null = null; // the current resource
 }
