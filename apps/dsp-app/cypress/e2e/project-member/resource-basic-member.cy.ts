@@ -13,11 +13,18 @@ describe('Check project admin existing resource functionality', () => {
     titles: [{ text: faker.lorem.sentence(), comment: faker.lorem.sentence() }],
   };
 
+  const resourceToDelete: ThingPictureClass = {
+    label: 'member resource',
+    file: '',
+    titles: [{ text: faker.lorem.sentence(), comment: faker.lorem.sentence() }],
+  };
+
   const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
 
   before(() => {
     cy.resetDatabase();
     Cypress.env('skipDatabaseCleanup', true);
+    cy.loginAdmin();
     project0001Page = new Project0001Page();
     cy.uploadFile(<Cypress.IUploadFileParameters>{
       filePath: `../${uploadedImageFilePath}`,
@@ -27,14 +34,33 @@ describe('Check project admin existing resource functionality', () => {
       thingPictureData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.picture(thingPictureData));
     });
+    cy.logout();
+
+    cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
+      const users: UserProfiles = json;
+      cy.login({
+        username: users.anythingProjectMember_username,
+        password: users.anythingProjectMember_password,
+      }).then(() => {
+        cy.uploadFile(<Cypress.IUploadFileParameters>{
+          filePath: `../${uploadedImageFilePath}`,
+          projectShortCode: Project0001Page.projectShortCode,
+          mimeType: 'image/png',
+        }).then(response => {
+          resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
+          cy.createResource(project0001Page.payloads.picture(resourceToDelete));
+        });
+      });
+    });
+    cy.logout();
   });
 
   beforeEach(() => {
     cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
       const users: UserProfiles = json;
       cy.login({
-        username: users.anythingProjectAdmin_username,
-        password: users.anythingProjectAdmin_password,
+        username: users.anythingProjectMember_username,
+        password: users.anythingProjectMember_password,
       });
     });
   });
@@ -52,8 +78,14 @@ describe('Check project admin existing resource functionality', () => {
     cy.url().should('match', regex);
   });
 
+  it('ThingPicture resource should not be deletable or erasable', () => {
+    project0001Page.visitClass('ThingPicture');
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
+    cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
+  });
+
   it.skip('ThingPicture resource should be visible', () => {
-    cy.intercept('GET', '**/default.jpg').as('stillImageRequest');
+    cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
     cy.should('not.contain', '[data-cy=close-restricted-button]');
@@ -73,6 +105,7 @@ describe('Check project admin existing resource functionality', () => {
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
+    cy.intercept('GET', `**/resources/**`).as('resourceRequest');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
     cy.get('[data-cy=edit-label-button]').should('be.visible').click();
     const newLabel = faker.lorem.word();
@@ -86,11 +119,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
+    cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
+    cy.get('@resourceRequest.all').should('have.length', 2);
 
     cy.get('[data-cy=property-value]').scrollIntoView();
     cy.get('[data-cy=property-value]').first().trigger('mouseenter');
     cy.get('[data-cy="action-bubble"]', { timeout: 500 }).should('be.visible');
-    cy.get('[data-cy="action-bubble"] .edit-button').should('be.visible').click();
+    cy.get('[data-cy="action-bubble"] .edit-button').should('be.visible').click({ force: true });
     const newTitle = faker.lorem.sentence();
     const newComment = faker.lorem.sentence();
     cy.get('[data-cy="common-input-text"]', { timeout: 2000 }).should('be.visible').clear().type(newTitle);
@@ -120,13 +155,17 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=show-all-comments]').scrollIntoView().click();
     cy.get('[data-cy=property-value-comment]').should('have.length', 1);
     cy.log('new property value with comment has been removed');
+  });
 
+  it('Self created resource should be deleted', () => {
+    cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
+    project0001Page.visitClass('ThingPicture');
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').click();
-    cy.get('[data-cy=resource-toolbar-delete-resource-button]').click();
+    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
     cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
-    cy.get('[data-cy=resource-header-label]').should('not.exist');
-    cy.log('Resource has been deleted');
+    cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
 
   after(() => {
