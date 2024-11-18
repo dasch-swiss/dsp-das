@@ -21,7 +21,7 @@ import { StillImageHelper } from './still-image-helper';
   selector: 'app-still-image',
   template: ` <div
       class="osd-container"
-      [class.drawing]="isViewInitialized && !osd.viewer.isMouseNavEnabled()"
+      [class.drawing]="isViewInitialized && !osdService.viewer.isMouseNavEnabled()"
       #osdViewer>
       <div *ngIf="compoundMode">
         <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
@@ -51,7 +51,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   isPng = false;
 
   constructor(
-    protected osd: OpenSeaDragonService,
+    protected osdService: OpenSeaDragonService,
     private _osdDrawerService: OsdDrawerService
   ) {}
 
@@ -63,7 +63,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
-    this.osd.onInit(this.osdViewerElement.nativeElement);
+    this.osdService.onInit(this.osdViewerElement.nativeElement);
     this._osdDrawerService.onInit(this.resource);
     this.isViewInitialized = true;
     this._loadImage();
@@ -75,7 +75,7 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy() {
-    this.osd.viewer.destroy();
+    this.osdService.viewer.destroy();
   }
 
   private _loadImage() {
@@ -94,8 +94,12 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   private _openInternalImage(image: ReadStillImageFileValue): void {
-    const tiles = StillImageHelper.prepareTileSourcesFromFileValues([image], this.isPng);
-    this.osd.viewer.open(tiles);
+    const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
+      [image],
+      (this.osdService.viewer as any).ajaxHeaders,
+      this.isPng
+    );
+    this.osdService.viewer.open(tiles);
   }
 
   private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
@@ -104,6 +108,6 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
       throw new AppError('Error with IIIF URL');
     }
 
-    this.osd.viewer.open(i3f.infoJsonUrl);
+    this.osdService.viewer.open(i3f.infoJsonUrl);
   }
 }
