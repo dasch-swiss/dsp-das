@@ -19,7 +19,7 @@ export class CompoundService {
   private _incomingResource = new BehaviorSubject<DspResource | undefined>(undefined);
   incomingResource$ = this._incomingResource.asObservable();
 
-  _resource!: DspResource;
+  private _resource!: DspResource;
 
   constructor(
     @Inject(DspApiConnectionToken)
