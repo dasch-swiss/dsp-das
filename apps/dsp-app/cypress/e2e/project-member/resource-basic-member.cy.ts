@@ -1,5 +1,5 @@
+import { UploadedFileResponse } from '@dasch-swiss/vre/shared/app-representations';
 import { faker } from '@faker-js/faker';
-import { UploadedFileResponse } from '../../../../../libs/vre/shared/app-representations/src';
 import { ThingPictureClass } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
 import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
@@ -24,6 +24,7 @@ describe('Check project admin existing resource functionality', () => {
   before(() => {
     cy.resetDatabase();
     Cypress.env('skipDatabaseCleanup', true);
+    cy.loginAdmin();
     project0001Page = new Project0001Page();
     cy.uploadFile(<Cypress.IUploadFileParameters>{
       filePath: `../${uploadedImageFilePath}`,
@@ -33,6 +34,7 @@ describe('Check project admin existing resource functionality', () => {
       thingPictureData.file = (response as UploadedFileResponse).internalFilename;
       cy.createResource(project0001Page.payloads.picture(thingPictureData));
     });
+    cy.logout();
 
     cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
       const users: UserProfiles = json;
@@ -46,10 +48,11 @@ describe('Check project admin existing resource functionality', () => {
           mimeType: 'image/png',
         }).then(response => {
           resourceToDelete.file = (response as UploadedFileResponse).internalFilename;
-          cy.createResource(project0001Page.payloads.picture(resourceToDelete), true);
+          cy.createResource(project0001Page.payloads.picture(resourceToDelete));
         });
       });
     });
+    cy.logout();
   });
 
   beforeEach(() => {
@@ -102,7 +105,7 @@ describe('Check project admin existing resource functionality', () => {
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
-    cy.intercept('GET', `**/resources/**`).as('resourceRequest');
+    cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
     cy.get('[data-cy=edit-label-button]').should('be.visible').click();
     const newLabel = faker.lorem.word();
@@ -149,7 +152,6 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="confirm-button"]').click();
     cy.get('[data-cy="delete-comment"]', { timeout: 2000 }).should('not.exist');
     cy.get('[data-cy=property-value]').should('have.length', 1);
-    cy.get('[data-cy=show-all-comments]').scrollIntoView().click();
     cy.get('[data-cy=property-value-comment]').should('have.length', 1);
     cy.log('new property value with comment has been removed');
   });

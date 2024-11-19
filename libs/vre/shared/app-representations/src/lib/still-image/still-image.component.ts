@@ -1,11 +1,12 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
@@ -25,7 +26,7 @@ import { StillImageHelper } from './still-image-helper';
   selector: 'app-still-image',
   template: ` <div
       class="osd-container"
-      [class.drawing]="isViewInitialized && !osd.viewer.isMouseNavEnabled()"
+      [class.drawing]="isViewInitialized && !osdService.viewer.isMouseNavEnabled()"
       #osdViewer>
       <div *ngIf="compoundMode">
         <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
@@ -47,7 +48,7 @@ import { StillImageHelper } from './still-image-helper';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService, OpenSeaDragonService],
 })
-export class StillImageComponent implements AfterViewInit, OnDestroy {
+export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) resource!: ReadResource;
   @ViewChild('osdViewer') osdViewerElement!: ElementRef;
@@ -62,31 +63,36 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   );
 
   constructor(
-    protected osd: OpenSeaDragonService,
+    protected osdService: OpenSeaDragonService,
     private _osdDrawerService: OsdDrawerService,
-    private _cdr: ChangeDetectorRef,
     private _store: Store,
     private _rs: RepresentationService
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.isViewInitialized && changes['resource']) {
+      this._osdDrawerService.update(this.resource);
+      this._loadImage();
+    }
+  }
+
   ngAfterViewInit() {
-    this.osd.onInit(this.osdViewerElement.nativeElement);
+    this.osdService.onInit(this.osdViewerElement.nativeElement);
     this._osdDrawerService.onInit(this.resource);
     this.isViewInitialized = true;
-    this._cdr.detectChanges();
-    this._loadImages();
+    this._loadImage();
   }
 
   afterFormatChange(value: boolean) {
     this.isPng = value;
-    this._loadImages();
+    this._loadImage();
   }
 
   ngOnDestroy() {
-    this.osd.viewer.destroy();
+    this.osdService.viewer.destroy();
   }
 
-  private _loadImages() {
+  private _loadImage() {
     const image = this.resource.properties[Constants.HasStillImageFileValue][0];
 
     switch (image.type) {
@@ -102,8 +108,12 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
   }
 
   private _openInternalImage(image: ReadStillImageFileValue): void {
-    const tiles = StillImageHelper.prepareTileSourcesFromFileValues([image], this.isPng);
-    this.osd.viewer.open(tiles);
+    const tiles = StillImageHelper.prepareTileSourcesFromFileValues(
+      [image],
+      (this.osdService.viewer as any).ajaxHeaders,
+      this.isPng
+    );
+    this.osdService.viewer.open(tiles);
   }
 
   private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
@@ -112,6 +122,6 @@ export class StillImageComponent implements AfterViewInit, OnDestroy {
       throw new AppError('Error with IIIF URL');
     }
 
-    this.osd.viewer.open(i3f.infoJsonUrl);
+    this.osdService.viewer.open(i3f.infoJsonUrl);
   }
 }
