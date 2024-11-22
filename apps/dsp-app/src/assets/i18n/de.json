@@ -180,7 +180,10 @@
   },
   "resource": {
     "properties": "Eigenschaften",
-    "comment": "Kommentar"
+    "comment": "Kommentar",
+    "properties": {
+      "linkedProperty": "Linked property"
+    }
   },
   "searchPanel": {
     "howToSearch": "Wie suchen?",
