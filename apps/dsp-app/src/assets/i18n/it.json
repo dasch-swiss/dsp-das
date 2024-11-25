@@ -208,8 +208,8 @@
   "resource": {
     "properties": "Properties",
     "comment": "Comment",
-    "properties": {
-      "linkedProperty": "Linked property"
+    "propertyLabels": {
+      "linkedProperty": "Risorse collegate"
     }
   },
   "searchPanel": {

@@ -57,7 +57,7 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy {
   }
 
   get propLabel(): string {
-    const label = this._translateService.instant('resource.properties.linkedProperty');
+    const label = this._translateService.instant('resource.propertyLabels.linkedProperty');
     return this.isLinkValueProperty ? label : this.label;
   }
 

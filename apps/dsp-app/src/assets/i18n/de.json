@@ -181,8 +181,8 @@
   "resource": {
     "properties": "Eigenschaften",
     "comment": "Kommentar",
-    "properties": {
-      "linkedProperty": "Linked property"
+    "propertyLabels": {
+      "linkedProperty": "Verlinkte Ressource"
     }
   },
   "searchPanel": {
