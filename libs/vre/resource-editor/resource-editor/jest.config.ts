@@ -3,7 +3,7 @@ export default {
   displayName: 'vre-shared-app-resource-page',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/app-resource-page',
+  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/resource-editor',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
