@@ -3,7 +3,7 @@ export default {
   displayName: 'vre-shared-app-segment-support',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/app-segment-support',
+  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/segment-support',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
