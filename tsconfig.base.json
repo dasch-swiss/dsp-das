@@ -96,7 +96,7 @@
         "libs/vre/resource-editor/representations/src/index.ts"
       ],
       "@dasch-swiss/vre/resource-editor/resource-editor": [
-        "libs/vre/shared/app-resource-page/src/index.ts"
+        "libs/vre/resource-editor/app-resource-page/src/index.ts"
       ],
       "@dasch-swiss/vre/resource-editor/resource-properties": [
         "libs/vre/resource-editor/resource-properties/src/index.ts"
