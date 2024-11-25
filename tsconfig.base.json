@@ -72,7 +72,7 @@
         "libs/vre/shared/app-logging/src/index.ts"
       ],
       "@dasch-swiss/vre/resource-editor/mathjax": [
-        "libs/vre/resource-editor/app-mathjax/src/index.ts"
+        "libs/vre/resource-editor/mathjax/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-notification": [
         "libs/vre/shared/app-notification/src/index.ts"

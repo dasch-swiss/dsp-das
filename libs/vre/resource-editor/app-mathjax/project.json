@@ -1,7 +1,7 @@
 {
-  "name": "vre-shared-app-mathjax",
+  "name": "vre-resource-editor-mathjax",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/shared/app-mathjax/src",
+  "sourceRoot": "libs/vre/resource-editor/mathjax/src",
   "prefix": "dasch-swiss",
   "tags": [],
   "projectType": "library",
@@ -12,7 +12,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libs/vre/shared/app-mathjax/jest.config.ts",
+        "jestConfig": "libs/vre/resource-editor/mathjax/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -29,8 +29,8 @@
       ],
       "options": {
         "lintFilePatterns": [
-          "libs/vre/shared/app-mathjax/**/*.ts",
-          "libs/vre/shared/app-mathjax/**/*.html"
+          "libs/vre/resource-editor/mathjax/**/*.ts",
+          "libs/vre/resource-editor/mathjax/**/*.html"
         ]
       }
     }
