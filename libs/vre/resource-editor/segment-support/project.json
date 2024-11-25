@@ -1,5 +1,5 @@
 {
-  "name": "vre-shared-app-segment-support",
+  "name": "vre-resource-editor-segment-support",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/vre/resource-editor/segment-support/src",
   "prefix": "dasch-swiss",
