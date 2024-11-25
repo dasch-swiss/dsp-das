@@ -1,7 +1,7 @@
 {
   "name": "vre-resource-editor-representations",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/resource-editor/app-representations/src",
+  "sourceRoot": "libs/vre/resource-editor/representations/src",
   "prefix": "dasch-swiss",
   "tags": [],
   "projectType": "library",
@@ -12,7 +12,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libs/vre/resource-editor/app-representations/jest.config.ts",
+        "jestConfig": "libs/vre/resource-editor/representations/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -29,8 +29,8 @@
       ],
       "options": {
         "lintFilePatterns": [
-          "libs/vre/resource-editor/app-representations/**/*.ts",
-          "libs/vre/resource-editor/app-representations/**/*.html"
+          "libs/vre/resource-editor/representations/**/*.ts",
+          "libs/vre/resource-editor/representations/**/*.html"
         ]
       }
     }
