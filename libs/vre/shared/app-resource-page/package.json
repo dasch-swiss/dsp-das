@@ -1,5 +1,5 @@
 {
-  "name": "@dasch-swiss/vre/shared/app-resource-page",
+  "name": "@dasch-swiss/vre/resource-editor/resource-editor",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^16.2.0",

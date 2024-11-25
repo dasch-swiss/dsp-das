@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
@@ -14,7 +15,6 @@ import {
   EditProjectFormPageComponent,
   ProjectComponent,
 } from '@dasch-swiss/vre/shared/app-project';
-import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import {
