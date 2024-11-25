@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/shared/app-representations';
+import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/resource-editor/representations';
 import { fileValueMapping } from './file-value-mapping';
 
 @Component({

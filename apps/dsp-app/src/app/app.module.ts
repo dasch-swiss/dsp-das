@@ -11,6 +11,7 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import { BASE_PATH } from '@dasch-swiss/vre/open-api';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
+import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
@@ -37,7 +38,6 @@ import {
 } from '@dasch-swiss/vre/shared/app-progress-indicator';
 import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
-import { RepresentationsComponents } from '@dasch-swiss/vre/shared/app-representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/shared/app-resource-page';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';

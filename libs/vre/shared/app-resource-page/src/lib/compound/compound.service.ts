@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { GetAttachedProjectAction, GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';

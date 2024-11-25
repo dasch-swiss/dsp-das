@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
@@ -11,7 +12,6 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { filter } from 'rxjs/operators';
 
 @Component({

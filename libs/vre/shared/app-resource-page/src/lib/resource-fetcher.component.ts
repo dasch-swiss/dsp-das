@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
 
 @Component({

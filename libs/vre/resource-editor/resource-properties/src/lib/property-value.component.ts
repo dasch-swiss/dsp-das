@@ -20,9 +20,9 @@ import {
   UpdateResource,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { ResourceFetcherService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subscription } from 'rxjs';
 import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
@@ -68,20 +68,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <dasch-swiss-app-progress-indicator *ngIf="loading" />
     </div>
   </div>`,
-  styles: [
-    `
-      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
-      .item {
-        flex: 1;
-        &.hover:hover {
-          background: $primary_100;
-        }
-      }
-      :host ::ng-deep .app-progress-indicator {
-        margin: 0 auto !important;
-      }
-    `,
-  ],
+  styleUrls: ['./property-value.component.scss'],
 })
 export class PropertyValueComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;

@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { RegionService } from '@dasch-swiss/vre/shared/app-representations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
