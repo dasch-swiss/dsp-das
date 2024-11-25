@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/shared/app-list';
-import { DataModelsComponent, OntologyComponent, OntologyFormComponent } from '@dasch-swiss/vre/shared/app-ontology';
+import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/shared/app-ontology';
 import { OntologyClassInstanceComponent } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import {
   CollaborationComponent,
@@ -14,7 +15,6 @@ import {
   ProjectComponent,
 } from '@dasch-swiss/vre/shared/app-project';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-page';
-import { CreateResourcePageComponent } from '@dasch-swiss/vre/shared/app-resource-properties';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/shared/app-search';
 import { ImageSettingsComponent, SettingsPageComponent } from '@dasch-swiss/vre/shared/app-settings-page';
 import {

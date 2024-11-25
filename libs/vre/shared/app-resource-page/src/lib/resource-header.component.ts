@@ -1,6 +1,10 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
+import {
+  EditResourceLabelDialogComponent,
+  EditResourceLabelDialogProps,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import {
@@ -10,13 +14,9 @@ import {
   OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  EditResourceLabelDialogComponent,
-  EditResourceLabelDialogProps,
-} from '@dasch-swiss/vre/shared/app-resource-properties';
 import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
