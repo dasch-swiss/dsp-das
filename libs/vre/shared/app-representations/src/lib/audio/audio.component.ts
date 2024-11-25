@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/shared/app-segment-support';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
