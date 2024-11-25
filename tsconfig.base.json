@@ -99,7 +99,7 @@
         "libs/vre/shared/app-resource-page/src/index.ts"
       ],
       "@dasch-swiss/vre/resource-editor/resource-properties": [
-        "libs/vre/resource-editor/app-resource-properties/src/index.ts"
+        "libs/vre/resource-editor/resource-properties/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-search": [
         "libs/vre/shared/app-search/src/index.ts"
