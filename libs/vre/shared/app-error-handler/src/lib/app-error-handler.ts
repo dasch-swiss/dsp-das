@@ -74,12 +74,12 @@ export class AppErrorHandler implements ErrorHandler {
       message = 'You do not have permission to see one or more resources.';
     } else if (error.status === 404) {
       message = 'The requested resource was not found.';
+    } else if (error.status === 409) {
+      message = (error as AjaxError).response['knora-api:error'];
     } else if (error.status === 504) {
       message = `There was a timeout issue with one or several requests.
             The resource(s) or a part of it cannot be displayed correctly.
             Failed on ${url}`;
-    } else if (error.status === 409) {
-      message = (error as AjaxError).response['knora-api:error'];
     } else {
       message = 'There is an error on our side. Please contact support@dasch.swiss';
     }
