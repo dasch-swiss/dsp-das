@@ -119,7 +119,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     if (this.isCurrentSearch()) {
       this.currentSearch = this.search;
       this.initSearch();
-      this.pagerComponent.initPager();
     }
   }
 

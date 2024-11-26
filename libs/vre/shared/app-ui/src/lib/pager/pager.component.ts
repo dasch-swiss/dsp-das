@@ -13,76 +13,47 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./pager.component.scss'],
 })
 export class PagerComponent {
+  @Input() pageSize = 25;
+  @Input() numberOfAllResults: number | undefined = undefined;
+  @Input() lastItemOfPage: number | undefined = undefined;
   @Output() pageChanged: EventEmitter<number> = new EventEmitter<number>();
-  @Input() showNumberOfAllResults = true;
-  @Input() nextPageIsAvailable: null | boolean = null;
-  @Input() set numberOfAllResults(value: number) {
-    this._numberOfAllResults = value;
-    this._calculateRange(this.currentIndex);
-  }
-  get numberOfAllResults(): number {
-    return this._numberOfAllResults;
-  }
-
-  static readonly pageSize = 25;
-
-  private _numberOfAllResults: number = 0;
-
-  PagerComponent = PagerComponent;
 
   currentIndex = 0;
-  currentRangeStart = 1;
-  currentRangeEnd = 0;
 
-  previousDisabled = false;
-  nextDisabled = false;
-
-  constructor(private _cd: ChangeDetectorRef) {}
-
-  initPager(): void {
-    this.currentIndex = 0;
-    this.currentRangeStart = 1;
-    this.currentRangeEnd = 0;
-    this.nextDisabled = false;
-  }
-
-  goToPage(direction: 'previous' | 'next') {
-    if (direction === 'previous' && this.currentIndex > 0) {
-      this.nextDisabled = false;
-      this.currentIndex -= 1;
+  get isLastOnPage(): boolean {
+    if (this.numberOfAllResults) {
+      return this.pageSize * (this.currentIndex + 1) >= this.numberOfAllResults;
+    } else {
+      return this.lastItemOfPage !== undefined && this.lastItemOfPage < this.pageSize;
     }
+  }
 
-    if (direction === 'next') {
-      this.currentIndex += 1;
+  get itemRangeStart(): number {
+    return this.pageSize * this.currentIndex + 1;
+  }
 
-      const isEndRange = PagerComponent.pageSize * (this.currentIndex + 1) >= this.numberOfAllResults;
-      // if end range for the next page of results is greater than the total number of results
-      if ((isEndRange && !this.nextPageIsAvailable) || (isEndRange && this.nextPageIsAvailable === true)) {
-        this.nextDisabled = true;
-      }
+  get itemRangeEnd(): number {
+    if (this.lastItemOfPage) {
+      return this.lastItemOfPage;
     }
-
-    this._calculateRange(this.currentIndex);
-    this.pageChanged.emit(this.currentIndex);
-  }
-
-  /** calculates number of all results when total amount of records is unknown
-   * @param newBatchCount
-   */
-  calculateNumberOfAllResults(newBatchCount: number) {
-    this.numberOfAllResults = this.currentIndex * PagerComponent.pageSize + newBatchCount;
-  }
-
-  /**
-   * @param page offset
-   */
-  private _calculateRange(page: number) {
-    this.currentRangeStart = PagerComponent.pageSize * page;
-    this.currentRangeEnd =
-      PagerComponent.pageSize * (page + 1) > this.numberOfAllResults
+    if (this.numberOfAllResults !== undefined) {
+      return this.pageSize * (this.currentIndex + 1) > this.numberOfAllResults
         ? this.numberOfAllResults
-        : PagerComponent.pageSize * (page + 1);
+        : this.pageSize * (this.currentIndex + 1);
+    }
+    return 0;
+  }
 
-    this._cd.markForCheck();
+  get lastPageIndex(): number {
+    return this.numberOfAllResults ? Math.ceil(this.numberOfAllResults / this.pageSize) - 1 : 0;
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.lastPageIndex + 1 }, (_, i) => i + 1);
+  }
+
+  goToPage(pageIndex: number) {
+    this.currentIndex = pageIndex;
+    this.pageChanged.emit(pageIndex);
   }
 }
