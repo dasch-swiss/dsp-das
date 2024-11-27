@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
-import { IKeyValuePairs, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { IKeyValuePairs, ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -41,8 +41,10 @@ export class RepresentationService {
       : undefined;
   }
 
-  downloadFile(url: string, fileName?: string, withCredentials = true) {
+  downloadFile(url: string, fileName?: string, userCanView = true) {
     let headers = {};
+    const isLoggedIn = this._store.selectSnapshot(UserSelectors.isLoggedIn);
+    const withCredentials = isLoggedIn && userCanView;
     if (withCredentials) {
       const authToken = this._accessTokenService.getAccessToken();
       headers = { Authorization: `Bearer ${authToken}` };
