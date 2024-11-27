@@ -97,7 +97,7 @@
     "@nx/cypress": "^17.0.2",
     "@nx/eslint-plugin": "^18.3.2",
     "@nx/jest": "16.5.3",
-    "@nx/js": "16.5.3",
+    "@nx/js": "16.10.0",
     "@nx/linter": "16.10.0",
     "@nx/workspace": "16.5.3",
     "@openapitools/openapi-generator-cli": "^2.13.13",
@@ -106,7 +106,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/jest": "^29.4.0",
     "@types/jwt-decode": "^3.1.0",
-    "@types/node": "^20.5.9",
+    "@types/node": "^20.17.8",
     "@types/openseadragon": "3.0.0",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
@@ -156,6 +156,6 @@
     "@nx/nx-darwin-arm64": "16.5.3",
     "@nx/nx-darwin-x64": "16.5.3",
     "@nx/nx-linux-x64-gnu": "16.10.0",
-    "@nx/nx-win32-x64-msvc": "16.5.3"
+    "@nx/nx-win32-x64-msvc": "16.10.0"
   }
 }
