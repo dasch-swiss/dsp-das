@@ -95,16 +95,7 @@ export class StillImageToolbarComponent {
   }
 
   download() {
-    const projectShort = this.attachedProject?.shortcode;
-    const assetId = this.imageFileValue.filename.split('.')[0] || '';
-
-    if (!projectShort) {
-      throw new AppError('Error with project shortcode');
-    }
-
-    this._rs.getIngestFileInfo(projectShort, assetId).subscribe(response => {
-      this._rs.downloadFile(this.imageFileValue.fileUrl, response.originalFilename, this.userCanView);
-    });
+    this._rs.downloadProjectFile(this.imageFileValue, this.attachedProject?.shortcode);
   }
 
   replaceImage() {

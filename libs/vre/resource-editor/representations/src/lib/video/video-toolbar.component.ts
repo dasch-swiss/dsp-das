@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { ReadResource } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
@@ -38,7 +38,11 @@ import { MediaPlayerService } from './media-player.service';
     <div data-cy="player-time">{{ mediaPlayer.currentTime() | appTime }} / {{ mediaPlayer.duration() | appTime }}</div>
 
     <div>
-      <app-video-more-button [parentResource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
+      <app-video-more-button
+        [parentResource]="parentResource"
+        [src]="src"
+        [fileInfo]="fileInfo"
+        [attachedProject]="attachedProject" />
 
       <button
         mat-icon-button
@@ -66,6 +70,7 @@ export class VideoToolbarComponent {
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
   @Input({ required: true }) cinemaMode!: boolean;
   @Input({ required: true }) isAdmin!: boolean;
+  @Input({ required: true }) attachedProject: ReadProject | undefined;
 
   @Output() cinemaModeChange = new EventEmitter<boolean>();
 

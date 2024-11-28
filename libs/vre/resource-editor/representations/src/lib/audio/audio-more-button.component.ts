@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
   KnoraApiConnection,
+  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
@@ -35,6 +36,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 })
 export class AudioMoreButtonComponent {
   @Input({ required: true }) parentResource!: ReadResource;
+  @Input() attachedProject: ReadProject | undefined;
 
   get src() {
     return new FileRepresentation(getFileValue(new DspResource(this.parentResource))!);
@@ -76,7 +78,7 @@ export class AudioMoreButtonComponent {
   }
 
   download(url: string) {
-    this._rs.downloadFile(url);
+    this._rs.downloadProjectFile(this.src.fileValue, this.attachedProject?.shortcode);
   }
 
   private _replaceFile(file: UpdateFileValue) {

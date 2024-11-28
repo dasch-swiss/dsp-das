@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
   KnoraApiConnection,
   ReadMovingImageFileValue,
+  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
@@ -51,6 +51,7 @@ export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
+  @Input({ required: true }) attachedProject: ReadProject | undefined;
 
   get userCanEdit() {
     return ResourceUtil.userCanEdit(this.parentResource);
@@ -61,8 +62,7 @@ export class VideoMoreButtonComponent {
     private _dialog: MatDialog,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _rs: RepresentationService,
-    private readonly _http: HttpClient
+    private _rs: RepresentationService
   ) {}
 
   openVideoInNewTab(url: string) {
@@ -74,8 +74,7 @@ export class VideoMoreButtonComponent {
   }
 
   async downloadVideo(url: string) {
-    const res = await this._http.get(url, { responseType: 'blob', withCredentials: true }).toPromise();
-    this._downloadFile(res);
+    this._rs.downloadProjectFile(this.src.fileValue, this.attachedProject?.shortcode);
   }
 
   openReplaceFileDialog() {
@@ -126,21 +125,5 @@ export class VideoMoreButtonComponent {
 
         window.location.reload();
       });
-  }
-
-  private _downloadFile(data: Blob) {
-    const url = window.URL.createObjectURL(data);
-    const linkElement = document.createElement('a');
-    linkElement.href = url;
-
-    if (this.fileInfo?.originalFilename === undefined) {
-      linkElement.download = url.substring(url.lastIndexOf('/') + 1);
-    } else {
-      linkElement.download = this.fileInfo.originalFilename;
-    }
-
-    document.body.appendChild(linkElement);
-    linkElement.click();
-    document.body.removeChild(linkElement);
   }
 }

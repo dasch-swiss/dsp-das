@@ -58,7 +58,7 @@ export class TextComponent implements OnChanges {
   }
 
   download(url: string) {
-    this._rs.downloadFile(url);
+    this._rs.downloadProjectFile(this.src.fileValue, this.attachedProject?.shortcode);
   }
 
   openReplaceFileDialog() {

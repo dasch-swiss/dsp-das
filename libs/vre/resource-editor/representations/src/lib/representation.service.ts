@@ -1,7 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import {
+  ReadArchiveFileValue,
+  ReadAudioFileValue,
+  ReadDocumentFileValue,
+  ReadMovingImageFileValue,
+  ReadProject,
+  ReadResource,
+  ReadStillImageExternalFileValue,
+  ReadStillImageFileValue,
+} from '@dasch-swiss/dsp-js';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { IKeyValuePairs, ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
@@ -41,15 +52,42 @@ export class RepresentationService {
       : undefined;
   }
 
-  downloadFile(url: string, fileName?: string, userCanView = true) {
+  userCanView(fileValue: ReadDocumentFileValue) {
+    return fileValue && ResourceUtil.userCanView(fileValue);
+  }
+
+  downloadProjectFile(
+    fileValue:
+      | ReadAudioFileValue
+      | ReadDocumentFileValue
+      | ReadMovingImageFileValue
+      | ReadStillImageFileValue
+      | ReadStillImageExternalFileValue
+      | ReadArchiveFileValue,
+    projectShortCode?: string
+  ) {
+    const assetId = fileValue.filename.split('.')[0] || '';
+
+    if (!projectShortCode) {
+      throw new AppError('Error with project shortcode');
+    }
+
+    this.getIngestFileInfo(projectShortCode, assetId)
+      .pipe(take(1))
+      .subscribe(response => {
+        this.downloadFile(fileValue.fileUrl, response.originalFilename, this.userCanView(fileValue));
+      });
+  }
+
+  private downloadFile(url: string, originalFileName?: string, userCanView = true) {
     let headers = {};
     const isLoggedIn = this._store.selectSnapshot(UserSelectors.isLoggedIn);
     const withCredentials = isLoggedIn && userCanView;
+    url = originalFileName ? `${url}/original` : url;
     if (withCredentials) {
       const authToken = this._accessTokenService.getAccessToken();
       headers = { Authorization: `Bearer ${authToken}` };
     }
-
     this._http
       .get(url, {
         responseType: 'blob',
@@ -60,7 +98,7 @@ export class RepresentationService {
       .subscribe(res => {
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(res);
-        a.download = fileName || url.split('/').pop()!;
+        a.download = originalFileName || url.split('/').pop()!;
         a.click();
         window.URL.revokeObjectURL(a.href);
       });
