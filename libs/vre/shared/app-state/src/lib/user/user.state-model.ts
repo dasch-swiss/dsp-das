@@ -1,10 +1,10 @@
-import { ReadUser, User } from '@dasch-swiss/dsp-js';
+import { ReadUser } from '@dasch-swiss/dsp-js';
 
 export class UserStateModel {
-  isLoading = false;
-  user: ReadUser | null = null;
-  userProjectAdminGroups: string[] = []; // before was projectAdmin
-  isMemberOfSystemAdminGroup = false; // before was sysAdmin
-  allUsers: ReadUser[] = [];
-  usersLoading = false;
+  isLoading = false; // loading state
+  user: ReadUser | null = null; // the currently logged in user
+  userProjectAdminGroups: string[] = []; // users permission groups
+  isMemberOfSystemAdminGroup = false; // current user is system admin
+  allUsers: ReadUser[] = []; // other user data in the system
+  usersLoading = false; // loading state for all users
 }

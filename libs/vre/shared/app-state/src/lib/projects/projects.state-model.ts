@@ -4,10 +4,10 @@ import { IKeyValuePair, IKeyValuePairs } from '../model-interfaces';
 
 export class ProjectsStateModel {
   isLoading = false;
-  isMembershipLoading = false;
-  hasLoadingErrors = false;
-  allProjects: ReadProject[] = [];
-  projectMembers: IKeyValuePairs<ReadUser> = {};
-  projectGroups: IKeyValuePairs<ReadGroup> = {};
-  projectRestrictedViewSettings: IKeyValuePair<ProjectRestrictedViewSettings | RestrictedViewResponse> = {};
+  isMembershipLoading = false; // loading state of project membership
+  hasLoadingErrors = false; // loading error state
+  allProjects: ReadProject[] = []; // all projects in the system grouped by project IRI
+  projectMembers: IKeyValuePairs<ReadUser> = {}; // project members grouped by project IRI
+  projectGroups: IKeyValuePairs<ReadGroup> = {}; // project user groups grouped by project IRI
+  projectRestrictedViewSettings: IKeyValuePair<ProjectRestrictedViewSettings | RestrictedViewResponse> = {}; // project image settings grouped by project id
 }
