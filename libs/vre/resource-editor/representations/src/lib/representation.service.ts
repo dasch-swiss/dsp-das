@@ -83,7 +83,6 @@ export class RepresentationService {
     let headers = {};
     const isLoggedIn = this._store.selectSnapshot(UserSelectors.isLoggedIn);
     const withCredentials = isLoggedIn && userCanView;
-    url = originalFileName ? `${url}/original` : url;
     if (withCredentials) {
       const authToken = this._accessTokenService.getAccessToken();
       headers = { Authorization: `Bearer ${authToken}` };
