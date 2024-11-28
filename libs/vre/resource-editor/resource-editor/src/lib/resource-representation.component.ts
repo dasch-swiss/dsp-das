@@ -45,7 +45,6 @@ import { map } from 'rxjs/operators';
       *ngSwitchCase="representationConstants.audio"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
-      [attachedProject]="attachedProject$ | async"
       [isAdmin]="isAdmin$ | async">
     </app-audio>
 
@@ -55,7 +54,6 @@ import { map } from 'rxjs/operators';
       *ngSwitchCase="representationConstants.movingImage"
       [src]="representationToDisplay"
       [parentResource]="resource.res"
-      [attachedProject]="attachedProject$ | async"
       [isAdmin]="isAdmin$ | async">
     </app-video>
 
@@ -64,8 +62,7 @@ import { map } from 'rxjs/operators';
       class="dsp-representation archive"
       *ngSwitchCase="representationConstants.archive"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [attachedProject]="attachedProject$ | async">
+      [parentResource]="resource.res">
     </app-archive>
 
     <app-text
@@ -73,8 +70,7 @@ import { map } from 'rxjs/operators';
       class="dsp-representation text"
       *ngSwitchCase="representationConstants.text"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [attachedProject]="attachedProject$ | async">
+      [parentResource]="resource.res">
     </app-text>
   </div>`,
 })

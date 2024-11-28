@@ -4,7 +4,6 @@ import {
   Constants,
   KnoraApiConnection,
   ReadMovingImageFileValue,
-  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
@@ -51,7 +50,6 @@ export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
-  @Input({ required: true }) attachedProject: ReadProject | undefined;
 
   get userCanEdit() {
     return ResourceUtil.userCanEdit(this.parentResource);
@@ -74,7 +72,7 @@ export class VideoMoreButtonComponent {
   }
 
   async downloadVideo(url: string) {
-    this._rs.downloadProjectFile(this.src.fileValue, this.attachedProject?.shortcode);
+    this._rs.downloadProjectFile(this.src.fileValue, this.parentResource);
   }
 
   openReplaceFileDialog() {

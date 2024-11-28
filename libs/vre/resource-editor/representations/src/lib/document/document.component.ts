@@ -94,7 +94,7 @@ export class DocumentComponent implements OnChanges {
   }
 
   download(fileValue: ReadDocumentFileValue) {
-    this._rs.downloadProjectFile(fileValue, this.attachedProject?.shortcode);
+    this._rs.downloadProjectFile(fileValue, this.parentResource);
   }
 
   openReplaceFileDialog() {

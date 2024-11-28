@@ -5,7 +5,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
   KnoraApiConnection,
-  ReadProject,
   ReadResource,
   ReadStillImageExternalFileValue,
   ReadStillImageFileValue,
@@ -49,7 +48,6 @@ export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) compoundMode!: boolean;
   @Input({ required: true }) isPng!: boolean;
-  @Input() attachedProject: ReadProject | undefined;
   @Output() imageIsPng = new EventEmitter<boolean>();
 
   get imageFileValue() {
@@ -95,7 +93,7 @@ export class StillImageToolbarComponent {
   }
 
   download() {
-    this._rs.downloadProjectFile(this.imageFileValue, this.attachedProject?.shortcode);
+    this._rs.downloadProjectFile(this.imageFileValue, this.resource);
   }
 
   replaceImage() {

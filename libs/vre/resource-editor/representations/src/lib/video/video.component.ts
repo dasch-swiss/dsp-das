@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subject } from 'rxjs';
@@ -32,7 +32,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) isAdmin!: boolean;
-  @Input({ required: true }) attachedProject: ReadProject | undefined;
   @Output() loaded = new EventEmitter<boolean>();
 
   @ViewChild('preview') preview!: ElementRef;

@@ -41,6 +41,11 @@ export class RepresentationService {
     return this._http.get<FileInfo>(url);
   }
 
+  getIiifFileInfo(fileName: string, projectShort: string): Observable<FileInfo> {
+    const url = `${this._appConfigService.dspIiifConfig.iiifUrl}/${projectShort}/${fileName}/knora.json`;
+    return this._http.get<FileInfo>(url);
+  }
+
   getAttachedProject(parentResource: ReadResource): ReadProject | undefined {
     const attachedProjects = this._store.selectSnapshot(ResourceSelectors.attachedProjects);
     return this.getParentResourceAttachedProject(attachedProjects, parentResource);
@@ -64,15 +69,17 @@ export class RepresentationService {
       | ReadStillImageFileValue
       | ReadStillImageExternalFileValue
       | ReadArchiveFileValue,
-    projectShortCode?: string
+    resource: ReadResource
   ) {
-    const assetId = fileValue.filename.split('.')[0] || '';
-
-    if (!projectShortCode) {
-      throw new AppError('Error with project shortcode');
+    const attachedProject = this.getParentResourceAttachedProject(
+      this._store.selectSnapshot(ResourceSelectors.attachedProjects),
+      resource
+    )!;
+    if (!attachedProject) {
+      throw new AppError('Project is not present');
     }
 
-    this.getIngestFileInfo(projectShortCode, assetId)
+    this.getIiifFileInfo(fileValue.filename, attachedProject.shortcode)
       .pipe(take(1))
       .subscribe(response => {
         this.downloadFile(fileValue.fileUrl, response.originalFilename, this.userCanView(fileValue));

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
@@ -29,7 +29,7 @@ import { MediaPlayerService } from '../video/media-player.service';
         <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()" *ngIf="isAdmin">
           <mat-icon>view_timeline</mat-icon>
         </button>
-        <app-audio-more-button [parentResource]="parentResource" [attachedProject]="attachedProject" />
+        <app-audio-more-button [parentResource]="parentResource" />
       </div>
     </mat-toolbar-row>
   `,
@@ -37,7 +37,6 @@ import { MediaPlayerService } from '../video/media-player.service';
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) isAdmin!: boolean;
-  @Input({ required: true }) attachedProject: ReadProject | undefined;
 
   durationString!: string;
 
