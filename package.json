@@ -137,7 +137,7 @@
     "karma-jasmine-html-reporter": "^1.7.0",
     "ng-mocks": "14.13.1",
     "ng-packagr": "~16.2.3",
-    "nx": "16.5.3",
+    "nx": "16.10.0",
     "nx-cloud": "^19.0.0",
     "onecolor": "^4.1.0",
     "openapi-typescript": "^6.7.4",
