@@ -16,7 +16,7 @@ import { ListItemForm } from './list-item-form.type';
       placeholder="Child node description"
       [formArray]="form.controls.comments"
       [validators]="commentsValidators"
-      [isRequired]="true" />
+      [isRequired]="oneDescriptionIsRequired" />
   `,
 })
 export class ReusableListItemFormComponent implements OnInit {
@@ -28,6 +28,7 @@ export class ReusableListItemFormComponent implements OnInit {
 
   form: ListItemForm;
 
+  readonly oneDescriptionIsRequired = false;
   readonly labelsValidators = [Validators.required, Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.required, Validators.maxLength(2000)];
 
@@ -38,7 +39,11 @@ export class ReusableListItemFormComponent implements OnInit {
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, this.labelsValidators, [
         atLeastOneStringRequired('value'),
       ]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, this.commentsValidators),
+      comments: DEFAULT_MULTILANGUAGE_FORM(
+        this.formData.comments,
+        this.commentsValidators,
+        this.oneDescriptionIsRequired ? [atLeastOneStringRequired('value')] : []
+      ),
     });
 
     this.afterFormInit.emit(this.form);
