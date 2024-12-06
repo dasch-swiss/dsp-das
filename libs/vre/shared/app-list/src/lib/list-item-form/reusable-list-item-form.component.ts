@@ -28,7 +28,6 @@ export class ReusableListItemFormComponent implements OnInit {
 
   form: ListItemForm;
 
-  readonly oneDescriptionIsRequired = false;
   readonly labelsValidators = [Validators.required, Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.required, Validators.maxLength(2000)];
 
