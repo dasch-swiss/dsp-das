@@ -16,7 +16,7 @@ import { ListItemForm } from './list-item-form.type';
       placeholder="Child node description"
       [formArray]="form.controls.comments"
       [validators]="commentsValidators"
-      [isRequired]="oneDescriptionIsRequired" />
+      [isRequired]="false" />
   `,
 })
 export class ReusableListItemFormComponent implements OnInit {
@@ -39,11 +39,7 @@ export class ReusableListItemFormComponent implements OnInit {
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, this.labelsValidators, [
         atLeastOneStringRequired('value'),
       ]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(
-        this.formData.comments,
-        this.commentsValidators,
-        this.oneDescriptionIsRequired ? [atLeastOneStringRequired('value')] : []
-      ),
+      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, this.commentsValidators),
     });
 
     this.afterFormInit.emit(this.form);
