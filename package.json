@@ -100,7 +100,7 @@
     "@nx/eslint-plugin": "18.2.0",
     "@nx/jest": "18.2.0",
     "@nx/js": "18.2.0",
-    "@nx/workspace": "18.2.0",
+    "@nx/workspace": "18.3.5",
     "@openapitools/openapi-generator-cli": "^2.15.3",
     "@schematics/angular": "^15.2.4",
     "@types/jasmine": "~4.6.4",
