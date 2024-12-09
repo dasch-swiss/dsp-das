@@ -96,7 +96,7 @@
     "@hirez_io/observer-spy": "^2.2.0",
     "@nrwl/eslint-plugin-nx": "18.2.0",
     "@nx/cypress": "18.2.0",
-    "@nx/eslint": "18.2.0",
+    "@nx/eslint": "18.3.5",
     "@nx/eslint-plugin": "18.2.0",
     "@nx/jest": "18.2.0",
     "@nx/js": "18.2.0",
