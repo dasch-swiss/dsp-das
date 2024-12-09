@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.22.4](https://github.com/dasch-swiss/dsp-das/compare/v11.22.3...v11.22.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* project linting (DEV-4446) ([#1973](https://github.com/dasch-swiss/dsp-das/issues/1973)) ([9b2cbb5](https://github.com/dasch-swiss/dsp-das/commit/9b2cbb56402429ab09e9b84d89e9f88b6e24a5e8))
+
 ## [11.22.3](https://github.com/dasch-swiss/dsp-das/compare/v11.22.2...v11.22.3) (2024-12-09)
 
 
