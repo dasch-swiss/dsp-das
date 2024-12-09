@@ -99,7 +99,7 @@
     "@nx/eslint": "18.2.0",
     "@nx/eslint-plugin": "18.2.0",
     "@nx/jest": "18.2.0",
-    "@nx/js": "18.2.0",
+    "@nx/js": "18.3.5",
     "@nx/workspace": "18.2.0",
     "@openapitools/openapi-generator-cli": "^2.15.3",
     "@schematics/angular": "^15.2.4",
