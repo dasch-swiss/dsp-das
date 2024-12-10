@@ -11,7 +11,7 @@ import {
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
+import { IncomingResourcePagerComponent, PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -93,10 +93,10 @@ import { sortByKeys } from './sortByKeys';
       <app-incoming-standoff-link-value
         *ngIf="(incomingLinks$ | async)?.length > 0"
         [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
-      <dasch-swiss-app-pager
+      <dasch-swiss-app-incoming-resource-pager
         #pager
         [lastItemOfPage]="incomingLinks.length"
-        (pageChanged)="pageChanged()"></dasch-swiss-app-pager>
+        (pageChanged)="pageChanged()"></dasch-swiss-app-incoming-resource-pager>
     </app-property-row>
 
     <ng-template #noProperties>
@@ -148,7 +148,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Output() afterResourceDeleted = new EventEmitter();
 
   @ViewChild('pager', { static: false })
-  pagerComponent: PagerComponent | undefined;
+  pagerComponent: IncomingResourcePagerComponent | undefined;
 
   protected readonly cardinality = Cardinality;
 
