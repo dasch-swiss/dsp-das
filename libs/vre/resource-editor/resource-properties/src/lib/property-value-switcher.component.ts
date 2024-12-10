@@ -168,13 +168,14 @@ export class PropertyValueSwitcherComponent implements OnInit, OnChanges, AfterV
   }
 
   _setupData() {
-    this._propertyValueService._editModeData = this.editModeData;
+    this._propertyValueService.editModeData = this.editModeData;
     this._propertyValueService.propertyDefinition = this.propertyDefinition;
     this._propertyValueService.formArray = this.formArray;
     this._propertyValueService.cardinality = this.cardinality;
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.itemTpl = this._getTemplate();
     if (changes['editModeData']) {
       this._setupData();
     }
