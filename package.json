@@ -56,7 +56,7 @@
     "@ngxs/logger-plugin": "^3.8.1",
     "@ngxs/router-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
-    "@nx/angular": "19.0.8",
+    "@nx/angular": "19.8.14",
     "@sentry/angular-ivy": "^7.120.0",
     "@sentry/cli": "^2.39.1",
     "angular-imask": "^7.5.0",
