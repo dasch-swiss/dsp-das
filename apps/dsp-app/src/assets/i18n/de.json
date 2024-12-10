@@ -216,5 +216,14 @@
       "home": "DSP-App Startseite",
       "myAccount": "Mein Konto"
     }
+  },
+  "paginator": {
+    "firstPage": "Erste Seite",
+    "lastPage": "Letzte Seite",
+    "nextPage": "Nächste Seite",
+    "pageLabel": "Seite",
+    "previousPage": "Vorherige Seite",
+    "rangeLabelOf": "von",
+    "rangeLabelZero": "Seite 1 von 1"
   }
 }
