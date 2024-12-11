@@ -15,7 +15,7 @@ updates:
       nx-deps:
         applies-to: version-updates
         patterns:
-          - "@nx/*"
+          - "nx*"
           - "@nrwl/*"
 #    groups:
 #       frontend-dependencies:
