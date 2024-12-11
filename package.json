@@ -42,7 +42,7 @@
     "@angular/material": "17.3.0",
     "@angular/platform-browser": "17.3.0",
     "@angular/platform-browser-dynamic": "17.3.0",
-    "@angular/router": "17.3.0",
+    "@angular/router": "17.3.12",
     "@ckeditor/ckeditor5-angular": "^5.2.0",
     "@dasch-swiss/dsp-js": "^10.2.2",
     "@dasch-swiss/jdnconvertiblecalendar": "^0.0.3",
