@@ -38,9 +38,11 @@ updates:
         update-types: ["version-update:semver-major"]
       # we use github:dasch-swiss/ckeditor_custom_build#v2.0.0 and v2.0.1 seems to be broken
       - dependency-name: "ckeditor5-custom-build"
-      # all nx and angular dependencies are for now handled manually, so for now are ignored
+      # all nx and angular dependencies are for now handled manually
       - dependency-name: "@angular/*"
       - dependency-name: "nx*"
+      - dependency-name: "@nx*"
+      - dependency-name: "@nrwl/*"
 
   - package-ecosystem: "docker"
     directory: "/"
