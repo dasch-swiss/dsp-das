@@ -1,5 +1,19 @@
 # Changelog
 
+## [11.22.4](https://github.com/dasch-swiss/dsp-das/compare/v11.22.3...v11.22.4) (2024-12-12)
+
+
+### Bug Fixes
+
+* file name decoding from response headers (DEV-4401) ([#1996](https://github.com/dasch-swiss/dsp-das/issues/1996)) ([07b003f](https://github.com/dasch-swiss/dsp-das/commit/07b003f7e6f6c29253bf6bb340b67e3b07354af3))
+* project linting (DEV-4446) ([#1973](https://github.com/dasch-swiss/dsp-das/issues/1973)) ([9b2cbb5](https://github.com/dasch-swiss/dsp-das/commit/9b2cbb56402429ab09e9b84d89e9f88b6e24a5e8))
+
+
+### Maintenances
+
+* improve Dependabot rules and grouping ([#2003](https://github.com/dasch-swiss/dsp-das/issues/2003)) ([790f74b](https://github.com/dasch-swiss/dsp-das/commit/790f74b8a519b3329c18feade58428f7f033d66d))
+* update nx to v19.0.8 ([#1983](https://github.com/dasch-swiss/dsp-das/issues/1983)) ([ffecefd](https://github.com/dasch-swiss/dsp-das/commit/ffecefd24036d6057183d2e69c29b8caa380b74e))
+
 ## [11.22.3](https://github.com/dasch-swiss/dsp-das/compare/v11.22.2...v11.22.3) (2024-12-09)
 
 
