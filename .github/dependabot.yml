@@ -16,6 +16,7 @@ updates:
         applies-to: version-updates
         patterns:
           - "@angular*"
+          - "@ngrx/component-store"
         update-types:
           - "minor"
           - "patch"
@@ -39,6 +40,13 @@ updates:
         applies-to: version-updates
         patterns:
           - "karma*"
+        update-types:
+          - "minor"
+          - "patch"
+      ngxs-deps:
+        applies-to: version-updates
+        patterns:
+          - "@ngxs/*"
         update-types:
           - "minor"
           - "patch"
@@ -81,6 +89,7 @@ updates:
       - dependency-name: "ckeditor5-custom-build"
       # all nx and angular dependencies are for now handled manually
       - dependency-name: "@angular/*"
+      - dependency-name: "@ngrx/component-store"
       - dependency-name: "nx*"
       - dependency-name: "@nx*"
       - dependency-name: "@nrwl/*"
