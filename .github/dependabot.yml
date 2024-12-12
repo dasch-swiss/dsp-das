@@ -19,6 +19,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      karma-deps:
+        applies-to: version-updates
+        patterns:
+          - "karma*"
+        update-types:
+          - "minor"
+          - "patch"
       nx-deps:
         applies-to: version-updates
         patterns:
