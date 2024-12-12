@@ -19,6 +19,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      grafana-deps:
+        applies-to: version-updates
+        patterns:
+          - "@grafana/*"
+        update-types:
+          - "minor"
+          - "patch"
       jest-deps:
         applies-to: version-updates
         patterns:
