@@ -42,11 +42,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-#    groups:
-#       frontend-dependencies:
-#          applies-to: version-updates
-#          patterns:
-#            - "*"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
