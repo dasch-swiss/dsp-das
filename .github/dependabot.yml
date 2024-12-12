@@ -20,6 +20,7 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      # eslint-deps: TODO: configure once the eslint issue is sorted out
       grafana-deps:
         applies-to: version-updates
         patterns:
