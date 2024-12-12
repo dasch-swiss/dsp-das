@@ -19,6 +19,15 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      jest-deps:
+        applies-to: version-updates
+        patterns:
+          - "jest*"
+          - "ts-jest"
+          - "@types/jest"
+        update-types:
+          - "minor"
+          - "patch"
       karma-deps:
         applies-to: version-updates
         patterns:
@@ -49,6 +58,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - "@types/jest"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
