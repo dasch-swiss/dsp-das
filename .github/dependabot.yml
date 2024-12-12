@@ -51,6 +51,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      sentry-deps:
+        applies-to: version-updates
+        patterns:
+          - "@sentry/*"
+        update-types:
+          - "minor"
+          - "patch"
       types-deps:
         applies-to: version-updates
         patterns:
