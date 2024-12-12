@@ -28,6 +28,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      postcss-deps:
+        applies-to: version-updates
+        patterns:
+          - "postcss*"
+        update-types:
+          - "minor"
+          - "patch"
 #    groups:
 #       frontend-dependencies:
 #          applies-to: version-updates
