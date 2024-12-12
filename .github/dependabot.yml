@@ -35,6 +35,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      types-deps:
+        applies-to: version-updates
+        patterns:
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
 #    groups:
 #       frontend-dependencies:
 #          applies-to: version-updates
