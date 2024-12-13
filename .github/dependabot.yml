@@ -28,6 +28,15 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      jasmine-karma-deps:
+        applies-to: version-updates
+        patterns:
+          - "karma*"
+          - "jasmine*"
+          - "@types/jasmine*"
+        update-types:
+          - "minor"
+          - "patch"
       jest-deps:
         applies-to: version-updates
         patterns:
@@ -37,12 +46,10 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      jasmine-karma-deps:
+      jwt-decoder-deps:
         applies-to: version-updates
         patterns:
-          - "karma*"
-          - "jasmine*"
-          - "@types/jasmine*"
+          - "jwt-decode"
         update-types:
           - "minor"
           - "patch"
@@ -86,6 +93,7 @@ updates:
         exclude-patterns:
           - "@types/jest"
           - "@types/jasmine*"
+          - "@types/jwt-decode"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
