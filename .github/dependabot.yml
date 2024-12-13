@@ -50,6 +50,7 @@ updates:
         applies-to: version-updates
         patterns:
           - "jwt-decode"
+          - "@types/jwt-decode"
         update-types:
           - "minor"
           - "patch"
@@ -101,6 +102,7 @@ updates:
       - dependency-name: "ckeditor5-custom-build"
       # all nx and angular dependencies are for now handled manually
       - dependency-name: "@angular/*"
+      - dependency-name: "typescript"
       - dependency-name: "@ngrx/component-store"
       - dependency-name: "nx*"
       - dependency-name: "@nx*"
