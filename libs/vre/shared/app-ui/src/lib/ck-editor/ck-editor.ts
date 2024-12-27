@@ -6,8 +6,8 @@ export class ckEditor {
     toolbar: {
       items: [
         'heading',
-        '|',
         'bold',
+        '|',
         'italic',
         'underline',
         'strikethrough',

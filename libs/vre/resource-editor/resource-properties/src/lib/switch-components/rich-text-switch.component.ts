@@ -10,6 +10,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
       *ngIf="displayMode; else editMode"
       data-cy="rich-text-switch"
       [innerHTML]="control.value"
+      appFooter
       appHtmlLink
       (internalLinkClicked)="_openResource($event)"></div>
     <ng-template #editMode>

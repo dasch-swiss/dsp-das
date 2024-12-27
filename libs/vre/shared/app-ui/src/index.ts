@@ -28,3 +28,4 @@ export * from './lib/pipes/string-transformation/title-from-camel-case.pipe';
 export * from './lib/pipes/string-transformation/linkify.pipe';
 export * from './lib/hint/hint.component';
 export * from './lib/validator-error.interface';
+export * from './lib/directives/footer.directive';

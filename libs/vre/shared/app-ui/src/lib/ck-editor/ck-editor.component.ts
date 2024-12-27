@@ -5,7 +5,7 @@ import { ckEditor } from './ck-editor';
 
 @Component({
   selector: 'app-ck-editor',
-  template: ` <ckeditor [formControl]="control" [config]="editorConfig" [editor]="editor" />
+  template: ` <ckeditor [formControl]="control" [config]="editor.defaultConfig" [editor]="editor" />
     <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>`,
 })
 export class CkEditorComponent {
@@ -13,4 +13,8 @@ export class CkEditorComponent {
 
   readonly editorConfig = ckEditor.config;
   readonly editor = Editor;
+
+  ngOnInit() {
+    console.error(this.editor);
+  }
 }
