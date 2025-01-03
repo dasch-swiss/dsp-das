@@ -1,5 +1,18 @@
 # Changelog
 
+## [11.22.5](https://github.com/dasch-swiss/dsp-das/compare/v11.22.4...v11.22.5) (2025-01-03)
+
+
+### Maintenances
+
+* **deps-dev:** bump @types/node from 20.17.9 to 20.17.10 ([#2005](https://github.com/dasch-swiss/dsp-das/issues/2005)) ([2688f85](https://github.com/dasch-swiss/dsp-das/commit/2688f85742d53d39e9a930fe31fde9f82a9993c9))
+* **deps-dev:** bump cypress from 13.16.1 to 13.17.0 ([#2017](https://github.com/dasch-swiss/dsp-das/issues/2017)) ([3b6a31e](https://github.com/dasch-swiss/dsp-das/commit/3b6a31ecf7b74fc86f6202ad369fa96f84bcf1f3))
+* **deps-dev:** bump karma-chrome-launcher from 3.1.1 to 3.2.0 in the jasmine-karma-deps group ([#2016](https://github.com/dasch-swiss/dsp-das/issues/2016)) ([a7aed40](https://github.com/dasch-swiss/dsp-das/commit/a7aed4007df9998f252c8e11760c09c8f9139a4b))
+* **deps:** bump @sentry/angular-ivy from 7.120.1 to 7.120.2 ([#2009](https://github.com/dasch-swiss/dsp-das/issues/2009)) ([d5bade4](https://github.com/dasch-swiss/dsp-das/commit/d5bade476e8a2fe2b2c5867b82a77a99256a38ed))
+* **deps:** bump @sentry/cli from 2.39.1 to 2.40.0 in the sentry-deps group ([#2021](https://github.com/dasch-swiss/dsp-das/issues/2021)) ([c375c21](https://github.com/dasch-swiss/dsp-das/commit/c375c21d7017d9721be4cf0c9f6f232427a5d2f5))
+* **deps:** bump zod from 3.23.8 to 3.24.1 ([#2002](https://github.com/dasch-swiss/dsp-das/issues/2002)) ([6743623](https://github.com/dasch-swiss/dsp-das/commit/6743623187821e90cd350dfb50b96930107da731))
+* divide packages into Dependabot groups ([#2007](https://github.com/dasch-swiss/dsp-das/issues/2007)) ([3d75fab](https://github.com/dasch-swiss/dsp-das/commit/3d75faba2d7a50ca824d1628953b6a6c75bf1182))
+
 ## [11.22.4](https://github.com/dasch-swiss/dsp-das/compare/v11.22.3...v11.22.4) (2024-12-17)
 
 
