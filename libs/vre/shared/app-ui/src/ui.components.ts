@@ -21,6 +21,7 @@ import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
 import { TimeInputComponent } from './lib/time-input/time-input.component';
 import { FootnoteDirective } from './lib/directives/footnote.directive';
+import { FootnotesComponent } from './lib/directives/footnotes.component';
 
 export const UiComponents = [
   ConfirmDialogComponent,
@@ -46,5 +47,6 @@ export const UiComponents = [
   TextValueHtmlLinkDirective,
   HintComponent,
   FootnoteDirective,
+  FootnotesComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];

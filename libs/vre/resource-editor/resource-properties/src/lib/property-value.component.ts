@@ -28,6 +28,7 @@ import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
+import { FootnoteService } from '../../../../shared/app-ui/src/lib/directives/footnote.service';
 
 @Component({
   selector: 'app-property-value',
@@ -112,6 +113,7 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
+    private _footnoteService: FootnoteService,
     @Optional() private _resourceFetcherService: ResourceFetcherService
   ) {}
 
@@ -188,6 +190,7 @@ export class PropertyValueComponent implements OnInit {
         () => {
           this.propertyValueService.currentlyAdding = false;
           this.propertyValueService.toggleOpenedValue(this.index);
+          this._footnoteService.reset();
           this._cdr.detectChanges();
         },
         (e: ApiResponseError) => {
@@ -238,6 +241,7 @@ export class PropertyValueComponent implements OnInit {
       .subscribe(() => {
         this.propertyValueService.toggleOpenedValue(this.index);
         this._setInitialValue();
+        this._footnoteService.reset();
         this._cdr.detectChanges();
       });
   }

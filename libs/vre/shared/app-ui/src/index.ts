@@ -29,3 +29,4 @@ export * from './lib/pipes/string-transformation/linkify.pipe';
 export * from './lib/hint/hint.component';
 export * from './lib/validator-error.interface';
 export * from './lib/directives/footnote.directive';
+export * from './lib/directives/footnotes.component';

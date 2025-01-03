@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
-import { ckEditor } from './ck-editor';
 
 @Component({
   selector: 'app-ck-editor',
@@ -11,10 +10,5 @@ import { ckEditor } from './ck-editor';
 export class CkEditorComponent {
   @Input({ required: true }) control!: FormControl<string>;
 
-  readonly editorConfig = ckEditor.config;
   readonly editor = Editor;
-
-  ngOnInit() {
-    console.error(this.editor);
-  }
 }

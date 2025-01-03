@@ -8,6 +8,7 @@ import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
+import { FootnoteService } from '../../../../shared/app-ui/src/lib/directives/footnote.service';
 
 @Component({
   selector: 'app-resource',
@@ -24,7 +25,7 @@ import { CompoundService } from './compound/compound.service';
     </div>
   `,
   styleUrls: ['./resource.component.scss'],
-  providers: [CompoundService, RegionService, SegmentsService],
+  providers: [CompoundService, RegionService, SegmentsService, FootnoteService],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

@@ -4,6 +4,7 @@ import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FootnoteService } from '../../../../../shared/app-ui/src/lib/directives/footnote.service';
 
 @Component({
   selector: 'app-rich-text-switch',
@@ -21,7 +22,7 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
   @Input() displayMode = true;
 
   sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(
-    `<p>some text with <footnote content="heeey">*</footnote> the following.</p>`
+    `<p>some text with <footnote content="heeey" id="testUid">*</footnote> the following.</p>`
   );
 
   get myControl() {
@@ -30,8 +31,11 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
 
   constructor(
     private _resourceService: ResourceService,
-    private _sanitizer: DomSanitizer
-  ) {}
+    private _sanitizer: DomSanitizer,
+    private _footnoteService: FootnoteService
+  ) {
+    this._footnoteService.addFootnote('testUid', 'heeey');
+  }
 
   _openResource(linkValue: ReadLinkValue | string) {
     const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
