@@ -15,7 +15,7 @@ import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/repr
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { PendoAnalyticsService } from '@dasch-swiss/vre/shared/app-analytics';
+import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   AppConfigService,
