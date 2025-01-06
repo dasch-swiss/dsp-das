@@ -3,7 +3,7 @@ export default {
   displayName: 'vre-shared-app-analytics',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/3rd-party-services/app-analytics',
+  coverageDirectory: '../../../../coverage/libs/vre/3rd-party-services/analytics',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
