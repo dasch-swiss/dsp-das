@@ -89,7 +89,7 @@ export class StillImageToolbarComponent {
   }
 
   toggleDrawMode(): void {
-    this.osd.viewer.setMouseNavEnabled(!this.osd.viewer.isMouseNavEnabled());
+    this.osd.toggleDrawing();
   }
 
   download() {
