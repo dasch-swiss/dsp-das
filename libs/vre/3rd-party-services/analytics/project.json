@@ -1,5 +1,5 @@
 {
-  "name": "vre-shared-app-analytics",
+  "name": "vre-3rd-party-services-analytics",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/vre/3rd-party-services/analytics/src",
   "prefix": "dasch-swiss",
