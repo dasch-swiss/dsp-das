@@ -39,6 +39,7 @@ export class OpenSeaDragonService {
     const viewerConfig: OpenSeadragon.Options = {
       ...osdViewerConfig,
       element: htmlElement,
+      loadTilesWithAjax: true,
     };
 
     const accessToken = this._accessToken.getAccessToken();
