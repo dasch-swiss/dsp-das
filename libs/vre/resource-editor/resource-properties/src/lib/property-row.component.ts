@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
+import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-property-row',
@@ -12,14 +13,32 @@ import { takeUntil, takeWhile } from 'rxjs/operators';
     <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ propLabel }}</h3>
     <div style="flex: 1">
       <ng-content></ng-content>
+      <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
     </div>
   </div>`,
+  providers: [FootnoteService],
   styles: [
     `
       @use '../../../../../../apps/dsp-app/src/styles/config' as *;
 
-      .currentValue {
-        background-color: $yellow_100;
+      /* Initialize counter */
+      :host {
+        counter-reset: footnote-counter;
+      }
+
+      /* Style <footnote> elements */
+      :host ::ng-deep footnote:not(app-ck-editor footnote) {
+        display: inline-block; /* Allows numbering inline */
+        position: relative;
+        visibility: hidden; /* Hide the original footnote text */
+
+        &::before {
+          counter-increment: footnote-counter;
+          content: counter(footnote-counter);
+          font-size: 0.8em; /* Slightly smaller font size for superscript */
+          vertical-align: super; /* Position as superscript */
+          visibility: visible; /* Show the number */
+        }
       }
 
       .label {
@@ -62,6 +81,7 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
+    public footnoteService: FootnoteService,
     private route: ActivatedRoute,
     private _translateService: TranslateService
   ) {}

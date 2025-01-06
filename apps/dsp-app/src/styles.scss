@@ -10,7 +10,6 @@
 @use "styles/typography" as t;
 @use "styles/viewer";
 @use "styles/ontology";
-@import "./footnote";
 
 @include mat.core();
 

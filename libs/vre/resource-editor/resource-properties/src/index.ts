@@ -46,3 +46,5 @@ export * from './lib/sortByKeys';
 export * from './lib/upload-control.component';
 export * from './resource-properties.components';
 export * from './lib/upload.component';
+export * from './lib/footnote.service';
+export * from './lib/footnotes.component';

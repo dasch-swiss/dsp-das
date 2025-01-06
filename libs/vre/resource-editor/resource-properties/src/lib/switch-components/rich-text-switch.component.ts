@@ -4,7 +4,7 @@ import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FootnoteService } from '../../../../../shared/app-ui/src/lib/directives/footnote.service';
+import { FootnoteService } from '../footnote.service';
 
 @Component({
   selector: 'app-rich-text-switch',

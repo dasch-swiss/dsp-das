@@ -14,17 +14,12 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltip, MatTooltipDefaultOptions } fro
 export class FootnoteDirective {
   private readonly _FOOTER_TAG = 'footnote';
 
-  constructor(private _tooltip: MatTooltip) {
-    this.setup();
-  }
-
-  setup() {}
+  constructor(private _tooltip: MatTooltip) {}
 
   @HostListener('mouseover', ['$event'])
   onMouseOver(event: MouseEvent) {
     const targetElement = event.target as HTMLElement;
     if (targetElement.nodeName.toLowerCase() === this._FOOTER_TAG) {
-      console.log(targetElement.getAttribute('content'));
       this.showTooltip(targetElement.getAttribute('content'), event.clientX, event.clientY);
     }
   }

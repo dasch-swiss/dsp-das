@@ -28,7 +28,7 @@ import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
-import { FootnoteService } from '../../../../shared/app-ui/src/lib/directives/footnote.service';
+import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-property-value',

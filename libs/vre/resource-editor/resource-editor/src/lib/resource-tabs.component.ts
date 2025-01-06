@@ -17,7 +17,6 @@ import { CompoundService } from './compound/compound.service';
       (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resource.properties' | translate">
         <app-properties-display *ngIf="resource" [resource]="resource" [properties]="resource.resProps" />
-        <app-footnotes />
       </mat-tab>
 
       <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
