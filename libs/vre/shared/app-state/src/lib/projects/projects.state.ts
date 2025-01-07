@@ -11,7 +11,7 @@ import {
   UserResponse,
 } from '@dasch-swiss/dsp-js';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/open-api';
-import { ProjectApiService } from '@dasch-swiss/vre/shared/app-api';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, State, StateContext, Store, ofActionSuccessful } from '@ngxs/store';

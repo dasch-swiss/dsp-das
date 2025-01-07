@@ -56,7 +56,7 @@
       "@dasch-swiss/vre/3rd-party-services/analytics": [
         "libs/vre/3rd-party-services/analytics/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-api": [
+      "@dasch-swiss/vre/3rd-party-services/api": [
         "libs/vre/shared/app-api/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-common": [
