@@ -119,7 +119,7 @@
       "@dasch-swiss/vre/shared/app-state-service": [
         "libs/vre/shared/app-state-service/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-string-literal": [
+      "@dasch-swiss/vre/ui/string-literal": [
         "libs/vre/shared/app-string-literal/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-system": [

@@ -47,7 +47,7 @@ import {
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
   StringLiteralComponents,
-} from '@dasch-swiss/vre/shared/app-string-literal';
+} from '@dasch-swiss/vre/ui/string-literal';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';

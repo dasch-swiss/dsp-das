@@ -8,7 +8,7 @@ import {
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/shared/app-string-literal';
+import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { PropertyForm } from '../property-form.type';
 
 @Component({

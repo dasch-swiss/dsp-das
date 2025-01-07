@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import { MultiLanguages } from '@dasch-swiss/vre/shared/app-string-literal';
+import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DIALOG_LARGE, DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { filter, switchMap } from 'rxjs/operators';
 import { ListItemService } from '../list-item/list-item.service';
