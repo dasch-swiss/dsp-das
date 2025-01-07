@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
-import { BASE_PATH } from '@dasch-swiss/vre/open-api';
+import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';

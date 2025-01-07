@@ -35,7 +35,7 @@
       "@dasch-swiss/vre/advanced-search": [
         "libs/vre/advanced-search/src/index.ts"
       ],
-      "@dasch-swiss/vre/open-api": [
+      "@dasch-swiss/vre/3rd-party-services/open-api": [
         "libs/vre/open-api/src/index.ts"
       ],
       "@dasch-swiss/vre/resource-editor/mathjax": [

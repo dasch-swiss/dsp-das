@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { StringLiteralV2 } from '@dasch-swiss/vre/open-api';
+import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   DefaultProperties,
   LocalizationService,
