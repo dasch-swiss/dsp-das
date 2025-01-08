@@ -72,7 +72,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
-    // cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
+    cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
     // cy.get('[data-cy=edit-label-button]').should('be.visible').click();
     // const newLabel = faker.lorem.word();
     // cy.get('[data-cy=common-input-text]', { timeout: 500 }).should('be.visible').clear().type(newLabel);
