@@ -113,7 +113,7 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _footnoteService: FootnoteService,
+    @Optional() private _footnoteService: FootnoteService,
     @Optional() private _resourceFetcherService: ResourceFetcherService
   ) {}
 

@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { IsSwitchComponent } from './is-switch-component.interface';
-import { DomSanitizer } from '@angular/platform-browser';
 import { FootnoteService } from '../footnote.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-rich-text-switch',
@@ -21,9 +21,7 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
   @Input() control!: FormControl<string | null>;
   @Input() displayMode = true;
 
-  sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(
-    `<p>some text with <footnote content="heeey" id="testUid">*</footnote> the following.</p>`
-  );
+  sanitizedHtml!: SafeHtml;
 
   get myControl() {
     return this.control as FormControl<string>;
@@ -32,9 +30,26 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
   constructor(
     private _resourceService: ResourceService,
     private _sanitizer: DomSanitizer,
-    private _footnoteService: FootnoteService
+    @Optional() private _footnoteService: FootnoteService
   ) {
-    this._footnoteService.addFootnote('testUid', 'heeey');
+    // this._footnoteService?.addFootnote('testUid', 'heeey');
+  }
+
+  ngOnInit() {
+    if (this.control.value) {
+      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.control.value));
+    }
+  }
+
+  unescapeHtml(str: string) {
+    const unescapeMap = {
+      '&amp;': '&',
+      '&lt;': '<',
+      '&gt;': '>',
+      '&quot;': '"',
+      '&#039;': "'",
+    };
+    return str.replace(/&(amp|lt|gt|quot|#039);/g, match => unescapeMap[match]);
   }
 
   _openResource(linkValue: ReadLinkValue | string) {
