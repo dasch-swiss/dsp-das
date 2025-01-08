@@ -68,6 +68,7 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('ThingPicture resource should be editable', () => {
+    cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
@@ -90,6 +91,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=add-property-value-button]').scrollIntoView();
     cy.get('[data-cy="add-property-value-button"]').click();
     const newLabel = faker.lorem.word();
+    cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
     cy.get('[data-cy=common-input-text]').scrollIntoView();
     cy.get('[data-cy=common-input-text]', { timeout: 500 }).should('be.visible').type(newLabel);
     const firstComment = faker.lorem.word();
