@@ -21,23 +21,27 @@ import { FootnoteService } from './footnote.service';
     `
       @use '../../../../../../apps/dsp-app/src/styles/config' as *;
 
-      /* Initialize counter */
       :host {
         counter-reset: footnote-counter;
       }
 
-      /* Style <footnote> elements */
       :host ::ng-deep footnote:not(app-ck-editor footnote) {
-        display: inline-block; /* Allows numbering inline */
+        display: inline-block;
         position: relative;
-        visibility: hidden; /* Hide the original footnote text */
+        visibility: hidden;
+        width: 8px;
 
         &::before {
           counter-increment: footnote-counter;
           content: counter(footnote-counter);
-          font-size: 0.8em; /* Slightly smaller font size for superscript */
-          vertical-align: super; /* Position as superscript */
-          visibility: visible; /* Show the number */
+          font-size: 0.8em;
+          vertical-align: super;
+          visibility: visible;
+          position: relative;
+          top: -6px;
+          left: 2px;
+          color: #336790;
+          cursor: pointer;
         }
       }
 
