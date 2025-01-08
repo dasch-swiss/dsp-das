@@ -12,9 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       *ngIf="displayMode; else editMode"
       data-cy="rich-text-switch"
       [innerHTML]="sanitizedHtml"
-      appFootnote
-      [content]="test"></div>
-    <button appFootnoteTooltip="This is <b>rich HTML</b> content!">Hover over me</button>
+      appFootnote></div>
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
     </ng-template>`,

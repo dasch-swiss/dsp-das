@@ -1,14 +1,14 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Overlay, OverlayPositionBuilder, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { FootnoteTooltipComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 
 @Directive({
   selector: '[appFootnote]',
 })
 export class FootnoteDirective {
-  @Input('content') content!: string;
   private overlayRef: OverlayRef | null = null;
 
   constructor(
@@ -21,7 +21,11 @@ export class FootnoteDirective {
   onMouseOver(event: MouseEvent) {
     const targetElement = event.target as HTMLElement;
     if (targetElement.nodeName.toLowerCase() === 'footnote') {
-      this.showTooltip(this.content, event.clientX, event.clientY);
+      const content = targetElement.getAttribute('content');
+      if (content === null) {
+        throw new AppError('Footnote content is null');
+      }
+      this.showTooltip(content, event.clientX, event.clientY);
     }
   }
 
@@ -33,7 +37,6 @@ export class FootnoteDirective {
   }
 
   private showTooltip(content: string, mouseX: number, mouseY: number) {
-    console.log('show tooltip', content);
     if (!this.overlayRef) {
       const positionStrategy = this.positionBuilder.flexibleConnectedTo({ x: mouseX, y: mouseY }).withPositions([
         {
@@ -56,7 +59,6 @@ export class FootnoteDirective {
 
     const sanitizedContent: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(content);
     tooltipRef.instance.content = sanitizedContent;
-    console.log(tooltipRef);
   }
 
   private hideTooltip() {
