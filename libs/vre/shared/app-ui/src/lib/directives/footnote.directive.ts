@@ -10,6 +10,7 @@ import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
 })
 export class FootnoteDirective {
   private overlayRef: OverlayRef | null = null;
+  private hideTimeout: any;
 
   constructor(
     private overlay: Overlay,
@@ -32,7 +33,7 @@ export class FootnoteDirective {
   @HostListener('mouseout', ['$event.target'])
   onMouseOut(targetElement: HTMLElement) {
     if (targetElement.nodeName.toLowerCase() === 'footnote') {
-      this.hideTooltip();
+      this.hideTooltipWithDelay();
     }
   }
 
@@ -59,6 +60,20 @@ export class FootnoteDirective {
 
     const sanitizedContent: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(content);
     tooltipRef.instance.content = sanitizedContent;
+
+    this.overlayRef.overlayElement.addEventListener('mouseenter', () => {
+      clearTimeout(this.hideTimeout);
+    });
+
+    this.overlayRef.overlayElement.addEventListener('mouseleave', () => {
+      this.hideTooltipWithDelay();
+    });
+  }
+
+  private hideTooltipWithDelay() {
+    this.hideTimeout = setTimeout(() => {
+      this.hideTooltip();
+    }, 500); // Adjust the delay as needed
   }
 
   private hideTooltip() {
