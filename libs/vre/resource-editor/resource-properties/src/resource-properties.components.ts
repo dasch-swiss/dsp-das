@@ -38,6 +38,8 @@ import { ListValueComponent } from './lib/value-components/list-value.component'
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
 import { FootnotesComponent } from './lib/footnotes.component';
+import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
+import { FootnoteTooltipDirective } from './lib/footnote-tooltip.directive';
 
 const valueComponents = [
   GeonameValueComponent,
@@ -88,4 +90,6 @@ export const ResourcePropertiesComponents = [
   PropertiesDisplayComponent,
   UploadComponent,
   FootnotesComponent,
+  FootnoteTooltipComponent,
+  FootnoteTooltipDirective,
 ];

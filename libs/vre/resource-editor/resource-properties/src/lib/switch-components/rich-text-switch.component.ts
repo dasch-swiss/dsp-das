@@ -12,7 +12,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       *ngIf="displayMode; else editMode"
       data-cy="rich-text-switch"
       [innerHTML]="sanitizedHtml"
-      appFootnote></div>
+      appFootnote
+      [content]="test"></div>
+    <button appFootnoteTooltip="This is <b>rich HTML</b> content!">Hover over me</button>
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
     </ng-template>`,
@@ -22,6 +24,7 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
   @Input() displayMode = true;
 
   sanitizedHtml!: SafeHtml;
+  test = `This is julien <b>rich HTML</b> content!`;
 
   get myControl() {
     return this.control as FormControl<string>;
