@@ -38,7 +38,6 @@ export class FootnoteTooltipDirective implements OnInit {
 
     this.renderer.listen(this.elementRef.nativeElement, 'mouseenter', () => {
       if (this.overlayRef && !this.overlayRef.hasAttached()) {
-        console.log('good');
         const tooltipPortal = new ComponentPortal(FootnoteTooltipComponent);
         const tooltipRef = this.overlayRef.attach(tooltipPortal);
         tooltipRef.instance.content = this.tooltipContent;

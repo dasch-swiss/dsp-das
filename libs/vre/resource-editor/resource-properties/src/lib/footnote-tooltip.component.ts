@@ -28,8 +28,4 @@ import { SafeHtml } from '@angular/platform-browser';
 export class FootnoteTooltipComponent {
   @Input() content!: SafeHtml;
   @Input() tooltipClass: string = 'default-tooltip';
-
-  ngOnInit() {
-    console.log('julien', this.content);
-  }
 }
