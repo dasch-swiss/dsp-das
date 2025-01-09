@@ -42,21 +42,21 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('can add owned project resource', () => {
-    const path = `/project/${Project0001Page.projectShortCode}/ontology/${Project0001Page.defaultOntology}/ThingPicture/add`;
+    const path = `/project/${Project0001Page.projectShortCode}/ontology/${Project0001Page.defaultOntology}/${Project0001Page.thingPictureClass.id}/add`;
     cy.visit(path);
     const regex = new RegExp(`${path}$`);
     cy.url().should('match', regex);
   });
 
   it.skip('ThingPicture resource should not be deletable or erasable', () => {
-    project0001Page.visitClass('ThingPicture');
+    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
   });
 
   it('ThingPicture resource should be visible', () => {
     cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
-    project0001Page.visitClass('ThingPicture');
+    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
     cy.should('not.contain', '[data-cy=close-restricted-button]');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
@@ -67,8 +67,38 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
+  it('ThingPicture resource should be created', () => {
+    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+    cy.intercept('GET', '**/resources/**').as('resourceRequest');
+    cy.get('[data-cy=class-item] div.label')
+      .contains(Project0001Page.thingPictureClass.label)
+      .parentsUntil('app-ontology-class-item')
+      .find('[data-cy="add-class-instance"]')
+      .click();
+
+    cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
+    cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
+    const newLabel = faker.lorem.word();
+    cy.get('[data-cy=resource-label]')
+      .siblings('app-common-input')
+      .find('[data-cy=common-input-text]')
+      .should('be.visible')
+      .type(newLabel);
+    const newTitle = faker.lorem.word();
+    cy.get('[data-cy=Titel]').find('[data-cy=common-input-text]').should('be.visible').type(newTitle);
+    cy.get('[data-cy=Titel]').find('[data-cy=comment-textarea]').should('be.visible').type(faker.lorem.word());
+    cy.get('[data-cy="submit-button"]').click();
+    cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
+    cy.get('@resourceRequest.all').should('have.length', 1);
+
+    cy.get('[data-cy=resource-header-label]').contains(newLabel);
+    cy.get('.representation-container').should('exist');
+    cy.get('app-still-image').should('be.visible');
+    cy.get('app-base-switch').contains(newTitle);
+  });
+
   it('ThingPicture resource should be editable', () => {
-    project0001Page.visitClass('ThingPicture');
+    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
@@ -135,7 +165,7 @@ describe('Check project admin existing resource functionality', () => {
 
   it.skip('Self created resource should be deleted', () => {
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    project0001Page.visitClass('ThingPicture');
+    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').click();
     cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();

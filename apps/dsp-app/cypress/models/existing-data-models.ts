@@ -52,3 +52,7 @@ export interface ArchiveClass {
   label: string;
   file: string;
 }
+export interface OntologyClass {
+  id: string;
+  label: string;
+}
