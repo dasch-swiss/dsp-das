@@ -56,6 +56,11 @@ export class FootnoteDirective {
     }
 
     const tooltipPortal = new ComponentPortal(FootnoteTooltipComponent);
+    if (this.overlayRef.hasAttached()) {
+      this.overlayRef.detach();
+      clearTimeout(this.hideTimeout);
+    }
+
     const tooltipRef = this.overlayRef.attach(tooltipPortal);
 
     const sanitizedContent: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(content);
