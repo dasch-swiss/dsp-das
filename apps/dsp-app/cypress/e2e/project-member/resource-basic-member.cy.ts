@@ -1,20 +1,14 @@
 import { faker } from '@faker-js/faker';
-import { ThingPictureClass } from '../../models/existing-data-models';
+import { ThingPictureClassResource } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
 import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Check project admin existing resource functionality', () => {
   let project0001Page: Project0001Page;
 
-  const thingPictureData: ThingPictureClass = {
+  const thingPictureData: ThingPictureClassResource = {
     label: 'A thing with a picture',
     file: 'B1D0OkEgfFp-Cew2Seur7Wi.jp2',
-    titles: [{ text: '', comment: '' }],
-  };
-
-  const resourceToDelete: ThingPictureClass = {
-    label: 'page 1',
-    file: '',
     titles: [{ text: '', comment: '' }],
   };
 
@@ -48,9 +42,9 @@ describe('Check project admin existing resource functionality', () => {
     cy.url().should('match', regex);
   });
 
-  it.skip('ThingPicture resource should not be deletable or erasable', () => {
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
+  it('ThingPicture resource should not be deletable or erasable', () => {
+    project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
+    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
   });
 
@@ -67,7 +61,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it('ThingPicture resource should be created', () => {
+  it('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=class-item] div.label')
@@ -95,6 +89,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
     cy.get('app-base-switch').contains(newTitle);
+
+    cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
+    cy.get('[data-cy=resource-toolbar-more-button]').click();
+    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
+    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
+    cy.get('[data-cy=app-delete-resource-dialog-button]').click();
+    cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
 
   it('ThingPicture resource should be editable', () => {
@@ -161,17 +162,6 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=property-value]').should('have.length', 1);
     cy.get('[data-cy=property-value-comment]').should('have.length', 1);
     cy.log('new property value with comment has been removed');
-  });
-
-  it.skip('Self created resource should be deleted', () => {
-    cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(resourceToDelete.label).click();
-    cy.get('[data-cy=resource-toolbar-more-button]').click();
-    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
-    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
-    cy.get('[data-cy=app-delete-resource-dialog-button]').click();
-    cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
 
   after(() => {

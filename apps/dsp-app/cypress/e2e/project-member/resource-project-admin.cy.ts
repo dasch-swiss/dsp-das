@@ -1,24 +1,24 @@
 import { faker } from '@faker-js/faker';
-import { ThingPictureClass } from '../../models/existing-data-models';
+import { ThingPictureClassResource } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
 import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Check project admin existing resource functionality', () => {
   let project0001Page: Project0001Page;
 
-  const thingPictureData: ThingPictureClass = {
+  const thingPictureData: ThingPictureClassResource = {
     label: 'A thing with a picture',
     file: 'B1D0OkEgfFp-Cew2Seur7Wi.jp2',
     titles: [{ text: '', comment: '' }],
   };
 
-  const resourceToDelete: ThingPictureClass = {
+  const resourceToDelete: ThingPictureClassResource = {
     label: 'page 1',
     file: 'B1D0OkEgfFp-Cew2Seur7Wi.jp2',
     titles: [{ text: '', comment: '' }],
   };
 
-  const resourceToErase: ThingPictureClass = {
+  const resourceToErase: ThingPictureClassResource = {
     label: 'page 2',
     file: 'B1D0OkEgfFp-Cew2Seur7Wi.jp2',
     titles: [{ text: '', comment: '' }],

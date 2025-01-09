@@ -1,10 +1,10 @@
-import { ArchiveClass } from '../../models/existing-data-models';
+import { ArchiveClassResource } from '../../models/existing-data-models';
 import { Project0001Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Create archive model, add new data and view it', () => {
   let projectAssertionPage: Project0001Page;
 
-  const archiveData: ArchiveClass = {
+  const archiveData: ArchiveClassResource = {
     className: 'ThingArchive',
     label: 'Archive Representation',
     file: '7mdeoFJ48dI-YCKeZrXK3Rr.7z',
