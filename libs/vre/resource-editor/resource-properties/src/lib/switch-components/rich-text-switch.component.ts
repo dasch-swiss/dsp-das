@@ -1,4 +1,4 @@
-import { Component, Input, Optional } from '@angular/core';
+import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -17,12 +17,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       <app-ck-editor [control]="myControl" />
     </ng-template>`,
 })
-export class RichTextSwitchComponent implements IsSwitchComponent {
+export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   @Input() control!: FormControl<string | null>;
   @Input() displayMode = true;
 
   sanitizedHtml!: SafeHtml;
-  test = `This is julien <b>rich HTML</b> content!`;
 
   get myControl() {
     return this.control as FormControl<string>;
@@ -32,13 +31,25 @@ export class RichTextSwitchComponent implements IsSwitchComponent {
     private _resourceService: ResourceService,
     private _sanitizer: DomSanitizer,
     @Optional() private _footnoteService: FootnoteService
-  ) {
-    // this._footnoteService?.addFootnote('testUid', 'heeey');
-  }
+  ) {}
 
-  ngOnInit() {
-    if (this.control.value) {
-      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.control.value));
+  ngOnChanges() {
+    if (this.control.value && this.displayMode) {
+      const regex = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
+      const matches = this.control.value?.matchAll(regex);
+      let newValue = this.control.value;
+      if (matches) {
+        Array.from(matches).forEach(matchArray => {
+          const uid = Math.random().toString(36).substring(7);
+          const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}"></footnote>`;
+          newValue = newValue.replace(matchArray[0], parsedFootnote);
+          this._footnoteService.addFootnote(
+            uid,
+            this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.unescapeHtml(matchArray[1])))
+          );
+        });
+      }
+      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(newValue));
     }
   }
 
