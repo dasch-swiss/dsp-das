@@ -8,8 +8,8 @@
   </div>
   <div class="line"></div>
 </div>
-<mat-menu #rootMenu="matMenu">
-  <span *ngFor="let child of list?.children">
+<mat-menu #rootMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false" (keydown)="onKeydown($event)">
+  <span *ngFor="let child of sortedLabelList">
     <span *ngIf="child.children && child.children.length > 0">
       <button mat-menu-item [matMenuTriggerFor]="menu.childMenu" (click)="onItemClicked(child)" type="button">
         {{ child.label }}
