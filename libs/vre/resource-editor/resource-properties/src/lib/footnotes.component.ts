@@ -6,7 +6,7 @@ import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
   selector: 'app-footnotes',
   template: `<h5>References</h5>
     <div
-      *ngFor="let footnote of footnoteService.footnotesList; let index = index"
+      *ngFor="let footnote of footnoteService.footnotes; let index = index"
       (click)="goToFootnote(footnote.uid)"
       class="footnote">
       {{ index + 1 }}. <span [innerHTML]="footnote.content"></span>

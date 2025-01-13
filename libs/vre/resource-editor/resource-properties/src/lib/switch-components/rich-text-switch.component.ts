@@ -16,6 +16,20 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
     </ng-template>`,
+  styles: [
+    `
+      :host ::ng-deep footnote {
+        font-size: 0.8em;
+        vertical-align: super;
+        visibility: visible;
+        position: relative;
+        top: -6px;
+        left: 2px;
+        color: #336790;
+        cursor: pointer;
+      }
+    `,
+  ],
 })
 export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   @Input() control!: FormControl<string | null>;
@@ -46,10 +60,9 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
         }
         Array.from(matches).forEach(matchArray => {
           const uid = Math.random().toString(36).substring(7);
-          const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}"></footnote>`;
+          const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}">${this._footnoteService.footnotes.length + 1}</footnote>`;
           newValue = newValue.replace(matchArray[0], parsedFootnote);
           this._footnoteService.addFootnote(
-            this.propertyUid!,
             uid,
             this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.unescapeHtml(matchArray[1])))
           );

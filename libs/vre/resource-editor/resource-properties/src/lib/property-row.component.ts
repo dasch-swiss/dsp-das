@@ -21,30 +21,6 @@ import { FootnoteService } from './footnote.service';
     `
       @use '../../../../../../apps/dsp-app/src/styles/config' as *;
 
-      :host {
-        counter-reset: footnote-counter;
-      }
-
-      :host ::ng-deep footnote:not(app-ck-editor footnote) {
-        display: inline-block;
-        position: relative;
-        visibility: hidden;
-        width: 8px;
-
-        &::before {
-          counter-increment: footnote-counter;
-          content: counter(footnote-counter);
-          font-size: 0.8em;
-          vertical-align: super;
-          visibility: visible;
-          position: relative;
-          top: -6px;
-          left: 2px;
-          color: #336790;
-          cursor: pointer;
-        }
-      }
-
       .label {
         color: rgb(107, 114, 128);
         align-self: start;
