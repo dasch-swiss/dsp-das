@@ -1,11 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-footnote-tooltip',
-  template: ` <div class="content">
+  template: ` <div class="content" [@fadeIn]="'in'">
     <div [innerHTML]="content"></div>
   </div>`,
+  animations: [
+    trigger('fadeIn', [
+      state('in', style({ opacity: 1 })),
+      transition(':enter', [style({ opacity: 0 }), animate(100)]),
+    ]),
+  ],
   styles: [
     `
       :host {

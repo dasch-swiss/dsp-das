@@ -78,7 +78,7 @@ export class FootnoteDirective {
   private hideTooltipWithDelay() {
     this.hideTimeout = setTimeout(() => {
       this.hideTooltip();
-    }, 500); // Adjust the delay as needed
+    }, 300);
   }
 
   private hideTooltip() {
