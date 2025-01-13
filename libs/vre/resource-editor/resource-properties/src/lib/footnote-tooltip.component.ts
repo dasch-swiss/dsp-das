@@ -3,9 +3,8 @@ import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-footnote-tooltip',
-  template: ` <div [class]="tooltipClass">
-    <h4 style="margin-top: 8px">Reference</h4>
-    <div [innerHTML]="content" style="font-size: 0.8em"></div>
+  template: ` <div class="content">
+    <div [innerHTML]="content"></div>
   </div>`,
   styles: [
     `
@@ -14,7 +13,8 @@ import { SafeHtml } from '@angular/platform-browser';
         z-index: 1000;
       }
 
-      .default-tooltip {
+      .content {
+        font-size: 0.8em;
         background: white;
         color: black;
         padding: 8px;
@@ -26,6 +26,5 @@ import { SafeHtml } from '@angular/platform-browser';
   ],
 })
 export class FootnoteTooltipComponent {
-  @Input() content!: SafeHtml;
-  @Input() tooltipClass: string = 'default-tooltip';
+  @Input({ required: true }) content!: SafeHtml;
 }

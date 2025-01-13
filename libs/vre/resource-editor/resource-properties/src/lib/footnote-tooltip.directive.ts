@@ -8,7 +8,6 @@ import { FootnoteTooltipComponent } from './footnote-tooltip.component';
 })
 export class FootnoteTooltipDirective implements OnInit {
   @Input('appFootnoteTooltip') tooltipContent: string = '';
-  @Input() tooltipClass: string = 'default-tooltip';
 
   private overlayRef: OverlayRef | null = null;
 
@@ -41,7 +40,6 @@ export class FootnoteTooltipDirective implements OnInit {
         const tooltipPortal = new ComponentPortal(FootnoteTooltipComponent);
         const tooltipRef = this.overlayRef.attach(tooltipPortal);
         tooltipRef.instance.content = this.tooltipContent;
-        tooltipRef.instance.tooltipClass = this.tooltipClass;
       }
     });
 
