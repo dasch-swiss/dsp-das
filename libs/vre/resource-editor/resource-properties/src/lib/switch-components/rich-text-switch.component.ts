@@ -29,6 +29,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
         left: 2px;
         color: #336790;
         cursor: pointer;
+        display: inline-block;
+        padding: 0 2px;
       }
     `,
   ],

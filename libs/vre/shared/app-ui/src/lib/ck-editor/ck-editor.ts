@@ -3,6 +3,7 @@ import { Constants } from '@dasch-swiss/dsp-js';
 export class ckEditor {
   static config = {
     entities: false,
+    licenseKey: 'GPL',
     toolbar: {
       items: [
         'heading',
@@ -32,6 +33,7 @@ export class ckEditor {
         'specialCharacters',
         '|',
         'sourceEditing',
+        'footnote',
       ],
       shouldNotGroupWhenFull: true,
     },
