@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Overlay, OverlayPositionBuilder, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { FootnoteTooltipComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -62,9 +62,7 @@ export class FootnoteDirective {
     }
 
     const tooltipRef = this.overlayRef.attach(tooltipPortal);
-
-    const sanitizedContent: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(content);
-    tooltipRef.instance.content = sanitizedContent;
+    tooltipRef.instance.content = this.sanitizer.bypassSecurityTrustHtml(content);
 
     this.overlayRef.overlayElement.addEventListener('mouseenter', () => {
       clearTimeout(this.hideTimeout);

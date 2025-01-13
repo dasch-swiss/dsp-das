@@ -14,7 +14,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       [innerHTML]="sanitizedHtml"
       appFootnote
       appHtmlLink
-      (internalLinkClicked)="_openResource($event)"></div>
+      (internalLinkClicked)="openResource($event)"></div>
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
     </ng-template>`,
@@ -57,6 +57,12 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     }
   }
 
+  openResource(linkValue: ReadLinkValue | string) {
+    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
+    const path = this._resourceService.getResourcePath(iri);
+    window.open(`/resource${path}`, '_blank');
+  }
+
   private _parseFootnotes(controlValue: string) {
     const regex = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
     const matches = controlValue.matchAll(regex);
@@ -84,11 +90,5 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
       '&#039;': "'",
     };
     return str.replace(/&(amp|lt|gt|quot|#039);/g, match => unescapeMap[match]);
-  }
-
-  _openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
-    window.open(`/resource${path}`, '_blank');
   }
 }

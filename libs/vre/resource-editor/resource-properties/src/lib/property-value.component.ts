@@ -114,13 +114,12 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    @Optional() @SkipSelf() private _footnoteService: FootnoteService,
+    @Optional() @SkipSelf() private readonly _footnoteService: FootnoteService,
     @Optional() private _resourceFetcherService: ResourceFetcherService
-  ) {
-    this._footnoteService.reset();
-  }
+  ) {}
 
   ngOnInit() {
+    this._footnoteService.reset();
     this._setInitialValue();
     this._setupDisplayMode();
     this._watchAndSetupCommentStatus();
