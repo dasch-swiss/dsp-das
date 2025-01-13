@@ -12,7 +12,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
       *ngIf="displayMode; else editMode"
       data-cy="rich-text-switch"
       [innerHTML]="sanitizedHtml"
-      appFootnote></div>
+      appFootnote
+      appHtmlLink
+      (internalLinkClicked)="_openResource($event)"></div>
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
     </ng-template>`,
@@ -50,6 +52,8 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   ngOnChanges() {
     if (this.control.value && this.displayMode) {
       this._parseFootnotes(this.control.value);
+    } else {
+      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.control.value!);
     }
   }
 
