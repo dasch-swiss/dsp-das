@@ -32,11 +32,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   ],
 })
 export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
-  @Input() control!: FormControl<string | null>;
+  @Input({ required: true }) control!: FormControl<string | null>;
   @Input() displayMode = true;
 
   sanitizedHtml!: SafeHtml;
-  propertyUid?: string;
 
   get myControl() {
     return this.control as FormControl<string>;
@@ -50,29 +49,29 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
 
   ngOnChanges() {
     if (this.control.value && this.displayMode) {
-      const regex = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
-      const matches = this.control.value?.matchAll(regex);
-      let newValue = this.control.value;
-      if (matches) {
-        console.log('got it', this.propertyUid);
-        if (!this.propertyUid) {
-          this.propertyUid = Math.random().toString(36).substring(7);
-        }
-        Array.from(matches).forEach(matchArray => {
-          const uid = Math.random().toString(36).substring(7);
-          const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}">${this._footnoteService.footnotes.length + 1}</footnote>`;
-          newValue = newValue.replace(matchArray[0], parsedFootnote);
-          this._footnoteService.addFootnote(
-            uid,
-            this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.unescapeHtml(matchArray[1])))
-          );
-        });
-      }
-      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(newValue));
+      this._parseFootnotes(this.control.value);
     }
   }
 
-  unescapeHtml(str: string) {
+  private _parseFootnotes(controlValue: string) {
+    const regex = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
+    const matches = controlValue.matchAll(regex);
+    let newValue = controlValue;
+    if (matches) {
+      Array.from(matches).forEach(matchArray => {
+        const uid = Math.random().toString(36).substring(7);
+        const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}">${this._footnoteService.footnotes.length + 1}</footnote>`;
+        newValue = newValue.replace(matchArray[0], parsedFootnote);
+        this._footnoteService.addFootnote(
+          uid,
+          this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(this._unescapeHtml(matchArray[1])))
+        );
+      });
+    }
+    this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(newValue));
+  }
+
+  private _unescapeHtml(str: string) {
     const unescapeMap = {
       '&amp;': '&',
       '&lt;': '<',
