@@ -22,6 +22,7 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   @Input() displayMode = true;
 
   sanitizedHtml!: SafeHtml;
+  propertyUid?: string;
 
   get myControl() {
     return this.control as FormControl<string>;
@@ -39,11 +40,16 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
       const matches = this.control.value?.matchAll(regex);
       let newValue = this.control.value;
       if (matches) {
+        console.log('got it', this.propertyUid);
+        if (!this.propertyUid) {
+          this.propertyUid = Math.random().toString(36).substring(7);
+        }
         Array.from(matches).forEach(matchArray => {
           const uid = Math.random().toString(36).substring(7);
           const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}"></footnote>`;
           newValue = newValue.replace(matchArray[0], parsedFootnote);
           this._footnoteService.addFootnote(
+            this.propertyUid!,
             uid,
             this._sanitizer.bypassSecurityTrustHtml(this.unescapeHtml(this.unescapeHtml(matchArray[1])))
           );

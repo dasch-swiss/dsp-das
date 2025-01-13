@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Optional,
+  SkipSelf,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
@@ -113,9 +114,11 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    @Optional() private _footnoteService: FootnoteService,
+    @Optional() @SkipSelf() private _footnoteService: FootnoteService,
     @Optional() private _resourceFetcherService: ResourceFetcherService
-  ) {}
+  ) {
+    this._footnoteService.reset();
+  }
 
   ngOnInit() {
     this._setInitialValue();
