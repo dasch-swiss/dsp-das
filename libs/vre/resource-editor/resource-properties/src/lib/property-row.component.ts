@@ -8,15 +8,14 @@ import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-property-row',
-  template: `
-      <div [class.border-bottom]="borderBottom" #rowElement style="display: flex; padding: 8px 0;">
-          <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
-          <div style="flex: 1">
-              <ng-content></ng-content>
-              <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
-          </div>
-      </div>`,
-    providers: [FootnoteService],
+  template: ` <div [class.border-bottom]="borderBottom" #rowElement style="display: flex; padding: 8px 0;">
+    <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
+    <div style="flex: 1">
+      <ng-content></ng-content>
+      <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
+    </div>
+  </div>`,
+  providers: [FootnoteService],
   styleUrls: ['./property-row.component.scss'],
 })
 export class PropertyRowComponent implements AfterViewInit, OnDestroy {
@@ -33,7 +32,10 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy {
     return this.prop && this.prop.values.length > 0 ? this.prop.values[0]?.id.split('/').pop() : undefined;
   }
 
-  constructor(private route: ActivatedRoute, public footnoteService: FootnoteService) {}
+  constructor(
+    private route: ActivatedRoute,
+    public footnoteService: FootnoteService
+  ) {}
 
   ngAfterViewInit() {
     this.highlightArkValue();

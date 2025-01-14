@@ -27,9 +27,9 @@ import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
+import { FootnoteService } from './footnote.service';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
-import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-property-value',

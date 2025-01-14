@@ -6,6 +6,8 @@ import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component'
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
 import { EraseResourceDialogComponent } from './lib/erase-resource-dialog.component';
 import { ExistingPropertyValueComponent } from './lib/existing-property-value.component';
+import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
+import { FootnotesComponent } from './lib/footnotes.component';
 import { IncomingStandoffLinkValueComponent } from './lib/incoming-standoff-link-value.component';
 import { PropertiesDisplayComponent } from './lib/properties-display.component';
 import { PropertiesToolbarComponent } from './lib/properties-toolbar.component';
@@ -37,8 +39,6 @@ import { LinkValueComponent } from './lib/value-components/link-value.component'
 import { ListValueComponent } from './lib/value-components/list-value.component';
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
-import { FootnotesComponent } from './lib/footnotes.component';
-import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
 
 const valueComponents = [
   GeonameValueComponent,

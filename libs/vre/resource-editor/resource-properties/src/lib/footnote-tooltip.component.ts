@@ -1,6 +1,6 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-footnote-tooltip',

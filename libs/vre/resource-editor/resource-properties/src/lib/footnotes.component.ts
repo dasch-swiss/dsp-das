@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { FootnoteService } from './footnote.service';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-footnotes',

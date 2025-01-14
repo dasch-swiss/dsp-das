@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { IsSwitchComponent } from './is-switch-component.interface';
 import { FootnoteService } from '../footnote.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
   selector: 'app-rich-text-switch',
