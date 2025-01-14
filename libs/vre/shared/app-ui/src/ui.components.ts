@@ -7,7 +7,6 @@ import { ColorPickerComponent } from './lib/color-picker/color-picker.component'
 import { CommonInputComponent } from './lib/common-input.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
-import { FootnoteDirective } from './lib/directives/footnote.directive';
 import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
 import { HintComponent } from './lib/hint/hint.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
@@ -45,6 +44,5 @@ export const UiComponents = [
   TruncatePipe,
   TextValueHtmlLinkDirective,
   HintComponent,
-  FootnoteDirective,
 ];
 export const UiStandaloneComponents = [PagerComponent];

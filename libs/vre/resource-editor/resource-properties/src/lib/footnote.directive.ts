@@ -2,8 +2,8 @@ import { Overlay, OverlayPositionBuilder, OverlayRef } from '@angular/cdk/overla
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Directive, HostListener } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FootnoteTooltipComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { FootnoteTooltipComponent } from './footnote-tooltip.component';
 
 @Directive({
   selector: '[appFootnote]',
