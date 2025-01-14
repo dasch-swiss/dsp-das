@@ -2,14 +2,13 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 import { ActivatedRoute } from '@angular/router';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { TranslateService } from '@ngx-translate/core';
-import { Subject, of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-property-row',
   template: ` <div [class.border-bottom]="borderBottom" #rowElement style="display: flex; padding: 8px 0;">
-    <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ propLabel }}</h3>
+    <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
     <div style="flex: 1">
       <ng-content></ng-content>
     </div>
@@ -30,22 +29,7 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy {
     return this.prop && this.prop.values.length > 0 ? this.prop.values[0]?.id.split('/').pop() : undefined;
   }
 
-  get isLinkValueProperty(): boolean {
-    return (
-      (this.prop?.propDef as any)?.isLinkValueProperty === true &&
-      (this.prop?.values[0] as any)?.linkedResource !== undefined
-    );
-  }
-
-  get propLabel(): string {
-    const label = this._translateService.instant('resource.propertyLabels.linkedProperty');
-    return this.isLinkValueProperty ? label : this.label;
-  }
-
-  constructor(
-    private route: ActivatedRoute,
-    private _translateService: TranslateService
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngAfterViewInit() {
     this.highlightArkValue();
