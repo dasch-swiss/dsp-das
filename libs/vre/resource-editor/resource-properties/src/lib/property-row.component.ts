@@ -14,26 +14,7 @@ import { takeUntil, takeWhile } from 'rxjs/operators';
       <ng-content></ng-content>
     </div>
   </div>`,
-  styles: [
-    `
-      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
-
-      .currentValue {
-        background-color: $yellow_100;
-      }
-
-      .label {
-        color: rgb(107, 114, 128);
-        align-self: start;
-        cursor: help;
-        width: 150px;
-        margin-top: 0px;
-        text-align: right;
-        padding-right: 24px;
-        flex-shrink: 0;
-      }
-    `,
-  ],
+  styleUrls: ['./property-row.component.scss'],
 })
 export class PropertyRowComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) label!: string;
