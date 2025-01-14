@@ -10,8 +10,8 @@ import {
   ReadUser,
   UserResponse,
 } from '@dasch-swiss/dsp-js';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext, Store } from '@ngxs/store';
