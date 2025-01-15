@@ -33,10 +33,7 @@ import { ListComponents } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
-import {
-  AppProgressIndicatorComponent,
-  ProgressIndicatorComponents,
-} from '@dasch-swiss/vre/shared/app-progress-indicator';
+import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
