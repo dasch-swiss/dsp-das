@@ -249,6 +249,7 @@
     "itemsPerPage": "Elementi per pagina:",
     "lastPage": "Ultima pagina",
     "nextPage": "Pagina successiva",
+    "inputTooltip": "Inserisci il numero della pagina e premi Invio per andare alla pagina.",
     "jumpToPage": "Vai alla pagina",
     "previousPage": "Pagina precedente",
     "pageLabel": "Pagina",

@@ -248,6 +248,7 @@
     "firstPage": "First page",
     "lastPage": "Last page",
     "nextPage": "Next page",
+    "inputTooltip": "Enter the page number and apply with the Enter key.",
     "jumpToPage": "Jump to page",
     "pageLabel": "Page",
     "previousPage": "Previous page",

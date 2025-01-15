@@ -25,6 +25,7 @@
         (focus)="onInputFocussed($event)"
         (blur)="onInputBlurred()"
         (keyup.enter)="onEnterPressed()"
+        [matTooltip]="'paginator.inputTooltip' | translate"
         class="page-input" />
       <button
         matTooltip="{{ 'paginator.jumpToPage' | translate }}"
