@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { AuthService } from '@dasch-swiss/vre/core/session';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Select, Store } from '@ngxs/store';

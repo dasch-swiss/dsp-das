@@ -1,7 +1,7 @@
 # app-session
 
 This library contains the SessionService which stores and retrieves a users session to and from the local storage.
-It can be imported via `@dasch-swiss/vre/shared/app-session`.
+It can be imported via `@dasch-swiss/vre/core/session`.
 
 ## Running unit tests
 

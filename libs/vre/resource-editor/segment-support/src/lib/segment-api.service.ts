@@ -8,7 +8,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
+import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { map } from 'rxjs/operators';
 import { Segment } from './segment';
 import { SegmentOrdering } from './segment-ordering';

@@ -101,8 +101,8 @@
       "@dasch-swiss/vre/shared/app-search": [
         "libs/vre/shared/app-search/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-session": [
-        "libs/vre/shared/app-session/src/index.ts"
+      "@dasch-swiss/vre/core/session": [
+        "libs/vre/core/session/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-settings-page": [
         "libs/vre/shared/app-settings-page/src/index.ts"

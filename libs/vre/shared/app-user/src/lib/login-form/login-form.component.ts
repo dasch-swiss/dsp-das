@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { AuthService } from '@dasch-swiss/vre/shared/app-session';
+import { AuthService } from '@dasch-swiss/vre/core/session';
 import { Subscription } from 'rxjs';
 import { finalize, takeLast, tap } from 'rxjs/operators';
 
