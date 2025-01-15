@@ -26,7 +26,7 @@ import {
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/shared/app-config';
 import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/shared/app-date-picker';
-import { AppErrorHandler } from '@dasch-swiss/vre/shared/app-error-handler';
+import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListComponents } from '@dasch-swiss/vre/shared/app-list';

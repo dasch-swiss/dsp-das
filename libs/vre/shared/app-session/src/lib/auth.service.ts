@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { UserFeedbackError } from '@dasch-swiss/vre/shared/app-error-handler';
+import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
