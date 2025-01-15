@@ -11,7 +11,7 @@
 </div>
 <!-- container with search results -->
 <div class="list-view-container">
-  <dasch-swiss-app-pager (pageChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults">
+  <dasch-swiss-app-pager (pageIndexChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults">
   </dasch-swiss-app-pager>
   <dasch-swiss-app-progress-indicator *ngIf="loading"></dasch-swiss-app-progress-indicator>
   <div *ngIf="numberOfAllResults > 0 && resources">

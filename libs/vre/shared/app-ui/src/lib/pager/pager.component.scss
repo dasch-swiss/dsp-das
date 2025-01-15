@@ -20,8 +20,10 @@
   justify-content: center;
 }
 
-.paginator-item-range {
-  min-width: 8em;
+.page-input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .page-input {
@@ -35,7 +37,51 @@
   width: 4em;
   text-align: center;
   font-size: 14px;
-  transition: border-color 0.3s, width 0.2s ease-in-out;
+}
+
+.go-to-button {
+  border: 1px solid $primary;
+  border-radius: 14px;
+  padding: 4px 0;
+  background-color: $primary_100;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.go-to-button-visible {
+  width: 2em;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  margin-right: 0.5em;
+}
+.go-to-icon {
+  color: $primary;
+  font-size: 1em;
+  width: 1em;
+  height: 1em;
+  transform: scale(0);
+  transition: transform 0.3s ease, font-size 0.3s ease;
+  line-height: 1; // Ensure vertical alignment
+}
+
+.go-to-button-visible .go-to-icon {
+  transform: scale(1);
+}
+
+.paginator-item-range {
+  min-width: 8em;
 }
 
 /* Remove number up/down buttons For Chrome, Edge, and Safari */

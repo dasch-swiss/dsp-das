@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,12 +15,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'dasch-swiss-app-pager',
-  imports: [MatIconModule, MatButtonModule, TranslateModule, MatInputModule, MatTooltipModule, NgIf],
+  imports: [MatIconModule, MatButtonModule, TranslateModule, MatInputModule, MatTooltipModule, NgIf, AsyncPipe],
   templateUrl: './pager.component.html',
   styleUrls: ['./pager.component.scss'],
 })
@@ -28,11 +29,13 @@ export class PagerComponent implements OnChanges {
   @Input() numberOfAllResults = 0;
   @Input() pageSize = 25;
 
-  @Output() pageChanged: EventEmitter<number> = new EventEmitter<number>();
+  @Output() pageIndexChanged: EventEmitter<number> = new EventEmitter<number>();
 
   @ViewChild('pageInput') private _pageInput!: ElementRef<HTMLInputElement>;
 
   private _pageIndex = 0;
+
+  actionBubbleVisible$ = new BehaviorSubject<boolean>(false);
 
   get pageIndex(): number {
     return this._pageIndex;
@@ -40,11 +43,19 @@ export class PagerComponent implements OnChanges {
 
   set pageIndex(val: number) {
     this._pageIndex = val;
-    this.pageChanged.emit(val);
+    this.pageIndexChanged.emit(val);
   }
 
   get lastPageIndex(): number {
     return this.numberOfAllResults ? Math.ceil(this.numberOfAllResults / this.pageSize) - 1 : 0;
+  }
+
+  get inputPage(): number | undefined {
+    return this._pageInput.nativeElement.value ? parseInt(this._pageInput.nativeElement.value, 10) : undefined;
+  }
+
+  get pageUnChanged(): boolean {
+    return this.inputPage === this._pageIndex + 1;
   }
 
   get itemRange(): string {
@@ -61,21 +72,40 @@ export class PagerComponent implements OnChanges {
     }
   }
 
-  onPageInput(page: string) {
-    if (!page) {
+  private _goToPage() {
+    if (!this.inputPage || this.pageUnChanged) {
+      this._pageInput.nativeElement.blur();
       return;
     }
-    const pageNumber = parseInt(page, 10);
-    // if the user inputs a far off number set to the closest available page
-    const clampedPage = Math.max(1, Math.min(pageNumber, this.lastPageIndex + 1));
-    if (clampedPage !== pageNumber) {
+    // if the user inputs a far off number set it to the closest available page
+    const clampedPage = Math.max(1, Math.min(this.inputPage, this.lastPageIndex + 1));
+    if (clampedPage !== this.inputPage) {
       this._pageInput.nativeElement.value = clampedPage.toString();
     }
     this.pageIndex = clampedPage - 1;
   }
 
-  selectTextOnFocus(event: FocusEvent) {
+  onEnterPressed() {
+    this._goToPage();
+    this._pageInput.nativeElement.blur();
+  }
+
+  onGoToClicked() {
+    this._goToPage();
+    this.actionBubbleVisible$.next(false);
+  }
+
+  onInputFocussed(event: FocusEvent) {
     const input = event.target as HTMLInputElement;
     input.select();
+    this.actionBubbleVisible$.next(true);
+  }
+
+  onInputBlurred() {
+    setTimeout(() => {
+      this.actionBubbleVisible$.next(false);
+      // reset the input value to the current page, might have been changed
+      this._pageInput.nativeElement.value = (this._pageIndex + 1).toString();
+    }, 200);
   }
 }

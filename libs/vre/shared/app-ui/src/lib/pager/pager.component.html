@@ -17,13 +17,23 @@
   </div>
   <div class="paginator-page-info">
     <span class="page-label">{{ 'paginator.pageLabel' | translate }}</span>
-    <input
-      #pageInput
-      type="number"
-      [value]="pageIndex + 1"
-      (focus)="selectTextOnFocus($event)"
-      (keyup.enter)="onPageInput($event.target.value)"
-      class="page-input" />
+    <div class="page-input-container">
+      <input
+        #pageInput
+        type="number"
+        [value]="pageIndex + 1"
+        (focus)="onInputFocussed($event)"
+        (blur)="onInputBlurred()"
+        (keyup.enter)="onEnterPressed()"
+        class="page-input" />
+      <button
+        matTooltip="{{ 'paginator.jumpToPage' | translate }}"
+        class="go-to-button"
+        [class.go-to-button-visible]="actionBubbleVisible$ | async"
+        (click)="onGoToClicked()">
+        <mat-icon class="go-to-icon">start</mat-icon>
+      </button>
+    </div>
     <span class="page-label">{{ 'paginator.rangeLabelOf' | translate }} {{ lastPageIndex + 1 }}</span>
   </div>
   <div class="paginator-nav">
