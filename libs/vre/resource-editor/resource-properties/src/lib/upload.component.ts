@@ -6,7 +6,7 @@ import {
   UploadFileService,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 

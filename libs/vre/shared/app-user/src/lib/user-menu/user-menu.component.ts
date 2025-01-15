@@ -3,7 +3,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { User } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { AuthService } from '@dasch-swiss/vre/shared/app-session';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';

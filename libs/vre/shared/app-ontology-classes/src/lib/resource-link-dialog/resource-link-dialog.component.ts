@@ -14,7 +14,7 @@ import {
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

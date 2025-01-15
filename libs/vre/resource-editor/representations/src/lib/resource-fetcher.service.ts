@@ -3,7 +3,7 @@ import { KnoraApiConnection, ReadResource, SystemPropertyDefinition } from '@das
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subscription } from 'rxjs';

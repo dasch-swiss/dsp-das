@@ -22,12 +22,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  ListsSelectors,
-  LoadOntologyAction,
-  OntologiesSelectors,
-  PropToDisplay,
-} from '@dasch-swiss/vre/shared/app-state';
+import { ListsSelectors, LoadOntologyAction, OntologiesSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { Actions, Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';

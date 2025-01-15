@@ -11,7 +11,7 @@ import {
   LoadProjectsAction,
   ProjectsSelectors,
   UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest, of } from 'rxjs';
 import { filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';

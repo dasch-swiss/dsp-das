@@ -14,7 +14,7 @@ import {
   OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

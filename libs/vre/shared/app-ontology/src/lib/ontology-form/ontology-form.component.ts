@@ -13,11 +13,7 @@ import {
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  ClearProjectOntologiesAction,
-  OntologiesSelectors,
-  ProjectsSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+import { ClearProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';

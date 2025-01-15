@@ -6,7 +6,7 @@ import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
-import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';

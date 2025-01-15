@@ -50,7 +50,7 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';

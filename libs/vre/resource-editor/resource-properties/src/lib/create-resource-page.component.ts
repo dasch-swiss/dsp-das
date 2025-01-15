@@ -4,7 +4,7 @@ import { Project } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

@@ -4,7 +4,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';

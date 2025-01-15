@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { AddUserToProjectMembershipAction, LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AddUserToProjectMembershipAction, LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { finalize } from 'rxjs/operators';
 import { ProjectForm } from './reusable-project-form/project-form.type';

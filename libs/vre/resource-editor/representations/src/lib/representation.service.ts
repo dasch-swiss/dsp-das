@@ -14,7 +14,7 @@ import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
-import { IKeyValuePairs, ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { IKeyValuePairs, ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';

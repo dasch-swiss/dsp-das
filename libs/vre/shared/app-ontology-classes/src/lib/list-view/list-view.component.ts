@@ -17,7 +17,7 @@ import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-com
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { Store } from '@ngxs/store';
 import { Subject, Subscription, combineLatest, of } from 'rxjs';

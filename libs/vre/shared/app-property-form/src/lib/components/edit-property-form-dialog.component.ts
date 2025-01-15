@@ -15,7 +15,7 @@ import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { SetCurrentOntologyAction } from '@dasch-swiss/vre/shared/app-state';
+import { SetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { switchMap, tap } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';

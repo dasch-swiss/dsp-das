@@ -10,7 +10,7 @@ import {
   ListsSelectors,
   LoadListsInProjectAction,
   ProjectsSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';

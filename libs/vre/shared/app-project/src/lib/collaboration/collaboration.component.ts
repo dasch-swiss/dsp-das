@@ -8,7 +8,7 @@ import {
   LoadProjectMembersAction,
   ProjectsSelectors,
   UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

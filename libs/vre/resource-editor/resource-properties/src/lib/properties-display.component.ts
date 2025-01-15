@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';

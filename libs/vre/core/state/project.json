@@ -1,21 +1,25 @@
 {
-  "name": "vre-shared-app-state",
+  "name": "vre-core-state",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/shared/app-state/src",
+  "sourceRoot": "libs/vre/core/state/src",
   "prefix": "dasch-swiss",
   "projectType": "library",
   "tags": [],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
-        "jestConfig": "libs/vre/shared/app-state/jest.config.ts"
+        "jestConfig": "libs/vre/core/state/jest.config.ts"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     }
   }
 }

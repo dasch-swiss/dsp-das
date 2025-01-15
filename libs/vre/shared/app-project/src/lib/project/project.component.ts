@@ -18,7 +18,7 @@ import {
   Events,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';

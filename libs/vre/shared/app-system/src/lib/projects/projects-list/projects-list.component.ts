@@ -6,7 +6,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';

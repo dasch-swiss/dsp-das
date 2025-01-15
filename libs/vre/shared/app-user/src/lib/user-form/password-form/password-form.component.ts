@@ -5,7 +5,7 @@ import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
 @Component({

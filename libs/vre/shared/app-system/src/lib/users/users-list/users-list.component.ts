@@ -14,7 +14,7 @@ import {
   RemoveUserFromProjectAction,
   SetUserAction,
   UserSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/shared/app-user';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';

@@ -16,7 +16,7 @@ import {
   OntologyService,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
 export interface ShortInfo {

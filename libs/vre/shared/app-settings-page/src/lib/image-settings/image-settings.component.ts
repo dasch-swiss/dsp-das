@@ -10,7 +10,7 @@ import {
   LoadProjectRestrictedViewSettingsAction,
   ProjectsSelectors,
   UpdateProjectRestrictedViewSettingsAction,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { IMask } from 'angular-imask';

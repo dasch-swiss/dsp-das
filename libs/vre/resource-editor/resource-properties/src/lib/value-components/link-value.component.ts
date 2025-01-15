@@ -25,7 +25,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';

@@ -20,7 +20,7 @@ import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,
 } from '@dasch-swiss/vre/shared/app-property-form';
-import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';

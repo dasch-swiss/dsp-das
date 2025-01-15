@@ -5,7 +5,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectsAction, UpdateProjectAction } from '@dasch-swiss/vre/core/state';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs/operators';

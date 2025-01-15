@@ -4,7 +4,7 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { AutoLoginService } from '@dasch-swiss/vre/shared/app-session';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Select, Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';

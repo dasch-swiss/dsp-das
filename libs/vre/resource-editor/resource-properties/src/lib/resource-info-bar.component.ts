@@ -4,7 +4,7 @@ import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { filter, map, take } from 'rxjs/operators';
 

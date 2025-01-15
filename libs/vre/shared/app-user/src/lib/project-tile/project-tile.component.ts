@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ClearProjectsAction, ClearProjectsMembershipAction } from '@dasch-swiss/vre/shared/app-state';
+import { ClearProjectsAction, ClearProjectsMembershipAction } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
 @Component({

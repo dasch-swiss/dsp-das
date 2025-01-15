@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseData, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem, CreateUserDialogComponent } from '@dasch-swiss/vre/shared/app-user';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';

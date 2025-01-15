@@ -23,7 +23,7 @@ import {
   IClassItemsKeyValuePairs,
   LoadClassItemsCountAction,
   OntologyClassSelectors,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';

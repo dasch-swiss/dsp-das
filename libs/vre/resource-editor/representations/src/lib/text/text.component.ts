@@ -12,7 +12,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';

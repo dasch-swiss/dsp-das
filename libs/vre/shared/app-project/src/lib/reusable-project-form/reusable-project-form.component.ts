@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { Store } from '@ngxs/store';
 import { ProjectForm } from './project-form.type';

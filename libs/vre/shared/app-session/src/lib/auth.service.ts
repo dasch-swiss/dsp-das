@@ -15,7 +15,7 @@ import {
   ClearProjectsAction,
   LoadUserAction,
   LogUserOutAction,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';

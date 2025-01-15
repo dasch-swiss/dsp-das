@@ -27,7 +27,7 @@ import {
   PropToDisplay,
   RemovePropertyAction,
   ReplacePropertyAction,
-} from '@dasch-swiss/vre/shared/app-state';
+} from '@dasch-swiss/vre/core/state';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';

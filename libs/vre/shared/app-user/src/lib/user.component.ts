@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
-import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';

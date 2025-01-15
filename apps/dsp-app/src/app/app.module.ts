@@ -41,7 +41,7 @@ import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
-import { NgxsStoreModule } from '@dasch-swiss/vre/shared/app-state';
+import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';

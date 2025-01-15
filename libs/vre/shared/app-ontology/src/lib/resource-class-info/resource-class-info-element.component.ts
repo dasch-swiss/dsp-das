@@ -13,7 +13,7 @@ import {
 import { GuiCardinality } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { DefaultClass, DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/shared/app-state';
+import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
