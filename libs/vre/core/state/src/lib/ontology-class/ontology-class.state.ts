@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Action, State, StateContext } from '@ngxs/store';
 import { finalize, map, take, tap } from 'rxjs/operators';
 import { ClearOntologyClassAction, LoadClassItemsCountAction } from './ontology-class.actions';
@@ -11,7 +11,7 @@ const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
   classItems: {}, // Ontology class items grouped by resource class id.
 };
 
-/* 
+/*
   Provides data about ontology class items, such as the number of resource items in a class.
 */
 @State<OntologyClassStateModel>({

@@ -20,7 +20,7 @@ import {
   UpdateOntology,
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListsSelectors, LoadOntologyAction, OntologiesSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { Actions, Store } from '@ngxs/store';

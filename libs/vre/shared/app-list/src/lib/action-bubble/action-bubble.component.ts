@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ListNode } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { DIALOG_LARGE, DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { filter, switchMap } from 'rxjs/operators';

@@ -21,7 +21,7 @@ import {
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';

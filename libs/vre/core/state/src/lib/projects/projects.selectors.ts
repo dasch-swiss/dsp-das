@@ -9,7 +9,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';

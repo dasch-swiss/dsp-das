@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ReadUser, StringLiteral } from '@dasch-swiss/dsp-js';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { AvailableLanguages } from '@dasch-swiss/vre/shared/app-config';
+import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Select } from '@ngxs/store';

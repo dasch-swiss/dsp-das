@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MenuItem } from '@dasch-swiss/vre/shared/app-user';
 
 @Component({

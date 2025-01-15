@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth } from '@dasch-swiss/vre/shared/app-config';
+import { Auth } from '@dasch-swiss/vre/core/config';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })

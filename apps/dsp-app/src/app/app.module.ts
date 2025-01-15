@@ -24,7 +24,7 @@ import {
   DspApiConfigToken,
   DspAppConfigToken,
   DspInstrumentationToken,
-} from '@dasch-swiss/vre/shared/app-config';
+} from '@dasch-swiss/vre/core/config';
 import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';

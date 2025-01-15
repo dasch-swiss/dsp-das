@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Constants, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';

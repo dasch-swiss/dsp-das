@@ -11,7 +11,7 @@ import {
   UpdateOntologyMetadata,
 } from '@dasch-swiss/dsp-js';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ClearProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';

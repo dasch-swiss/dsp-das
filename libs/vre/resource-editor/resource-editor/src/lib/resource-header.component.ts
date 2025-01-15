@@ -6,7 +6,7 @@ import {
   EditResourceLabelDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
   ComponentCommunicationEventService,
   EmitEvent,

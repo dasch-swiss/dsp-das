@@ -5,7 +5,7 @@ import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
 } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
