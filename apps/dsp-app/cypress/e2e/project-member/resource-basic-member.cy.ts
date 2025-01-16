@@ -12,7 +12,8 @@ describe('Check project admin existing resource functionality', () => {
     titles: [{ text: '', comment: '' }],
   };
 
-  const uploadedImageFilePath = '/uploads/Fingerprint_Logo_coloured.png';
+  const uploadedImageFile = 'Fingerprint_Logo_coloured.png';
+  const uploadedImageFilePath = `/uploads/${uploadedImageFile}`;
 
   before(() => {
     cy.resetDatabase();
@@ -70,8 +71,10 @@ describe('Check project admin existing resource functionality', () => {
       .find('[data-cy="add-class-instance"]')
       .click();
 
+    cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
+    cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=resource-label]')
       .siblings('app-common-input')
@@ -110,10 +113,12 @@ describe('Check project admin existing resource functionality', () => {
     // cy.get('[data-cy=edit-resource-label-submit]').click();
     // cy.get('[data-cy=resource-header-label').contains(newLabel);
 
+    cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy="more-vert-image-button"]').click();
     cy.get('[data-cy="replace-image-button"]').should('be.visible').click();
     cy.get('[data-cy="replace-file-submit-button"]').should('have.attr', 'disabled');
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
+    cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
