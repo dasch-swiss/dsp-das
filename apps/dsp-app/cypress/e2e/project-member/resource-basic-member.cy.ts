@@ -119,6 +119,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
     cy.get('@resourceRequest.all').should('have.length', 1);
 
+    cy.intercept('GET', `**/resources/**`).as('resourcesRequest');
     cy.get('[data-cy=show-all-properties]').scrollIntoView();
     cy.get('[data-cy="show-all-properties"]').click();
     cy.get('[data-cy=add-property-value-button]').scrollIntoView();
@@ -129,6 +130,7 @@ describe('Check project admin existing resource functionality', () => {
     const firstComment = faker.lorem.word();
     cy.get('[data-cy=comment-textarea]').should('be.visible').type(firstComment);
     cy.get('[data-cy="save-button"]').click();
+    cy.wait('@resourcesRequest').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-cy=property-value]').scrollIntoView();
     cy.get('[data-cy=property-value]').first().trigger('mouseenter');
