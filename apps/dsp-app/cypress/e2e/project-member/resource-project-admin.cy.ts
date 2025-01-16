@@ -67,7 +67,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it.only('ThingPicture resource should be editable', () => {
+  it('ThingPicture resource should be editable', () => {
     project0001Page.visitClass('ThingPicture');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
@@ -78,19 +78,23 @@ describe('Check project admin existing resource functionality', () => {
     // cy.get('[data-cy=edit-resource-label-submit]').click();
     // cy.get('[data-cy=resource-header-label').contains(newLabel);
 
+    cy.intercept('GET', `**/default.jpg`).as('stillImageRequest');
     cy.get('[data-cy="more-vert-image-button"]').click();
     cy.get('[data-cy="replace-image-button"]').should('be.visible').click();
     cy.get('[data-cy="replace-file-submit-button"]').should('have.attr', 'disabled');
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
+    cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-cy=show-all-properties]').scrollIntoView();
     cy.get('[data-cy="show-all-properties"]').click();
     cy.get('[data-cy=add-property-value-button]').scrollIntoView();
     cy.get('[data-cy="add-property-value-button"]').click();
+    cy.get('[data-cy="add-property-value-button"]').should('not.exist', { timeout: 500 });
+
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=common-input-text]', { timeout: 1000 }).should('be.visible').type(newLabel);
+    cy.get('[data-cy=common-input-text]').should('be.visible').type(newLabel);
     const firstComment = faker.lorem.word();
     cy.get('[data-cy=comment-textarea]').should('be.visible').type(firstComment);
     cy.get('[data-cy="save-button"]').click();
