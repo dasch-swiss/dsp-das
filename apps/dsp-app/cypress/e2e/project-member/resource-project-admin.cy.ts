@@ -93,11 +93,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="add-property-value-button"]').click();
     cy.get('[data-cy="add-property-value-button"]').should('not.exist', { timeout: 500 });
 
+    cy.intercept('GET', `**/resources/**`).as('resourcesRequest');
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=common-input-text]').should('be.visible').type(newLabel);
     const firstComment = faker.lorem.word();
     cy.get('[data-cy=comment-textarea]').should('be.visible').type(firstComment);
     cy.get('[data-cy="save-button"]').click();
+    cy.wait('@resourcesRequest').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-cy=property-value]').scrollIntoView();
     cy.get('[data-cy=property-value]').first().trigger('mouseenter');
