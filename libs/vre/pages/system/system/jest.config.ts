@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'vre-shared-app-settings-page',
-  preset: '../../../../jest.preset.js',
+  displayName: 'vre-pages-system-system',
+  preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/shared/app-settings-page',
+  coverageDirectory: '../../../../../coverage/libs/vre/shared/app-system',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
@@ -18,5 +18,5 @@ export default {
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
-  ]
+  ],
 };
