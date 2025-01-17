@@ -83,8 +83,8 @@
       "@dasch-swiss/vre/shared/app-notification": [
         "libs/vre/shared/app-notification/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-ontology": [
-        "libs/vre/shared/app-ontology/src/index.ts"
+      "@dasch-swiss/vre/pages/ontology/ontology": [
+        "libs/vre/pages/ontology/ontology/src/index.ts"
       ],
       "@dasch-swiss/vre/pages/ontology/ontology-classes": [
         "libs/vre/pages/ontology/ontology-classes/src/index.ts"
