@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   IKeyValuePairs,
   LoadProjectMembershipAction,
@@ -12,6 +11,7 @@ import {
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';

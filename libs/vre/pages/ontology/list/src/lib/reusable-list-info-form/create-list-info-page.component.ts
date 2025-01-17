@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { ListInfoForm } from './list-info-form.type';
 

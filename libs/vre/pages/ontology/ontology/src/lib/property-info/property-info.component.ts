@@ -10,13 +10,13 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
   DefaultProperty,
   OntologyService,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
 export interface ShortInfo {
