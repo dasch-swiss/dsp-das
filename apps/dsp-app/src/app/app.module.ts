@@ -21,6 +21,7 @@ import {
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
+import { OntologyClassesComponents } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
@@ -32,7 +33,6 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 import { ListComponents } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
-import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
 import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
