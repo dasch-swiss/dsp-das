@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { AppConfigService, DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Injectable({
   providedIn: 'root',

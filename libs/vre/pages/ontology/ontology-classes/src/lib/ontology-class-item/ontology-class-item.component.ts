@@ -13,17 +13,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
+  IClassItemsKeyValuePairs,
+  LoadClassItemsCountAction,
+  OntologyClassSelectors,
+} from '@dasch-swiss/vre/core/state';
+import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events,
   LocalizationService,
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  IClassItemsKeyValuePairs,
-  LoadClassItemsCountAction,
-  OntologyClassSelectors,
-} from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';

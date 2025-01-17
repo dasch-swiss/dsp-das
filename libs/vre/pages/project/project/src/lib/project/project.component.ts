@@ -13,12 +13,12 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   ComponentCommunicationEventService,
   Events,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Actions, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';

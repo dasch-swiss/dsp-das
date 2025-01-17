@@ -7,8 +7,8 @@ import {
   ResourceClassDefinition,
   ResourceClassDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';

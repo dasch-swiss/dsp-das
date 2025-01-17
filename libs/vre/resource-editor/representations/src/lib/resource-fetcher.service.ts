@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
-import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
+import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
+import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subscription } from 'rxjs';

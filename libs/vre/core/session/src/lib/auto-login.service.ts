@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { LoadUserAction } from '@dasch-swiss/vre/core/state';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { finalize, switchMap, take } from 'rxjs/operators';

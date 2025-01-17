@@ -1,15 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
-import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   IProjectOntologiesKeyValuePairs,
   OntologiesSelectors,
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
 import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';

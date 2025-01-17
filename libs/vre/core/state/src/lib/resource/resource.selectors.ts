@@ -1,7 +1,7 @@
 import { Params } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
 import { IKeyValuePairs } from '../model-interfaces';

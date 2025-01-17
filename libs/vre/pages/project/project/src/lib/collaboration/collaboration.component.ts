@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   IKeyValuePairs,
   LoadProjectMembersAction,
   ProjectsSelectors,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

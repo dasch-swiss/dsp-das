@@ -3,12 +3,6 @@ import { ApiResponseData, ApiResponseError, KnoraApiConnection, LoginResponse } 
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events as CommsEvents,
-  LocalizationService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import {
   ClearListsAction,
   ClearOntologiesAction,
   ClearOntologyClassAction,
@@ -16,6 +10,12 @@ import {
   LoadUserAction,
   LogUserOutAction,
 } from '@dasch-swiss/vre/core/state';
+import {
+  ComponentCommunicationEventService,
+  EmitEvent,
+  Events as CommsEvents,
+  LocalizationService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { of, throwError } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
