@@ -11,8 +11,8 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import {
