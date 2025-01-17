@@ -36,6 +36,7 @@ import {
   SetCurrentProjectOntologyPropertiesAction,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
+import { ProjectBase } from '@dasch-swiss/vre/pages/project/project';
 import {
   DefaultClass,
   DefaultProperties,
@@ -46,7 +47,6 @@ import {
   PropertyInfoObject,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectBase } from '@dasch-swiss/vre/shared/app-project';
 import {
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,

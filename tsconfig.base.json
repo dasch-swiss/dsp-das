@@ -92,8 +92,8 @@
       "@dasch-swiss/vre/ui/progress-indicator": [
         "libs/vre/ui/progress-indicator/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-project": [
-        "libs/vre/shared/app-project/src/index.ts"
+      "@dasch-swiss/vre/pages/project/project": [
+        "libs/vre/pages/project/project/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-property-form": [
         "libs/vre/shared/app-property-form/src/index.ts"
