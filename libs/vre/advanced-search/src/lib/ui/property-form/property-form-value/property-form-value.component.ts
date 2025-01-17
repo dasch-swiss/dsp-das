@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
-import { AppDatePickerComponent } from '@dasch-swiss/vre/shared/app-date-picker';
+import { AppDatePickerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ResourceLabel } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
