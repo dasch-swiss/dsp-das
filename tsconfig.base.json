@@ -77,8 +77,8 @@
       "@dasch-swiss/vre/shared/app-helper-services": [
         "libs/vre/shared/app-helper-services/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-list": [
-        "libs/vre/shared/app-list/src/index.ts"
+      "@dasch-swiss/vre/pages/ontology/list": [
+        "libs/vre/pages/ontology/list/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/app-notification": [
         "libs/vre/shared/app-notification/src/index.ts"

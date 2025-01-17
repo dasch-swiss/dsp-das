@@ -20,6 +20,7 @@ import {
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
+import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
 import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
@@ -33,7 +34,6 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ListComponents } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
