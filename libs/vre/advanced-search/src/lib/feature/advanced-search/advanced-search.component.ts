@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { take } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';

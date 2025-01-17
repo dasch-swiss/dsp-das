@@ -4,14 +4,14 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   DeleteListNodeAction,
   ListsSelectors,
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';

@@ -11,12 +11,6 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
-import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
-import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
-import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   AppConfigService,
   buildTagFactory,
@@ -25,29 +19,35 @@ import {
   DspAppConfigToken,
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/core/config';
-import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/shared/app-date-picker';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
+import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
+import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
+import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/shared/app-date-picker';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ListComponents } from '@dasch-swiss/vre/shared/app-list';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { OntologyComponents } from '@dasch-swiss/vre/shared/app-ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/shared/app-ontology-classes';
-import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { ProjectComponents } from '@dasch-swiss/vre/shared/app-project';
 import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SearchComponents } from '@dasch-swiss/vre/shared/app-search';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
-import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
-import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/shared/app-ui';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
+import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   HumanReadableErrorPipe,
   MultiLanguageTextareaComponent,
   MutiLanguageInputComponent,
   StringLiteralComponents,
 } from '@dasch-swiss/vre/ui/string-literal';
+import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular-ivy';

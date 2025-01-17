@@ -1,20 +1,7 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import {
-  Cardinality,
-  ClassDefinition,
-  Constants,
-  KnoraApiConnection,
-  PropertyDefinition,
-  ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
-  UpdateResourceClassCardinality,
-} from '@dasch-swiss/dsp-js';
-import { GuiCardinality } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DefaultClass, DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/core/state';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

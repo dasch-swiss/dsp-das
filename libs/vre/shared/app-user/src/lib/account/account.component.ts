@@ -4,7 +4,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';

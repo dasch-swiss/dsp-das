@@ -23,6 +23,20 @@ import {
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
+  ClearCurrentOntologyAction,
+  ClearProjectOntologiesAction,
+  CurrentOntologyCanBeDeletedAction,
+  LoadListsInProjectAction,
+  LoadOntologyAction,
+  LoadProjectOntologiesAction,
+  OntologiesSelectors,
+  OntologyProperties,
+  ProjectsSelectors,
+  SetCurrentOntologyAction,
+  SetCurrentProjectOntologyPropertiesAction,
+  UserSelectors,
+} from '@dasch-swiss/vre/core/state';
+import {
   DefaultClass,
   DefaultProperties,
   DefaultResourceClasses,
@@ -37,22 +51,8 @@ import {
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,
 } from '@dasch-swiss/vre/shared/app-property-form';
-import {
-  ClearCurrentOntologyAction,
-  ClearProjectOntologiesAction,
-  CurrentOntologyCanBeDeletedAction,
-  LoadListsInProjectAction,
-  LoadOntologyAction,
-  LoadProjectOntologiesAction,
-  OntologiesSelectors,
-  OntologyProperties,
-  ProjectsSelectors,
-  SetCurrentOntologyAction,
-  SetCurrentProjectOntologyPropertiesAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';

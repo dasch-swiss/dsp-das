@@ -5,7 +5,6 @@ import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import {
   LoadProjectMembersAction,
   LoadProjectMembershipAction,
@@ -15,8 +14,9 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { DialogService } from '@dasch-swiss/vre/shared/app-ui';
+import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/shared/app-user';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';

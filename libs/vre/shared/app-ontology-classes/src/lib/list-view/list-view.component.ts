@@ -13,14 +13,14 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiResponseError, CountQueryResponse, KnoraApiConnection, ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { Subject, Subscription, combineLatest, of } from 'rxjs';
+import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';
 
 export interface ShortResInfo {
