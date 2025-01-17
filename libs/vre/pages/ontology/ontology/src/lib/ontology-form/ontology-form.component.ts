@@ -10,11 +10,11 @@ import {
   ReadProject,
   UpdateOntologyMetadata,
 } from '@dasch-swiss/dsp-js';
-import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ClearProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { existingNamesValidator } from '@dasch-swiss/vre/shared/app-user';
+import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
+import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';

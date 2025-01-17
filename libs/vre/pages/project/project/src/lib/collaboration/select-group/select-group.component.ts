@@ -11,7 +11,7 @@ import {
 import { UntypedFormControl } from '@angular/forms';
 import { ReadGroup } from '@dasch-swiss/dsp-js';
 import { IKeyValuePairs, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { AutocompleteItem } from '@dasch-swiss/vre/shared/app-user';
+import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

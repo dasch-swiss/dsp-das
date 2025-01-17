@@ -14,8 +14,8 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
+import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/shared/app-user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';

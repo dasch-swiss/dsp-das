@@ -119,8 +119,8 @@
       "@dasch-swiss/vre/ui/ui": [
         "libs/vre/ui/ui/src/index.ts"
       ],
-      "@dasch-swiss/vre/shared/app-user": [
-        "libs/vre/shared/app-user/src/index.ts"
+      "@dasch-swiss/vre/pages/user-settings/user": [
+        "libs/vre/pages/user-settings/user/src/index.ts"
       ],
       "@dasch-swiss/vre/shared/assets/status-msg": [
         "libs/vre/shared/assets/status-msg/src/index.ts"

@@ -12,6 +12,7 @@ import {
   ProjectComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
+import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -23,7 +24,6 @@ import {
   SystemComponent,
   UsersComponent,
 } from '@dasch-swiss/vre/shared/app-system';
-import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/shared/app-user';
 import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 

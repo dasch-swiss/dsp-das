@@ -26,6 +26,7 @@ import { OntologyClassesComponents } from '@dasch-swiss/vre/pages/ontology/ontol
 import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
+import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
 import { PropertyFormComponents } from '@dasch-swiss/vre/resource-editor/property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
@@ -37,7 +38,6 @@ import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
-import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
