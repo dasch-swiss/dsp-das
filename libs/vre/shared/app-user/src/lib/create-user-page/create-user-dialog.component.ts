@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { CreateUserAction } from '@dasch-swiss/vre/core/state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';

@@ -2,15 +2,15 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
 import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   LoadProjectRestrictedViewSettingsAction,
   ProjectsSelectors,
   UpdateProjectRestrictedViewSettingsAction,
 } from '@dasch-swiss/vre/core/state';
+import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { IMask } from 'angular-imask';

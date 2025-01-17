@@ -16,7 +16,7 @@ import {
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { OntologyClassService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Action, Actions, State, StateContext, ofActionSuccessful } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';

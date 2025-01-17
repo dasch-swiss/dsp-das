@@ -19,8 +19,6 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { DefaultClass, DefaultResourceClasses, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import {
   OntologiesSelectors,
   OntologyProperties,
@@ -28,6 +26,8 @@ import {
   RemovePropertyAction,
   ReplacePropertyAction,
 } from '@dasch-swiss/vre/core/state';
+import { DefaultClass, DefaultResourceClasses, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';

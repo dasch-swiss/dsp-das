@@ -22,7 +22,7 @@ import {
   Events,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

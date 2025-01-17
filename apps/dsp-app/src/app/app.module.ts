@@ -35,11 +35,11 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';
 import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   HumanReadableErrorPipe,

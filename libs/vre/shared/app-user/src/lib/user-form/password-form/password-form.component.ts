@@ -2,10 +2,10 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ApiResponseError, KnoraApiConnection, ReadUser, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 
 @Component({

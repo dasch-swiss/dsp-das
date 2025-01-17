@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import * as Sentry from '@sentry/angular-ivy';
 import { AjaxError } from 'rxjs/ajax';
 import { UserFeedbackError } from './user-feedback-error';
