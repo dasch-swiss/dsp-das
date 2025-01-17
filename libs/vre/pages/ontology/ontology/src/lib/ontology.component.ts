@@ -38,6 +38,10 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import { ProjectBase } from '@dasch-swiss/vre/pages/project/project';
 import {
+  EditPropertyFormDialogComponent,
+  EditPropertyFormDialogProps,
+} from '@dasch-swiss/vre/resource-editor/property-form';
+import {
   DefaultClass,
   DefaultProperties,
   DefaultResourceClasses,
@@ -47,10 +51,6 @@ import {
   PropertyInfoObject,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  EditPropertyFormDialogComponent,
-  EditPropertyFormDialogProps,
-} from '@dasch-swiss/vre/shared/app-property-form';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';

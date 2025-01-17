@@ -27,6 +27,7 @@ import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
+import { PropertyFormComponents } from '@dasch-swiss/vre/resource-editor/property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -35,7 +36,6 @@ import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-mo
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
-import { PropertyFormComponents } from '@dasch-swiss/vre/shared/app-property-form';
 import { SettingsPageComponents } from '@dasch-swiss/vre/shared/app-settings-page';
 import { SystemComponents } from '@dasch-swiss/vre/shared/app-system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/shared/app-user';

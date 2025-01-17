@@ -9,6 +9,11 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import {
+  CreatePropertyFormDialogComponent,
+  CreatePropertyFormDialogProps,
+} from '@dasch-swiss/vre/resource-editor/property-form';
 import {
   DefaultProperties,
   DefaultProperty,
@@ -16,11 +21,6 @@ import {
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import {
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
-} from '@dasch-swiss/vre/shared/app-property-form';
-import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
