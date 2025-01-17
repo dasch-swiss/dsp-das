@@ -1,5 +1,5 @@
 {
-  "extends": ["../../../.eslintrc-angular.json"],
+  "extends": ["../../../../../.eslintrc-angular.json"],
   "rules": {
     "@angular-eslint/component-selector": [
       "error",

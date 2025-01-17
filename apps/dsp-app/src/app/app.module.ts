@@ -10,7 +10,6 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { AdvancedSearchComponent } from '@dasch-swiss/vre/advanced-search';
 import {
   AppConfigService,
   buildTagFactory,
@@ -23,6 +22,7 @@ import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';

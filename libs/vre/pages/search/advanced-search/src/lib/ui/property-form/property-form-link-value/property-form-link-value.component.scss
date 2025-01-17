@@ -1,4 +1,4 @@
-@use '../../../../../../../../apps/dsp-app/src/styles/config' as *;
+@use '../../../../../../../../../../apps/dsp-app/src/styles/config' as *;
 
 mat-form-field {
   width: 100%;
@@ -10,15 +10,15 @@ mat-form-field {
 
     .mat-mdc-option.loader {
       flex-direction: column;
-      
+
       .mdc-list-item__primary-text {
         margin-right: initial;
       }
     }
-    
+
     .mat-mdc-option {
       padding: 10px;
-      
+
       &:nth-child(even) {
         background-color: $primary_50;
       }

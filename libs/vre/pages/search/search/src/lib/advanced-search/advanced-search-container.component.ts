@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QueryObject, PropertyFormItem } from '@dasch-swiss/vre/advanced-search';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/advanced-search';
 
 @Component({
   selector: 'app-advanced-search-container',
