@@ -9,9 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { PagerComponent } from '@dasch-swiss/vre/shared/app-ui';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
