@@ -70,6 +70,7 @@ describe('Check project admin existing resource functionality', () => {
 
   it('ThingPicture resource should be editable', () => {
     project0001Page.visitClass('ThingPicture');
+    cy.intercept('GET', `**/resources/**`).as('initialImageRequest');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
     // cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
@@ -79,6 +80,7 @@ describe('Check project admin existing resource functionality', () => {
     // cy.get('[data-cy=edit-resource-label-submit]').click();
     // cy.get('[data-cy=resource-header-label').contains(newLabel);
 
+    cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
     cy.intercept('GET', `**/default.jpg`).as('stillImageRequest');
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy="more-vert-image-button"]').click();
