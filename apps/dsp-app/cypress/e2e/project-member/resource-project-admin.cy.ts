@@ -80,7 +80,6 @@ describe('Check project admin existing resource functionality', () => {
     // cy.get('[data-cy=edit-resource-label-submit]').click();
     // cy.get('[data-cy=resource-header-label').contains(newLabel);
 
-    cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
     cy.intercept('GET', `**/default.jpg`).as('stillImageRequest');
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy="more-vert-image-button"]').click();
@@ -91,6 +90,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
+    cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-cy=show-all-properties]').scrollIntoView();
     cy.get('[data-cy="show-all-properties"]').click();
