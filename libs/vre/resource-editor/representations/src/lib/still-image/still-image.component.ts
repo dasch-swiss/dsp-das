@@ -40,7 +40,6 @@ import { StillImageHelper } from './still-image-helper';
       <app-still-image-toolbar
         *ngIf="isViewInitialized"
         [resource]="resource"
-        [attachedProject]="attachedProject$ | async"
         [compoundMode]="compoundMode"
         [isPng]="isPng"
         (imageIsPng)="afterFormatChange($event)" />
@@ -116,15 +115,17 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
       (this.osdService.viewer as any).ajaxHeaders,
       this.isPng
     );
+    (this.osdService.viewer as any).loadTilesWithAjax = true;
     this.osdService.viewer.open(tiles);
   }
 
   private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
     const i3f = IIIFUrl.createUrl(image.externalUrl);
     if (!i3f) {
-      throw new AppError('Error with IIIF URL');
+      throw new AppError("Can't open external IIIF URL");
     }
 
+    (this.osdService.viewer as any).loadTilesWithAjax = false;
     this.osdService.viewer.open(i3f.infoJsonUrl);
   }
 }

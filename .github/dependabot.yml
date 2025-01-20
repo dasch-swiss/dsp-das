@@ -5,19 +5,119 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    open-pull-requests-limit: 5
     schedule:
-      interval: "daily"
+      interval: "weekly"
     commit-message:
       prefix: "chore"
       include: "scope"
-#    groups:
-#       frontend-dependencies:
-#          applies-to: version-updates
-#          patterns:
-#            - "*"
+    groups:
+      angular-deps:
+        applies-to: version-updates
+        patterns:
+          - "@angular*"
+          - "@ngrx/component-store"
+        update-types:
+          - "minor"
+          - "patch"
+      eslint-deps:
+        applies-to: version-updates
+        patterns:
+          - "eslint"
+        exclude-patterns:
+          - "@angular-eslint/*"
+          - "@nx/eslint/*"
+          - "@nrwl/eslint*"
+        update-types:
+          - "minor"
+          - "patch"
+      grafana-deps:
+        applies-to: version-updates
+        patterns:
+          - "@grafana/*"
+        update-types:
+          - "minor"
+          - "patch"
+      jasmine-karma-deps:
+        applies-to: version-updates
+        patterns:
+          - "karma*"
+          - "jasmine*"
+          - "@types/jasmine*"
+        update-types:
+          - "minor"
+          - "patch"
+      jest-deps:
+        applies-to: version-updates
+        patterns:
+          - "jest*"
+          - "ts-jest"
+          - "@types/jest"
+        update-types:
+          - "minor"
+          - "patch"
+      jwt-decoder-deps:
+        applies-to: version-updates
+        patterns:
+          - "jwt-decode"
+          - "@types/jwt-decode"
+        update-types:
+          - "minor"
+          - "patch"
+      ngxs-deps:
+        applies-to: version-updates
+        patterns:
+          - "@ngxs/*"
+        update-types:
+          - "minor"
+          - "patch"
+      nx-deps:
+        applies-to: version-updates
+        patterns:
+          - "nx*"
+          - "@nx*"
+          - "@nrwl*"
+        update-types:
+          - "minor"
+          - "patch"
+      postcss-deps:
+        applies-to: version-updates
+        patterns:
+          - "postcss*"
+        update-types:
+          - "minor"
+          - "patch"
+      sentry-deps:
+        applies-to: version-updates
+        patterns:
+          - "@sentry/*"
+        update-types:
+          - "minor"
+          - "patch"
+      types-deps:
+        applies-to: version-updates
+        patterns:
+          - "@types/*"
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "@types/jest"
+          - "@types/jasmine*"
+          - "@types/jwt-decode"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # we use github:dasch-swiss/ckeditor_custom_build#v2.0.0 and v2.0.1 seems to be broken
+      - dependency-name: "ckeditor5-custom-build"
+      # all nx and angular dependencies are for now handled manually
+      - dependency-name: "@angular/*"
+      - dependency-name: "@angular-eslint/*" #angular-eslint should match the angular version, also handled manually
+      - dependency-name: "typescript"
+      - dependency-name: "@ngrx/component-store"
+      - dependency-name: "nx*"
+      - dependency-name: "@nx*"
+      - dependency-name: "@nrwl/*"
 
   - package-ecosystem: "docker"
     directory: "/"

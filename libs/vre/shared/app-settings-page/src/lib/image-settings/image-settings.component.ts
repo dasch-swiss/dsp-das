@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
-import { RestrictedViewResponse } from '@dasch-swiss/vre/open-api';
+import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -37,7 +37,7 @@ export class ImageSettingsComponent implements OnInit {
   currentSettings: ProjectRestrictedViewSettings | RestrictedViewResponse;
   imageSettings: ImageSettingsEnum = ImageSettingsEnum.Off;
   projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
-  percentage: string = '99';
+  percentage = '99';
   fixedWidth: string;
 
   minMaxInputMask(min: number, max: number) {
