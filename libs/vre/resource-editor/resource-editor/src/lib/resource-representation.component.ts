@@ -1,14 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
 import {
   FileRepresentation,
   RepresentationConstants,
-  RepresentationService,
   getFileValue,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ResourceSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { UserSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -35,8 +33,7 @@ import { map } from 'rxjs/operators';
       [class.pdf]="representationToDisplay.fileValue.filename.split('.').pop() === 'pdf'"
       *ngSwitchCase="representationConstants.document"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [attachedProject]="attachedProject$ | async">
+      [parentResource]="resource.res">
     </app-document>
 
     <app-audio
@@ -85,10 +82,6 @@ export class ResourceRepresentationComponent implements OnChanges {
     return this.resource.res.attachedToProject;
   }
 
-  attachedProject$: Observable<ReadProject | undefined> = this._store
-    .select(ResourceSelectors.attachedProjects)
-    .pipe(map(attachedProjects => this._rs.getParentResourceAttachedProject(attachedProjects, this.resource.res)));
-
   isAdmin$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
     this._store.select(UserSelectors.userProjectAdminGroups),
@@ -100,10 +93,7 @@ export class ResourceRepresentationComponent implements OnChanges {
     })
   );
 
-  constructor(
-    private _store: Store,
-    private _rs: RepresentationService
-  ) {}
+  constructor(private _store: Store) {}
 
   ngOnChanges() {
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
