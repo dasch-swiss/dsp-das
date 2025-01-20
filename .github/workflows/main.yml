@@ -93,7 +93,7 @@ jobs:
       - name: Check Docker Container Logs
         run: |
           docker ps
-          docker logs $(docker ps -q)
+          docker ps -q | xargs -I {} docker logs {}
 
 
   jdnconvertiblecalendar-tests:
