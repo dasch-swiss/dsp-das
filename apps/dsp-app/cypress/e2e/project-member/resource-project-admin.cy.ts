@@ -91,11 +91,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
+    cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
+    cy.get('@initialImageRequest.all').should('have.length', 2);
+    cy.get('@stillImageRequest.all').should('have.length', 2);
     cy.get('[data-cy=show-all-properties]').scrollIntoView();
     cy.get('[data-cy="show-all-properties"]').click();
     cy.get('[data-cy=add-property-value-button]').scrollIntoView();
     cy.get('[data-cy="add-property-value-button"]').click();
-    cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.intercept('GET', `**/resources/**`).as('resourcesRequest');
     const newLabel = faker.lorem.word();
