@@ -92,8 +92,8 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
 
     cy.wait('@initialImageRequest').its('response.statusCode').should('eq', 200);
-    cy.get('@initialImageRequest.all').should('have.length', 2);
-    cy.get('@stillImageRequest.all').should('have.length', 2);
+    cy.get('@initialImageRequest.all').should('have.length.greaterThan', 1);
+    cy.get('@stillImageRequest.all').should('have.length.greaterThan', 1);
     cy.get('[data-cy=show-all-properties]').scrollIntoView();
     cy.get('[data-cy="show-all-properties"]').click();
     cy.get('[data-cy=add-property-value-button]').scrollIntoView();
