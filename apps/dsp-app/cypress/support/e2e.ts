@@ -42,10 +42,10 @@ beforeEach(() => {
       //   path: 'test_data/project_ontologies/books-onto.ttl',
       //   name: 'http://www.knora.org/ontology/0001/books',
       // },
-      {
-        path: 'test_data/project_data/incunabula-data.ttl',
-        name: 'http://www.knora.org/data/0803/incunabula',
-      },
+      // {
+      //   path: 'test_data/project_data/incunabula-data.ttl',
+      //   name: 'http://www.knora.org/data/0803/incunabula',
+      // },
       // {
       //   path: 'test_data/project_data/biblio-data.ttl',
       //   name: 'http://www.knora.org/data/0801/biblio',
