@@ -24,7 +24,7 @@ describe('Check project admin existing resource functionality', () => {
     titles: [{ text: '', comment: '' }],
   };
 
-  const uploadedImageFile = 'Fingerprint_Logo_coloured.png';
+  const uploadedImageFile = 'Fingerprint_Logo.jpg';
   const uploadedImageFilePath = `/uploads/${uploadedImageFile}`;
 
   before(() => {
