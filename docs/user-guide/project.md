@@ -143,12 +143,14 @@ Now you have created your first class *Book*, as seen below:
 ![Layout after the creation of the resource class.](../assets/images/Fig10.png)
 
 #### Display of CLASSES and SUBCLASSES
+
 In the data model, *Student* and *Teacher* are subclasses of the class *Person*, meaning they inherit its general properties and they can have their own specific properties as well.
 
-**Viewing Resource Entries of CLASSES and SUBCLASSES**
+##### Viewing Resource Entries of CLASSES and SUBCLASSES
 
 For example on the left, under resource entries, you might see:
 
+- 4 entries for *Person*
 - 2 entries for *Student*
 - 2 entries for *Teacher*
 
