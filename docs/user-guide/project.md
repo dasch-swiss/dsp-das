@@ -134,6 +134,7 @@ By clicking `+ Create new class`, a small window pops up with six basic types to
 ![Choose the type of your resource class.](../assets/images/Fig7.png)
 
 Which type you choose depends on the data type which you need to describe. You can choose from a selection of the following class types:
+
 - Object without representation
 - Still Image (jp2, jpg, jpeg, png, tif, tiff)
 - Moving Image (mp4)
