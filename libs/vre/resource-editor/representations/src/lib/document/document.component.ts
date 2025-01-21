@@ -1,5 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
@@ -28,7 +37,7 @@ import { RepresentationService } from '../representation.service';
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
 })
-export class DocumentComponent implements OnChanges {
+export class DocumentComponent implements OnChanges, AfterViewInit {
   @Input() src: FileRepresentation;
   @Input() parentResource: ReadResource;
   @Input() attachedProject: ReadProject | undefined;
@@ -72,9 +81,12 @@ export class DocumentComponent implements OnChanges {
         }
       );
       this.fileType = this._getFileType(this.src.fileValue.filename);
-      if (this.fileType === 'pdf') {
-        this.elem = document.getElementsByClassName('pdf-viewer')[0];
-      }
+    }
+  }
+
+  ngAfterViewInit() {
+    if (this.fileType === 'pdf') {
+      this.elem = document.getElementsByClassName('pdf-viewer')[0];
     }
   }
 
