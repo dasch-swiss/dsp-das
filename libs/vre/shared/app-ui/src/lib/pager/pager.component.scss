@@ -39,45 +39,6 @@
   font-size: 14px;
 }
 
-.go-to-button {
-  visibility: hidden;
-  width: 0;
-  opacity: 0;
-  transition: width 0.3s ease, visibility 0.3s ease, opacity 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 1px solid $primary;
-  border-radius: 14px;
-  padding: 0.25em 0;
-  background-color: $primary_100;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.go-to-button-visible {
-  visibility: visible;
-  width: 2em;
-  opacity: 1;
-  transition: width 0.3s ease, visibility 0.3s ease, opacity 0.3s ease;
-  margin-right: 0.5em;
-}
-
-.go-to-icon {
-  color: $primary;
-  font-size: 1em;
-  width: 1em;
-  height: 1em;
-  transform: scale(0);
-  transition: transform 0.3s ease;
-  line-height: 1;
-}
-
-.go-to-button-visible .go-to-icon {
-  transform: scale(1);
-  transition: transform 0.3s ease;
-}
-
 .paginator-item-range {
   min-width: 8em;
 }

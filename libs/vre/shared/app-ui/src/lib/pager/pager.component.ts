@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -34,8 +33,6 @@ export class PagerComponent implements OnChanges {
   @ViewChild('pageInput') private _pageInput!: ElementRef<HTMLInputElement>;
 
   private _pageIndex = 0;
-
-  actionBubbleVisible$ = new BehaviorSubject<boolean>(false);
 
   get pageIndex(): number {
     return this._pageIndex;
@@ -72,7 +69,7 @@ export class PagerComponent implements OnChanges {
     }
   }
 
-  private _goToPage() {
+  goToPage() {
     if (!this.inputPage || this.pageUnChanged) {
       this._pageInput.nativeElement.blur();
       return;
@@ -83,29 +80,16 @@ export class PagerComponent implements OnChanges {
       this._pageInput.nativeElement.value = clampedPage.toString();
     }
     this.pageIndex = clampedPage - 1;
-  }
-
-  onEnterPressed() {
-    this._goToPage();
     this._pageInput.nativeElement.blur();
+    this._pageInput.nativeElement.value = (this._pageIndex + 1).toString();
   }
 
-  onGoToClicked() {
-    this._goToPage();
-    this.actionBubbleVisible$.next(false);
-  }
-
-  onInputFocussed(event: FocusEvent) {
+  selectText(event: FocusEvent) {
     const input = event.target as HTMLInputElement;
     input.select();
-    this.actionBubbleVisible$.next(true);
   }
 
-  onInputBlurred() {
-    setTimeout(() => {
-      this.actionBubbleVisible$.next(false);
-      // reset the input value to the current page, might have been changed
-      this._pageInput.nativeElement.value = (this._pageIndex + 1).toString();
-    }, 200);
+  resetToCurrentPage() {
+    this._pageInput.nativeElement.value = (this._pageIndex + 1).toString();
   }
 }

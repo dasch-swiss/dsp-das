@@ -22,18 +22,11 @@
         #pageInput
         type="number"
         [value]="pageIndex + 1"
-        (focus)="onInputFocussed($event)"
-        (blur)="onInputBlurred()"
-        (keyup.enter)="onEnterPressed()"
+        (focus)="selectText($event)"
+        (blur)="resetToCurrentPage()"
+        (keyup.enter)="goToPage()"
         [matTooltip]="'paginator.inputTooltip' | translate"
         class="page-input" />
-      <button
-        matTooltip="{{ 'paginator.jumpToPage' | translate }}"
-        class="go-to-button"
-        [class.go-to-button-visible]="actionBubbleVisible$ | async"
-        (click)="onGoToClicked()">
-        <mat-icon class="go-to-icon">start</mat-icon>
-      </button>
     </div>
     <span class="page-label">{{ 'paginator.rangeLabelOf' | translate }} {{ lastPageIndex + 1 }}</span>
   </div>
