@@ -10,6 +10,7 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { Store } from '@ngxs/store';
