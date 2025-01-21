@@ -154,7 +154,7 @@ For example on the left, under resource entries, you might see:
 - 2 entries for *Student*
 - 2 entries for *Teacher*
 
-These are grouped under *Person*, so they are shown together. While this makes the hierarchy clear, individual subclasses like *Student* and *Teacher* may be less distinct on the left.
+*Student* and *Teacher* are grouped under *Person*, so they are shown together. While this makes the hierarchy clear, individual subclasses like *Student* and *Teacher* may appear less distinct on the left.
 
 ![Display of Classes and Subclasses.](../assets/images/ClassSubClass.png)
 
