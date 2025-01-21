@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 
@@ -87,6 +87,8 @@ export class ResourceComponent implements OnChanges {
         if (this.isCompoundNavigation) {
           this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);
           this._cdr.detectChanges();
+        } else {
+          this._compoundService.incomingResource.next(undefined);
         }
       });
   }

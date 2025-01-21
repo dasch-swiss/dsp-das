@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { GetAttachedProjectAction, GetAttachedUserAction } from '@dasch-swiss/vre/core/state';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { GetAttachedProjectAction, GetAttachedUserAction } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 
@@ -16,8 +15,8 @@ import { BehaviorSubject } from 'rxjs';
 export class CompoundService {
   compoundPosition!: DspCompoundPosition;
 
-  private _incomingResource = new BehaviorSubject<DspResource | undefined>(undefined);
-  incomingResource$ = this._incomingResource.asObservable();
+  incomingResource = new BehaviorSubject<DspResource | undefined>(undefined);
+  incomingResource$ = this.incomingResource.asObservable();
 
   private _resource!: DspResource;
 
@@ -48,7 +47,7 @@ export class CompoundService {
         const incomingImageRepresentations = res as ReadResourceSequence;
 
         if (incomingImageRepresentations.resources.length === 0) {
-          this._incomingResource.next(undefined);
+          this.incomingResource.next(undefined);
           return;
         }
         this._resource.incomingRepresentations = incomingImageRepresentations.resources;
@@ -75,7 +74,7 @@ export class CompoundService {
   }
 
   private _reloadViewer(resource: DspResource) {
-    this._incomingResource.next(resource);
+    this.incomingResource.next(resource);
     this._cd.detectChanges();
   }
 }

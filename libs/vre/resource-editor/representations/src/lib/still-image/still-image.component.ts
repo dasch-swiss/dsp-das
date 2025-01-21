@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
-import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -115,15 +115,17 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
       (this.osdService.viewer as any).ajaxHeaders,
       this.isPng
     );
+    (this.osdService.viewer as any).loadTilesWithAjax = true;
     this.osdService.viewer.open(tiles);
   }
 
   private _openExternal3iFImage(image: ReadStillImageExternalFileValue) {
     const i3f = IIIFUrl.createUrl(image.externalUrl);
     if (!i3f) {
-      throw new AppError('Error with IIIF URL');
+      throw new AppError("Can't open external IIIF URL");
     }
 
+    (this.osdService.viewer as any).loadTilesWithAjax = false;
     this.osdService.viewer.open(i3f.infoJsonUrl);
   }
 }

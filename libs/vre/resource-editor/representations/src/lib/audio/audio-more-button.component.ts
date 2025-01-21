@@ -9,8 +9,8 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
@@ -59,7 +59,6 @@ export class AudioMoreButtonComponent {
           title: 'Audio',
           subtitle: 'Update the audio file of this resource',
           representation: Constants.HasAudioFileValue,
-          projectUuid: this._rs.getAttachedProject(this.parentResource)!.id,
           propId: this.parentResource.properties[Constants.HasAudioFileValue][0].id,
         },
       })
