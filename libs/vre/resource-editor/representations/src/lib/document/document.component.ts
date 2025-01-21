@@ -5,15 +5,14 @@ import {
   Constants,
   KnoraApiConnection,
   ReadDocumentFileValue,
-  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
@@ -31,7 +30,6 @@ import { RepresentationService } from '../representation.service';
 export class DocumentComponent implements OnChanges {
   @Input() src: FileRepresentation;
   @Input() parentResource: ReadResource;
-  @Input() attachedProject: ReadProject | undefined;
 
   @ViewChild(PdfViewerComponent) private _pdfComponent: PdfViewerComponent;
 
@@ -104,7 +102,6 @@ export class DocumentComponent implements OnChanges {
           title: 'Document',
           subtitle: 'Update the document file of this resource',
           representation: Constants.HasDocumentFileValue,
-          projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasDocumentFileValue][0].id,
         },
       })
