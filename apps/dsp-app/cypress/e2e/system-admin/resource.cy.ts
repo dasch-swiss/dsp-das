@@ -4,6 +4,7 @@ import { Project00FFPayloads } from '../../fixtures/project00FF-resource-payload
 import { ClassPropertyPayloads } from '../../fixtures/property-definition-payloads';
 import { ResourceRequests, ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
+import { ResourcePage } from '../../support/pages/resource-page';
 
 describe('Resource', () => {
   let finalLastModificationDate: string;
@@ -19,6 +20,34 @@ describe('Resource', () => {
       project00FFPayloads.createClassPayload('datamodelclass')
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
+    });
+  });
+
+  describe('footnotes', () => {
+    it.only('should be displayed', () => {
+      const footnote = {
+        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
+        'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
+        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+          '@id': 'http://rdfh.ch/projects/00FF',
+        },
+        'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
+            '<?xml version="1.0" encoding="UTF-8"?><text><p>footnote1<footnote content="&amp;lt;p&amp;gt;fn1&amp;lt;/p&amp;gt;">[Footnote]</footnote> and footnote2<footnote content="&amp;lt;p&amp;gt;fn2&amp;lt;/p&amp;gt;">[Footnote]</footnote></p></text>',
+          'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
+            '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
+          },
+        },
+      };
+
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
+      cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, footnote).then(v => {
+        const id = v.body['@id'].match(/\/([^\/]+)$/)[1];
+        console.log('id', id);
+        const page = new ResourcePage();
+        page.visit(id);
+      });
     });
   });
 
