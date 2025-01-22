@@ -11,7 +11,7 @@ import {
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
+import { IncomingResourcePagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
