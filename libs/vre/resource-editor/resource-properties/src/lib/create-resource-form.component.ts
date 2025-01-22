@@ -12,10 +12,10 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
@@ -47,6 +47,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <div class="my-grid">
         <div style="display: flex">
           <h3
+            data-cy="resource-label"
             class="mat-subtitle-2 my-h3"
             matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
             matTooltipPosition="above">
@@ -64,7 +65,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
               prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
             }}
           </h3>
-          <div style="flex: 1">
+          <div style="flex: 1" [attr.data-cy]="prop.propDef.label">
             <app-property-value-switcher
               [myProperty]="prop"
               [formArray]="form.controls.properties.controls[prop.propDef.id]"
