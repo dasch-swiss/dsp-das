@@ -30,7 +30,6 @@ export class DocumentComponent implements OnChanges {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
 
-
   @ViewChild(PdfViewerComponent) private _pdfComponent!: PdfViewerComponent;
 
   originalFilename: string | undefined = '';
