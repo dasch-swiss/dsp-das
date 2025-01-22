@@ -4,15 +4,14 @@ import {
   Constants,
   KnoraApiConnection,
   ReadArchiveFileValue,
-  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import {
@@ -28,7 +27,6 @@ import { RepresentationService } from '../representation.service';
 })
 export class ArchiveComponent implements OnChanges {
   @Input() src: FileRepresentation;
-  @Input() attachedProject: ReadProject | undefined;
   @Input() parentResource: ReadResource;
   originalFilename: string;
 
@@ -69,7 +67,6 @@ export class ArchiveComponent implements OnChanges {
           title: 'Archive',
           subtitle: 'Update the archive file of this resource',
           representation: Constants.HasArchiveFileValue,
-          projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasArchiveFileValue][0].id,
         },
       })

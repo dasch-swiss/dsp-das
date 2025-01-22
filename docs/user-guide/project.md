@@ -133,7 +133,17 @@ You can then create a resource class by clicking the button `+ Create new class`
 By clicking `+ Create new class`, a small window pops up with six basic types to choose from:
 ![Choose the type of your resource class.](../assets/images/Fig7.png)
 
-Which type you choose depends on the data type which you need to describe. Let's assume you have pdf-documents of books and they have a number of pages. To describe this in an ontology, you create a class as `Document` by clicking on `Document`. A dialog box pops up which looks like this:
+Which type you choose depends on the data type which you need to describe. You can choose from a selection of the following class types:
+
+- Object without representation
+- Still Image (jp2, jpg, jpeg, png, tif, tiff)
+- Moving Image (mp4)
+- Audio (mp3, wav)
+- Text (csv, json, odd, rng, txt, xml, xsd, xsl)
+- Document (doc, docx, pdf, ppt, pptx, xls, xlsx)
+- Archive (7z, gz, gzip, tar, tgz, z, zip)
+
+Let's assume you have pdf-documents of books and they have a number of pages. To describe this in an ontology, you create a class as `Document` by clicking on `Document`. A dialog box pops up which looks like this:
 ![Create a class with type *Document*.](../assets/images/Fig8.png)
 
 For the label you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
@@ -141,6 +151,23 @@ For the label you could write *Book*, and you should add a preferably meaningful
 
 Now you have created your first class *Book*, as seen below:
 ![Layout after the creation of the resource class.](../assets/images/Fig10.png)
+
+#### Display of CLASSES and SUBCLASSES
+
+In the data model, *Student* and *Teacher* are subclasses of the class *Person*, meaning they inherit its general properties and they can have their own specific properties as well.
+
+##### Viewing Resource Entries of CLASSES and SUBCLASSES
+
+For example on the left, under resource entries, you might see:
+
+- 4 entries for *Person*
+- 2 entries for *Student*
+- 2 entries for *Teacher*
+
+*Student* and *Teacher* are grouped under *Person*, so they are shown together. While this makes the hierarchy clear, individual subclasses like *Student* and *Teacher* may appear less distinct on the left.
+
+![Display of Classes and Subclasses.](../assets/images/ClassSubClass.png)
+
 
 ---
 
