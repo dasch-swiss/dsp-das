@@ -13,7 +13,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, take } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import {
   ReplaceFileDialogComponent,
@@ -32,7 +32,7 @@ export class DocumentComponent implements OnChanges {
 
   @ViewChild(PdfViewerComponent) private _pdfComponent!: PdfViewerComponent;
 
-  originalFilename: string | undefined = '';
+  originalFilename = '';
 
   zoomFactor = 1.0;
 
@@ -114,7 +114,8 @@ export class DocumentComponent implements OnChanges {
       .pipe(
         mergeMap((res: WriteValueResponse) =>
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
-        )
+        ),
+        take(1)
       )
       .subscribe((fileValue: ReadResource) => {
         this.parentResource = fileValue;
@@ -138,9 +139,10 @@ export class DocumentComponent implements OnChanges {
   }
 
   private _setOriginalFilename() {
+    this.originalFilename = '';
     this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
       res => {
-        this.originalFilename = res['originalFilename'];
+        this.originalFilename = res['originalFilename'] || '';
         this._cd.detectChanges();
       },
       () => {
