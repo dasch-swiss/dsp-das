@@ -17,7 +17,6 @@ import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';
