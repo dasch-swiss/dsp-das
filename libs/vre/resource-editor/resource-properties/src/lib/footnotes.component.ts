@@ -8,7 +8,8 @@ import { FootnoteService } from './footnote.service';
     <div
       *ngFor="let footnote of footnoteService.footnotes; let index = index"
       (click)="goToFootnote(footnote.uid)"
-      class="footnote">
+      class="footnote"
+      data-cy="footnote">
       {{ index + 1 }}. <span [innerHTML]="footnote.content"></span>
     </div>`,
   styles: [

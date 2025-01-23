@@ -24,7 +24,7 @@ describe('Resource', () => {
   });
 
   describe('footnotes', () => {
-    it.only('should be displayed', () => {
+    it.only('should be displayed, and can be edited', () => {
       const footnote = {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
         'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
@@ -44,10 +44,27 @@ describe('Resource', () => {
       ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, footnote).then(v => {
         const id = v.body['@id'].match(/\/([^\/]+)$/)[1];
-        console.log('id', id);
         const page = new ResourcePage();
         page.visit(id);
+        cy.get('[data-cy=footnote]').should('have.length', 2);
+        cy.get('[data-cy=footnote]').eq(0).should('contain', 'fn1');
+        cy.get('[data-cy=footnote]').eq(1).should('contain', 'fn2');
       });
+      cy.get('app-rich-text-switch').trigger('mouseenter');
+      cy.get('[data-cy="edit-button"]').click();
+      cy.get('[content="&lt;p&gt;fn1&lt;/p&gt;"]').click();
+      cy.get('.ck-content[contenteditable=true]')
+        .eq(1)
+        .then(el => {
+          // @ts-ignore
+          const editor = el[0].ckeditorInstance; // If you're using TS, this is ReturnType<typeof InlineEditor['create']>
+          editor.setData('Typing some stuff');
+        });
+      cy.get('.ck-button-save').click({ force: true });
+      cy.get('[data-cy="save-button"] > .mat-mdc-button-touch-target').click();
+      cy.get('[data-cy=footnote]').should('have.length', 2);
+      cy.get('[data-cy=footnote]').eq(0).should('contain', 'Typing some stuff');
+      cy.get('[data-cy=footnote]').eq(1).should('contain', 'fn2');
     });
   });
 
