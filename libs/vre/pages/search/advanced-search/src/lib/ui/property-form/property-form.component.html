@@ -97,7 +97,7 @@
         [objectType]="propertyFormItem.selectedProperty?.objectType"
         [value]="propertyFormItem.searchValue"
         (emitValueChanged)="onValueChanged($event)" />
-      <dasch-swiss-property-form-list-value
+      <app-property-form-list-value
         *ngIf="
                     propertyFormItem.selectedProperty?.objectType ===
                     constants.ListValue
@@ -105,7 +105,7 @@
         [list]="propertyFormItem.list"
         [value]="propertyFormItem.searchValue"
         (emitValueChanged)="onValueChanged($event)">
-      </dasch-swiss-property-form-list-value>
+      </app-property-form-list-value>
 
       <app-property-form-link-value
         *ngIf="
