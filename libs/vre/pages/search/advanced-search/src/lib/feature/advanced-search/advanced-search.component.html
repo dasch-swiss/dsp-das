@@ -68,13 +68,13 @@
       (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
       (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
       (emitChildValueChanged)="handleChildValueChanged($event)"></dasch-swiss-property-form>
-    <dasch-swiss-form-actions
+    <app-form-actions
       [addButtonDisabled]="asyncData.addButtonDisabled"
       [resetButtonDisabled]="asyncData.resetButtonDisabled"
       [searchButtonDisabled]="asyncData.searchButtonDisabled"
       (emitAddPropertyForm)="handleAddPropertyForm()"
       (emitResetButtonClicked)="handleResetButtonClicked()"
       (emitSearchButtonClicked)="handleSearchButtonClicked()">
-    </dasch-swiss-form-actions>
+    </app-form-actions>
   </div>
 </div>
