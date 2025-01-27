@@ -1,4 +1,4 @@
-<dasch-swiss-centered-layout>
+<app-centered-layout>
   <dasch-swiss-app-progress-indicator *ngIf="isProjectsLoading$ | async"></dasch-swiss-app-progress-indicator>
   <div class="content large middle" *ngIf="(isProjectsLoading$ | async) === false">
     <div>
@@ -65,4 +65,4 @@
       </button>
     </div>
   </div>
-</dasch-swiss-centered-layout>
+</app-centered-layout>
