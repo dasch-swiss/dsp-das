@@ -28,7 +28,7 @@ import { DateValueHandlerComponent } from './date-value-handler.component';
  */
 @Component({
   template: ` <div [formGroup]="form">
-    <dasch-swiss-date-value-handler #dateValueHandler [formControlName]="'date'"></dasch-swiss-date-value-handler>
+    <app-date-value-handler #dateValueHandler [formControlName]="'date'"></app-date-value-handler>
   </div>`,
 })
 class TestHostComponent implements OnInit {
@@ -51,8 +51,8 @@ class TestHostComponent implements OnInit {
  */
 @Component({
   template: ` <div [formGroup]="form">
-    <dasch-swiss-date-value-handler #dateValueHandler [formControlName]="'date'" [valueRequiredValidator]="false">
-    </dasch-swiss-date-value-handler>
+    <app-date-value-handler #dateValueHandler [formControlName]="'date'" [valueRequiredValidator]="false">
+    </app-date-value-handler>
   </div>`,
 })
 class NoValueRequiredTestHostComponent implements OnInit {
