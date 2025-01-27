@@ -12,7 +12,7 @@ import { ListItemForm } from './list-item-form.type';
       [formArray]="form.controls.labels"
       [validators]="labelsValidators"
       [isRequired]="true" />
-    <dasch-swiss-multi-language-textarea
+    <app-multi-language-textarea
       placeholder="Child node description"
       [formArray]="form.controls.comments"
       [validators]="commentsValidators"

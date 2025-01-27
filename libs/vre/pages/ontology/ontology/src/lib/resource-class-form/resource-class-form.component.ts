@@ -29,7 +29,7 @@ import { ResourceClassForm } from './resource-class-form.type';
         [validators]="labelsValidators"
         [isRequired]="true" />
 
-      <dasch-swiss-multi-language-textarea
+      <app-multi-language-textarea
         data-cy="comment-textarea"
         placeholder="Comment"
         [formArray]="form.controls.comments"

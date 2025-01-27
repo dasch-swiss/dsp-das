@@ -52,7 +52,7 @@ import { PropertyForm } from '../property-form.type';
       *ngIf="formData.property.propType.objectType === Constants.LinkValue"
       [control]="form.controls.guiAttr"></app-gui-attr-link>
 
-    <dasch-swiss-multi-language-textarea
+    <app-multi-language-textarea
       [formArray]="form.controls.comments"
       data-cy="comment-textarea"
       placeholder="Comment"
