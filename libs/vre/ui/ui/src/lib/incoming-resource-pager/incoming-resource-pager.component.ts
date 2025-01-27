@@ -34,7 +34,7 @@ export class IncomingResourcePagerComponent {
     return this.lastItemOfPage ? this.lastItemOfPage : this.pageSize * (this._pageIndex + 1);
   }
 
-  turnPage(dir: 1 | -1) {
+  changePage(dir: 1 | -1) {
     this._pageIndex += dir;
     this.pageChanged.emit(dir);
   }
