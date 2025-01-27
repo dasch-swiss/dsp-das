@@ -7,7 +7,7 @@ import { ListInfoForm } from './list-info-form.type';
 @Component({
   selector: 'app-reusable-list-info-form',
   template: `
-    <dasch-swiss-multi-language-input
+    <app-multi-language-input
       [formArray]="form.controls.labels"
       placeholder="Controlled vocabulary label"
       [isRequired]="true"
