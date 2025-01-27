@@ -107,7 +107,7 @@
         (emitValueChanged)="onValueChanged($event)">
       </dasch-swiss-property-form-list-value>
 
-      <dasch-swiss-property-form-link-value
+      <app-property-form-link-value
         *ngIf="
                     !propertyFormItem.selectedProperty?.objectType?.includes(
                         constants.KnoraApiV2
@@ -126,7 +126,7 @@
                     onResourceSearchValueChanged($event)
                 "
         (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
-        (emitResourceSelected)="onValueChanged($event)"></dasch-swiss-property-form-link-value>
+        (emitResourceSelected)="onValueChanged($event)"></app-property-form-link-value>
       <app-property-form-link-match-property
         *ngIf="
                     !propertyFormItem.selectedProperty?.objectType?.includes(
