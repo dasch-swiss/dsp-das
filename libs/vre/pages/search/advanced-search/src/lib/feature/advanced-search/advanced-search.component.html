@@ -30,11 +30,11 @@
             resourcesSearchNoResults: resourcesSearchNoResults$ | async,
             orderByButtonDisabled: orderByButtonDisabled$ | async,
         } as asyncData">
-    <dasch-swiss-order-by
+    <app-order-by
       [orderByList]="asyncData.propertiesOrderByList"
       [orderByDisabled]="asyncData.orderByButtonDisabled"
       (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)">
-    </dasch-swiss-order-by>
+    </app-order-by>
     <dasch-swiss-ontology-resource-form
       [ontologies]="asyncData.ontologies"
       [ontologiesLoading]="asyncData.ontologiesLoading"
