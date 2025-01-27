@@ -72,7 +72,7 @@ class NoValueRequiredTestHostComponent implements OnInit {
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'dasch-swiss-app-date-picker',
+  selector: 'app-date-picker',
   template: '',
   providers: [
     {
@@ -118,6 +118,7 @@ class TestDatePickerComponent implements ControlValueAccessor, MatFormFieldContr
   onContainerClick(event: MouseEvent): void {}
 
   setDescribedByIds(ids: string[]): void {}
+
   /* eslint-enable @typescript-eslint/no-unused-vars */
 
   _handleInput(): void {
