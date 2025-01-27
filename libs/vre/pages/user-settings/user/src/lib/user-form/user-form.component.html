@@ -1,7 +1,6 @@
 <app-dialog-header
   [title]="editExistingUser ? userForm.controls.username.value : ('form.user.title.profile' | translate)"
-  [subtitle]="editExistingUser ? ('form.user.title.edit' | translate) : ('form.user.title.new' | translate)">
-</app-dialog-header>
+  [subtitle]="editExistingUser ? ('form.user.title.edit' | translate) : ('form.user.title.new' | translate)" />
 <form [formGroup]="userForm" class="form-content user-form">
   <app-common-input
     [class]="editExistingUser ? 'small-field' : 'large-field' "

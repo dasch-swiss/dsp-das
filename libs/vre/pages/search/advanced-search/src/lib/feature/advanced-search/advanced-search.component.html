@@ -33,8 +33,7 @@
     <app-order-by
       [orderByList]="asyncData.propertiesOrderByList"
       [orderByDisabled]="asyncData.orderByButtonDisabled"
-      (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)">
-    </app-order-by>
+      (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)" />
     <app-ontology-resource-form
       [ontologies]="asyncData.ontologies"
       [ontologiesLoading]="asyncData.ontologiesLoading"

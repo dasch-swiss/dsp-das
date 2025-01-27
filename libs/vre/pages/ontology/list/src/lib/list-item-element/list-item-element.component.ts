@@ -27,8 +27,7 @@ import { ListItemService } from '../list-item/list-item.service';
           *ngIf="showChildren"
           [projectUuid]="listItemService.projectInfos.projectIri"
           [rootNodeIri]="node.id"
-          [isAdmin]="isAdmin">
-        </app-list-item>
+          [isAdmin]="isAdmin" />
       </div>
     </div>
   `,

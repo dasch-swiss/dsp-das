@@ -44,10 +44,8 @@
           </mat-form-field>
           <mat-label class="nowrap"> x {{ fixedWidth }} Px</mat-label>
         </div>
-        <app-image-display-ratio [@replaceAnimation] *ngIf="isPercentageSize" [ratio]="ratio" class="child">
-        </app-image-display-ratio>
-        <app-image-display-absolute [@replaceAnimation] *ngIf="!isPercentageSize" [widthPx]="fixedWidth">
-        </app-image-display-absolute>
+        <app-image-display-ratio [@replaceAnimation] *ngIf="isPercentageSize" [ratio]="ratio" class="child" />
+        <app-image-display-absolute [@replaceAnimation] *ngIf="!isPercentageSize" [widthPx]="fixedWidth" />
       </div>
     </div>
     <div class="action-buttons mt-2">

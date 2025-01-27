@@ -57,8 +57,7 @@
             *ngIf="((isListsLoading$ | async) === false) && (projectBaseService.project$ | async) as project"
             [rootNodeIri]="list.id"
             [projectUuid]="project.id"
-            [isAdmin]="projectBaseService.isAdmin$ | async">
-          </app-list-item>
+            [isAdmin]="projectBaseService.isAdmin$ | async" />
         </div>
       </ng-container>
     </div>

@@ -7,8 +7,7 @@
     (refreshParent)="refresh()"
     [createNew]="true"
     [isUsersProjects]="isUsersProjects"
-    data-cy="active-projects-section">
-  </app-projects-list>
+    data-cy="active-projects-section" />
   <!-- already deactivated projects: disable the menu -->
   <app-projects-list
     [list]="inactiveProjects$ | async"
