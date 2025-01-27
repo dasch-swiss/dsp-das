@@ -14,8 +14,8 @@
             <mat-option *ngIf="propertiesLoading" disabled="true">Loading...</mat-option>
             <ng-container *ngIf="!propertiesLoading">
               <mat-option [value]="resourceLabelObj" [attr.data-cy]="resourceLabelObj.label"
-                >{{ resourceLabelObj.label }}</mat-option
-              >
+                >{{ resourceLabelObj.label }}
+              </mat-option>
               <mat-option *ngFor="let prop of properties" [value]="prop" [attr.data-cy]="prop.label">
                 {{ prop.label }}
               </mat-option>
@@ -127,7 +127,7 @@
                 "
         (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
         (emitResourceSelected)="onValueChanged($event)"></dasch-swiss-property-form-link-value>
-      <dasch-swiss-property-form-link-match-property
+      <app-property-form-link-match-property
         *ngIf="
                     !propertyFormItem.selectedProperty?.objectType?.includes(
                         constants.KnoraApiV2
@@ -162,7 +162,7 @@
         (emitLoadMoreSearchResults)="
                     onChildLoadMoreSearchResults($event)
                 ">
-      </dasch-swiss-property-form-link-match-property>
+      </app-property-form-link-match-property>
     </div>
   </div>
 
