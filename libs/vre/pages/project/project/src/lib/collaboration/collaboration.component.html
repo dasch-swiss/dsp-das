@@ -16,18 +16,18 @@
         [project]="project$ | async"
         [list]="activeProjectMembers$ | async"
         [status]="true"
-        (refreshParent)="refresh()"></app-users-list>
+        (refreshParent)="refresh()" />
 
       <!-- list of inactive users -->
       <app-users-list
         [project]="project$ | async"
         [list]="inactiveProjectMembers$ | async"
         [status]="false"
-        (refreshParent)="refresh()"></app-users-list>
+        (refreshParent)="refresh()" />
     </div>
   </div>
 
   <div *ngIf="(isCurrentProjectAdminOrSysAdmin$ | async) === false" class="content large middle">
-    <app-status [status]="403"></app-status>
+    <app-status [status]="403" />
   </div>
 </div>

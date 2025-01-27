@@ -41,7 +41,7 @@
     </div>
     <div class="app-menu-content" [ngSwitch]="true">
       <app-expert-search *ngSwitchCase="showExpert" (search)="emitSearch($event)" />
-      <app-hint *ngSwitchCase="showHint" [topic]="'search'"></app-hint>
+      <app-hint *ngSwitchCase="showHint" [topic]="'search'" />
     </div>
   </div>
 </ng-template>

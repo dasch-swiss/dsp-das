@@ -64,7 +64,7 @@ import { sortByKeys } from './sortByKeys';
             prop.propDef.label +
             (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
           ">
-          <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
+          <app-existing-property-value [prop]="prop" [resource]="resource.res" />
         </app-property-row>
       </ng-container>
     </ng-container>

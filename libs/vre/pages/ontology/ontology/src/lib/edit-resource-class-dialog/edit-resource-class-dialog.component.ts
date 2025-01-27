@@ -31,7 +31,7 @@ export interface EditResourceClassDialogProps {
     <div mat-dialog-content>
       <app-resource-class-form
         [formData]="{ name: data.name, labels: data.labels, comments: data.comments }"
-        (afterFormInit)="afterFormInit($event)"></app-resource-class-form>
+        (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>

@@ -69,7 +69,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <app-property-value-switcher
               [myProperty]="prop"
               [formArray]="form.controls.properties.controls[prop.propDef.id]"
-              [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
+              [resourceClassIri]="resourceClassIri" />
           </div>
         </div>
       </div>
