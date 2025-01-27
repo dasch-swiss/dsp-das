@@ -35,7 +35,7 @@
       [orderByDisabled]="asyncData.orderByButtonDisabled"
       (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)">
     </app-order-by>
-    <dasch-swiss-ontology-resource-form
+    <app-ontology-resource-form
       [ontologies]="asyncData.ontologies"
       [ontologiesLoading]="asyncData.ontologiesLoading"
       [resourceClasses]="asyncData.resourceClasses"
@@ -43,7 +43,7 @@
       [selectedOntology]="asyncData.selectedOntology"
       [selectedResourceClass]="asyncData.selectedResourceClass"
       (emitSelectedOntology)="handleSelectedOntology($event)"
-      (emitSelectedResourceClass)="handleSelectedResourceClass($event)"></dasch-swiss-ontology-resource-form>
+      (emitSelectedResourceClass)="handleSelectedResourceClass($event)"></app-ontology-resource-form>
     <app-property-form
       *ngFor="let propertyForm of asyncData.propertyFormList"
       [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
