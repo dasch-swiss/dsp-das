@@ -28,7 +28,7 @@ import { DateValueHandlerComponent } from './date-value-handler.component';
  */
 @Component({
   template: ` <div [formGroup]="form">
-    <app-date-value-handler #dateValueHandler [formControlName]="'date'"></app-date-value-handler>
+    <app-date-value-handler #dateValueHandler [formControlName]="'date'" />
   </div>`,
 })
 class TestHostComponent implements OnInit {

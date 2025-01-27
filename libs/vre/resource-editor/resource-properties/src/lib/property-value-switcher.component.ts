@@ -27,7 +27,7 @@ import { PropertyValueService } from './property-value.service';
   selector: 'app-property-value-switcher',
   providers: [PropertyValueService],
   template: `
-    <app-property-values [itemTpl]="itemTpl"></app-property-values>
+    <app-property-values [itemTpl]="itemTpl" />
 
     <ng-template #intTpl let-item="item" let-displayMode="displayMode">
       <app-base-switch [control]="item" [displayMode]="displayMode">
@@ -53,10 +53,7 @@ import { PropertyValueService } from './property-value.service';
     </ng-template>
 
     <ng-template #listTpl let-item="item" let-displayMode="displayMode">
-      <app-list-switch
-        [control]="item"
-        [displayMode]="displayMode"
-        [propertyDef]="propertyDefinition"></app-list-switch>
+      <app-list-switch [control]="item" [displayMode]="displayMode" [propertyDef]="propertyDefinition" />
     </ng-template>
 
     <ng-template #colorTpl let-item="item" let-displayMode="displayMode">

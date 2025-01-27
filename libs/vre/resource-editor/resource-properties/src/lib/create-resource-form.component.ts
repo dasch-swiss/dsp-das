@@ -88,7 +88,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </form>
 
     <ng-template #loadingTemplate>
-      <app-progress-indicator></app-progress-indicator>
+      <app-progress-indicator />
     </ng-template>
   `,
   styles: [
