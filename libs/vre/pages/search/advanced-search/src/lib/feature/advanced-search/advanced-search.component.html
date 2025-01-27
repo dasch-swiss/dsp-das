@@ -44,7 +44,7 @@
       [selectedResourceClass]="asyncData.selectedResourceClass"
       (emitSelectedOntology)="handleSelectedOntology($event)"
       (emitSelectedResourceClass)="handleSelectedResourceClass($event)"></dasch-swiss-ontology-resource-form>
-    <dasch-swiss-property-form
+    <app-property-form
       *ngFor="let propertyForm of asyncData.propertyFormList"
       [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
       [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
@@ -67,7 +67,7 @@
       (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
       (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
       (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
-      (emitChildValueChanged)="handleChildValueChanged($event)"></dasch-swiss-property-form>
+      (emitChildValueChanged)="handleChildValueChanged($event)"></app-property-form>
     <app-form-actions
       [addButtonDisabled]="asyncData.addButtonDisabled"
       [resetButtonDisabled]="asyncData.resetButtonDisabled"
