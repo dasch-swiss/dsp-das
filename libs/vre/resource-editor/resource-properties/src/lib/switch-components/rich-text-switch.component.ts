@@ -3,6 +3,8 @@ import { FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { FootnoteService } from '../footnote.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
@@ -40,6 +42,7 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   @Input() displayMode = true;
 
   sanitizedHtml!: SafeHtml;
+  subscription?: Subscription;
 
   get myControl() {
     return this.control as FormControl<string>;
@@ -53,7 +56,9 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
 
   ngOnChanges() {
     if (this.control.value && this.displayMode) {
-      this._parseFootnotes(this.control.value);
+      this.subscription = this._footnoteService.onReset$.pipe(startWith(null)).subscribe(() => {
+        this._parseFootnotes(this.control.value!);
+      });
     } else {
       this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.control.value!);
     }

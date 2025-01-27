@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as Editor from 'ckeditor5-custom-build';
+import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { ckEditor } from './ck-editor';
 
 @Component({
