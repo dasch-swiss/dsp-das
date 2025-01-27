@@ -27,7 +27,7 @@ export interface EditResourceClassDialogProps {
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.title" subtitle="Customize resource class"></app-dialog-header>
+    <app-dialog-header [title]="data.title" subtitle="Customize resource class" />
     <div mat-dialog-content>
       <app-resource-class-form
         [formData]="{ name: data.name, labels: data.labels, comments: data.comments }"

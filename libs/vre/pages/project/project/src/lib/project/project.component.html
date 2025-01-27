@@ -23,7 +23,7 @@
             matTooltipShowDelay="500"
             [matTooltipDisabled]="compareElementHeights(projectTitle)"
             matTooltipPosition="right">
-            {{(currentProject$ | async)?.longname}}
+            {{ (currentProject$ | async)?.longname }}
           </p>
         </div>
         <mat-list class="main-list">
@@ -89,7 +89,7 @@
                       matTooltipShowDelay="500"
                       matTooltipPosition="right"
                       [matTooltipDisabled]="compareElementHeights(ontoTitle)">
-                      {{onto.label}}
+                      {{ onto.label }}
                     </p>
                   </mat-panel-title>
                 </div>
@@ -127,6 +127,6 @@
 
 <ng-template #StatusMsg>
   <div class="content large middle">
-    <app-status *ngIf="hasLoadingErrors$ | async" [status]="404"></app-status>
+    <app-status *ngIf="hasLoadingErrors$ | async" [status]="404" />
   </div>
 </ng-template>

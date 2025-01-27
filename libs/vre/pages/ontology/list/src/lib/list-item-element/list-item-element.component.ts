@@ -20,11 +20,7 @@ import { ListItemService } from '../list-item/list-item.service';
             [validators]="[]"
             [isRequired]="true" />
 
-          <app-action-bubble
-            *ngIf="showActionBubble"
-            [position]="position"
-            [length]="length"
-            [node]="node"></app-action-bubble>
+          <app-action-bubble *ngIf="showActionBubble" [position]="position" [length]="length" [node]="node" />
         </div>
 
         <app-list-item

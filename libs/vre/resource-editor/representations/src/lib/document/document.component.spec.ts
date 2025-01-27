@@ -93,7 +93,7 @@ const appInitSpy = {
  * test host component with a pdf document
  */
 @Component({
-  template: ` <app-document [src]="documentFileRepresentation"></app-document>`,
+  template: ` <app-document [src]="documentFileRepresentation" />`,
 })
 class TestPdfDocumentHostComponent implements OnInit {
   @ViewChild(DocumentComponent) documentComp: DocumentComponent;

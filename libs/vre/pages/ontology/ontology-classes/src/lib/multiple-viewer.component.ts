@@ -23,7 +23,7 @@ import { SplitSize } from './split-size.interface';
             <app-intermediate
               *ngSwitchCase="'intermediate'"
               [resources]="selectedResources"
-              (action)="viewMode = $event"></app-intermediate>
+              (action)="viewMode = $event" />
 
             <!-- multiple resources view / comparison viewer -->
             <app-comparison

@@ -1,5 +1,5 @@
-<app-progress-indicator *ngIf="(username$ | async) === null"></app-progress-indicator>
-<app-status *ngIf="error"></app-status>
+<app-progress-indicator *ngIf="(username$ | async) === null" />
+<app-status *ngIf="error" />
 
 <div class="content large middle" *ngIf="username$ | async">
   <div class="content-sidebar user-data">

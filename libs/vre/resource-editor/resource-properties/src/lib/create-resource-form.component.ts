@@ -40,7 +40,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
               data-cy="upload-control" />
           </mat-tab>
           <mat-tab label="External IIIF URL">
-            <app-third-part-iiif [formControl]="form.controls.file"></app-third-part-iiif>
+            <app-third-part-iiif [formControl]="form.controls.file" />
           </mat-tab>
         </mat-tab-group>
       </div>

@@ -15,7 +15,7 @@ export class EditListInfoDialogProps {
 @Component({
   selector: 'app-edit-list-info-dialog',
   template: `
-    <app-dialog-header title="" subtitle="Edit controlled vocabulary info"></app-dialog-header>
+    <app-dialog-header title="" subtitle="Edit controlled vocabulary info" />
     <div mat-dialog-content>
       <app-reusable-list-info-form [formData]="formData" (afterFormInit)="form = $event"></app-reusable-list-info-form>
     </div>
