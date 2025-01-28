@@ -54,9 +54,14 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     @Optional() private _footnoteService: FootnoteService
   ) {}
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
+    console.log('here are the changes', changes);
     if (this.control.value && this.displayMode) {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
       this.subscription = this._footnoteService.onReset$.pipe(startWith(null)).subscribe(() => {
+        console.log('got it');
         this._parseFootnotes(this.control.value!);
       });
     } else {
