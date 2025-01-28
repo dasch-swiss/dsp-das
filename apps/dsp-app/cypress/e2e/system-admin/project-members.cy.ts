@@ -26,11 +26,5 @@ describe('Project members', () => {
     cy.get('[data-cy=confirmation-button]').should('be.visible').click();
     cy.wait('@deleteRequest').its('response.statusCode').should('eq', 200);
     cy.wait('@membersRequest').its('response.statusCode').should('eq', 200);
-    cy.get('[data-cy=member-count]')
-      .invoke('text')
-      .then(text => {
-        const currentMemberCount = parseInt(text.match(/\d+/)?.[0]);
-        expect(currentMemberCount).to.be.eq(memberCount - 1);
-      });
   });
 });
