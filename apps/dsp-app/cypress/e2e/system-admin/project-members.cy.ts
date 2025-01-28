@@ -10,6 +10,7 @@ describe('Project members', () => {
 
   it('admin can remove user from a project', () => {
     cy.intercept('DELETE', '/admin/users/**').as('deleteRequest');
+    cy.intercept('GET', '**/members').as('membersRequest');
     cy.visit(`/project/${Project0001Page.projectShortCode}/settings/collaboration`);
     let memberCount = 0;
     cy.get('[data-cy=member-count]')
@@ -24,6 +25,7 @@ describe('Project members', () => {
     cy.get('[data-cy=remove-member-button]').should('be.visible').click();
     cy.get('[data-cy=confirmation-button]').should('be.visible').click();
     cy.wait('@deleteRequest').its('response.statusCode').should('eq', 200);
+    cy.wait('@membersRequest').its('response.statusCode').should('eq', 200);
     cy.get('[data-cy=member-count]')
       .invoke('text')
       .then(text => {
