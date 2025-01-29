@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, OnChanges } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -43,7 +43,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
 })
-export class PropertyValuesComponent implements OnInit {
+export class PropertyValuesComponent implements OnInit, OnChanges {
   @Input() itemTpl!: TemplateRef<any>;
 
   @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
@@ -60,6 +60,10 @@ export class PropertyValuesComponent implements OnInit {
     if (!this.propertyValueService.formArray) {
       throw new Error('The form array should not be empty.');
     }
+  }
+
+  ngOnChanges(changes) {
+    console.log('prop values changes', changes);
   }
 
   addItem() {

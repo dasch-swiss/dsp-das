@@ -4,7 +4,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { FootnoteService } from '../footnote.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
@@ -55,15 +54,9 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   ) {}
 
   ngOnChanges(changes) {
-    console.log('here are the changes', changes);
-    if (this.control.value && this.displayMode) {
-      if (this.subscription) {
-        this.subscription.unsubscribe();
-      }
-      this.subscription = this._footnoteService.onReset$.pipe(startWith(null)).subscribe(() => {
-        console.log('got it');
-        this._parseFootnotes(this.control.value!);
-      });
+    if (changes['control'] && this.control.value && this.displayMode) {
+      console.log('here are the changes', changes, this.control.value);
+      this._parseFootnotes(this.control.value!);
     } else {
       this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.control.value!);
     }
