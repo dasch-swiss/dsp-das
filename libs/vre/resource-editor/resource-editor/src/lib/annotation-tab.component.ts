@@ -55,16 +55,19 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
-  private _scrollToRegion(iri: string) {
-    const region = document.getElementById(iri);
-    if (region) {
-      region.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }
-
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
   protected readonly RouteConstants = RouteConstants;
+
+  private _scrollToRegion(iri: string) {
+    const elements = document.querySelectorAll(`#${CSS.escape(iri)}`);
+
+    Array.from(elements).forEach(element => {
+      if (!(element as HTMLElement).classList.contains('region')) {
+        (element as HTMLElement).scrollIntoView({
+          behavior: 'smooth',
+        });
+        return;
+      }
+    });
+  }
 }
