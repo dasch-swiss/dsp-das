@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -18,7 +27,7 @@ import { FootnoteService } from './footnote.service';
   providers: [FootnoteService],
   styleUrls: ['./property-row.component.scss'],
 })
-export class PropertyRowComponent implements AfterViewInit, OnDestroy {
+export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) borderBottom!: boolean;
   @Input() tooltip: string | undefined;
@@ -36,6 +45,12 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     public footnoteService: FootnoteService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['prop']) {
+      this.footnoteService.reset();
+    }
+  }
 
   ngAfterViewInit() {
     this.highlightArkValue();

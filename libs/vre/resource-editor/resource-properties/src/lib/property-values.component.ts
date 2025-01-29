@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, TemplateRef, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { FootnoteService } from './footnote.service';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -53,7 +54,8 @@ export class PropertyValuesComponent implements OnInit, OnChanges {
 
   constructor(
     public propertyValueService: PropertyValueService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _footnoteService: FootnoteService
   ) {}
 
   ngOnInit() {
@@ -62,8 +64,9 @@ export class PropertyValuesComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes) {
+  ngOnChanges(changes: SimpleChanges) {
     console.log('prop values changes', changes);
+    this._footnoteService.reset();
   }
 
   addItem() {

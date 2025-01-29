@@ -190,7 +190,6 @@ export class PropertyValueComponent implements OnInit {
         () => {
           this.propertyValueService.currentlyAdding = false;
           this.propertyValueService.toggleOpenedValue(this.index);
-          this._footnoteService.reset();
           this._cdr.detectChanges();
         },
         (e: ApiResponseError) => {
@@ -241,7 +240,6 @@ export class PropertyValueComponent implements OnInit {
       .subscribe(() => {
         this.propertyValueService.toggleOpenedValue(this.index);
         this._setInitialValue();
-        this._footnoteService.reset();
         this._cdr.detectChanges();
       });
   }
