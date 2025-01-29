@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Optional } from '@angular/core';
+import { Component, Input, OnChanges, Optional, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReadLinkValue } from '@dasch-swiss/dsp-js';
@@ -43,6 +43,8 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   sanitizedHtml!: SafeHtml;
   subscription?: Subscription;
 
+  private readonly _footnoteRegExp = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
+
   get myControl() {
     return this.control as FormControl<string>;
   }
@@ -53,13 +55,23 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     @Optional() private _footnoteService: FootnoteService
   ) {}
 
-  ngOnChanges(changes) {
-    if (changes['control'] && this.control.value && this.displayMode) {
-      console.log('here are the changes', changes, this.control.value);
-      this._parseFootnotes(this.control.value!);
-    } else {
-      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.control.value!);
+  ngOnChanges(changes: SimpleChanges) {
+    // does nothing if only displayMode changes
+    if (!changes['control'] && changes['displayMode'].currentValue === !changes['displayMode'].previousValue) {
+      return;
     }
+
+    if (this.control.value === null) {
+      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml('');
+      return;
+    }
+
+    if (!this._containsFootnote(this.control.value)) {
+      this.sanitizedHtml = this._sanitizer.bypassSecurityTrustHtml(this.control.value);
+      return;
+    }
+
+    this._parseFootnotes(this.control.value);
   }
 
   openResource(linkValue: ReadLinkValue | string) {
@@ -68,9 +80,12 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     window.open(`/resource${path}`, '_blank');
   }
 
+  private _containsFootnote(text: string) {
+    return text.match(this._footnoteRegExp) !== null;
+  }
+
   private _parseFootnotes(controlValue: string) {
-    const regex = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
-    const matches = controlValue.matchAll(regex);
+    const matches = controlValue.matchAll(this._footnoteRegExp);
     let newValue = controlValue;
     if (matches) {
       Array.from(matches).forEach(matchArray => {
