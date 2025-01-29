@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   Optional,
-  SkipSelf,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
@@ -27,7 +26,6 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
-import { FootnoteService } from './footnote.service';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -113,7 +111,6 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    @Optional() @SkipSelf() private readonly _footnoteService: FootnoteService,
     @Optional() private _resourceFetcherService: ResourceFetcherService
   ) {}
 
