@@ -61,13 +61,14 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
   private _scrollToRegion(iri: string) {
     const elements = document.querySelectorAll(`#${CSS.escape(iri)}`);
 
-    Array.from(elements).forEach(element => {
-      if (!(element as HTMLElement).classList.contains('region')) {
-        (element as HTMLElement).scrollIntoView({
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i] as HTMLElement;
+      if (!element.classList.contains('region')) {
+        element.scrollIntoView({
           behavior: 'smooth',
         });
-        return;
+        break;
       }
-    });
+    }
   }
 }
