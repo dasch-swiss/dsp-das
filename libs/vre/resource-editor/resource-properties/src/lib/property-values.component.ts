@@ -1,10 +1,9 @@
-import { Component, Input, OnChanges, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { FootnoteService } from './footnote.service';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -44,7 +43,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
 })
-export class PropertyValuesComponent implements OnInit, OnChanges {
+export class PropertyValuesComponent implements OnInit {
   @Input() itemTpl!: TemplateRef<any>;
 
   @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
@@ -54,18 +53,13 @@ export class PropertyValuesComponent implements OnInit, OnChanges {
 
   constructor(
     public propertyValueService: PropertyValueService,
-    private _fb: FormBuilder,
-    private _footnoteService: FootnoteService
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit() {
     if (!this.propertyValueService.formArray) {
       throw new Error('The form array should not be empty.');
     }
-  }
-
-  ngOnChanges() {
-    this._footnoteService.reset();
   }
 
   addItem() {
