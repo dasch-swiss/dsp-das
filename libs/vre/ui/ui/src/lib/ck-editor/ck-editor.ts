@@ -33,6 +33,7 @@ export class ckEditor {
         'specialCharacters',
         '|',
         'sourceEditing',
+        '|',
         'footnote',
       ],
       shouldNotGroupWhenFull: true,
