@@ -207,14 +207,12 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       (this.properties.find(prop => prop.propDef.id === Constants.HasStandoffLinkToValue)?.values as ReadLinkValue[]) ??
       []
     ).map(link => {
-      console.log('standoff', link.linkedResourceIri);
       const parts = link.linkedResourceIri.split('/');
       if (parts.length < 2) {
         throw new Error('Linked resource IRI is not in the expected format');
       }
 
       const resourceIdPathOnly = parts.slice(-2).join('/');
-      console.log('resource id path', resourceIdPathOnly);
       return {
         label: link.strval ?? '',
         uri: `/resource/${resourceIdPathOnly}`,
