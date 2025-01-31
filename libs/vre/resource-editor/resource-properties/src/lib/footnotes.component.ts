@@ -10,13 +10,12 @@ import { FootnoteService } from './footnote.service';
       (click)="goToFootnote(footnote.uuid)"
       class="footnote"
       data-cy="footnote">
-      {{ index + 1 }}. <span [innerHTML]="footnote.content"></span>
+      <span style="padding-top: 1em">{{ index + 1 }}.</span> <span [innerHTML]="footnote.content"></span>
     </div>`,
   styles: [
     `
       .footnote {
         display: flex;
-        align-items: center;
         gap: 5px;
       }
     `,
