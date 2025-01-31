@@ -20,7 +20,7 @@ import { FootnoteService } from './footnote.service';
   template: ` <div [class.border-bottom]="borderBottom" #rowElement style="display: flex; padding: 8px 0;">
     <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
     <div style="flex: 1">
-      <ng-content></ng-content>
+      <ng-content />
       <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
     </div>
   </div>`,
@@ -42,7 +42,7 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   constructor(
-    private route: ActivatedRoute,
+    private _route: ActivatedRoute,
     public footnoteService: FootnoteService
   ) {}
 
@@ -68,7 +68,7 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges
         takeWhile(
           value =>
             value !== undefined &&
-            this.route.snapshot.paramMap.get(RouteConstants.valueParameter) === value &&
+            this._route.snapshot.paramMap.get(RouteConstants.valueParameter) === value &&
             this.rowElement !== undefined
         )
       )
