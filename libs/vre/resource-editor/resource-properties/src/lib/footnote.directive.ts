@@ -42,7 +42,7 @@ export class FootnoteDirective {
     const targetElement = event.target as HTMLElement;
 
     if (targetElement.nodeName.toLowerCase() === 'footnote') {
-      const uuid = targetElement.getAttribute('uuid');
+      const uuid = targetElement.getAttribute('id');
 
       if (uuid) {
         // Find the footnote with the same UUID and scroll to it

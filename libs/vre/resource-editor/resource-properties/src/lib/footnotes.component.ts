@@ -11,7 +11,8 @@ import { FootnoteService } from './footnote.service';
       class="footnote"
       [attr.data-uuid]="footnote.uuid"
       data-cy="footnote">
-      <span style="padding-top: 1em">{{ index + 1 }}.</span> <span [innerHTML]="footnote.content"></span>
+      <a style="padding-top: 1em" (click)="goToFootnote(footnote.uuid)">{{ index + 1 }}.</a>
+      <span [innerHTML]="footnote.content"></span>
     </div>`,
   styles: [
     `
@@ -31,7 +32,10 @@ export class FootnotesComponent {
       throw new AppError(`Element with uid ${uuid} is not found on page.`);
     }
 
-    element.scrollIntoView();
+    const yOffset = -80;
+    const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+
+    window.scrollTo({ top: y, behavior: 'smooth' });
   }
 
   trackByIndex(index: number) {
