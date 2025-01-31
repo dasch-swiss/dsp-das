@@ -213,6 +213,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       }
 
       const resourceIdPathOnly = parts.slice(-2).join('/');
+
       return {
         label: link.strval ?? '',
         uri: `/resource/${resourceIdPathOnly}`,
