@@ -38,22 +38,23 @@ export class FootnoteDirective {
   }
 
   private showTooltip(content: string, mouseX: number, mouseY: number) {
-    if (!this._overlayRef) {
-      const positionStrategy = this._positionBuilder.flexibleConnectedTo({ x: mouseX, y: mouseY }).withPositions([
-        {
-          overlayX: 'center',
-          overlayY: 'top',
-          originX: 'center',
-          originY: 'bottom',
-          offsetY: 10,
-        },
-      ]);
-
-      this._overlayRef = this._overlay.create({
-        positionStrategy,
-        scrollStrategy: this._overlay.scrollStrategies.reposition(),
-      });
+    if (this._overlayRef) {
+      this._overlayRef.detach();
     }
+    const positionStrategy = this._positionBuilder.flexibleConnectedTo({ x: mouseX, y: mouseY }).withPositions([
+      {
+        overlayX: 'center',
+        overlayY: 'top',
+        originX: 'center',
+        originY: 'bottom',
+        offsetY: 10,
+      },
+    ]);
+
+    this._overlayRef = this._overlay.create({
+      positionStrategy,
+      scrollStrategy: this._overlay.scrollStrategies.reposition(),
+    });
 
     const tooltipPortal = new ComponentPortal(FootnoteTooltipComponent);
     if (this._overlayRef.hasAttached()) {
