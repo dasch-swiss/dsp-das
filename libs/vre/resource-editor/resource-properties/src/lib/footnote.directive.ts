@@ -9,13 +9,13 @@ import { FootnoteTooltipComponent } from './footnote-tooltip.component';
   selector: '[appFootnote]',
 })
 export class FootnoteDirective {
-  private overlayRef: OverlayRef | null = null;
-  private hideTimeout: any;
+  private _overlayRef: OverlayRef | null = null;
+  private _hideTimeout: any;
 
   constructor(
-    private overlay: Overlay,
-    private positionBuilder: OverlayPositionBuilder,
-    private sanitizer: DomSanitizer
+    private _overlay: Overlay,
+    private _positionBuilder: OverlayPositionBuilder,
+    private _sanitizer: DomSanitizer
   ) {}
 
   @HostListener('mouseover', ['$event'])
@@ -38,8 +38,8 @@ export class FootnoteDirective {
   }
 
   private showTooltip(content: string, mouseX: number, mouseY: number) {
-    if (!this.overlayRef) {
-      const positionStrategy = this.positionBuilder.flexibleConnectedTo({ x: mouseX, y: mouseY }).withPositions([
+    if (!this._overlayRef) {
+      const positionStrategy = this._positionBuilder.flexibleConnectedTo({ x: mouseX, y: mouseY }).withPositions([
         {
           overlayX: 'center',
           overlayY: 'top',
@@ -49,39 +49,39 @@ export class FootnoteDirective {
         },
       ]);
 
-      this.overlayRef = this.overlay.create({
+      this._overlayRef = this._overlay.create({
         positionStrategy,
-        scrollStrategy: this.overlay.scrollStrategies.reposition(),
+        scrollStrategy: this._overlay.scrollStrategies.reposition(),
       });
     }
 
     const tooltipPortal = new ComponentPortal(FootnoteTooltipComponent);
-    if (this.overlayRef.hasAttached()) {
-      this.overlayRef.detach();
-      clearTimeout(this.hideTimeout);
+    if (this._overlayRef.hasAttached()) {
+      this._overlayRef.detach();
+      clearTimeout(this._hideTimeout);
     }
 
-    const tooltipRef = this.overlayRef.attach(tooltipPortal);
-    tooltipRef.instance.content = this.sanitizer.bypassSecurityTrustHtml(content);
+    const tooltipRef = this._overlayRef.attach(tooltipPortal);
+    tooltipRef.instance.content = this._sanitizer.bypassSecurityTrustHtml(content);
 
-    this.overlayRef.overlayElement.addEventListener('mouseenter', () => {
-      clearTimeout(this.hideTimeout);
+    this._overlayRef.overlayElement.addEventListener('mouseenter', () => {
+      clearTimeout(this._hideTimeout);
     });
 
-    this.overlayRef.overlayElement.addEventListener('mouseleave', () => {
+    this._overlayRef.overlayElement.addEventListener('mouseleave', () => {
       this.hideTooltipWithDelay();
     });
   }
 
   private hideTooltipWithDelay() {
-    this.hideTimeout = setTimeout(() => {
+    this._hideTimeout = setTimeout(() => {
       this.hideTooltip();
     }, 300);
   }
 
   private hideTooltip() {
-    if (this.overlayRef) {
-      this.overlayRef.detach();
+    if (this._overlayRef) {
+      this._overlayRef.detach();
     }
   }
 }
