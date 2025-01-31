@@ -9,6 +9,7 @@ import { FootnoteService } from './footnote.service';
       *ngFor="let footnote of footnoteService.footnotes; let index = index; trackBy: trackByIndex"
       (click)="goToFootnote(footnote.uuid)"
       class="footnote"
+      [attr.data-uuid]="footnote.uuid"
       data-cy="footnote">
       <span style="padding-top: 1em">{{ index + 1 }}.</span> <span [innerHTML]="footnote.content"></span>
     </div>`,

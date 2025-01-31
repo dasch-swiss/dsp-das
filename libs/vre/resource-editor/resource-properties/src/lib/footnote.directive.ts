@@ -37,6 +37,26 @@ export class FootnoteDirective {
     }
   }
 
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+
+    if (targetElement.nodeName.toLowerCase() === 'footnote') {
+      const uuid = targetElement.getAttribute('uuid');
+
+      if (uuid) {
+        // Find the footnote with the same UUID and scroll to it
+        const targetFootnote = document.querySelector(`.footnote[data-uuid="${uuid}"]`);
+
+        if (targetFootnote) {
+          console.log('d', event);
+          // Scroll to the target footnote element
+          targetFootnote.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+  }
+
   private showTooltip(content: string, mouseX: number, mouseY: number) {
     if (this._overlayRef) {
       this._overlayRef.detach();
