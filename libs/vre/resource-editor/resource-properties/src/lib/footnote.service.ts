@@ -5,12 +5,12 @@ import { SafeHtml } from '@angular/platform-browser';
 export class FootnoteService {
   footnotes: { uuid: string; content: SafeHtml }[] = [];
 
-  addFootnote(uid: string, content: SafeHtml): void {
-    const property = this.footnotes.find(footnote => footnote.uuid === uid);
+  addFootnote(uuid: string, content: SafeHtml): void {
+    const property = this.footnotes.find(footnote => footnote.uuid === uuid);
     if (property) {
       property.content = content;
     } else {
-      this.footnotes.push({ uuid: uid, content });
+      this.footnotes.push({ uuid, content });
     }
   }
 

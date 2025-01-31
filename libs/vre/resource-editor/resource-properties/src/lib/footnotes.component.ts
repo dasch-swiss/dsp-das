@@ -24,10 +24,10 @@ import { FootnoteService } from './footnote.service';
 export class FootnotesComponent {
   constructor(public readonly footnoteService: FootnoteService) {}
 
-  goToFootnote(uid: string) {
-    const element = document.getElementById(uid);
+  goToFootnote(uuid: string) {
+    const element = document.getElementById(uuid);
     if (!element) {
-      throw new AppError(`Element with uid ${uid} is not found on page.`);
+      throw new AppError(`Element with uid ${uuid} is not found on page.`);
     }
 
     element.scrollIntoView();

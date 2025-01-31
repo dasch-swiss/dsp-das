@@ -89,11 +89,11 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     let newValue = controlValue;
     if (matches) {
       Array.from(matches).forEach(matchArray => {
-        const uid = Math.random().toString(36).substring(7);
-        const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uid}">${this._footnoteService.footnotes.length + 1}</footnote>`;
+        const uuid = Math.random().toString(36).substring(7);
+        const parsedFootnote = `<footnote content="${matchArray[1]}" id="${uuid}">${this._footnoteService.footnotes.length + 1}</footnote>`;
         newValue = newValue.replace(matchArray[0], parsedFootnote);
         this._footnoteService.addFootnote(
-          uid,
+          uuid,
           this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(this._unescapeHtml(matchArray[1])))
         );
       });
