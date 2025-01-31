@@ -6,7 +6,7 @@ import { FootnoteService } from './footnote.service';
   selector: 'app-footnotes',
   template: `<h5>Footnotes</h5>
     <div
-      *ngFor="let footnote of footnoteService.footnotes; let index = index"
+      *ngFor="let footnote of footnoteService.footnotes; let index = index; trackBy: trackByIndex"
       (click)="goToFootnote(footnote.uid)"
       class="footnote"
       data-cy="footnote">
@@ -32,5 +32,9 @@ export class FootnotesComponent {
     }
 
     element.scrollIntoView();
+  }
+
+  trackByIndex(index: number) {
+    return index;
   }
 }
