@@ -10,7 +10,7 @@ import { FootnoteTooltipComponent } from './footnote-tooltip.component';
 })
 export class FootnoteDirective {
   private _overlayRef: OverlayRef | null = null;
-  private _hideTimeout: any;
+  private _hideTimeout?: number;
 
   constructor(
     private _overlay: Overlay,
