@@ -54,8 +54,8 @@ export interface CheckboxUpdate {
 export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  @Input() search: SearchParams;
-  currentSearch: SearchParams;
+  @Input() search: SearchParams | undefined = undefined;
+  currentSearch: SearchParams | undefined = undefined;
 
   /**
    * set to true if multiple resources can be selected for comparison
@@ -67,7 +67,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
    */
   @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
 
-  resources: ReadResourceSequence;
+  resources: ReadResourceSequence | undefined = undefined;
 
   selectedResourceIdx: number[] = [];
 
@@ -117,7 +117,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   isCurrentSearch = (): boolean =>
-    this.search.query !== this.currentSearch?.query || this.currentSearch.query === undefined;
+    this.search?.query !== this.currentSearch?.query || this.currentSearch?.query === undefined;
 
   initSearch(): void {
     // reset
