@@ -210,7 +210,8 @@
     "comment": "Comment",
     "propertyLabels": {
       "linkedProperty": "Ressource liée"
-    }
+    },
+    "footnotes": "Notes"
   },
   "searchPanel": {
     "howToSearch": "How to search",
@@ -250,10 +251,8 @@
     "lastPage": "Dernière page",
     "nextPage": "Page suivante",
     "inputTooltip": "Saisir le numéro de page et appuyer sur Entrée pour aller à la page.",
-    "pageLabel": "Page",
     "previousPage": "Page précédente",
     "rangeLabelOf": "sur",
     "rangeLabelZero": "Page 1 sur 1"
   }
-
 }
