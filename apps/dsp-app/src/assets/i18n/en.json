@@ -210,7 +210,8 @@
     "comment": "Comment",
     "propertyLabels": {
       "linkedProperty": "Linked resource"
-    }
+    },
+    "footnotes": "Footnotes"
   },
   "searchPanel": {
     "howToSearch": "How to search",
@@ -249,7 +250,6 @@
     "lastPage": "Last page",
     "nextPage": "Next page",
     "inputTooltip": "Enter the page number and apply with the Enter key.",
-    "pageLabel": "Page",
     "previousPage": "Previous page",
     "rangeLabelOf": "of",
     "rangeLabelZero": "Page 1 of 1"
