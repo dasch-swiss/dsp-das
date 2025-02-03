@@ -14,13 +14,11 @@
 <div class="loader-container">
   <mat-progress-bar mode="indeterminate" *ngIf="loading" />
 </div>
-<div>
-  <app-resource-list
-    [withMultipleSelection]="true"
-    [resources]="resources"
-    [selectedResourceIdx]="selectedResourceIdx"
-    (resourcesSelected)="emitSelectedResources($event)" />
-</div>
+<app-resource-list
+  [withMultipleSelection]="true"
+  [resources]="resources"
+  [selectedResourceIdx]="selectedResourceIdx"
+  (resourcesSelected)="emitSelectedResources($event)" />
 <!-- In case of 0 result -->
 <div data-cy="list-view-no-results" class="list-view no-results" *ngIf="!loading && !resources.length">
   <!-- Case A: user did a fulltext search -->
