@@ -37,7 +37,6 @@
         name="searchbox"
         class="pdf-searchbox fill-remaining-space"
         placeholder="Search in pdf..."
-        [value]="pdfQuery"
         [disabled]="failedToLoad"
         (input)="onInputChange($event)"
         (keyup.enter)="searchQueryChanged(queryInp.value)" />
