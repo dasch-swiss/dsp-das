@@ -58,6 +58,9 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
+  trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
+  protected readonly RouteConstants = RouteConstants;
+
   private _scrollToRegion(iri: string) {
     const region = this.annotationElements.find(
       element => element.nativeElement.getAttribute('data-annotation-resource') === iri
@@ -72,7 +75,4 @@ export class AnnotationTabComponent implements OnInit, OnDestroy {
       block: 'center',
     });
   }
-
-  trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
-  protected readonly RouteConstants = RouteConstants;
 }
