@@ -9,14 +9,14 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
 import {
+  Events as CommsEvents,
   ComponentCommunicationEventService,
   EmitEvent,
-  Events as CommsEvents,
   OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -145,11 +145,15 @@ export class ResourceHeaderComponent {
   }
 
   afterResourceDeleted() {
-    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(
-      this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortcode
-    );
-    const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
-    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
+    const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+    if (currentProject) {
+      const ontologyIri = this._ontologyService.getOntologyIriFromRoute(currentProject.shortcode);
+      if (ontologyIri) {
+        const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
+        this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
+      }
+    }
+
     this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
   }
 }
