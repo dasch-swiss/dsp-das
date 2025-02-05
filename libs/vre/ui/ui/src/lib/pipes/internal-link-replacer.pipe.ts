@@ -26,7 +26,6 @@ export class InternalLinkReplacerPipe implements PipeTransform {
     links.forEach((link: HTMLAnchorElement) => {
       const href = link.getAttribute('href');
 
-      console.log('links', href, htmlString);
       // If the href starts with "http://rdfh.ch/...", replace it with "/resource/..."
       if (href && href.startsWith('http://rdfh.ch/')) {
         const path = href.replace('http://rdfh.ch/', '');

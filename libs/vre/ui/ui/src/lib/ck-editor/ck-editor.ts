@@ -65,9 +65,7 @@ export class ckEditor {
         isInternal: {
           // label: 'internal link to a Knora resource',
           mode: 'automatic', // automatic requires callback -> but the callback is async and the user could save the text before the check ...
-          callback: (
-            url: string // console.log(url, url.startsWith( 'http://rdfh.ch/' ));
-          ) => !!url && url.startsWith('http://rdfh.ch/'), // --> TODO: get this from config via AppInitService
+          callback: (url: string) => !!url && url.startsWith('http://rdfh.ch/'), // --> TODO: get this from config via AppInitService
           attributes: {
             class: Constants.SalsahLink,
           },
