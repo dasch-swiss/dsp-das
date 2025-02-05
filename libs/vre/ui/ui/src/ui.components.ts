@@ -12,8 +12,8 @@ import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager/in
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { PagerComponent } from './lib/pager/pager.component';
 import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
+import { HrefReplacerPipe } from './lib/pipes/href-replacer.pipe';
 import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
-import { HrefReplacerPipe } from './lib/pipes/rdfh-replacer.pipe';
 import { LinkifyPipe } from './lib/pipes/string-transformation/linkify.pipe';
 import { TitleFromCamelCasePipe } from './lib/pipes/string-transformation/title-from-camel-case.pipe';
 import { TruncatePipe } from './lib/pipes/string-transformation/truncate.pipe';
