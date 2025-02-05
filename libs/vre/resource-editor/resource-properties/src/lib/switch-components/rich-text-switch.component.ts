@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges, Optional, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ReadLinkValue } from '@dasch-swiss/dsp-js';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
 import { FootnoteService } from '../footnote.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
@@ -48,7 +46,6 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
   }
 
   constructor(
-    private _resourceService: ResourceService,
     private _sanitizer: DomSanitizer,
     @Optional() private _footnoteService: FootnoteService
   ) {}
@@ -70,12 +67,6 @@ export class RichTextSwitchComponent implements IsSwitchComponent, OnChanges {
     }
 
     this._parseFootnotes(this.control.value);
-  }
-
-  openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
-    window.open(`/resource${path}`, '_blank');
   }
 
   private _containsFootnote(text: string) {
