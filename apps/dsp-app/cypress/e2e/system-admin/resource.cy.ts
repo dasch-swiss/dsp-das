@@ -23,7 +23,9 @@ describe('Resource', () => {
     });
   });
 
-  describe.skip('footnotes', () => {
+  describe('footnotes', () => {
+    it('a created footnote should be sent in the right format (no double escape', () => {});
+
     it('should be displayed, and can be edited', () => {
       const footnote = {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
