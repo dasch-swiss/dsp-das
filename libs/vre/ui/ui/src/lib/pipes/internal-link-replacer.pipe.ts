@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
-  name: 'hrefReplacer',
+  name: 'internalLinkReplacer',
 })
-export class HrefReplacerPipe implements PipeTransform {
+export class InternalLinkReplacerPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
   transform(value: null | string | SafeHtml): SafeHtml | null {

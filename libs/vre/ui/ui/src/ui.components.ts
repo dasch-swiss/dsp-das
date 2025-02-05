@@ -12,7 +12,7 @@ import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager/in
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { PagerComponent } from './lib/pager/pager.component';
 import { KnoraDatePipe } from './lib/pipes/formatting/knoradate.pipe';
-import { HrefReplacerPipe } from './lib/pipes/href-replacer.pipe';
+import { InternalLinkReplacerPipe } from './lib/pipes/internal-link-replacer.pipe';
 import { IsFalsyPipe } from './lib/pipes/isFalsy.piipe';
 import { LinkifyPipe } from './lib/pipes/string-transformation/linkify.pipe';
 import { TitleFromCamelCasePipe } from './lib/pipes/string-transformation/title-from-camel-case.pipe';
@@ -43,6 +43,6 @@ export const UiComponents = [
   LinkifyPipe,
   TruncatePipe,
   HintComponent,
-  HrefReplacerPipe,
+  InternalLinkReplacerPipe,
 ];
 export const UiStandaloneComponents = [PagerComponent, IncomingResourcePagerComponent];
