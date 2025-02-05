@@ -1,4 +1,4 @@
-import { Optional, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FootnoteService } from './footnote.service';
 
@@ -10,7 +10,7 @@ export class FootnoteParserPipe implements PipeTransform {
 
   constructor(
     private _sanitizer: DomSanitizer,
-    @Optional() private _footnoteService: FootnoteService
+    private _footnoteService: FootnoteService
   ) {}
 
   transform(value: null | string): SafeHtml | null {
