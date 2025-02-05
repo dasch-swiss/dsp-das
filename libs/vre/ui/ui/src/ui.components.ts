@@ -7,7 +7,6 @@ import { ColorPickerComponent } from './lib/color-picker/color-picker.component'
 import { CommonInputComponent } from './lib/common-input.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
-import { TextValueHtmlLinkDirective } from './lib/directives/text-value-html-link.directive';
 import { HintComponent } from './lib/hint/hint.component';
 import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager/incoming-resource-pager.component';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
@@ -36,7 +35,6 @@ export const UiComponents = [
   ColorPickerComponent,
   AdminImageDirective,
   CenteredLayoutComponent,
-  TextValueHtmlLinkDirective,
   DragDropDirective,
   KnoraDatePipe,
   IsFalsyPipe,
@@ -44,7 +42,6 @@ export const UiComponents = [
   TitleFromCamelCasePipe,
   LinkifyPipe,
   TruncatePipe,
-  TextValueHtmlLinkDirective,
   HintComponent,
   InternalLinkReplacerPipe,
 ];

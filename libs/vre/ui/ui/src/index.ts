@@ -19,7 +19,6 @@ export * from './lib/common-input.component';
 export * from './lib/color-picker/color-picker.component';
 export * from './lib/admin-image/admin-image.directive';
 export * from './lib/centered-layout.component';
-export * from './lib/directives/text-value-html-link.directive';
 export * from './lib/directives/drag-drop.directive';
 export * from './lib/pipes/isFalsy.piipe';
 export * from './lib/pipes/time.pipe';
