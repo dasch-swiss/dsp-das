@@ -19,7 +19,7 @@ export class InternalLinkReplacerPipe implements PipeTransform {
       /<a\s+href="http:\/\/rdfh\.ch\/([^"]+)".*>([^<]+)<\/a>/g,
       (_: any, path: string, content: string) => {
         const newHref = `href="/resource/${path}"`; // Replace 'rdfh/' with '/'
-        return `<a ${newHref} target="_blank">${content}</a>`;
+        return `<a ${newHref}>${content}</a>`;
       }
     );
 

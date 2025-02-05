@@ -12,7 +12,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   template: ` <div
       *ngIf="displayMode; else editMode"
       data-cy="rich-text-switch"
-      [innerHTML]="sanitizedHtml | internalLinkReplacer"
+      [innerHTML]="sanitizedHtml | addTargetBlank"
       appFootnote></div>
     <ng-template #editMode>
       <app-ck-editor [control]="myControl" />
