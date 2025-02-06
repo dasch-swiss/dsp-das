@@ -1,4 +1,3 @@
-export * from './lib/base.service';
 export * from './lib/component-communication-event.service';
 export * from './lib/default-data/default-properties';
 export * from './lib/default-data/default-resource-classes';
