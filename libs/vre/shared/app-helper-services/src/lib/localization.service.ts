@@ -15,10 +15,6 @@ export class LocalizationService {
   private readonly localStorageLanguageKey = 'dsp_language';
 
   private _locale: any;
-  get locale() {
-    return window.navigator.language ? window.navigator.language : this._locale;
-  }
-
   set locale(value: string) {
     this._locale = value;
     this.setLocale(this._locale);
