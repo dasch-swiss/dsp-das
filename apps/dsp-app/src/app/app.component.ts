@@ -13,7 +13,6 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 })
 export class AppComponent implements OnInit {
   showCookieBanner = true;
-  session = false;
 
   constructor(
     private _router: Router,
