@@ -38,7 +38,7 @@ import { PropertyForm } from '../property-form.type';
       data-cy="name-input"
       prefixIcon="fingerprint"
       [control]="form.controls.name" />
-    <dasch-swiss-multi-language-input
+    <app-multi-language-input
       [formArray]="form.controls.labels"
       [isRequired]="true"
       data-cy="label-input"
@@ -46,13 +46,13 @@ import { PropertyForm } from '../property-form.type';
 
     <app-gui-attr-list
       *ngIf="formData.property.propType.objectType === Constants.ListValue"
-      [control]="form.controls.guiAttr"></app-gui-attr-list>
+      [control]="form.controls.guiAttr" />
 
     <app-gui-attr-link
       *ngIf="formData.property.propType.objectType === Constants.LinkValue"
-      [control]="form.controls.guiAttr"></app-gui-attr-link>
+      [control]="form.controls.guiAttr" />
 
-    <dasch-swiss-multi-language-textarea
+    <app-multi-language-textarea
       [formArray]="form.controls.comments"
       data-cy="comment-textarea"
       placeholder="Comment"

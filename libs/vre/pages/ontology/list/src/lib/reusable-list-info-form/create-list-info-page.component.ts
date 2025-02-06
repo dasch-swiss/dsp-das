@@ -11,13 +11,13 @@ import { ListInfoForm } from './list-info-form.type';
 @Component({
   selector: 'app-create-list-info-page',
   template: `
-    <dasch-swiss-centered-layout>
+    <app-centered-layout>
       <app-reusable-list-info-form
         [formData]="{
           labels: [],
           comments: [],
         }"
-        (afterFormInit)="form = $event"></app-reusable-list-info-form>
+        (afterFormInit)="form = $event" />
 
       <div style="display: flex; justify-content: flex-end">
         <button
@@ -32,7 +32,7 @@ import { ListInfoForm } from './list-info-form.type';
           {{ 'form.action.submit' | translate }}
         </button>
       </div>
-    </dasch-swiss-centered-layout>
+    </app-centered-layout>
   `,
 })
 export class CreateListInfoPageComponent {

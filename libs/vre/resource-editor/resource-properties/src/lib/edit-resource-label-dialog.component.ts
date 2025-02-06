@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
 
 export interface EditResourceLabelDialogProps {
@@ -13,7 +12,7 @@ export interface EditResourceLabelDialogProps {
 
 @Component({
   selector: 'app-edit-resource-label-dialog',
-  template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label"></app-dialog-header>
+  template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label" />
 
     <div mat-dialog-content>
       <app-common-input [control]="control" [label]="'Label'" />
@@ -43,8 +42,7 @@ export class EditResourceLabelDialogComponent {
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: EditResourceLabelDialogProps,
     private _dialogRef: MatDialogRef<EditResourceLabelDialogComponent>,
-    private _resourceFetcherService: ResourceFetcherService,
-    private _componentCommsService: ComponentCommunicationEventService
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   submit() {
@@ -73,7 +71,6 @@ export class EditResourceLabelDialogComponent {
         })
       )
       .subscribe(() => {
-        this._componentCommsService.emit(new EmitEvent(Events.resourceChanged));
         this._resourceFetcherService.reload();
         this._dialogRef.close(true);
       });

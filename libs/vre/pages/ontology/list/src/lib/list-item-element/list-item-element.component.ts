@@ -13,30 +13,25 @@ import { ListItemService } from '../list-item/list-item.service';
 
       <div style="flex: 1">
         <div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" style="position: relative">
-          <dasch-swiss-multi-language-input
+          <app-multi-language-input
             [placeholder]="node.labels | appStringifyStringLiteral: 'all' | appTruncate: 128"
             [editable]="false"
             [formArray]="readOnlyFormArray"
             [validators]="[]"
             [isRequired]="true" />
 
-          <app-action-bubble
-            *ngIf="showActionBubble"
-            [position]="position"
-            [length]="length"
-            [node]="node"></app-action-bubble>
+          <app-action-bubble *ngIf="showActionBubble" [position]="position" [length]="length" [node]="node" />
         </div>
 
         <app-list-item
           *ngIf="showChildren"
           [projectUuid]="listItemService.projectInfos.projectIri"
           [rootNodeIri]="node.id"
-          [isAdmin]="isAdmin">
-        </app-list-item>
+          [isAdmin]="isAdmin" />
       </div>
     </div>
   `,
-  styles: [':host ::ng-deep dasch-swiss-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
+  styles: [':host ::ng-deep app-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
 })
 export class ListItemElementComponent implements OnInit, OnChanges {
   @Input() node: ListNode;

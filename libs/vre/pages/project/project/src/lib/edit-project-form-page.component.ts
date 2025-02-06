@@ -13,11 +13,11 @@ import { ProjectForm } from './reusable-project-form/project-form.type';
 
 @Component({
   selector: 'app-edit-project-form-page',
-  template: ` <dasch-swiss-centered-layout>
+  template: ` <app-centered-layout>
     <app-reusable-project-form
       *ngIf="formData$ | async as formData"
       [formData]="formData"
-      (afterFormInit)="form = $event"></app-reusable-project-form>
+      (afterFormInit)="form = $event" />
 
     <div style="display: flex; justify-content: space-between">
       <button
@@ -32,7 +32,7 @@ import { ProjectForm } from './reusable-project-form/project-form.type';
         {{ 'form.action.submit' | translate }}
       </button>
     </div>
-  </dasch-swiss-centered-layout>`,
+  </app-centered-layout>`,
 })
 export class EditProjectFormPageComponent {
   form: ProjectForm;

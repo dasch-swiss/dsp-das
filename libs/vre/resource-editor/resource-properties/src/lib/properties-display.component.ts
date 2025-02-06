@@ -11,7 +11,7 @@ import {
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
+import { IncomingResourcePagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
@@ -26,10 +26,7 @@ import { sortByKeys } from './sortByKeys';
     <div style="display: flex; align-items: center; background: #EAEFF3; margin-bottom: 8px">
       <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
-        <app-properties-toolbar
-          [showToggleProperties]="true"
-          [showOnlyIcons]="displayLabel"
-          style="flex-shrink: 0"></app-properties-toolbar>
+        <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
         <app-resource-toolbar
           *ngIf="displayLabel"
           [adminPermissions]="adminPermissions"
@@ -67,7 +64,7 @@ import { sortByKeys } from './sortByKeys';
             prop.propDef.label +
             (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
           ">
-          <app-existing-property-value [prop]="prop" [resource]="resource.res"></app-existing-property-value>
+          <app-existing-property-value [prop]="prop" [resource]="resource.res" />
         </app-property-row>
       </ng-container>
     </ng-container>
@@ -79,7 +76,7 @@ import { sortByKeys } from './sortByKeys';
         label="has Standoff link"
         [borderBottom]="true"
         [class]="getRowClass(showAllProperties$ | async, standoffLinks.length)">
-        <app-incoming-standoff-link-value [links]="standoffLinks"></app-incoming-standoff-link-value>
+        <app-incoming-standoff-link-value [links]="standoffLinks" />
       </app-property-row>
     </ng-container>
 
@@ -90,10 +87,8 @@ import { sortByKeys } from './sortByKeys';
       [borderBottom]="true"
       class="incoming-link"
       [class]="getRowClass(showAllProperties$ | async, (incomingLinks$ | async).length)">
-      <app-incoming-standoff-link-value
-        *ngIf="(incomingLinks$ | async)?.length > 0"
-        [links]="incomingLinks$ | async"></app-incoming-standoff-link-value>
-      <dasch-swiss-app-pager #pager (pageChanged)="pageChanged()"></dasch-swiss-app-pager>
+      <app-incoming-standoff-link-value *ngIf="(incomingLinks$ | async)?.length > 0" [links]="incomingLinks$ | async" />
+      <app-incoming-resource-pager #pager [lastItemOfPage]="incomingLinks.length" (pageChanged)="pageChanged()" />
     </app-property-row>
 
     <ng-template #noProperties>
@@ -145,7 +140,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Output() afterResourceDeleted = new EventEmitter();
 
   @ViewChild('pager', { static: false })
-  pagerComponent: PagerComponent | undefined;
+  pagerComponent: IncomingResourcePagerComponent | undefined;
 
   protected readonly cardinality = Cardinality;
 
@@ -183,9 +178,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
 
     this.incomingLinks$.next([]);
-    if (this.pagerComponent) {
-      this.pagerComponent!.initPager();
-    }
 
     this.doIncomingLinkSearch(offset);
     this.setStandOffLinks();
@@ -193,7 +185,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
   pageChanged() {
     this.incomingLinks$.next(
-      this.incomingLinks.slice(this.pagerComponent?.currentRangeStart, this.pagerComponent?.currentRangeEnd)
+      this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
     );
   }
 
@@ -203,11 +195,8 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.incomingLinks = incomingLinks;
-        this.incomingLinks$.next(incomingLinks.slice(0, PagerComponent.pageSize));
+        this.incomingLinks$.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
         this._cd.detectChanges();
-        if (incomingLinks.length > 0) {
-          this.pagerComponent!.calculateNumberOfAllResults(incomingLinks.length);
-        }
       });
   }
 
@@ -227,7 +216,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
 
       return {
         label: link.strval ?? '',
-        uri: `/resource/${resourceIdPathOnly[0]}`,
+        uri: `/resource/${resourceIdPathOnly}`,
         project: link.linkedResource?.resourceClassLabel ?? '',
       };
     });

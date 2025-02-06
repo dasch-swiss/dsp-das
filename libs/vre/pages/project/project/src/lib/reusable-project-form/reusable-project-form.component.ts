@@ -31,7 +31,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
         [control]="form.controls.longname"
         data-cy="longname-input" />
 
-      <dasch-swiss-multi-language-textarea
+      <app-multi-language-textarea
         [placeholder]="'form.project.general.description' | translate"
         [formArray]="form.controls.description"
         [validators]="descriptionValidators"
@@ -41,8 +41,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
       <app-chip-list-input
         [formArray]="form.controls.keywords"
         data-cy="keywords-input"
-        [validators]="keywordsValidators">
-      </app-chip-list-input>
+        [validators]="keywordsValidators" />
     </form>
   `,
 })

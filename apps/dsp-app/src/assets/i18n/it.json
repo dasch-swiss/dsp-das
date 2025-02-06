@@ -210,7 +210,8 @@
     "comment": "Comment",
     "propertyLabels": {
       "linkedProperty": "Risorse collegate"
-    }
+    },
+    "footnotes": "Footnotes"
   },
   "searchPanel": {
     "howToSearch": "How to search",
@@ -243,5 +244,15 @@
       "home": "DSP-App Home Page",
       "myAccount": "My Account"
     }
+  },
+  "paginator": {
+    "firstPage": "Prima pagina",
+    "itemsPerPage": "Elementi per pagina:",
+    "lastPage": "Ultima pagina",
+    "nextPage": "Pagina successiva",
+    "inputTooltip": "Inserisci il numero della pagina e premi Invio per andare alla pagina.",
+    "previousPage": "Pagina precedente",
+    "rangeLabelOf": "di",
+    "rangeLabelZero": "Pagina 1 di 1"
   }
 }

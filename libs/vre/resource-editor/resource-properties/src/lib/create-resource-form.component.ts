@@ -40,7 +40,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
               data-cy="upload-control" />
           </mat-tab>
           <mat-tab label="External IIIF URL">
-            <app-third-part-iiif [formControl]="form.controls.file"></app-third-part-iiif>
+            <app-third-part-iiif [formControl]="form.controls.file" />
           </mat-tab>
         </mat-tab-group>
       </div>
@@ -69,7 +69,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <app-property-value-switcher
               [myProperty]="prop"
               [formArray]="form.controls.properties.controls[prop.propDef.id]"
-              [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
+              [resourceClassIri]="resourceClassIri" />
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </form>
 
     <ng-template #loadingTemplate>
-      <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
+      <app-progress-indicator />
     </ng-template>
   `,
   styles: [
@@ -96,7 +96,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     '.my-row:last-child { border-bottom: 0}',
     '.my-grid { width: 600px}',
     '.my-grid h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
-    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
+    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0; text-align: right;flex-shrink: 0}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {

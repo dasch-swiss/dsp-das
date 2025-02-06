@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChildren } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Constants, ReadLinkValue, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { CheckboxUpdate } from '../list-view.component';
 import { ListViewService } from '../list-view.service';
@@ -11,7 +10,7 @@ import { ListViewService } from '../list-view.service';
   templateUrl: './resource-list.component.html',
   styleUrls: ['./resource-list.component.scss'],
 })
-export class ResourceListComponent implements OnInit {
+export class ResourceListComponent implements OnChanges {
   /**
    * list of all resource checkboxes. This list is used to
    * unselect all checkboxes when single selection to view
@@ -20,11 +19,11 @@ export class ResourceListComponent implements OnInit {
   @ViewChildren('ckbox') resChecks: MatCheckbox[];
 
   /**
-   * list of resources of type ReadResourceSequence
+   * list of resources of type ReadResource
    *
-   * @param  {ReadResourceSequence} resources
+   * @param  {ReadResource[]} resources
    */
-  @Input() resources: ReadResourceSequence;
+  @Input() resources: ReadResource[] = [];
 
   /**
    * list of all selected resources indices
@@ -43,32 +42,19 @@ export class ResourceListComponent implements OnInit {
    */
   @Output() resourcesSelected?: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
 
-  constructor(
-    private _listView: ListViewService,
-    private _resourceService: ResourceService
-  ) {}
+  constructor(private _listView: ListViewService) {}
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
     // select the first item in the list
-    if (this.resources.resources.length) {
+    if (changes['resources'] && this.resources.length) {
       this.selectResource({
         checked: true,
         resIndex: 0,
-        resId: this.resources.resources[0].id,
-        resLabel: this.resources.resources[0].label,
+        resId: this.resources[0].id,
+        resLabel: this.resources[0].label,
         isCheckbox: false,
       });
     }
-  }
-
-  /**
-   * opens a clicked internal link
-   * @param linkValue
-   */
-  openResource(linkValue: ReadLinkValue | string) {
-    const iri = typeof linkValue == 'string' ? linkValue : linkValue.linkedResourceIri;
-    const path = this._resourceService.getResourcePath(iri);
-    window.open(`/resource${path}`, '_blank');
   }
 
   selectResource(status: CheckboxUpdate) {

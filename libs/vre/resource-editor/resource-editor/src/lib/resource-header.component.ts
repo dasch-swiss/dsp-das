@@ -8,15 +8,9 @@ import {
   EditResourceLabelDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import {
-  Events as CommsEvents,
-  ComponentCommunicationEventService,
-  EmitEvent,
-  OntologyService,
-  ProjectService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -49,7 +43,7 @@ import { map } from 'rxjs/operators';
         <mat-icon>edit</mat-icon>
       </button>
     </div>
-    <app-resource-info-bar [resource]="resource"></app-resource-info-bar>
+    <app-resource-info-bar [resource]="resource" />
   </div>`,
   styles: [
     `
@@ -130,7 +124,6 @@ export class ResourceHeaderComponent {
     private _dialog: MatDialog,
     private _store: Store,
     private _viewContainerRef: ViewContainerRef,
-    private _componentCommsService: ComponentCommunicationEventService,
     private _ontologyService: OntologyService
   ) {}
 
@@ -145,15 +138,10 @@ export class ResourceHeaderComponent {
   }
 
   afterResourceDeleted() {
-    const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (currentProject) {
-      const ontologyIri = this._ontologyService.getOntologyIriFromRoute(currentProject.shortcode);
-      if (ontologyIri) {
-        const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
-        this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
-      }
-    }
-
-    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
+    const ontologyIri = this._ontologyService.getOntologyIriFromRoute(
+      this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortcode
+    );
+    const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
+    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
   }
 }
