@@ -15,8 +15,7 @@ export class CkEditorComponent implements OnInit {
   protected readonly ckEditor = ckEditor;
 
   ngOnInit() {
-    console.log('kk', this.control.value, this.reverse(this.control.value));
-    this.footnoteControl.setValue(this.reverse(this.control.value));
+    this.footnoteControl.setValue(this.control.value ? this.reverse(this.control.value) : null);
     this.footnoteControl.valueChanges.subscribe(value => {
       this.control.setValue(this.test(value));
     });
@@ -25,7 +24,6 @@ export class CkEditorComponent implements OnInit {
   reverse(rawHtml: string) {
     const _footnoteRegExp2 = /<footnote content="([^>]+)"\/>/g;
     return rawHtml.replace(_footnoteRegExp2, (match, content) => {
-      const escapedContent = this._unescapeHtml(content);
       return `<footnote content="${content}">[Footnote]</footnote>`;
     });
   }

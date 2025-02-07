@@ -45,28 +45,13 @@ describe('Resource', () => {
       cy.get('.ck-button-save > .ck-icon').click();
       po.clickOnSubmit();
 
-      const response = {
-        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
-        'http://www.w3.org/2000/01/rdf-schema#label': 'label',
-        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
-          '@id': 'http://rdfh.ch/projects/00FF',
-        },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
-          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
-          'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
-            '<?xml version="1.0" encoding="UTF-8"?><text><p><footnote content="&amp;lt;p&amp;gt;myfootnote&amp;lt;/p&amp;gt;">[Footnote]</footnote></p></text>',
-          'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
-            '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
-          },
-        },
-      };
       cy.wait('@postRequest').then(interception => {
         // Assert that the intercepted request body matches the expected payload (X)
         const v =
           interception.request.body['http://0.0.0.0:3333/ontology/00FF/images/v2#property'][
             'http://api.knora.org/ontology/knora-api/v2#textValueAsXml'
           ];
-        expect(v).to.contain('<footnote content="&amp;lt;p&amp;gt;myfootnote&amp;lt;/p&amp;gt;">[Footnote]</footnote>');
+        expect(v).to.contain('<footnote content="&lt;p&gt;myfootnote&lt;/p&gt;"></footnote>');
       });
     });
 
