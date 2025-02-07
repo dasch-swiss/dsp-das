@@ -6,7 +6,7 @@ import { FootnoteService } from './footnote.service';
   name: 'footnoteParser',
 })
 export class FootnoteParserPipe implements PipeTransform {
-  private readonly _footnoteRegExp = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
+  private readonly _footnoteRegExp = /<footnote content="([^>]+)"\/>/g;
 
   constructor(
     private _sanitizer: DomSanitizer,
@@ -39,10 +39,11 @@ export class FootnoteParserPipe implements PipeTransform {
         newValue = newValue.replace(matchArray[0], parsedFootnote);
         this._footnoteService.addFootnote(
           uuid,
-          this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(this._unescapeHtml(matchArray[1])))
+          this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(matchArray[1]))
         );
       });
     }
+
     return this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(newValue));
   }
 
