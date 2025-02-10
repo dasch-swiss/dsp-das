@@ -13,11 +13,12 @@ export class FootnoteParserPipe implements PipeTransform {
     private _footnoteService: FootnoteService
   ) {}
 
-  transform(value: null | string): SafeHtml | null {
-    if (value === null) {
-      return value; // Return as is if value is empty or null
+  transform(value_: null | string | SafeHtml): SafeHtml | null {
+    if (value_ === null) {
+      return value_; // Return as is if value is empty or null
     } // does nothing if only displayMode changes
 
+    const value = typeof value_ === 'string' ? value_ : value_['changingThisBreaksApplicationSecurity'];
     if (!this._containsFootnote(value)) {
       return this._sanitizer.bypassSecurityTrustHtml(value);
     }
@@ -44,7 +45,7 @@ export class FootnoteParserPipe implements PipeTransform {
       });
     }
 
-    return this._sanitizer.bypassSecurityTrustHtml(this._unescapeHtml(newValue));
+    return this._sanitizer.bypassSecurityTrustHtml(newValue);
   }
 
   private _unescapeHtml(str: string) {
