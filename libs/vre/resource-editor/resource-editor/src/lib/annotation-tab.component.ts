@@ -62,6 +62,7 @@ export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   protected readonly RouteConstants = RouteConstants;
 
   private _scrollToRegion(iri: string) {
+    console.log('scrolling to region', iri);
     const region = this.annotationElements.find(
       element => element.nativeElement.getAttribute('data-annotation-resource') === iri
     );
