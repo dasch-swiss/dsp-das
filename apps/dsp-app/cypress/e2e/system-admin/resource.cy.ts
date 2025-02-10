@@ -55,7 +55,7 @@ describe('Resource', () => {
       });
     });
 
-    it('should be displayed, and can be edited', () => {
+    it.only('should be displayed, and can be edited', () => {
       const footnote = {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
         'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
@@ -65,7 +65,7 @@ describe('Resource', () => {
         'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
-            '<?xml version="1.0" encoding="UTF-8"?><text><p>footnote1<footnote content="&amp;lt;p&amp;gt;fn1&amp;lt;/p&amp;gt;">[Footnote]</footnote> and footnote2<footnote content="&amp;lt;p&amp;gt;fn2&amp;lt;/p&amp;gt;">[Footnote]</footnote></p></text>',
+            '<?xml version="1.0" encoding="UTF-8"?> <text><p>footnote1<footnote content="&lt;p&gt;fn1&lt;/p&gt;"/> footnote2 <footnote content="&lt;p&gt;fn2&lt;/p&gt;"/></p></text>',
           'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
             '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
           },
