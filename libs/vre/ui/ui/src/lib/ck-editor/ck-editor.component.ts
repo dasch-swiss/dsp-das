@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
+import * as Editor from 'ckeditor5-custom-build';
 import { ckEditor } from './ck-editor';
 import { unescapeHtml } from './unescape-html';
 
