@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { ckEditor } from './ck-editor';
+import { unescapeHtml } from './unescape-html';
 
 @Component({
   selector: 'app-ck-editor',
@@ -33,19 +34,8 @@ export class CkEditorComponent implements OnInit {
   private _parseFromFootnote(rawHtml: string) {
     const _footnoteRegExp = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
     return rawHtml.replace(_footnoteRegExp, (match, content) => {
-      const escapedContent = this._unescapeHtml(content);
+      const escapedContent = unescapeHtml(content);
       return `<footnote content="${escapedContent}"></footnote>`;
     });
-  }
-
-  private _unescapeHtml(str: string) {
-    const unescapeMap = {
-      '&amp;': '&',
-      '&lt;': '<',
-      '&gt;': '>',
-      '&quot;': '"',
-      '&#039;': "'",
-    };
-    return str.replace(/&(amp|lt|gt|quot|#039);/g, match => unescapeMap[match]);
   }
 }
