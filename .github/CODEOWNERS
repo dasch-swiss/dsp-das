@@ -7,7 +7,7 @@
 /libs/vre/pages/user-settings @domsteinbach
 /libs/vre/pages/system @mpro7
 /libs/vre/pages/ontology @derschnee68 @domsteinbach
-# /libs/vre/pages/miscellaneous not exist yet
+# /libs/vre/pages/miscellaneous does not exist yet
 
 /libs/vre/resource-editor @derschnee68 @domsteinbach
 
