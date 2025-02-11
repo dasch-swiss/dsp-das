@@ -72,10 +72,15 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(projects => {
-      if (projects.length > 0) {
-        this.selectedProject = projects[0].id;
-      }
+    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe({
+      next: projects => {
+        if (projects && projects.length > 0) {
+          this.selectedProject = projects[0].id;
+        }
+      },
+      error: err => {
+        console.error(`No projects available. Observable emitted an error: ${err}`);
+      },
     });
   }
 
