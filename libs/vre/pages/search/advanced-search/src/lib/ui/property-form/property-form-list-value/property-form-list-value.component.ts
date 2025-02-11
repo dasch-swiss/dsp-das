@@ -62,17 +62,7 @@ export class PropertyFormListValueComponent implements AfterViewInit, OnDestroy 
       this.selectedItem = this.findItemById(this.list, this.value);
     }
 
-    this.filteredList$.next([...(this.sortedLabelList || [])]);
-    this.valueFilterCtrl.valueChanges
-      .pipe(
-        takeUntil(this.destroyed),
-        takeWhile(item => !!item)
-      )
-      .subscribe(value =>
-        this.filteredList$.next(
-          (this.sortedLabelList || []).filter(item => item.label.toLowerCase().includes(value!.toLowerCase()))
-        )
-      );
+    this.initAutocompleteControl();
   }
 
   trackByFn = (index: number, item: ListNodeV2) => `${index}-${item.id}`;
@@ -88,7 +78,7 @@ export class PropertyFormListValueComponent implements AfterViewInit, OnDestroy 
     this.destroyed.complete();
   }
 
-  findItemById(node: ListNodeV2, targetId: string): ListNodeV2 | undefined {
+  private findItemById(node: ListNodeV2, targetId: string): ListNodeV2 | undefined {
     if (node.id === targetId) {
       return node;
     }
@@ -101,5 +91,19 @@ export class PropertyFormListValueComponent implements AfterViewInit, OnDestroy 
     }
 
     return undefined;
+  }
+
+  private initAutocompleteControl() {
+    this.filteredList$.next([...(this.sortedLabelList || [])]);
+    this.valueFilterCtrl.valueChanges
+      .pipe(
+        takeUntil(this.destroyed),
+        takeWhile(item => !!item)
+      )
+      .subscribe(value =>
+        this.filteredList$.next(
+          (this.sortedLabelList || []).filter(item => item.label.toLowerCase().includes(value!.toLowerCase()))
+        )
+      );
   }
 }
