@@ -1,36 +1,33 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
   CanDoResponse,
   Constants,
-  KnoraApiConnection,
   PropertyDefinition,
-  ReadOntology,
+  ReadProject,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   OntologiesSelectors,
   OntologyProperties,
+  ProjectsSelectors,
   PropToDisplay,
-  RemovePropertyAction,
   ReplacePropertyAction,
+  UserSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { DefaultClass, DefaultResourceClasses, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  DefaultClass,
+  DefaultResourceClasses,
+  LocalizationService,
+  ProjectService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,85 +35,47 @@ import { map, take, takeUntil } from 'rxjs/operators';
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
 })
-export class ResourceClassInfoComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+export class ResourceClassInfoComponent implements OnInit {
+  @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
 
-  // open / close res class card
-  @Input() expanded = false;
+  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
 
-  @Input() resourceClass: ResourceClassDefinitionWithAllLanguages;
-
-  @Input() projectUuid: string;
-
-  @Input() projectStatus: boolean;
-  @Input() userCanEdit: boolean; // is user a project admin or sys admin?
-
-  // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
-
-  // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
-  @Output() ontoPropertiesChange = new EventEmitter<PropertyDefinition[]>();
-
-  @Input() updatePropertyAssignment$: Subject<any>;
-
-  // to update the resource class itself (edit or delete)
-  @Output() editResourceClass = new EventEmitter<DefaultClass>();
-  @Output() deleteResourceClass = new EventEmitter<DefaultClass>();
-
-  // to update the assignment of a property to a class we need the information about property (incl. propType)
-  // and resource class
-  @Output() updatePropertyAssignment = new EventEmitter<string>();
-
-  ontology: ReadOntology;
+  currentProjectOntologyProperties$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties);
 
   // set to false if it is a subclass of a default class inheriting the order
-  canChangeGuiOrder: boolean;
+  expanded = true;
 
-  classCanBeDeleted: boolean;
+  canChangeGuiOrder = false;
 
-  classLabel: string;
+  classCanBeDeleted = false;
+
+  classLabel = '';
 
   subClassOfLabel = '';
 
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
-  // list of all ontologies with their properties
-  currentProjectOntologyProperties$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties);
-
   currentOntologyPropertiesToDisplay$: Observable<PropToDisplay[]> = this.currentProjectOntologyProperties$.pipe(
-    takeUntil(this.ngUnsubscribe),
     map(ontoProperties => this.getPropsToDisplay([...this.resourceClass.propertiesList], [...ontoProperties]))
   );
 
+  trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
+
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _localizationService: LocalizationService,
     private _notification: NotificationService,
+    private _oes: OntologyEditService,
     private _store: Store,
     private _actions$: Actions
   ) {}
 
   ngOnInit(): void {
-    this.ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    // translate iris from "subclass of" array
     this.translateSubClassOfIri(this.resourceClass.subClassOf);
-    // check if the class can be deleted
-    this.canBeDeleted();
     this.getOntologiesLabelsInPreferredLanguage();
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
-  trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
-
   private getPropsToDisplay(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToDisplay[] {
-    if (classProps.length === 0 || ontoProperties.length === 0) {
-      return [];
-    }
-
     const propsToDisplay: PropToDisplay[] = [];
     let remainingProperties: PropertyDefinition[] = [];
     classProps.forEach((hasProp: PropToDisplay) => {
@@ -125,7 +84,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
       if (ontoIri !== Constants.KnoraApiV2 && ontoIri !== Constants.Rdfs) {
         // get property definition from list of project ontologies
         const index = ontoProperties.findIndex((item: OntologyProperties) => item.ontology === ontoIri);
-        remainingProperties = [...ontoProperties[index].properties];
+        remainingProperties = [...(ontoProperties[index]?.properties || [])];
         hasProp.propDef = remainingProperties.find(
           (obj: ResourcePropertyDefinitionWithAllLanguages) =>
             obj.id === hasProp.propertyIndex &&
@@ -149,7 +108,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         }
       }
     });
-
     return propsToDisplay;
   }
 
@@ -168,6 +126,11 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
    * @param classIris
    */
   translateSubClassOfIri(classIris: string[]) {
+    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    if (!ontology) {
+      return;
+    }
+
     // reset the label
     this.subClassOfLabel = '';
 
@@ -184,11 +147,11 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
       if (defaultClass) {
         this.subClassOfLabel += defaultClass.label;
         this.canChangeGuiOrder = true;
-      } else if (this.ontology.id === ontologyIri) {
+      } else if (ontology.id === ontologyIri) {
         // the class is not defined in the default classes
         // but defined in the current ontology
         // get class label from there
-        this.subClassOfLabel += this.ontology.classes[iri].label;
+        this.subClassOfLabel += ontology.classes[iri].label;
         // in this case, the user can't update the cardinality incl. the gui order in this class
         // we have to disable this update cardinality functionality
         this.canChangeGuiOrder = false;
@@ -213,8 +176,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   canBeDeleted() {
     // check if the class can be deleted
-    this._dspApiConnection.v2.onto
+    this._oes
       .canDeleteResourceClass(this.resourceClass.id)
+      .pipe(take(1))
       .subscribe((response: CanDoResponse) => {
         this.classCanBeDeleted = response.canDo;
       });
@@ -232,7 +196,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     );
 
     if (event.previousIndex !== event.currentIndex) {
-      this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
       // the dropped property item has a new index (= gui order)
       // send the new gui-order to the api by
       // preparing the UpdateOntology object first
@@ -242,7 +205,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
         .pipe(take(1))
         .subscribe(() => {
           // successful request: update the view
-          this.updatePropertyAssignment.emit(this.ontology.id);
           // display success message
           this._notification.openSnackBar(
             `You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`
@@ -251,19 +213,12 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeProperty(property: DefaultClass, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    // TODO temporary solution to replace eventemitter with subject because emitter loses subscriber after following subscription is triggered
-    this.updatePropertyAssignment.pipe(take(1)).subscribe(() => this.updatePropertyAssignment$.next());
+  editResourceClassInfo() {
+    this._oes.openEditResourceClass(this.resourceClass);
+  }
 
-    this._store.dispatch(new RemovePropertyAction(property, this.resourceClass, currentOntologyPropertiesToDisplay));
-    this._actions$
-      .pipe(ofActionSuccessful(RemovePropertyAction))
-      .pipe(take(1))
-      .subscribe(res => {
-        // TODO should be the same as ontology lastModificationDate ? if yes remove commented line, otherwise add additional lastModificationDate property to the state
-        // this.lastModificationDate = res.lastModificationDate;
-        this.updatePropertyAssignment.emit(this.ontology.id);
-      });
+  deleteResourceClass() {
+    this._oes.deleteResourceClass(this.resourceClass.id);
   }
 
   /**

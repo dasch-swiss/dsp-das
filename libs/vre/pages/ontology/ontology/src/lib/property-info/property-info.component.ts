@@ -1,23 +1,25 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
   ApiResponseError,
   CanDoResponse,
   Constants,
   KnoraApiConnection,
   ReadOntology,
+  ReadProject,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
-  DefaultClass,
   DefaultProperty,
   OntologyService,
+  ProjectService,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
   id: string;
@@ -57,15 +59,9 @@ export interface ShortInfo {
 export class PropertyInfoComponent implements OnInit {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
-  @Input() projectUuid!: string;
+  project!: ReadProject | undefined;
 
-  @Input() projectStatus!: boolean;
-
-  @Input() userCanEdit = false;
-
-  @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
-
-  @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+  userCanEdit = true; // Todo: IsAdmin
 
   private _projectOntologies: ReadOntology[] = [];
 
@@ -91,9 +87,12 @@ export class PropertyInfoComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
+    private _oes: OntologyEditService,
+    private _projectService: ProjectService,
     private _store: Store
   ) {
     this._projectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+    this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
   }
 
   ngOnInit() {
@@ -143,8 +142,10 @@ export class PropertyInfoComponent implements OnInit {
 
     if (this.propDef.objectType === Constants.ListValue) {
       const currentProjectsLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
+      const projectUuid = this._projectService.uuidToIri(this.project.id);
+
       const listIri = this.propDef.guiAttributes[0].split('<')[1].replace(/>/g, '');
-      const listUrl = `/project/${this.projectUuid}/lists/${encodeURIComponent(listIri)}`;
+      const listUrl = `/project/${projectUuid}/lists/${encodeURIComponent(listIri)}`;
       const list = currentProjectsLists.find(i => i.id === listIri);
       this.propAttribute = `<a href="${listUrl}">${list?.labels[0].value}</a>`;
       this.propAttributeComment = list?.comments.length ? list.comments[0].value : '';
@@ -161,6 +162,14 @@ export class PropertyInfoComponent implements OnInit {
           this.propCanBeDeleted = canDoRes.canDo;
         }
       });
+  }
+
+  editResourceProperty(prop: PropertyInfoObject) {
+    this._oes.openEditProperty(prop);
+  }
+
+  deleteResourceProperty(iri: string) {
+    this._oes.deleteProperty(iri);
   }
 
   mouseEnter() {

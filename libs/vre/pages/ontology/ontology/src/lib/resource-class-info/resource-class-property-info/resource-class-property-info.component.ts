@@ -1,31 +1,21 @@
-import {
-  AfterContentInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   CanDoResponse,
   Cardinality,
   ClassDefinition,
   Constants,
   IHasProperty,
-  KnoraApiConnection,
   ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, LoadOntologyAction, OntologiesSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
-import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ListsSelectors, OntologiesSelectors, PropToDisplay, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-property-info',
@@ -39,17 +29,11 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
 
   @Input() props: PropToDisplay[];
 
-  @Input() classIri?: string;
-
-  @Input() projectUuid: string;
-
-  @Input() lastModificationDate?: string;
-
-  @Input() userCanEdit: boolean; // is user a project admin or sys admin?
-
-  @Output() removePropertyFromClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
-
   @Input() resourceClass: ClassDefinition;
+
+  @Select(UserSelectors.isMemberOfSystemAdminGroup) isAdmin$!: Observable<boolean>;
+
+  projectUuid?: string;
 
   isDestroyed = new Subject<void>();
 
@@ -60,13 +44,31 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
 
   propCanBeRemovedFromClass: boolean;
 
+  projectUuid$: Observable<string> = combineLatest([
+    this._route.params,
+    this._route.parent?.params,
+    this._route.parent?.parent ? this._route.parent.parent.params : of({}),
+  ]).pipe(
+    map(([params, parentParams, parentParentParams]) => {
+      return params[RouteConstants.uuidParameter]
+        ? params[RouteConstants.uuidParameter]
+        : parentParams[RouteConstants.uuidParameter]
+          ? parentParams[RouteConstants.uuidParameter]
+          : parentParentParams[RouteConstants.uuidParameter];
+    })
+  );
+
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
+    private _oes: OntologyEditService,
+    private _route: ActivatedRoute,
     private _store: Store,
     private _cd: ChangeDetectorRef
-  ) {}
+  ) {
+    this.projectUuid$.pipe().subscribe((projectUuid: string) => {
+      this.projectUuid = projectUuid;
+    });
+  }
 
   ngOnChanges(): void {
     const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
@@ -134,48 +136,21 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
    * determines whether a property can be removed from a class or not
    */
   canBeRemovedFromClass(): void {
-    // check if the property can be removed from res class
-    if (!this.lastModificationDate) {
-      // guard
-      return;
-    }
+    this._oes
+      .propertyCanBeRemovedFromClass(this.propCard, this.resourceClass.id)
+      .subscribe((canDoRes: CanDoResponse) => {
+        this.propCanBeRemovedFromClass = canDoRes.canDo;
+        this._cd.markForCheck();
+      });
+  }
 
-    // property can only be removed from class if it's not inherited from another prop or class
-    if (this.propCard.isInherited) {
-      // other guard
-      this.propCanBeRemovedFromClass = false;
-      return;
-    }
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-
-    onto.lastModificationDate = this.lastModificationDate;
-
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    onto.id = ontology.id;
-
-    const delCard = new UpdateResourceClassCardinality();
-
-    delCard.id = this.classIri;
-
-    delCard.cardinalities = [];
-
-    delCard.cardinalities = [this.propCard];
-    onto.entity = delCard;
-
-    this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe((canDoRes: CanDoResponse) => {
-      this.propCanBeRemovedFromClass = canDoRes.canDo;
-      this._cd.markForCheck();
-    });
+  removePropertyFromClass(propDef: ResourcePropertyDefinitionWithAllLanguages): void {
+    this._oes.removePropertyFromClass(propDef, this.resourceClass, this.props);
   }
 
   submitCardinalitiesChange(newValue: Cardinality) {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    // get the ontology, the class and its properties
-    const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
-    classUpdate.lastModificationDate = this.lastModificationDate;
-    classUpdate.id = ontology.id;
-    const changedClass = new UpdateResourceClassCardinality();
-    changedClass.id = this.classIri; // TODO this.resClassIri;
+    const updateResourceClassCard = new UpdateResourceClassCardinality();
+    updateResourceClassCard.id = this.resourceClass.id!; // TODO this.resClassIri;
     // find the prop in the this.props array and replace with this.propCard
     this.props.forEach((prop, index) => {
       if (prop.propertyIndex === this.propCard.propertyIndex) {
@@ -183,21 +158,11 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
       }
     });
 
-    changedClass.cardinalities = this.props;
+    updateResourceClassCard.cardinalities = this.props;
     // get the property for replacing the cardinality
-    const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propDef.id);
-    changedClass.cardinalities[idx].cardinality = newValue;
-
-    classUpdate.entity = changedClass;
-    this._dspApiConnection.v2.onto
-      .replaceCardinalityOfResourceClass(classUpdate)
-      .pipe(
-        tap(() => {
-          this._store.dispatch(new LoadOntologyAction(ontology?.id || '', this.projectUuid, true));
-        }),
-        take(1)
-      )
-      .subscribe(response => {});
+    const idx = updateResourceClassCard.cardinalities.findIndex(c => c.propertyIndex === this.propDef.id);
+    updateResourceClassCard.cardinalities[idx].cardinality = newValue;
+    this._oes.updateCardinalityOfResourceClass(updateResourceClassCard);
   }
 
   ngOnDestroy() {

@@ -67,7 +67,7 @@
       </ng-template>
     </span>
   </div>
-  <div class="action-bubble" *ngIf="userCanEdit && projectStatus && showActionBubble" [@simpleFadeAnimation]="'in'">
+  <div class="action-bubble" *ngIf="userCanEdit && project.status && showActionBubble" [@simpleFadeAnimation]="'in'">
     <div class="button-container">
       <span
         matTooltipPosition="above"
@@ -76,18 +76,14 @@
           mat-button
           [disabled]="!propDef.isEditable"
           class="edit"
-          (click)="editResourceProperty.emit({propDef: propDef, propType: propType})">
+          (click)="editResourceProperty({propDef: propDef, propType: propType})">
           <mat-icon>edit</mat-icon>
         </button>
       </span>
       <span
         matTooltipPosition="above"
         [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
-        <button
-          mat-button
-          [disabled]="!propCanBeDeleted"
-          class="delete"
-          (click)="deleteResourceProperty.emit({iri: propDef.id, label: propDef.label})">
+        <button mat-button [disabled]="!propCanBeDeleted" class="delete" (click)="deleteResourceProperty(propDef.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

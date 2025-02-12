@@ -25,7 +25,7 @@
     </a>
   </div>
   <div *ngIf="ontologiesMetadata$ | async" class="projectOntos">
-    <div class="list" [class.top-padding]="isAdmin$ | async">
+    <div class="list" [class.top-padding]="isProjectMember$ | async">
       <div
         class="list-item ontos"
         *ngFor="let onto of ontologiesMetadata$ | async; trackBy: trackByOntologyMetaFn"
@@ -58,7 +58,7 @@
     </a>
   </div>
   <div *ngIf="(listsInProject$ | async)?.length > 0" class="projectLists">
-    <div class="list" [class.top-padding]="isAdmin$ | async">
+    <div class="list" [class.top-padding]="isProjectMember$ | async">
       <div
         class="list-item"
         *ngFor="let list of (listsInProject$ | async); trackBy: trackByFn"

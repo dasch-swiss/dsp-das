@@ -5,7 +5,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';

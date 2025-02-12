@@ -62,7 +62,6 @@ import { PropertyForm } from '../property-form.type';
 export class PropertyFormComponent implements OnInit {
   @Input() formData!: {
     property: PropertyInfoObject;
-    resourceClassId: string;
     name?: string;
     labels?: StringLiteralV2[];
     comments?: StringLiteralV2[];

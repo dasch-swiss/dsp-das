@@ -208,7 +208,7 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: !stopLoadingWhenCompleted,
-            projectOntologies: projectOntologiesState,
+            projectOntologies: { ...projectOntologiesState }, // batch update with a new reference!
           });
         },
         error: (error: ApiResponseError) => {

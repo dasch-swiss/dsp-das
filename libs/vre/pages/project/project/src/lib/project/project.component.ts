@@ -10,19 +10,25 @@ import {
 import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ReadOntology, ReadProject } from '@dasch-swiss/dsp-js';
+import { ReadOntology, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import {
+  LoadProjectMembersAction,
+  LoadProjectOntologiesAction,
+  LoadProjectsAction,
+  OntologiesSelectors,
+  ProjectsSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/core/state';
 import {
   ComponentCommunicationEventService,
   Events,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
-import { ProjectBase } from '../project-base';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 type AvailableRoute =
   | typeof RouteConstants.project
@@ -36,46 +42,65 @@ type AvailableRoute =
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],
 })
-export class ProjectComponent extends ProjectBase implements OnInit, OnDestroy {
+export class ProjectComponent implements OnInit, OnDestroy {
   destroyed: Subject<void> = new Subject<void>();
 
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   routeConstants = RouteConstants;
+  projectUuid = '';
 
   listItemSelected = '';
 
   getAllEntityDefinitionsAsArray = getAllEntityDefinitionsAsArray;
   componentCommsSubscription: Subscription;
   sideNavOpened = true;
+  expandedOntologyId$: Observable<string>;
 
   // routes for sidenav
   settingsRoute: AvailableRoute = RouteConstants.settings;
   dataModelsRoute: AvailableRoute = RouteConstants.dataModels;
 
-  isMember$: Observable<boolean> = combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
-    map(([user, userProjectAdminGroups]) =>
-      ProjectService.IsProjectMember(user, userProjectAdminGroups, this.projectUuid)
-    )
-  );
-
-  projectOntologies$: Observable<ReadOntology[]> = combineLatest([
-    this.isProjectsLoading$,
-    this._store.select(OntologiesSelectors.isLoading),
-    this._store.select(OntologiesSelectors.projectOntologies),
-  ]).pipe(
-    map(([isProjectsLoading, isOntologiesLoading, ontologies]) => {
-      const projectIri = this._projectService.uuidToIri(this.projectUuid);
-      if (!ontologies || !ontologies[projectIri]) {
+  projectOntologies$: Observable<ReadOntology[]> = this._store.select(OntologiesSelectors.projectOntologies).pipe(
+    takeUntil(this.destroyed),
+    map(ontologies => {
+      const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id;
+      if (!projectIri || !ontologies || !ontologies[projectIri]) {
         return [];
       }
-
       return ontologies[projectIri].readOntologies;
     })
   );
 
+  projectIri$: Observable<string>;
+
+  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
+
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
   @Select(OntologiesSelectors.hasLoadingErrors) hasLoadingErrors$: Observable<boolean>;
   @Select(ProjectsSelectors.currentProject) currentProject$: Observable<ReadProject>;
+
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember) isMember$: Observable<boolean>;
+
+  @Select(OntologiesSelectors.projectOntology) ontology$!: Observable<ReadOntology>;
+
+  projectUuid$: Observable<string> = combineLatest([
+    this._route.params,
+    this._route.parent?.params,
+    this._route.parent?.parent ? this._route.parent.parent.params : of({}),
+  ]).pipe(
+    takeUntil(this.destroyed),
+    map(([params, parentParams, parentParentParams]) => {
+      return params[RouteConstants.uuidParameter]
+        ? params[RouteConstants.uuidParameter]
+        : parentParams[RouteConstants.uuidParameter]
+          ? parentParams[RouteConstants.uuidParameter]
+          : parentParentParams[RouteConstants.uuidParameter];
+    })
+  );
+
+  projectIriFromUrl$: Observable<string> = this.projectUuid$.pipe(map(uuid => this.projectService.uuidToIri(uuid)));
 
   constructor(
     private _componentCommsService: ComponentCommunicationEventService,
@@ -84,11 +109,9 @@ export class ProjectComponent extends ProjectBase implements OnInit, OnDestroy {
     protected _router: Router,
     protected _store: Store,
     protected _route: ActivatedRoute,
-    _titleService: Title,
-    _projectService: ProjectService
-  ) {
-    super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
-  }
+    private _titleService: Title,
+    protected projectService: ProjectService
+  ) {}
 
   /**
    * add keyboard support to expand/collapse sidenav
@@ -103,21 +126,77 @@ export class ProjectComponent extends ProjectBase implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    super.ngOnInit();
     this._router.events
       .pipe(
         takeUntil(this.destroyed),
         filter((e): e is NavigationEnd => e instanceof NavigationEnd)
       )
       .subscribe((event: NavigationEnd) => {
-        this.listItemSelected = ProjectComponent.GetListItemSelected(event.url, this.projectUuid);
+        this.listItemSelected = ProjectComponent.GetListItemSelected(event.url);
       });
 
-    this.listItemSelected = ProjectComponent.GetListItemSelected(this._router.url, this.projectUuid);
+    this.listItemSelected = ProjectComponent.GetListItemSelected(this._router.url);
 
     this.componentCommsSubscription = this._componentCommsService.on([Events.unselectedListItem], () => {
       this.listItemSelected = '';
     });
+
+    this.projectUuid$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(uuid => {
+      this.projectUuid = uuid;
+      console.log('uuid', uuid);
+      this._loadProject(uuid);
+    });
+
+    this.projectIri$ = combineLatest([this.project$, this.projectIriFromUrl$]).pipe(
+      takeUntil(this.destroyed),
+      distinctUntilChanged(),
+      map(([project, projectIriFromUrl]) => {
+        return project ? project.id : projectIriFromUrl;
+      })
+    );
+
+    this.project$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(project => {
+      if (project) {
+        this._titleService.setTitle(project.shortname);
+      }
+    });
+
+    this.expandedOntologyId$ = this.ontology$.pipe(
+      map(ontology => ontology?.id ?? '') // Extract ID or empty string if null
+    );
+  }
+
+  private _loadProject(projectUuid: string): void {
+    this.isProjectsLoading$
+      .pipe(takeWhile(isLoading => isLoading === false && projectUuid !== undefined))
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+          const projectIri = this.projectService.uuidToIri(projectUuid);
+          if (!project || project.id !== projectIri) {
+            // get current project data, project members and project groups
+            // and set the project state here
+            this._actions$
+              .pipe(ofActionSuccessful(LoadProjectsAction))
+              .pipe(take(1))
+              .subscribe(() => this.setProjectData());
+            this._store.dispatch([new LoadProjectsAction()]);
+          } else {
+            this._store.dispatch(new LoadProjectOntologiesAction(projectUuid));
+          }
+        },
+      });
+  }
+
+  private setProjectData(): void {
+    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+    if (!project) {
+      return;
+    }
+
+    this._titleService.setTitle(project.shortname);
+    this._store.dispatch(new LoadProjectOntologiesAction(project.id));
   }
 
   ngOnDestroy() {
@@ -152,7 +231,7 @@ export class ProjectComponent extends ProjectBase implements OnInit, OnDestroy {
     this.sidenav.toggle();
   }
 
-  static GetListItemSelected(url: string, projectUuid: string): string {
+  static GetListItemSelected(url: string, projectUuid = ''): string {
     switch (true) {
       case url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.advancedSearch}`): {
         return RouteConstants.advancedSearch;

@@ -30,9 +30,9 @@
           [matMenuTriggerFor]="classInfoMenu"
           class="menu-icon-button"
           (click)="canBeRemovedFromClass()"
-          *ngIf="userCanEdit"
-          >more_vert
-        </mat-icon>
+          *ngIf="(isAdmin$ | async) === true"
+          >more_vert</mat-icon
+        >
       </div>
     </div>
   </div>
@@ -46,21 +46,18 @@
     </span>
     <span>
       <app-cardinality
-        [disabled]="!userCanEdit"
+        [disabled]="(isAdmin$ | async) !== true"
         [cardinality]="propCard.cardinality"
         [classIri]="resourceClass.id"
         [propertyInfo]="{ propDef: this.propDef, propType: this.propType }"
-        (cardinalityChange)="submitCardinalitiesChange($event)" />
+        (cardinalityChange)="submitCardinalitiesChange($event)"></app-cardinality>
     </span>
   </div>
 </div>
 
 <mat-menu #classInfoMenu="matMenu">
   <div class="remove-menu-wrapper">
-    <button
-      mat-menu-item
-      [disabled]="!propCanBeRemovedFromClass"
-      (click)="removePropertyFromClass.emit({iri: propDef.id, label: propDef.label})">
+    <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass(propDef)">
       <mat-icon>link_off</mat-icon>
       <ngx-skeleton-loader
         *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass === null"
