@@ -67,7 +67,10 @@
       </ng-template>
     </span>
   </div>
-  <div class="action-bubble" *ngIf="userCanEdit && project.status && showActionBubble" [@simpleFadeAnimation]="'in'">
+  <div
+    class="action-bubble"
+    *ngIf="(isAdmin$ | async) && project?.status && showActionBubble"
+    [@simpleFadeAnimation]="'in'">
     <div class="button-container">
       <span
         matTooltipPosition="above"

@@ -18,7 +18,8 @@ import {
   ProjectService,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -59,9 +60,9 @@ export interface ShortInfo {
 export class PropertyInfoComponent implements OnInit {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
-  project!: ReadProject | undefined;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
 
-  userCanEdit = true; // Todo: IsAdmin
+  project!: ReadProject | undefined;
 
   private _projectOntologies: ReadOntology[] = [];
 
