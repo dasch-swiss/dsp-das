@@ -23,8 +23,8 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
   @ViewChild('pager', { static: false })
   pagerComponent: IncomingResourcePagerComponent | undefined;
 
-  private incomingLinksSubject = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
-  incomingLinks$ = this.incomingLinksSubject.asObservable();
+  private _incomingLinksSubject = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
+  incomingLinks$ = this._incomingLinksSubject.asObservable();
   incomingLinks: IncomingOrStandoffLink[] = [];
 
   constructor(
@@ -33,7 +33,7 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.incomingLinksSubject.next([]);
+    this._incomingLinksSubject.next([]);
     this._doIncomingLinkSearch(0);
   }
 
@@ -43,13 +43,13 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.incomingLinks = incomingLinks;
-        this.incomingLinksSubject.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
+        this._incomingLinksSubject.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
         this._cd.detectChanges();
       });
   }
 
   pageChanged() {
-    this.incomingLinksSubject.next(
+    this._incomingLinksSubject.next(
       this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
     );
   }
