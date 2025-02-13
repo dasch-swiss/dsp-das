@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
-import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-incoming-links-property-row',
@@ -29,7 +28,6 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
   incomingLinks: IncomingOrStandoffLink[] = [];
 
   constructor(
-    public propertiesDisplayService: PropertiesDisplayService,
     private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService,
     private _cd: ChangeDetectorRef
   ) {}

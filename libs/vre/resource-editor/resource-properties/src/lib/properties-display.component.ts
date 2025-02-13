@@ -99,10 +99,7 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   editableProperties: PropertyInfoValues[] = [];
 
-  constructor(
-    public propertiesDisplayService: PropertiesDisplayService,
-    private _store: Store
-  ) {}
+  constructor(private _store: Store) {}
 
   ngOnChanges() {
     this.editableProperties = this.resource.resProps.filter(
