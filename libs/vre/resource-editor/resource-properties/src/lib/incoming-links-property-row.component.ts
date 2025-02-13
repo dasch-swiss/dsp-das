@@ -14,7 +14,6 @@ import { sortByKeys } from './sortByKeys';
     tooltip="Indicates that this resource is referred to by another resource"
     label="has incoming link"
     [borderBottom]="true"
-    class="incoming-link"
     [isEmptyRow]="allIncomingLinks.length === 0">
     <ng-container *ngIf="allIncomingLinks.length > 0">
       <app-incoming-standoff-link-value [links]="myLinks" />
@@ -29,12 +28,11 @@ import { sortByKeys } from './sortByKeys';
 export class IncomingLinksPropertyRowComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
-  pageSize = 25;
-
   get myLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
   }
 
+  pageSize = 25;
   allIncomingLinks: IncomingOrStandoffLink[] = [];
   pageIndex = 0;
 
@@ -57,7 +55,6 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
 
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
       expand(sequence => {
-        console.log('julien', sequence);
         if (!(sequence as ReadResourceSequence).mayHaveMoreResults) {
           return of(sequence as ReadResourceSequence);
         }
