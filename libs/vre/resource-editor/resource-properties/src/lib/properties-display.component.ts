@@ -1,19 +1,9 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingResourcePagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map, take, takeUntil } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
@@ -81,15 +71,6 @@ import { sortByKeys } from './sortByKeys';
     </ng-container>
 
     <!-- incoming link -->
-    <app-property-row
-      tooltip="Indicates that this resource is referred to by another resource"
-      label="has incoming link"
-      [borderBottom]="true"
-      class="incoming-link"
-      [class]="getRowClass(showAllProperties$ | async, (incomingLinks$ | async).length)">
-      <app-incoming-standoff-link-value *ngIf="(incomingLinks$ | async)?.length > 0" [links]="incomingLinks$ | async" />
-      <app-incoming-resource-pager #pager [lastItemOfPage]="incomingLinks.length" (pageChanged)="pageChanged()" />
-    </app-property-row>
 
     <ng-template #noProperties>
       <app-property-row label="info" [borderBottom]="false">
@@ -139,9 +120,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Input() linkToNewTab?: string;
   @Output() afterResourceDeleted = new EventEmitter();
 
-  @ViewChild('pager', { static: false })
-  pagerComponent: IncomingResourcePagerComponent | undefined;
-
   protected readonly cardinality = Cardinality;
 
   resourceAttachedUser$ = this._store.select(ResourceSelectors.attachedUsers).pipe(
@@ -152,9 +130,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   );
 
   editableProperties: PropertyInfoValues[] = [];
-  private incomingLinksSubject = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
-  incomingLinks$ = this.incomingLinksSubject.asObservable();
-  incomingLinks: IncomingOrStandoffLink[] = [];
+
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
 
   standoffLinks: IncomingOrStandoffLink[] = [];
@@ -167,7 +143,12 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges() {
-    this._setupProperties();
+    this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
+
+    this.incomingLinksSubject.next([]);
+
+    this.doIncomingLinkSearch(0);
+    this.setStandOffLinks();
   }
 
   ngOnDestroy() {
@@ -175,22 +156,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  private _setupProperties(offset = 0) {
-    this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
-
-    this.incomingLinksSubject.next([]);
-
-    this.doIncomingLinkSearch(offset);
-    this.setStandOffLinks();
-  }
-
-  pageChanged() {
-    this.incomingLinksSubject.next(
-      this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
-    );
-  }
-
-  doIncomingLinkSearch(offset = 0) {
+  private doIncomingLinkSearch(offset = 0) {
     this._propertiesDisplayIncomingLink
       .getIncomingLinksRecursively$(this.resource.res.id, offset)
       .pipe(take(1))
