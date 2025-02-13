@@ -1,13 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 import { PropertiesDisplayService } from './properties-display.service';
-import { sortByKeys } from './sortByKeys';
 
 @Component({
   selector: 'app-properties-display',
@@ -43,7 +41,7 @@ import { sortByKeys } from './sortByKeys';
     <!-- list of properties -->
     <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
       <app-property-row
-        [display]="(showAllProperties$ | async) || prop.values.length > 0"
+        [display]="(propertiesDisplayService.showAllProperties$ | async) || prop.values.length > 0"
         *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
         [borderBottom]="true"
         [tooltip]="prop.propDef.comment"
@@ -56,16 +54,7 @@ import { sortByKeys } from './sortByKeys';
       </app-property-row>
     </ng-container>
 
-    <!-- standoff link -->
-    <app-property-row
-      tooltip=" Represent a link in standoff markup from one resource to another"
-      label="has Standoff link"
-      [display]="(showAllProperties$ | async) || standoffLinks.length > 0"
-      [borderBottom]="true">
-      <app-incoming-standoff-link-value [links]="standoffLinks" />
-    </app-property-row>
-
-    <!-- incoming link -->
+    <app-standoff-links-property-row [resource]="resource" />
     <app-incoming-links-property-row [resource]="resource" />
 
     <ng-template #noProperties>
@@ -98,7 +87,6 @@ export class PropertiesDisplayComponent implements OnChanges {
   @Input() linkToNewTab?: string;
   @Output() afterResourceDeleted = new EventEmitter();
 
-  properties!: PropertyInfoValues[];
   protected readonly cardinality = Cardinality;
 
   resourceAttachedUser$ = this._store
@@ -110,41 +98,17 @@ export class PropertiesDisplayComponent implements OnChanges {
     );
 
   editableProperties: PropertyInfoValues[] = [];
-  showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
-  standoffLinks: IncomingOrStandoffLink[] = [];
 
   constructor(
-    private _propertiesDisplayService: PropertiesDisplayService,
+    public propertiesDisplayService: PropertiesDisplayService,
     private _store: Store
   ) {}
 
   ngOnChanges() {
-    this.properties = this.resource.resProps;
-    this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
-
-    this.setStandOffLinks();
+    this.editableProperties = this.resource.resProps.filter(
+      prop => (prop.propDef as ResourcePropertyDefinition).isEditable
+    );
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
-
-  private setStandOffLinks() {
-    this.standoffLinks = (
-      (this.properties.find(prop => prop.propDef.id === Constants.HasStandoffLinkToValue)?.values as ReadLinkValue[]) ??
-      []
-    ).map(link => {
-      const parts = link.linkedResourceIri.split('/');
-      if (parts.length < 2) {
-        throw new Error('Linked resource IRI is not in the expected format');
-      }
-
-      const resourceIdPathOnly = parts.slice(-2).join('/');
-
-      return {
-        label: link.strval ?? '',
-        uri: `/resource/${resourceIdPathOnly}`,
-        project: link.linkedResource?.resourceClassLabel ?? '',
-      };
-    });
-    this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
-  }
 }
