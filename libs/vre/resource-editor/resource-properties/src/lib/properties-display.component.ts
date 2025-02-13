@@ -114,7 +114,8 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) properties!: PropertyInfoValues[];
+  properties!: PropertyInfoValues[];
+
   @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
   @Output() afterResourceDeleted = new EventEmitter();
@@ -142,6 +143,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges() {
+    this.properties = this.resource.resProps;
     this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
 
     this.incomingLinksSubject.next([]);
