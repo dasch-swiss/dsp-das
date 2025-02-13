@@ -40,8 +40,14 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
     this._doIncomingLinkSearch(0);
   }
 
+  pageChanged() {
+    this._incomingLinksSubject.next(
+      this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
+    );
+  }
+
   private _doIncomingLinkSearch(offset = 0) {
-    this.getIncomingLinksRecursively$(this.resource.res.id, offset)
+    this._getIncomingLinksRecursively$(this.resource.res.id, offset)
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.incomingLinks = incomingLinks;
@@ -50,34 +56,30 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
       });
   }
 
-  pageChanged() {
-    this._incomingLinksSubject.next(
-      this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
-    );
-  }
-
-  getIncomingLinksRecursively$(resourceId: string, offset = 0): Observable<IncomingOrStandoffLink[]> {
+  private _getIncomingLinksRecursively$(resourceId: string, offset = 0): Observable<IncomingOrStandoffLink[]> {
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
       expand(sequence => {
-        if ((sequence as ReadResourceSequence).mayHaveMoreResults === false) {
+        if (!(sequence as ReadResourceSequence).mayHaveMoreResults) {
           return of(sequence as ReadResourceSequence);
         }
 
         return this._incomingService.getIncomingLinksForResource(
           resourceId,
-          ++offset
+          offset + 1
         ) as Observable<ReadResourceSequence>;
       }),
-      takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults === true, true),
+      takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults, true),
       reduce((all: ReadResource[], data) => all.concat(data.resources), []),
       map(incomingResources => {
-        const incomingLinks = incomingResources.map(resource => this._createIncomingOrStandoffLink(resource));
+        const incomingLinks = incomingResources.map(resource =>
+          IncomingLinksPropertyRowComponent.createIncomingOrStandoffLink(resource)
+        );
         return sortByKeys(incomingLinks, ['project', 'label']);
       })
     );
   }
 
-  private _createIncomingOrStandoffLink(resource: ReadResource): IncomingOrStandoffLink {
+  static createIncomingOrStandoffLink(resource: ReadResource): IncomingOrStandoffLink {
     const resourceIdPathOnly = resource.id.match(/[^\/]*\/[^\/]*$/);
     if (!resourceIdPathOnly) {
       throw new AppError('Resource id is not in the expected format');
