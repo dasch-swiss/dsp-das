@@ -54,7 +54,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     </ng-container>
 
     <app-standoff-links-property-row [resource]="resource" />
-    <app-incoming-links-property-row [resource]="resource" />
+    <app-incoming-links-property [resource]="resource" />
 
     <ng-template #noProperties>
       <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">

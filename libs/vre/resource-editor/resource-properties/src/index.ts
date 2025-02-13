@@ -51,5 +51,5 @@ export * from './lib/footnotes.component';
 export * from './lib/footnote-tooltip.component';
 export * from './lib/footnote.directive';
 export * from './lib/footnote-parser.pipe';
-export * from './lib/incoming-links-property-row.component';
+export * from './lib/incoming-links-property.component';
 export * from './lib/standoff-links-property-row.component';

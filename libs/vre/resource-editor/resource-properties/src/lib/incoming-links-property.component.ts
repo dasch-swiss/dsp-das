@@ -9,7 +9,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { sortByKeys } from './sortByKeys';
 
 @Component({
-  selector: 'app-incoming-links-property-row',
+  selector: 'app-incoming-links-property',
   template: ` <app-property-row
     tooltip="Indicates that this resource is referred to by another resource"
     label="has incoming link"
@@ -25,7 +25,7 @@ import { sortByKeys } from './sortByKeys';
     </ng-container>
   </app-property-row>`,
 })
-export class IncomingLinksPropertyRowComponent implements OnChanges {
+export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   get myLinks() {
@@ -70,7 +70,7 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
       reduce((all: ReadResource[], data) => all.concat(data.resources), []),
       map(incomingResources => {
         const incomingLinks = incomingResources.map(resource =>
-          IncomingLinksPropertyRowComponent.createIncomingOrStandoffLink(resource)
+          IncomingLinksPropertyComponent.createIncomingOrStandoffLink(resource)
         );
         return sortByKeys(incomingLinks, ['project', 'label']);
       })
