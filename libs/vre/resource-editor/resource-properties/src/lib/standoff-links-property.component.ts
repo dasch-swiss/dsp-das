@@ -6,7 +6,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { sortByKeys } from './sortByKeys';
 
 @Component({
-  selector: 'app-standoff-links-property-row',
+  selector: 'app-standoff-links-property',
   template: ` <app-property-row
     tooltip=" Represent a link in standoff markup from one resource to another"
     label="has Standoff link"
@@ -15,7 +15,7 @@ import { sortByKeys } from './sortByKeys';
     <app-incoming-standoff-link-value [links]="standoffLinks" />
   </app-property-row>`,
 })
-export class StandoffLinksPropertyRowComponent implements OnChanges {
+export class StandoffLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   standoffLinks: IncomingOrStandoffLink[] = [];

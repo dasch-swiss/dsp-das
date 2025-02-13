@@ -21,7 +21,7 @@ import { PropertyValueSwitcherComponent } from './lib/property-value-switcher.co
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceInfoBarComponent } from './lib/resource-info-bar.component';
-import { StandoffLinksPropertyRowComponent } from './lib/standoff-links-property-row.component';
+import { StandoffLinksPropertyComponent } from './lib/standoff-links-property.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
 import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
 import { DateSwitchComponent } from './lib/switch-components/date-switch.component';
@@ -97,5 +97,5 @@ export const ResourcePropertiesComponents = [
   FootnoteDirective,
   FootnoteParserPipe,
   IncomingLinksPropertyComponent,
-  StandoffLinksPropertyRowComponent,
+  StandoffLinksPropertyComponent,
 ];
