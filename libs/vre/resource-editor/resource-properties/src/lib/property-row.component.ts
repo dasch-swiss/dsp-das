@@ -17,7 +17,11 @@ import { FootnoteService } from './footnote.service';
 
 @Component({
   selector: 'app-property-row',
-  template: ` <div [class.border-bottom]="borderBottom" #rowElement style="display: flex; padding: 8px 0;">
+  template: ` <div
+    [class.border-bottom]="borderBottom"
+    #rowElement
+    style="display: flex; padding: 8px 0;"
+    [ngClass]="{ hidden: !display }">
     <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
     <div style="flex: 1">
       <ng-content />
@@ -30,6 +34,7 @@ import { FootnoteService } from './footnote.service';
 export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) borderBottom!: boolean;
+  @Input({ required: true }) display!: boolean;
   @Input() tooltip: string | undefined;
   @Input() prop: PropertyInfoValues | undefined;
 

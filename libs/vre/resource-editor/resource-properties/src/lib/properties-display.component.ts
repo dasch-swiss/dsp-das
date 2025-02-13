@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 import { PropertiesDisplayService } from './properties-display.service';
@@ -42,45 +42,42 @@ import { sortByKeys } from './sortByKeys';
     </div>
 
     <!-- list of properties -->
-    <ng-container>
-      <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
-        <app-property-row
-          [class]="getRowClass(showAllProperties$ | async, prop.values.length)"
-          *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
-          [borderBottom]="true"
-          [tooltip]="prop.propDef.comment"
-          [prop]="prop"
-          [label]="
-            prop.propDef.label +
-            (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
-          ">
-          <app-existing-property-value [prop]="prop" [resource]="resource.res" />
-        </app-property-row>
-      </ng-container>
+    <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
+      <app-property-row
+        [display]="(showAllProperties$ | async) || prop.values.length > 0"
+        *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
+        [borderBottom]="true"
+        [tooltip]="prop.propDef.comment"
+        [prop]="prop"
+        [label]="
+          prop.propDef.label +
+          (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
+        ">
+        <app-existing-property-value [prop]="prop" [resource]="resource.res" />
+      </app-property-row>
     </ng-container>
 
     <!-- standoff link -->
-    <ng-container>
-      <app-property-row
-        tooltip=" Represent a link in standoff markup from one resource to another"
-        label="has Standoff link"
-        [borderBottom]="true"
-        [class]="getRowClass(showAllProperties$ | async, standoffLinks.length)">
-        <app-incoming-standoff-link-value [links]="standoffLinks" />
-      </app-property-row>
-    </ng-container>
+    <app-property-row
+      tooltip=" Represent a link in standoff markup from one resource to another"
+      label="has Standoff link"
+      [display]="(showAllProperties$ | async) || standoffLinks.length > 0"
+      [borderBottom]="true">
+      <app-incoming-standoff-link-value [links]="standoffLinks" />
+    </app-property-row>
 
     <!-- incoming link -->
+    <app-incoming-links-property-row [resource]="resource" />
 
     <ng-template #noProperties>
-      <app-property-row label="info" [borderBottom]="false">
+      <app-property-row label="info" [borderBottom]="false" [display]="true">
         This resource has no defined properties.
       </app-property-row>
       <div *ngIf="resource.res.isDeleted">
-        <app-property-row label="Deleted on" [borderBottom]="true">
+        <app-property-row label="Deleted on" [borderBottom]="true" [display]="true">
           {{ resource.res.deleteDate | date }}
         </app-property-row>
-        <app-property-row label="Comment" [borderBottom]="false">
+        <app-property-row label="Comment" [borderBottom]="false" [display]="true">
           {{ resource.res.deleteComment }}
         </app-property-row>
       </div>
@@ -92,20 +89,6 @@ import { sortByKeys } from './sortByKeys';
         text-align: right;
         padding-right: 6px;
       }
-
-      ::ng-deep {
-        .incoming-link .paging-container {
-          border-bottom: none;
-        }
-      }
-
-      .show-property-row {
-        display: block;
-      }
-
-      .hide-property-row {
-        display: none;
-      }
     `,
   ],
   providers: [PropertiesDisplayService, PropertiesDisplayIncomingLinkService],
@@ -114,12 +97,11 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input({ required: true }) resource!: DspResource;
-  properties!: PropertyInfoValues[];
-
   @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
   @Output() afterResourceDeleted = new EventEmitter();
 
+  properties!: PropertyInfoValues[];
   protected readonly cardinality = Cardinality;
 
   resourceAttachedUser$ = this._store.select(ResourceSelectors.attachedUsers).pipe(
@@ -130,42 +112,24 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   );
 
   editableProperties: PropertyInfoValues[] = [];
-
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
-
   standoffLinks: IncomingOrStandoffLink[] = [];
 
   constructor(
-    private _cd: ChangeDetectorRef,
     private _propertiesDisplayService: PropertiesDisplayService,
-    private _store: Store,
-    private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService
+    private _store: Store
   ) {}
 
   ngOnChanges() {
     this.properties = this.resource.resProps;
     this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
 
-    this.incomingLinksSubject.next([]);
-
-    this.doIncomingLinkSearch(0);
     this.setStandOffLinks();
   }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  private doIncomingLinkSearch(offset = 0) {
-    this._propertiesDisplayIncomingLink
-      .getIncomingLinksRecursively$(this.resource.res.id, offset)
-      .pipe(take(1))
-      .subscribe(incomingLinks => {
-        this.incomingLinks = incomingLinks;
-        this.incomingLinksSubject.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
-        this._cd.detectChanges();
-      });
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
@@ -189,9 +153,5 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       };
     });
     this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
-  }
-
-  getRowClass(showAllProperties: boolean, valuesLength: number): string {
-    return showAllProperties || valuesLength > 0 ? 'show-property-row' : 'hide-property-row';
   }
 }
