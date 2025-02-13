@@ -10,23 +10,32 @@ import { sortByKeys } from './sortByKeys';
 
 @Component({
   selector: 'app-incoming-links-property',
-  template: ` <app-property-row
-    tooltip="Indicates that this resource is referred to by another resource"
-    label="has incoming link"
-    [borderBottom]="true"
-    [isEmptyRow]="allIncomingLinks.length === 0">
-    <ng-container *ngIf="allIncomingLinks.length > 0">
-      <app-incoming-standoff-link-value [links]="myLinks" />
-      <app-incoming-resource-pager
-        [pageIndex]="pageIndex"
-        [pageSize]="pageSize"
-        [itemsNumber]="allIncomingLinks.length"
-        (pageChanged)="pageChanged($event)" />
-    </ng-container>
-  </app-property-row>`,
+  template: `
+    <app-property-row
+      tooltip="Indicates that this resource is referred to by another resource"
+      label="has incoming link"
+      [borderBottom]="true"
+      [isEmptyRow]="!loading && allIncomingLinks.length === 0">
+      <ng-container *ngIf="allIncomingLinks.length > 0; else loadingTemplate">
+        <app-incoming-standoff-link-value [links]="myLinks" />
+        <app-incoming-resource-pager
+          *ngIf="allIncomingLinks.length > pageSize"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [itemsNumber]="allIncomingLinks.length"
+          (pageChanged)="pageChanged($event)" />
+      </ng-container>
+    </app-property-row>
+
+    <ng-template #loadingTemplate>
+      <app-progress-indicator />
+    </ng-template>
+  `,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
+
+  loading = true;
 
   get myLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
@@ -42,6 +51,7 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     this._getIncomingLinksRecursively$(this.resource.res.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
+        this.loading = false;
         this.allIncomingLinks = incomingLinks;
       });
   }
