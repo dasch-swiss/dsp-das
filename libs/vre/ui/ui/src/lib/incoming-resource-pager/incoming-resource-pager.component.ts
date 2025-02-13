@@ -12,30 +12,21 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./incoming-resource-pager.component.scss'],
 })
 export class IncomingResourcePagerComponent {
-  @Input() pageSize = 25;
-  @Input() lastItemOfPage = 0;
-  @Output() pageChanged: EventEmitter<number> = new EventEmitter<number>();
-
-  private _pageIndex = 0;
-
-  get pageIndex(): number {
-    return this._pageIndex;
-  }
-
-  get isLastOnPage(): boolean {
-    return this.lastItemOfPage !== undefined && this.lastItemOfPage < this.pageSize;
-  }
+  @Input({ required: true }) pageIndex!: number;
+  @Input({ required: true }) pageSize!: number;
+  @Input({ required: true }) itemsNumber!: number;
+  @Output() pageChanged = new EventEmitter<number>();
 
   get itemRangeStart(): number {
-    return this.pageSize * this._pageIndex + 1;
+    return this.pageSize * this.pageIndex + 1;
   }
 
   get itemRangeEnd(): number {
-    return this.lastItemOfPage ? this.lastItemOfPage : this.pageSize * (this._pageIndex + 1);
+    return Math.min(this.pageSize * (this.pageIndex + 1), this.itemsNumber);
   }
 
   changePage(dir: 1 | -1) {
-    this._pageIndex += dir;
-    this.pageChanged.emit(dir);
+    this.pageIndex += dir;
+    this.pageChanged.emit(this.pageIndex);
   }
 }

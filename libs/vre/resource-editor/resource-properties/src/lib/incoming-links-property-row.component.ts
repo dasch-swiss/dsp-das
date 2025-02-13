@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { IncomingResourcePagerComponent } from '@dasch-swiss/vre/ui/ui';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { expand, map, reduce, take, takeWhile } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { sortByKeys } from './sortByKeys';
@@ -16,56 +15,58 @@ import { sortByKeys } from './sortByKeys';
     label="has incoming link"
     [borderBottom]="true"
     class="incoming-link"
-    [isEmptyRow]="(incomingLinks$ | async).length === 0">
-    <app-incoming-standoff-link-value *ngIf="(incomingLinks$ | async)?.length > 0" [links]="incomingLinks$ | async" />
-    <app-incoming-resource-pager #pager [lastItemOfPage]="incomingLinks.length" (pageChanged)="pageChanged()" />
+    [isEmptyRow]="allIncomingLinks.length === 0">
+    <ng-container *ngIf="allIncomingLinks.length > 0">
+      <app-incoming-standoff-link-value [links]="myLinks" />
+      <app-incoming-resource-pager
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [itemsNumber]="allIncomingLinks.length"
+        (pageChanged)="pageChanged($event)" />
+    </ng-container>
   </app-property-row>`,
 })
 export class IncomingLinksPropertyRowComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
-  @ViewChild('pager', { static: false })
-  pagerComponent: IncomingResourcePagerComponent | undefined;
 
-  private _incomingLinksSubject = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
-  incomingLinks$ = this._incomingLinksSubject.asObservable();
-  incomingLinks: IncomingOrStandoffLink[] = [];
+  pageSize = 25;
 
-  constructor(
-    private _cd: ChangeDetectorRef,
-    private _incomingService: IncomingService
-  ) {}
+  get myLinks() {
+    return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
+  }
+
+  allIncomingLinks: IncomingOrStandoffLink[] = [];
+  pageIndex = 0;
+
+  constructor(private _incomingService: IncomingService) {}
 
   ngOnChanges() {
-    this._incomingLinksSubject.next([]);
-    this._doIncomingLinkSearch(0);
-  }
-
-  pageChanged() {
-    this._incomingLinksSubject.next(
-      this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
-    );
-  }
-
-  private _doIncomingLinkSearch(offset = 0) {
-    this._getIncomingLinksRecursively$(this.resource.res.id, offset)
+    this._getIncomingLinksRecursively$(this.resource.res.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
-        this.incomingLinks = incomingLinks;
-        this._incomingLinksSubject.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
-        this._cd.detectChanges();
+        this.allIncomingLinks = incomingLinks;
       });
   }
 
-  private _getIncomingLinksRecursively$(resourceId: string, offset = 0): Observable<IncomingOrStandoffLink[]> {
+  pageChanged(page: number) {
+    this.pageIndex = page;
+  }
+
+  private _getIncomingLinksRecursively$(resourceId: string) {
+    let offset = 0;
+
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
       expand(sequence => {
+        console.log('julien', sequence);
         if (!(sequence as ReadResourceSequence).mayHaveMoreResults) {
           return of(sequence as ReadResourceSequence);
         }
 
+        offset += 1;
+
         return this._incomingService.getIncomingLinksForResource(
           resourceId,
-          offset + 1
+          offset
         ) as Observable<ReadResourceSequence>;
       }),
       takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults, true),
