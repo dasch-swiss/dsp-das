@@ -152,7 +152,8 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   );
 
   editableProperties: PropertyInfoValues[] = [];
-  incomingLinks$ = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
+  private incomingLinksSubject = new BehaviorSubject<IncomingOrStandoffLink[]>([]);
+  incomingLinks$ = this.incomingLinksSubject.asObservable();
   incomingLinks: IncomingOrStandoffLink[] = [];
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
 
@@ -177,14 +178,14 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   private _setupProperties(offset = 0) {
     this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
 
-    this.incomingLinks$.next([]);
+    this.incomingLinksSubject.next([]);
 
     this.doIncomingLinkSearch(offset);
     this.setStandOffLinks();
   }
 
   pageChanged() {
-    this.incomingLinks$.next(
+    this.incomingLinksSubject.next(
       this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
     );
   }
@@ -195,7 +196,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.incomingLinks = incomingLinks;
-        this.incomingLinks$.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
+        this.incomingLinksSubject.next(incomingLinks.slice(0, this.pagerComponent!.pageSize - 1));
         this._cd.detectChanges();
       });
   }
