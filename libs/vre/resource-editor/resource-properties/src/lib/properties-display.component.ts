@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 import { PropertiesDisplayService } from './properties-display.service';
@@ -93,9 +92,7 @@ import { sortByKeys } from './sortByKeys';
   ],
   providers: [PropertiesDisplayService, PropertiesDisplayIncomingLinkService],
 })
-export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
+export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
   @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
@@ -104,12 +101,13 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   properties!: PropertyInfoValues[];
   protected readonly cardinality = Cardinality;
 
-  resourceAttachedUser$ = this._store.select(ResourceSelectors.attachedUsers).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(attachedUsers =>
-      attachedUsers[this.resource.res.id]?.value.find(u => u.id === this.resource.res.attachedToUser)
-    )
-  );
+  resourceAttachedUser$ = this._store
+    .select(ResourceSelectors.attachedUsers)
+    .pipe(
+      map(attachedUsers =>
+        attachedUsers[this.resource.res.id]?.value.find(u => u.id === this.resource.res.attachedToUser)
+      )
+    );
 
   editableProperties: PropertyInfoValues[] = [];
   showAllProperties$ = this._propertiesDisplayService.showAllProperties$;
@@ -125,11 +123,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
     this.editableProperties = this.properties.filter(prop => (prop.propDef as ResourcePropertyDefinition).isEditable);
 
     this.setStandOffLinks();
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
