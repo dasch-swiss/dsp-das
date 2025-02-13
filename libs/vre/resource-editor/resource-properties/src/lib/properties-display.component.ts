@@ -19,7 +19,7 @@ import { sortByKeys } from './sortByKeys';
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
         <app-resource-toolbar
           *ngIf="displayLabel"
-          [adminPermissions]="adminPermissions"
+          [adminPermissions]="false"
           [resource]="resource"
           [linkToNewTab]="linkToNewTab"
           (afterResourceDeleted)="afterResourceDeleted.emit()" />
@@ -116,7 +116,6 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
   @Input() displayLabel = false;
-  @Input() adminPermissions = false;
   @Input() linkToNewTab?: string;
   @Output() afterResourceDeleted = new EventEmitter();
 
