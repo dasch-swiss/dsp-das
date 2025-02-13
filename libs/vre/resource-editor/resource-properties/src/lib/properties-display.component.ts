@@ -4,7 +4,6 @@ import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
 import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
@@ -79,7 +78,7 @@ import { PropertiesDisplayService } from './properties-display.service';
       }
     `,
   ],
-  providers: [PropertiesDisplayService, PropertiesDisplayIncomingLinkService],
+  providers: [PropertiesDisplayService],
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

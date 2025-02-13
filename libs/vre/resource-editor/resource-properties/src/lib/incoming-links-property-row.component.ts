@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { IncomingResourcePagerComponent } from '@dasch-swiss/vre/ui/ui';
-import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { expand, map, reduce, take, takeWhile } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
-import { PropertiesDisplayIncomingLinkService } from './properties-display-incoming-link.service';
+import { sortByKeys } from './sortByKeys';
 
 @Component({
   selector: 'app-incoming-links-property-row',
@@ -28,8 +31,8 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
   incomingLinks: IncomingOrStandoffLink[] = [];
 
   constructor(
-    private _propertiesDisplayIncomingLink: PropertiesDisplayIncomingLinkService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _incomingService: IncomingService
   ) {}
 
   ngOnChanges() {
@@ -38,8 +41,7 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
   }
 
   private _doIncomingLinkSearch(offset = 0) {
-    this._propertiesDisplayIncomingLink
-      .getIncomingLinksRecursively$(this.resource.res.id, offset)
+    this.getIncomingLinksRecursively$(this.resource.res.id, offset)
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.incomingLinks = incomingLinks;
@@ -52,5 +54,39 @@ export class IncomingLinksPropertyRowComponent implements OnChanges {
     this._incomingLinksSubject.next(
       this.incomingLinks.slice(this.pagerComponent?.itemRangeStart, this.pagerComponent?.itemRangeEnd)
     );
+  }
+
+  getIncomingLinksRecursively$(resourceId: string, offset = 0): Observable<IncomingOrStandoffLink[]> {
+    return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
+      expand(sequence => {
+        if ((sequence as ReadResourceSequence).mayHaveMoreResults === false) {
+          return of(sequence as ReadResourceSequence);
+        }
+
+        return this._incomingService.getIncomingLinksForResource(
+          resourceId,
+          ++offset
+        ) as Observable<ReadResourceSequence>;
+      }),
+      takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults === true, true),
+      reduce((all: ReadResource[], data) => all.concat(data.resources), []),
+      map(incomingResources => {
+        const incomingLinks = incomingResources.map(resource => this._createIncomingOrStandoffLink(resource));
+        return sortByKeys(incomingLinks, ['project', 'label']);
+      })
+    );
+  }
+
+  private _createIncomingOrStandoffLink(resource: ReadResource): IncomingOrStandoffLink {
+    const resourceIdPathOnly = resource.id.match(/[^\/]*\/[^\/]*$/);
+    if (!resourceIdPathOnly) {
+      throw new AppError('Resource id is not in the expected format');
+    }
+
+    return {
+      label: resource.label,
+      uri: `/resource/${resourceIdPathOnly[0]}`,
+      project: resource.resourceClassLabel ? resource.resourceClassLabel : '',
+    };
   }
 }
