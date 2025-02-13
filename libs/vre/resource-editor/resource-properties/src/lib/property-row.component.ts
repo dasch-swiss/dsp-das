@@ -14,6 +14,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { of, Subject } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { FootnoteService } from './footnote.service';
+import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-property-row',
@@ -21,7 +22,7 @@ import { FootnoteService } from './footnote.service';
     [class.border-bottom]="borderBottom"
     #rowElement
     style="display: flex; padding: 8px 0;"
-    [ngClass]="{ hidden: !display }">
+    [ngClass]="{ hidden: (showAllProperties | async) || !containItems }">
     <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
     <div style="flex: 1">
       <ng-content />
@@ -34,13 +35,14 @@ import { FootnoteService } from './footnote.service';
 export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input({ required: true }) label!: string;
   @Input({ required: true }) borderBottom!: boolean;
-  @Input({ required: true }) display!: boolean;
+  @Input({ required: true }) containItems!: boolean;
   @Input() tooltip: string | undefined;
   @Input() prop: PropertyInfoValues | undefined;
 
   @ViewChild('rowElement', { static: false }) rowElement!: ElementRef;
 
   destroyed: Subject<void> = new Subject<void>();
+  showAllProperties = this._propertiesDisplayService.showAllProperties$;
 
   get valueId() {
     return this.prop && this.prop.values.length > 0 ? this.prop.values[0]?.id.split('/').pop() : undefined;
@@ -48,7 +50,8 @@ export class PropertyRowComponent implements AfterViewInit, OnDestroy, OnChanges
 
   constructor(
     private _route: ActivatedRoute,
-    public footnoteService: FootnoteService
+    public footnoteService: FootnoteService,
+    private _propertiesDisplayService: PropertiesDisplayService
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {

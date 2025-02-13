@@ -3,7 +3,6 @@ import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
-import { PropertiesDisplayService } from './properties-display.service';
 import { sortByKeys } from './sortByKeys';
 
 @Component({
@@ -11,7 +10,7 @@ import { sortByKeys } from './sortByKeys';
   template: ` <app-property-row
     tooltip=" Represent a link in standoff markup from one resource to another"
     label="has Standoff link"
-    [display]="(propertiesDisplayService.showAllProperties$ | async) || standoffLinks.length > 0"
+    [containItems]="standoffLinks.length > 0"
     [borderBottom]="true">
     <app-incoming-standoff-link-value [links]="standoffLinks" />
   </app-property-row>`,
@@ -20,8 +19,6 @@ export class StandoffLinksPropertyRowComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   standoffLinks: IncomingOrStandoffLink[] = [];
-
-  constructor(public propertiesDisplayService: PropertiesDisplayService) {}
 
   ngOnChanges() {
     this.standoffLinks = (

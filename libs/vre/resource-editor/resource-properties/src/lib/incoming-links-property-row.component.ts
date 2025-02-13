@@ -14,7 +14,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     label="has incoming link"
     [borderBottom]="true"
     class="incoming-link"
-    [display]="(propertiesDisplayService.showAllProperties$ | async) || (incomingLinks$ | async).length > 0">
+    [containItems]="(incomingLinks$ | async).length > 0">
     <app-incoming-standoff-link-value *ngIf="(incomingLinks$ | async)?.length > 0" [links]="incomingLinks$ | async" />
     <app-incoming-resource-pager #pager [lastItemOfPage]="incomingLinks.length" (pageChanged)="pageChanged()" />
   </app-property-row>`,
