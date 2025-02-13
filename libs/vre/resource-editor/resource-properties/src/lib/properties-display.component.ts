@@ -41,7 +41,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     <!-- list of properties -->
     <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
       <app-property-row
-        [containItems]="prop.values.length > 0"
+        [isEmptyRow]="prop.values.length === 0"
         *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
         [borderBottom]="true"
         [tooltip]="prop.propDef.comment"
@@ -58,14 +58,14 @@ import { PropertiesDisplayService } from './properties-display.service';
     <app-incoming-links-property-row [resource]="resource" />
 
     <ng-template #noProperties>
-      <app-property-row label="info" [borderBottom]="false" [containItems]="true">
+      <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">
         This resource has no defined properties.
       </app-property-row>
       <div *ngIf="resource.res.isDeleted">
-        <app-property-row label="Deleted on" [borderBottom]="true" [containItems]="true">
+        <app-property-row label="Deleted on" [borderBottom]="true" [isEmptyRow]="false">
           {{ resource.res.deleteDate | date }}
         </app-property-row>
-        <app-property-row label="Comment" [borderBottom]="false" [containItems]="true">
+        <app-property-row label="Comment" [borderBottom]="false" [isEmptyRow]="false">
           {{ resource.res.deleteComment }}
         </app-property-row>
       </div>
