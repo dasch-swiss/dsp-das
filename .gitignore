@@ -56,6 +56,7 @@ Thumbs.db
 
 .angular
 /libs/jdnconvertiblecalendar/coverage/
+apps/dsp-app/coverage/
 
 #E2E
 /.nx
