@@ -27,14 +27,14 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
   selector: 'app-link-value',
-  styleUrls: ['./link-value.component.scss'],
+  styleUrls: ['./property-value.component.scss'],
   template: `
     <mat-form-field style="width: 100%">
       <input
@@ -145,11 +145,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject)?.id;
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        data: {
-          resourceType,
-          resourceClassIri,
-          projectIri,
-        },
+        data: { resourceType, resourceClassIri, projectIri },
       })
       .afterClosed()
       .pipe(
@@ -195,9 +191,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!searchValue || searchValue.length <= 2 || typeof searchValue !== 'string') return of(0);
 
     return this._dspApiConnection.v2.search
-      .doSearchByLabelCountQuery(searchValue, {
-        limitToResourceClass: resourceClassIri,
-      })
+      .doSearchByLabelCountQuery(searchValue, { limitToResourceClass: resourceClassIri })
       .pipe(
         takeUntil(this.cancelPreviousCountRequest$),
         switchMap((response: CountQueryResponse | ApiResponseError) => {
@@ -211,9 +205,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cancelPreviousSearchRequest$.next();
     const resourceClassIri = this._getRestrictToResourceClass(this.readResource as ReadResource)!;
     this._dspApiConnection.v2.search
-      .doSearchByLabel(searchTerm, offset, {
-        limitToResourceClass: resourceClassIri,
-      })
+      .doSearchByLabel(searchTerm, offset, { limitToResourceClass: resourceClassIri })
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$),
         take(1),

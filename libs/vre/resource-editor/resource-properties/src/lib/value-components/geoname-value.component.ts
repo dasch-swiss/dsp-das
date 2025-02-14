@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { filter, switchMap } from 'rxjs/operators';
-import { GeonameService, SearchPlace } from '../geoname.service';
+import { DisplayPlace, GeonameService, SearchPlace } from '../geoname.service';
 
 @Component({
   selector: 'app-geoname-value',
@@ -15,12 +15,15 @@ import { GeonameService, SearchPlace } from '../geoname.service';
       data-cy="geoname-autocomplete"
       [matAutocomplete]="auto" />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
-      <mat-option *ngFor="let place of places" [value]="place.id"> {{ place?.displayName }}</mat-option>
+      <mat-option *ngFor="let place of places; trackBy: trackByFn" [value]="place.id">
+        {{ place?.displayName }}</mat-option
+      >
     </mat-autocomplete>
     <mat-error *ngIf="control.errors as errors">
       {{ errors | humanReadableError }}
     </mat-error>
   </mat-form-field>`,
+  styleUrls: ['./property-value.component.scss'],
 })
 export class GeonameValueComponent implements OnInit {
   @Input() control!: FormControl<string>;
@@ -31,13 +34,7 @@ export class GeonameValueComponent implements OnInit {
   ngOnInit() {
     if (this.control.value) {
       this._geonameService.resolveGeonameID(this.control.value).subscribe(place => {
-        this.places = [
-          {
-            ...place,
-            id: this.control.value,
-            locationType: '',
-          },
-        ];
+        this.places = [{ ...place, id: this.control.value, locationType: '' }];
       });
     }
 
@@ -50,6 +47,8 @@ export class GeonameValueComponent implements OnInit {
         this.places = places;
       });
   }
+
+  trackByFn = (index: number, item: DisplayPlace) => `${index}-${item.name}`;
 
   displayPlaceInSearch(placeId: string) {
     const geoPlace = this.places.find(place => place.id === placeId);
