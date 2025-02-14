@@ -1,4 +1,3 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CommonModule } from '@angular/common';
 import {
@@ -264,10 +263,8 @@ export class AppDatePickerComponent
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
     @Optional() @Self() public override ngControl: NgControl,
-    private _stateChanges: Subject<void>,
     fb: UntypedFormBuilder,
-    private _elRef: ElementRef<HTMLElement>,
-    private _fm: FocusMonitor
+    private _elRef: ElementRef<HTMLElement>
   ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
 
