@@ -17,7 +17,7 @@ import { sortByKeys } from './sortByKeys';
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
       <ng-container *ngIf="allIncomingLinks.length > 0; else loadingTemplate">
-        <app-incoming-standoff-link-value [links]="myLinks" />
+        <app-incoming-standoff-link-value [links]="slidedLinks" />
         <app-incoming-resource-pager
           *ngIf="allIncomingLinks.length > pageSize"
           [pageIndex]="pageIndex"
@@ -37,7 +37,7 @@ export class IncomingLinksPropertyComponent implements OnChanges {
 
   loading = true;
 
-  get myLinks() {
+  get slidedLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
   }
 
