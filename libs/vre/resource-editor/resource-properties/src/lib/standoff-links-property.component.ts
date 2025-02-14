@@ -8,8 +8,8 @@ import { sortByKeys } from './sortByKeys';
 @Component({
   selector: 'app-standoff-links-property',
   template: ` <app-property-row
-    tooltip=" Represent a link in standoff markup from one resource to another"
-    label="has Standoff link"
+    [tooltip]="'resource.standoffLink.tooltip' | translate"
+    [label]="'resource.standoffLink.label' | translate"
     [isEmptyRow]="standoffLinks.length > 0"
     [borderBottom]="true">
     <app-incoming-standoff-link-value [links]="standoffLinks" />

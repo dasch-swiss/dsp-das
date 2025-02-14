@@ -12,8 +12,8 @@ import { sortByKeys } from './sortByKeys';
   selector: 'app-incoming-links-property',
   template: `
     <app-property-row
-      tooltip="Indicates that this resource is referred to by another resource"
-      label="has incoming link"
+      [tooltip]="'resource.incomingLink.tooltip' | translate"
+      [label]="'resource.incomingLink.label' | translate"
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
       <ng-container *ngIf="allIncomingLinks.length > 0; else loadingTemplate">
