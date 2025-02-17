@@ -16,7 +16,7 @@ import { sortByKeys } from './sortByKeys';
       [label]="'resource.incomingLink.label' | translate"
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
-      <ng-container *ngIf="allIncomingLinks.length > 0; else loadingTemplate">
+      <ng-container *ngIf="allIncomingLinks.length > 0">
         <app-incoming-standoff-link-value [links]="slidedLinks" />
         <app-incoming-resource-pager
           *ngIf="allIncomingLinks.length > pageSize"
@@ -26,10 +26,7 @@ import { sortByKeys } from './sortByKeys';
           (pageChanged)="pageChanged($event)" />
       </ng-container>
     </app-property-row>
-
-    <ng-template #loadingTemplate>
-      <app-progress-indicator />
-    </ng-template>
+    <app-progress-indicator *ngIf="loading" />
   `,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
