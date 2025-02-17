@@ -50,7 +50,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
       const projects = currentProject
         ? isSysAdmin
           ? [currentProject]
-          : currentUserProjects.find(x => x.id === currentProject.id)
+          : [currentUserProjects.find(x => x.id === currentProject.id)]
         : currentUserProjects;
       return projects as StoredProject[];
     })
