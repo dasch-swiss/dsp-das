@@ -58,6 +58,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
 
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isCurrentProjectMember$ = this._store.select(ProjectsSelectors.isCurrentProjectMember);
   isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
   constructor(
