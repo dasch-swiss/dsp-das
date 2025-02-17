@@ -9,8 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AdministrativePermissionADM } from './administrative-permission-adm';
 import { DefaultObjectAccessPermissionGetResponseADM } from './default-object-access-permission-get-response-adm';
 import { AdministrativePermissionGetResponseADM } from './administrative-permission-get-response-adm';
+import { DefaultObjectAccessPermissionADM } from './default-object-access-permission-adm';
 
 
 /**

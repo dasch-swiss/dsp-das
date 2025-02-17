@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { StringLiteralSequenceV2 } from './string-literal-sequence-v2';
 import { ListRootNodeADM } from './list-root-node-adm';
 import { ListChildNodeADM } from './list-child-node-adm';
 

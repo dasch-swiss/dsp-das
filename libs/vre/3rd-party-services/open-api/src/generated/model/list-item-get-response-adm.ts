@@ -9,8 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NodeADM } from './node-adm';
 import { ListNodeGetResponseADM } from './list-node-get-response-adm';
 import { ListGetResponseADM } from './list-get-response-adm';
+import { ListADM } from './list-adm';
 
 
 /**
