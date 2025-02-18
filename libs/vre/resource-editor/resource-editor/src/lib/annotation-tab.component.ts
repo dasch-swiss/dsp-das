@@ -4,7 +4,6 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-annotation-tab',
@@ -24,8 +23,7 @@ import { take } from 'rxjs/operators';
         RouteConstants.annotationQueryParam +
         '=' +
         annotation.res.id
-      "
-      (afterResourceDeleted)="afterResourceDeleted()" />
+      " />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })
@@ -48,10 +46,6 @@ export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
         this._scrollToRegion(region);
       }
     });
-  }
-
-  afterResourceDeleted() {
-    this.regionService.updateRegions$().pipe(take(1)).subscribe();
   }
 
   ngOnDestroy() {

@@ -1,13 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -27,12 +18,7 @@ import { sortByKeys } from './sortByKeys';
       <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
-        <app-resource-toolbar
-          *ngIf="displayLabel"
-          [adminPermissions]="adminPermissions"
-          [resource]="resource"
-          [linkToNewTab]="linkToNewTab"
-          (afterResourceDeleted)="afterResourceDeleted.emit()" />
+        <app-resource-toolbar *ngIf="displayLabel" [resource]="resource" [linkToNewTab]="linkToNewTab" />
       </div>
     </div>
 
@@ -135,9 +121,7 @@ export class PropertiesDisplayComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
   @Input({ required: true }) properties!: PropertyInfoValues[];
   @Input() displayLabel = false;
-  @Input() adminPermissions = false;
   @Input() linkToNewTab?: string;
-  @Output() afterResourceDeleted = new EventEmitter();
 
   @ViewChild('pager', { static: false })
   pagerComponent: IncomingResourcePagerComponent | undefined;
