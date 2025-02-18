@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CreateLinkValue,
@@ -11,12 +11,12 @@ import {
   ReadResource,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 export interface ResourceLinkDialogProps {
@@ -66,17 +66,23 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
+    private _activeRoute: ActivatedRoute,
     private _store: Store,
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
 
   ngOnInit() {
-    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(projects => {
-      if (projects.length > 0) {
-        this.selectedProject = projects[0].id;
-      }
-    });
+    this.selectedProject = decodeURIComponent(
+      this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project]
+    );
+    if (!this.selectedProject) {
+      this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(usersProjects => {
+        if (usersProjects.length > 0) {
+          this.selectedProject = usersProjects[0].id;
+        }
+      });
+    }
   }
 
   ngOnDestroy() {
