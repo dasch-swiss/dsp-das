@@ -15,6 +15,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -39,6 +40,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   });
 
   selectedProject?: string;
+  routeProject?: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -61,6 +63,17 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   isCurrentProjectMember$ = this._store.select(ProjectsSelectors.isCurrentProjectMember);
   isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
+  get isRouteProjectMember(): boolean {
+    const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectGroups);
+    const user = this._store.selectSnapshot(UserSelectors.user)!;
+    const isProjectMember = ProjectService.IsProjectMemberOrAdminOrSysAdmin(
+      user,
+      userProjectGroups,
+      this.routeProject!
+    );
+    return isProjectMember;
+  }
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -74,16 +87,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.selectedProject = decodeURIComponent(
-      this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project]
-    );
-    if (!this.selectedProject) {
-      this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(usersProjects => {
-        if (usersProjects.length > 0) {
-          this.selectedProject = usersProjects[0].id;
-        }
-      });
-    }
+    this.setProject();
   }
 
   ngOnDestroy() {
@@ -101,6 +105,23 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
       const goto = `/resource${path}`;
       this._router.navigate([]).then(() => window.open(goto, '_blank'));
       this.dialogRef.close();
+    });
+  }
+
+  private setProject() {
+    const routeProject = decodeURIComponent(
+      this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project] || ''
+    );
+
+    if (routeProject && this.isRouteProjectMember) {
+      this.selectedProject = routeProject;
+      return;
+    }
+
+    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(usersProjects => {
+      if (usersProjects.length > 0) {
+        this.selectedProject = usersProjects[0].id;
+      }
     });
   }
 
