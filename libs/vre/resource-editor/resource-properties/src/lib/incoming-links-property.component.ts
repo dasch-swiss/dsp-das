@@ -44,9 +44,13 @@ export class IncomingLinksPropertyComponent implements OnChanges {
   constructor(private _incomingService: IncomingService) {}
 
   ngOnChanges() {
+    this.allIncomingLinks = [];
+    this.loading = true;
+
     this._getIncomingLinksRecursively$(this.resource.res.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
+        console.log('got it', incomingLinks.length);
         this.loading = false;
         this.allIncomingLinks = incomingLinks;
       });
