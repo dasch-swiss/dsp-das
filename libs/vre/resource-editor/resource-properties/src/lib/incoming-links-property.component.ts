@@ -32,12 +32,11 @@ import { sortByKeys } from './sortByKeys';
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
-  loading = true;
-
   get slidedLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
   }
 
+  loading = true;
   pageSize = 25;
   allIncomingLinks: IncomingOrStandoffLink[] = [];
   pageIndex = 0;
