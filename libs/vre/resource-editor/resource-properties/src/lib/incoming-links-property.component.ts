@@ -50,7 +50,6 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     this._getIncomingLinksRecursively$(this.resource.res.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
-        console.log('got it', incomingLinks.length);
         this.loading = false;
         this.allIncomingLinks = incomingLinks;
       });
