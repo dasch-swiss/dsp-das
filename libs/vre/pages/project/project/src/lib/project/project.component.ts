@@ -14,12 +14,10 @@ import { ReadOntology, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
-  LoadProjectMembersAction,
   LoadProjectOntologiesAction,
   LoadProjectsAction,
   OntologiesSelectors,
   ProjectsSelectors,
-  UserSelectors,
 } from '@dasch-swiss/vre/core/state';
 import {
   ComponentCommunicationEventService,
@@ -81,7 +79,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
   @Select(ProjectsSelectors.currentProject) currentProject$: Observable<ReadProject>;
 
   @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember) isMember$: Observable<boolean>;
 
   @Select(OntologiesSelectors.projectOntology) ontology$!: Observable<ReadOntology>;
 
