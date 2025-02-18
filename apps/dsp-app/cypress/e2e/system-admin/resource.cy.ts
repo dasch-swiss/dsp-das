@@ -4,6 +4,7 @@ import { Project00FFPayloads } from '../../fixtures/project00FF-resource-payload
 import { ClassPropertyPayloads } from '../../fixtures/property-definition-payloads';
 import { ResourceRequests, ResponseUtil } from '../../fixtures/requests';
 import { AddResourceInstancePage } from '../../support/pages/add-resource-instance-page';
+import { ResourcePage } from '../../support/pages/resource-page';
 
 describe('Resource', () => {
   let finalLastModificationDate: string;
@@ -19,6 +20,82 @@ describe('Resource', () => {
       project00FFPayloads.createClassPayload('datamodelclass')
     ).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
+    });
+  });
+
+  describe('footnotes', () => {
+    it.skip('a created footnote should be sent in the right format (no double escape, empty text in tagTEST)', () => {
+      // Intercept the POST request
+      cy.intercept('POST', 'http://0.0.0.0:3333/v2/resources').as('postRequest');
+
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+
+      cy.get('.ck-blurred').click();
+      cy.get('button[data-cke-tooltip-text="Footnote"]').click();
+      cy.get('.ck-blurred').click();
+      cy.get('.ck-content[contenteditable=true]').then(el => {
+        // @ts-ignore
+        const editor = el[1].ckeditorInstance; // If you're using TS, this is ReturnType<typeof InlineEditor['create']>
+        editor.setData('myfootnote');
+      });
+      cy.get('.ck-button-save > .ck-icon').click();
+      po.clickOnSubmit();
+
+      cy.wait('@postRequest').then(interception => {
+        // Assert that the intercepted request body matches the expected payload (X)
+        const v =
+          interception.request.body['http://0.0.0.0:3333/ontology/00FF/images/v2#property'][
+            'http://api.knora.org/ontology/knora-api/v2#textValueAsXml'
+          ];
+        expect(v).to.contain('<footnote content="&lt;p&gt;myfootnote&lt;/p&gt;"></footnote>');
+      });
+    });
+
+    it.skip('should be displayed, and can be edited', () => {
+      const footnote = {
+        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
+        'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
+        'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
+          '@id': 'http://rdfh.ch/projects/00FF',
+        },
+        'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
+          '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
+          'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
+            '<?xml version="1.0" encoding="UTF-8"?> <text><p>footnote1<footnote content="&lt;p&gt;fn1&lt;/p&gt;"/> footnote2 <footnote content="&lt;p&gt;fn2&lt;/p&gt;"/></p></text>',
+          'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
+            '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
+          },
+        },
+      };
+
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
+      cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, footnote).then(v => {
+        const id = v.body['@id'].match(/\/([^\/]+)$/)[1];
+        const page = new ResourcePage();
+        page.visit(id);
+        cy.get('[data-cy=footnote]').should('have.length', 2);
+        cy.get('[data-cy=footnote]').eq(0).should('contain', 'fn1');
+        cy.get('[data-cy=footnote]').eq(1).should('contain', 'fn2');
+      });
+      cy.get('app-rich-text-switch').trigger('mouseenter');
+      cy.get('[data-cy="edit-button"]').click();
+      cy.get('[content="&lt;p&gt;fn1&lt;/p&gt;"]').click();
+      cy.get('.ck-content[contenteditable=true]')
+        .eq(1)
+        .then(el => {
+          // @ts-ignore
+          const editor = el[0].ckeditorInstance; // If you're using TS, this is ReturnType<typeof InlineEditor['create']>
+          editor.setData('Typing some stuff');
+        });
+      cy.get('.ck-button-save').click({ force: true });
+      cy.get('[data-cy="save-button"] > .mat-mdc-button-touch-target').click();
+      cy.get('[data-cy=footnote]').should('have.length', 2);
+      cy.get('[data-cy=footnote]').eq(0).should('contain', 'Typing some stuff');
+      cy.get('[data-cy=footnote]').eq(1).should('contain', 'fn2');
     });
   });
 

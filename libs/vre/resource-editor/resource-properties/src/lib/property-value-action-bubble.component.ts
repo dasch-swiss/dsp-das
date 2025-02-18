@@ -1,7 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
@@ -14,7 +13,7 @@ import { PropertyValueService } from './property-value.service';
       <div class="button-container d-flex">
         <ng-container *ngIf="!editMode; else editTemplate">
           <button
-            *ngIf="userHasPermissionToModify"
+            *ngIf="userHasPermission('edit')"
             mat-button
             class="edit edit-button"
             data-cy="action-bubble-edit"
@@ -35,7 +34,7 @@ import { PropertyValueService } from './property-value.service';
           </ng-container>
           <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
             <button
-              *ngIf="userHasPermissionToModify"
+              *ngIf="userHasPermission('delete')"
               mat-button
               class="delete"
               data-cy="delete-button"
@@ -77,12 +76,6 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   infoTooltip$!: Observable<string>;
 
-  get userHasPermissionToModify() {
-    return !this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0
-      ? false
-      : ResourceUtil.userCanEdit(this._propertyValueService.editModeData.values[0]);
-  }
-
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
     private _propertyValueService: PropertyValueService
@@ -99,5 +92,14 @@ export class PropertyValueActionBubbleComponent implements OnInit {
         return `Creation date: ${this.date}. Value creator: ${creator}`;
       })
     );
+  }
+
+  userHasPermission(permissionType: 'edit' | 'delete'): boolean {
+    if (!this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0) {
+      return false;
+    }
+
+    const value = this._propertyValueService.editModeData.values[0];
+    return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
   }
 }

@@ -13,13 +13,13 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       [myProperty]="prop"
       [formArray]="formArray"
       [resourceClassIri]="resource.type"
-      [editModeData]="{ resource, values: prop.values }"></app-property-value-switcher>
+      [editModeData]="{ resource, values: prop.values }" />
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
 })
 export class ExistingPropertyValueComponent implements OnChanges {
-  @Input() prop!: PropertyInfoValues;
-  @Input() resource!: ReadResource;
+  @Input({ required: true }) prop!: PropertyInfoValues;
+  @Input({ required: true }) resource!: ReadResource;
 
   formArray!: FormValueArray;
 

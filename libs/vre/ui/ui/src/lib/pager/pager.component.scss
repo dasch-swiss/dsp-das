@@ -1,0 +1,60 @@
+@use 'config' as *;
+
+.paginator-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paginator-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.paginator-page-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.page-input {
+  background: none;
+  margin: 0 0.5em;
+  border: none;
+  background: $primary_100;
+  border-bottom: 2px solid $primary;
+  outline: none;
+  padding: 4px 0;
+  width: 4em;
+  text-align: center;
+  font-size: 14px;
+}
+
+.paginator-item-range {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-right: 16px;
+  font-size: 0.7em;
+}
+
+/* Remove number up/down buttons For Chrome, Edge, and Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Remove number up/down buttons for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

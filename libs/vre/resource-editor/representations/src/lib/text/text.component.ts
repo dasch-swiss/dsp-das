@@ -10,10 +10,7 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
-import { Store } from '@ngxs/store';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import {
@@ -21,6 +18,7 @@ import {
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
+import { ResourceUtil } from '../resource.util';
 
 @Component({
   selector: 'app-text',
@@ -43,8 +41,7 @@ export class TextComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _rs: RepresentationService,
-    private _store: Store
+    private _rs: RepresentationService
   ) {}
 
   ngOnChanges(): void {
@@ -63,17 +60,12 @@ export class TextComponent implements OnChanges {
   }
 
   openReplaceFileDialog() {
-    const attachedProject = this._rs.getParentResourceAttachedProject(
-      this._store.selectSnapshot(ResourceSelectors.attachedProjects),
-      this.parentResource
-    )!;
     this._dialog
       .open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
           title: 'Text (csv, txt, xml)',
           subtitle: 'Update the text file of this resource',
           representation: Constants.HasTextFileValue,
-          projectUuid: attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasTextFileValue][0].id,
         },
       })

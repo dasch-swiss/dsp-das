@@ -1,12 +1,27 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppConfigToken } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigToken } from '@dasch-swiss/vre/core/config';
 import * as Sentry from '@sentry/angular-ivy';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 function initSentry(environmentName: string) {
-  if (environmentName === 'local-dev') return;
+  const serverNamesListToExcludeFromSentry = [
+    'demo',
+    'dev',
+    'dev-02',
+    'dev-03',
+    'dev-04',
+    'dev-05',
+    'dev-06',
+    'dev-server',
+    'local-dev',
+    'ls-test',
+    'perf-01',
+    'test-rdu',
+  ];
+
+  if (serverNamesListToExcludeFromSentry.includes(environmentName)) return;
 
   Sentry.init({
     dsn: 'https://20bfc69ec9e457239886c1128cc17928@o4506122165747712.ingest.us.sentry.io/4506122171252736',

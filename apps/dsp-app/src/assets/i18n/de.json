@@ -183,7 +183,16 @@
     "comment": "Kommentar",
     "propertyLabels": {
       "linkedProperty": "Verlinkte Ressource"
-    }
+    },
+    "incomingLink": {
+      "tooltip": "Indicates that this resource is referred to by another resource",
+      "label": "has incoming link"
+    },
+    "standoffLink": {
+      "tooltip": "Represent a link in standoff markup from one resource to another",
+      "label": "has Standoff link"
+    },
+    "footnotes": "Fussnoten"
   },
   "searchPanel": {
     "howToSearch": "Wie suchen?",
@@ -216,5 +225,14 @@
       "home": "DSP-App Startseite",
       "myAccount": "Mein Konto"
     }
+  },
+  "paginator": {
+    "firstPage": "Erste Seite",
+    "lastPage": "Letzte Seite",
+    "nextPage": "Nächste Seite",
+    "inputTooltip": "Seitennummer eingeben und über Enter zur gewählten Seite springen.",
+    "previousPage": "Vorherige Seite",
+    "rangeLabelOf": "von",
+    "rangeLabelZero": "Seite 1 von 1"
   }
 }

@@ -1,19 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/core/session';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/shared/app-session';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   showCookieBanner = true;
-  session = false;
 
   constructor(
     private _router: Router,
@@ -36,10 +35,6 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       this.showCookieBanner = JSON.parse(localStorage.getItem('cookieBanner'));
     }
-  }
-
-  ngOnDestroy(): void {
-    this._localizationService.destroy();
   }
 
   goToCookiePolicy() {

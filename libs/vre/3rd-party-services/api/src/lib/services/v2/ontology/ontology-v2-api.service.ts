@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppConfigService } from '@dasch-swiss/vre/shared/app-config';
+import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { Graph } from '../../../interfaces/graph.interface';
 import { BaseApi } from '../../base-api';
 import { CanDoResponse } from './can-do-response.interface';
@@ -146,13 +146,5 @@ export class OntologyV2ApiService extends BaseApi {
 
   replaceGuiOrderOfCardinalities(payload: any) {
     return this._http.put<ResourcePropertyDefinitionWithAllLanguages>(`${this.baseUri}/guiorder`, payload);
-  }
-
-  private _updateMetadata(ontologyMetadata: OntologyMetadata) {
-    return this._http.put<OntologyMetadata>(`${this.baseUri} / metadata`, ontologyMetadata);
-  }
-
-  private _update(iri: string, ontologyMetaData: OntologyMetadata) {
-    return this._http.put<OntologyMetadata>(`${this.baseUri} /${encodeURIComponent(iri)}`, ontologyMetaData);
   }
 }

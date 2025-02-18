@@ -1,22 +1,22 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { ProjectsSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-resource-page',
-  template: ` <h3>Create new resource of type: {{ classLabel }}</h3>
+  template: ` <h3 data-cy="create-resource-title">Create new resource of type: {{ classLabel }}</h3>
     <app-create-resource-form
       *ngIf="resourceClassIri"
       [resourceClassIri]="resourceClassIri"
       [projectIri]="projectIri"
-      (createdResourceIri)="afterCreation($event)"></app-create-resource-form>`,
+      (createdResourceIri)="afterCreation($event)" />`,
 })
 export class CreateResourcePageComponent implements OnDestroy {
   private _destroy = new Subject<void>();

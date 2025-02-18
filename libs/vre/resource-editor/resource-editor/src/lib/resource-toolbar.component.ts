@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
   DeleteResourceDialogProps,
@@ -10,8 +10,8 @@ import {
   EraseResourceDialogComponent,
   EraseResourceDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -47,10 +47,8 @@ import { filter } from 'rxjs/operators';
       <app-permission-info
         *ngIf="adminPermissions"
         [hasPermissions]="resource.res.hasPermissions"
-        [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
-      <app-permission-info
-        *ngIf="!adminPermissions"
-        [userHasPermission]="resource.res.userHasPermission"></app-permission-info>
+        [userHasPermission]="resource.res.userHasPermission" />
+      <app-permission-info *ngIf="!adminPermissions" [userHasPermission]="resource.res.userHasPermission" />
       <!-- more menu with: delete, erase resource -->
       <button
         data-cy="resource-toolbar-more-button"

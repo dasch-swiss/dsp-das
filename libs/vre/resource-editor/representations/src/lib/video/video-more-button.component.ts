@@ -10,9 +10,8 @@ import {
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
@@ -21,6 +20,7 @@ import {
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
+import { ResourceUtil } from '../resource.util';
 
 @Component({
   selector: 'app-video-more-button',
@@ -82,7 +82,6 @@ export class VideoMoreButtonComponent {
           title: 'Video',
           subtitle: 'Update the video file of this resource',
           representation: Constants.HasMovingImageFileValue,
-          projectUuid: this._rs.getAttachedProject(this.parentResource)!.id,
           propId: this.parentResource.properties[Constants.HasMovingImageFileValue][0].id,
         },
         disableClose: true,

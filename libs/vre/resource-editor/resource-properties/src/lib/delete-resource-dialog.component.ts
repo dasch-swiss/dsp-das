@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteResource, DeleteResourceResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 
 export interface DeleteResourceDialogProps {
   resource: DspResource;
@@ -11,9 +11,7 @@ export interface DeleteResourceDialogProps {
 
 @Component({
   selector: 'app-delete-resource-dialog',
-  template: ` <app-dialog-header
-      title="Do you want to delete this resource ?"
-      [subtitle]="data.resource.res.label"></app-dialog-header>
+  template: ` <app-dialog-header title="Do you want to delete this resource ?" [subtitle]="data.resource.res.label" />
     <mat-dialog-content class="form-content">
       <mat-form-field class="large-field">
         <mat-label>Comment why resource is being deleted</mat-label>

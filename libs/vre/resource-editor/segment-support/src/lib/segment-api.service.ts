@@ -6,9 +6,9 @@ import {
   ReadResourceSequence,
   ReadTextValueAsString,
 } from '@dasch-swiss/dsp-js';
+import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { AppConfigService, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { AccessTokenService } from '@dasch-swiss/vre/shared/app-session';
 import { map } from 'rxjs/operators';
 import { Segment } from './segment';
 import { SegmentOrdering } from './segment-ordering';
@@ -166,10 +166,13 @@ OFFSET ${page}
             hasTitle: resource.properties[`${endpoint}hasTitle`] as ReadTextValueAsString[] | undefined,
           };
 
-          const mappedObject = Object.entries(data).reduce((acc, [key, value_]) => {
-            acc[key] = value_ !== undefined ? value_![0] : undefined;
-            return acc;
-          }, {});
+          const mappedObject = Object.entries(data).reduce(
+            (acc, [key, value_]) => {
+              acc[key] = value_ === undefined ? undefined : value_[0];
+              return acc;
+            },
+            {} as Record<string, any>
+          );
 
           const dspResource = new DspResource(resource);
           dspResource.resProps = GenerateProperty.segmentProperty(resource, type);

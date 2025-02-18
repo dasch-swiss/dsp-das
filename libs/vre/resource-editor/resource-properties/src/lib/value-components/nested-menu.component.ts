@@ -21,14 +21,10 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
     <mat-menu #menu="matMenu">
       <ng-container *ngFor="let node of data.children; let i = index">
         <button mat-menu-item style="padding: 0" *ngIf="node.children.length > 0; else menuItem">
-          <app-nested-menu [data]="node" (selectedNode)="selectedNode.emit($event)"></app-nested-menu>
+          <app-nested-menu [data]="node" (selectedNode)="selectedNode.emit($event)" />
         </button>
         <ng-template #menuItem>
-          <button
-            mat-menu-item
-            (click)="selectedNode.emit(node)"
-            style="padding: 0 16px; width: 400px"
-            data-cy="list-item-button">
+          <button mat-menu-item (click)="selectedNode.emit(node)" class="list-item-button" data-cy="list-item-button">
             {{ node.label }}
           </button>
         </ng-template>
@@ -37,6 +33,11 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
   `,
   styles: [
     `
+      .list-item-button {
+        padding: 0 16px;
+        width: 400px;
+      }
+
       ::ng-deep span.mat-mdc-menu-item-text {
         width: 100%;
       }

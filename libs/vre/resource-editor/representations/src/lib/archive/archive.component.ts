@@ -1,18 +1,16 @@
-import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Constants,
   KnoraApiConnection,
   ReadArchiveFileValue,
-  ReadProject,
   ReadResource,
   UpdateFileValue,
   UpdateResource,
   UpdateValue,
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import {
@@ -20,6 +18,7 @@ import {
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
+import { ResourceUtil } from '../resource.util';
 
 @Component({
   selector: 'app-archive',
@@ -28,7 +27,6 @@ import { RepresentationService } from '../representation.service';
 })
 export class ArchiveComponent implements OnChanges {
   @Input() src: FileRepresentation;
-  @Input() attachedProject: ReadProject | undefined;
   @Input() parentResource: ReadResource;
   originalFilename: string;
 
@@ -42,7 +40,8 @@ export class ArchiveComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _rs: RepresentationService
+    private _rs: RepresentationService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -69,7 +68,6 @@ export class ArchiveComponent implements OnChanges {
           title: 'Archive',
           subtitle: 'Update the archive file of this resource',
           representation: Constants.HasArchiveFileValue,
-          projectUuid: this.attachedProject!.id,
           propId: this.parentResource.properties[Constants.HasArchiveFileValue][0].id,
         },
       })
@@ -106,6 +104,7 @@ export class ArchiveComponent implements OnChanges {
 
         this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(res => {
           this.originalFilename = res['originalFilename'];
+          this._cd.detectChanges();
         });
       });
   }

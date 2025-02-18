@@ -1,20 +1,15 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   EditResourceLabelDialogComponent,
   EditResourceLabelDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events as CommsEvents,
-  OntologyService,
-  ProjectService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -49,7 +44,7 @@ import { map } from 'rxjs/operators';
         <mat-icon>edit</mat-icon>
       </button>
     </div>
-    <app-resource-info-bar [resource]="resource"></app-resource-info-bar>
+    <app-resource-info-bar [resource]="resource" />
   </div>`,
   styles: [
     `
@@ -130,7 +125,6 @@ export class ResourceHeaderComponent {
     private _dialog: MatDialog,
     private _store: Store,
     private _viewContainerRef: ViewContainerRef,
-    private _componentCommsService: ComponentCommunicationEventService,
     private _ontologyService: OntologyService
   ) {}
 
@@ -150,6 +144,5 @@ export class ResourceHeaderComponent {
     );
     const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
     this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
-    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
   }
 }

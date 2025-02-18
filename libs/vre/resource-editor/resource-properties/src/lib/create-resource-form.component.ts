@@ -12,10 +12,10 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { FormValueArray, FormValueGroup } from './form-value-array.type';
@@ -40,13 +40,14 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
               data-cy="upload-control" />
           </mat-tab>
           <mat-tab label="External IIIF URL">
-            <app-third-part-iiif [formControl]="form.controls.file"></app-third-part-iiif>
+            <app-third-part-iiif [formControl]="form.controls.file" />
           </mat-tab>
         </mat-tab-group>
       </div>
       <div class="my-grid">
         <div style="display: flex">
           <h3
+            data-cy="resource-label"
             class="mat-subtitle-2 my-h3"
             matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
             matTooltipPosition="above">
@@ -64,11 +65,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
               prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
             }}
           </h3>
-          <div style="flex: 1">
+          <div style="flex: 1" [attr.data-cy]="prop.propDef.label">
             <app-property-value-switcher
               [myProperty]="prop"
               [formArray]="form.controls.properties.controls[prop.propDef.id]"
-              [resourceClassIri]="resourceClassIri"></app-property-value-switcher>
+              [resourceClassIri]="resourceClassIri" />
           </div>
         </div>
       </div>
@@ -87,7 +88,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </form>
 
     <ng-template #loadingTemplate>
-      <dasch-swiss-app-progress-indicator></dasch-swiss-app-progress-indicator>
+      <app-progress-indicator />
     </ng-template>
   `,
   styles: [
@@ -95,7 +96,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     '.my-row:last-child { border-bottom: 0}',
     '.my-grid { width: 600px}',
     '.my-grid h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
-    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0px; text-align: right;flex-shrink: 0}',
+    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0; text-align: right;flex-shrink: 0}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {

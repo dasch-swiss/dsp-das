@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { Constants, ReadProject, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
-import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ResourceSelectors } from '@dasch-swiss/vre/shared/app-state';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -25,10 +25,7 @@ import { StillImageHelper } from './still-image-helper';
 
 @Component({
   selector: 'app-still-image',
-  template: ` <div
-      class="osd-container"
-      [class.drawing]="isViewInitialized && !osdService.viewer.isMouseNavEnabled()"
-      #osdViewer>
+  template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
       <div *ngIf="compoundMode">
         <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
         <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />

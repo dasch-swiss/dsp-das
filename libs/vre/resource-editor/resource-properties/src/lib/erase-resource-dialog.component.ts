@@ -2,8 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteResource, DeleteResourceResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { finalize } from 'rxjs/operators';
 
 export interface EraseResourceDialogProps {
@@ -14,9 +14,7 @@ export interface EraseResourceDialogProps {
 @Component({
   selector: 'app-erase-resource-dialog',
   template: `
-    <app-dialog-header
-      title="Do you want to erase this resource forever?"
-      [subtitle]="'Erase resource instance'"></app-dialog-header>
+    <app-dialog-header title="Do you want to erase this resource forever?" [subtitle]="'Erase resource instance'" />
 
     <mat-dialog-content>
       <div style="margin-bottom: 8px">WARNING: This action cannot be undone, so use it with care.</div>

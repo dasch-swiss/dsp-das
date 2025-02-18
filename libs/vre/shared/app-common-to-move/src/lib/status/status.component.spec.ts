@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HealthEndpointSystem, MockHealth } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
 import { of } from 'rxjs';
 import { StatusComponent } from './status.component';
@@ -27,7 +27,7 @@ class MockPipe implements PipeTransform {
  * dsp specific http status message
  */
 @Component({
-  template: ` <app-status #warning [status]="204"></app-status>`,
+  template: ` <app-status #warning [status]="204" />`,
 })
 class NoContentTestHostComponent implements OnInit {
   @ViewChild('warning', { static: false }) StatusComponent: StatusComponent;
@@ -42,7 +42,7 @@ class NoContentTestHostComponent implements OnInit {
  * default http status message
  */
 @Component({
-  template: ` <app-status #error [status]="418"></app-status>`,
+  template: ` <app-status #error [status]="418" />`,
 })
 class TeapotTestHostComponent implements OnInit {
   @ViewChild('error', { static: false }) StatusComponent: StatusComponent;

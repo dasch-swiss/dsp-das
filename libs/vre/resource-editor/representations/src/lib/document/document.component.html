@@ -1,7 +1,6 @@
-<div *ngIf="fileType === 'pdf'" class="pdf-container">
+<div *ngIf="isPdf" class="pdf-container">
   <!-- in case of an error -->
-  <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'document'" *ngIf="failedToLoad">
-  </app-status>
+  <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'document'" *ngIf="failedToLoad" />
 
   <pdf-viewer
     class="pdf-viewer"
@@ -38,9 +37,8 @@
         name="searchbox"
         class="pdf-searchbox fill-remaining-space"
         placeholder="Search in pdf..."
-        [value]="pdfQuery"
         [disabled]="failedToLoad"
-        (input)="searchQueryChanged($event.target.value)"
+        (input)="onInputChange($event)"
         (keyup.enter)="searchQueryChanged(queryInp.value)" />
 
       <!-- image action tools e.g. zoom, rotate and flip -->
@@ -50,7 +48,7 @@
           mat-icon-button
           id="DSP_PDF_ZOOM_OUT"
           matTooltip="Zoom out"
-          (click)="zoom('out')"
+          (click)="zoom(-1)"
           [disabled]="failedToLoad">
           <mat-icon>remove_circle_outline</mat-icon>
         </button>
@@ -62,12 +60,7 @@
           [disabled]="failedToLoad">
           <mat-icon>adjust</mat-icon>
         </button>
-        <button
-          mat-icon-button
-          id="DSP_PDF_ZOOM_IN"
-          matTooltip="Zoom in"
-          (click)="zoom('in')"
-          [disabled]="failedToLoad">
+        <button mat-icon-button id="DSP_PDF_ZOOM_IN" matTooltip="Zoom in" (click)="zoom(+1)" [disabled]="failedToLoad">
           <mat-icon>add_circle_outline</mat-icon>
         </button>
       </span>
@@ -90,12 +83,12 @@
   </div>
 </div>
 <!-- default document viewer -->
-<div *ngIf="fileType !== 'pdf'">
+<div *ngIf="!isPdf">
   <div class="file-representation">
     <div class="container">
       <div class="contents">
         <div class="icon">
-          <mat-icon> text_snippet </mat-icon>
+          <mat-icon> text_snippet</mat-icon>
         </div>
         <div class="file">
           <p>{{ originalFilename }}</p>

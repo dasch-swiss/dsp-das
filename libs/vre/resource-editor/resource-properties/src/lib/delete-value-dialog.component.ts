@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
 import { tap } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
@@ -16,7 +16,7 @@ export interface DeleteValueDialogProps {
     <app-dialog-header
       [title]="
         'Are you sure you want to delete this value from ' + propertyValueService.propertyDefinition.label + '?'
-      "></app-dialog-header>
+      " />
     <div mat-dialog-content>
       You can leave a comment to explain your choice.
 

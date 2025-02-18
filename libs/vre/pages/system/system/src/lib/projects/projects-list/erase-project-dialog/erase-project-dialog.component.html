@@ -1,0 +1,51 @@
+<app-dialog-header
+  [title]="'projects.list.eraseConfirmationDialog.title' | translate"
+  [subtitle]="'projects.list.eraseConfirmationDialog.subtitle' | translate" />
+
+<mat-dialog-content>
+  <div>{{ 'projects.list.eraseConfirmationDialog.warning' | translate }}</div>
+  <mat-form-field>
+    <mat-label>{{ 'projects.list.eraseConfirmationDialog.shortCode' | translate }}</mat-label>
+    <input
+      matInput
+      maxlength="4"
+      minlength="4"
+      data-cy="short-code-input"
+      [placeholder]="'projects.list.eraseConfirmationDialog.shortCode' | translate"
+      [formControl]="eraseForm.controls.shortCode"
+      [value]="eraseForm.controls.shortCode" />
+    <mat-error *ngIf="eraseForm.controls.shortCode.hasError('shortCode') as errors">
+      {{ 'projects.list.eraseConfirmationDialog.shortCodeValidation' | translate }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="large-field">
+    <mat-label>{{ 'projects.list.eraseConfirmationDialog.systemAdminPassword' | translate }}</mat-label>
+    <input
+      [placeholder]="'projects.list.eraseConfirmationDialog.systemAdminPassword' | translate"
+      autocomplete="current-password"
+      data-cy="password-input"
+      [formControl]="eraseForm.controls.password"
+      matInput
+      type="password" />
+    <mat-error *ngIf="eraseForm.controls.password.hasError('password') as errors">
+      {{ 'projects.list.eraseConfirmationDialog.passwordValidation' | translate }}
+    </mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button color="primary" mat-dialog-close class="cancel-button center">
+    {{ 'projects.list.eraseConfirmationDialog.cancel' | translate }}
+  </button>
+  <span class="fill-remaining-space"></span>
+  <button
+    [disabled]="eraseForm.invalid"
+    mat-button
+    appLoadingButton
+    [isLoading]="isLoading"
+    mat-raised-button
+    class="confirm-button center"
+    (click)="submit()">
+    {{ 'projects.list.eraseConfirmationDialog.confirm' | translate }}
+  </button>
+</mat-dialog-actions>

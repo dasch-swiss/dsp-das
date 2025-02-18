@@ -11,11 +11,9 @@ import {
   UpdateFileValue,
   UpdateResource,
 } from '@dasch-swiss/dsp-js';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/shared/app-config';
-import { AppError } from '@dasch-swiss/vre/shared/app-error-handler';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { filter, switchMap } from 'rxjs/operators';
 import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
 import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
@@ -25,6 +23,7 @@ import {
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
+import { ResourceUtil } from '../resource.util';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 
 @Component({
@@ -85,7 +84,7 @@ export class StillImageToolbarComponent {
   }
 
   toggleDrawMode(): void {
-    this.osd.viewer.setMouseNavEnabled(!this.osd.viewer.isMouseNavEnabled());
+    this.osd.toggleDrawing();
   }
 
   download() {
@@ -105,7 +104,6 @@ export class StillImageToolbarComponent {
     } else {
       dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
-          projectUuid: ProjectService.IriToUuid(this.resource.attachedToProject),
           title: 'Image',
           subtitle: 'Update image of the resource',
           representation: Constants.HasStillImageFileValue,

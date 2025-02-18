@@ -20,9 +20,9 @@ import {
   UpdateResource,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/shared/app-config';
-import { NotificationService } from '@dasch-swiss/vre/shared/app-notification';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
@@ -42,15 +42,14 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       [date]="propertyValueService.editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
       (editAction)="propertyValueService.toggleOpenedValue(index)"
-      (deleteAction)="askToDelete()"></app-property-value-action-bubble>
+      (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
       <div class="item" [ngClass]="{ hover: displayMode }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
-        <app-property-value-comment [displayMode]="displayMode" [control]="group?.controls.comment">
-        </app-property-value-comment>
+        <app-property-value-comment [displayMode]="displayMode" [control]="group?.controls.comment" />
       </div>
       <button
         (click)="onSave()"
@@ -65,7 +64,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         ">
         <mat-icon>save</mat-icon>
       </button>
-      <dasch-swiss-app-progress-indicator *ngIf="loading" />
+      <app-progress-indicator *ngIf="loading" />
     </div>
   </div>`,
   styleUrls: ['./property-value.component.scss'],

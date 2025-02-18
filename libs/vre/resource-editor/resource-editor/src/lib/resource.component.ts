@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { RouteConstants } from '@dasch-swiss/vre/shared/app-config';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 
@@ -14,8 +14,8 @@ import { CompoundService } from './compound/compound.service';
   template: `
     <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
 
-    <div class=" content large middle">
-      <div class="resource-view">
+    <div class="content large middle">
+      <div>
         <app-resource-header [resource]="resource" />
         <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
         <app-compound-viewer *ngIf="isCompoundNavigation" />
@@ -23,7 +23,6 @@ import { CompoundService } from './compound/compound.service';
       </div>
     </div>
   `,
-  styleUrls: ['./resource.component.scss'],
   providers: [CompoundService, RegionService, SegmentsService],
 })
 export class ResourceComponent implements OnChanges {
