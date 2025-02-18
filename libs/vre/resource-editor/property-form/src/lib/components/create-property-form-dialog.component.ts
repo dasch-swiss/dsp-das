@@ -48,7 +48,7 @@ export interface CreatePropertyFormDialogProps {
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: PropertyForm;
+  form!: PropertyForm;
 
   constructor(
     @Inject(DspApiConnectionToken)
