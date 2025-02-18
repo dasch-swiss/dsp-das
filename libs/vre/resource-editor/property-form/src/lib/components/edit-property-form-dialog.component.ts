@@ -6,7 +6,6 @@ import {
   DeleteResourcePropertyComment,
   KnoraApiConnection,
   ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
   UpdateResourcePropertyComment,
   UpdateResourcePropertyGuiElement,
@@ -171,12 +170,14 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     onto4guiEle.entity = updateGuiEle;
 
-    this._dspApiConnection.v2.onto
-      .replaceGuiElementOfProperty(onto4guiEle)
-      .subscribe((guiEleResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-        this.lastModificationDate = guiEleResponse.lastModificationDate;
-        this.onSuccess();
-      });
+    this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(guiEleResponse => {
+      if (guiEleResponse instanceof ApiResponseError) {
+        throw new JsLibParsedError();
+      }
+
+      this.lastModificationDate = guiEleResponse.lastModificationDate;
+      this.onSuccess();
+    });
   }
 
   private setGuiAttribute(guiAttr: string): string[] {
