@@ -24,7 +24,7 @@ export default defineConfig({
     screenshotsFolder: 'cypress/fixtures/screenshots',
 
     setupNodeEvents(on, config) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line
       require('@cypress/code-coverage/task')(on, config);
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.name === 'chrome' && browser.isHeadless) {
