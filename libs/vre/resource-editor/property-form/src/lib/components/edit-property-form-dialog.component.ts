@@ -17,7 +17,7 @@ import { SetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
 
 export interface EditPropertyFormDialogProps {
@@ -96,29 +96,21 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
           if (onto4Comment.entity.comments.length) {
             // if the comments array is not empty, send a request to update the comments
-            return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).pipe(
-              tap((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                this.lastModificationDate = propertyCommentResponse.lastModificationDate;
-
-                this.final();
-              })
-            );
+            return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment);
           } else {
             // if the comments array is empty, send a request to remove the comments
             const deleteResourcePropertyComment = new DeleteResourcePropertyComment();
             deleteResourcePropertyComment.id = this.propertyInfo.propDef.id;
             deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
 
-            return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment).pipe(
-              tap((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-                this.lastModificationDate = deleteCommentResponse.lastModificationDate;
-                this.final();
-              })
-            );
+            return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment);
           }
         })
       )
-      .subscribe(() => {
+      .subscribe((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+        this.lastModificationDate = propertyCommentResponse.lastModificationDate;
+        this.final();
+
         this.ontology.lastModificationDate = this.lastModificationDate;
         this._store.dispatch(new SetCurrentOntologyAction(this.ontology));
       });
