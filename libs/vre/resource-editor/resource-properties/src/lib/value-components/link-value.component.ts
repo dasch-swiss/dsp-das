@@ -34,7 +34,6 @@ import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
   selector: 'app-link-value',
-  styleUrls: ['./link-value.component.scss'],
   template: `
     <mat-form-field style="width: 100%">
       <input
@@ -72,7 +71,6 @@ import { LinkValueDataService } from './link-value-data.service';
   providers: [LinkValueDataService, MatAutocompleteOptionsScrollDirective],
 })
 export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly pageResultsLimit: number = 25;
   private cancelPreviousCountRequest$ = new Subject<void>();
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
