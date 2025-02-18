@@ -109,12 +109,12 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   }
 
   private setProject() {
-    const routeProject = decodeURIComponent(
+    this.routeProject = decodeURIComponent(
       this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project] || ''
     );
 
-    if (routeProject && this.isRouteProjectMember) {
-      this.selectedProject = routeProject;
+    if (this.routeProject && this.isRouteProjectMember) {
+      this.selectedProject = this.routeProject;
       return;
     }
 
