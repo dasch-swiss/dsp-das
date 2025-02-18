@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { Cardinality, Constants, ReadLinkValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Component, Input, OnChanges } from '@angular/core';
+import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
@@ -14,7 +14,6 @@ import { PropertiesDisplayService } from './properties-display.service';
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
         <app-resource-toolbar *ngIf="displayLabel" [resource]="resource" [linkToNewTab]="linkToNewTab" />
-
       </div>
     </div>
 
