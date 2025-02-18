@@ -258,11 +258,11 @@
           }
         },
         "coverage": {
-          "devServerTarget": "dsp-app:serve-nx-demo-app-e2e"
+          "devServerTarget": "dsp-app:serve-app-e2e"
         }
       }
     },
-    "serve-nx-demo-app-e2e": {
+    "serve-app-e2e": {
       "executor": "ngx-build-plus:dev-server",
       "defaultConfiguration": "",
       "options": {
