@@ -57,7 +57,7 @@ export interface EditPropertyFormDialogProps {
 })
 export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: PropertyForm;
+  form!: PropertyForm;
 
   ontology = this.data.ontology;
   lastModificationDate = this.data.lastModificationDate;
