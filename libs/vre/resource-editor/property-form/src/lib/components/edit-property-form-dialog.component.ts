@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
+  ApiResponseError,
   Constants,
   DeleteResourcePropertyComment,
   KnoraApiConnection,
@@ -18,6 +19,7 @@ import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/a
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { switchMap } from 'rxjs/operators';
+import { JsLibParsedError } from '../../../../../core/error-handler/src/lib/js-lib-parsed-error';
 import { PropertyForm } from '../property-form.type';
 
 export interface EditPropertyFormDialogProps {
@@ -88,7 +90,10 @@ export class EditPropertyFormDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .updateResourceProperty(onto4Label)
       .pipe(
-        switchMap((propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+        switchMap(propertyLabelResponse => {
+          if (propertyLabelResponse instanceof ApiResponseError) {
+            throw new JsLibParsedError();
+          }
           const onto4Comment = this.getUpdateOntologyForPropertyComment();
 
           this.lastModificationDate = propertyLabelResponse.lastModificationDate;
@@ -107,7 +112,11 @@ export class EditPropertyFormDialogComponent implements OnInit {
           }
         })
       )
-      .subscribe((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+      .subscribe(propertyCommentResponse => {
+        if (propertyCommentResponse instanceof ApiResponseError) {
+          throw new JsLibParsedError();
+        }
+
         this.lastModificationDate = propertyCommentResponse.lastModificationDate;
         this.final();
 
