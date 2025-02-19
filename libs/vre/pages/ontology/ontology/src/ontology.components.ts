@@ -1,7 +1,9 @@
 import { CreateResourceClassDialogComponent } from './lib/create-resource-class-dialog/create-resource-class-dialog.component';
 import { DataModelsComponent } from './lib/data-models/data-models.component';
 import { EditResourceClassDialogComponent } from './lib/edit-resource-class-dialog/edit-resource-class-dialog.component';
+import { OntologyEditorClassesComponent } from './lib/ontology-editor-classes.component';
 import { OntologyFormComponent } from './lib/ontology-form/ontology-form.component';
+import { OntologyPropertiesComponent } from './lib/ontology-properties.component';
 import { OntologyComponent } from './lib/ontology.component';
 import { PropertyInfoComponent } from './lib/property-info/property-info.component';
 import { ResourceClassFormComponent } from './lib/resource-class-form/resource-class-form.component';
@@ -18,6 +20,8 @@ export const OntologyComponents = [
   EditResourceClassDialogComponent,
   OntologyFormComponent,
   OntologyComponent,
+  OntologyEditorClassesComponent,
+  OntologyPropertiesComponent,
   PropertyInfoComponent,
   ResourceClassFormComponent,
   AddPropertyMenuComponent,

@@ -7,13 +7,12 @@ import { OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app
   selector: 'app-ontology-classes',
   template: `
     <div *ngFor="let class of classesToDisplay; trackBy: trackByFn">
-      <app-ontology-class-item [resClass]="class" [projectMember]="projectMember" />
+      <app-ontology-class-item [resClass]="class" />
     </div>
   `,
 })
 export class OntologyClassesComponent {
   @Input({ required: true }) resClasses!: ClassDefinition[];
-  @Input({ required: true }) projectMember!: boolean;
 
   get classesToDisplay(): ClassDefinition[] {
     const classesToDisplay = OntologyClassHelper.GetClassesToDisplay(this.resClasses);

@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <a class="icon link" data-cy="add-class-instance" *ngIf="projectMember" (click)="goToAddClassInstance()">
+    <a class="icon link" data-cy="add-class-instance" *ngIf="isMember$ | async" (click)="goToAddClassInstance()">
       <mat-icon>add_circle_outline</mat-icon>
     </a>
   </div>
