@@ -1,25 +1,26 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ReadResource } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { RegionService, ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
-  DeleteResourceDialogProps,
   EditResourceLabelDialogComponent,
-  EditResourceLabelDialogProps,
   EraseResourceDialogComponent,
-  EraseResourceDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { filter } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-toolbar',
   template: `
-    <!-- tools: share, add to favorites, edit, delete etc. -->
     <span class="action" [class.deleted]="resource.res.isDeleted">
-      <!-- Toggle show all comments button-->
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
@@ -43,17 +44,16 @@ import { filter } from 'rxjs/operators';
         <mat-icon>share</mat-icon>
       </button>
 
-      <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
       <app-permission-info
-        *ngIf="adminPermissions"
+        *ngIf="isAdmin$ | async"
         [hasPermissions]="resource.res.hasPermissions"
         [userHasPermission]="resource.res.userHasPermission" />
-      <app-permission-info *ngIf="!adminPermissions" [userHasPermission]="resource.res.userHasPermission" />
+      <app-permission-info *ngIf="isAdmin$ | async" [userHasPermission]="resource.res.userHasPermission" />
       <!-- more menu with: delete, erase resource -->
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        *ngIf="(userCanEdit && showEditLabel) || userCanDelete || adminPermissions"
+        *ngIf="(userCanEdit && showEditLabel) || userCanDelete || (isAdmin$ | async)"
         mat-icon-button
         class="more-menu"
         matTooltip="More"
@@ -71,7 +71,7 @@ import { filter } from 'rxjs/operators';
         matTooltipPosition="above"
         data-cy="copy-ark-url-button"
         [cdkCopyToClipboard]="resource.res.versionArkUrl"
-        (click)="openSnackBar('ARK URL copied to clipboard!')">
+        (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
       </button>
@@ -81,7 +81,7 @@ import { filter } from 'rxjs/operators';
         data-cy="copy-internal-link-button"
         matTooltipPosition="above"
         [cdkCopyToClipboard]="resource.res.id"
-        (click)="openSnackBar('Internal link copied to clipboard!')">
+        (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy internal link to clipboard
       </button>
@@ -90,7 +90,7 @@ import { filter } from 'rxjs/operators';
     <mat-menu #more="matMenu" class="res-more-menu">
       <button
         *ngIf="showEditLabel"
-        [disabled]="!adminPermissions && !userCanEdit"
+        [disabled]="!userCanEdit"
         data-cy="resource-toolbar-edit-resource-button"
         mat-menu-item
         matTooltip="Edit the label of this resource"
@@ -101,7 +101,7 @@ import { filter } from 'rxjs/operators';
       </button>
       <button
         data-cy="resource-toolbar-delete-resource-button"
-        [disabled]="!adminPermissions && userCanDelete === false"
+        [disabled]="!userCanDelete"
         mat-menu-item
         matTooltip="Move resource to trash bin."
         matTooltipPosition="above"
@@ -110,7 +110,7 @@ import { filter } from 'rxjs/operators';
         Delete resource
       </button>
       <button
-        *ngIf="adminPermissions"
+        *ngIf="isAdmin$ | async"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
         matTooltip="Erase resource forever. This cannot be undone."
@@ -126,11 +126,6 @@ import { filter } from 'rxjs/operators';
       .action {
         display: inline-flex;
 
-        .toggle-props {
-          padding: 12px;
-          height: 48px;
-        }
-
         button {
           border-radius: 0;
         }
@@ -138,15 +133,12 @@ import { filter } from 'rxjs/operators';
     `,
   ],
 })
-export class ResourceToolbarComponent implements OnInit {
+export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: DspResource;
-  @Input() adminPermissions = false;
   @Input() showEditLabel = true;
-
-  @Input() lastModificationDate!: string;
   @Input() linkToNewTab?: string;
 
-  @Output() afterResourceDeleted = new EventEmitter();
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<string[]>;
 
   get userCanEdit() {
     return ResourceUtil.userCanEdit(this.resource.res);
@@ -157,41 +149,28 @@ export class ResourceToolbarComponent implements OnInit {
   }
 
   constructor(
-    private _notification: NotificationService,
+    protected notification: NotificationService,
     private _resourceService: ResourceService,
     private _cd: ChangeDetectorRef,
     private _dialog: MatDialog,
-    private _adminProjectsApi: AdminProjectsApiService,
-    private _viewContainerRef: ViewContainerRef,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _store: Store,
+    private _regionService: RegionService,
     private _resourceFetcher: ResourceFetcherService
   ) {}
 
-  ngOnInit(): void {
-    if (this.resource.res.attachedToProject) {
-      this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
-        this._cd.detectChanges();
-      });
-    }
-    this._cd.detectChanges();
-  }
-
   openResource() {
-    window.open(`/resource${this._getResourceSharedPath()}`, '_blank');
-  }
-
-  private _getResourceSharedPath() {
-    if (this.linkToNewTab) {
-      return this.linkToNewTab;
-    }
-
-    return this._resourceService.getResourcePath(this.resource.res.id);
+    const resourceSegments = this.linkToNewTab
+      ? this.linkToNewTab
+      : this._resourceService.getResourcePath(this.resource.res.id);
+    window.open(`/resource${resourceSegments}`, '_blank');
   }
 
   editResourceLabel() {
     this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
-        data: { resource: this.resource.res },
-        viewContainerRef: this._viewContainerRef,
+      .open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
+        data: this.resource.res,
       })
       .afterClosed()
       .pipe(filter(answer => !!answer))
@@ -203,35 +182,43 @@ export class ResourceToolbarComponent implements OnInit {
 
   deleteResource() {
     this._dialog
-      .open<DeleteResourceDialogComponent, DeleteResourceDialogProps>(DeleteResourceDialogComponent, {
-        data: {
-          resource: this.resource,
-          lastModificationDate: this.lastModificationDate,
-        },
-      })
+      .open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, { data: this.resource.res })
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this.afterResourceDeleted.emit();
+        this._afterResourceDeleted();
       });
   }
 
   eraseResource() {
     this._dialog
-      .open<EraseResourceDialogComponent, EraseResourceDialogProps>(EraseResourceDialogComponent, {
-        data: {
-          resource: this.resource,
-          lastModificationDate: this.lastModificationDate,
-        },
-      })
+      .open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, { data: this.resource.res })
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this.afterResourceDeleted.emit();
+        this._afterResourceDeleted();
       });
   }
 
-  openSnackBar(message: string) {
-    this._notification.openSnackBar(message);
+  private _afterResourceDeleted() {
+    const className = this.resource.res.type.split('#')[1];
+
+    if (className === 'Region') {
+      this._regionService.updateRegions$().pipe(take(1)).subscribe();
+      return;
+    }
+
+    const pId = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+    const pUuid = ProjectService.IriToUuid(pId);
+
+    const ontologyName = this._route.snapshot?.paramMap.get(RouteConstants.ontoParameter);
+
+    if (!pId || !ontologyName) {
+      this._router.navigate([RouteConstants.home]);
+    } else {
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([RouteConstants.project, pUuid, RouteConstants.ontology, ontologyName, className]);
+      });
+    }
   }
 }
