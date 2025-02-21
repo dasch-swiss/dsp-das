@@ -4,9 +4,9 @@ import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-in
 export class OntologiesStateModel {
   isLoading: boolean | undefined;
   hasLoadingErrors: boolean | undefined;
-  projectOntologies: IProjectOntologiesKeyValuePairs = {};
-  currentOntology: ReadOntology | null = null;
-  currentOntologyCanBeDeleted = false;
-  currentProjectOntologyProperties: OntologyProperties[] = [];
-  isOntologiesLoading = false;
+  ontologiesByIri: IProjectOntologiesKeyValuePairs = {};
+  selectedOntology: ReadOntology | null = null;
+  canSelectedOntologyBeDeleted = false;
+  selectedOntologyPropertiesByIri: OntologyProperties[] = [];
+  areOntologiesLoading = false;
 }

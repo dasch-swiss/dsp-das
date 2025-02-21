@@ -32,43 +32,43 @@ export class OntologiesSelectors {
 
   @Selector([OntologiesState])
   static projectOntologies(state: OntologiesStateModel): IProjectOntologiesKeyValuePairs {
-    return state.projectOntologies;
+    return state.ontologiesByIri;
   }
 
   @Selector([OntologiesState, ProjectsSelectors.currentProject])
   static currentProjectOntologyMetadata(state: OntologiesStateModel, project: ReadProject): OntologyMetadata[] {
-    return state.projectOntologies[project.id] ? state.projectOntologies[project.id].ontologiesMetadata : [];
+    return state.ontologiesByIri[project.id] ? state.ontologiesByIri[project.id].ontologiesMetadata : [];
   }
 
   @Selector([OntologiesState, ProjectsSelectors.currentProject])
   static currentProjectOntologies(state: OntologiesStateModel, project: ReadProject): ReadOntology[] {
-    return state.projectOntologies[project.id] ? state.projectOntologies[project.id].readOntologies : [];
+    return state.ontologiesByIri[project.id] ? state.ontologiesByIri[project.id].readOntologies : [];
   }
 
   // ontology name has to be unique
   @Selector([OntologiesState, ProjectsSelectors.currentProject])
   static currentProjectExistingOntologyNames(state: OntologiesStateModel, project: ReadProject): string[] {
-    return state.projectOntologies[project.id].ontologiesMetadata.map(meta => OntologyService.getOntologyName(meta.id));
+    return state.ontologiesByIri[project.id].ontologiesMetadata.map(meta => OntologyService.getOntologyName(meta.id));
   }
 
   @Selector([OntologiesState])
   static currentOntology(state: OntologiesStateModel): ReadOntology | null {
-    return state.currentOntology?.id ? state.currentOntology : null;
+    return state.selectedOntology?.id ? state.selectedOntology : null;
   }
 
   @Selector([OntologiesState])
   static currentProjectOntologyProperties(state: OntologiesStateModel): OntologyProperties[] {
-    return state.currentProjectOntologyProperties;
+    return state.selectedOntologyPropertiesByIri;
   }
 
   @Selector([OntologiesState])
   static currentOntologyCanBeDeleted(state: OntologiesStateModel): boolean {
-    return state.currentOntologyCanBeDeleted;
+    return state.canSelectedOntologyBeDeleted;
   }
 
   @Selector([OntologiesState])
   static isOntologiesLoading(state: OntologiesStateModel): boolean {
-    return state.isOntologiesLoading;
+    return state.areOntologiesLoading;
   }
 
   @Selector([OntologiesState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
@@ -79,9 +79,9 @@ export class OntologiesSelectors {
     params: Params
   ): ReadOntology | undefined {
     const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
-    if (!projectIri || Object.values(state.projectOntologies).length === 0) return undefined;
+    if (!projectIri || Object.values(state.ontologiesByIri).length === 0) return undefined;
 
-    const projectReadOntologies = state.projectOntologies[projectIri].readOntologies;
+    const projectReadOntologies = state.ontologiesByIri[projectIri].readOntologies;
     const projectReadOntologiesIndex = projectReadOntologies.findIndex(
       o => o.id.indexOf(`/${params[RouteConstants.ontoParameter]}/`) !== -1
     );
