@@ -6,5 +6,5 @@ export class ResourceStateModel {
   isLoading = false;
   attachedUsers: IKeyValuePairs<ReadUser> = {};
   attachedProjects: IKeyValuePairs<ReadProject> = {};
-  selectedResource: DspResource | null = null;
+  resource: DspResource | null = null;
 }

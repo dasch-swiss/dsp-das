@@ -45,9 +45,9 @@ const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,
   ontologiesByIri: {},
   hasLoadingErrors: false,
-  selectedOntology: null,
-  canSelectedOntologyBeDeleted: false,
-  selectedOntologyPropertiesByIri: [],
+  ontology: null,
+  canOntologyBeDeleted: false,
+  ontologyPropertiesByIri: [],
   areOntologiesLoading: false,
 };
 
@@ -77,7 +77,7 @@ export class OntologiesState {
 
   @Action(SetCurrentOntologyAction)
   setCurrentOntologyAction(ctx: StateContext<OntologiesStateModel>, { readOntology }: SetCurrentOntologyAction) {
-    ctx.patchState({ selectedOntology: readOntology });
+    ctx.patchState({ ontology: readOntology });
   }
 
   @Action(UpdateProjectOntologyAction)
@@ -201,7 +201,7 @@ export class OntologiesState {
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
           projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
 
-          if (ontology.id === ctx.getState().selectedOntology?.id) {
+          if (ontology.id === ctx.getState().ontology?.id) {
             ctx.dispatch(new SetCurrentOntologyAction(ontology));
           }
 
@@ -268,8 +268,8 @@ export class OntologiesState {
   @Action(ClearCurrentOntologyAction)
   clearCurrentOntology(ctx: StateContext<OntologiesStateModel>) {
     const state = ctx.getState();
-    state.selectedOntology = defaults.selectedOntology;
-    state.selectedOntologyPropertiesByIri = defaults.selectedOntologyPropertiesByIri;
+    state.ontology = defaults.ontology;
+    state.ontologyPropertiesByIri = defaults.ontologyPropertiesByIri;
     ctx.patchState(state);
   }
 
@@ -295,7 +295,7 @@ export class OntologiesState {
 
     ctx.setState({
       ...state,
-      selectedOntologyPropertiesByIri: ontoProperties,
+      ontologyPropertiesByIri: ontoProperties,
     });
   }
 
@@ -312,8 +312,8 @@ export class OntologiesState {
     const state = ctx.getState();
 
     const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.selectedOntology?.lastModificationDate;
-    onto.id = <string>state.selectedOntology?.id;
+    onto.lastModificationDate = <string>state.ontology?.lastModificationDate;
+    onto.id = <string>state.ontology?.id;
     const delCard = new UpdateResourceClassCardinality();
     delCard.id = resourceClass.id;
     delCard.cardinalities = [];
@@ -350,8 +350,8 @@ export class OntologiesState {
     const state = ctx.getState();
 
     const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.selectedOntology?.lastModificationDate;
-    onto.id = <string>state.selectedOntology?.id;
+    onto.lastModificationDate = <string>state.ontology?.lastModificationDate;
+    onto.id = <string>state.ontology?.id;
     const addCard = new UpdateResourceClassCardinality();
     addCard.id = resourceClass.id;
     addCard.cardinalities = [];
@@ -387,11 +387,11 @@ export class OntologiesState {
   currentOntologyCanBeDeletedAction(ctx: StateContext<OntologiesStateModel>) {
     ctx.patchState({ isLoading: true });
     const state = ctx.getState();
-    if (!state.selectedOntology) {
+    if (!state.ontology) {
       return;
     }
 
-    return this._dspApiConnection.v2.onto.canDeleteOntology(state.selectedOntology.id).pipe(
+    return this._dspApiConnection.v2.onto.canDeleteOntology(state.ontology.id).pipe(
       take(1),
       map((response: CanDoResponse | ApiResponseError) => response as CanDoResponse),
       tap({
@@ -399,7 +399,7 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: false,
-            canSelectedOntologyBeDeleted: response.canDo,
+            canOntologyBeDeleted: response.canDo,
           });
         },
         error: (error: ApiResponseError) => {

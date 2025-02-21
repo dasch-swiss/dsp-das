@@ -53,17 +53,17 @@ export class OntologiesSelectors {
 
   @Selector([OntologiesState])
   static currentOntology(state: OntologiesStateModel): ReadOntology | null {
-    return state.selectedOntology?.id ? state.selectedOntology : null;
+    return state.ontology?.id ? state.ontology : null;
   }
 
   @Selector([OntologiesState])
   static currentProjectOntologyProperties(state: OntologiesStateModel): OntologyProperties[] {
-    return state.selectedOntologyPropertiesByIri;
+    return state.ontologyPropertiesByIri;
   }
 
   @Selector([OntologiesState])
   static currentOntologyCanBeDeleted(state: OntologiesStateModel): boolean {
-    return state.canSelectedOntologyBeDeleted;
+    return state.canOntologyBeDeleted;
   }
 
   @Selector([OntologiesState])

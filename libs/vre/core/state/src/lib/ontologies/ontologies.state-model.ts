@@ -5,8 +5,8 @@ export class OntologiesStateModel {
   isLoading: boolean | undefined;
   hasLoadingErrors: boolean | undefined;
   ontologiesByIri: IProjectOntologiesKeyValuePairs = {};
-  selectedOntology: ReadOntology | null = null;
-  canSelectedOntologyBeDeleted = false;
-  selectedOntologyPropertiesByIri: OntologyProperties[] = [];
+  ontology: ReadOntology | null = null;
+  canOntologyBeDeleted = false;
+  ontologyPropertiesByIri: OntologyProperties[] = [];
   areOntologiesLoading = false;
 }
