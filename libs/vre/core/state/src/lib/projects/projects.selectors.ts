@@ -66,12 +66,12 @@ export class ProjectsSelectors {
 
   @Selector([ProjectsState])
   static allActiveProjects(state: ProjectsStateModel): ReadProject[] {
-    return state.allProjectsByIri.filter(project => project.status === true);
+    return state.allProjectsByIri.filter(project => project.status);
   }
 
   @Selector([ProjectsState])
   static allInactiveProjects(state: ProjectsStateModel): ReadProject[] {
-    return state.allProjectsByIri.filter(project => project.status === false);
+    return state.allProjectsByIri.filter(project => !project.status);
   }
 
   @Selector([ProjectsState])

@@ -6,10 +6,7 @@ import { finalize, map, take, tap } from 'rxjs/operators';
 import { ClearOntologyClassAction, LoadClassItemsCountAction } from './ontology-class.actions';
 import { OntologyClassStateModel } from './ontology-class.state-model';
 
-const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
-  isLoading: false,
-  classItemsById: {},
-};
+const defaults = new OntologyClassStateModel();
 
 /*
   Provides data about ontology class items, such as the number of resource items in a class.
