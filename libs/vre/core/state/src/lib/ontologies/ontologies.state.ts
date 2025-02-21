@@ -43,12 +43,12 @@ import { OntologiesStateModel } from './ontologies.state-model';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,
-  ontologiesByIri: {}, // project ontologies grouped by project IRI
-  hasLoadingErrors: false, // loading error state
-  selectedOntology: null, // the currently selected ontology
+  ontologiesByIri: {},
+  hasLoadingErrors: false,
+  selectedOntology: null,
   canSelectedOntologyBeDeleted: false,
-  selectedOntologyPropertiesByIri: [], // reflects current ontology properties in data model grouped by ontology IRI
-  areOntologiesLoading: false, // loading state for project ontologies
+  selectedOntologyPropertiesByIri: [],
+  areOntologiesLoading: false,
 };
 
 /*

@@ -8,7 +8,7 @@ import { OntologyClassStateModel } from './ontology-class.state-model';
 
 const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
   isLoading: false,
-  classItemsById: {}, // Ontology class items grouped by resource class id.
+  classItemsById: {},
 };
 
 /*

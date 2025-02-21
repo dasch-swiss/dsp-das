@@ -40,12 +40,12 @@ import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
   isLoading: false,
-  isMembershipLoading: false, // loading state of project membership
-  hasLoadingErrors: false, // loading error state
-  allProjectsByIri: [], // all projects in the system grouped by project IRI
-  projectMembersByIri: {}, // project members grouped by project IRI
-  projectGroupsByIri: {}, // project user groups grouped by project IRI
-  restrictedViewSettings: {}, // project image settings grouped by project id
+  isMembershipLoading: false,
+  hasLoadingErrors: false,
+  allProjectsByIri: [],
+  projectMembersByIri: {},
+  projectGroupsByIri: {},
+  restrictedViewSettings: {},
 };
 
 /*

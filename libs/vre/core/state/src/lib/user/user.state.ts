@@ -18,12 +18,12 @@ import {
 import { UserStateModel } from './user.state-model';
 
 const defaults = <UserStateModel>{
-  isLoading: false, // loading state
-  user: null, // the currently logged in user
-  userGroups: [], // users permission groups
-  isMemberOfSystemAdminGroup: false, // current user is system admin
-  allUsers: [], // other user data in the system
-  areUsersLoading: false, // loading state for all users
+  isLoading: false,
+  user: null,
+  userGroups: [],
+  isMemberOfSystemAdminGroup: false,
+  allUsers: [],
+  areUsersLoading: false,
 };
 
 /*

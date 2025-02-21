@@ -10,9 +10,9 @@ import { ResourceStateModel } from './resource.state-model';
 
 const defaults = <ResourceStateModel>{
   isLoading: false,
-  attachedProjects: {}, // projects attached to a resource
-  attachedUsers: {}, // users attached to a resource
-  selectedResource: null, // the current resource
+  attachedProjects: {},
+  attachedUsers: {},
+  selectedResource: null,
 };
 
 /*
