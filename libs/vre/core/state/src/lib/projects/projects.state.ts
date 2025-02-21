@@ -112,11 +112,11 @@ export class ProjectsState {
           }
 
           state = produce(state, draft => {
-            const index = draft.allProjects.findIndex(p => p.id === project.id);
+            const index = draft.allProjectsByIri.findIndex(p => p.id === project.id);
             if (index > -1) {
-              draft.allProjects[index] = project;
+              draft.allProjectsByIri[index] = project;
             } else {
-              draft.allProjects.push(project);
+              draft.allProjectsByIri.push(project);
             }
             draft.isLoading = false;
           });
