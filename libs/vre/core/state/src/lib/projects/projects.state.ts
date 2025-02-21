@@ -38,15 +38,7 @@ import {
 } from './projects.actions';
 import { ProjectsStateModel } from './projects.state-model';
 
-const defaults: ProjectsStateModel = {
-  isLoading: false,
-  isMembershipLoading: false,
-  hasLoadingErrors: false,
-  allProjectsByIri: [],
-  projectMembersByIri: {},
-  projectGroupsByIri: {},
-  restrictedViewSettings: {},
-};
+const defaults = new ProjectsStateModel();
 
 /*
   Provides data about projects, including their members, user groups, and settings.

@@ -17,14 +17,7 @@ import {
 } from './user.actions';
 import { UserStateModel } from './user.state-model';
 
-const defaults = <UserStateModel>{
-  isLoading: false,
-  user: null,
-  userGroups: [],
-  isMemberOfSystemAdminGroup: false,
-  allUsers: [],
-  areUsersLoading: false,
-};
+const defaults = new UserStateModel();
 
 /*
   Provides data about the currently logged-in user, other users, and user permission groups.

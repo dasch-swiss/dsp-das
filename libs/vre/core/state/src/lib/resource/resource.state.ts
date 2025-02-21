@@ -8,12 +8,7 @@ import { UserSelectors } from '../user/user.selectors';
 import { GetAttachedProjectAction, GetAttachedUserAction, SetCurrentResourceAction } from './resource.actions';
 import { ResourceStateModel } from './resource.state-model';
 
-const defaults = <ResourceStateModel>{
-  isLoading: false,
-  attachedProjects: {},
-  attachedUsers: {},
-  resource: null,
-};
+const defaults = new ResourceStateModel();
 
 /*
   Provides data about the current resource. Also attached data like users or projects to a resource.
@@ -118,6 +113,6 @@ export class ResourceState {
 
   @Action(SetCurrentResourceAction)
   setCurrentOntologyAction(ctx: StateContext<ResourceStateModel>, { resource }: SetCurrentResourceAction) {
-    ctx.patchState({ resource: resource });
+    ctx.patchState({ resource });
   }
 }

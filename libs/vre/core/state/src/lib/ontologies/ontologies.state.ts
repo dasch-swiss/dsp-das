@@ -41,15 +41,7 @@ import {
 } from './ontologies.actions';
 import { OntologiesStateModel } from './ontologies.state-model';
 
-const defaults: OntologiesStateModel = <OntologiesStateModel>{
-  isLoading: false,
-  ontologiesByIri: {},
-  hasLoadingErrors: false,
-  ontology: null,
-  canOntologyBeDeleted: false,
-  ontologyPropertiesByIri: [],
-  areOntologiesLoading: false,
-};
+const defaults = new OntologiesStateModel();
 
 /*
   Provides data about the ontologies in a project, resource viewer, ontology editor.
