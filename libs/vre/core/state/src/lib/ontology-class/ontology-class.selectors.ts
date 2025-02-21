@@ -11,6 +11,6 @@ export class OntologyClassSelectors {
 
   @Selector([OntologyClassState])
   static classItems(state: OntologyClassStateModel): IClassItemsKeyValuePairs {
-    return state.classItems;
+    return state.classItemsById;
   }
 }

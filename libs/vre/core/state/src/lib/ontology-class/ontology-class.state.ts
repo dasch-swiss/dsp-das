@@ -8,7 +8,7 @@ import { OntologyClassStateModel } from './ontology-class.state-model';
 
 const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
   isLoading: false,
-  classItems: {}, // Ontology class items grouped by resource class id.
+  classItemsById: {}, // Ontology class items grouped by resource class id.
 };
 
 /*
@@ -38,7 +38,7 @@ export class OntologyClassState {
       map((response: CountQueryResponse | ApiResponseError) => response as CountQueryResponse),
       tap({
         next: (countQueryResponse: CountQueryResponse) => {
-          const classItems = ctx.getState().classItems;
+          const classItems = ctx.getState().classItemsById;
           if (!classItems || !classItems[resClassId]) {
             classItems[resClassId] = { ontologyIri, classItemsCount: countQueryResponse.numberOfResults };
           } else {
@@ -48,7 +48,7 @@ export class OntologyClassState {
 
           ctx.setState({
             ...ctx.getState(),
-            classItems,
+            classItemsById: classItems,
           });
         },
       }),
