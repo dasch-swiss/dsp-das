@@ -12,7 +12,7 @@ export class UserSelectors {
 
   @Selector([UserState])
   static usersLoading(state: UserStateModel): boolean {
-    return state.usersLoading;
+    return state.areUsersLoading;
   }
 
   @Selector([UserState])
@@ -57,7 +57,7 @@ export class UserSelectors {
 
   @Selector([UserState])
   static userProjectAdminGroups(state: UserStateModel): string[] {
-    return state.userProjectAdminGroups;
+    return state.userGroups;
   }
 
   @Selector([UserState])

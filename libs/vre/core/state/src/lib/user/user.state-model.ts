@@ -3,8 +3,8 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 export class UserStateModel {
   isLoading = false;
   user: ReadUser | null = null;
-  userProjectAdminGroups: string[] = []; // before was projectAdmin
-  isMemberOfSystemAdminGroup = false; // before was sysAdmin
+  userGroups: string[] = [];
+  isMemberOfSystemAdminGroup = false;
   allUsers: ReadUser[] = [];
-  usersLoading = false;
+  areUsersLoading = false;
 }

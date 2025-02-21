@@ -20,10 +20,10 @@ import { UserStateModel } from './user.state-model';
 const defaults = <UserStateModel>{
   isLoading: false, // loading state
   user: null, // the currently logged in user
-  userProjectAdminGroups: [], // users permission groups
+  userGroups: [], // users permission groups
   isMemberOfSystemAdminGroup: false, // current user is system admin
   allUsers: [], // other user data in the system
-  usersLoading: false, // loading state for all users
+  areUsersLoading: false, // loading state for all users
 };
 
 /*
@@ -110,7 +110,7 @@ export class UserState {
 
     const state = ctx.getState();
     if (state.user?.username === user.username) {
-      state.userProjectAdminGroups = userProjectGroups;
+      state.userGroups = userProjectGroups;
       state.isMemberOfSystemAdminGroup = isMemberOfSystemAdminGroup;
     }
 
@@ -124,14 +124,14 @@ export class UserState {
 
   @Action(LoadUsersAction)
   loadUsersAction(ctx: StateContext<UserStateModel>): LoadUsersAction {
-    ctx.patchState({ usersLoading: true });
+    ctx.patchState({ areUsersLoading: true });
     return this._userApiService.list().pipe(
       take(1),
       tap({
         next: response => {
           ctx.setState({
             ...ctx.getState(),
-            usersLoading: false,
+            areUsersLoading: false,
             allUsers: response.users,
           });
         },
