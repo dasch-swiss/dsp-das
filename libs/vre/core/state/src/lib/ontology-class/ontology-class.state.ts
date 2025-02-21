@@ -6,10 +6,7 @@ import { finalize, map, take, tap } from 'rxjs/operators';
 import { ClearOntologyClassAction, LoadClassItemsCountAction } from './ontology-class.actions';
 import { OntologyClassStateModel } from './ontology-class.state-model';
 
-const defaults: OntologyClassStateModel = <OntologyClassStateModel>{
-  isLoading: false,
-  classItems: {}, // Ontology class items grouped by resource class id.
-};
+const defaults = new OntologyClassStateModel();
 
 /*
   Provides data about ontology class items, such as the number of resource items in a class.
@@ -38,7 +35,7 @@ export class OntologyClassState {
       map((response: CountQueryResponse | ApiResponseError) => response as CountQueryResponse),
       tap({
         next: (countQueryResponse: CountQueryResponse) => {
-          const classItems = ctx.getState().classItems;
+          const classItems = ctx.getState().classItemsById;
           if (!classItems || !classItems[resClassId]) {
             classItems[resClassId] = { ontologyIri, classItemsCount: countQueryResponse.numberOfResults };
           } else {
@@ -48,7 +45,7 @@ export class OntologyClassState {
 
           ctx.setState({
             ...ctx.getState(),
-            classItems,
+            classItemsById: classItems,
           });
         },
       }),

@@ -6,10 +6,7 @@ import { finalize, map, take, tap } from 'rxjs/operators';
 import { ClearListsAction, DeleteListNodeAction, LoadListsInProjectAction } from './lists.actions';
 import { ListsStateModel } from './lists.state-model';
 
-const defaults: ListsStateModel = {
-  isLoading: false,
-  listsInProject: [], // lists in a project
-};
+const defaults = new ListsStateModel();
 
 /*
   Provides data for the lists (Controlled Vocabularies) in a project.

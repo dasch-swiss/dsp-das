@@ -2,11 +2,11 @@ import { ReadOntology } from '@dasch-swiss/dsp-js';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 
 export class OntologiesStateModel {
-  isLoading: boolean | undefined;
-  hasLoadingErrors: boolean | undefined;
-  projectOntologies: IProjectOntologiesKeyValuePairs = {};
-  currentOntology: ReadOntology | null = null;
-  currentOntologyCanBeDeleted = false;
-  currentProjectOntologyProperties: OntologyProperties[] = [];
-  isOntologiesLoading = false;
+  isLoading: boolean | undefined = false;
+  hasLoadingErrors: boolean | undefined = false;
+  ontologiesByIri: IProjectOntologiesKeyValuePairs = {};
+  ontology: ReadOntology | null = null;
+  canOntologyBeDeleted = false;
+  ontologyPropertiesByIri: OntologyProperties[] = [];
+  areOntologiesLoading = false;
 }

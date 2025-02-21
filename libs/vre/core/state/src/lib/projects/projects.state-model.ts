@@ -6,8 +6,8 @@ export class ProjectsStateModel {
   isLoading = false;
   isMembershipLoading = false;
   hasLoadingErrors = false;
-  allProjects: ReadProject[] = [];
-  projectMembers: IKeyValuePairs<ReadUser> = {};
-  projectGroups: IKeyValuePairs<ReadGroup> = {};
-  projectRestrictedViewSettings: IKeyValuePair<ProjectRestrictedViewSettings | RestrictedViewResponse> = {};
+  allProjectsByIri: ReadProject[] = [];
+  projectMembersByIri: IKeyValuePairs<ReadUser> = {};
+  projectGroupsByIri: IKeyValuePairs<ReadGroup> = {};
+  restrictedViewSettings: IKeyValuePair<ProjectRestrictedViewSettings | RestrictedViewResponse> = {};
 }
