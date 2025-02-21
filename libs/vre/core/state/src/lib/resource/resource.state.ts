@@ -12,7 +12,7 @@ const defaults = <ResourceStateModel>{
   isLoading: false,
   attachedProjects: {}, // projects attached to a resource
   attachedUsers: {}, // users attached to a resource
-  resource: null, // the current resource
+  selectedResource: null, // the current resource
 };
 
 /*
@@ -118,6 +118,6 @@ export class ResourceState {
 
   @Action(SetCurrentResourceAction)
   setCurrentOntologyAction(ctx: StateContext<ResourceStateModel>, { resource }: SetCurrentResourceAction) {
-    ctx.patchState({ resource });
+    ctx.patchState({ selectedResource: resource });
   }
 }

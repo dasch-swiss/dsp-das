@@ -24,7 +24,7 @@ export class ResourceSelectors {
 
   @Selector([ResourceState])
   static resource(state: ResourceStateModel): DspResource | null {
-    return state.resource;
+    return state.selectedResource;
   }
 
   @Selector([ResourceState, ConfigState.getConfig, RouterSelectors.params])
@@ -39,7 +39,7 @@ export class ResourceSelectors {
     }
 
     const attachedProject = state.attachedProjects[resourceId].value.find(
-      u => u.id === state.resource?.res.attachedToProject
+      u => u.id === state.selectedResource?.res.attachedToProject
     );
     return attachedProject;
   }
