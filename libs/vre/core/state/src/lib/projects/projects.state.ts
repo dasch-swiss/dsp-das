@@ -42,10 +42,10 @@ const defaults: ProjectsStateModel = {
   isLoading: false,
   isMembershipLoading: false, // loading state of project membership
   hasLoadingErrors: false, // loading error state
-  allProjects: [], // all projects in the system grouped by project IRI
-  projectMembers: {}, // project members grouped by project IRI
-  projectGroups: {}, // project user groups grouped by project IRI
-  projectRestrictedViewSettings: {}, // project image settings grouped by project id
+  allProjectsByIri: [], // all projects in the system grouped by project IRI
+  projectMembersByIri: {}, // project members grouped by project IRI
+  projectGroupsByIri: {}, // project user groups grouped by project IRI
+  restrictedViewSettings: {}, // project image settings grouped by project id
 };
 
 /*
@@ -76,7 +76,7 @@ export class ProjectsState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: false,
-            allProjects: response.projects,
+            allProjectsByIri: response.projects,
           });
         },
         error: (error: ApiResponseError) => {
@@ -107,8 +107,8 @@ export class ProjectsState {
           const project = response.body.project;
 
           let state = ctx.getState();
-          if (!state.allProjects) {
-            state.allProjects = [];
+          if (!state.allProjectsByIri) {
+            state.allProjectsByIri = [];
           }
 
           state = produce(state, draft => {
@@ -161,8 +161,8 @@ export class ProjectsState {
   clearProjectsMembership(ctx: StateContext<ProjectsStateModel>) {
     return of(ctx.getState()).pipe(
       map(currentState => {
-        currentState.projectMembers = defaults.projectMembers;
-        currentState.projectGroups = defaults.projectGroups;
+        currentState.projectMembersByIri = defaults.projectMembersByIri;
+        currentState.projectGroupsByIri = defaults.projectGroupsByIri;
         ctx.patchState(currentState);
         return currentState;
       })
@@ -224,7 +224,7 @@ export class ProjectsState {
           ctx.setState({
             ...ctx.getState(),
             isMembershipLoading: false,
-            projectMembers: {
+            projectMembersByIri: {
               [projectIri]: { value: response.body.members },
             },
           });
@@ -260,7 +260,7 @@ export class ProjectsState {
           ctx.setState({
             ...ctx.getState(),
             isMembershipLoading: false,
-            projectGroups: groups,
+            projectGroupsByIri: groups,
           });
         },
       })
@@ -288,10 +288,10 @@ export class ProjectsState {
   @Action(SetProjectMemberAction)
   setProjectMember(ctx: StateContext<ProjectsStateModel>, { member }: SetProjectMemberAction) {
     const state = ctx.getState();
-    Object.keys(state.projectMembers).forEach(projectId => {
-      const index = state.projectMembers[projectId].value.findIndex(u => u.id === member.id);
+    Object.keys(state.projectMembersByIri).forEach(projectId => {
+      const index = state.projectMembersByIri[projectId].value.findIndex(u => u.id === member.id);
       if (index > -1) {
-        state.projectMembers[projectId].value[index] = member;
+        state.projectMembersByIri[projectId].value[index] = member;
       }
     });
 
@@ -309,7 +309,7 @@ export class ProjectsState {
         next: response => {
           ctx.setState({
             ...ctx.getState(),
-            projectRestrictedViewSettings: {
+            restrictedViewSettings: {
               [ProjectService.IriToUuid(projectIri)]: { value: response.settings },
             },
           });
@@ -337,7 +337,7 @@ export class ProjectsState {
           next: response => {
             ctx.setState({
               ...ctx.getState(),
-              projectRestrictedViewSettings: {
+              restrictedViewSettings: {
                 [projectUuid]: { value: response },
               },
             });

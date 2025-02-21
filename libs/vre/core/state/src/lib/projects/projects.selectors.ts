@@ -24,19 +24,19 @@ export class ProjectsSelectors {
   // get list of all projects the user is NOT a member of
   @Selector([ProjectsState, UserSelectors.userActiveProjects])
   static otherProjects(state: ProjectsStateModel, userActiveProjects: StoredProject[]): StoredProject[] {
-    return state.allProjects.filter(
+    return state.allProjectsByIri.filter(
       project => userActiveProjects.findIndex(userProj => userProj.id === project.id) === -1
     );
   }
 
   @Selector([ProjectsState])
   static allProjects(state: ProjectsStateModel): StoredProject[] {
-    return state.allProjects;
+    return state.allProjectsByIri;
   }
 
   @Selector([ProjectsState])
   static allProjectShortcodes(state: ProjectsStateModel): string[] {
-    return state.allProjects.map(project => project.shortcode);
+    return state.allProjectsByIri.map(project => project.shortcode);
   }
 
   @Selector([ProjectsState])
@@ -56,27 +56,27 @@ export class ProjectsSelectors {
 
   @Selector([ProjectsState])
   static projectMembers(state: ProjectsStateModel): IKeyValuePairs<ReadUser> {
-    return state.projectMembers;
+    return state.projectMembersByIri;
   }
 
   @Selector([ProjectsState])
   static projectGroups(state: ProjectsStateModel): IKeyValuePairs<ReadGroup> {
-    return state.projectGroups;
+    return state.projectGroupsByIri;
   }
 
   @Selector([ProjectsState])
   static allActiveProjects(state: ProjectsStateModel): ReadProject[] {
-    return state.allProjects.filter(project => project.status === true);
+    return state.allProjectsByIri.filter(project => project.status === true);
   }
 
   @Selector([ProjectsState])
   static allInactiveProjects(state: ProjectsStateModel): ReadProject[] {
-    return state.allProjects.filter(project => project.status === false);
+    return state.allProjectsByIri.filter(project => project.status === false);
   }
 
   @Selector([ProjectsState])
   static allNotSystemProjects(state: ProjectsStateModel): StoredProject[] {
-    return state.allProjects.filter(
+    return state.allProjectsByIri.filter(
       project =>
         project.status && project.id !== Constants.SystemProjectIRI && project.id !== Constants.DefaultSharedOntologyIRI
     );
@@ -85,7 +85,7 @@ export class ProjectsSelectors {
   @Selector([ProjectsState, RouterSelectors.params])
   static currentProject(state: ProjectsStateModel, params: Params): ReadProject | undefined {
     const uuid = params[`${RouteConstants.uuidParameter}`];
-    const project = state.allProjects.find(p => ProjectService.IriToUuid(p.id) === uuid);
+    const project = state.allProjectsByIri.find(p => ProjectService.IriToUuid(p.id) === uuid);
     return project;
   }
 
@@ -168,9 +168,9 @@ export class ProjectsSelectors {
     params: Params
   ): ProjectRestrictedViewSettings | RestrictedViewResponse | undefined {
     const projectUuid = params[`${RouteConstants.uuidParameter}`];
-    return !projectUuid || !state.projectRestrictedViewSettings[projectUuid]
+    return !projectUuid || !state.restrictedViewSettings[projectUuid]
       ? undefined
-      : state.projectRestrictedViewSettings[projectUuid].value;
+      : state.restrictedViewSettings[projectUuid].value;
   }
 
   @Selector([ProjectsState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
@@ -182,6 +182,6 @@ export class ProjectsSelectors {
   ): ReadProject | undefined {
     const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
     if (!projectIri) return undefined;
-    return state.allProjects.find(p => p.id === projectIri);
+    return state.allProjectsByIri.find(p => p.id === projectIri);
   }
 }
