@@ -31,19 +31,23 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 8px" />
 
-      <div *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file">
-        <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;" data-cy="stillimage-tab-group">
-          <mat-tab label="Upload Image">
-            <app-upload-control
-              [formControl]="form.controls.file"
-              [representation]="fileRepresentation"
-              data-cy="upload-control" />
-          </mat-tab>
-          <mat-tab label="External IIIF URL">
-            <app-third-part-iiif [formControl]="form.controls.file" />
-          </mat-tab>
-        </mat-tab-group>
-      </div>
+      <mat-tab-group
+        *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file"
+        preserveContent
+        style="max-width: 700px; min-height: 320px;"
+        data-cy="stillimage-tab-group">
+        <mat-tab label="Upload Image">
+          <app-upload-control
+            [formControl]="form.controls.file"
+            [representation]="fileRepresentation"
+            data-cy="upload-control" />
+        </mat-tab>
+
+        <mat-tab label="External IIIF URL">
+          <app-third-part-iiif [formControl]="form.controls.file" />
+        </mat-tab>
+      </mat-tab-group>
+
       <div class="my-grid">
         <div style="display: flex">
           <h3
