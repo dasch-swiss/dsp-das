@@ -33,7 +33,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-property-value',
   template: ` <div
     data-cy="property-value"
-    style="position: relative; min-height: 40px; width: 100%"
+    class="my-property-value"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
@@ -45,7 +45,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
-      <div class="item" [ngClass]="{ hover: displayMode }">
+      <div class="item" [ngClass]="{ hover: displayMode, bg: true }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
@@ -70,8 +70,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   styleUrls: ['./property-value.component.scss'],
 })
 export class PropertyValueComponent implements OnInit {
-  @Input() itemTpl!: TemplateRef<any>;
-  @Input() index!: number;
+  @Input({ required: true }) itemTpl!: TemplateRef<any>;
+  @Input({ required: true }) index!: number;
 
   initialFormValue!: { item: any; comment: string | null };
 
