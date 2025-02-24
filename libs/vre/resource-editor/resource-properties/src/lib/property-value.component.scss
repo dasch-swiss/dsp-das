@@ -1,22 +1,21 @@
 @use '../../../../../../apps/dsp-app/src/styles/config' as *;
 
-.item {
-  flex: 1;
-  padding: 16px 8px;
-
-  &.highlighted {
-    background: $yellow_100;
-  }
-
-  &.hover:hover {
-    background: $primary_100;
-  }
-}
-
 :host ::ng-deep .app-progress-indicator {
   margin: 0 auto !important;
 }
 
 .pos-relative {
   position: relative;
+}
+
+.resource-editor-value {
+  flex: 1;
+
+  &.highlighted {
+    background: $yellow_100;
+  }
+
+  &.edit {
+    background: inherit;
+  }
 }

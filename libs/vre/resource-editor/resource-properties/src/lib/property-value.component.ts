@@ -46,7 +46,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
-      <div class="item" [ngClass]="{ hover: displayMode, highlighted: isHighlighted && displayMode }">
+      <div class="resource-editor-value" [ngClass]="{ edit: !displayMode, highlighted: isHighlighted && displayMode }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
