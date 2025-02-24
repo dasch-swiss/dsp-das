@@ -64,12 +64,13 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           {{ prop.propDef.label
           }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
         </h3>
-        <div style="flex: 1" [attr.data-cy]="prop.propDef.label">
-          <app-property-value-switcher
-            [myProperty]="prop"
-            [formArray]="form.controls.properties.controls[prop.propDef.id]"
-            [resourceClassIri]="resourceClassIri" />
-        </div>
+
+        <app-property-value-switcher
+          style="flex: 1"
+          [attr.data-cy]="prop.propDef.label"
+          [myProperty]="prop"
+          [formArray]="form.controls.properties.controls[prop.propDef.id]"
+          [resourceClassIri]="resourceClassIri" />
       </div>
 
       <div style="display: flex; justify-content: end">
