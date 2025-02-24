@@ -2,6 +2,7 @@
 
 .item {
   flex: 1;
+  padding: 8px 4px;
 
   &.highlighted {
     background: $yellow_100;

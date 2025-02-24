@@ -19,9 +19,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       }
     `,
   ],
-  template: ` <div *ngFor="let group of propertyValueService.formArray.controls; let index = index">
-      <app-property-value style="width: 100%" [itemTpl]="itemTpl" [index]="index" />
-    </div>
+  template: ` <app-property-value
+      *ngFor="let group of propertyValueService.formArray.controls; let index = index"
+      [itemTpl]="itemTpl"
+      [index]="index"
+      style="width: 100%" />
+
     <button
       mat-icon-button
       (click)="addItem()"
