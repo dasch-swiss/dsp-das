@@ -47,16 +47,7 @@ import { PropertyValueService } from './property-value.service';
       </div>
     </div>
 
-    <ng-template #editTemplate>
-      <button
-        mat-button
-        class="edit"
-        matTooltip="undo"
-        data-cy="action-bubble-undo"
-        (click)="$event.stopPropagation(); editAction.emit()">
-        <mat-icon>undo</mat-icon>
-      </button>
-    </ng-template>
+    <ng-template #editTemplate> </ng-template>
   `,
   animations: [
     trigger('simpleFadeAnimation', [

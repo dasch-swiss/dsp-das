@@ -52,19 +52,29 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
         <app-property-value-comment [displayMode]="displayMode" [control]="group?.controls.comment" />
       </div>
-      <button
-        (click)="onSave()"
-        mat-icon-button
-        data-cy="save-button"
+      <div
         *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
-        [disabled]="
-          group.value.item === null ||
-          group.value.item === '' ||
-          (!isBoolean && valueIsUnchanged) ||
-          (isBoolean && isRequired && valueIsUnchanged)
-        ">
-        <mat-icon>save</mat-icon>
-      </button>
+        style="display: flex; flex-direction: column">
+        <button
+          (click)="goToDisplayMode()"
+          mat-icon-button
+          *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading">
+          <mat-icon>undo</mat-icon>
+        </button>
+        <button
+          (click)="onSave()"
+          mat-icon-button
+          data-cy="save-button"
+          [disabled]="
+            group.value.item === null ||
+            group.value.item === '' ||
+            (!isBoolean && valueIsUnchanged) ||
+            (isBoolean && isRequired && valueIsUnchanged)
+          ">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+
       <app-progress-indicator *ngIf="loading" />
     </div>
   </div>`,
@@ -244,6 +254,10 @@ export class PropertyValueComponent implements OnInit {
         this._setInitialValue();
         this._cdr.detectChanges();
       });
+  }
+
+  goToDisplayMode() {
+    this.propertyValueService.toggleOpenedValue(this.index);
   }
 
   private _getUpdatedValue(index: number) {
