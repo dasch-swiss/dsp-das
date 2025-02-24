@@ -51,7 +51,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <div style="display: flex">
         <h3
           data-cy="resource-label"
-          class="mat-subtitle-2 my-grid-h3"
+          class="mat-subtitle-2 grid-h3"
           matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
           matTooltipPosition="above">
           Resource label *
@@ -60,10 +60,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       </div>
 
       <div
-        class="my-row"
+        class="row"
         *ngFor="let prop of myProperties; let last = last"
         [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'">
-        <h3 class="my-grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+        <h3 class="grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
           {{ prop.propDef.label
           }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
         </h3>
@@ -95,8 +95,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.my-row { display: flex}',
-    '.my-grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
+    '.row { display: flex}',
+    '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {
