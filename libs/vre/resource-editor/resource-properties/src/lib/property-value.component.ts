@@ -38,7 +38,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
-      *ngIf="!propertyValueService.keepEditMode && showBubble"
+      *ngIf="
+        !propertyValueService.keepEditMode && showBubble && (propertyValueService.lastOpenedItem$ | async) !== index
+      "
       [date]="propertyValueService.editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
       (editAction)="propertyValueService.toggleOpenedValue(index)"
