@@ -32,7 +32,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value',
-  template: ` <div data-cy="property-value" (mouseenter)="showBubble = true" (mouseleave)="showBubble = false">
+  template: ` <div
+    data-cy="property-value"
+    class="pos-relative"
+    (mouseenter)="showBubble = true"
+    (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
       [editMode]="!displayMode"
       *ngIf="!propertyValueService.keepEditMode && showBubble"
