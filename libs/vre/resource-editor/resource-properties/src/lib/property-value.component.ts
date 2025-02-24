@@ -55,10 +55,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       </div>
       <div
         *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading"
-        style="display: flex; flex-direction: column">
+        style="display: flex; flex-direction: column; padding-top: 16px">
         <button
           (click)="goToDisplayMode()"
           mat-icon-button
+          color="primary"
           *ngIf="!displayMode && !propertyValueService.keepEditMode && !loading">
           <mat-icon>undo</mat-icon>
         </button>
@@ -66,6 +67,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           (click)="onSave()"
           mat-icon-button
           data-cy="save-button"
+          color="primary"
           [disabled]="
             group.value.item === null ||
             group.value.item === '' ||
@@ -76,7 +78,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         </button>
       </div>
 
-      <app-progress-indicator *ngIf="loading" />
+      <app-progress-indicator *ngIf="loading" [size]="'xsmall'" style="margin-top: 8px" />
     </div>
   </div>`,
   styleUrls: ['./property-value.component.scss'],
