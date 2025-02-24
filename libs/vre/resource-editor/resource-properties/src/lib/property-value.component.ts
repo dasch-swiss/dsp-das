@@ -9,6 +9,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiResponseError,
   Cardinality,
@@ -31,11 +32,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value',
-  template: ` <div
-    data-cy="property-value"
-    class="my-property-value"
-    (mouseenter)="showBubble = true"
-    (mouseleave)="showBubble = false">
+  template: ` <div data-cy="property-value" (mouseenter)="showBubble = true" (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
       [editMode]="!displayMode"
       *ngIf="!propertyValueService.keepEditMode && showBubble"
@@ -45,7 +42,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
-      <div class="item" [ngClass]="{ hover: displayMode, bg: true }">
+      <div class="item" [ngClass]="{ hover: displayMode, highlighted: isHighlighted && displayMode }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
@@ -80,6 +77,7 @@ export class PropertyValueComponent implements OnInit {
   loading = false;
 
   subscription!: Subscription;
+  isHighlighted!: boolean;
 
   protected readonly Cardinality = Cardinality;
 
@@ -111,13 +109,16 @@ export class PropertyValueComponent implements OnInit {
     private _notification: NotificationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    @Optional() private _resourceFetcherService: ResourceFetcherService
+    @Optional() private _resourceFetcherService: ResourceFetcherService,
+    private _route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this._setInitialValue();
     this._setupDisplayMode();
     this._watchAndSetupCommentStatus();
+
+    this._highlightArkValue();
   }
 
   private _setInitialValue() {
@@ -265,5 +266,11 @@ export class PropertyValueComponent implements OnInit {
     updateResource.type = resource.type;
     updateResource.value = this._getUpdatedValue(index);
     return updateResource;
+  }
+
+  private _highlightArkValue() {
+    this.isHighlighted =
+      this._route.snapshot.queryParams['highlightValue'] ===
+      this.propertyValueService.editModeData?.values[this.index].uuid;
   }
 }

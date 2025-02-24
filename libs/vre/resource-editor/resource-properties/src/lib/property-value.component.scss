@@ -3,6 +3,10 @@
 .item {
   flex: 1;
 
+  &.highlighted {
+    background: $yellow_100;
+  }
+
   &.hover:hover {
     background: $primary_100;
   }
@@ -12,9 +16,4 @@
   margin: 0 auto !important;
 }
 
-.my-property-value {
-}
 
-.bg {
-  background: green;
-}
