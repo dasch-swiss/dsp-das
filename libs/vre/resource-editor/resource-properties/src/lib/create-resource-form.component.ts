@@ -59,8 +59,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
       </div>
 
-      <div class="my-row" *ngFor="let prop of myProperties">
-        <h3 class="my-grid-h3 label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+      <div
+        class="my-row"
+        *ngFor="let prop of myProperties; let last = last"
+        [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'">
+        <h3 class="my-grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
           {{ prop.propDef.label
           }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
         </h3>
@@ -92,10 +95,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.my-row { display: flex!important; border-bottom: 1px solid rgba(33,33,33,.1)}',
-    '.my-row:last-child { border-bottom: 0}',
-    '.my-grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
-    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0; text-align: right;flex-shrink: 0}',
+    '.my-row { display: flex}',
+    '.my-grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {
