@@ -28,7 +28,7 @@ import { CompoundService } from './compound/compound.service';
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
   representationsToDisplay!: ReadFileValue;
-  isCompoundNavigation = false;
+  isCompoundNavigation!: boolean;
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
@@ -40,6 +40,7 @@ export class ResourceComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    this.isCompoundNavigation = false;
     this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource);
     this._onInit(this.resource);
   }
