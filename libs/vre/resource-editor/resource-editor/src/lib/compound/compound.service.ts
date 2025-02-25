@@ -30,16 +30,16 @@ export class CompoundService {
     private _store: Store
   ) {}
 
-  reset() {
-    this.compoundPosition = undefined;
-    this._resource = undefined;
-    this.incomingResource.next(undefined);
-  }
-
   onInit(_compound: DspCompoundPosition, resource: DspResource) {
     this.compoundPosition = _compound;
     this._resource = resource;
     this.openPage(_compound.page);
+  }
+
+  reset() {
+    this.compoundPosition = undefined;
+    this._resource = undefined;
+    this.incomingResource.next(undefined);
   }
 
   openPage(page: number) {
