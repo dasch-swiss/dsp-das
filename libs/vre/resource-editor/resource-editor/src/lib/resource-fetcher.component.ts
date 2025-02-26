@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -10,25 +11,20 @@ import { Subscription } from 'rxjs';
 })
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
+  @Output() resourceIsDeleted = new EventEmitter<void>();
 
   resource?: DspResource;
+  private _ngUnsubscribe = new Subject<void>();
 
-  private _subscription?: Subscription;
-
-  constructor(
-    private _cdr: ChangeDetectorRef,
-    private _resourceFetcherService: ResourceFetcherService
-  ) {}
+  constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnChanges() {
     this._resourceFetcherService.onDestroy();
     this._resourceFetcherService.onInit(this.resourceIri);
 
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-    }
+    this._unsubscribe();
 
-    this._subscription = this._resourceFetcherService.resource$.subscribe(resource => {
+    this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
       if (resource === null) {
         return;
       }
@@ -37,16 +33,21 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         return;
       }
 
-      this._reloadEditor(resource);
+      this.resource = resource;
     });
-  }
 
-  private _reloadEditor(resource: DspResource) {
-    this.resource = resource;
-    this._cdr.detectChanges();
+    this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
+      this.resourceIsDeleted.emit();
+    });
   }
 
   ngOnDestroy() {
     this._resourceFetcherService.onDestroy();
+    this._unsubscribe();
+  }
+
+  private _unsubscribe() {
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 }
