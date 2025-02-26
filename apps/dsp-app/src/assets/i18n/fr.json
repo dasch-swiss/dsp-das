@@ -2,29 +2,19 @@
   "overview": {
     "title": "Browse Research Projects",
     "myProjects": "My Projects",
-    "browseOtherResearchProjects": "Browse Other Research Projects",
-    "firstParagraph": "Welcome to DSP-APP — a web-based virtual research environment that helps researchers in the humanities to deal with digital data. It allows the annotation and linkage of arbitrary sources such as digital texts, still and moving images, and sound.",
-    "secondParagraph": "DSP-APP is one (generic) user interface to handle the data from the main repository called ",
-    "projectsIntro": "Public projects in DSP"
-  },
-  "list": {
-    "title": {
-      "active": "Active",
-      "inactive": "Deactivated"
-    }
+    "browseOtherResearchProjects": "Browse Other Research Projects"
   },
   "addProjectMember": {
     "title": "Add project member",
     "description": "Increase your team",
-    "select": "Select from list...",
+    "select": "Select from list ...",
     "usersLoading": "Loading users ...",
     "newUser": "New user"
   },
   "usersList": {
     "sortProps": {
       "familyName": "Last name",
-      "givenName": "First name",
-      "sortTitle": "Sort by "
+      "givenName": "First name"
     }
   },
   "projects": {
@@ -57,9 +47,6 @@
         "passwordValidation": "Password incorrect"
       }
     }
-  },
-  "formDialog": {
-    "discard": "You're sure to close the form and discard all changes?"
   },
   "form": {
     "action": {
@@ -195,10 +182,6 @@
     }
   },
   "uiControls": {
-    "icon": {
-      "true": "Yes",
-      "false": "No"
-    },
     "pager": {
       "of": "of",
       "previous": "Previous",
@@ -208,9 +191,6 @@
   "resource": {
     "properties": "Properties",
     "comment": "Comment",
-    "propertyLabels": {
-      "linkedProperty": "Ressource liée"
-    },
     "incomingLink": {
       "tooltip": "Indicates that this resource is referred to by another resource",
       "label": "has incoming link"
@@ -260,7 +240,6 @@
     "nextPage": "Page suivante",
     "inputTooltip": "Saisir le numéro de page et appuyer sur Entrée pour aller à la page.",
     "previousPage": "Page précédente",
-    "rangeLabelOf": "sur",
-    "rangeLabelZero": "Page 1 sur 1"
+    "rangeLabelOf": "sur"
   }
 }
