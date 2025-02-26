@@ -109,10 +109,10 @@ export class PropertiesDisplayComponent implements OnChanges {
   }
 
   openAnnotationInNewTab() {
+    const annotationId = encodeURIComponent(this.resource.res.id);
+    const resPath = this.resourceService.getResourcePath(this.parentResourceId);
     window.open(
-      `${this.resourceService.getResourcePath(this.parentResourceId)}?${RouteConstants.annotationQueryParam}=${
-        this.resource.res.id
-      }`,
+      `/${RouteConstants.resource}${resPath}?${RouteConstants.annotationQueryParam}=${annotationId}`,
       '_blank'
     );
   }
