@@ -21,7 +21,7 @@ import {
   UsersComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
-import { ResourcePage2Component, ResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { ResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
@@ -171,17 +171,7 @@ const routes: Routes = [
     ],
   },
   {
-    path: RouteConstants.resource,
-    children: [
-      {
-        path: RouteConstants.projectResourceValueRelative,
-        component: ResourcePage2Component,
-      },
-      {
-        path: RouteConstants.projectResourceRelative,
-        component: ResourcePage2Component,
-      },
-    ],
+    path: RouteConstants.projectResourceRelative,
     runGuardsAndResolvers: 'always',
   },
   {
