@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Cardinality, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
-import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, PropertyInfoValues, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertiesDisplayService } from './properties-display.service';
@@ -13,7 +14,10 @@ import { PropertiesDisplayService } from './properties-display.service';
       <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
-        <app-resource-toolbar *ngIf="displayLabel" [resource]="resource" [linkToNewTab]="linkToNewTab" />
+        <app-annotation-toolbar
+          *ngIf="displayLabel"
+          [resource]="resource"
+          (openInNewTabClicked)="openAnnotationInNewTab()" />
       </div>
     </div>
 
@@ -79,6 +83,7 @@ export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
   @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
+  @Input() parentResourceId = '';
 
   protected readonly cardinality = Cardinality;
 
@@ -92,11 +97,23 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   editableProperties: PropertyInfoValues[] = [];
 
-  constructor(private _store: Store) {}
+  constructor(
+    private resourceService: ResourceService,
+    private _store: Store
+  ) {}
 
   ngOnChanges() {
     this.editableProperties = this.resource.resProps.filter(
       prop => (prop.propDef as ResourcePropertyDefinition).isEditable
+    );
+  }
+
+  openAnnotationInNewTab() {
+    window.open(
+      `${this.resourceService.getResourcePath(this.parentResourceId)}?${RouteConstants.annotationQueryParam}=${
+        this.resource.res.id
+      }`,
+      '_blank'
     );
   }
 

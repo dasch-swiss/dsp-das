@@ -18,7 +18,7 @@ import { filter } from 'rxjs/operators';
         matTooltipPosition="above">
         {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
       </h3>
-      <app-resource-toolbar [resource]="resource" [showEditLabel]="false" />
+      <app-resource-toolbar [resource]="resource" />
     </div>
     <div class="resource-label" style="display: flex; justify-content: space-between">
       <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>

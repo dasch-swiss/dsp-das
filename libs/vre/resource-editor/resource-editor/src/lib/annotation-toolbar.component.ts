@@ -1,20 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { RegionService, ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
+  EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-resource-toolbar',
+  selector: 'app-annotation-toolbar',
   template: `
     <span class="action" [class.deleted]="resource.res.isDeleted">
       <button
@@ -24,7 +25,7 @@ import { filter } from 'rxjs/operators';
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
         [disabled]="resource.res.isDeleted"
-        (click)="openResource()">
+        (click)="openInNewTabClicked.emit()">
         <mat-icon>open_in_new</mat-icon>
       </button>
       <!-- Share resource: copy ark url, add to favorites or open in new tab -->
@@ -41,11 +42,10 @@ import { filter } from 'rxjs/operators';
       </button>
 
       <app-permission-info [resource]="resource.res" />
-      <!-- more menu with: delete, erase resource -->
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        *ngIf="userCanDelete || (isAdmin$ | async)"
+        *ngIf="(userCanEdit && showEditLabel) || userCanDelete"
         mat-icon-button
         class="more-menu"
         matTooltip="More"
@@ -63,7 +63,7 @@ import { filter } from 'rxjs/operators';
         matTooltipPosition="above"
         data-cy="copy-ark-url-button"
         [cdkCopyToClipboard]="resource.res.versionArkUrl"
-        (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
+        (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
       </button>
@@ -73,13 +73,24 @@ import { filter } from 'rxjs/operators';
         data-cy="copy-internal-link-button"
         matTooltipPosition="above"
         [cdkCopyToClipboard]="resource.res.id"
-        (click)="notification.openSnackBar('Internal link copied to clipboard!')">
+        (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy internal link to clipboard
       </button>
     </mat-menu>
 
     <mat-menu #more="matMenu" class="res-more-menu">
+      <button
+        *ngIf="showEditLabel"
+        [disabled]="!userCanEdit"
+        data-cy="resource-toolbar-edit-resource-button"
+        mat-menu-item
+        matTooltip="Edit the label of this resource"
+        matTooltipPosition="above"
+        (click)="editResourceLabel()">
+        <mat-icon>edit</mat-icon>
+        Edit label
+      </button>
       <button
         data-cy="resource-toolbar-delete-resource-button"
         [disabled]="!userCanDelete"
@@ -114,24 +125,44 @@ import { filter } from 'rxjs/operators';
     `,
   ],
 })
-export class ResourceToolbarComponent {
+export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: DspResource;
+  @Input() showEditLabel = true;
+
+  @Output() openInNewTabClicked = new EventEmitter<void>();
 
   isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+
+  get userCanEdit() {
+    return ResourceUtil.userCanEdit(this.resource.res);
+  }
 
   get userCanDelete() {
     return ResourceUtil.userCanDelete(this.resource.res);
   }
 
+  get isRegion() {
+    return this.resource.res.type.split('#')[1] === 'Region';
+  }
+
   constructor(
     protected notification: NotificationService,
-    private _resourceService: ResourceService,
+    private _regionService: RegionService,
     private _dialog: MatDialog,
+    private _resourceFetcher: ResourceFetcherService,
     private _store: Store
   ) {}
 
-  openResource() {
-    window.open(`/resource${this._resourceService.getResourcePath(this.resource.res.id)}`, '_blank');
+  editResourceLabel() {
+    this._dialog
+      .open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
+        data: this.resource.res,
+      })
+      .afterClosed()
+      .pipe(filter(answer => !!answer))
+      .subscribe(answer => {
+        this._resourceFetcher.reload();
+      });
   }
 
   deleteResource() {
@@ -140,7 +171,7 @@ export class ResourceToolbarComponent {
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this._resourceService.resourceDeleted.next(this.resource.res.id);
+        this._afterResourceDeleted();
       });
   }
 
@@ -150,7 +181,13 @@ export class ResourceToolbarComponent {
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this._resourceService.resourceDeleted.next(this.resource.res.id);
+        this._afterResourceDeleted();
       });
+  }
+
+  private _afterResourceDeleted() {
+    if (this.isRegion) {
+      this._regionService.updateRegions$().pipe(take(1)).subscribe();
+    }
   }
 }

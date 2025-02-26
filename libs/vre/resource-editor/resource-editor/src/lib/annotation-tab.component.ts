@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
     data-cy="annotation-border">
     <app-properties-display
       [resource]="annotation"
+      [parentResourceId]="resource.res.id"
       [displayLabel]="true"
       [linkToNewTab]="
         resourceService.getResourcePath(resource.res.id) +
