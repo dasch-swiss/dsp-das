@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Cardinality, ReadResource, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
-import { DspResource, PropertyInfoValues, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertiesDisplayService } from './properties-display.service';
@@ -14,10 +13,7 @@ import { PropertiesDisplayService } from './properties-display.service';
       <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
       <div style="display: flex; justify-content: end; flex: 1">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
-        <app-annotation-toolbar
-          *ngIf="displayLabel"
-          [resource]="resource"
-          (openInNewTabClicked)="openAnnotationInNewTab()" />
+        <app-annotation-toolbar *ngIf="displayLabel" [resource]="resource.res" [parentResourceId]="parentResourceId" />
       </div>
     </div>
 
@@ -97,23 +93,11 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   editableProperties: PropertyInfoValues[] = [];
 
-  constructor(
-    private resourceService: ResourceService,
-    private _store: Store
-  ) {}
+  constructor(private _store: Store) {}
 
   ngOnChanges() {
     this.editableProperties = this.resource.resProps.filter(
       prop => (prop.propDef as ResourcePropertyDefinition).isEditable
-    );
-  }
-
-  openAnnotationInNewTab() {
-    const annotationId = encodeURIComponent(this.resource.res.id);
-    const resPath = this.resourceService.getResourcePath(this.parentResourceId);
-    window.open(
-      `/${RouteConstants.resource}${resPath}?${RouteConstants.annotationQueryParam}=${annotationId}`,
-      '_blank'
     );
   }
 
