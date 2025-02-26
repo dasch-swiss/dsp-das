@@ -55,10 +55,7 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this._resourceFetcherService.onDestroy();
-    this._unsubscribe();
-  }
 
-  private _unsubscribe() {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
   }
