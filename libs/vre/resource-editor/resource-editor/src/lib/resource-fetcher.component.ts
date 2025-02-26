@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject } from 'rxjs';
@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
   `,
   providers: [ResourceFetcherService],
 })
-export class ResourceFetcherComponent implements OnChanges, OnDestroy {
+export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
 
   resource?: DspResource;
@@ -26,13 +26,7 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
 
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
-  ngOnChanges() {
-    this.loading = true;
-    this._resourceFetcherService.onDestroy();
-    this._resourceFetcherService.onInit(this.resourceIri);
-
-    this._unsubscribe();
-
+  ngOnInit() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
       if (resource === null) {
         return;
@@ -51,6 +45,12 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
     this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
       this.resource = undefined;
     });
+  }
+
+  ngOnChanges() {
+    this.loading = true;
+    this._resourceFetcherService.onDestroy();
+    this._resourceFetcherService.onInit(this.resourceIri);
   }
 
   ngOnDestroy() {
