@@ -115,15 +115,15 @@ export class UsersListComponent {
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
 
   constructor(
-    private _userApiService: UserApiService,
-    private _matDialog: MatDialog,
+    private _actions$: Actions,
     private _dialog: DialogService,
+    private _matDialog: MatDialog,
     private _route: ActivatedRoute,
     private _router: Router,
     private _sortingService: SortingService,
     private _store: Store,
-    private _actions$: Actions,
-    private _ts: TranslateService
+    private _ts: TranslateService,
+    private _userApiService: UserApiService
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe((params: Params) => {
