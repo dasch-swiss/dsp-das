@@ -94,7 +94,6 @@
         "edit": "Edit profile",
         "profile": "User profile",
         "delete": "Suspend user account",
-        "deleteHint": "You're sure to delete this user?",
         "deleteButton": "Suspend user account now",
         "password": "Update password",
         "ownPasswordSuccess": "You have successfully updated your password.",
@@ -107,34 +106,14 @@
         "shortcode": "Short code",
         "shortname": "Short name",
         "longname": "Project name",
-        "institution": "Institution",
-        "logo": {
-          "upload": "Upload a logo",
-          "or": "OR",
-          "url": "Set an URL to the logo file",
-          "name": "Logo file name or URL"
-        },
         "keywords": "Keywords"
-      },
-      "title": {
-        "new": "Create new",
-        "edit": "Update project",
-        "profile": "Research project",
-        "editSuccess": "You have successfully updated this project.",
-        "deactivate": "Deactivate project",
-        "deactivateHint": "You're sure to deactivate this project?",
-        "deactivateButton": "Deactivate project now",
-        "activate": "Do you want to reactivate?",
-        "activateButton": "Reactivate project now"
       },
       "imageSettings": {
         "off": "Off",
         "isWatermark": "Apply watermark",
         "ratio": "Ratio",
-        "fixed": "Fixed width",
         "restrictImageSize": "Restrict image size",
         "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
-        "percentageValue": "Percentage value",
         "percentage": "Percentage",
         "updateConfirmation": "You have successfully updated the project image settings.",
         "info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options.",
