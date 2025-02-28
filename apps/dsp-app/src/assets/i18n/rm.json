@@ -120,33 +120,14 @@
         "restrictions": "Image settings can only be applied for the resources which have the restricted view permissions set."
       }
     },
-    "member": {
-      "select": {
-        "project": "Select project",
-        "user": "Select project member",
-        "group": "Select permission group"
-      },
-      "title": {
-        "project": "Project membership",
-        "user": "Members in the project",
-        "group": "Permissions"
-      }
-    },
     "lists": {
       "title": {
-        "deleteList": "Delete controlled vocabulary",
-        "deleteListNode": "Delete controlled vocabulary node"
+        "deleteList": "Delete controlled vocabulary"
       }
     },
     "resource": {
       "title": {
-        "new": "Create new",
-        "edit": "Update resource",
-        "profile": "Resource",
-        "editSuccess": "You have successfully updated this resource.",
-        "delete": "Delete this resource",
-        "deleteHint": "You're sure to delete this resource?",
-        "deleteButton": "Delete resource now"
+        "delete": "Delete this resource"
       }
     }
   },
@@ -171,11 +152,6 @@
     "footnotes": "Footnotes",
     "permissions": {
       "groups": {
-        "projectAdmin": "Project Admin",
-        "creator": "Creator",
-        "projectMember": "Project Member",
-        "knownUser": "Known User",
-        "unknownUser": "Unknown User",
         "usersPermissions": "Your permissions"
       },
       "interactions": {

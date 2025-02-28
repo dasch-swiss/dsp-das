@@ -120,16 +120,9 @@
         "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind."
       }
     },
-    "member": {
-      "select": {
-        "project": "Projekt wählen",
-        "user": "Benutzer wählen",
-        "group": "Berechtigungsgruppe wählen"
-      },
+    "lists": {
       "title": {
-        "project": "Mitglied im Projekt",
-        "user": "Mitglieder im Projekt",
-        "group": "Berechtigungen"
+        "deleteList": "Delete controlled vocabulary"
       }
     }
   },
@@ -154,11 +147,6 @@
     "footnotes": "Fussnoten",
     "permissions": {
       "groups": {
-        "projectAdmin": "Project Admin",
-        "creator": "Creator",
-        "projectMember": "Project Member",
-        "knownUser": "Known User",
-        "unknownUser": "Unknown User",
         "usersPermissions": "Your permissions"
       },
       "interactions": {
