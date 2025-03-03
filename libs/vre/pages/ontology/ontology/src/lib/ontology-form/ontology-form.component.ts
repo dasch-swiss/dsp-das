@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import {
   CreateOntology,
   KnoraApiConnection,
-  OntologyMetadata,
   ReadOntology,
   ReadProject,
   UpdateOntologyMetadata,
@@ -169,7 +168,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this._dspApiConnection.v2.onto
       .createOntology(ontologyData)
       .pipe(take(1))
-      .subscribe((response: OntologyMetadata) => {
+      .subscribe(response => {
         this._store.dispatch([new ClearProjectOntologiesAction(this.project.shortcode)]);
         // go to the new ontology page
         this._router.navigate([

@@ -91,7 +91,7 @@ export class TextComponent implements OnChanges {
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
         )
       )
-      .subscribe((res2: ReadResource) => {
+      .subscribe(res2 => {
         this.src.fileValue.fileUrl = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).fileUrl;
         this.src.fileValue.filename = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).filename;
         this.src.fileValue.strval = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).strval;
