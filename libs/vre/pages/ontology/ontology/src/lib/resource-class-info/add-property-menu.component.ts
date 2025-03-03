@@ -1,19 +1,12 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import {
-  ClassDefinition,
-  Constants,
-  KnoraApiConnection,
-  ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
-  UpdateResourceClassCardinality,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
-import {
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
-} from '@dasch-swiss/vre/resource-editor/property-form';
+  OntologiesSelectors,
+  OntologyProperties,
+  ProjectsSelectors,
+  PropToAdd,
+  PropToDisplay,
+} from '@dasch-swiss/vre/core/state';
 import {
   DefaultProperties,
   DefaultProperty,
@@ -23,15 +16,15 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   selector: 'app-add-property-menu',
   template: `
     <mat-list style="border-top: 1px solid rgba(0, 0, 0, .12);">
-      <!-- here we have to know if the class has values or not -->
       <mat-list-item
-        *ngIf="(lastModificationDate$ | async) && projectStatus && userCanEdit"
+        *ngIf="!disabled"
         class="property link"
         data-cy="add-property-button"
         [matMenuTriggerFor]="addPropertyMenu">
@@ -44,7 +37,11 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
       <button data-cy="create-new-from-type-button" mat-menu-item [matMenuTriggerFor]="newFromPropType">
         Create new from type
       </button>
-      <button data-cy="add-existing-property-button" mat-menu-item [matMenuTriggerFor]="addExistingProp">
+      <button
+        data-cy="add-existing-property-button"
+        mat-menu-item
+        [matMenuTriggerFor]="addExistingProp"
+        *ngIf="resourceClass">
         Add existing property
       </button>
     </mat-menu>
@@ -60,7 +57,7 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
             *ngFor="let prop of onto.properties; trackBy: trackByPropFn"
             [matTooltip]="prop.propDef.comment"
             matTooltipPosition="after"
-            (click)="assignExistingProperty(prop)">
+            (click)="assignExistingProperty(prop.propDef?.id)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>
             {{ prop.propDef.label }}
           </button>
@@ -97,21 +94,13 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
   ],
 })
 export class AddPropertyMenuComponent {
-  @Input() currentOntologyPropertiesToDisplay: PropToDisplay[];
-  @Input() resourceClass: ClassDefinition;
-  @Input() projectStatus: boolean;
-  @Input() userCanEdit: boolean; // is user a project admin or sys admin?
+  @Input() resourceClass: ClassDefinition | undefined = undefined;
+  @Input() disabled = false;
   @Output() updatePropertyAssignment = new EventEmitter<string>();
 
   private ngUnsubscribe = new Subject<void>();
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  currentOntology$ = this._store.select(OntologiesSelectors.currentOntology);
-
-  lastModificationDate$ = this.currentOntology$.pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(x => x?.lastModificationDate)
-  );
   currentProjectOntologyProperties$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties);
 
   // list of existing ontology properties, which are not in this resource class
@@ -121,11 +110,9 @@ export class AddPropertyMenuComponent {
   );
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
-    private _store: Store,
-    private _ontoService: OntologyService
+    private _ontoService: OntologyService,
+    private _oes: OntologyEditService,
+    private _store: Store
   ) {}
 
   trackByPropToAddFn = (index: number, item: PropToAdd) => `${index}-${item.ontologyId}`;
@@ -136,64 +123,12 @@ export class AddPropertyMenuComponent {
 
   trackByPropFn = (index: number, item: PropertyInfoObject) => `${index}-${item.propDef?.id}`;
 
-  assignExistingProperty(prop: PropertyInfoObject) {
-    const maxGuiOrderProperty = this.resourceClass.propertiesList.reduce(
-      (prev, current) => Math.max(prev, current.guiOrder ?? 0),
-      0
-    );
-
-    const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = currentOntology.lastModificationDate;
-    onto.id = currentOntology.id;
-
-    const addCard = new UpdateResourceClassCardinality();
-    addCard.id = this.resourceClass.id;
-
-    addCard.cardinalities = [
-      {
-        propertyIndex: prop.propDef.id,
-        cardinality: 1,
-        guiOrder: maxGuiOrderProperty + 1,
-      },
-    ];
-
-    onto.entity = addCard;
-
-    this._dspApiConnection.v2.onto
-      .addCardinalityToResourceClass(onto)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.updatePropertyAssignment.emit(currentOntology.id);
-      });
+  assignExistingProperty(propertyId: string) {
+    this._oes.assignPropertyToClass(propertyId, this.resourceClass!);
   }
 
   addNewProperty(propType: DefaultProperty) {
-    const maxGuiOrderProperty = this.resourceClass.propertiesList.reduce(
-      (prev, current) => Math.max(prev, current.guiOrder ?? 0),
-      0
-    );
-
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    this._dialog
-      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps, boolean>(
-        CreatePropertyFormDialogComponent,
-        {
-          data: {
-            ontologyId: ontology.id,
-            lastModificationDate: ontology.lastModificationDate,
-            propertyInfo: { propType },
-            resClassIri: this.resourceClass.id,
-            maxGuiOrderProperty,
-          },
-        }
-      )
-      .afterClosed()
-      .pipe(filter(res => res === true))
-      .subscribe(res => {
-        this.updatePropertyAssignment.emit(ontology.id);
-      });
+    this._oes.openAddNewProperty(propType, this.resourceClass);
   }
 
   private getExistingProperties(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToAdd[] {
