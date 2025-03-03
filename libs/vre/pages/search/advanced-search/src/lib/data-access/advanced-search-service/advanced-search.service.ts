@@ -1,13 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-  ApiResponseError,
   Constants,
-  CountQueryResponse,
   KnoraApiConnection,
   ListNodeV2,
   ReadOntology,
   ReadResource,
-  ReadResourceSequence,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
   ResourcePropertyDefinition,
@@ -15,7 +12,7 @@ import {
 import { OntologyV2ApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 
 export interface ApiData {
   iri: string;
@@ -87,12 +84,7 @@ export class AdvancedSearchService {
   // API call to get the list of resource classes
   resourceClassesList = (ontologyIri: string, restrictToClass?: string): Observable<ApiData[]> =>
     this._dspApiConnection.v2.onto.getOntology(ontologyIri).pipe(
-      map((response: ApiResponseError | ReadOntology) => {
-        if (response instanceof ApiResponseError) {
-          // eslint-disable-next-line @typescript-eslint/no-throw-literal
-          throw response; // caught by catchError operator
-        }
-
+      map(response => {
         let resClasses = response.getClassDefinitionsByType(ResourceClassDefinition);
 
         let resClassesFiltered: ResourceClassDefinition[] = [];
@@ -251,13 +243,7 @@ export class AdvancedSearchService {
       })
       .pipe(
         takeUntil(this.cancelPreviousCountRequest$), // Cancel previous request
-        switchMap((response: CountQueryResponse | ApiResponseError) => {
-          if (response instanceof ApiResponseError) {
-            // eslint-disable-next-line @typescript-eslint/no-throw-literal
-            throw response; // caught by catchError operator
-          }
-          return of(response.numberOfResults);
-        }),
+        map(response => response.numberOfResults),
         catchError(err => {
           return of(0); // return 0 on error
         })
@@ -276,18 +262,12 @@ export class AdvancedSearchService {
       })
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$), // Cancel previous request
-        switchMap((response: ReadResourceSequence | ApiResponseError) => {
-          if (response instanceof ApiResponseError) {
-            // eslint-disable-next-line @typescript-eslint/no-throw-literal
-            throw response; // caught by catchError operator
-          }
-          return of(
-            response.resources.map((res: ReadResource) => ({
-              iri: res.id,
-              label: res.label,
-            }))
-          );
-        }),
+        map(response =>
+          response.resources.map((res: ReadResource) => ({
+            iri: res.id,
+            label: res.label,
+          }))
+        ),
         catchError(err => {
           return of([]); // return an empty array on error wrapped in an observable
         })
