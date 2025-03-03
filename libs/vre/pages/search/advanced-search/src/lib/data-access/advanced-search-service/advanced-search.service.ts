@@ -4,7 +4,6 @@ import {
   KnoraApiConnection,
   ListNodeV2,
   ReadOntology,
-  ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
   ResourcePropertyDefinition,
@@ -180,7 +179,7 @@ export class AdvancedSearchService {
   // API call to get the list of properties filtered by resource class
   filteredPropertiesList = (resourceClassIri: string): Observable<PropertyData[]> =>
     this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
-      map((onto: ResourceClassAndPropertyDefinitions) => {
+      map(onto => {
         // filter out properties that shouldn't be able to be selected
         // this is a bit different than how the propertiesList method does it
         // because the getResourceClassDefintion method return more props
@@ -191,7 +190,7 @@ export class AdvancedSearchService {
           .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
             (a.label || '').localeCompare(b.label || '')
           )
-          .map((propDef: ResourcePropertyDefinition) => {
+          .map(propDef => {
             // label can be undefined
             const label = propDef.label || '';
 
@@ -263,7 +262,7 @@ export class AdvancedSearchService {
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$), // Cancel previous request
         map(response =>
-          response.resources.map((res: ReadResource) => ({
+          response.resources.map(res => ({
             iri: res.id,
             label: res.label,
           }))

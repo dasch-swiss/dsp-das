@@ -240,7 +240,7 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
             .doExtendedSearchCountQuery(this.search.query)
             .pipe(takeUntil(this.ngUnsubscribe))
             .pipe(
-              map((count: CountQueryResponse) => {
+              map(count => {
                 this.numberOfAllResults = count.numberOfResults;
                 if (this.numberOfAllResults === 0) {
                   this._notification.openSnackBar('No resources to display.');

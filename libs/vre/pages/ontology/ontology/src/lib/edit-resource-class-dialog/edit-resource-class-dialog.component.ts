@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   DeleteResourceClassComment,
   KnoraApiConnection,
-  ResourceClassDefinitionWithAllLanguages,
   StringLiteral,
   UpdateOntology,
   UpdateResourceClassComment,
@@ -96,7 +95,7 @@ export class EditResourceClassDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .updateResourceClass(onto4Label)
       .pipe(
-        switchMap((classLabelResponse: ResourceClassDefinitionWithAllLanguages) => {
+        switchMap(classLabelResponse => {
           this.lastModificationDate = classLabelResponse.lastModificationDate;
           onto4Comment.lastModificationDate = this.lastModificationDate;
 

@@ -5,7 +5,6 @@ import {
   DeleteResourcePropertyComment,
   KnoraApiConnection,
   ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
   UpdateResourcePropertyComment,
   UpdateResourcePropertyGuiElement,
@@ -88,7 +87,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .updateResourceProperty(onto4Label)
       .pipe(
-        switchMap((propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+        switchMap(propertyLabelResponse => {
           const onto4Comment = this.getUpdateOntologyForPropertyComment();
 
           this.lastModificationDate = propertyLabelResponse.lastModificationDate;
