@@ -5,7 +5,6 @@ import {
   CountQueryResponse,
   KnoraApiConnection,
   ListNodeV2,
-  OntologiesMetadata,
   ReadOntology,
   ReadResource,
   ReadResourceSequence,
@@ -74,18 +73,13 @@ export class AdvancedSearchService {
   // API call to get the list of ontologies within the specified project iri
   ontologiesInProjectList = (projectIri: string): Observable<ApiData[]> =>
     this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
-      map((response: OntologiesMetadata | ApiResponseError) => {
-        if (response instanceof ApiResponseError) {
-          // eslint-disable-next-line @typescript-eslint/no-throw-literal
-          throw response; // caught by catchError operator
-        }
+      map(response => {
         return response.ontologies.map((onto: { id: string; label: string }) => ({
           iri: onto.id,
           label: onto.label,
         }));
       }),
       catchError(err => {
-        this._handleError(err);
         return []; // return an empty array on error
       })
     );
@@ -130,7 +124,6 @@ export class AdvancedSearchService {
           });
       }),
       catchError(err => {
-        this._handleError(err);
         return []; // return an empty array on error
       })
     );
@@ -188,7 +181,6 @@ export class AdvancedSearchService {
           });
       }),
       catchError(err => {
-        this._handleError(err);
         return []; // return an empty array on error
       })
     );
@@ -243,7 +235,6 @@ export class AdvancedSearchService {
           });
       }),
       catchError(err => {
-        this._handleError(err);
         return []; // return an empty array on error
       })
     );
@@ -268,7 +259,6 @@ export class AdvancedSearchService {
           return of(response.numberOfResults);
         }),
         catchError(err => {
-          this._handleError(err);
           return of(0); // return 0 on error
         })
       );
@@ -299,7 +289,6 @@ export class AdvancedSearchService {
           );
         }),
         catchError(err => {
-          this._handleError(err);
           return of([]); // return an empty array on error wrapped in an observable
         })
       );
@@ -307,16 +296,8 @@ export class AdvancedSearchService {
 
   getList(rootNodeIri: string): Observable<ListNodeV2 | undefined> {
     return this._dspApiConnection.v2.list.getList(rootNodeIri).pipe(
-      map((response: ListNodeV2 | ApiResponseError) => {
-        if (response instanceof ApiResponseError) {
-          // eslint-disable-next-line @typescript-eslint/no-throw-literal
-          throw response; // caught by catchError operator
-        }
-        return response;
-      }),
       catchError(err => {
-        this._handleError(err);
-        return of(undefined); // return undefined on error
+        return of(undefined);
       })
     );
   }
@@ -335,13 +316,5 @@ export class AdvancedSearchService {
           propDef.objectType !== Constants.StillImageFileValue &&
           propDef.objectType !== Constants.TextFileValue
       );
-  }
-
-  private _handleError(error: unknown) {
-    if (error instanceof ApiResponseError) {
-      console.error('API error: ', error);
-    } else {
-      console.error('An error occurred: ', error);
-    }
   }
 }
