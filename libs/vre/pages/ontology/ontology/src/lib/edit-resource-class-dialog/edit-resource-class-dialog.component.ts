@@ -121,7 +121,7 @@ export class EditResourceClassDialogComponent implements OnInit {
     deleteResourceClassComment.lastModificationDate = this.lastModificationDate;
 
     return this._dspApiConnection.v2.onto.deleteResourceClassComment(deleteResourceClassComment).pipe(
-      tap((deleteCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+      tap(deleteCommentResponse => {
         this.lastModificationDate = deleteCommentResponse.lastModificationDate;
       })
     );
@@ -129,7 +129,7 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   private _updateComment$(onto4Comment) {
     return this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).pipe(
-      tap((classCommentResponse: ResourceClassDefinitionWithAllLanguages) => {
+      tap(classCommentResponse => {
         this.lastModificationDate = classCommentResponse.lastModificationDate;
       })
     );

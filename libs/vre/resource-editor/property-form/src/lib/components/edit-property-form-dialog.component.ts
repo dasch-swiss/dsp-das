@@ -97,7 +97,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
           if (onto4Comment.entity.comments.length) {
             // if the comments array is not empty, send a request to update the comments
             return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).pipe(
-              tap((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+              tap(propertyCommentResponse => {
                 this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
                 this.final();
@@ -110,7 +110,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
             deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
 
             return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment).pipe(
-              tap((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+              tap(deleteCommentResponse => {
                 this.lastModificationDate = deleteCommentResponse.lastModificationDate;
                 this.final();
               })
