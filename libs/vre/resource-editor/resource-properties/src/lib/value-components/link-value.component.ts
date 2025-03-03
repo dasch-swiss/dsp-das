@@ -14,8 +14,6 @@ import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  ApiResponseError,
-  CountQueryResponse,
   KnoraApiConnection,
   ReadProject,
   ReadResource,
@@ -198,10 +196,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .pipe(
         takeUntil(this.cancelPreviousCountRequest$),
-        switchMap((response: CountQueryResponse | ApiResponseError) => {
-          const countQuery = response as CountQueryResponse;
-          return of(countQuery.numberOfResults);
-        })
+        map(response => response.numberOfResults)
       );
   }
 
