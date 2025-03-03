@@ -21,7 +21,7 @@ export class PendoAnalyticsService {
     this.authService
       .isCredentialsValid$()
       .pipe(takeUntilDestroyed())
-      .subscribe((isSessionValid: boolean) => {
+      .subscribe(isSessionValid => {
         if (!isSessionValid) {
           this.removeActiveUser();
           return;

@@ -179,7 +179,7 @@ export class CreateResourceFormComponent implements OnInit {
           this._cd.detectChanges();
         })
       )
-      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+      .subscribe(onto => {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         this.resourceClass = onto.classes[this.resourceClassIri];

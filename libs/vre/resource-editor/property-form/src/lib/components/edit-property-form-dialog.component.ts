@@ -170,12 +170,10 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     onto4guiEle.entity = updateGuiEle;
 
-    this._dspApiConnection.v2.onto
-      .replaceGuiElementOfProperty(onto4guiEle)
-      .subscribe((guiEleResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-        this.lastModificationDate = guiEleResponse.lastModificationDate;
-        this.onSuccess();
-      });
+    this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(guiEleResponse => {
+      this.lastModificationDate = guiEleResponse.lastModificationDate;
+      this.onSuccess();
+    });
   }
 
   private setGuiAttribute(guiAttr: string): string[] {
