@@ -80,7 +80,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     }
 
     // get the default property type for this property
-    this._ontoService.getDefaultPropType(this.propDef).subscribe((prop: DefaultProperty) => {
+    this._ontoService.getDefaultPropType(this.propDef).subscribe(prop => {
       this.propType = prop;
     });
   }

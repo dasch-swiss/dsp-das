@@ -87,7 +87,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
 
     if (this.data.ontologyIri) {
-      this._currentOntology$.pipe(take(1)).subscribe((response: ReadOntology) => {
+      this._currentOntology$.pipe(take(1)).subscribe(response => {
         this._buildForm(response);
         this._lastModificationDate = response.lastModificationDate;
       });
