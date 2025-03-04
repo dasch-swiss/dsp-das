@@ -106,6 +106,18 @@ updates:
           - "@types/jest"
           - "@types/jasmine*"
           - "@types/jwt-decode"
+      test-coverage-deps:
+        applies-to: version-updates
+        patterns:
+          - "@cypress/code-coverage"
+          - "@istanbuljs/nyc-config-typescript"
+          - "@jsdevtools/coverage-istanbul-loader"
+          - "istanbul-lib-coverage"
+          - "ngx-build-plus"
+          - "nyc"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
