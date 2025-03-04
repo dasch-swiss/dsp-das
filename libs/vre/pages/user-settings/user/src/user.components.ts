@@ -1,5 +1,4 @@
 import { AccountComponent } from './lib/account/account.component';
-import { CreateUserDialogComponent } from './lib/create-user-page/create-user-dialog.component';
 import { EditUserPageComponent } from './lib/edit-user-page/edit-user-page.component';
 import { LoginFormComponent } from './lib/login-form/login-form.component';
 import { MembershipComponent } from './lib/membership/membership.component';
@@ -13,7 +12,6 @@ import { UserComponent } from './lib/user.component';
 
 export const UserComponents = [
   AccountComponent,
-  CreateUserDialogComponent,
   EditUserPageComponent,
   MembershipComponent,
   OverviewComponent,
