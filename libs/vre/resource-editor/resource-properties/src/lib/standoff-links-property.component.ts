@@ -35,9 +35,9 @@ export class StandoffLinksPropertyComponent implements OnChanges {
       return {
         label: link.strval ?? '',
         uri: `/resource/${resourceIdPathOnly}`,
-        project: link.linkedResource?.resourceClassLabel ?? '',
+        resourceClass: link.linkedResource?.resourceClassLabel ?? '',
       };
     });
-    this.standoffLinks = sortByKeys(this.standoffLinks, ['project', 'label']);
+    this.standoffLinks = sortByKeys(this.standoffLinks, ['resourceClass', 'label']);
   }
 }
