@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
@@ -9,8 +8,6 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -45,7 +42,6 @@ import { filter } from 'rxjs/operators';
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        *ngIf="userCanDelete || (isAdmin$ | async)"
         mat-icon-button
         class="more-menu"
         matTooltip="More"
@@ -91,7 +87,7 @@ import { filter } from 'rxjs/operators';
         Delete resource
       </button>
       <button
-        *ngIf="isAdmin$ | async"
+        [disabled]="!userCanDelete"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
         matTooltip="Erase resource forever. This cannot be undone."
@@ -117,8 +113,6 @@ import { filter } from 'rxjs/operators';
 export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: DspResource;
 
-  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
   get userCanDelete() {
     return ResourceUtil.userCanDelete(this.resource.res);
   }
@@ -127,8 +121,7 @@ export class ResourceToolbarComponent {
     protected notification: NotificationService,
     private _resourceService: ResourceService,
     private _resourceFetcherService: ResourceFetcherService,
-    private _dialog: MatDialog,
-    private _store: Store
+    private _dialog: MatDialog
   ) {}
 
   openResource() {
