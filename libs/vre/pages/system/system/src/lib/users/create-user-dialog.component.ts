@@ -30,7 +30,7 @@ import { UserForm } from '../../../../../user-settings/user/src/lib/user-form/us
 })
 export class CreateUserDialogComponent {
   user = new ReadUser();
-  form: UserForm;
+  form!: UserForm;
 
   isLoading$: Observable<boolean>;
 

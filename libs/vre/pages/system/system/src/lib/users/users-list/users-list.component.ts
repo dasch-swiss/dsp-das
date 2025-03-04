@@ -14,7 +14,7 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { CreateUserDialogComponent, EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
@@ -313,7 +313,7 @@ export class UsersListComponent {
 
   editUser(user: ReadUser) {
     const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true);
-    const dialogRef = this._matDialog.open(EditUserPageComponent, dialogConfig);
+    const dialogRef = this._matDialog.open(EditUserDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => {
       this.refreshParent.emit();
     });

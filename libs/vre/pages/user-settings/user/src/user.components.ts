@@ -1,5 +1,5 @@
 import { AccountComponent } from './lib/account/account.component';
-import { EditUserPageComponent } from './lib/edit-user-page/edit-user-page.component';
+import { EditUserDialogComponent } from './lib/edit-user-page/edit-user-dialog.component';
 import { LoginFormComponent } from './lib/login-form/login-form.component';
 import { MembershipComponent } from './lib/membership/membership.component';
 import { OverviewComponent } from './lib/overview/overview.component';
@@ -12,7 +12,7 @@ import { UserComponent } from './lib/user.component';
 
 export const UserComponents = [
   AccountComponent,
-  EditUserPageComponent,
+  EditUserDialogComponent,
   MembershipComponent,
   OverviewComponent,
   ProfileComponent,
