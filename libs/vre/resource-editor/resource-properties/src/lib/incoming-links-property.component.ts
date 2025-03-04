@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { Observable, of } from 'rxjs';
-import { expand, map, reduce, take, takeWhile } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { expand, filter, map, reduce, take, takeWhile, tap } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 import { sortByKeys } from './sortByKeys';
 
@@ -22,7 +22,8 @@ import { sortByKeys } from './sortByKeys';
           *ngIf="allIncomingLinks.length > pageSize"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
-          [itemsNumber]="allIncomingLinks.length"
+          [lastPageIndex]="lastPageIndex"
+          [itemsNumber]="slidedLinks.length"
           (pageChanged)="pageChanged($event)" />
       </ng-container>
       <app-progress-indicator *ngIf="loading" />
@@ -40,49 +41,60 @@ export class IncomingLinksPropertyComponent implements OnChanges {
   pageSize = 25;
   allIncomingLinks: IncomingOrStandoffLink[] = [];
   pageIndex = 0;
+  lastPageIndex?: number;
 
   constructor(private _incomingService: IncomingService) {}
 
   ngOnChanges() {
     this.allIncomingLinks = [];
     this.loading = true;
+    this._loadInitialIncomingLinks();
+  }
 
-    this._getIncomingLinksRecursively$(this.resource.res.id)
-      .pipe(take(1))
-      .subscribe(incomingLinks => {
+  pageChanged(pageIndex: number) {
+    this.pageIndex = pageIndex;
+    // load the next page if it is not already loaded
+    if (pageIndex > this.pageIndex && (!this.lastPageIndex || pageIndex < this.lastPageIndex - 1)) {
+      this._getIncomingLinks$(this.resource.res.id, pageIndex + 1)
+        .pipe(take(1))
+        .subscribe(nextLinks => {
+          this.allIncomingLinks = [...this.allIncomingLinks, ...nextLinks];
+        });
+    }
+  }
+
+  private _loadInitialIncomingLinks(): void {
+    this.loading = true;
+    this._getIncomingLinks$(this.resource.res.id, 0)
+      .pipe(
+        take(1),
+        tap(firstPageLinks => {
+          if (firstPageLinks.length > 0) {
+            this._getIncomingLinks$(this.resource.res.id, 1)
+              .pipe(take(1))
+              .subscribe(nextPageLinks => {
+                this.allIncomingLinks = [...this.allIncomingLinks, ...nextPageLinks];
+              });
+          }
+        })
+      )
+      .subscribe(firstPageLinks => {
+        this.allIncomingLinks = firstPageLinks;
         this.loading = false;
-        this.allIncomingLinks = incomingLinks;
       });
   }
 
-  pageChanged(page: number) {
-    this.pageIndex = page;
-  }
-
-  private _getIncomingLinksRecursively$(resourceId: string) {
-    let offset = 0;
-
+  private _getIncomingLinks$(resourceId: string, offset: number): Observable<IncomingOrStandoffLink[]> {
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
-      expand(sequence => {
-        if (!(sequence as ReadResourceSequence).mayHaveMoreResults) {
-          return of(sequence as ReadResourceSequence);
+      filter((sequence): sequence is ReadResourceSequence => !(sequence instanceof ApiResponseError)),
+      tap(sequence => {
+        if (sequence.resources.length < this.pageSize || !sequence.mayHaveMoreResults) {
+          this.lastPageIndex = offset;
         }
-
-        offset += 1;
-
-        return this._incomingService.getIncomingLinksForResource(
-          resourceId,
-          offset
-        ) as Observable<ReadResourceSequence>;
       }),
-      takeWhile(response => response.resources.length > 0 && response.mayHaveMoreResults, true),
-      reduce((all: ReadResource[], data) => all.concat(data.resources), []),
-      map(incomingResources => {
-        const incomingLinks = incomingResources.map(resource =>
-          IncomingLinksPropertyComponent.createIncomingOrStandoffLink(resource)
-        );
-        return sortByKeys(incomingLinks, ['project', 'label']);
-      })
+      map(sequence =>
+        sequence.resources.map(resource => IncomingLinksPropertyComponent.createIncomingOrStandoffLink(resource))
+      )
     );
   }
 
@@ -95,7 +107,7 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     return {
       label: resource.label,
       uri: `/resource/${resourceIdPathOnly[0]}`,
-      project: resource.resourceClassLabel ? resource.resourceClassLabel : '',
+      resourceClass: resource.resourceClassLabel ? resource.resourceClassLabel : '',
     };
   }
 }
