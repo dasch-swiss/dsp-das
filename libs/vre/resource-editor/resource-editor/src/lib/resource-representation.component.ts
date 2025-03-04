@@ -40,8 +40,7 @@ import { map } from 'rxjs/operators';
       class="dsp-representation audio"
       *ngSwitchCase="representationConstants.audio"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [isAdmin]="isAdmin$ | async" />
+      [parentResource]="resource.res" />
 
     <app-video
       #video
