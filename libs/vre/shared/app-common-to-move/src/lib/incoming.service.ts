@@ -143,6 +143,7 @@ OFFSET ${offset}
   ): Observable<ReadResourceSequence | ApiResponseError> {
     const sparqlQueryStr = `
 PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 CONSTRUCT {
 ?incomingRes knora-api:isMainResource true .
@@ -154,6 +155,7 @@ CONSTRUCT {
 ?incomingRes a knora-api:Resource .
 
 ?incomingRes ?incomingProp <${resourceIri}> .
+?incomingRes rdfs:label ?label .
 
 <${resourceIri}> a knora-api:Resource .
 
@@ -167,64 +169,13 @@ FILTER NOT EXISTS {
 }
 
 FILTER NOT EXISTS {
-?incomingRes  knora-api:isPartOf <${resourceIri}> .
+?incomingRes knora-api:isPartOf <${resourceIri}> .
 ?incomingRes knora-api:seqnum ?seqnum .
 }
 
-} OFFSET ${offset}
+} ORDER BY ?label
+OFFSET ${offset}
 `;
-
     return this._dspApiConnection.v2.search.doExtendedSearch(sparqlQueryStr);
-  }
-
-  /**
-   *
-   * returns all incoming links for the given resource Iri.
-   *
-   * @param {string} resourceIri the Iri of the resource whose incoming links should be returned.
-   * @param {number} offset the offset to be used for paging. 0 is the default and is used to get the first page of results.
-   * @param {boolean} countQuery if set to true, the request returns only the CountQueryResponse; default value is `false`
-   * @returns {Observable<any>}
-   */
-  getIncomingLinks(
-    resourceIri: string,
-    offset: number,
-    countQuery = false
-  ): Observable<ReadResourceSequence | CountQueryResponse | ApiResponseError> {
-    const sparqlQueryStr = `
-PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
-
-CONSTRUCT {
-?incomingRes knora-api:isMainResource true .
-
-?incomingRes ?incomingProp <${resourceIri}> .
-
-} WHERE {
-
-?incomingRes a knora-api:Resource .
-
-?incomingRes ?incomingProp <${resourceIri}> .
-
-<${resourceIri}> a knora-api:Resource .
-
-?incomingProp knora-api:objectType knora-api:Resource .
-
-knora-api:isRegionOf knora-api:objectType knora-api:Resource .
-knora-api:isPartOf knora-api:objectType knora-api:Resource .
-
-FILTER NOT EXISTS {
-?incomingRes  knora-api:isRegionOf <${resourceIri}> .
-}
-
-FILTER NOT EXISTS {
-?incomingRes  knora-api:isPartOf <${resourceIri}> .
-?incomingRes knora-api:seqnum ?seqnum .
-}
-
-} OFFSET ${offset}
-`;
-    return countQuery
-      ? this._dspApiConnection.v2.search.doExtendedSearchCountQuery(sparqlQueryStr)
-      : this._dspApiConnection.v2.search.doExtendedSearch(sparqlQueryStr);
   }
 }
