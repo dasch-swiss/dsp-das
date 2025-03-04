@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -13,7 +13,7 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-annotation-toolbar',
@@ -154,29 +154,34 @@ export class AnnotationToolbarComponent {
         data: this.resource,
       })
       .afterClosed()
-      .pipe(filter(answer => !!answer))
       .subscribe(answer => {
-        this._resourceFetcher.reload();
+        if (answer) {
+          this._resourceFetcher.reload();
+        }
       });
   }
 
   deleteResource() {
     this._dialog
-      .open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, { data: this.resource })
+      .open<DeleteResourceDialogComponent, ReadResource, boolean>(DeleteResourceDialogComponent, {
+        data: this.resource,
+      })
       .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._afterResourceDeleted();
+      .subscribe(response => {
+        if (response) {
+          this._afterResourceDeleted();
+        }
       });
   }
 
   eraseResource() {
     this._dialog
-      .open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, { data: this.resource })
+      .open<EraseResourceDialogComponent, ReadResource, boolean>(EraseResourceDialogComponent, { data: this.resource })
       .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._afterResourceDeleted();
+      .subscribe(response => {
+        if (response) {
+          this._afterResourceDeleted();
+        }
       });
   }
 
