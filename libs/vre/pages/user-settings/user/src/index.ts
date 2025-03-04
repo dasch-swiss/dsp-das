@@ -13,3 +13,4 @@ export * from './lib/existing-names.validator';
 export * from './lib/autocomplete-item.interface';
 export * from './lib/project-tile/project-tile.component';
 export * from './lib/login-form/login-form.component';
+export * from './lib/user-form/user-form.type';
