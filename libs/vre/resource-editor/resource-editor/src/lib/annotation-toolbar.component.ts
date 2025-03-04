@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { RegionService, ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
@@ -11,8 +10,6 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
 @Component({
@@ -46,7 +43,6 @@ import { filter, take } from 'rxjs/operators';
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        *ngIf="userCanEdit || userCanDelete"
         mat-icon-button
         class="more-menu"
         matTooltip="More"
@@ -102,7 +98,7 @@ import { filter, take } from 'rxjs/operators';
         Delete resource
       </button>
       <button
-        *ngIf="isAdmin$ | async"
+        [disabled]="!userCanDelete"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
         matTooltip="Erase resource forever. This cannot be undone."
@@ -129,8 +125,6 @@ export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) parentResourceId!: string;
 
-  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
   get userCanEdit() {
     return ResourceUtil.userCanEdit(this.resource);
   }
@@ -144,8 +138,7 @@ export class AnnotationToolbarComponent {
     private _regionService: RegionService,
     private _dialog: MatDialog,
     private _resourceService: ResourceService,
-    private _resourceFetcher: ResourceFetcherService,
-    private _store: Store
+    private _resourceFetcher: ResourceFetcherService
   ) {}
 
   editResourceLabel() {
