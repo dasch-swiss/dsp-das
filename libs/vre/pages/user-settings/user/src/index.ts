@@ -3,7 +3,6 @@ export * from './lib/user.component';
 export * from './lib/account/account.component';
 export * from './lib/account/api-connection-token.provider';
 export * from './lib/edit-user-page/edit-user-dialog.component';
-export * from './lib/membership/membership.component';
 export * from './lib/overview/overview.component';
 export * from './lib/profile/profile.component';
 export * from './lib/user-form/user-form.component';

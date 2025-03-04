@@ -1,4 +1,5 @@
 import { CookiePolicyComponent } from './lib/cookie-policy/cookie-policy.component';
+import { MembershipComponent } from './lib/membership/membership.component';
 import { EraseProjectDialogComponent } from './lib/projects/projects-list/erase-project-dialog/erase-project-dialog.component';
 import { ProjectsListComponent } from './lib/projects/projects-list/projects-list.component';
 import { ProjectsComponent } from './lib/projects/projects.component';
@@ -22,4 +23,5 @@ export const SystemComponents = [
   ManageProjectMembershipDialogComponent,
   EditPasswordDialogComponent,
   CreateUserDialogComponent,
+  MembershipComponent,
 ];
