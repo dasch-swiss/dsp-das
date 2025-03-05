@@ -12,13 +12,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
         </button>
         <span class="fill-remaining-space"></span>
         <div class="range">
-          <span>{{ itemRangeStart }} - {{ itemRangeEnd }} of {{ itemsNumber }}</span>
+          <span>{{ itemRangeStart }} - {{ itemRangeEnd }}</span>
         </div>
         <span class="fill-remaining-space"></span>
         <button
           mat-button
           class="pagination-button next"
-          [disabled]="itemRangeEnd === itemsNumber"
+          [disabled]="pageIndex === lastPageIndex"
           (click)="changePage(1)">
           <span>{{ 'uiControls.pager.next' | translate }}</span>
           <mat-icon>east</mat-icon>
@@ -32,14 +32,16 @@ export class IncomingResourcePagerComponent {
   @Input({ required: true }) pageIndex!: number;
   @Input({ required: true }) pageSize!: number;
   @Input({ required: true }) itemsNumber!: number;
+  @Input() lastPageIndex?: number;
+
   @Output() pageChanged = new EventEmitter<number>();
 
   get itemRangeStart(): number {
     return this.pageSize * this.pageIndex + 1;
   }
 
-  get itemRangeEnd(): number {
-    return Math.min(this.pageSize * (this.pageIndex + 1), this.itemsNumber);
+  get itemRangeEnd(): number | undefined {
+    return this.itemsNumber + this.itemRangeStart - 1;
   }
 
   changePage(dir: 1 | -1) {
