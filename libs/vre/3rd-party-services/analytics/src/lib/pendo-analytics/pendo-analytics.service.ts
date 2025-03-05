@@ -14,8 +14,7 @@ export class PendoAnalyticsService {
   private _appConfig = inject(AppConfigService);
 
   setup() {
-    console.log('test pendo environment', this._appConfig.dspInstrumentationConfig.environment);
-    if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
+    if (this.config.environment !== 'prod') {
       return;
     }
 
