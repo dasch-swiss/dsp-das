@@ -14,6 +14,7 @@ export class PendoAnalyticsService {
   private _appConfig = inject(AppConfigService);
 
   setup() {
+    console.log('test pendo environment', this._appConfig.dspInstrumentationConfig.environment);
     if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
       return;
     }
@@ -21,7 +22,7 @@ export class PendoAnalyticsService {
     this.authService
       .isCredentialsValid$()
       .pipe(takeUntilDestroyed())
-      .subscribe((isSessionValid: boolean) => {
+      .subscribe(isSessionValid => {
         if (!isSessionValid) {
           this.removeActiveUser();
           return;
