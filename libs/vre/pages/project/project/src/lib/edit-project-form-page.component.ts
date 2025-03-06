@@ -38,7 +38,7 @@ import { ProjectForm } from './reusable-project-form/project-form.type';
 export class EditProjectFormPageComponent {
   form: ProjectForm;
   loading = false;
-  formData$ = this._ar.parent.parent.paramMap.pipe(
+  formData$ = this._route.parent.parent.paramMap.pipe(
     map(params => params.get(RouteConstants.uuidParameter)),
     map(uuid => this._projectService.uuidToIri(uuid)),
     switchMap(iri => this._projectApiService.get(iri)),
@@ -56,17 +56,17 @@ export class EditProjectFormPageComponent {
 
   constructor(
     private _actions: Actions,
-    private _ar: ActivatedRoute,
     private _notification: NotificationService,
     private _projectApiService: ProjectApiService,
     private _projectService: ProjectService,
+    private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
     private _ts: TranslateService
   ) {}
 
   onSubmit() {
-    const projectUuid = this._ar.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
+    const projectUuid = this._route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
 
     const projectData: UpdateProjectRequest = {
       longname: this.form.value.longname,
