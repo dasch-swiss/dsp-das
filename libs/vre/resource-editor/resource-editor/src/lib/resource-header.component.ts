@@ -1,10 +1,15 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { LoadClassItemsCountAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-header',
@@ -82,8 +87,10 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
     `,
   ],
 })
-export class ResourceHeaderComponent {
+export class ResourceHeaderComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
+
+  destroyed: Subject<void> = new Subject<void>();
 
   get resourceClassType(): ResourceClassDefinitionWithPropertyDefinition {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
@@ -96,20 +103,37 @@ export class ResourceHeaderComponent {
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _resourceFetcher: ResourceFetcherService
+    private _store: Store,
+    private _ontologyService: OntologyService,
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
+  ngOnInit(): void {
+    this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this.afterResourceDeleted();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed.next();
+    this.destroyed.complete();
+  }
+
   openEditLabelDialog() {
-    this._dialog
-      .open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
-        ...DspDialogConfig.smallDialog<ReadResource>(this.resource.res),
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
-      .subscribe(answer => {
-        if (answer) {
-          this._resourceFetcher.reload();
-        }
-      });
+    this._dialog.open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
+      ...DspDialogConfig.smallDialog<ReadResource>(this.resource.res),
+      viewContainerRef: this._viewContainerRef,
+    });
+  }
+
+  afterResourceDeleted() {
+    const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+    if (currentProject) {
+      const ontologyIri = this._ontologyService.getOntologyIriFromRoute(currentProject.shortcode);
+      if (ontologyIri) {
+        const classId = this.resource.res.entityInfo.classes[this.resource.res.type]?.id;
+        this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
+      }
+    }
   }
 }
