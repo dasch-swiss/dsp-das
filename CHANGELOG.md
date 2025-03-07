@@ -1,5 +1,29 @@
 # Changelog
 
+## [11.26.3](https://github.com/dasch-swiss/dsp-das/compare/v11.26.2...v11.26.3) (2025-03-07)
+
+
+### Bug Fixes
+
+* bring back, fix and improve some translations (DEV-4676) ([#2161](https://github.com/dasch-swiss/dsp-das/issues/2161)) ([68ebf71](https://github.com/dasch-swiss/dsp-das/commit/68ebf718c30a832acae70bc0673e89b746373ec1))
+* pass viewContainerRef (DEV-4671) ([#2154](https://github.com/dasch-swiss/dsp-das/issues/2154)) ([a0a0717](https://github.com/dasch-swiss/dsp-das/commit/a0a071765a245e3e42c0bcfb98cd8b456a82f15a))
+* pendo only receives data from 'prod' ([#2160](https://github.com/dasch-swiss/dsp-das/issues/2160)) ([6fc9812](https://github.com/dasch-swiss/dsp-das/commit/6fc9812251c68ccefee8cad3221b8da98771a720))
+* properties style alignment ([#2153](https://github.com/dasch-swiss/dsp-das/issues/2153)) ([9c495d2](https://github.com/dasch-swiss/dsp-das/commit/9c495d20420f02c1314da55bb7aa6be3ae077aa1))
+* remove unused translations (DEV-4598) ([#2148](https://github.com/dasch-swiss/dsp-das/issues/2148)) ([3542562](https://github.com/dasch-swiss/dsp-das/commit/35425629754487beacdcc575b3a39f114691980c))
+
+
+### Maintenances
+
+* add entries to Dependabot file ([#2141](https://github.com/dasch-swiss/dsp-das/issues/2141)) ([41640b6](https://github.com/dasch-swiss/dsp-das/commit/41640b6a14b4dbc8d6cfbc9f44f553234e58d6a2))
+* change align-items values from start to flex-start ([#2156](https://github.com/dasch-swiss/dsp-das/issues/2156)) ([6e1bbba](https://github.com/dasch-swiss/dsp-das/commit/6e1bbba65107e6093fbf74adf4ec72412d194aac))
+* **deps-dev:** bump @types/node from 20.17.19 to 20.17.23 in the types-deps group ([#2147](https://github.com/dasch-swiss/dsp-das/issues/2147)) ([b025f59](https://github.com/dasch-swiss/dsp-das/commit/b025f59c3a4c4be01ed90481898f798ca7a9ecaf))
+* **deps-dev:** bump postcss from 8.5.2 to 8.5.3 in the postcss-deps group ([#2144](https://github.com/dasch-swiss/dsp-das/issues/2144)) ([95fdf7b](https://github.com/dasch-swiss/dsp-das/commit/95fdf7b8fe74dbecc467edfcb117396701858ee0))
+* **deps-dev:** bump ts-jest from 29.2.5 to 29.2.6 in the jest-deps group ([#2143](https://github.com/dasch-swiss/dsp-das/issues/2143)) ([f3de978](https://github.com/dasch-swiss/dsp-das/commit/f3de9781b3113c40cbd5a52c99cb20d49d38dc7c))
+* **deps:** bump @sentry/cli from 2.41.1 to 2.42.2 in the sentry-deps group ([#2145](https://github.com/dasch-swiss/dsp-das/issues/2145)) ([199aa1e](https://github.com/dasch-swiss/dsp-das/commit/199aa1e310ecc0d8b4f3f0c34f2dcebb0b0f398d))
+* **deps:** bump the grafana-deps group with 2 updates ([#2142](https://github.com/dasch-swiss/dsp-das/issues/2142)) ([a07b14a](https://github.com/dasch-swiss/dsp-das/commit/a07b14a5978e2e79fe37b7d42f3512c46f2905c6))
+* move some user components to the right lib ([#2149](https://github.com/dasch-swiss/dsp-das/issues/2149)) ([2d09530](https://github.com/dasch-swiss/dsp-das/commit/2d09530ad7a09649b210f5656c7a2d379b1a4ec1))
+* remove unused code ([#2151](https://github.com/dasch-swiss/dsp-das/issues/2151)) ([96d9dfb](https://github.com/dasch-swiss/dsp-das/commit/96d9dfbbe94d3cb211a11bb6a9fac547dd65326e))
+
 ## [11.26.2](https://github.com/dasch-swiss/dsp-das/compare/v11.26.1...v11.26.2) (2025-03-03)
 
 
