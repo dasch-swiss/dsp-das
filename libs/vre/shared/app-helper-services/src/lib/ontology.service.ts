@@ -141,7 +141,10 @@ export class OntologyService {
    */
   getIriBaseUrl(): string {
     return `http://${this._dspApiConfig.apiHost}${
-      this._dspApiConfig.apiPort !== null ? `:${this._dspApiConfig.apiPort}` : ''
+      this._dspApiConfig.apiPort !== null &&
+      (this._dspApiConfig.apiHost === '0.0.0.0' || this._dspApiConfig.apiHost === 'localhost')
+        ? `:${this._dspApiConfig.apiPort}`
+        : ''
     }${this._dspApiConfig.apiPath}`;
   }
 
