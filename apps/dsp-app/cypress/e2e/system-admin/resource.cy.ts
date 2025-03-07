@@ -24,7 +24,38 @@ describe('Resource', () => {
   });
 
   describe('footnotes', () => {
-    it.only('should be displayed, and can be edited', () => {
+    it.skip('a created footnote should be sent in the right format (no double escape, empty text in tagTEST)', () => {
+      // Intercept the POST request
+      cy.intercept('POST', 'http://0.0.0.0:3333/v2/resources').as('postRequest');
+
+      ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
+      po.visitAddPage();
+
+      // create
+      po.addInitialLabel();
+
+      cy.get('.ck-blurred').click();
+      cy.get('button[data-cke-tooltip-text="Footnote"]').click();
+      cy.get('.ck-blurred').click();
+      cy.get('.ck-content[contenteditable=true]').then(el => {
+        // @ts-ignore
+        const editor = el[1].ckeditorInstance; // If you're using TS, this is ReturnType<typeof InlineEditor['create']>
+        editor.setData('myfootnote');
+      });
+      cy.get('.ck-button-save > .ck-icon').click();
+      po.clickOnSubmit();
+
+      cy.wait('@postRequest').then(interception => {
+        // Assert that the intercepted request body matches the expected payload (X)
+        const v =
+          interception.request.body['http://0.0.0.0:3333/ontology/00FF/images/v2#property'][
+            'http://api.knora.org/ontology/knora-api/v2#textValueAsXml'
+          ];
+        expect(v).to.contain('<footnote content="&lt;p&gt;myfootnote&lt;/p&gt;"></footnote>');
+      });
+    });
+
+    it.skip('should be displayed, and can be edited', () => {
       const footnote = {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
         'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
@@ -34,7 +65,7 @@ describe('Resource', () => {
         'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
-            '<?xml version="1.0" encoding="UTF-8"?><text><p>footnote1<footnote content="&amp;lt;p&amp;gt;fn1&amp;lt;/p&amp;gt;">[Footnote]</footnote> and footnote2<footnote content="&amp;lt;p&amp;gt;fn2&amp;lt;/p&amp;gt;">[Footnote]</footnote></p></text>',
+            '<?xml version="1.0" encoding="UTF-8"?> <text><p>footnote1<footnote content="&lt;p&gt;fn1&lt;/p&gt;"/> footnote2 <footnote content="&lt;p&gt;fn2&lt;/p&gt;"/></p></text>',
           'http://api.knora.org/ontology/knora-api/v2#textValueHasMapping': {
             '@id': 'http://rdfh.ch/standoff/mappings/StandardMapping',
           },

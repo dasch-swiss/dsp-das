@@ -1,25 +1,22 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ReadResource } from '@dasch-swiss/dsp-js';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   DeleteResourceDialogComponent,
-  DeleteResourceDialogProps,
-  EditResourceLabelDialogComponent,
-  EditResourceLabelDialogProps,
   EraseResourceDialogComponent,
-  EraseResourceDialogProps,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceService, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-toolbar',
   template: `
-    <!-- tools: share, add to favorites, edit, delete etc. -->
     <span class="action" [class.deleted]="resource.res.isDeleted">
-      <!-- Toggle show all comments button-->
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
@@ -43,17 +40,12 @@ import { filter } from 'rxjs/operators';
         <mat-icon>share</mat-icon>
       </button>
 
-      <!-- permission info: display full info in case of system or project admin; otherwise display only user's permissions -->
-      <app-permission-info
-        *ngIf="adminPermissions"
-        [hasPermissions]="resource.res.hasPermissions"
-        [userHasPermission]="resource.res.userHasPermission" />
-      <app-permission-info *ngIf="!adminPermissions" [userHasPermission]="resource.res.userHasPermission" />
+      <app-permission-info [resource]="resource.res" />
       <!-- more menu with: delete, erase resource -->
       <button
         data-cy="resource-toolbar-more-button"
         color="primary"
-        *ngIf="(userCanEdit && showEditLabel) || userCanDelete || adminPermissions"
+        *ngIf="userCanDelete || (isAdmin$ | async)"
         mat-icon-button
         class="more-menu"
         matTooltip="More"
@@ -71,7 +63,7 @@ import { filter } from 'rxjs/operators';
         matTooltipPosition="above"
         data-cy="copy-ark-url-button"
         [cdkCopyToClipboard]="resource.res.versionArkUrl"
-        (click)="openSnackBar('ARK URL copied to clipboard!')">
+        (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
       </button>
@@ -81,7 +73,7 @@ import { filter } from 'rxjs/operators';
         data-cy="copy-internal-link-button"
         matTooltipPosition="above"
         [cdkCopyToClipboard]="resource.res.id"
-        (click)="openSnackBar('Internal link copied to clipboard!')">
+        (click)="notification.openSnackBar('Internal link copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy internal link to clipboard
       </button>
@@ -89,28 +81,17 @@ import { filter } from 'rxjs/operators';
 
     <mat-menu #more="matMenu" class="res-more-menu">
       <button
-        *ngIf="showEditLabel"
-        [disabled]="!adminPermissions && !userCanEdit"
-        data-cy="resource-toolbar-edit-resource-button"
-        mat-menu-item
-        matTooltip="Edit the label of this resource"
-        matTooltipPosition="above"
-        (click)="editResourceLabel()">
-        <mat-icon>edit</mat-icon>
-        Edit label
-      </button>
-      <button
         data-cy="resource-toolbar-delete-resource-button"
-        [disabled]="!adminPermissions && userCanDelete === false"
+        [disabled]="!userCanDelete"
         mat-menu-item
         matTooltip="Move resource to trash bin."
         matTooltipPosition="above"
         (click)="deleteResource()">
         <mat-icon>delete</mat-icon>
-        Delete resource
+        {{ 'form.resource.title.delete' | translate }}
       </button>
       <button
-        *ngIf="adminPermissions"
+        *ngIf="isAdmin$ | async"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
         matTooltip="Erase resource forever. This cannot be undone."
@@ -126,11 +107,6 @@ import { filter } from 'rxjs/operators';
       .action {
         display: inline-flex;
 
-        .toggle-props {
-          padding: 12px;
-          height: 48px;
-        }
-
         button {
           border-radius: 0;
         }
@@ -138,100 +114,44 @@ import { filter } from 'rxjs/operators';
     `,
   ],
 })
-export class ResourceToolbarComponent implements OnInit {
+export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: DspResource;
-  @Input() adminPermissions = false;
-  @Input() showEditLabel = true;
 
-  @Input() lastModificationDate!: string;
-  @Input() linkToNewTab?: string;
-
-  @Output() afterResourceDeleted = new EventEmitter();
-
-  get userCanEdit() {
-    return ResourceUtil.userCanEdit(this.resource.res);
-  }
+  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   get userCanDelete() {
     return ResourceUtil.userCanDelete(this.resource.res);
   }
 
   constructor(
-    private _notification: NotificationService,
+    protected notification: NotificationService,
     private _resourceService: ResourceService,
-    private _cd: ChangeDetectorRef,
+    private _resourceFetcherService: ResourceFetcherService,
     private _dialog: MatDialog,
-    private _adminProjectsApi: AdminProjectsApiService,
-    private _viewContainerRef: ViewContainerRef,
-    private _resourceFetcher: ResourceFetcherService
+    private _store: Store
   ) {}
 
-  ngOnInit(): void {
-    if (this.resource.res.attachedToProject) {
-      this._adminProjectsApi.getAdminProjectsIriProjectiri(this.resource.res.attachedToProject).subscribe(res => {
-        this._cd.detectChanges();
-      });
-    }
-    this._cd.detectChanges();
-  }
-
   openResource() {
-    window.open(`/resource${this._getResourceSharedPath()}`, '_blank');
-  }
-
-  private _getResourceSharedPath() {
-    if (this.linkToNewTab) {
-      return this.linkToNewTab;
-    }
-
-    return this._resourceService.getResourcePath(this.resource.res.id);
-  }
-
-  editResourceLabel() {
-    this._dialog
-      .open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(EditResourceLabelDialogComponent, {
-        data: { resource: this.resource.res },
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
-      .pipe(filter(answer => !!answer))
-      .subscribe(answer => {
-        this._resourceFetcher.reload();
-        this._cd.markForCheck();
-      });
+    window.open(`/resource${this._resourceService.getResourcePath(this.resource.res.id)}`, '_blank');
   }
 
   deleteResource() {
     this._dialog
-      .open<DeleteResourceDialogComponent, DeleteResourceDialogProps>(DeleteResourceDialogComponent, {
-        data: {
-          resource: this.resource,
-          lastModificationDate: this.lastModificationDate,
-        },
-      })
+      .open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, { data: this.resource.res })
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this.afterResourceDeleted.emit();
+        this._resourceFetcherService.resourceIsDeleted();
       });
   }
 
   eraseResource() {
     this._dialog
-      .open<EraseResourceDialogComponent, EraseResourceDialogProps>(EraseResourceDialogComponent, {
-        data: {
-          resource: this.resource,
-          lastModificationDate: this.lastModificationDate,
-        },
-      })
+      .open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, { data: this.resource.res })
       .afterClosed()
       .pipe(filter(response => !!response))
       .subscribe(() => {
-        this.afterResourceDeleted.emit();
+        this._resourceFetcherService.resourceIsDeleted();
       });
-  }
-
-  openSnackBar(message: string) {
-    this._notification.openSnackBar(message);
   }
 }

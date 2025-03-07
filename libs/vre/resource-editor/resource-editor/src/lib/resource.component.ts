@@ -14,8 +14,8 @@ import { CompoundService } from './compound/compound.service';
   template: `
     <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
 
-    <div class=" content large middle">
-      <div class="resource-view">
+    <div class="content large middle">
+      <div>
         <app-resource-header [resource]="resource" />
         <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
         <app-compound-viewer *ngIf="isCompoundNavigation" />
@@ -23,13 +23,12 @@ import { CompoundService } from './compound/compound.service';
       </div>
     </div>
   `,
-  styleUrls: ['./resource.component.scss'],
   providers: [CompoundService, RegionService, SegmentsService],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
   representationsToDisplay!: ReadFileValue;
-  isCompoundNavigation = false;
+  isCompoundNavigation!: boolean;
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
@@ -41,6 +40,9 @@ export class ResourceComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    this._compoundService.reset();
+    this.isCompoundNavigation = false;
+
     this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource);
     this._onInit(this.resource);
   }

@@ -7,12 +7,11 @@ import { FootnoteService } from './footnote.service';
   template: `<h5>{{ 'resource.footnotes' | translate }}</h5>
     <div
       *ngFor="let footnote of footnoteService.footnotes; let index = index; trackBy: trackByIndex"
-      (click)="goToFootnote(footnote.uuid)"
       class="footnote"
       [attr.data-uuid]="footnote.uuid"
       data-cy="footnote">
       <a style="padding-top: 1em" (click)="goToFootnote(footnote.uuid)">{{ index + 1 }}.</a>
-      <span [innerHTML]="footnote.content"></span>
+      <span [innerHTML]="footnote.content | internalLinkReplacer | addTargetBlank"></span>
     </div>`,
   styles: [
     `

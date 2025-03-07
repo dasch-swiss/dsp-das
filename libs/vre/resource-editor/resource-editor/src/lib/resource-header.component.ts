@@ -1,23 +1,13 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { ReadResource, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { LoadClassItemsCountAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  EditResourceLabelDialogComponent,
-  EditResourceLabelDialogProps,
-} from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
-import {
-  Events as CommsEvents,
-  ComponentCommunicationEventService,
-  EmitEvent,
-  OntologyService,
-  ProjectService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadClassItemsCountAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-header',
@@ -30,12 +20,7 @@ import { map } from 'rxjs/operators';
         matTooltipPosition="above">
         {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
       </h3>
-      <app-resource-toolbar
-        [resource]="resource"
-        [lastModificationDate]="resource.res.lastModificationDate"
-        [adminPermissions]="isAdmin$ | async"
-        [showEditLabel]="false"
-        (afterResourceDeleted)="afterResourceDeleted()" />
+      <app-resource-toolbar [resource]="resource" />
     </div>
     <div class="resource-label" style="display: flex; justify-content: space-between">
       <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>
@@ -72,7 +57,7 @@ import { map } from 'rxjs/operators';
         display: flex;
         box-sizing: border-box;
         flex-direction: row;
-        align-items: start;
+        align-items: flex-start;
         justify-content: space-between;
 
         h3.label-info {
@@ -111,37 +96,18 @@ export class ResourceHeaderComponent {
     return ResourceUtil.userCanEdit(this.resource.res);
   }
 
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  isAdmin$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectAdminOrSysAdmin(user!, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
   constructor(
     private _dialog: MatDialog,
-    private _store: Store,
     private _viewContainerRef: ViewContainerRef,
-    private _componentCommsService: ComponentCommunicationEventService,
+    private _store: Store,
     private _ontologyService: OntologyService
   ) {}
 
   openEditLabelDialog() {
-    this._dialog.open<EditResourceLabelDialogComponent, EditResourceLabelDialogProps, boolean>(
-      EditResourceLabelDialogComponent,
-      {
-        ...DspDialogConfig.smallDialog<EditResourceLabelDialogProps>({ resource: this.resource.res }),
-        viewContainerRef: this._viewContainerRef,
-      }
-    );
+    this._dialog.open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
+      ...DspDialogConfig.smallDialog<ReadResource>(this.resource.res),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   afterResourceDeleted() {
@@ -153,7 +119,5 @@ export class ResourceHeaderComponent {
         this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
       }
     }
-
-    this._componentCommsService.emit(new EmitEvent(CommsEvents.resourceDeleted));
   }
 }

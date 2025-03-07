@@ -10,7 +10,7 @@ import {
   WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DspResource, ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
+import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { mergeMap } from 'rxjs/operators';
 import { FileRepresentation } from '../file-representation';
 import { getFileValue } from '../get-file-value';
@@ -20,6 +20,7 @@ import {
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
+import { ResourceUtil } from '../resource.util';
 
 @Component({
   selector: 'app-audio-more-button',
@@ -29,7 +30,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
     <mat-menu #more="matMenu" class="representation-menu">
       <button mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
       <button mat-menu-item [cdkCopyToClipboard]="src.fileValue.fileUrl">Copy audio URL to clipboard</button>
-      <button mat-menu-item (click)="download(src.fileValue.fileUrl)">Download audio</button>
+      <button mat-menu-item (click)="download()">Download audio</button>
       <button mat-menu-item [disabled]="!userCanEdit" (click)="openReplaceFileDialog()">Replace file</button>
     </mat-menu>`,
 })
@@ -74,7 +75,7 @@ export class AudioMoreButtonComponent {
     window.open(this.src.fileValue.fileUrl, '_blank');
   }
 
-  download(url: string) {
+  download() {
     this._rs.downloadProjectFile(this.src.fileValue, this.parentResource);
   }
 

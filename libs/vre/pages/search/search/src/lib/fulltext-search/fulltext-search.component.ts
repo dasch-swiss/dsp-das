@@ -92,6 +92,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
   // selected project, in case of limitToProject and/or projectfilter is true
   project: ReadProject;
 
+  // although is defined here use 'fullTextSearch.allProjects' in the template for proper translation handling
   defaultProjectLabel = 'All projects';
 
   projectLabel: string = this.defaultProjectLabel;
@@ -351,7 +352,7 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   setFocus(): void {
     if (localStorage.getItem('prevSearch') !== null) {
-      this.prevSearch = this._sortingService.reverseArray(JSON.parse(localStorage.getItem('prevSearch')));
+      this.prevSearch = this._reverseArray(JSON.parse(localStorage.getItem('prevSearch')));
     } else {
       this.prevSearch = [];
     }
@@ -431,5 +432,9 @@ export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   togglePhonePanel() {
     this.displayPhonePanel = !this.displayPhonePanel;
+  }
+
+  private _reverseArray(value: Array<any>): Array<any> {
+    return value.slice().reverse();
   }
 }

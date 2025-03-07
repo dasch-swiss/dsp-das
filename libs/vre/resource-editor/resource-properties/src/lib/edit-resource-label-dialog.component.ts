@@ -4,12 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
-
-export interface EditResourceLabelDialogProps {
-  resource: ReadResource;
-}
 
 @Component({
   selector: 'app-edit-resource-label-dialog',
@@ -34,17 +29,16 @@ export interface EditResourceLabelDialogProps {
     </div>`,
 })
 export class EditResourceLabelDialogComponent {
-  control = new FormControl(this.data.resource.label, { validators: [Validators.required], nonNullable: true });
-  initialValue = this.data.resource.label;
+  control = new FormControl(this.data.label, { validators: [Validators.required], nonNullable: true });
+  initialValue = this.data.label;
   loading = false;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    @Inject(MAT_DIALOG_DATA) public data: EditResourceLabelDialogProps,
+    @Inject(MAT_DIALOG_DATA) public data: ReadResource,
     private _dialogRef: MatDialogRef<EditResourceLabelDialogComponent>,
-    private _resourceFetcherService: ResourceFetcherService,
-    private _componentCommsService: ComponentCommunicationEventService
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   submit() {
@@ -58,11 +52,11 @@ export class EditResourceLabelDialogComponent {
     this.loading = true;
 
     const payload = new UpdateResourceMetadata();
-    payload.id = this.data.resource.id;
-    payload.type = this.data.resource.type;
+    payload.id = this.data.id;
+    payload.type = this.data.type;
     payload.label = this.control.value;
     this._dspApiConnection.v2.res
-      .getResource(this.data.resource.id)
+      .getResource(this.data.id)
       .pipe(
         switchMap(res => {
           payload.lastModificationDate = (res as ReadResource).lastModificationDate;
@@ -73,7 +67,6 @@ export class EditResourceLabelDialogComponent {
         })
       )
       .subscribe(() => {
-        this._componentCommsService.emit(new EmitEvent(Events.resourceChanged));
         this._resourceFetcherService.reload();
         this._dialogRef.close(true);
       });

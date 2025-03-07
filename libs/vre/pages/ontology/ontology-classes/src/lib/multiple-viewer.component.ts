@@ -5,7 +5,7 @@ import { SplitSize } from './split-size.interface';
 @Component({
   selector: 'app-multiple-viewer',
   template: `
-    <div class="multiple-instances" *ngIf="searchParams">
+    <div class="multiple-instances">
       <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
         <as-split-area [size]="40">
           <app-list-view
@@ -27,7 +27,7 @@ import { SplitSize } from './split-size.interface';
             <!-- multiple resources view / comparison viewer -->
             <app-comparison
               *ngSwitchCase="'compare'"
-              [resources]="selectedResources.resInfo"
+              [resources]="selectedResources?.resInfo"
               [splitSizeChanged]="splitSizeChanged" />
           </div>
         </as-split-area>
@@ -37,10 +37,10 @@ import { SplitSize } from './split-size.interface';
   styleUrls: ['./multiple-viewer.component.scss'],
 })
 export class MultipleViewerComponent {
-  @Input({ required: true }) searchParams: SearchParams;
+  @Input({ required: true }) searchParams!: SearchParams;
   viewMode: 'single' | 'intermediate' | 'compare' = 'single';
-  selectedResources?: FilteredResources;
-  splitSizeChanged: SplitSize;
+  selectedResources: FilteredResources | undefined = undefined;
+  splitSizeChanged: SplitSize | undefined = undefined;
 
   constructor(private _cdr: ChangeDetectorRef) {}
 

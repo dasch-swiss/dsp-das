@@ -1,7 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { ResourceUtil } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
@@ -12,52 +11,38 @@ import { PropertyValueService } from './property-value.service';
   template: `
     <div class="action-bubble" data-cy="action-bubble">
       <div class="button-container d-flex">
-        <ng-container *ngIf="!editMode; else editTemplate">
+        <button
+          *ngIf="userHasPermission('edit')"
+          mat-button
+          class="edit edit-button"
+          matTooltip="edit"
+          (click)="$event.stopPropagation(); editAction.emit()"
+          data-cy="edit-button">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <ng-container *ngIf="date">
           <button
-            *ngIf="userHasPermissionToModify"
             mat-button
-            class="edit edit-button"
-            data-cy="action-bubble-edit"
-            matTooltip="edit"
-            (click)="$event.stopPropagation(); editAction.emit()"
-            data-cy="edit-button">
-            <mat-icon>edit</mat-icon>
+            class="edit"
+            *ngIf="infoTooltip$ | async as infoTooltip"
+            [matTooltip]="infoTooltip"
+            (click)="$event.stopPropagation()">
+            <mat-icon>info</mat-icon>
           </button>
-          <ng-container *ngIf="date">
-            <button
-              mat-button
-              class="edit"
-              *ngIf="infoTooltip$ | async as infoTooltip"
-              [matTooltip]="infoTooltip"
-              (click)="$event.stopPropagation()">
-              <mat-icon>info</mat-icon>
-            </button>
-          </ng-container>
-          <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
-            <button
-              *ngIf="userHasPermissionToModify"
-              mat-button
-              class="delete"
-              data-cy="delete-button"
-              [disabled]="!showDelete"
-              (click)="$event.stopPropagation(); deleteAction.emit()">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </span>
         </ng-container>
+        <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
+          <button
+            *ngIf="userHasPermission('delete')"
+            mat-button
+            class="delete"
+            data-cy="delete-button"
+            [disabled]="!showDelete"
+            (click)="$event.stopPropagation(); deleteAction.emit()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
       </div>
     </div>
-
-    <ng-template #editTemplate>
-      <button
-        mat-button
-        class="edit"
-        matTooltip="undo"
-        data-cy="action-bubble-undo"
-        (click)="$event.stopPropagation(); editAction.emit()">
-        <mat-icon>undo</mat-icon>
-      </button>
-    </ng-template>
   `,
   animations: [
     trigger('simpleFadeAnimation', [
@@ -69,19 +54,12 @@ import { PropertyValueService } from './property-value.service';
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input() editMode!: boolean;
   @Input() showDelete!: boolean;
   @Input() date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
 
   infoTooltip$!: Observable<string>;
-
-  get userHasPermissionToModify() {
-    return !this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0
-      ? false
-      : ResourceUtil.userCanEdit(this._propertyValueService.editModeData.values[0]);
-  }
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
@@ -99,5 +77,14 @@ export class PropertyValueActionBubbleComponent implements OnInit {
         return `Creation date: ${this.date}. Value creator: ${creator}`;
       })
     );
+  }
+
+  userHasPermission(permissionType: 'edit' | 'delete'): boolean {
+    if (!this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0) {
+      return false;
+    }
+
+    const value = this._propertyValueService.editModeData.values[0];
+    return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
   }
 }

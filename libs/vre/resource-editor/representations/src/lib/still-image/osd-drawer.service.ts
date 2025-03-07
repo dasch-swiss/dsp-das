@@ -41,6 +41,13 @@ export class OsdDrawerService implements OnDestroy {
     this._subscribeToRegions();
     this._subscribeToSelectedRegion();
     this._subscribeToCreatedRectangle();
+
+    this._osd.viewer.addHandler('canvas-click', event => {
+      const regionIri = (<any>event).originalTarget.dataset.regionIri;
+      if (regionIri) {
+        this._regionService.selectRegion(regionIri);
+      }
+    });
   }
 
   update(resource: ReadResource): void {
@@ -182,15 +189,11 @@ export class OsdDrawerService implements OnDestroy {
     regionComment: string
   ): void {
     const { regEle, loc } = this._createRectangle(regionIri, geometry, aspectRatio);
-    this._osd.viewer
-      .addOverlay({
-        id: regionIri,
-        element: regEle,
-        location: loc,
-      })
-      .addHandler('canvas-click', event => {
-        this._regionService.selectRegion((<any>event).originalTarget.dataset.regionIri);
-      });
+    this._osd.viewer.addOverlay({
+      id: regionIri,
+      element: regEle,
+      location: loc,
+    });
 
     this._paintedPolygons[regionIri].push(regEle);
     this._createTooltip(regionLabel, regionComment, regEle, regionIri);

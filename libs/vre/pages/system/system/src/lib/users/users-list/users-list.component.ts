@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
@@ -14,12 +14,14 @@ import {
   SetUserAction,
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { CreateUserDialogComponent, EditUserPageComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
 import { combineLatest, from, merge, Observable } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
+import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 
@@ -74,11 +76,11 @@ export class UsersListComponent {
   sortProps: any = [
     {
       key: 'familyName',
-      label: 'Last name',
+      label: this._ts.instant('usersList.sortProps.familyName'),
     },
     {
       key: 'givenName',
-      label: 'First name',
+      label: this._ts.instant('usersList.sortProps.givenName'),
     },
     {
       key: 'email',
@@ -114,15 +116,15 @@ export class UsersListComponent {
   @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
 
   constructor(
-    private _userApiService: UserApiService,
-    private _matDialog: MatDialog,
+    private _actions$: Actions,
     private _dialog: DialogService,
+    private _matDialog: MatDialog,
     private _route: ActivatedRoute,
     private _router: Router,
     private _sortingService: SortingService,
     private _store: Store,
-    private _actions$: Actions,
-    private _cd: ChangeDetectorRef
+    private _ts: TranslateService,
+    private _userApiService: UserApiService
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe((params: Params) => {
@@ -314,7 +316,7 @@ export class UsersListComponent {
 
   editUser(user: ReadUser) {
     const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true);
-    const dialogRef = this._matDialog.open(EditUserPageComponent, dialogConfig);
+    const dialogRef = this._matDialog.open(EditUserDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(() => {
       this.refreshParent.emit();
     });
@@ -377,16 +379,5 @@ export class UsersListComponent {
     this.sortBy = key;
     this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy as any);
     localStorage.setItem('sortUsersBy', key);
-  }
-
-  private addUserToGroupMembership(id: string, newGroup: string): void {
-    this._userApiService
-      .addToGroupMembership(id, newGroup)
-      .pipe(take(1))
-      .subscribe(() => {
-        if (this.projectUuid) {
-          this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
-        }
-      });
   }
 }
