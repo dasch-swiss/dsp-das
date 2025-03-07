@@ -1,5 +1,40 @@
 # Changelog
 
+## [11.26.2](https://github.com/dasch-swiss/dsp-das/compare/v11.26.1...v11.26.2) (2025-03-03)
+
+
+### Bug Fixes
+
+* compoundService reset on change of resource ([#2135](https://github.com/dasch-swiss/dsp-das/issues/2135)) ([768f687](https://github.com/dasch-swiss/dsp-das/commit/768f6872db350bdfcdab2be6a067248354f5bfdf))
+* highlights value from route and redesign the properties in the resource editor ([#2134](https://github.com/dasch-swiss/dsp-das/issues/2134)) ([ac6186d](https://github.com/dasch-swiss/dsp-das/commit/ac6186d31509830ba5fef52b19852ae6a814fcb4))
+* navigate after deletion ([#2125](https://github.com/dasch-swiss/dsp-das/issues/2125)) ([08ca25b](https://github.com/dasch-swiss/dsp-das/commit/08ca25b097426d1d7680490c3b0c5ae75fd3f881))
+* resource editor manages its own resource deletion ([#2138](https://github.com/dasch-swiss/dsp-das/issues/2138)) ([097b620](https://github.com/dasch-swiss/dsp-das/commit/097b6207386d2aeeb676cb72d466480bd402393d))
+
+
+### Maintenances
+
+* e2e tests can have code coverage option ([#2127](https://github.com/dasch-swiss/dsp-das/issues/2127)) ([9930f7a](https://github.com/dasch-swiss/dsp-das/commit/9930f7a74b018de6f671b7979e3b18f1a470d5be))
+* remove unused code ([#2137](https://github.com/dasch-swiss/dsp-das/issues/2137)) ([6c9d1b0](https://github.com/dasch-swiss/dsp-das/commit/6c9d1b01cd59e55c77087299f8490ffe43db73a7))
+* remove unused route ([#2139](https://github.com/dasch-swiss/dsp-das/issues/2139)) ([593c19d](https://github.com/dasch-swiss/dsp-das/commit/593c19d9aef5ea58076b40b5d07928f0f527a024))
+
+## [11.26.1](https://github.com/dasch-swiss/dsp-das/compare/v11.26.0...v11.26.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* can navigate to internal links ([#2133](https://github.com/dasch-swiss/dsp-das/issues/2133)) ([9574905](https://github.com/dasch-swiss/dsp-das/commit/957490523f76f1b03d0a8fda1063b875af7adeba))
+* incoming links update properly ([#2130](https://github.com/dasch-swiss/dsp-das/issues/2130)) ([d1731d8](https://github.com/dasch-swiss/dsp-das/commit/d1731d83a202b63efcbc2532ec3d838fd53b0bc2))
+* loading is happening inside the incoming links property row ([#2128](https://github.com/dasch-swiss/dsp-das/issues/2128)) ([c2e7020](https://github.com/dasch-swiss/dsp-das/commit/c2e702016ab08bc1548b5a4bf3472805482f2548))
+* select search (DEV-4498) ([#2129](https://github.com/dasch-swiss/dsp-das/issues/2129)) ([fe8e6b7](https://github.com/dasch-swiss/dsp-das/commit/fe8e6b71393afa89d471299d8e944f6efa8529ed))
+
+
+### Maintenances
+
+* **deps-dev:** bump @types/jasmine from 4.6.4 to 4.6.5 in the jasmine-karma-deps group ([#2118](https://github.com/dasch-swiss/dsp-das/issues/2118)) ([61e1356](https://github.com/dasch-swiss/dsp-das/commit/61e13566299496875b0b5aff87bac31ca680df81))
+* **deps-dev:** bump @types/node from 20.17.17 to 20.17.19 in the types-deps group ([#2120](https://github.com/dasch-swiss/dsp-das/issues/2120)) ([db6a742](https://github.com/dasch-swiss/dsp-das/commit/db6a7423df5d395b72e72db9b9ce5c2963a7c7b0))
+* **deps-dev:** bump postcss from 8.5.1 to 8.5.2 in the postcss-deps group ([#2119](https://github.com/dasch-swiss/dsp-das/issues/2119)) ([88b6f8a](https://github.com/dasch-swiss/dsp-das/commit/88b6f8ac6c54cffd3dae68aa8c691dd2ba85e1cf))
+* **deps-dev:** bump prettier from 3.5.0 to 3.5.1 ([#2121](https://github.com/dasch-swiss/dsp-das/issues/2121)) ([3975ec5](https://github.com/dasch-swiss/dsp-das/commit/3975ec5b1887e2b145f39ebb810feafaf566cee4))
+
 ## [11.26.0](https://github.com/dasch-swiss/dsp-das/compare/v11.25.1...v11.26.0) (2025-02-17)
 
 
