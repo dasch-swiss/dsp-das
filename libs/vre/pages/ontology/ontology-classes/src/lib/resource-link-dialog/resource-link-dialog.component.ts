@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Constants,
   CreateLinkValue,
@@ -11,12 +11,13 @@ import {
   ReadResource,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 export interface ResourceLinkDialogProps {
@@ -39,6 +40,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   });
 
   selectedProject?: string;
+  routeProject?: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -50,7 +52,7 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
       const projects = currentProject
         ? isSysAdmin
           ? [currentProject]
-          : currentUserProjects.find(x => x.id === currentProject.id)
+          : [currentUserProjects.find(x => x.id === currentProject.id)]
         : currentUserProjects;
       return projects as StoredProject[];
     })
@@ -58,7 +60,19 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
 
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isCurrentProjectMember$ = this._store.select(ProjectsSelectors.isCurrentProjectMember);
   isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
+
+  get isRouteProjectMember(): boolean {
+    const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectGroups);
+    const user = this._store.selectSnapshot(UserSelectors.user)!;
+    const isProjectMember = ProjectService.IsProjectMemberOrAdminOrSysAdmin(
+      user,
+      userProjectGroups,
+      this.routeProject!
+    );
+    return isProjectMember;
+  }
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -66,17 +80,14 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
+    private _activeRoute: ActivatedRoute,
     private _store: Store,
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
 
   ngOnInit() {
-    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(projects => {
-      if (projects.length > 0) {
-        this.selectedProject = projects[0].id;
-      }
-    });
+    this.setProject();
   }
 
   ngOnDestroy() {
@@ -94,6 +105,23 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
       const goto = `/resource${path}`;
       this._router.navigate([]).then(() => window.open(goto, '_blank'));
       this.dialogRef.close();
+    });
+  }
+
+  private setProject() {
+    this.routeProject = decodeURIComponent(
+      this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project] || ''
+    );
+
+    if (this.routeProject && this.isRouteProjectMember) {
+      this.selectedProject = this.routeProject;
+      return;
+    }
+
+    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(usersProjects => {
+      if (usersProjects.length > 0) {
+        this.selectedProject = usersProjects[0].id;
+      }
     });
   }
 
