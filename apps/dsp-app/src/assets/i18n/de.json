@@ -6,15 +6,15 @@
   },
   "list": {
     "title": {
-      "active": "Active",
-      "inactive": "Deactivated"
+      "active": "Aktiv",
+      "inactive": "Deaktiviert"
     }
   },
   "addProjectMember": {
     "title": "Projektmitglied hinzufügen",
     "description": "Projektteam erweitern",
     "select": "Aus der Liste wählen ...",
-    "usersLoading": "Lade Benutzer ...",
+    "usersLoading": "Benutzer werden geladen ...",
     "newUser": "Neuer Benutzer"
   },
   "usersList": {
@@ -28,8 +28,8 @@
       "project": "Projekt",
       "projects": "Projekte",
       "sortShortCode": "Kurzcode",
-      "sortShortName": "Abkürzung",
-      "sortProjectName": "Projekttitel",
+      "sortShortName": "Kurzname",
+      "sortProjectName": "Projektname",
       "statusActive": "Aktiv",
       "statusDeactivated": "Deaktiviert",
       "createNew": "Neues Projekt erstellen",
@@ -37,7 +37,7 @@
       "edit": "Projektinformationen bearbeiten",
       "reactivate": "Projekt reaktivieren",
       "deactivate": "Projekt deaktivieren",
-      "erase": "Löschen",
+      "erase": "Projekt löschen",
       "eraseConfirmation": "Möchten Sie Projekt “{{0}}” löschen?",
       "deactivateConfirmation": "Möchten Sie Projekt “{{0}}” deaktivieren?",
       "reactivateConfirmation": "Möchten Sie Projekt “{{0}}” reaktivieren?",
@@ -45,7 +45,7 @@
         "title": "Bitte geben Sie die erforderlichen Informationen ein, um das Projekt zu löschen.",
         "subtitle": "Projekt löschen",
         "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden, gehen Sie also vorsichtig damit um.",
-        "shortCode": "Projektkurzcode",
+        "shortCode": "Projekt-Kurzcode",
         "systemAdminPassword": "Systemadministrator-Passwort",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
@@ -59,7 +59,7 @@
       "cancel": "Abbrechen",
       "close": "Schliessen",
       "submit": "Speichern",
-      "retry": "Wiederholen",
+      "retry": "Erneut versuchen",
       "update": "Aktualisieren",
       "next": "Weiter",
       "reset": "Zurücksetzen",
@@ -73,7 +73,7 @@
         "edit": "Datenmodell bearbeiten"
       },
       "label": {
-        "name": "Eindeutiger Name"
+        "name": "Einen eindeutigen Namen festlegen"
       }
     },
     "user": {
@@ -85,35 +85,35 @@
         "username": "Benutzername",
         "usernameHint": "Benutzername darf keine Sonder- oder Leerzeichen beinhalten.",
         "password": "Passwort",
-        "passwordLengthHint": "Use at least 8 characters.",
-        "passwordPatternHint": "The password should have at least one uppercase letter and one number.",
+        "passwordLengthHint": "Verwenden Sie mindestens 8 Zeichen.",
+        "passwordPatternHint": "Das Passwort sollte mindestens einen Großbuchstaben und eine Zahl enthalten.",
         "oldPassword": "Altes Passwort",
         "newPassword": "Neues Passwort",
         "confirmPassword": "Passwort bestätigen",
         "requesterPassword": "Dein Passwort",
         "language": "Sprache",
-        "sysAdmin": "Systemadministratorregeln",
-        "updateSuccess": "Das Profil wurde erfolgreich aktualisiert."
+        "sysAdmin": "Systemadministrator-Regeln",
+        "updateSuccess": "Das Benutzerprofil wurde erfolgreich aktualisiert."
       },
       "title": {
         "new": "Neuen Benutzer erstellen",
         "edit": "Benutzer anpassen",
-        "profile": "Profil",
+        "profile": "Benutzerprofil",
         "delete": "Benutzer löschen",
         "deleteButton": "Benutzerkonto jetzt sperren",
-        "password": "Passwort ändern",
-        "ownPasswordSuccess": "You have successfully updated your password.",
-        "userPasswordSuccess": "You have successfully updated user's password."
+        "password": "Passwort aktualisieren",
+        "ownPasswordSuccess": "Sie haben Ihr Passwort erfolgreich aktualisiert.",
+        "userPasswordSuccess": "Sie haben das Passwort des Benutzers erfolgreich aktualisiert."
       }
     },
     "project": {
       "general": {
         "description": "Projektbeschrieb",
         "shortcode": "Kurzcode",
-        "shortname": "Abkürzung",
+        "shortname": "Kurzname",
         "longname": "Projekttitel",
         "keywords": "Stichworte",
-        "editSuccess": "You have successfully updated the project information."
+        "editSuccess": "Sie haben die Projektinformationen erfolgreich aktualisiert."
       },
       "imageSettings": {
         "off": "Aus",
@@ -122,19 +122,19 @@
         "restrictImageSize": "Bildgröße einschränken",
         "absoluteWidth": "Absolute Breite in Pixel von: {{min}} bis: {{max}}",
         "percentage": "Prozentsatz",
-        "updateConfirmation": "Sie haben die Projektbildeinstellungen erfolgreich aktualisiert.",
+        "updateConfirmation": "Sie haben die Projektbild-Einstellungen erfolgreich aktualisiert.",
         "info": "Um die Größe Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht für beide Optionen Werte angeben.",
         "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind."
       }
     },
     "lists": {
       "title": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Kontrolliertes Vokabular löschen"
       }
     },
     "resource": {
       "title": {
-        "delete": "Delete this resource"
+        "delete": "Diese Ressource löschen"
       }
     }
   },
@@ -149,30 +149,30 @@
     "properties": "Eigenschaften",
     "comment": "Kommentar",
     "incomingLink": {
-      "tooltip": "Indicates that this resource is referred to by another resource",
-      "label": "has incoming link"
+    "tooltip": "Zeigt an, dass auf diese Ressource von einer anderen Ressource verwiesen wird",
+    "label": "hat eingehenden Link"
     },
     "standoffLink": {
-      "tooltip": "Represent a link in standoff markup from one resource to another",
-      "label": "has Standoff link"
+    "tooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
+    "label": "hat Standoff-Link"
     },
     "footnotes": "Fussnoten",
     "permissions": {
       "groups": {
         "label": "Berechtigungen",
-        "projectAdmin": "Project Admin",
-        "creator": "Creator",
-        "projectMember": "Project Member",
-        "knownUser": "Known User",
-        "unknownUser": "Unknown User",
-        "usersPermissions": "Your permissions"
+        "projectAdmin": "Projektadministrator",
+        "creator": "Ersteller",
+        "projectMember": "Projektmitglied",
+        "knownUser": "Bekannter Benutzer",
+        "unknownUser": "Unbekannter Benutzer",
+        "usersPermissions": "Ihre Berechtigungen"
       },
       "interactions": {
-        "restrictedView": "Restricted view permission (RV)",
-        "view": "View permission (V)",
-        "modify": "Modify permission (M)",
-        "delete": "Delete permission (D)",
-        "changeRights": "Change rights permission (CR)"
+        "restrictedView": "Eingeschränkte Ansichtsberechtigung (RV)",
+        "view": "Ansichtsberechtigung (V)",
+        "modify": "Änderungsberechtigung (M)",
+        "delete": "Löschberechtigung (D)",
+        "changeRights": "Rechteänderungsberechtigung (CR)"
       }
     }
   },
@@ -185,7 +185,7 @@
   "fullTextSearch": {
     "filterByProject": "Nach Projekt filtern",
     "search": "Suche",
-    "allProjects": "All projects"
+    "allProjects": "Alle Projekte"
   },
   "header": {
     "help": "Hilfe"
