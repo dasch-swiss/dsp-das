@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AppConfigService, DspInstrumentationConfig, DspInstrumentationToken } from '@dasch-swiss/vre/core/config';
+import { DspInstrumentationConfig, DspInstrumentationToken } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService, AuthService } from '@dasch-swiss/vre/core/session';
 
 @Injectable({
@@ -11,10 +11,9 @@ export class PendoAnalyticsService {
   private authService: AuthService = inject(AuthService);
   private _accessTokenService: AccessTokenService = inject(AccessTokenService);
   private environment: string = this.config.environment;
-  private _appConfig = inject(AppConfigService);
 
   setup() {
-    if (this._appConfig.dspInstrumentationConfig.environment !== 'prod') {
+    if (this.config.environment !== 'prod') {
       return;
     }
 
