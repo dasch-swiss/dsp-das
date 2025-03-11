@@ -41,15 +41,7 @@ import {
 } from './ontologies.actions';
 import { OntologiesStateModel } from './ontologies.state-model';
 
-const defaults: OntologiesStateModel = <OntologiesStateModel>{
-  isLoading: false,
-  projectOntologies: {}, // project ontologies grouped by project IRI
-  hasLoadingErrors: false, // loading error state
-  currentOntology: null, // the currently selected ontology
-  currentOntologyCanBeDeleted: false,
-  currentProjectOntologyProperties: [], // reflects current ontology properties in data model grouped by ontology IRI
-  isOntologiesLoading: false, // loading state for project ontologies
-};
+const defaults = new OntologiesStateModel();
 
 /*
   Provides data about the ontologies in a project, resource viewer, ontology editor.
@@ -77,7 +69,7 @@ export class OntologiesState {
 
   @Action(SetCurrentOntologyAction)
   setCurrentOntologyAction(ctx: StateContext<OntologiesStateModel>, { readOntology }: SetCurrentOntologyAction) {
-    ctx.patchState({ currentOntology: readOntology });
+    ctx.patchState({ ontology: readOntology });
   }
 
   @Action(UpdateProjectOntologyAction)
@@ -86,7 +78,7 @@ export class OntologiesState {
     { readOntology, projectUuid }: UpdateProjectOntologyAction
   ) {
     const state = ctx.getState();
-    const readOntologies = state.projectOntologies[projectUuid].readOntologies;
+    const readOntologies = state.ontologiesByIri[projectUuid].readOntologies;
     readOntologies[readOntologies.findIndex(onto => onto.id === readOntology.id)] = readOntology;
     ctx.patchState(state);
   }
@@ -97,7 +89,7 @@ export class OntologiesState {
     { readOntologyId, projectUuid }: RemoveProjectOntologyAction
   ) {
     const state = ctx.getState();
-    const readOntologies = state.projectOntologies[projectUuid].readOntologies;
+    const readOntologies = state.ontologiesByIri[projectUuid].readOntologies;
     const index = readOntologies.findIndex(onto => onto.id === readOntologyId);
     if (index > -1) {
       readOntologies.splice(index, 1);
@@ -107,7 +99,7 @@ export class OntologiesState {
 
   @Action(LoadProjectOntologiesAction)
   loadProjectOntologiesAction(ctx: StateContext<OntologiesStateModel>, { projectIri }: LoadProjectOntologiesAction) {
-    ctx.patchState({ isOntologiesLoading: true, isLoading: true });
+    ctx.patchState({ areOntologiesLoading: true, isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
 
     // get all project ontologies
@@ -128,7 +120,7 @@ export class OntologiesState {
               readOntologies: [],
             },
           };
-          ctx.setState({ ...ctx.getState(), projectOntologies });
+          ctx.setState({ ...ctx.getState(), ontologiesByIri: projectOntologies });
           // TODO should load ontologies as a batch with dedicated endpoint, not one by one
           ctx
             .dispatch(
@@ -151,7 +143,7 @@ export class OntologiesState {
               ontoMeta.ontologies.forEach(onto => {
                 const readOntology = ctx
                   .getState()
-                  .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
+                  .ontologiesByIri[projectIri].readOntologies.find(o => o.id === onto.id);
                 if (readOntology) {
                   ctx.dispatch(
                     OntologyClassHelper.GetReadOntologyClassesToDisplay(readOntology.classes).map(
@@ -160,7 +152,7 @@ export class OntologiesState {
                   );
                 }
               });
-              ctx.patchState({ isOntologiesLoading: false });
+              ctx.patchState({ areOntologiesLoading: false });
             });
         },
         error: (error: ApiResponseError) => {
@@ -182,7 +174,7 @@ export class OntologiesState {
       tap({
         next: (ontology: ReadOntology) => {
           const projectIri = this._projectService.uuidToIri(projectUuid);
-          let projectOntologiesState = ctx.getState().projectOntologies;
+          let projectOntologiesState = ctx.getState().ontologiesByIri;
           if (!projectOntologiesState[projectIri]) {
             projectOntologiesState = {
               [projectIri]: { ontologiesMetadata: [], readOntologies: [] },
@@ -201,14 +193,14 @@ export class OntologiesState {
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
           projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
 
-          if (ontology.id === ctx.getState().currentOntology?.id) {
+          if (ontology.id === ctx.getState().ontology?.id) {
             ctx.dispatch(new SetCurrentOntologyAction(ontology));
           }
 
           ctx.setState({
             ...ctx.getState(),
             isLoading: !stopLoadingWhenCompleted,
-            projectOntologies: projectOntologiesState,
+            ontologiesByIri: projectOntologiesState,
           });
         },
         error: (error: ApiResponseError) => {
@@ -244,9 +236,9 @@ export class OntologiesState {
     const projectIri = this._projectService.uuidToIri(projectUuid);
     return of(ctx.getState()).pipe(
       map(currentState => {
-        if (currentState.projectOntologies[projectIri]) {
-          currentState.projectOntologies[projectIri].ontologiesMetadata = [];
-          currentState.projectOntologies[projectIri].readOntologies = [];
+        if (currentState.ontologiesByIri[projectIri]) {
+          currentState.ontologiesByIri[projectIri].ontologiesMetadata = [];
+          currentState.ontologiesByIri[projectIri].readOntologies = [];
           ctx.patchState(currentState);
         }
 
@@ -268,8 +260,8 @@ export class OntologiesState {
   @Action(ClearCurrentOntologyAction)
   clearCurrentOntology(ctx: StateContext<OntologiesStateModel>) {
     const state = ctx.getState();
-    state.currentOntology = defaults.currentOntology;
-    state.currentProjectOntologyProperties = defaults.currentProjectOntologyProperties;
+    state.ontology = defaults.ontology;
+    state.ontologyPropertiesByIri = defaults.ontologyPropertiesByIri;
     ctx.patchState(state);
   }
 
@@ -280,11 +272,11 @@ export class OntologiesState {
     { projectUuid }: SetCurrentProjectOntologyPropertiesAction
   ) {
     const state = ctx.getState();
-    if (!state.projectOntologies[projectUuid]) {
+    if (!state.ontologiesByIri[projectUuid]) {
       return;
     }
     // get all project ontologies
-    const projectOntologies = state.projectOntologies[projectUuid].readOntologies;
+    const projectOntologies = state.ontologiesByIri[projectUuid].readOntologies;
     const ontoProperties = <OntologyProperties[]>projectOntologies.map(
       onto =>
         <OntologyProperties>{
@@ -295,7 +287,7 @@ export class OntologiesState {
 
     ctx.setState({
       ...state,
-      currentProjectOntologyProperties: ontoProperties,
+      ontologyPropertiesByIri: ontoProperties,
     });
   }
 
@@ -312,8 +304,8 @@ export class OntologiesState {
     const state = ctx.getState();
 
     const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
+    onto.lastModificationDate = <string>state.ontology?.lastModificationDate;
+    onto.id = <string>state.ontology?.id;
     const delCard = new UpdateResourceClassCardinality();
     delCard.id = resourceClass.id;
     delCard.cardinalities = [];
@@ -350,8 +342,8 @@ export class OntologiesState {
     const state = ctx.getState();
 
     const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
+    onto.lastModificationDate = <string>state.ontology?.lastModificationDate;
+    onto.id = <string>state.ontology?.id;
     const addCard = new UpdateResourceClassCardinality();
     addCard.id = resourceClass.id;
     addCard.cardinalities = [];
@@ -387,11 +379,11 @@ export class OntologiesState {
   currentOntologyCanBeDeletedAction(ctx: StateContext<OntologiesStateModel>) {
     ctx.patchState({ isLoading: true });
     const state = ctx.getState();
-    if (!state.currentOntology) {
+    if (!state.ontology) {
       return;
     }
 
-    return this._dspApiConnection.v2.onto.canDeleteOntology(state.currentOntology.id).pipe(
+    return this._dspApiConnection.v2.onto.canDeleteOntology(state.ontology.id).pipe(
       take(1),
       map((response: CanDoResponse | ApiResponseError) => response as CanDoResponse),
       tap({
@@ -399,7 +391,7 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: false,
-            currentOntologyCanBeDeleted: response.canDo,
+            canOntologyBeDeleted: response.canDo,
           });
         },
         error: (error: ApiResponseError) => {

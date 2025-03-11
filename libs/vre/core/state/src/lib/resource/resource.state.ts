@@ -8,12 +8,7 @@ import { UserSelectors } from '../user/user.selectors';
 import { GetAttachedProjectAction, GetAttachedUserAction, SetCurrentResourceAction } from './resource.actions';
 import { ResourceStateModel } from './resource.state-model';
 
-const defaults = <ResourceStateModel>{
-  isLoading: false,
-  attachedProjects: {}, // projects attached to a resource
-  attachedUsers: {}, // users attached to a resource
-  resource: null, // the current resource
-};
+const defaults = new ResourceStateModel();
 
 /*
   Provides data about the current resource. Also attached data like users or projects to a resource.
