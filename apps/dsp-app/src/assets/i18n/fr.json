@@ -19,7 +19,7 @@
   },
   "usersList": {
     "sortProps": {
-      "familyName": "Nom de famille",
+      "familyName": "Nom",
       "givenName": "Prénom"
     }
   },
@@ -79,7 +79,7 @@
     "user": {
       "general": {
         "givenName": "Prénom",
-        "familyName": "Nom de famille",
+        "familyName": "Nom",
         "email": "Adresse e-mail",
         "emailValidation": "Cette adresse e-mail semble invalide.",
         "username": "Nom d'utilisateur",
