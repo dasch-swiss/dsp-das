@@ -1,3 +1,4 @@
+import { AddCopyrightHolderDialogComponent } from './lib/add-copyright-holder-dialog.component';
 import { AddUserComponent } from './lib/collaboration/add-user/add-user.component';
 import { CollaborationComponent } from './lib/collaboration/collaboration.component';
 import { SelectGroupComponent } from './lib/collaboration/select-group/select-group.component';
@@ -26,4 +27,5 @@ export const ProjectComponents = [
   ImageDisplayRatioComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
+  AddCopyrightHolderDialogComponent,
 ];

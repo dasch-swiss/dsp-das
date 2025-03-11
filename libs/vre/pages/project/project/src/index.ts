@@ -14,3 +14,4 @@ export * from './lib/image-settings/image-display-absolute.component';
 export * from './lib/image-settings/image-display-ratio.component';
 export * from './lib/image-settings/image-settings.component';
 export * from './lib/legal-settings.component';
+export * from './lib/add-copyright-holder-dialog.component';
