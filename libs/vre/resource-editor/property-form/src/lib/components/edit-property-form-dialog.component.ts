@@ -5,7 +5,6 @@ import {
   DeleteResourcePropertyComment,
   KnoraApiConnection,
   ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
   UpdateResourcePropertyComment,
   UpdateResourcePropertyGuiElement,
@@ -88,7 +87,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .updateResourceProperty(onto4Label)
       .pipe(
-        switchMap((propertyLabelResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+        switchMap(propertyLabelResponse => {
           const onto4Comment = this.getUpdateOntologyForPropertyComment();
 
           this.lastModificationDate = propertyLabelResponse.lastModificationDate;
@@ -97,7 +96,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
           if (onto4Comment.entity.comments.length) {
             // if the comments array is not empty, send a request to update the comments
             return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment).pipe(
-              tap((propertyCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+              tap(propertyCommentResponse => {
                 this.lastModificationDate = propertyCommentResponse.lastModificationDate;
 
                 this.final();
@@ -110,7 +109,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
             deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
 
             return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment).pipe(
-              tap((deleteCommentResponse: ResourcePropertyDefinitionWithAllLanguages) => {
+              tap(deleteCommentResponse => {
                 this.lastModificationDate = deleteCommentResponse.lastModificationDate;
                 this.final();
               })
@@ -170,12 +169,10 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
     onto4guiEle.entity = updateGuiEle;
 
-    this._dspApiConnection.v2.onto
-      .replaceGuiElementOfProperty(onto4guiEle)
-      .subscribe((guiEleResponse: ResourcePropertyDefinitionWithAllLanguages) => {
-        this.lastModificationDate = guiEleResponse.lastModificationDate;
-        this.onSuccess();
-      });
+    this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(guiEleResponse => {
+      this.lastModificationDate = guiEleResponse.lastModificationDate;
+      this.onSuccess();
+    });
   }
 
   private setGuiAttribute(guiAttr: string): string[] {
