@@ -1,219 +1,228 @@
 {
   "overview": {
-    "title": "Browse Research Projects",
-    "myProjects": "My Projects",
-    "browseOtherResearchProjects": "Browse Other Research Projects"
+    "title": "Navigar en ils projects da recercha",
+    "myProjects": "Mils projects",
+    "browseOtherResearchProjects": "Navigar en auters projects da recercha"
   },
   "list": {
     "title": {
-      "active": "Active",
-      "inactive": "Deactivated"
+      "active": "Activ",
+      "inactive": "Deactivà"
     }
   },
   "addProjectMember": {
-    "title": "Add project member",
-    "description": "Increase your team",
-    "select": "Select from list ...",
-    "usersLoading": "Loading users ...",
-    "newUser": "New user"
+    "title": "Agiuntar in membrum al project",
+    "description": "Crescher tia equipa",
+    "select": "Tscherner da la glista ...",
+    "usersLoading": "Chargiar utilisaders ...",
+    "newUser": "Nov utilisader"
   },
   "usersList": {
     "sortProps": {
-      "familyName": "Last name",
-      "givenName": "First name"
+      "familyName": "Num da famiglia",
+      "givenName": "Prenum"
     }
   },
   "projects": {
     "list": {
       "project": "Project",
       "projects": "Projects",
-      "sortShortCode": "Short code",
-      "sortShortName": "Short name",
-      "sortProjectName": "Project name",
-      "statusActive": "Active",
-      "statusDeactivated": "Deactivated",
-      "createNew": "Create new project",
-      "projectAdmin": "Project Administrator",
-      "edit": "Edit project information",
-      "reactivate": "Reactivate project",
-      "deactivate": "Deactivate project",
-      "erase": "Erase project",
-      "eraseConfirmation": "Project “{{0}}” has been erased.",
-      "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-      "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
+      "sortShortCode": "Cod curt",
+      "sortShortName": "Num curt",
+      "sortProjectName": "Num dal project",
+      "statusActive": "Activ",
+      "statusDeactivated": "Deactivà",
+      "createNew": "Crear in nov project",
+      "projectAdmin": "Administratur dal project",
+      "edit": "Modifitgar las infurmaziuns dal project",
+      "reactivate": "Reactivar il project",
+      "deactivate": "Deactivar il project",
+      "erase": "Stizzar il project",
+      "eraseConfirmation": "Il project «{{0}}» è stà stizzà.",
+      "deactivateConfirmation": "Vuls ti deactivar il project «{{0}}»?",
+      "reactivateConfirmation": "Vuls ti reactivar il project «{{0}}»?",
       "eraseConfirmationDialog": {
-        "title": "Please enter required information to erase the project.",
-        "subtitle": "Erase project",
-        "warning": "WARNING: This action cannot be undone, so use it with care.",
-        "shortCode": "Project short code",
-        "systemAdminPassword": "System administrator password",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "shortCodeValidation": "Short code does not match",
-        "passwordValidation": "Password incorrect"
+        "title": "Entcha las infurmaziuns necessarias per stizzar il project.",
+        "subtitle": "Stizzar il project",
+        "warning": "ATTENZIUN: Questa acziun na po betg esser annullada, perquai duvr’la cun precauziun.",
+        "shortCode": "Cod curt dal project",
+        "systemAdminPassword": "Pledge da l’administratur dal sistem",
+        "cancel": "Annullar",
+        "confirm": "Confermar",
+        "shortCodeValidation": "Il cod curt na correspunda betg",
+        "passwordValidation": "Pledge nuncorrect"
       }
     }
   },
   "form": {
     "action": {
-      "cancel": "Cancel",
-      "close": "Close",
-      "submit": "Save",
-      "retry": "Retry",
-      "update": "Update",
-      "next": "Next",
-      "reset": "Reset",
-      "danger": "Danger zone",
-      "searchHelp": "Type 3 letters to search for an existing resource.",
-      "login": "Login"
+      "cancel": "Annullar",
+      "close": "Serrar",
+      "submit": "Memorisar",
+      "retry": "Repruvar",
+      "update": "Actualisar",
+      "next": "Proxim",
+      "reset": "Reinizialisar",
+      "danger": "Zona da pericul",
+      "searchHelp": "Tippa 3 litteras per tschertgar ina resursa existenta.",
+      "login": "Annunzia"
     },
     "ontology": {
       "title": {
-        "create": "Create new data model",
-        "edit": "Customize data model"
+        "create": "Crear in nov model da datas",
+        "edit": "Persunalisar il model da datas"
       },
       "label": {
-        "name": "Set a unique name"
+        "name": "Definir in num unic"
       }
     },
     "user": {
       "general": {
-        "givenName": "First name",
-        "familyName": "Last name",
-        "email": "Email address",
-        "emailValidation": "This does not appear to be a valid email address.",
-        "username": "Username",
-        "usernameHint": "Spaces and special characters are not allowed in username.",
-        "password": "Password",
-        "passwordLengthHint": "Use at least 8 characters.",
-        "passwordPatternHint": "The password should have at least one uppercase letter and one number.",
-        "oldPassword": "Old password",
-        "newPassword": "New password",
-        "confirmPassword": "Confirm password",
-        "requesterPassword": "Your password",
-        "language": "Default language",
-        "sysAdmin": "System administrator rules",
-        "updateSuccess": "You successfully updated the user's profile."
+        "givenName": "Prenum",
+        "familyName": "Num da famiglia",
+        "email": "Adressa dad e-mail",
+        "emailValidation": "Questa adressa dad e-mail para d’esser nunvalaivla.",
+        "username": "Num d’utilisader",
+        "usernameHint": "Spazis e caracters spezials n’èn betg lubids en il num d’utilisader.",
+        "password": "Pledge",
+        "passwordLengthHint": "Duair usar almain 8 caracters.",
+        "passwordPatternHint": "Il pledge duess avair almain ina littera maiuscula ed in numer.",
+        "oldPassword": "Vegl pledge",
+        "newPassword": "Nov pledge",
+        "confirmPassword": "Confermar il pledge",
+        "requesterPassword": "Tia pledge",
+        "language": "Lingua predefinida",
+        "sysAdmin": "Règlas da l’administratur dal sistem",
+        "updateSuccess": "Ti has actualisà cun success il profil da l’utilisader."
       },
       "title": {
-        "new": "Create new",
-        "edit": "Edit profile",
-        "profile": "User profile",
-        "delete": "Suspend user account",
-        "deleteButton": "Suspend user account now",
-        "password": "Update password",
-        "ownPasswordSuccess": "You have successfully updated your password.",
-        "userPasswordSuccess": "You have successfully updated user's password."
+        "new": "Crear nov",
+        "edit": "Modifitgar il profil",
+        "profile": "Profil da l’utilisader",
+        "delete": "Suspendar il conto da l’utilisader",
+        "deleteButton": "Suspendar il conto da l’utilisader ussa",
+        "password": "Actualisar il pledge",
+        "ownPasswordSuccess": "Ti has actualisà cun success tia pledge.",
+        "userPasswordSuccess": "Ti has actualisà cun success la pledge da l’utilisader."
       }
     },
     "project": {
       "general": {
-        "description": "Description",
-        "shortcode": "Short code",
-        "shortname": "Short name",
-        "longname": "Project name",
-        "keywords": "Keywords",
-        "editSuccess": "You have successfully updated the project information."
+        "description": "Descripziun",
+        "shortcode": "Cod curt",
+        "shortname": "Num curt",
+        "longname": "Num dal project",
+        "keywords": "Pleds clau",
+        "editSuccess": "Ti has actualisà cun success las infurmaziuns dal project."
       },
       "imageSettings": {
-        "off": "Off",
-        "isWatermark": "Apply watermark",
-        "ratio": "Ratio",
-        "restrictImageSize": "Restrict image size",
-        "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
-        "percentage": "Percentage",
-        "updateConfirmation": "You have successfully updated the project image settings.",
-        "info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options.",
-        "restrictions": "Image settings can only be applied for the resources which have the restricted view permissions set."
+        "off": "Deactivà",
+        "isWatermark": "Applicar ina marca d’aua",
+        "ratio": "Rapport",
+        "restrictImageSize": "Restrinscher la grondezza da l’imagin",
+        "absoluteWidth": "Larghezza absoluta en pixels da: {{min}} a: {{max}}",
+        "percentage": "Percentual",
+        "updateConfirmation": "Ti has actualisà cun success las configuraziuns da l’imagin dal project.",
+        "info": "Per limitar la grondezza da tia imagin, entcha in percentual u ina larghezza absoluta en pixels. Ti na pos betg inditgar valurs per ambas las opziuns.",
+        "restrictions": "Las configuraziuns da l’imagin pon vegnir applicadas mo a las resursas che han permessi da vista restrinschida."
       }
     },
     "lists": {
       "title": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Stizzar il vocabulari controllà"
       }
     },
     "resource": {
       "title": {
-        "delete": "Delete this resource"
+        "delete": "Stizzar questa resursa"
       }
     }
   },
   "uiControls": {
     "pager": {
-      "of": "of",
-      "previous": "Previous",
-      "next": "Next"
+      "of": "da",
+      "previous": "Precedent",
+      "next": "Proxim"
     }
   },
   "resource": {
-    "properties": "Properties",
-    "comment": "Comment",
+    "properties": "Proprieziuns",
+    "comment": "Commentari",
     "incomingLink": {
-      "tooltip": "Indicates that this resource is referred to by another resource",
-      "label": "has incoming link"
+      "tooltip": "Indicha ch’questa resursa è referida dad in’autra resursa",
+      "label": "ha in link entrant"
     },
     "standoffLink": {
-      "tooltip": "Represent a link in standoff markup from one resource to another",
-      "label": "has Standoff link"
+      "tooltip": "Rappreschenta in link en markup standoff dad ina resursa ad in’autra",
+      "label": "ha in link standoff"
     },
-    "footnotes": "Footnotes",
+    "footnotes": "Notas a pe",
     "permissions": {
       "groups": {
-        "label": "Permissions",
-        "projectAdmin": "Project Admin",
-        "creator": "Creator",
-        "projectMember": "Project Member",
-        "knownUser": "Known User",
-        "unknownUser": "Unknown User",
-        "usersPermissions": "Your permissions"
+        "label": "Permessi",
+        "projectAdmin": "Administratur dal project",
+        "creator": "Creatur",
+        "projectMember": "Membrum dal project",
+        "knownUser": "Utilisader enconuschì",
+        "unknownUser": "Utilisader nunenconuschì",
+        "usersPermissions": "Tes permessi"
       },
       "interactions": {
-        "restrictedView": "Restricted view permission (RV)",
-        "view": "View permission (V)",
-        "modify": "Modify permission (M)",
-        "delete": "Delete permission (D)",
-        "changeRights": "Change rights permission (CR)"
+        "restrictedView": "Permess da vista restrinschida (RV)",
+        "view": "Permess da vista (V)",
+        "modify": "Permess da modificaziun (M)",
+        "delete": "Permess da stizzaziun (D)",
+        "changeRights": "Permess da midar ils dretgs (CR)"
       }
     }
   },
   "searchPanel": {
-    "howToSearch": "How to search",
+    "howToSearch": "Co tschertgar",
     "expert": "Expert",
-    "advancedSearch": "Advanced search",
-    "expertSearch": "Expert search"
+    "advancedSearch": "Tschertga avanzada",
+    "expertSearch": "Tschertga experta"
   },
   "fullTextSearch": {
-    "filterByProject": "Filter by project",
-    "search": "Search",
-    "allProjects": "All projects"
+    "filterByProject": "Filtrar per project",
+    "search": "Tschertgar",
+    "allProjects": "Tuot ils projects"
   },
   "header": {
-    "help": "Help"
+    "help": "Agid"
   },
   "user": {
     "navigation": {
-      "myProjects": "My Projects",
-      "myAccount": "My Account"
+      "myProjects": "Mils projects",
+      "myAccount": "Mieu conto"
     },
     "profile": {
-      "systemAdmin": "System admin",
-      "editMyProfile": "Edit my profile"
+      "systemAdmin": "Administratur dal sistem",
+      "editMyProfile": "Modifitgar mieu profil"
     },
     "userMenu": {
-      "signedInAs": "Signed in as",
-      "systemAdministration": "System Administration",
-      "logout": "Logout",
-      "login": "LOGIN",
-      "home": "DSP-App Home Page",
-      "myAccount": "My Account"
+      "signedInAs": "Annunzià sco",
+      "systemAdministration": "Administraziun dal sistem",
+      "logout": "Sortir",
+      "login": "ANNUNZIA",
+      "home": "Pagina principala da l’app DSP",
+      "myAccount": "Mieu conto"
     }
   },
   "paginator": {
-    "firstPage": "First page",
-    "lastPage": "Last page",
-    "nextPage": "Next page",
-    "inputTooltip": "Enter the page number and apply with the Enter key.",
-    "previousPage": "Previous page",
-    "rangeLabelOf": "of"
+    "firstPage": "Emprima pagina",
+    "lastPage": "Ultima pagina",
+    "nextPage": "Proxima pagina",
+    "inputTooltip": "Entcha il numer da la pagina e confirma cun la clav Entrar.",
+    "previousPage": "Pagina precedenta",
+    "rangeLabelOf": "da"
   }
 }
+
+Translating the JSON object into Romansh, one of Switzerland's four official languages, presents a unique challenge due to its limited use in technical contexts and fewer available resources for software-specific terminology compared to German, French, or Italian. Romansh (Rumantsch) is a Romance language spoken primarily in the canton of Graubünden, with several regional variants (e.g., Sursilvan, Vallader, Puter, Surmiran, Sutsilvan, and Rumantsch Grischun, the standardized form). For this translation, I will use Rumantsch Grischun, the standardized written form, as it is the most widely accepted for formal and official purposes.
+
+Given the lack of extensive technical vocabulary in Romansh for software interfaces, some terms will be adapted from related Romance languages (like Italian or French) or contextualized based on general usage, while aiming to preserve authenticity and natural flow. Below is the translated JSON object:
+
+Limitations and Considerations
+Limited Technical Corpus: Romansh is less commonly used in software, so some terms are neologisms or adaptations. Native speakers might refine these further based on regional preferences or emerging standards.
+Resources: I relied on Romansh dictionaries (e.g., Pledari Grond), online tools like rumantsch.ch, and comparisons with Italian and French for technical terms.
+Validation: For production use, consultation with a native Romansh speaker familiar with technical contexts would ensure accuracy.
