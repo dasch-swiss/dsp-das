@@ -1,4 +1,5 @@
 import { AdminImageDirective } from './lib/admin-image/admin-image.directive';
+import { AlternatedListComponent } from './lib/alternated-list.component';
 import { CenteredLayoutComponent } from './lib/centered-layout.component';
 import { ChipListInputComponent } from './lib/chip-list-input.component';
 import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.component';
@@ -45,5 +46,6 @@ export const UiComponents = [
   HintComponent,
   InternalLinkReplacerPipe,
   AddTargetBlankPipe,
+  AlternatedListComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];
