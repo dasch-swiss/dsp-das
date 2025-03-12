@@ -1,4 +1,5 @@
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
+import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
 import { CreateResourceFormComponent } from './lib/create-resource-form.component';
 import { CreateResourcePageComponent } from './lib/create-resource-page.component';
 import { DeleteResourceDialogComponent } from './lib/delete-resource-dialog.component';
@@ -82,6 +83,7 @@ export const ResourcePropertiesComponents = [
   CreateResourceDialogComponent,
   CreateResourcePageComponent,
   CreateResourceFormComponent,
+  CreateResourceFormLegalComponent,
   UploadControlComponent,
   PropertiesToolbarComponent,
   PropertyValueCommentComponent,
