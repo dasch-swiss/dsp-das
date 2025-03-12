@@ -14,6 +14,7 @@ api/api.ts
 api/shacl-api.service.ts
 api/v2-authentication-api.service.ts
 api/v2-lists-api.service.ts
+api/v2-ontologies-api.service.ts
 api/v2-resources-api.service.ts
 api/v2-search-api.service.ts
 api/v2-values-api.service.ts
@@ -25,7 +26,6 @@ model/administrative-permission-adm.ts
 model/administrative-permission-create-response-adm.ts
 model/administrative-permission-get-response-adm.ts
 model/administrative-permissions-for-project-get-response-adm.ts
-model/authorship.ts
 model/bad-credentials-exception.ts
 model/bad-request-exception.ts
 model/basic-user-information-change-request.ts
@@ -41,7 +41,6 @@ model/child-node-info-get-response-adm.ts
 model/comments.ts
 model/copyright-holder-add-request.ts
 model/copyright-holder-replace-request.ts
-model/copyright-holder.ts
 model/create-administrative-permission-api-request-adm.ts
 model/create-default-object-access-permission-api-request-adm.ts
 model/default-object-access-permission-adm.ts

@@ -10,11 +10,10 @@
  * Do not edit the class manually.
  */
 import { Pagination } from './pagination';
-import { CopyrightHolder } from './copyright-holder';
 
 
 export interface PagedResponseCopyrightHolder { 
-    data?: Array<CopyrightHolder>;
+    data?: Array<string>;
     pagination: Pagination;
 }
 

@@ -10,11 +10,10 @@
  * Do not edit the class manually.
  */
 import { Pagination } from './pagination';
-import { Authorship } from './authorship';
 
 
 export interface PagedResponseAuthorship { 
-    data?: Array<Authorship>;
+    data?: Array<string>;
     pagination: Pagination;
 }
 

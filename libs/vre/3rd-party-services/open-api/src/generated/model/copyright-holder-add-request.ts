@@ -9,10 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CopyrightHolder } from './copyright-holder';
 
 
 export interface CopyrightHolderAddRequest { 
-    data?: Array<CopyrightHolder>;
+    data?: Array<string>;
 }
 

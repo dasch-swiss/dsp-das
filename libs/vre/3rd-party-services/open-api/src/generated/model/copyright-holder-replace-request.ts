@@ -9,11 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CopyrightHolder } from './copyright-holder';
 
 
 export interface CopyrightHolderReplaceRequest { 
-    old_value: CopyrightHolder;
-    new_value: CopyrightHolder;
+    old_value: string;
+    new_value: string;
 }
 
