@@ -49,7 +49,7 @@ export class AddCopyrightHolderDialogComponent {
 
     this._adminApi
       .postAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(this.data.projectShortcode, {
-        data: [{ value: this.form.controls.copyrightHolder.value }],
+        data: [this.form.controls.copyrightHolder.value],
       })
       .pipe(
         finalize(() => {
