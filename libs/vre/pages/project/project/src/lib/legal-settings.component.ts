@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  AdminProjectsLegalInfoApiService,
-  Authorship,
-  CopyrightHolder,
-  LicenseDto,
-} from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
@@ -22,9 +17,9 @@ import {
       Copyright holders
       <button color="primary" mat-raised-button (click)="addCopyrightHolder()">Add (copyright holder)</button>
     </h2>
-    <div *ngFor="let item of copyrightHolders$ | async">{{ item.value }}</div>
+    <div *ngFor="let item of copyrightHolders$ | async">{{ item }}</div>
     <div *ngFor="let item of licenses$ | async">{{ item.label_en }} <a [href]="item.uri">link</a></div>
-    <div *ngFor="let item of authorships$ | async">{{ item.value }}</div>
+    <div *ngFor="let item of authorships$ | async">{{ item }}</div>
   `,
 })
 export class LegalSettingsComponent implements OnInit {
@@ -35,7 +30,7 @@ export class LegalSettingsComponent implements OnInit {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project!.shortcode)
     ),
-    map(data => data.data as CopyrightHolder[])
+    map(data => data.data as string[])
   );
 
   licenses$ = this.project$.pipe(
@@ -51,7 +46,7 @@ export class LegalSettingsComponent implements OnInit {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
     ),
-    map(data => data.data as Authorship[])
+    map(data => data.data as string[])
   );
 
   constructor(
