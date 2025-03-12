@@ -7,6 +7,7 @@ import { CompoundViewerComponent } from './lib/compound/compound-viewer.componen
 import { PermissionInfoComponent } from './lib/permission-info/permission-info.component';
 import { ResourceFetcherComponent } from './lib/resource-fetcher.component';
 import { ResourceHeaderComponent } from './lib/resource-header.component';
+import { ResourceLegalComponent } from './lib/resource-legal.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceRestrictionComponent } from './lib/resource-restriction.component';
@@ -26,6 +27,7 @@ export const ResourcePageComponents = [
   ...CompoundComponents,
   ResourceComponent,
   ResourceHeaderComponent,
+  ResourceLegalComponent,
   ResourcePageComponent,
   SingleResourcePageComponent,
   ResourceFetcherComponent,

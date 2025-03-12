@@ -13,7 +13,7 @@ import { CompoundService } from './compound/compound.service';
   selector: 'app-resource',
   template: `
     <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
-
+    <app-resource-legal [resource]="resource" />
     <div class="content large middle">
       <div>
         <app-resource-header [resource]="resource" />
