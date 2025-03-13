@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  ApiResponseError,
   Cardinality,
   Constants,
   CreateResource,
@@ -25,8 +24,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <app-create-resource-form-representation *ngIf="form.controls.file" [control]="form.controls.file" />
+      <app-create-resource-form-representation
+        *ngIf="form.controls.file && fileRepresentation"
+        [control]="form.controls.file"
+        [fileRepresentation]="fileRepresentation" />
       <app-create-resource-form-legal [formGroup]="form.controls.legal" />
+
       <div style="display: flex">
         <h3
           data-cy="resource-label"
@@ -38,22 +41,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
       </div>
 
-      <div
-        class="row"
-        *ngFor="let prop of myProperties; let last = last"
-        [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'">
-        <h3 class="grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-          {{ prop.propDef.label
-          }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
-        </h3>
-
-        <app-property-value-switcher
-          style="flex: 1"
-          [attr.data-cy]="prop.propDef.label"
-          [myProperty]="prop"
-          [formArray]="form.controls.properties.controls[prop.propDef.id]"
-          [resourceClassIri]="resourceClassIri" />
-      </div>
+      <app-create-resource-form-properties
+        *ngIf="properties"
+        [resourceClassIri]="resourceClassIri"
+        [properties]="properties"
+        [formGroup]="form.controls.properties" />
 
       <div style="display: flex; justify-content: end">
         <button
@@ -74,8 +66,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.row { display: flex}',
-    '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
+    ':host ::ng-deep .grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {
@@ -117,10 +108,6 @@ export class CreateResourceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
-  get myProperties() {
-    return this.properties?.filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!)) ?? [];
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -144,7 +131,6 @@ export class CreateResourceFormComponent implements OnInit {
       .createResource(this._getPayload())
       .pipe(take(1))
       .subscribe(res => {
-        if (res instanceof ApiResponseError) return;
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
         this.createdResourceIri.emit(res.id);
       });
