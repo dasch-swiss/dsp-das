@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApiResponseError,
   Cardinality,
   Constants,
-  CreateFileValue,
   CreateResource,
   CreateValue,
   KnoraApiConnection,
@@ -18,36 +17,16 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
-import { FormValueArray, FormValueGroup } from './form-value-array.type';
+import { CreateResourceFormInterface } from './create-resource-form.interface';
+import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <app-upload-control
-        *ngIf="form.controls.file && fileRepresentation && fileRepresentation !== Constants.HasStillImageFileValue"
-        [formControl]="form.controls.file"
-        [representation]="fileRepresentation"
-        style="display: block; margin-bottom: 8px" />
-
-      <mat-tab-group
-        *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file"
-        preserveContent
-        style="min-height: 320px;"
-        data-cy="stillimage-tab-group">
-        <mat-tab label="Upload Image">
-          <app-upload-control
-            [formControl]="form.controls.file"
-            [representation]="fileRepresentation"
-            data-cy="upload-control" />
-        </mat-tab>
-
-        <mat-tab label="External IIIF URL">
-          <app-third-part-iiif [formControl]="form.controls.file" />
-        </mat-tab>
-      </mat-tab-group>
-
+      <app-create-resource-form-representation *ngIf="form.controls.file" [control]="form.controls.file" />
+      <app-create-resource-form-legal [formGroup]="form.controls.legal" />
       <div style="display: flex">
         <h3
           data-cy="resource-label"
@@ -104,12 +83,13 @@ export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) projectIri!: string;
   @Output() createdResourceIri = new EventEmitter<string>();
 
-  form: FormGroup<{
-    label: FormControl<string>;
-    properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file?: FormControl<CreateFileValue | null>;
-  }> = this._fb.group({
+  form: FormGroup<CreateResourceFormInterface> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    legal: this._fb.group({
+      copyrightHolder: this._fb.control(''),
+      license: this._fb.control(''),
+      authorship: this._fb.control(''),
+    }),
     properties: this._fb.group({}),
   });
 
