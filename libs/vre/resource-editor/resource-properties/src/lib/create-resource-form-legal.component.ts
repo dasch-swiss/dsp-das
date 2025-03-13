@@ -23,7 +23,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     <app-create-resource-form-row [label]="'License'" [tooltip]="'License'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.license">
-          <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.label_en }} </mat-option>
+          <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.labelEn }} </mat-option>
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>

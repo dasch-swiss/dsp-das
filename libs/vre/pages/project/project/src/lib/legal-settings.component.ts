@@ -31,7 +31,7 @@ import {
           <h2>Licenses</h2>
           <app-alternated-list>
             <div *ngFor="let item of licenses$ | async" style="display: flex; align-items: center; gap: 8px">
-              {{ item['label-en'] }}
+              {{ item.labelEn }}
               <a [href]="item.uri">
                 <mat-icon>launch</mat-icon>
               </a>
