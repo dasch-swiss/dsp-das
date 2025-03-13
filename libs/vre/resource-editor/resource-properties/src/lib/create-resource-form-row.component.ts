@@ -7,7 +7,9 @@ import { Component, Input } from '@angular/core';
       <h3 class="mat-subtitle-2 grid-h3" [matTooltip]="tooltip" matTooltipPosition="above">
         {{ label }}
       </h3>
-      <ng-content />
+      <div style="flex: 1">
+        <ng-content />
+      </div>
     </div>
   `,
   styles: [

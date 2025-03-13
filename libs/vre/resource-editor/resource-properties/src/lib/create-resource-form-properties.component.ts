@@ -12,13 +12,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       *ngFor="let prop of myProperties; let last = last"
       [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'"
       [label]="
-        prop.propDef.label + prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n
-          ? '*'
-          : ''
+        prop.propDef.label +
+        (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
       "
       [tooltip]="prop.propDef.comment">
       <app-property-value-switcher
-        style="flex: 1"
         [attr.data-cy]="prop.propDef.label"
         [myProperty]="prop"
         [formArray]="formGroup.controls[prop.propDef.id]"

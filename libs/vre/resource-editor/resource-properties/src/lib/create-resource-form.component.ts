@@ -35,7 +35,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         label="Resource label *"
         tooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
         data-cy="resource-label">
-        <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
+        <app-common-input [control]="form.controls.label" data-cy="label-input" label="Text value" />
       </app-create-resource-form-row>
 
       <app-create-resource-form-properties
