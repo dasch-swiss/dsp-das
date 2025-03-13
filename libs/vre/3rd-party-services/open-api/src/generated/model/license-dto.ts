@@ -14,6 +14,6 @@
 export interface LicenseDto { 
     id: string;
     uri: string;
-    label_en: string;
+    labelEn: string;
 }
 
