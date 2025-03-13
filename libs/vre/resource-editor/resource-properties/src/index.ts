@@ -22,6 +22,7 @@ export * from './lib/switch-components/uri-switch.component';
 
 export * from './lib/create-resource-dialog.component';
 export * from './lib/create-resource-form.component';
+export * from './lib/create-resource-form-row.component';
 export * from './lib/create-resource-form-representation.component';
 export * from './lib/create-resource-form-legal.component';
 export * from './lib/create-resource-form-properties.component';

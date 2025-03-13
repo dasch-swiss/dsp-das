@@ -28,18 +28,15 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         *ngIf="form.controls.file && fileRepresentation"
         [control]="form.controls.file"
         [fileRepresentation]="fileRepresentation" />
+
       <app-create-resource-form-legal [formGroup]="form.controls.legal" />
 
-      <div style="display: flex">
-        <h3
-          data-cy="resource-label"
-          class="mat-subtitle-2 grid-h3"
-          matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
-          matTooltipPosition="above">
-          Resource label *
-        </h3>
+      <app-create-resource-form-row
+        label="Resource label *"
+        tooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+        data-cy="resource-label">
         <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
-      </div>
+      </app-create-resource-form-row>
 
       <app-create-resource-form-properties
         *ngIf="properties"
@@ -65,9 +62,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator />
     </ng-template>
   `,
-  styles: [
-    ':host ::ng-deep .grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
-  ],
 })
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;

@@ -2,6 +2,7 @@ import { CreateResourceDialogComponent } from './lib/create-resource-dialog.comp
 import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
 import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
 import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
+import { CreateResourceFormRowComponent } from './lib/create-resource-form-row.component';
 import { CreateResourceFormComponent } from './lib/create-resource-form.component';
 import { CreateResourcePageComponent } from './lib/create-resource-page.component';
 import { DeleteResourceDialogComponent } from './lib/delete-resource-dialog.component';
@@ -88,6 +89,7 @@ export const ResourcePropertiesComponents = [
   CreateResourceFormLegalComponent,
   CreateResourceFormRepresentationComponent,
   CreateResourceFormPropertiesComponent,
+  CreateResourceFormRowComponent,
   UploadControlComponent,
   PropertiesToolbarComponent,
   PropertyValueCommentComponent,

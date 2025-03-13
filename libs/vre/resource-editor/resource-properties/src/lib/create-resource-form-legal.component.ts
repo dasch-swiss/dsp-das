@@ -4,27 +4,25 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
 @Component({
   selector: 'app-create-resource-form-legal',
   template: `
-    <h2>Legal infos</h2>
-    <div class="row">
-      <h3>Copyright holder</h3>
+    <h3>Legal infos</h3>
+
+    <app-create-resource-form-row [label]="'Copyright holder'" [tooltip]="'Copyright holder'">
       <mat-select placeholder="Copyright holder" [formControl]="formGroup.controls.copyrightHolder">
         <mat-option *ngFor="let cal of copyrightHolders$ | async" [value]="cal">{{ cal }}</mat-option>
       </mat-select>
-    </div>
+    </app-create-resource-form-row>
 
-    <div class="row">
-      <h3>License</h3>
+    <app-create-resource-form-row [label]="'License'" [tooltip]="'License'">
       <mat-select placeholder="License" [formControl]="formGroup.controls.license">
         <mat-option *ngFor="let cal of licenses$ | async" [value]="cal">{{ cal }}</mat-option>
       </mat-select>
-    </div>
+    </app-create-resource-form-row>
 
-    <div class="row">
-      <h3>Authorship</h3>
+    <app-create-resource-form-row [label]="'Authorship'" [tooltip]="'Authorship'">
       <mat-select placeholder="Authorship" [formControl]="formGroup.controls.authorship">
         <mat-option *ngFor="let cal of authorships$ | async" [value]="cal">{{ cal }}</mat-option>
       </mat-select>
-    </div>
+    </app-create-resource-form-row>
   `,
 })
 export class CreateResourceFormLegalComponent {
