@@ -6,9 +6,9 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
-  AddCopyrightHolderDialogComponent,
-  AddCopyrightHolderDialogProps,
-} from './add-copyright-holder-dialog.component';
+  CreateCopyrightHolderDialogComponent,
+  CreateCopyrightHolderDialogProps,
+} from './create-copyright-holder-dialog.component';
 
 @Component({
   selector: 'app-legal-settings',
@@ -91,8 +91,8 @@ export class LegalSettingsComponent {
     if (!currentProject) {
       throw new AppError('No current project');
     }
-    this._dialog.open<AddCopyrightHolderDialogComponent, AddCopyrightHolderDialogProps>(
-      AddCopyrightHolderDialogComponent,
+    this._dialog.open<CreateCopyrightHolderDialogComponent, CreateCopyrightHolderDialogProps>(
+      CreateCopyrightHolderDialogComponent,
       { data: { projectShortcode: currentProject.shortcode } }
     );
   }

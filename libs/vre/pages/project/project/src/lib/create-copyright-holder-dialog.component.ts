@@ -5,7 +5,7 @@ import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-ser
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { finalize } from 'rxjs/operators';
 
-export interface AddCopyrightHolderDialogProps {
+export interface CreateCopyrightHolderDialogProps {
   projectShortcode: string;
 }
 
@@ -27,7 +27,7 @@ export interface AddCopyrightHolderDialogProps {
       </button>
     </div>`,
 })
-export class AddCopyrightHolderDialogComponent {
+export class CreateCopyrightHolderDialogComponent {
   form = this._fb.group({
     copyrightHolder: this._fb.control('', Validators.required),
   });
@@ -36,9 +36,9 @@ export class AddCopyrightHolderDialogComponent {
 
   constructor(
     private _fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: AddCopyrightHolderDialogProps,
+    @Inject(MAT_DIALOG_DATA) public data: CreateCopyrightHolderDialogProps,
     private _adminApi: AdminProjectsLegalInfoApiService,
-    private _dialogRef: MatDialogRef<AddCopyrightHolderDialogComponent>
+    private _dialogRef: MatDialogRef<CreateCopyrightHolderDialogComponent>
   ) {}
 
   onSubmit() {
