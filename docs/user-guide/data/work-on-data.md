@@ -163,7 +163,7 @@ You can edit or delete a segment or a property of a segment if you have the gran
 
 #### Audio segment
 
-To create an audio segment, you click on the icon `Create a segment` in the audio player toolbar. 
+To create an audio segment, you click on the icon `Create a segment` in the audio player toolbar.
 
 ![Create an audio segment.](../../assets/images/audio-create-a-segment.png)*Create a new audio segment.*
 
