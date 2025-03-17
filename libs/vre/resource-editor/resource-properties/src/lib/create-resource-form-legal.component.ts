@@ -29,13 +29,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     </app-create-resource-form-row>
 
     <app-create-resource-form-row [label]="'Authorship'" [tooltip]="'Authorship'">
-      <mat-form-field>
-        <mat-select placeholder="Choose" [formControl]="formGroup.controls.authorship">
-          <mat-option *ngFor="let authorship of authorships$ | async" [value]="authorship"
-            >{{ authorship }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <app-authorship-form-field />
     </app-create-resource-form-row>
   `,
   styles: [

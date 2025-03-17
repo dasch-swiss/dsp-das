@@ -1,4 +1,4 @@
-import { CreateAuthorshipDialogComponent } from './lib/create-authorship-dialog.component';
+import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
 import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
 import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
@@ -109,5 +109,5 @@ export const ResourcePropertiesComponents = [
   IncomingLinksPropertyComponent,
   StandoffLinksPropertyComponent,
   IncomingResourcePagerComponent,
-  CreateAuthorshipDialogComponent,
+  AuthorshipFormFieldComponent,
 ];
