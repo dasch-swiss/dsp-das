@@ -1,13 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClassDefinition, Constants, CreateResourceProperty } from '@dasch-swiss/dsp-js';
-import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologyEditService } from '../../../../../pages/ontology/ontology/src/lib/services/ontology-edit.service';
-import { PropertyForm } from '../property-form.type';
+import { PropertyForm } from '@dasch-swiss/vre/resource-editor/property-form';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface CreatePropertyFormDialogProps {
   propertyInfo: PropertyInfoObject;
   resClass: ClassDefinition | undefined;
+  maxGuiOrderProperty: number;
+  resClassIri: string;
 }
 
 @Component({
@@ -35,7 +37,7 @@ export interface CreatePropertyFormDialogProps {
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: PropertyForm;
+  form!: PropertyForm;
 
   constructor(
     private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>,
@@ -67,24 +69,24 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     if (guiAttr) {
       createResProp.guiAttributes = this.getGuiAttribute(guiAttr);
     }
-    const selectedProperty = DefaultProperties.data
-      .flatMap(el => el.elements)
-      .find(
-        e =>
-          e.guiEle === this.form.controls.propType.value && e.objectType === this.data.propertyInfo.propType.objectType
-      );
 
-    if (!selectedProperty) {
-      throw new Error('Property not found');
+    createResProp.guiElement = this.data.propertyInfo.propType.guiEle;
+    createResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
+
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)) {
+      createResProp.objectType = guiAttr;
+      createResProp.subjectType = this.data.resClassIri;
+    } else {
+      createResProp.objectType = this.data.propertyInfo.propType.objectType;
     }
-    createResProp.guiElement = selectedProperty.guiEle;
-    createResProp.subPropertyOf = [selectedProperty.subPropOf || ''];
+    createResProp.guiElement = this.data.propertyInfo.propType.guiEle;
+    createResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf || ''];
 
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(selectedProperty.subPropOf || '')) {
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf || '')) {
       createResProp.objectType = guiAttr;
       createResProp.subjectType = this.data.resClass?.id || '';
     } else {
-      createResProp.objectType = selectedProperty.objectType || '';
+      createResProp.objectType = this.data.propertyInfo.propType.objectType || '';
     }
     return createResProp;
   }

@@ -1,12 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import {
-  OntologiesSelectors,
-  OntologyProperties,
-  ProjectsSelectors,
-  PropToAdd,
-  PropToDisplay,
-} from '@dasch-swiss/vre/core/state';
+import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
   DefaultProperties,
   DefaultProperty,
