@@ -4,11 +4,9 @@ import {
   Constants,
   KnoraApiConfig,
   ReadOntology,
-  ReadResource,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadClassItemsCountAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
@@ -157,16 +155,5 @@ export class OntologyService {
     }
 
     return ontologyName ? `${iriBase}/${RouteConstants.ontology}/${projectShortcode}/${ontologyName}/v2` : null;
-  }
-
-  updateClassItemCount(resource: ReadResource) {
-    const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (currentProject) {
-      const ontologyIri = this.getOntologyIriFromRoute(currentProject.shortcode);
-      if (ontologyIri) {
-        const classId = resource.entityInfo.classes[resource.type]?.id;
-        this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, classId));
-      }
-    }
   }
 }
