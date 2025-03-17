@@ -64,10 +64,8 @@ export class ckEditor {
       decorators: {
         isInternal: {
           // DO NOT REMOVE THIS.. ADDING THIS CLASS MAKES THE BACKEND KNOW IT'S AN INTERNAL LINK.
-          mode: 'automatic', // automatic requires callback -> but the callback is async and the user could save the text before the check ...
-          callback: (
-            url: string // console.log(url, url.startsWith( 'http://rdfh.ch/' ));
-          ) => !!url && url.startsWith('http://rdfh.ch/'),
+          mode: 'automatic', // automatic requires callback
+          callback: (url: string) => !!url && url.startsWith('http://rdfh.ch/'),
           attributes: {
             class: Constants.SalsahLink,
           },
