@@ -36,3 +36,4 @@ OPTION 2 (tab 2): External IIIF URL
 You copy and paste a valid external IIIF URL in the field, then, fill in the required properties and save to create the image resource.
 
 ![External IIIF URL](../../assets/images/create-new-external-iiif-url.png)*Specify an external IIIF URL*
+
