@@ -63,11 +63,11 @@ export class ckEditor {
       addTargetToExternalLinks: false,
       decorators: {
         isInternal: {
-          // label: 'internal link to a Knora resource',
+          // DO NOT REMOVE THIS.. ADDING THIS CLASS MAKES THE BACKEND KNOW IT'S AN INTERNAL LINK.
           mode: 'automatic', // automatic requires callback -> but the callback is async and the user could save the text before the check ...
           callback: (
             url: string // console.log(url, url.startsWith( 'http://rdfh.ch/' ));
-          ) => !!url && url.startsWith('http://rdfh.ch/'), // --> TODO: get this from config via AppInitService
+          ) => !!url && url.startsWith('http://rdfh.ch/'),
           attributes: {
             class: Constants.SalsahLink,
           },
