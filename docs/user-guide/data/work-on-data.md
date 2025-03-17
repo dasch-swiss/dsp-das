@@ -145,7 +145,7 @@ The new region information is displayed after the image viewer. You can edit or 
 
 #### Video segment
 
-To create a video segment, you click on the icon `Create a segment` in the video player toolbar. 
+To create a video segment, you click on the icon `Create a segment` in the video player toolbar.
 
 ![Create a video segment.](../../assets/images/video-create-a-segment.png)*Create a new video segment.*
 
