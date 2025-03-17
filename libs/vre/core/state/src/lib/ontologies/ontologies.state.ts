@@ -185,7 +185,7 @@ export class OntologiesState {
 
           let projectReadOntologies = projectOntologiesState[projectIri].readOntologies;
           const projectReadOntologiesIndex = projectReadOntologies.findIndex(o => o.id === ontology.id);
-          if (projectReadOntologiesIndex > 0) {
+          if (projectReadOntologiesIndex > -1) {
             projectReadOntologies[projectReadOntologiesIndex] = ontology;
           } else {
             projectReadOntologies.push(ontology);
