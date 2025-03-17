@@ -5,7 +5,6 @@ import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-header',
@@ -55,7 +54,7 @@ import { filter } from 'rxjs/operators';
         display: flex;
         box-sizing: border-box;
         flex-direction: row;
-        align-items: start;
+        align-items: flex-start;
         justify-content: space-between;
 
         h3.label-info {
@@ -107,9 +106,10 @@ export class ResourceHeaderComponent {
         viewContainerRef: this._viewContainerRef,
       })
       .afterClosed()
-      .pipe(filter(answer => !!answer))
       .subscribe(answer => {
-        this._resourceFetcher.reload();
+        if (answer) {
+          this._resourceFetcher.reload();
+        }
       });
   }
 }
