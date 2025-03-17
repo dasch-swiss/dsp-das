@@ -10,6 +10,7 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
@@ -19,7 +20,7 @@ export interface CreatePropertyFormDialogProps {
   lastModificationDate: string;
   propertyInfo: PropertyInfoObject;
   maxGuiOrderProperty: number;
-  resClassIri?: string;
+  resClassIri: string;
 }
 
 @Component({
@@ -47,7 +48,7 @@ export interface CreatePropertyFormDialogProps {
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: PropertyForm;
+  form!: PropertyForm;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -119,6 +120,10 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     const guiAttr = this.form.controls.guiAttr.value;
     if (guiAttr) {
       newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
+    }
+
+    if (!selectedProperty) {
+      throw new AppError('Selected property not found');
     }
 
     newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
