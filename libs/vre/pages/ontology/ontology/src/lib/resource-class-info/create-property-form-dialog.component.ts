@@ -10,10 +10,9 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { PropertyForm } from '@dasch-swiss/vre/resource-editor/property-form';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
-import { PropertyForm } from '../property-form.type';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;
@@ -120,10 +119,6 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     const guiAttr = this.form.controls.guiAttr.value;
     if (guiAttr) {
       newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
-    }
-
-    if (!selectedProperty) {
-      throw new AppError('Selected property not found');
     }
 
     newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
