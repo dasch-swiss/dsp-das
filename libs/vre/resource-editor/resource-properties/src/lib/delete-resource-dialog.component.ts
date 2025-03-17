@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteResource, DeleteResourceResponse, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   selector: 'app-delete-resource-dialog',
@@ -39,6 +40,7 @@ export class DeleteResourceDialogComponent {
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA)
     public data: ReadResource,
+    private _ontologyService: OntologyService,
     private _dialogRef: MatDialogRef<DeleteResourceDialogComponent>
   ) {}
 
@@ -49,6 +51,7 @@ export class DeleteResourceDialogComponent {
     payload.deleteComment = this.comment ?? undefined;
     payload.lastModificationDate = this.data.lastModificationDate;
     this._dspApiConnection.v2.res.deleteResource(payload).subscribe(response => {
+      this._ontologyService.updateClassItemCount(this.data);
       this._dialogRef.close(response as DeleteResourceResponse);
     });
   }
