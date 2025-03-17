@@ -132,7 +132,7 @@ export class OntologyComponent implements OnInit, OnDestroy {
   }
 
   editOntology(iri: string) {
-    this._oes.openOntologyForm(iri);
+    this._oes.openEditOntology(iri);
   }
 
   deleteOntology() {

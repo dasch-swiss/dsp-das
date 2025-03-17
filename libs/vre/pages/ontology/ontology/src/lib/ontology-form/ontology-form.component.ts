@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
+  ApiResponseError,
   CreateOntology,
   KnoraApiConnection,
   OntologyMetadata,
@@ -106,7 +107,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return ontoName ? `${ontoName.charAt(0).toUpperCase()}${ontoName.slice(1)}` : '';
   }
 
-  private _buildForm(ontology: ReadOntology = null): void {
+  private _buildForm(ontology?: ReadOntology): void {
     this.ontologyForm = this._fb.group({
       name: [
         { value: this.ontologyName, disabled: !!ontology },
@@ -137,23 +138,16 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   private _updateOntology() {
     const ontologyData = new UpdateOntologyMetadata();
-    ontologyData.id = this.data.ontologyIri;
+    ontologyData.id = this.data.ontologyIri!;
     ontologyData.lastModificationDate = this._lastModificationDate;
     ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
     ontologyData.comment = this.ontologyForm.controls.comment.value;
 
-    const update = this._dspApiConnection.v2.onto
+    this._dspApiConnection.v2.onto
       .updateOntology(ontologyData)
-      .pipe(
-        take(1),
-        tap({
-          error: () => {
-            this.loading = false;
-          },
-        })
-      )
-      .subscribe(() => {
-        this.dialogRef.close(true);
+      .subscribe((response: OntologyMetadata | ApiResponseError) => {
+        this.loading = false;
+        this.dialogRef.close(response instanceof ApiResponseError ? null : response);
       });
   }
 
@@ -169,18 +163,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this._dspApiConnection.v2.onto
       .createOntology(ontologyData)
       .pipe(take(1))
-      .subscribe((response: OntologyMetadata) => {
-        this._store.dispatch([new ClearProjectOntologiesAction(this.project.shortcode)]);
-        // go to the new ontology page
-        this._router.navigate([
-          RouteConstants.project,
-          ProjectService.IriToUuid(this.project.id),
-          RouteConstants.ontology,
-          OntologyService.getOntologyName(response.id),
-          RouteConstants.editor,
-          RouteConstants.classes,
-        ]);
-        this.dialogRef.close();
+      .subscribe((response: OntologyMetadata | ApiResponseError) => {
+        this.dialogRef.close(response instanceof ApiResponseError ? null : response);
       });
   }
 

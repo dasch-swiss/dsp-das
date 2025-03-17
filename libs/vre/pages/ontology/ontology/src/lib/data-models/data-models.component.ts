@@ -63,6 +63,6 @@ export class DataModelsComponent {
   }
 
   createNewOntology() {
-    this._oes.createNewOntology();
+    this._oes.openCreateNewOntology();
   }
 }
