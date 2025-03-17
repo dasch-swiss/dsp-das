@@ -143,17 +143,17 @@ The new region information is displayed after the image viewer. You can edit or 
 
 To create a video segment, you click on the icon `Create a segment` in the video player toolbar. 
 
-SCREENSHOT
+![Create a video segment.](../../assets/images/video-create-a-segment.png)*Create a new video segment.*
 
-Fill in the form `Create a segment` by indicating at least the required fileds: label, start (time), end (time) and submit to create your new video segment.
+Fill in the form `Create a segment` by indicating at least the required fields: label, start (time), end (time), and submit to create your new video segment.
 
-SCREENSHOT
+![Form Create a segment.](../../assets/images/video-form-new-segment.png)*Form to create a segment.*
 
-New segments are displayed under the `Segments` tab, where you can view all the details for each segment.
+New segments are displayed within the `Segments` tab, where you can view all the details for each segment.
 
 Below the video scrubber in the player toolbar, all segments are also shown and are clickable, allowing you to jump to and play each segment. The corresponding data for each segment will be highlighted below the video player by clicking on the down arrow button.
 
-SCREENSHOT
+![Display segments.](../../assets/images/video-display-segment.png)*Video segment display in DSP-APP.*
 
 You can edit or delete a segment or a property of a segment if you have the granted permissions. A segment has also an AKR URL you can copy and share.
 
