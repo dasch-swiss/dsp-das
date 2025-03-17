@@ -139,6 +139,25 @@ The new region information is displayed after the image viewer. You can edit or 
 
 ![Region created.](../../assets/images/region_new_annotation.png)*A new region has been created.*
 
+### Add a video segment
+
+To create a video segment, you click on the icon `Create a segment` in the video player toolbar. 
+
+SCREENSHOT
+
+Fill in the form `Create a segment` by indicating at least the required fileds: label, start (time), end (time) and submit to create your new video segment.
+
+SCREENSHOT
+
+New segments are displayed under the `Segments` tab, where you can view all the details for each segment.
+
+Below the video scrubber in the player toolbar, all segments are also shown and are clickable, allowing you to jump to and play each segment. The corresponding data for each segment will be highlighted below the video player by clicking on the down arrow button.
+
+SCREENSHOT
+
+You can edit or delete a segment or a property of a segment if you have the granted permissions. A segment has also an AKR URL you can copy and share.
+
+
 ---
 
 ## Edit your data
