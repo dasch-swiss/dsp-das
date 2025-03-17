@@ -165,6 +165,13 @@ You edit your value by changing the text content, searching for another resource
 
 It is the same process to add, edit or delete a comment to the value.
 
+### Edit an image file
+
+To replace an image file, open the menu on the left side of the image viewer toolbar. Click on the `Replace File` button (if the image was uploaded from a local computer folder) or `Replace External File URL` (if the image was sourced from an external IIIF URL). Then, replace the file or URL and save your changes.
+
+![Replace an image file.](../../assets/images/edit-uploaded-image.png)
+
+
 ---
 
 ## Delete your data
