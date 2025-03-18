@@ -13,10 +13,10 @@ import { CompoundService } from './compound/compound.service';
   selector: 'app-resource',
   template: `
     <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
-    <app-resource-legal [resource]="resource" />
     <div class="content large middle">
       <div>
         <app-resource-header [resource]="resource" />
+        <app-resource-legal [resource]="resource" />
         <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
         <app-compound-viewer *ngIf="isCompoundNavigation" />
         <app-resource-tabs [resource]="resource" />
