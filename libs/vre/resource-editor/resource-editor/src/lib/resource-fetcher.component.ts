@@ -1,6 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -24,7 +27,10 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   loading!: boolean;
   private _ngUnsubscribe = new Subject<void>();
 
-  constructor(private _resourceFetcherService: ResourceFetcherService) {}
+  constructor(
+    private _resourceFetcherService: ResourceFetcherService,
+    private _store: Store
+  ) {}
 
   ngOnInit() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
@@ -43,6 +49,11 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
+      if (!this.resource) {
+        throw new AppError('Resource is not defined');
+      }
+      this._store.dispatch(new LoadResourceClassItemsCountAction(this.resource.res));
+
       this.resource = undefined;
     });
   }
