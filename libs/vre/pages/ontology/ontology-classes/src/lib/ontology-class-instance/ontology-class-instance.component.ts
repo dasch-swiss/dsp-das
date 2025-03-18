@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadResource, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   IProjectOntologiesKeyValuePairs,
+  LoadResourceClassItemsCountAction,
   OntologiesSelectors,
   ProjectsSelectors,
   UserSelectors,
@@ -23,7 +24,9 @@ import { map, takeUntil, takeWhile } from 'rxjs/operators';
     <div
       class="single-instance"
       *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
-      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
+      <app-resource-fetcher
+        [resourceIri]="resourceIri$ | async"
+        (afterResourceDeleted)="editStoreResourceCount($event)" />
     </div>
   `,
 })
@@ -113,6 +116,10 @@ export class OntologyClassInstanceComponent implements OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  editStoreResourceCount(resource: ReadResource) {
+    this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
   }
 
   private _setGravsearch(iri: string): string {

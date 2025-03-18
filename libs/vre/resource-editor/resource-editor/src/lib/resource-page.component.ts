@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadResourceClassItemsCountAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-page',
-  template:
-    '<app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" (afterResourceDeleted)="editStoreResourceCount($event)"/>',
+  template: '<app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" />',
 })
 export class ResourcePageComponent {
   constructor(
@@ -25,8 +23,4 @@ export class ResourcePageComponent {
     filter(v => v !== undefined),
     map(project => `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${this.instanceId}`)
   );
-
-  editStoreResourceCount(resource: ReadResource) {
-    this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
-  }
 }
