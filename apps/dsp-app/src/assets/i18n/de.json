@@ -215,5 +215,12 @@
     "inputTooltip": "Seitennummer eingeben und über Enter zur gewählten Seite springen.",
     "previousPage": "Vorherige Seite",
     "rangeLabelOf": "von"
+  },
+  "annotations": {
+    "audio": "Audioannotation",
+    "create": "Annotation hinzufügen",
+    "lead": "Annotation von",
+    "timespan": "Zeitspanne",
+    "video": "Videoannotation"
   }
 }
