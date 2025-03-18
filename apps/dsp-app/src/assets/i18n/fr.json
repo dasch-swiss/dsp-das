@@ -11,11 +11,11 @@
     }
   },
   "addProjectMember": {
-    "title": "Ajouter un membre au projet",
-    "description": "Augmenter votre équipe",
+    "title": "Ajouter un·e membre au projet",
+    "description": "Accroître l'équipe",
     "select": "Sélectionner dans la liste ...",
-    "usersLoading": "Chargement des utilisateurs ...",
-    "newUser": "Nouvel utilisateur"
+    "usersLoading": "Chargement des utilisateur·rice·s ...",
+    "newUser": "Nouvel·le utilisateur·rice"
   },
   "usersList": {
     "sortProps": {
@@ -27,13 +27,13 @@
     "list": {
       "project": "Projet",
       "projects": "Projets",
-      "sortShortCode": "Code court",
-      "sortShortName": "Nom court",
+      "sortShortCode": "Shortcode",
+      "sortShortName": "Acronyme",
       "sortProjectName": "Nom du projet",
       "statusActive": "Actif",
       "statusDeactivated": "Désactivé",
       "createNew": "Créer un nouveau projet",
-      "projectAdmin": "Administrateur du projet",
+      "projectAdmin": "Administrateur·ice du projet",
       "edit": "Modifier les informations du projet",
       "reactivate": "Réactiver le projet",
       "deactivate": "Désactiver le projet",
@@ -45,11 +45,11 @@
         "title": "Veuillez entrer les informations requises pour supprimer le projet.",
         "subtitle": "Supprimer le projet",
         "warning": "ATTENTION : Cette action est irréversible, utilisez-la avec précaution.",
-        "shortCode": "Code court du projet",
-        "systemAdminPassword": "Mot de passe de l'administrateur système",
+        "shortCode": "Shortcode du projet",
+        "systemAdminPassword": "Mot de passe de l'administrateur·rice système",
         "cancel": "Annuler",
         "confirm": "Confirmer",
-        "shortCodeValidation": "Le code court ne correspond pas",
+        "shortCodeValidation": "Le Shortcode ne correspond pas",
         "passwordValidation": "Mot de passe incorrect"
       }
     }
@@ -64,7 +64,7 @@
       "next": "Suivant",
       "reset": "Réinitialiser",
       "danger": "Zone de danger",
-      "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante.",
+      "searchHelp": "Tapez 3 lettres pour chercher une ressource existante.",
       "login": "Connexion"
     },
     "ontology": {
@@ -82,8 +82,8 @@
         "familyName": "Nom",
         "email": "Adresse e-mail",
         "emailValidation": "Cette adresse e-mail semble invalide.",
-        "username": "Nom d'utilisateur",
-        "usernameHint": "Les espaces et caractères spéciaux ne sont pas autorisés dans le nom d'utilisateur.",
+        "username": "Nom d'utilisateur·rice",
+        "usernameHint": "Les espaces et caractères spéciaux ne sont pas autorisés dans le nom d'utilisateur·rice.",
         "password": "Mot de passe",
         "passwordLengthHint": "Utilisez au moins 8 caractères.",
         "passwordPatternHint": "Le mot de passe doit contenir au moins une lettre majuscule et un chiffre.",
@@ -92,25 +92,25 @@
         "confirmPassword": "Confirmer le mot de passe",
         "requesterPassword": "Votre mot de passe",
         "language": "Langue par défaut",
-        "sysAdmin": "Règles de l'administrateur système",
-        "updateSuccess": "Vous avez mis à jour le profil de l'utilisateur avec succès."
+        "sysAdmin": "Règles de l'administrateur·rice système",
+        "updateSuccess": "Vous avez mis à jour le profil d'utilisateur·rice avec succès."
       },
       "title": {
         "new": "Créer un nouveau",
         "edit": "Modifier le profil",
-        "profile": "Profil utilisateur",
+        "profile": "Profil utilisateur·rice",
         "delete": "Suspendre le compte utilisateur",
-        "deleteButton": "Suspendre le compte utilisateur maintenant",
+        "deleteButton": "Suspendre le compte utilisateur·rice maintenant",
         "password": "Mettre à jour le mot de passe",
         "ownPasswordSuccess": "Vous avez mis à jour votre mot de passe avec succès.",
-        "userPasswordSuccess": "Vous avez mis à jour le mot de passe de l'utilisateur avec succès."
+        "userPasswordSuccess": "Vous avez mis à jour le mot de passe d'utilisateur·rice avec succès."
       }
     },
     "project": {
       "general": {
         "description": "Description",
-        "shortcode": "Code court",
-        "shortname": "Nom court",
+        "shortcode": "Shortcode",
+        "shortname": "Acronyme",
         "longname": "Nom du projet",
         "keywords": "Mots-clés",
         "editSuccess": "Vous avez mis à jour les informations du projet avec succès."
@@ -123,8 +123,8 @@
         "absoluteWidth": "Largeur absolue en pixels de : {{min}} à : {{max}}",
         "percentage": "Pourcentage",
         "updateConfirmation": "Vous avez mis à jour les paramètres d'image du projet avec succès.",
-        "info": "Pour limiter la taille de votre image, entrez soit un pourcentage, soit une largeur absolue en pixels. Vous ne pouvez pas fournir de valeurs pour les deux options.",
-        "restrictions": "Les paramètres d'image ne peuvent être appliqués qu'aux ressources ayant des permissions de vue restreinte."
+        "info": "Pour limiter la taille de votre image, entrez soit un pourcentage, soit une largeur absolue en pixels. Vous ne pouvez pas fournir de valeurs pour les deux options simultanénement.",
+        "restrictions": "Les paramètres d'image ne peuvent être appliqués qu'aux ressources ayant des permissions de vue restreintes."
       }
     },
     "lists": {
@@ -160,11 +160,11 @@
     "permissions": {
       "groups": {
         "label": "Permissions",
-        "projectAdmin": "Administrateur du projet",
-        "creator": "Créateur",
+        "projectAdmin": "Administrateur·rice du projet",
+        "creator": "Créateur·rice",
         "projectMember": "Membre du projet",
-        "knownUser": "Utilisateur connu",
-        "unknownUser": "Utilisateur inconnu",
+        "knownUser": "Utilisateur·rice connu·e",
+        "unknownUser": "Utilisateur·rice inconnu·e",
         "usersPermissions": "Vos permissions"
       },
       "interactions": {
@@ -177,7 +177,7 @@
     }
   },
   "searchPanel": {
-    "howToSearch": "Comment rechercher",
+    "howToSearch": "Comment faire une recherche",
     "expert": "Expert",
     "advancedSearch": "Recherche avancée",
     "expertSearch": "Recherche experte"
@@ -196,15 +196,15 @@
       "myAccount": "Mon compte"
     },
     "profile": {
-      "systemAdmin": "Administrateur système",
+      "systemAdmin": "Administrateur·rice système",
       "editMyProfile": "Modifier mon profil"
     },
     "userMenu": {
-      "signedInAs": "Connecté en tant que",
+      "signedInAs": "Connecté·e en tant que",
       "systemAdministration": "Administration système",
       "logout": "Déconnexion",
       "login": "CONNEXION",
-      "home": "Page d'accueil de l'application DSP",
+      "home": "Page d'accueil de DSP-App",
       "myAccount": "Mon compte"
     }
   },
