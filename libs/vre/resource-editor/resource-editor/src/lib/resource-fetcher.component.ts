@@ -1,9 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -22,15 +21,13 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
+  @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;
   loading!: boolean;
   private _ngUnsubscribe = new Subject<void>();
 
-  constructor(
-    private _resourceFetcherService: ResourceFetcherService,
-    private _store: Store
-  ) {}
+  constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnInit() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
@@ -52,7 +49,7 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
       if (!this.resource) {
         throw new AppError('Resource is not defined');
       }
-      this._store.dispatch(new LoadResourceClassItemsCountAction(this.resource.res));
+      this.afterResourceDeleted.emit(this.resource.res);
 
       this.resource = undefined;
     });
