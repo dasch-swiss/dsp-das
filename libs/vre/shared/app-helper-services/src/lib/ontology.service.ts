@@ -84,7 +84,7 @@ export class OntologyService {
     let propType: DefaultProperty | undefined;
 
     for (const group of this.defaultProperties) {
-      if (property.subPropertyOf.length) {
+      if (property?.subPropertyOf.length) {
         for (const subProp of property.subPropertyOf) {
           // if subProp is of type "link to" or "part of" we have to check the subproperty;
           // otherwise we get the necessary property info from the objectType
