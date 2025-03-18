@@ -27,13 +27,13 @@
     "list": {
       "project": "Projekt",
       "projects": "Projekte",
-      "sortShortCode": "Kurzcode",
+      "sortShortCode": "Shortcode",
       "sortShortName": "Kurzname",
       "sortProjectName": "Projektname",
       "statusActive": "Aktiv",
       "statusDeactivated": "Deaktiviert",
       "createNew": "Neues Projekt erstellen",
-      "projectAdmin": "Projekt Administrator",
+      "projectAdmin": "Projektadministrator",
       "edit": "Projektinformationen bearbeiten",
       "reactivate": "Projekt reaktivieren",
       "deactivate": "Projekt deaktivieren",
@@ -44,12 +44,12 @@
       "eraseConfirmationDialog": {
         "title": "Bitte geben Sie die erforderlichen Informationen ein, um das Projekt zu löschen.",
         "subtitle": "Projekt löschen",
-        "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden, gehen Sie also vorsichtig damit um.",
-        "shortCode": "Projekt-Kurzcode",
+        "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden.",
+        "shortCode": "Projekt-Shortcode",
         "systemAdminPassword": "Systemadministrator-Passwort",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
-        "shortCodeValidation": "Der Kurzcode stimmt nicht überein",
+        "shortCodeValidation": "Der Shortcode stimmt nicht überein",
         "passwordValidation": "Falsches Passwort"
       }
     }
@@ -64,7 +64,7 @@
       "next": "Weiter",
       "reset": "Zurücksetzen",
       "danger": "Gefahrenzone",
-      "searchHelp": "Gebe 3 Zeichen ein um nach einer existierender Resource zu suchen.",
+      "searchHelp": "Geben Sie 3 Zeichen ein, um nach einer existierenden Resource zu suchen.",
       "login": "Anmelden"
     },
     "ontology": {
@@ -100,7 +100,7 @@
         "edit": "Benutzer anpassen",
         "profile": "Benutzerprofil",
         "delete": "Benutzer löschen",
-        "deleteButton": "Benutzerkonto jetzt sperren",
+        "deleteButton": "Benutzerkonto sperren",
         "password": "Passwort aktualisieren",
         "ownPasswordSuccess": "Sie haben Ihr Passwort erfolgreich aktualisiert.",
         "userPasswordSuccess": "Sie haben das Passwort des Benutzers erfolgreich aktualisiert."
@@ -109,7 +109,7 @@
     "project": {
       "general": {
         "description": "Projektbeschrieb",
-        "shortcode": "Kurzcode",
+        "shortcode": "Shortcode",
         "shortname": "Kurzname",
         "longname": "Projekttitel",
         "keywords": "Stichworte",
@@ -119,10 +119,10 @@
         "off": "Aus",
         "isWatermark": "Wasserzeichen anwenden",
         "ratio": "Verhältnis",
-        "restrictImageSize": "Bildgröße einschränken",
+        "restrictImageSize": "Bildgrösse einschränken",
         "absoluteWidth": "Absolute Breite in Pixel von: {{min}} bis: {{max}}",
         "percentage": "Prozentsatz",
-        "updateConfirmation": "Sie haben die Projektbild-Einstellungen erfolgreich aktualisiert.",
+        "updateConfirmation": "Sie haben die Bildeinstellungen des Projekts erfolgreich aktualisiert.",
         "info": "Um die Größe Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht für beide Optionen Werte angeben.",
         "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind."
       }
@@ -168,11 +168,11 @@
         "usersPermissions": "Ihre Berechtigungen"
       },
       "interactions": {
-        "restrictedView": "Eingeschränkte Ansichtsberechtigung (RV)",
-        "view": "Ansichtsberechtigung (V)",
-        "modify": "Änderungsberechtigung (M)",
+        "restrictedView": "Leseberechtigung mit Restriktion (RV)",
+        "view": "Leseberechtigung (V)",
+        "modify": "Schreibberechtigung (M)",
         "delete": "Löschberechtigung (D)",
-        "changeRights": "Rechteänderungsberechtigung (CR)"
+        "changeRights": "Administrationsberechtigung (CR)"
       }
     }
   },
