@@ -7,6 +7,7 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 
@@ -22,7 +23,8 @@ export class OntologyService {
 
   constructor(
     @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _store: Store
   ) {}
 
   /**
