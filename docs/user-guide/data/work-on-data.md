@@ -227,6 +227,11 @@ To replace an image file, open the menu on the left side of the image viewer too
 
 ![Replace an image file.](../../assets/images/edit-uploaded-image.png)
 
+### Edit a footnote
+
+Footnotes can be edited in edit mode. Simply click the pencil icon, then click on the footnote link you wish to edit. Make your changes, and be sure to save them once you're done.
+
+![Edit a footnote.](../../assets/images/footnote-edit.png)
 
 ---
 
