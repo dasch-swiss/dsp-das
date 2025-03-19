@@ -219,7 +219,8 @@
   "annotations": {
     "audio": "Audio Annotation",
     "create": "Create Annotation",
-    "lead": "Annotation of",
+    "of": "Annotation of",
+    "label": "Annotation",
     "timespan": "Timespan",
     "video": "Video Annotation"
   }
