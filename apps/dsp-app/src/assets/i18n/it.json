@@ -1,8 +1,8 @@
 {
   "overview": {
-    "title": "Sfoglia i progetti di ricerca",
+    "title": "Naviga nei progetti di ricerca",
     "myProjects": "I miei progetti",
-    "browseOtherResearchProjects": "Sfoglia altri progetti di ricerca"
+    "browseOtherResearchProjects": "Esplora altri progetti di ricerca"
   },
   "list": {
     "title": {
@@ -27,8 +27,8 @@
     "list": {
       "project": "Progetto",
       "projects": "Progetti",
-      "sortShortCode": "Codice breve",
-      "sortShortName": "Nome breve",
+      "sortShortCode": "Codice del progetto",
+      "sortShortName": "Nome abbreviato del progetto",
       "sortProjectName": "Nome del progetto",
       "statusActive": "Attivo",
       "statusDeactivated": "Disattivato",
@@ -49,7 +49,7 @@
         "systemAdminPassword": "Password dell'amministratore di sistema",
         "cancel": "Annulla",
         "confirm": "Conferma",
-        "shortCodeValidation": "Il codice breve non corrisponde",
+        "shortCodeValidation": "Il codice del progetto non corrisponde",
         "passwordValidation": "Password errata"
       }
     }
@@ -63,7 +63,7 @@
       "update": "Aggiorna",
       "next": "Avanti",
       "reset": "Ripristina",
-      "danger": "Zona di pericolo",
+      "danger": "Zona pericolosa",
       "searchHelp": "Digita 3 lettere per cercare una risorsa esistente.",
       "login": "Accesso"
     },
@@ -73,7 +73,7 @@
         "edit": "Personalizza il modello di dati"
       },
       "label": {
-        "name": "Imposta un nome univoco"
+        "name": "Imposta un nome unico"
       }
     },
     "user": {
@@ -109,8 +109,8 @@
     "project": {
       "general": {
         "description": "Descrizione",
-        "shortcode": "Codice breve",
-        "shortname": "Nome breve",
+        "shortcode": "Codice del progetto",
+        "shortname": "Nome abbreviato del progetto",
         "longname": "Nome del progetto",
         "keywords": "Parole chiave",
         "editSuccess": "Hai aggiornato con successo le informazioni del progetto."
