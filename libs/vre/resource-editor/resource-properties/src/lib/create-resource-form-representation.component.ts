@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Constants, CreateFileValue } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
@@ -7,7 +7,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
   selector: 'app-create-resource-form-representation',
   template: `
     <app-upload-control
-      *ngIf="fileRepresentation !== Constants.HasStillImageFileValue"
+      *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl"
       [formControl]="control"
       [representation]="fileRepresentation"
       style="display: block; margin-bottom: 8px" />
@@ -25,8 +25,12 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
     </ng-template>
   `,
 })
-export class CreateResourceFormRepresentationComponent {
+export class CreateResourceFormRepresentationComponent implements OnChanges {
   @Input({ required: true }) control!: FormControl<CreateFileValue | null>;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   protected readonly Constants = Constants;
+
+  ngOnChanges() {
+    console.log('representation', this);
+  }
 }

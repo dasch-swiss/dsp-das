@@ -82,7 +82,7 @@ export class CreateResourceFormComponent implements OnInit {
   fileRepresentation: FileRepresentationType | undefined;
 
   properties!: PropertyInfoValues[];
-  loading = false;
+  loading = true;
 
   mapping = new Map<string, string>();
   readonly resourceClassTypes = [
@@ -131,7 +131,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getResourceProperties() {
-    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(this.ontologyIri)
       .pipe(
@@ -143,7 +142,7 @@ export class CreateResourceFormComponent implements OnInit {
       )
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.fileRepresentation = this._getFileRepresentation(onto);
-
+        console.log('julien file representation', this);
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
