@@ -92,7 +92,7 @@
         "confirmPassword": "Confirmer le mot de passe",
         "requesterPassword": "Votre mot de passe",
         "language": "Langue par défaut",
-        "sysAdmin": "Règles de l'administrateur·rice système",
+        "sysAdmin": "Droits d'administration système",
         "updateSuccess": "Vous avez mis à jour le profil d'utilisateur·rice avec succès."
       },
       "title": {
@@ -204,7 +204,7 @@
       "systemAdministration": "Administration système",
       "logout": "Déconnexion",
       "login": "CONNEXION",
-      "home": "Page d'accueil de DSP-App",
+      "home": "Page d'accueil de DSP-APP",
       "myAccount": "Mon compte"
     }
   },

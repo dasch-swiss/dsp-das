@@ -14,8 +14,8 @@
     "title": "Projektmitglied hinzufügen",
     "description": "Projektteam erweitern",
     "select": "Aus der Liste wählen ...",
-    "usersLoading": "Benutzer werden geladen ...",
-    "newUser": "Neuer Benutzer"
+    "usersLoading": "Konten werden geladen ...",
+    "newUser": "Neues Konto"
   },
   "usersList": {
     "sortProps": {
@@ -33,7 +33,7 @@
       "statusActive": "Aktiv",
       "statusDeactivated": "Deaktiviert",
       "createNew": "Neues Projekt erstellen",
-      "projectAdmin": "Projektadministrator",
+      "projectAdmin": "Projekt-Admin",
       "edit": "Projektinformationen bearbeiten",
       "reactivate": "Projekt reaktivieren",
       "deactivate": "Projekt deaktivieren",
@@ -46,7 +46,7 @@
         "subtitle": "Projekt löschen",
         "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden.",
         "shortCode": "Projekt-Shortcode",
-        "systemAdminPassword": "Systemadministrator:in-Passwort",
+        "systemAdminPassword": "System-Admin-Passwort",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "shortCodeValidation": "Der Shortcode stimmt nicht überein",
@@ -82,37 +82,37 @@
         "familyName": "Nachname",
         "email": "Email Adresse",
         "emailValidation": "Das ist keine gültige Email Adresse",
-        "username": "Benutzername",
-        "usernameHint": "Benutzername darf keine Sonder- oder Leerzeichen beinhalten.",
+        "username": "Anzeigename",
+        "usernameHint": "Der Anzeigename darf keine Sonder- oder Leerzeichen beinhalten.",
         "password": "Passwort",
         "passwordLengthHint": "Verwenden Sie mindestens 8 Zeichen.",
-        "passwordPatternHint": "Das Passwort sollte mindestens einen Grossbuchstaben und eine Zahl enthalten.",
+        "passwordPatternHint": "Das Passwort muss mindestens einen Grossbuchstaben und eine Zahl enthalten.",
         "oldPassword": "Altes Passwort",
         "newPassword": "Neues Passwort",
         "confirmPassword": "Passwort bestätigen",
         "requesterPassword": "Dein Passwort",
         "language": "Sprache",
-        "sysAdmin": "Systemadministrator:in-Regeln",
-        "updateSuccess": "Das Benutzerprofil wurde erfolgreich aktualisiert."
+        "sysAdmin": "System-Admin-Rechte",
+        "updateSuccess": "Das Profil wurde erfolgreich aktualisiert."
       },
       "title": {
-        "new": "Neue:n Benutzer:in erstellen",
-        "edit": "Benutzer:in anpassen",
-        "profile": "Benutzerprofil",
-        "delete": "Benutzer löschen",
-        "deleteButton": "Benutzerkonto sperren",
+        "new": "Neues Konto anlegen",
+        "edit": "Profil anpassen",
+        "profile": "Profil",
+        "delete": "Konto löschen",
+        "deleteButton": "Konto sperren",
         "password": "Passwort aktualisieren",
         "ownPasswordSuccess": "Sie haben Ihr Passwort erfolgreich aktualisiert.",
-        "userPasswordSuccess": "Sie haben das Passwort des Benutzers erfolgreich aktualisiert."
+        "userPasswordSuccess": "Sie haben das Passwort erfolgreich aktualisiert."
       }
     },
     "project": {
       "general": {
-        "description": "Projektbeschrieb",
+        "description": "Projektbeschreibung",
         "shortcode": "Shortcode",
         "shortname": "Kurzname",
         "longname": "Projekttitel",
-        "keywords": "Stichworte",
+        "keywords": "Schlagworte",
         "editSuccess": "Sie haben die Projektinformationen erfolgreich aktualisiert."
       },
       "imageSettings": {
@@ -123,8 +123,8 @@
         "absoluteWidth": "Absolute Breite in Pixel von: {{min}} bis: {{max}}",
         "percentage": "Prozentsatz",
         "updateConfirmation": "Sie haben die Bildeinstellungen des Projekts erfolgreich aktualisiert.",
-        "info": "Um die Größe Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht für beide Optionen Werte angeben.",
-        "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsberechtigungen festgelegt sind."
+        "info": "Um die Grösse Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht beide Optionen gleichzeitig angeben.",
+        "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsrechte festgelegt sind."
       }
     },
     "lists": {
@@ -149,22 +149,22 @@
     "properties": "Eigenschaften",
     "comment": "Kommentar",
     "incomingLink": {
-    "tooltip": "Zeigt an, dass auf diese Ressource von einer anderen Ressource verwiesen wird",
-    "label": "hat eingehenden Link"
+      "tooltip": "Zeigt an, dass auf diese Ressource von einer anderen Ressource verwiesen wird",
+      "label": "hat eingehenden Link"
     },
     "standoffLink": {
-    "tooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
-    "label": "hat Standoff-Link"
+      "tooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
+      "label": "hat Standoff-Link"
     },
     "footnotes": "Fussnoten",
     "permissions": {
       "groups": {
         "label": "Berechtigungen",
         "projectAdmin": "Projektadministrator:in",
-        "creator": "Ersteller",
+        "creator": "Ersteller:in",
         "projectMember": "Projektmitglied",
-        "knownUser": "Bekannter Benutzer",
-        "unknownUser": "Unbekannter Benutzer",
+        "knownUser": "Angemeldet",
+        "unknownUser": "Nicht angemeldet",
         "usersPermissions": "Ihre Berechtigungen"
       },
       "interactions": {
@@ -180,7 +180,7 @@
     "howToSearch": "Wie suchen?",
     "expert": "Experte",
     "advancedSearch": "Erweiterte Suche",
-    "expertSearch": "Experte suchen"
+    "expertSearch": "Expertensuchen"
   },
   "fullTextSearch": {
     "filterByProject": "Nach Projekt filtern",
@@ -196,7 +196,7 @@
       "myAccount": "Mein Konto"
     },
     "profile": {
-      "systemAdmin": "Systemadministrator",
+      "systemAdmin": "System-Admin",
       "editMyProfile": "Mein Profil bearbeiten"
     },
     "userMenu": {
@@ -204,7 +204,7 @@
       "systemAdministration": "Systemadministration",
       "logout": "Abmelden",
       "login": "ANMELDEN",
-      "home": "DSP-App Startseite",
+      "home": "DSP-APP Startseite",
       "myAccount": "Mein Konto"
     }
   },

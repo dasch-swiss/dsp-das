@@ -92,7 +92,7 @@
         "confirmPassword": "Conferma password",
         "requesterPassword": "La tua password",
         "language": "Lingua predefinita",
-        "sysAdmin": "Regole dell'amministratore di sistema",
+        "sysAdmin": "diritti d'amministrazione del sistema",
         "updateSuccess": "Hai aggiornato con successo il profilo dell'utente."
       },
       "title": {

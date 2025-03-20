@@ -92,7 +92,7 @@
         "confirmPassword": "Confirm password",
         "requesterPassword": "Your password",
         "language": "Default language",
-        "sysAdmin": "System administrator rules",
+        "sysAdmin": "System administrator rights",
         "updateSuccess": "You have successfully updated the user's profile."
       },
       "title": {
@@ -204,7 +204,7 @@
       "systemAdministration": "System Administration",
       "logout": "Logout",
       "login": "LOGIN",
-      "home": "DSP-App Home Page",
+      "home": "DSP-APP Home Page",
       "myAccount": "My Account"
     }
   },
