@@ -71,6 +71,7 @@ Simply make your changes and click "Save."
 ### Legal Settings for Media Assets
 
 The legal settings will apply to **media files, documents, and other digital assets**, such as **images, audio, video, PDFs, and text-based files** etc. These settings will consist of three key sections, **all of which will be mandatory**:
+
 1. **Copyright Holders** – Defines who holds the copyright for a given media asset.
 2. **Licenses** – Specifies the available licensing options.
 3. **Authorship** – Identifies the creator of the media asset.
@@ -94,23 +95,23 @@ The following licenses will be available, with additional options to be added in
 ##### **Available Licenses**
 
 - **Creative Commons Licenses**  
-  - **Attribution 4.0 International (CC BY 4.0)**  
+    - **Attribution 4.0 International (CC BY 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by/4.0/)  
-  - **Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**  
+    - **Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by-sa/4.0/)  
-  - **Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**  
+    - **Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by-nc/4.0/)  
-  - **Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**  
+    - **Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
-  - **Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)**  
+    - **Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by-nd/4.0/)  
-  - **Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)**  
+    - **Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)**  
     [🔗 License URI](https://creativecommons.org/licenses/by-nc-nd/4.0/)  
 
 - **Other License Options**  
-  - **AI-Generated Content** – Not Protected by Copyright  
-  - **Unknown License** – Contact Copyright Holder for Permission  
-  - **Public Domain** – Not Protected by Copyright  
+    - **AI-Generated Content** – Not Protected by Copyright  
+    - **Unknown License** – Contact Copyright Holder for Permission  
+    - **Public Domain** – Not Protected by Copyright  
 
 
 #### Authorship
