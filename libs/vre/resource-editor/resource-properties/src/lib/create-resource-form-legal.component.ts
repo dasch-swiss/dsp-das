@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -50,7 +50,7 @@ export class CreateResourceFormLegalComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project!.shortcode)
     ),
-    map(data => data.data as string[])
+    map(data => data.data)
   );
 
   licenses$ = this.project$.pipe(
@@ -58,7 +58,7 @@ export class CreateResourceFormLegalComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project!.shortcode)
     ),
-    map(data => data.data as LicenseDto[])
+    map(data => data.data)
   );
 
   authorships$ = this.project$.pipe(
@@ -66,7 +66,7 @@ export class CreateResourceFormLegalComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
     ),
-    map(data => data.data as string[])
+    map(data => data.data)
   );
 
   constructor(

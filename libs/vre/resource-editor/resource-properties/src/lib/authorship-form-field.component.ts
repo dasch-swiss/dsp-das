@@ -56,7 +56,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
         )
       )
       .subscribe(response => {
-        this.availableAuthorships = response.data ?? [];
+        this.availableAuthorships = response.data;
       });
   }
 

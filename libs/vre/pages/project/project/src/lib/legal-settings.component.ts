@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
@@ -61,7 +61,7 @@ export class LegalSettingsComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project!.shortcode)
     ),
-    map(data => data.data as string[])
+    map(data => data.data)
   );
 
   licenses$ = this.project$.pipe(
@@ -69,7 +69,7 @@ export class LegalSettingsComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project!.shortcode)
     ),
-    map(data => data.data as LicenseDto[])
+    map(data => data.data)
   );
 
   authorships$ = this.project$.pipe(
@@ -77,7 +77,7 @@ export class LegalSettingsComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
     ),
-    map(data => data.data as string[])
+    map(data => data.data)
   );
 
   constructor(
