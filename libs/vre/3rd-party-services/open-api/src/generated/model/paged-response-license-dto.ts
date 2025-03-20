@@ -14,7 +14,7 @@ import { LicenseDto } from './license-dto';
 
 
 export interface PagedResponseLicenseDto { 
-    data?: Array<LicenseDto>;
+    data: Array<LicenseDto>;
     pagination: Pagination;
 }
 

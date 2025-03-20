@@ -12,9 +12,9 @@
 
 
 export interface Pagination { 
-    page_size: number;
-    total_items: number;
-    total_pages: number;
-    current_page: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
 }
 

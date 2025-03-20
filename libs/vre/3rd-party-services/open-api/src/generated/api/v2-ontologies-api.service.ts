@@ -98,6 +98,216 @@ export class V2OntologiesApiService {
     }
 
     /**
+     * @param resourceClassIri 
+     * @param lastModificationDate 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteV2OntologiesClassesResourceclassiri(resourceClassIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public deleteV2OntologiesClassesResourceclassiri(resourceClassIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public deleteV2OntologiesClassesResourceclassiri(resourceClassIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public deleteV2OntologiesClassesResourceclassiri(resourceClassIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (resourceClassIri === null || resourceClassIri === undefined) {
+            throw new Error('Required parameter resourceClassIri was null or undefined when calling deleteV2OntologiesClassesResourceclassiri.');
+        }
+        if (lastModificationDate === null || lastModificationDate === undefined) {
+            throw new Error('Required parameter lastModificationDate was null or undefined when calling deleteV2OntologiesClassesResourceclassiri.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lastModificationDate !== undefined && lastModificationDate !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lastModificationDate, 'lastModificationDate');
+        }
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/classes/${this.configuration.encodeParam({name: "resourceClassIri", value: resourceClassIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<string>('delete', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param ontologyIri 
+     * @param lastModificationDate 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteV2OntologiesCommentOntologyiri(ontologyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public deleteV2OntologiesCommentOntologyiri(ontologyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public deleteV2OntologiesCommentOntologyiri(ontologyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public deleteV2OntologiesCommentOntologyiri(ontologyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (ontologyIri === null || ontologyIri === undefined) {
+            throw new Error('Required parameter ontologyIri was null or undefined when calling deleteV2OntologiesCommentOntologyiri.');
+        }
+        if (lastModificationDate === null || lastModificationDate === undefined) {
+            throw new Error('Required parameter lastModificationDate was null or undefined when calling deleteV2OntologiesCommentOntologyiri.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lastModificationDate !== undefined && lastModificationDate !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lastModificationDate, 'lastModificationDate');
+        }
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/comment/${this.configuration.encodeParam({name: "ontologyIri", value: ontologyIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<string>('delete', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * @param ontologyIri 
      * @param lastModificationDate 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
@@ -189,6 +399,111 @@ export class V2OntologiesApiService {
         }
 
         let localVarPath = `/v2/ontologies/${this.configuration.encodeParam({name: "ontologyIri", value: ontologyIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<string>('delete', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param propertyIri 
+     * @param lastModificationDate 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteV2OntologiesPropertiesCommentPropertyiri(propertyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public deleteV2OntologiesPropertiesCommentPropertyiri(propertyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public deleteV2OntologiesPropertiesCommentPropertyiri(propertyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public deleteV2OntologiesPropertiesCommentPropertyiri(propertyIri: string, lastModificationDate: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (propertyIri === null || propertyIri === undefined) {
+            throw new Error('Required parameter propertyIri was null or undefined when calling deleteV2OntologiesPropertiesCommentPropertyiri.');
+        }
+        if (lastModificationDate === null || lastModificationDate === undefined) {
+            throw new Error('Required parameter lastModificationDate was null or undefined when calling deleteV2OntologiesPropertiesCommentPropertyiri.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lastModificationDate !== undefined && lastModificationDate !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lastModificationDate, 'lastModificationDate');
+        }
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/properties/comment/${this.configuration.encodeParam({name: "propertyIri", value: propertyIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<string>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -308,6 +623,103 @@ export class V2OntologiesApiService {
     }
 
     /**
+     * @param resourceClassIri 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getV2OntologiesCandeleteclassResourceclassiri(resourceClassIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public getV2OntologiesCandeleteclassResourceclassiri(resourceClassIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public getV2OntologiesCandeleteclassResourceclassiri(resourceClassIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public getV2OntologiesCandeleteclassResourceclassiri(resourceClassIri: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (resourceClassIri === null || resourceClassIri === undefined) {
+            throw new Error('Required parameter resourceClassIri was null or undefined when calling getV2OntologiesCandeleteclassResourceclassiri.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/candeleteclass/${this.configuration.encodeParam({name: "resourceClassIri", value: resourceClassIri, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<string>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * @param ontologyIri 
      * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
      * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
@@ -394,6 +806,309 @@ export class V2OntologiesApiService {
         return this.httpClient.request<string>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param allLanguages 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getV2OntologiesClasses(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public getV2OntologiesClasses(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public getV2OntologiesClasses(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public getV2OntologiesClasses(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (allLanguages !== undefined && allLanguages !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>allLanguages, 'allLanguages');
+        }
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/classes`;
+        return this.httpClient.request<string>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param allLanguages 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getV2OntologiesProperties(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public getV2OntologiesProperties(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public getV2OntologiesProperties(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public getV2OntologiesProperties(knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, allLanguages?: boolean, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (allLanguages !== undefined && allLanguages !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>allLanguages, 'allLanguages');
+        }
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/properties`;
+        return this.httpClient.request<string>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public patchV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public patchV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public patchV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public patchV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchV2OntologiesCardinalities.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/cardinalities`;
+        return this.httpClient.request<string>('patch', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -498,6 +1213,648 @@ export class V2OntologiesApiService {
 
         let localVarPath = `/v2/ontologies`;
         return this.httpClient.request<string>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public postV2OntologiesCandeletecardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public postV2OntologiesCandeletecardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public postV2OntologiesCandeletecardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public postV2OntologiesCandeletecardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling postV2OntologiesCandeletecardinalities.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/candeletecardinalities`;
+        return this.httpClient.request<string>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public postV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public postV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public postV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public postV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling postV2OntologiesProperties.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/properties`;
+        return this.httpClient.request<string>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public putV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public putV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public putV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public putV2OntologiesCardinalities(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling putV2OntologiesCardinalities.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/cardinalities`;
+        return this.httpClient.request<string>('put', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public putV2OntologiesGuiorder(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public putV2OntologiesGuiorder(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public putV2OntologiesGuiorder(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public putV2OntologiesGuiorder(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling putV2OntologiesGuiorder.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/guiorder`;
+        return this.httpClient.request<string>('put', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public putV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public putV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public putV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public putV2OntologiesProperties(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling putV2OntologiesProperties.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/properties`;
+        return this.httpClient.request<string>('put', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: body,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999 
+     * @param xKnoraAcceptSchema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param schema The ontology schema to be used for the request. If not specified, the default schema ApiV2Complex will be used.
+     * @param xKnoraJsonLdRendering The JSON-LD rendering to be used for the request (flat or hierarchical). If not specified, hierarchical JSON-LD will be used.
+     * @param markup The markup rendering to be used for the request (XML or standoff).
+     * @param xKnoraAcceptMarkup The markup rendering to be used for the request (XML or standoff).
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public putV2OntologiesPropertiesGuielement(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<string>;
+    public putV2OntologiesPropertiesGuielement(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public putV2OntologiesPropertiesGuielement(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public putV2OntologiesPropertiesGuielement(body: string, knoraAuthenticationMFYGSLTEMV3C4ZDBONRWQLTTO5UXG4Z2GQ2DG999?: string, xKnoraAcceptSchema?: string, schema?: string, xKnoraJsonLdRendering?: string, markup?: string, xKnoraAcceptMarkup?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json', context?: HttpContext}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling putV2OntologiesPropertiesGuielement.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (schema !== undefined && schema !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>schema, 'schema');
+        }
+        if (markup !== undefined && markup !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>markup, 'markup');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xKnoraAcceptSchema !== undefined && xKnoraAcceptSchema !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-schema', String(xKnoraAcceptSchema));
+        }
+        if (xKnoraJsonLdRendering !== undefined && xKnoraJsonLdRendering !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-json-ld-rendering', String(xKnoraJsonLdRendering));
+        }
+        if (xKnoraAcceptMarkup !== undefined && xKnoraAcceptMarkup !== null) {
+            localVarHeaders = localVarHeaders.set('x-knora-accept-markup', String(xKnoraAcceptMarkup));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (httpAuth1) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth1');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Basic ' + localVarCredential);
+        }
+
+        // authentication (httpAuth) required
+        localVarCredential = this.configuration.lookupCredential('httpAuth');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v2/ontologies/properties/guielement`;
+        return this.httpClient.request<string>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: body,

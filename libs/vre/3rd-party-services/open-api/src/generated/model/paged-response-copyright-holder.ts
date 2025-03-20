@@ -13,7 +13,7 @@ import { Pagination } from './pagination';
 
 
 export interface PagedResponseCopyrightHolder { 
-    data?: Array<string>;
+    data: Array<string>;
     pagination: Pagination;
 }
 
