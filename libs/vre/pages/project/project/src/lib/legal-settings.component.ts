@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
@@ -54,28 +55,29 @@ import {
   `,
 })
 export class LegalSettingsComponent {
-  readonly project$ = this._store.select(ProjectsSelectors.currentProject);
+  readonly project$ = this._store.select(ProjectsSelectors.currentProject).pipe(
+    filter(project => project !== undefined),
+    map(project => project as ReadProject),
+    take(1)
+  );
 
   copyrightHolders$ = this.project$.pipe(
-    filter(project => project !== undefined),
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project!.shortcode)
+      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project.shortcode)
     ),
     map(data => data.data)
   );
 
   licenses$ = this.project$.pipe(
-    filter(project => project !== undefined),
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project!.shortcode)
+      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
     ),
     map(data => data.data)
   );
 
   authorships$ = this.project$.pipe(
-    filter(project => project !== undefined),
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
+      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project.shortcode)
     ),
     map(data => data.data)
   );
