@@ -1,5 +1,32 @@
 # Changelog
 
+## [11.27.0](https://github.com/dasch-swiss/dsp-das/compare/v11.26.3...v11.27.0) (2025-03-20)
+
+
+### Enhancements
+
+* add missing translations for EN, DE, FR and IT languages (DEV-4647) ([#2163](https://github.com/dasch-swiss/dsp-das/issues/2163)) ([2e43da7](https://github.com/dasch-swiss/dsp-das/commit/2e43da7c0e413de93d3bdfcd3fe2d87b4a77b91d))
+
+
+### Bug Fixes
+
+* fix resource permissions label translation (DEV-4708) ([#2185](https://github.com/dasch-swiss/dsp-das/issues/2185)) ([1fe197e](https://github.com/dasch-swiss/dsp-das/commit/1fe197ea096e62af76e8136ddce1ffb82b319acc))
+* selected ontology in advanced search (DEV-4696) ([#2180](https://github.com/dasch-swiss/dsp-das/issues/2180)) ([9ef0459](https://github.com/dasch-swiss/dsp-das/commit/9ef0459acf09ac6723e0c682c3b2dd7423a51bd1))
+
+
+### Maintenances
+
+* adapt to js lib new typing ([#2150](https://github.com/dasch-swiss/dsp-das/issues/2150)) ([b02753c](https://github.com/dasch-swiss/dsp-das/commit/b02753c773a78a8e4ac56830ea942e6cc80bd418))
+* **deps-dev:** bump @typescript-eslint/utils from 8.26.0 to 8.26.1 ([#2184](https://github.com/dasch-swiss/dsp-das/issues/2184)) ([fee5133](https://github.com/dasch-swiss/dsp-das/commit/fee513383b8a7d14ac244868260a48051f6b501e))
+* **deps:** bump @sentry/cli from 2.42.2 to 2.42.3 in the sentry-deps group ([#2183](https://github.com/dasch-swiss/dsp-das/issues/2183)) ([2228ed5](https://github.com/dasch-swiss/dsp-das/commit/2228ed54a67665e261ff6d4e25f8630ffa5bbb75))
+
+
+### Documentation
+
+* Add content about footnotes ([#2190](https://github.com/dasch-swiss/dsp-das/issues/2190)) ([2f44e89](https://github.com/dasch-swiss/dsp-das/commit/2f44e893a23b43ab9471e79ceb28378ac0bf389e))
+* Add content about segment support ([#2175](https://github.com/dasch-swiss/dsp-das/issues/2175)) ([fb1778c](https://github.com/dasch-swiss/dsp-das/commit/fb1778c53d060372407c0639693ce590fcf63147))
+* Add missing documentation about IIIF images ([#2174](https://github.com/dasch-swiss/dsp-das/issues/2174)) ([e373022](https://github.com/dasch-swiss/dsp-das/commit/e37302276f09c48aa5c126fdefb42ee5a3adbc00))
+
 ## [11.26.3](https://github.com/dasch-swiss/dsp-das/compare/v11.26.2...v11.26.3) (2025-03-17)
 
 
