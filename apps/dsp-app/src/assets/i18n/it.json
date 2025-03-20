@@ -149,7 +149,7 @@
     "properties": "Proprietà",
     "comment": "Commento",
     "incomingLink": {
-      "tooltip": "Indica che questa risorsa è riferita da un'altra risorsa",
+      "tooltip": "Indica che questa risorsa è menzionata da un'altra risorsa",
       "label": "ha un link in entrata"
     },
     "standoffLink": {
@@ -178,7 +178,7 @@
   },
   "searchPanel": {
     "howToSearch": "Come cercare",
-    "expert": "Esperto",
+    "expert": "Expert",
     "advancedSearch": "Ricerca avanzata",
     "expertSearch": "Ricerca esperta"
   },
@@ -203,7 +203,7 @@
       "signedInAs": "Connesso come",
       "systemAdministration": "Amministrazione di sistema",
       "logout": "Disconnessione",
-      "login": "ACCESSO",
+      "login": "LOGIN",
       "home": "Pagina iniziale dell'app DSP",
       "myAccount": "Il mio account"
     }
@@ -212,7 +212,7 @@
     "firstPage": "Prima pagina",
     "lastPage": "Ultima pagina",
     "nextPage": "Pagina successiva",
-    "inputTooltip": "Inserisci il numero della pagina e applica con il tasto Invio.",
+    "inputTooltip": "Inserisci il numero della pagina e premi Invio per andare alla pagina.",
     "previousPage": "Pagina precedente",
     "rangeLabelOf": "di"
   }
