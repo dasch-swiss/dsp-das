@@ -5,7 +5,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { filter, finalize, map, startWith, switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authorship-form-field',
@@ -41,6 +41,8 @@ export class AuthorshipFormFieldComponent implements OnInit {
   selectedItems: string[] = [];
   availableAuthorships: string[] = [];
 
+  loading = true;
+
   constructor(
     private _adminApi: AdminProjectsLegalInfoApiService,
     private _store: Store
@@ -51,9 +53,13 @@ export class AuthorshipFormFieldComponent implements OnInit {
       .select(ProjectsSelectors.currentProject)
       .pipe(
         filter(project => project !== undefined),
+        take(1),
         switchMap(project =>
           this._adminApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
-        )
+        ),
+        finalize(() => {
+          this.loading = false;
+        })
       )
       .subscribe(response => {
         this.availableAuthorships = response.data;

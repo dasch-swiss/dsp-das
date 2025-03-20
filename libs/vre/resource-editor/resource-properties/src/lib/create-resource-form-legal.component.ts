@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -10,22 +10,22 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
   selector: 'app-create-resource-form-legal',
   template: `
     <h3>Legal infos</h3>
-    GG
+
     <app-create-resource-form-row [label]="'Copyright holder'" [tooltip]="'Copyright holder'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.copyrightHolder">
-          <mat-option *ngIf="copyrightHolderLoading">Loading.. {{ copyrightHolderLoading }}</mat-option>
+          <mat-option *ngIf="copyrightHoldersLoading">Loading...</mat-option>
           <mat-option *ngFor="let copyrightHolder of copyrightHolders$ | async" [value]="copyrightHolder"
             >{{ copyrightHolder }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>
-    A{{ copyrightHolderLoading }}B
 
     <app-create-resource-form-row [label]="'License'" [tooltip]="'License'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.license">
+          <mat-option *ngIf="licensesLoading">Loading...</mat-option>
           <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.labelEn }} </mat-option>
         </mat-select>
       </mat-form-field>
@@ -52,7 +52,8 @@ export class CreateResourceFormLegalComponent {
     take(1)
   );
 
-  copyrightHolderLoading = true;
+  copyrightHoldersLoading = true;
+  licensesLoading = true;
 
   copyrightHolders$ = this.project$.pipe(
     switchMap(project =>
@@ -60,7 +61,7 @@ export class CreateResourceFormLegalComponent {
     ),
     map(data => data.data),
     finalize(() => {
-      this.copyrightHolderLoading = false;
+      this.copyrightHoldersLoading = false;
     })
   );
 
@@ -68,7 +69,10 @@ export class CreateResourceFormLegalComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
     ),
-    map(data => data.data)
+    map(data => data.data),
+    finalize(() => {
+      this.licensesLoading = false;
+    })
   );
 
   authorships$ = this.project$.pipe(
@@ -80,7 +84,6 @@ export class CreateResourceFormLegalComponent {
 
   constructor(
     private _store: Store,
-    private _copyrightApi: AdminProjectsLegalInfoApiService,
-    private _cdr: ChangeDetectorRef
+    private _copyrightApi: AdminProjectsLegalInfoApiService
   ) {}
 }
