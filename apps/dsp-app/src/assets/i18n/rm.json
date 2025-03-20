@@ -215,5 +215,12 @@
     "inputTooltip": "Enter the page number and apply with the Enter key.",
     "previousPage": "Previous page",
     "rangeLabelOf": "of"
+  },
+  "annotations": {
+    "audio": "Audio Annotation",
+    "create": "Create Annotation",
+    "lead": "Annotation of",
+    "timespan": "Timespan",
+    "video": "Video Annotation"
   }
 }
