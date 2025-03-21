@@ -217,12 +217,3 @@
     "rangeLabelOf": "da"
   }
 }
-
-Translating the JSON object into Romansh, one of Switzerland's four official languages, presents a unique challenge due to its limited use in technical contexts and fewer available resources for software-specific terminology compared to German, French, or Italian. Romansh (Rumantsch) is a Romance language spoken primarily in the canton of Graubünden, with several regional variants (e.g., Sursilvan, Vallader, Puter, Surmiran, Sutsilvan, and Rumantsch Grischun, the standardized form). For this translation, I will use Rumantsch Grischun, the standardized written form, as it is the most widely accepted for formal and official purposes.
-
-Given the lack of extensive technical vocabulary in Romansh for software interfaces, some terms will be adapted from related Romance languages (like Italian or French) or contextualized based on general usage, while aiming to preserve authenticity and natural flow. Below is the translated JSON object:
-
-Limitations and Considerations
-Limited Technical Corpus: Romansh is less commonly used in software, so some terms are neologisms or adaptations. Native speakers might refine these further based on regional preferences or emerging standards.
-Resources: I relied on Romansh dictionaries (e.g., Pledari Grond), online tools like rumantsch.ch, and comparisons with Italian and French for technical terms.
-Validation: For production use, consultation with a native Romansh speaker familiar with technical contexts would ensure accuracy.
