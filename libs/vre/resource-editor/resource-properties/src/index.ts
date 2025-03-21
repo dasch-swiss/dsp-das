@@ -59,3 +59,4 @@ export * from './lib/incoming-links-property.component';
 export * from './lib/standoff-links-property.component';
 export * from './lib/incoming-resource-pager/incoming-resource-pager.component';
 export * from './lib/authorship-form-field.component';
+export * from './lib/create-resource-form-file.component';

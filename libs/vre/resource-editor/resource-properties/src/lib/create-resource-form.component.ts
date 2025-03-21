@@ -25,9 +25,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <app-create-resource-form-representation
+      <app-create-resource-form-file
         *ngIf="form.controls.file && fileRepresentation"
-        [control]="form.controls.file.controls.link"
+        [control]="form.controls.file"
         [fileRepresentation]="fileRepresentation" />
 
       <app-create-resource-form-row
@@ -154,9 +154,9 @@ export class CreateResourceFormComponent implements OnInit {
       const fileFormGroup = this._fb.group({
         link: this._fb.control(null as string | null, [Validators.required]),
         legal: this._fb.group({
-          copyrightHolder: this._fb.control(null as string | null),
-          license: this._fb.control(null as string | null),
-          authorship: this._fb.control(null as string | null),
+          copyrightHolder: [null as string | null, Validators.required],
+          license: [null as string | null],
+          authorship: [null as string | null],
         }),
       });
       this.form.addControl('file', fileFormGroup);
