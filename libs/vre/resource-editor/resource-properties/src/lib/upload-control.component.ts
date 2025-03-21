@@ -53,6 +53,7 @@ export class UploadControlComponent implements ControlValueAccessor {
       this.onChange(uploadedFile);
     } else {
       const createFile = fileValueMapping.get(this.representation)!.create();
+      createFile.copyrightHolder = 'finally julien';
       createFile.filename = res.internalFilename;
       this.onChange(createFile);
     }
