@@ -217,10 +217,7 @@
     "rangeLabelOf": "of"
   },
   "annotations": {
-    "audio": "Audio Annotation",
     "create": "Create Annotation",
-    "lead": "Annotation of",
-    "timespan": "Timespan",
-    "video": "Video Annotation"
+    "label": "Annotations"
   }
 }
