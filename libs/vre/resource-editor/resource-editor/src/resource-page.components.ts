@@ -6,6 +6,7 @@ import { CompoundSliderComponent } from './lib/compound/compound-slider.componen
 import { CompoundViewerComponent } from './lib/compound/compound-viewer.component';
 import { PermissionInfoComponent } from './lib/permission-info/permission-info.component';
 import { ResourceFetcherComponent } from './lib/resource-fetcher.component';
+import { ResourceFileValueComponent } from './lib/resource-file-value.component';
 import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourceLegalComponent } from './lib/resource-legal.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
@@ -39,4 +40,5 @@ export const ResourcePageComponents = [
   SegmentTabComponent,
   PermissionInfoComponent,
   ResourceRestrictionComponent,
+  ResourceFileValueComponent,
 ];

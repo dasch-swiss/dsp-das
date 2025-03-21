@@ -1,10 +1,6 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  FileRepresentation,
-  getFileValue,
-  RepresentationConstants,
-} from '@dasch-swiss/vre/resource-editor/representations';
+import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -66,9 +62,9 @@ import { map } from 'rxjs/operators';
       [parentResource]="resource.res" />
   </div>`,
 })
-export class ResourceRepresentationComponent implements OnChanges {
+export class ResourceRepresentationComponent {
   @Input({ required: true }) resource!: DspResource;
-  representationToDisplay!: FileRepresentation;
+  @Input({ required: true }) representationToDisplay!: FileRepresentation;
 
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
@@ -89,8 +85,4 @@ export class ResourceRepresentationComponent implements OnChanges {
   );
 
   constructor(private _store: Store) {}
-
-  ngOnChanges() {
-    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
-  }
 }

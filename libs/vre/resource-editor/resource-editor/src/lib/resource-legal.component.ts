@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Constants, ReadFileValue } from '@dasch-swiss/dsp-js';
+import { FileRepresentation } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
@@ -9,10 +11,20 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
     <div>Licensed on {{ licensedOn }}</div>
     <div>Authorship {{ authorship }}</div>`,
 })
-export class ResourceLegalComponent {
+export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
+  @Input({ required: true }) representationToDisplay!: FileRepresentation;
+
+  get legalInfos() {
+    return this.resource.res.properties[Constants.HasStillImageFileValue][0] as unknown as ReadFileValue;
+  }
+
   copyrightHolder = 'copyrightHolderTODO';
   license = 'license';
   licensedOn = 'licensedOn';
   authorship = 'authorship';
+
+  ngOnInit() {
+    console.log('julien', this, this.legalInfos);
+  }
 }
