@@ -17,6 +17,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
+import { fileValueMapping } from './file-value-mapping';
 import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -26,10 +27,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <app-create-resource-form-representation
         *ngIf="form.controls.file && fileRepresentation"
-        [control]="form.controls.file"
+        [control]="form.controls.file.controls.link"
         [fileRepresentation]="fileRepresentation" />
-
-      <app-create-resource-form-legal [formGroup]="form.controls.legal" />
 
       <app-create-resource-form-row
         label="Resource label *"
@@ -70,11 +69,6 @@ export class CreateResourceFormComponent implements OnInit {
 
   form: FormGroup<CreateResourceFormInterface> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
-    legal: this._fb.group({
-      copyrightHolder: this._fb.control(''),
-      license: this._fb.control(''),
-      authorship: this._fb.control(''),
-    }),
     properties: this._fb.group({}),
   });
 
@@ -142,7 +136,6 @@ export class CreateResourceFormComponent implements OnInit {
       )
       .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
         this.fileRepresentation = this._getFileRepresentation(onto);
-        console.log('julien file representation', this);
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
@@ -158,7 +151,15 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _buildForm() {
     if (this.fileRepresentation) {
-      this.form.addControl('file', this._fb.control(null, [Validators.required]));
+      const fileFormGroup = this._fb.group({
+        link: this._fb.control(null as string | null, [Validators.required]),
+        legal: this._fb.group({
+          copyrightHolder: this._fb.control(null as string | null),
+          license: this._fb.control(null as string | null),
+          authorship: this._fb.control(null as string | null),
+        }),
+      });
+      this.form.addControl('file', fileFormGroup);
     }
 
     this.properties
@@ -223,9 +224,18 @@ export class CreateResourceFormComponent implements OnInit {
       });
 
     if (this.fileRepresentation && this.form.controls.file!.value) {
-      propertiesObj[this.fileRepresentation] = [this.form.controls.file!.value];
+      propertiesObj[this.fileRepresentation] = [this._getCreateFileValue()];
     }
     return propertiesObj;
+  }
+
+  private _getCreateFileValue() {
+    const formFileValue = this.form.controls.file!.getRawValue();
+    const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+    createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
+    createFile.filename = formFileValue.link!;
+
+    return createFile;
   }
 
   private getOptionalValueItems = (iri: string, controls: FormValueGroup[], properties: PropertyInfoValues[]) =>

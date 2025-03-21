@@ -4,7 +4,6 @@ import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-ser
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { filter, finalize, map, switchMap, take } from 'rxjs/operators';
-import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
   selector: 'app-create-resource-form-legal',
@@ -44,7 +43,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
   ],
 })
 export class CreateResourceFormLegalComponent {
-  @Input({ required: true }) formGroup!: CreateResourceFormInterface['legal'];
+  @Input({ required: true }) formGroup!: any;
 
   readonly project$ = this._store.select(ProjectsSelectors.currentProject).pipe(
     filter(project => project !== undefined),

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Constants, CreateFileValue } from '@dasch-swiss/dsp-js';
+import { Constants } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
@@ -26,7 +26,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
   `,
 })
 export class CreateResourceFormRepresentationComponent implements OnChanges {
-  @Input({ required: true }) control!: FormControl<CreateFileValue | null>;
+  @Input({ required: true }) control!: FormControl<string | null>;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   protected readonly Constants = Constants;
 
