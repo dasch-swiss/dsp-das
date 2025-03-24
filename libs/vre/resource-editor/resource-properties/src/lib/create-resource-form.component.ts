@@ -10,6 +10,7 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
+import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
@@ -109,6 +110,7 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   submitData() {
+    console.log('form', this.form);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -155,8 +157,8 @@ export class CreateResourceFormComponent implements OnInit {
         link: this._fb.control(null as string | null, [Validators.required]),
         legal: this._fb.group({
           copyrightHolder: [null as string | null, Validators.required],
-          license: [null as string | null],
-          authorship: [null as string | null],
+          license: [null as LicenseDto | null, Validators.required],
+          authorship: [null as string[] | null],
         }),
       });
       this.form.addControl('file', fileFormGroup);
@@ -233,6 +235,8 @@ export class CreateResourceFormComponent implements OnInit {
     const formFileValue = this.form.controls.file!.getRawValue();
     const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
+    createFile.license = formFileValue.legal.license!;
+    createFile.authorship = ['julien', 'julien2']; // formFileValue.legal.authorship!;
     createFile.filename = formFileValue.link!;
 
     return createFile;

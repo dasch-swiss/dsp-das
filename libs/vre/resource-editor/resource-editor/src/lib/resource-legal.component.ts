@@ -6,7 +6,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 @Component({
   selector: 'app-resource-legal',
   template: ` <h2>Legal infos</h2>
-    <div>Copyright holder {{ legalInfos.copyrightHolder }}</div>
+    <!--<div>Copyright holder {{ legalInfos.copyrightHolder }}</div>-->
     <div>License {{ license }}</div>
     <div>Licensed on {{ licensedOn }}</div>
     <div>Authorship {{ authorship }}</div>`,
