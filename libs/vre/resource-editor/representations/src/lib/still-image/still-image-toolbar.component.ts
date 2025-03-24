@@ -36,6 +36,20 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
         justify-content: space-between;
         padding-right: 16px;
       }
+
+      .clickable-icon {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 32px;
+      }
+
+      .clickable-icon.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+      }
     `,
   ],
 })
