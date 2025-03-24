@@ -10,16 +10,16 @@ import {
   UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { PropertyForm } from '@dasch-swiss/vre/resource-editor/property-form';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { finalize, switchMap } from 'rxjs/operators';
-import { PropertyForm } from '../property-form.type';
 
 export interface CreatePropertyFormDialogProps {
   ontologyId: string;
   lastModificationDate: string;
   propertyInfo: PropertyInfoObject;
   maxGuiOrderProperty: number;
-  resClassIri?: string;
+  resClassIri: string;
 }
 
 @Component({
@@ -47,7 +47,7 @@ export interface CreatePropertyFormDialogProps {
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
-  form: PropertyForm;
+  form!: PropertyForm;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -71,7 +71,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     this._dspApiConnection.v2.onto
       .createResourceProperty(this.getOntologyForNewProperty())
       .pipe(
-        switchMap((response: ResourcePropertyDefinitionWithAllLanguages) => this.assignProperty(response)),
+        switchMap(response => this.assignProperty(response)),
         finalize(() => {
           this.loading = false;
         })
@@ -120,21 +120,15 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     if (guiAttr) {
       newResProp.guiAttributes = this.setGuiAttribute(guiAttr);
     }
-    const selectedProperty = DefaultProperties.data
-      .flatMap(el => el.elements)
-      .find(
-        e =>
-          e.guiEle === this.form.controls.propType.value && e.objectType === this.data.propertyInfo.propType.objectType
-      );
 
-    newResProp.guiElement = selectedProperty.guiEle;
-    newResProp.subPropertyOf = [selectedProperty.subPropOf];
+    newResProp.guiElement = this.data.propertyInfo.propType.guiEle;
+    newResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(selectedProperty.subPropOf)) {
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)) {
       newResProp.objectType = guiAttr;
       newResProp.subjectType = this.data.resClassIri;
     } else {
-      newResProp.objectType = selectedProperty.objectType;
+      newResProp.objectType = this.data.propertyInfo.propType.objectType;
     }
 
     onto.entity = newResProp;
