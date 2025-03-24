@@ -72,9 +72,11 @@ Simply make your changes and click "Save."
 
 Each media asset will require the following legal information:
 
+
 - **One copyright holder**
 - **One license**
 - **One or more authorship entries**
+
 
 These fields will help ensure that legal attribution is clear and consistent for every asset.
 
