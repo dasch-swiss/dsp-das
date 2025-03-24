@@ -281,9 +281,9 @@ a,
   .toolbar {
     color: $primary_50;
     background-color: $dark;
-    // height: 64px;
+    min-height: 48px;
     border-radius: 0px 0px 8px 8px;
-    box-shadow: 0px 4px 4px 0px #888888;
+    // box-shadow: 0px 4px 4px 0px #888888;
   }
 
   .action,
