@@ -70,6 +70,13 @@ Simply make your changes and click "Save."
 
 ### Legal Settings for Media Assets
 
+Each media asset will require the following legal information:
+- **One copyright holder**
+- **One license**
+- **One or more authorship entries**
+
+These fields will help ensure that legal attribution is clear and consistent for every asset.
+
 The legal settings will apply to **media files, documents, and other digital assets**, such as **images, audio, video, PDFs, and text-based files** etc. These settings will consist of three key sections, **all of which will be mandatory**:
 
 1. **Copyright Holders** – Defines who holds the copyright for a given media asset.
