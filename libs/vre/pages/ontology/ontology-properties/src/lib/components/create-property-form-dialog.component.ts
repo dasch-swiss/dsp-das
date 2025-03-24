@@ -1,15 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClassDefinition, Constants, CreateResourceProperty } from '@dasch-swiss/dsp-js';
-import { PropertyForm } from '@dasch-swiss/vre/resource-editor/property-form';
+import { PropertyForm } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditService } from '../../../../ontology/src/lib/services/ontology-edit.service';
 
 export interface CreatePropertyFormDialogProps {
   propertyInfo: PropertyInfoObject;
-  resClass: ClassDefinition | undefined;
-  maxGuiOrderProperty: number;
-  resClassIri: string;
+  resClass?: ClassDefinition;
 }
 
 @Component({
@@ -41,8 +39,8 @@ export class CreatePropertyFormDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>,
-    private _oes: OntologyEditService,
-    @Inject(MAT_DIALOG_DATA) public data: CreatePropertyFormDialogProps
+    @Inject(MAT_DIALOG_DATA) public data: CreatePropertyFormDialogProps,
+    private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
@@ -73,9 +71,12 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     createResProp.guiElement = this.data.propertyInfo.propType.guiEle;
     createResProp.subPropertyOf = [this.data.propertyInfo.propType.subPropOf];
 
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)) {
+    if (
+      this.data.resClass &&
+      [Constants.HasLinkTo, Constants.IsPartOf].includes(this.data.propertyInfo.propType.subPropOf)
+    ) {
       createResProp.objectType = guiAttr;
-      createResProp.subjectType = this.data.resClassIri;
+      createResProp.subjectType = this.data.resClass.id;
     } else {
       createResProp.objectType = this.data.propertyInfo.propType.objectType;
     }

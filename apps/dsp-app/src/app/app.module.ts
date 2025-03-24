@@ -20,6 +20,7 @@ import {
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
+import { OntologyPropertyComponents } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { OntologyClassesComponents } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
@@ -29,7 +30,6 @@ import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
 import { MathJaxComponents } from '@dasch-swiss/vre/resource-editor/mathjax';
-import { PropertyFormComponents } from '@dasch-swiss/vre/resource-editor/property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -69,7 +69,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    ...PropertyFormComponents,
+    ...OntologyPropertyComponents,
     ...ResourcePropertiesComponents,
     ...SegmentSupportComponents,
     ...ResourcePageComponents,

@@ -15,7 +15,6 @@ import {
   DefaultProperties,
   DefaultProperty,
   DefaultResourceClasses,
-  ProjectService,
   PropertyCategory,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';

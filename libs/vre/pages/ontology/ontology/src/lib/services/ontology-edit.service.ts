@@ -1,6 +1,5 @@
-import { EventEmitter, Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import {
   ApiResponseError,
   CanDoResponse,
@@ -15,7 +14,11 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
   UpdateResourceClassCardinality,
+  UpdateResourceProperty,
+  UpdateResourcePropertyLabel,
+  UpdateResourcePropertyComment,
 } from '@dasch-swiss/dsp-js';
+import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
   LoadOntologyAction,
@@ -24,6 +27,7 @@ import {
   ProjectsSelectors,
   PropToDisplay,
   RemovePropertyAction,
+  SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/core/state';
 import {
@@ -31,7 +35,7 @@ import {
   CreatePropertyFormDialogProps,
   EditPropertyFormDialogComponent,
   EditPropertyFormDialogProps,
-} from '@dasch-swiss/vre/resource-editor/property-form';
+} from '@dasch-swiss/vre/ontology/ontology-properties';
 import {
   DefaultClass,
   DefaultProperty,
@@ -43,10 +47,12 @@ import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { CreateResourceClass } from '../../../../../../3rd-party-services/api/src/lib/services/v2/ontology/create-resource-class.interface';
+import { UpdateResourcePropertyGuiElement } from '../../../../../../3rd-party-services/api/src/lib/services/v2/ontology/update-resource-property-gui-element.interface';
 import {
-  CreateResourceClassDialogProps,
   CreateResourceClassDialogComponent,
+  CreateResourceClassDialogProps,
 } from '../create-resource-class-dialog/create-resource-class-dialog.component';
 import {
   EditResourceClassDialogComponent,
@@ -232,6 +238,52 @@ export class OntologyEditService implements OnDestroy {
   ) {
     this._store.dispatch(new RemovePropertyAction(property, resourceClass, currentOntologyPropertiesToDisplay));
     this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+  }
+
+  updatePropertyLabels(
+    id: string,
+    labels: StringLiteralV2[]
+  ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
+    const onto = new UpdateOntology<UpdateResourcePropertyLabel>(this._currentOntology!.id, this.lastModificationDate);
+    onto.entity = new UpdateResourcePropertyLabel(id, labels);
+    return this._dspApiConnection.v2.onto.updateResourceProperty(onto);
+  }
+
+  private _updateOntology<
+    T extends UpdateResourcePropertyLabel | UpdateResourcePropertyComment | UpdateResourceProperty,
+  >(ontology: UpdateOntology<T>) {
+    return this._dspApiConnection.v2.onto.updateResourceProperty(ontology).pipe(
+      tap((propertyDef: ResourcePropertyDefinitionWithAllLanguages) => {
+        this._currentOntology!.lastModificationDate = propertyDef.lastModificationDate;
+        this._store.dispatch(new SetCurrentOntologyAction(this._currentOntology!));
+      })
+    );
+  }
+
+  updateResourceProperty(
+    id: string,
+    labels: StringLiteralV2[] = [],
+    comments: StringLiteralV2[] = [],
+    guiElement?: string
+  ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
+    console.log('id', id);
+    console.log('labels', labels);
+    const onto = new UpdateOntology<UpdateResourceProperty>(this._currentOntology!.id, this.lastModificationDate);
+    const p = new UpdateResourceProperty(id);
+    p.labels = labels;
+    p.comments = comments;
+    if (guiElement) {
+      p.guiElement = guiElement;
+    }
+    onto.entity = p;
+
+    return this._dspApiConnection.v2.onto.updateResourceProperty(onto).pipe(
+      tap((propertyDef: ResourcePropertyDefinitionWithAllLanguages) => {
+        console.log(propertyDef);
+        this._currentOntology!.lastModificationDate = propertyDef.lastModificationDate;
+        this._store.dispatch(new SetCurrentOntologyAction(this._currentOntology!));
+      })
+    );
   }
 
   createResourceClass(resClassInfo: DefaultClass): void {
