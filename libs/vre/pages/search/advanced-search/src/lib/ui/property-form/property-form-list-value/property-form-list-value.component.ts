@@ -120,10 +120,14 @@ export class PropertyFormListValueComponent implements OnInit, AfterViewInit, On
   private initAutocompleteControl() {
     const list = [...(this.sortedLabelList || [])];
     this.filteredList$.next(list);
-    this.valueFilterCtrl.valueChanges.pipe(takeUntil(this.destroyed)).subscribe(value => {
-      const filtered = value
-        ? this.filterItems(this.sortedLabelList || [], value.toLowerCase())
-        : [...(this.sortedLabelList || [])];
+    this.valueFilterCtrl.valueChanges.pipe(takeUntil(this.destroyed)).subscribe((value: any) => {
+      let filtered = [];
+      if (value) {
+        const label = typeof value === 'object' ? value.label : value.toLowerCase();
+        filtered = this.filterItems(this.sortedLabelList || [], label);
+      } else {
+        filtered = [...(this.sortedLabelList || [])];
+      }
 
       this.filteredList$.next(filtered);
     });
