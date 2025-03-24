@@ -20,7 +20,7 @@ export class CkEditorComponent implements OnInit {
     this.footnoteControl.setValue(this.control.value ? this._parseToFootnote(this.control.value) : null);
 
     this.footnoteControl.valueChanges.subscribe(value => {
-      this.control.setValue(this._parseFromFootnote(value));
+      this.control.setValue(value ? this._parseFromFootnote(value) : '');
     });
   }
 
@@ -32,7 +32,7 @@ export class CkEditorComponent implements OnInit {
   }
 
   private _parseFromFootnote(rawHtml: string) {
-    const _footnoteRegExp = /<footnote content="([^>]+)">([^<]*)<\/footnote>/g;
+    const _footnoteRegExp = /<footnote content="([^>]+)">((?:(?!<\/footnote>).)*)<\/footnote>/g;
     return rawHtml.replace(_footnoteRegExp, (match, content) => {
       const escapedContent = unescapeHtml(content);
       return `<footnote content="${escapedContent}"></footnote>`;

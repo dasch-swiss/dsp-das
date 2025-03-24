@@ -25,19 +25,18 @@ import { sortByKeys } from './sortByKeys';
           [itemsNumber]="allIncomingLinks.length"
           (pageChanged)="pageChanged($event)" />
       </ng-container>
+      <app-progress-indicator *ngIf="loading" />
     </app-property-row>
-    <app-progress-indicator *ngIf="loading" />
   `,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
-  loading = true;
-
   get slidedLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
   }
 
+  loading = true;
   pageSize = 25;
   allIncomingLinks: IncomingOrStandoffLink[] = [];
   pageIndex = 0;
@@ -45,6 +44,9 @@ export class IncomingLinksPropertyComponent implements OnChanges {
   constructor(private _incomingService: IncomingService) {}
 
   ngOnChanges() {
+    this.allIncomingLinks = [];
+    this.loading = true;
+
     this._getIncomingLinksRecursively$(this.resource.res.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
@@ -62,8 +64,8 @@ export class IncomingLinksPropertyComponent implements OnChanges {
 
     return this._incomingService.getIncomingLinksForResource(resourceId, offset).pipe(
       expand(sequence => {
-        if (!(sequence as ReadResourceSequence).mayHaveMoreResults) {
-          return of(sequence as ReadResourceSequence);
+        if (!sequence.mayHaveMoreResults) {
+          return of(sequence);
         }
 
         offset += 1;

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-  ApiResponseError,
   Cardinality,
   Constants,
   CreateFileValue,
@@ -31,49 +30,52 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 8px" />
 
-      <div *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file">
-        <mat-tab-group preserveContent style="max-width: 700px; min-height: 320px;" data-cy="stillimage-tab-group">
-          <mat-tab label="Upload Image">
-            <app-upload-control
-              [formControl]="form.controls.file"
-              [representation]="fileRepresentation"
-              data-cy="upload-control" />
-          </mat-tab>
-          <mat-tab label="External IIIF URL">
-            <app-third-part-iiif [formControl]="form.controls.file" />
-          </mat-tab>
-        </mat-tab-group>
-      </div>
-      <div class="my-grid">
-        <div style="display: flex">
-          <h3
-            data-cy="resource-label"
-            class="mat-subtitle-2 my-h3"
-            matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
-            matTooltipPosition="above">
-            Resource label *
-          </h3>
-          <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
-        </div>
+      <mat-tab-group
+        *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file"
+        preserveContent
+        style="min-height: 320px;"
+        data-cy="stillimage-tab-group">
+        <mat-tab label="Upload Image">
+          <app-upload-control
+            [formControl]="form.controls.file"
+            [representation]="fileRepresentation"
+            data-cy="upload-control" />
+        </mat-tab>
+
+        <mat-tab label="External IIIF URL">
+          <app-third-part-iiif [formControl]="form.controls.file" />
+        </mat-tab>
+      </mat-tab-group>
+
+      <div style="display: flex">
+        <h3
+          data-cy="resource-label"
+          class="mat-subtitle-2 grid-h3"
+          matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+          matTooltipPosition="above">
+          Resource label *
+        </h3>
+        <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
       </div>
 
-      <div class="my-grid">
-        <div class="my-row" *ngFor="let prop of myProperties">
-          <h3 class="label mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-            {{ prop.propDef.label
-            }}{{
-              prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : ''
-            }}
-          </h3>
-          <div style="flex: 1" [attr.data-cy]="prop.propDef.label">
-            <app-property-value-switcher
-              [myProperty]="prop"
-              [formArray]="form.controls.properties.controls[prop.propDef.id]"
-              [resourceClassIri]="resourceClassIri" />
-          </div>
-        </div>
+      <div
+        class="row"
+        *ngFor="let prop of myProperties; let last = last"
+        [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'">
+        <h3 class="grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
+          {{ prop.propDef.label
+          }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
+        </h3>
+
+        <app-property-value-switcher
+          style="flex: 1"
+          [attr.data-cy]="prop.propDef.label"
+          [myProperty]="prop"
+          [formArray]="form.controls.properties.controls[prop.propDef.id]"
+          [resourceClassIri]="resourceClassIri" />
       </div>
-      <div class="my-grid" style="display: flex; justify-content: end">
+
+      <div style="display: flex; justify-content: end">
         <button
           mat-raised-button
           type="submit"
@@ -92,11 +94,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.my-row { display: flex!important; border-bottom: 1px solid rgba(33,33,33,.1)}',
-    '.my-row:last-child { border-bottom: 0}',
-    '.my-grid { width: 600px}',
-    '.my-grid h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px}',
-    '.label {color: rgb(107, 114, 128); align-self: start; cursor: help; margin-top: 0; text-align: right;flex-shrink: 0}',
+    '.row { display: flex}',
+    '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
   ],
 })
 export class CreateResourceFormComponent implements OnInit {
@@ -164,7 +163,6 @@ export class CreateResourceFormComponent implements OnInit {
       .createResource(this._getPayload())
       .pipe(take(1))
       .subscribe(res => {
-        if (res instanceof ApiResponseError) return;
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
         this.createdResourceIri.emit(res.id);
       });
@@ -181,7 +179,7 @@ export class CreateResourceFormComponent implements OnInit {
           this._cd.detectChanges();
         })
       )
-      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+      .subscribe(onto => {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         this.resourceClass = onto.classes[this.resourceClassIri];

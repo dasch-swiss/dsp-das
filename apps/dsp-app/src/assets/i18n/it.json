@@ -1,266 +1,222 @@
 {
   "overview": {
-    "title": "Browse Research Projects",
-    "myProjects": "My Projects",
-    "browseOtherResearchProjects": "Browse Other Research Projects",
-    "firstParagraph": "Welcome to DSP-APP — a web-based virtual research environment that helps researchers in the humanities to deal with digital data. It allows the annotation and linkage of arbitrary sources such as digital texts, still and moving images, and sound.",
-    "secondParagraph": "DSP-APP is one (generic) user interface to handle the data from the main repository called ",
-    "projectsIntro": "Public projects in DSP"
+    "title": "Naviga nei progetti di ricerca",
+    "myProjects": "I miei progetti",
+    "browseOtherResearchProjects": "Esplora altri progetti di ricerca"
   },
   "list": {
     "title": {
-      "active": "Active",
-      "inactive": "Deactivated"
+      "active": "Attivo",
+      "inactive": "Disattivato"
     }
   },
   "addProjectMember": {
-    "title": "Add project member",
-    "description": "Increase your team",
-    "select": "Select from list...",
-    "usersLoading": "Loading users ...",
-    "newUser": "New user"
+    "title": "Aggiungi membro al progetto",
+    "description": "Aumenta il tuo team",
+    "select": "Seleziona dall'elenco ...",
+    "usersLoading": "Caricamento utenti ...",
+    "newUser": "Nuovo utente"
   },
   "usersList": {
     "sortProps": {
-      "familyName": "Last name",
-      "givenName": "First name",
-      "sortTitle": "Sort by "
+      "familyName": "Cognome",
+      "givenName": "Nome"
     }
   },
   "projects": {
     "list": {
-      "project": "Project",
-      "projects": "Projects",
-      "sortShortCode": "Short code",
-      "sortShortName": "Short name",
-      "sortProjectName": "Project name",
-      "statusActive": "Active",
-      "statusDeactivated": "Deactivated",
-      "createNew": "Create new project",
-      "projectAdmin": "Project Administrator",
-      "edit": "Edit project information",
-      "reactivate": "Reactivate project",
-      "deactivate": "Deactivate project",
-      "erase": "Erase project",
-      "eraseConfirmation": "Project “{{0}}” has been erased.",
-      "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-      "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
+      "project": "Progetto",
+      "projects": "Progetti",
+      "sortShortCode": "Codice del progetto",
+      "sortShortName": "Nome abbreviato del progetto",
+      "sortProjectName": "Nome del progetto",
+      "statusActive": "Attivo",
+      "statusDeactivated": "Disattivato",
+      "createNew": "Crea un nuovo progetto",
+      "projectAdmin": "Amministratore del progetto",
+      "edit": "Modifica le informazioni del progetto",
+      "reactivate": "Riattiva il progetto",
+      "deactivate": "Disattiva il progetto",
+      "erase": "Elimina il progetto",
+      "eraseConfirmation": "Il progetto «{{0}}» è stato eliminato.",
+      "deactivateConfirmation": "Vuoi disattivare il progetto «{{0}}»?",
+      "reactivateConfirmation": "Vuoi riattivare il progetto «{{0}}»?",
       "eraseConfirmationDialog": {
-        "title": "Please enter required information to erase the project.",
-        "subtitle": "Erase project",
-        "warning": "WARNING: This action cannot be undone, so use it with care.",
-        "shortCode": "Project short code",
-        "systemAdminPassword": "System administrator password",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "shortCodeValidation": "Short code does not match",
-        "passwordValidation": "Password incorrect"
+        "title": "Inserisci le informazioni richieste per eliminare il progetto.",
+        "subtitle": "Elimina il progetto",
+        "warning": "ATTENZIONE: Questa azione non può essere annullata, usala con cautela.",
+        "shortCode": "Codice breve del progetto",
+        "systemAdminPassword": "Password dell'amministratore di sistema",
+        "cancel": "Annulla",
+        "confirm": "Conferma",
+        "shortCodeValidation": "Il codice del progetto non corrisponde",
+        "passwordValidation": "Password errata"
       }
     }
   },
-  "formDialog": {
-    "discard": "You're sure to close the form and discard all changes?"
-  },
   "form": {
     "action": {
-      "cancel": "Cancel",
-      "close": "Close",
-      "submit": "Save",
-      "submitting": "Submitting",
-      "retry": "Retry",
-      "add": "Add",
-      "update": "Update",
-      "next": "Next",
-      "back": "Back",
-      "skip": "Skip",
-      "reset": "Reset",
-      "activate": "Activate",
-      "deactivate": "Deactivate",
-      "confirm": "Yes",
-      "danger": "Danger zone",
-      "deleted": "Already deleted",
-      "searchHelp": "Type 3 letters to search for an existing resource.",
-      "login": "Login"
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "submit": "Salva",
+      "retry": "Riprova",
+      "update": "Aggiorna",
+      "next": "Avanti",
+      "reset": "Ripristina",
+      "danger": "Zona pericolosa",
+      "searchHelp": "Digita 3 lettere per cercare una risorsa esistente.",
+      "login": "Accesso"
     },
     "ontology": {
       "title": {
-        "create": "Create new data model",
-        "edit": "Customize data model"
+        "create": "Crea un nuovo modello di dati",
+        "edit": "Personalizza il modello di dati"
       },
       "label": {
-        "name": "Set a unique name"
+        "name": "Imposta un nome unico"
       }
     },
     "user": {
       "general": {
-        "givenName": "First name",
-        "familyName": "Last name",
-        "email": "Email address",
-        "emailValidation": "This does not appear to be a valid email address.",
-        "username": "Username",
-        "usernameHint": "Spaces and special characters are not allowed in username",
+        "givenName": "Nome",
+        "familyName": "Cognome",
+        "email": "Indirizzo email",
+        "emailValidation": "Questo indirizzo email sembra non valido.",
+        "username": "Nome utente",
+        "usernameHint": "Spazi e caratteri speciali non sono consentiti nel nome utente.",
         "password": "Password",
-        "passwordHint": "Use at least 8 characters with one uppercase letter and one number.",
-        "oldPassword": "Old password",
-        "newPassword": "New password",
-        "confirmPassword": "Confirm password",
-        "requesterPassword": "Your password",
-        "avatar": "Upload a profile pic",
-        "language": "Default language",
-        "sysAdmin": "System administrator rules",
-        "updateSuccess": "You successfully updated the user's profile"
+        "passwordLengthHint": "Usa almeno 8 caratteri.",
+        "passwordPatternHint": "La password deve contenere almeno una lettera maiuscola e un numero.",
+        "oldPassword": "Vecchia password",
+        "newPassword": "Nuova password",
+        "confirmPassword": "Conferma password",
+        "requesterPassword": "La tua password",
+        "language": "Lingua predefinita",
+        "sysAdmin": "diritti d'amministrazione del sistema",
+        "updateSuccess": "Hai aggiornato con successo il profilo dell'utente."
       },
       "title": {
-        "new": "Create new",
-        "edit": "Edit profile",
-        "profile": "User profile",
-        "editSuccess": "You have successfully updated the user profile.",
-        "delete": "Suspend user account",
-        "deleteHint": "You're sure to delete this user?",
-        "deleteButton": "Suspend user account now",
-        "password": "Update password",
-        "passwordSuccess": "You have successfully updated the password.",
-        "create": "or create new",
-        "deleted": "already deleted"
+        "new": "Crea nuovo",
+        "edit": "Modifica profilo",
+        "profile": "Profilo utente",
+        "delete": "Sospendi account utente",
+        "deleteButton": "Sospendi account utente ora",
+        "password": "Aggiorna password",
+        "ownPasswordSuccess": "Hai aggiornato con successo la tua password.",
+        "userPasswordSuccess": "Hai aggiornato con successo la password dell'utente."
       }
     },
     "project": {
-      "general": {
-        "description": "Description",
-        "shortcode": "Short code",
-        "shortname": "Short name",
-        "longname": "Project name",
-        "institution": "Institution",
-        "logo": {
-          "upload": "Upload a logo",
-          "or": "OR",
-          "url": "Set an URL to the logo file",
-          "name": "Logo file name or URL"
-        },
-        "keywords": "Keywords"
+      "advancedSearch": {
+        "propertyListValue": "Select an item"
       },
-      "title": {
-        "new": "Create new",
-        "edit": "Update project",
-        "profile": "Research project",
-        "editSuccess": "You have successfully updated this project.",
-        "deactivate": "Deactivate project",
-        "deactivateHint": "You're sure to deactivate this project?",
-        "deactivateButton": "Deactivate project now",
-        "activate": "Do you want to reactivate?",
-        "activateButton": "Reactivate project now"
+      "general": {
+        "description": "Descrizione",
+        "shortcode": "Codice del progetto",
+        "shortname": "Nome abbreviato del progetto",
+        "longname": "Nome del progetto",
+        "keywords": "Parole chiave",
+        "editSuccess": "Hai aggiornato con successo le informazioni del progetto."
       },
       "imageSettings": {
-        "off": "Off",
-        "isWatermark": "Apply watermark",
-        "ratio": "Ratio",
-        "fixed": "Fixed width",
-        "restrictImageSize": "Restrict image size",
-        "absoluteWidth": "Absolute width in pixels from: {{min}} to: {{max}}",
-        "percentageValue": "Percentage value",
-        "percentage": "Percentage",
-        "updateConfirmation": "You have successfully updated the project image settings.",
-        "info": "To limit the size of your image, input either a percentage or an absolute pixel width. You cannot provide values for both options.",
-        "restrictions": "Image settings can only be applied for the resources which have the restricted view permissions set."
-      }
-    },
-    "member": {
-      "select": {
-        "project": "Select project",
-        "user": "Select project member",
-        "group": "Select permission group"
-      },
-      "title": {
-        "project": "Project membership",
-        "user": "Members in the project",
-        "group": "Permissions"
+        "off": "Spento",
+        "isWatermark": "Applica filigrana",
+        "ratio": "Rapporto",
+        "restrictImageSize": "Limita la dimensione dell'immagine",
+        "absoluteWidth": "Larghezza assoluta in pixel da: {{min}} a: {{max}}",
+        "percentage": "Percentuale",
+        "updateConfirmation": "Hai aggiornato con successo le impostazioni dell'immagine del progetto.",
+        "info": "Per limitare la dimensione dell'immagine, inserisci una percentuale o una larghezza assoluta in pixel. Non puoi fornire valori per entrambe le opzioni.",
+        "restrictions": "Le impostazioni dell'immagine possono essere applicate solo alle risorse con permessi di visualizzazione ristretti."
       }
     },
     "lists": {
       "title": {
-        "deleteList": "Delete controlled vocabulary",
-        "deleteListNode": "Delete controlled vocabulary node"
+        "deleteList": "Elimina vocabolario controllato"
       }
     },
     "resource": {
       "title": {
-        "new": "Create new",
-        "edit": "Update resource",
-        "profile": "Resource",
-        "editSuccess": "You have successfully updated this resource.",
-        "delete": "Delete this resource",
-        "deleteHint": "You're sure to delete this resource?",
-        "deleteButton": "Delete resource now"
+        "delete": "Elimina questa risorsa"
       }
     }
   },
   "uiControls": {
-    "icon": {
-      "true": "Yes",
-      "false": "No"
-    },
     "pager": {
-      "of": "of",
-      "previous": "Previous",
-      "next": "Next"
+      "of": "di",
+      "previous": "Precedente",
+      "next": "Successivo"
     }
   },
   "resource": {
-    "properties": "Properties",
-    "comment": "Comment",
-    "propertyLabels": {
-      "linkedProperty": "Risorse collegate"
-    },
+    "properties": "Proprietà",
+    "comment": "Commento",
     "incomingLink": {
-      "tooltip": "Indicates that this resource is referred to by another resource",
-      "label": "has incoming link"
+      "tooltip": "Indica che questa risorsa è menzionata da un'altra risorsa",
+      "label": "ha un link in entrata"
     },
     "standoffLink": {
-      "tooltip": "Represent a link in standoff markup from one resource to another",
-      "label": "has Standoff link"
+      "tooltip": "Rappresenta un link in markup standoff da una risorsa a un'altra",
+      "label": "ha un link standoff"
     },
-    "footnotes": "Footnotes"
+    "footnotes": "Note a piè di pagina",
+    "permissions": {
+      "groups": {
+        "label": "Permessi",
+        "projectAdmin": "Amministratore del progetto",
+        "creator": "Creatore",
+        "projectMember": "Membro del progetto",
+        "knownUser": "Utente conosciuto",
+        "unknownUser": "Utente sconosciuto",
+        "usersPermissions": "I tuoi permessi"
+      },
+      "interactions": {
+        "restrictedView": "Permesso di visualizzazione ristretta (RV)",
+        "view": "Permesso di visualizzazione (V)",
+        "modify": "Permesso di modifica (M)",
+        "delete": "Permesso di eliminazione (D)",
+        "changeRights": "Permesso di modifica dei diritti (CR)"
+      }
+    }
   },
   "searchPanel": {
-    "howToSearch": "How to search",
+    "howToSearch": "Come cercare",
     "expert": "Expert",
-    "advancedSearch": "Advanced search",
-    "expertSearch": "Expert search"
+    "advancedSearch": "Ricerca avanzata",
+    "expertSearch": "Ricerca esperta"
   },
   "fullTextSearch": {
-    "filterByProject": "Filter by project",
-    "search": "Search",
-    "allProjects": "All projects"
+    "filterByProject": "Filtra per progetto",
+    "search": "Cerca",
+    "allProjects": "Tutti i progetti"
   },
   "header": {
-    "help": "Help"
+    "help": "Aiuto"
   },
   "user": {
     "navigation": {
-      "myProjects": "My Projects",
-      "myAccount": "My Account"
+      "myProjects": "I miei progetti",
+      "myAccount": "Il mio account"
     },
     "profile": {
-      "systemAdmin": "System admin",
-      "editMyProfile": "Edit my profile"
+      "systemAdmin": "Amministratore di sistema",
+      "editMyProfile": "Modifica il mio profilo"
     },
     "userMenu": {
-      "signedInAs": "Signed in as",
-      "systemAdministration": "System Administration",
-      "logout": "Logout",
+      "signedInAs": "Connesso come",
+      "systemAdministration": "Amministrazione di sistema",
+      "logout": "Disconnessione",
       "login": "LOGIN",
-      "home": "DSP-App Home Page",
-      "myAccount": "My Account"
+      "home": "Pagina iniziale dell'app DSP",
+      "myAccount": "Il mio account"
     }
   },
   "paginator": {
     "firstPage": "Prima pagina",
-    "itemsPerPage": "Elementi per pagina:",
     "lastPage": "Ultima pagina",
     "nextPage": "Pagina successiva",
     "inputTooltip": "Inserisci il numero della pagina e premi Invio per andare alla pagina.",
     "previousPage": "Pagina precedente",
-    "rangeLabelOf": "di",
-    "rangeLabelZero": "Pagina 1 di 1"
+    "rangeLabelOf": "di"
   }
 }
