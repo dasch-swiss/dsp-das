@@ -9,6 +9,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
+import { ResourceUtil } from '../resource.util';
 import { MediaPlayerService } from './media-player.service';
 
 @Component({
@@ -45,7 +46,7 @@ import { MediaPlayerService } from './media-player.service';
         data-cy="timeline-button"
         (click)="createVideoSegment()"
         [matTooltip]="'Create a segment'"
-        *ngIf="isAdmin">
+        *ngIf="userCanEdit">
         <mat-icon>view_timeline</mat-icon>
       </button>
 
@@ -65,9 +66,11 @@ export class VideoToolbarComponent {
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
   @Input({ required: true }) cinemaMode!: boolean;
-  @Input({ required: true }) isAdmin!: boolean;
-
   @Output() cinemaModeChange = new EventEmitter<boolean>();
+
+  get userCanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
 
   matTooltipPos: TooltipPosition = 'below';
   play = false;
