@@ -21,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
+  @Input() resourceVersion?: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;
@@ -58,7 +59,7 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     this.loading = true;
     this._resourceFetcherService.onDestroy();
-    this._resourceFetcherService.onInit(this.resourceIri);
+    this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
   }
 
   ngOnDestroy() {

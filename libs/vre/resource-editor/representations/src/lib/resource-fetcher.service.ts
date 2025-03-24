@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, ReadResource, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
@@ -11,7 +11,6 @@ import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _resourceIri!: string;
   private _loadResourceSubject = new BehaviorSubject(null);
 
   private _resourceSubject = new BehaviorSubject<DspResource | null>(null);
@@ -30,11 +29,10 @@ export class ResourceFetcherService {
     private _componentCommsService: ComponentCommunicationEventService
   ) {}
 
-  onInit(resourceIri: string) {
-    this._resourceIri = resourceIri;
+  onInit(resourceIri: string, resourceVersion?: string) {
     this._subscription = this._loadResourceSubject
       .asObservable()
-      .pipe(switchMap(() => this._getResource()))
+      .pipe(switchMap(() => this._getResource(resourceIri, resourceVersion)))
       .subscribe(res => this._resourceSubject.next(res));
 
     this._translateService.onLangChange
@@ -64,10 +62,10 @@ export class ResourceFetcherService {
     this._resourceIsDeletedSubject.next();
   }
 
-  private _getResource() {
-    return this._dspApiConnection.v2.res.getResource(this._resourceIri).pipe(
+  private _getResource(resourceIri: string, resourceVersion?: string) {
+    return this._dspApiConnection.v2.res.getResource(resourceIri, resourceVersion).pipe(
       map(response => {
-        const res = new DspResource(response as ReadResource);
+        const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
 
         // gather system property information
