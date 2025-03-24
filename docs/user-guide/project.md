@@ -71,6 +71,7 @@ Simply make your changes and click "Save."
 ### Legal Settings for Media Assets
 
 Each media asset will require the following legal information:
+
 - **One copyright holder**
 - **One license**
 - **One or more authorship entries**
