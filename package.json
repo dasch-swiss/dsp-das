@@ -1,6 +1,6 @@
 {
   "name": "dsp-app",
-  "version": "11.26.3",
+  "version": "11.27.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/dsp-app.git"
@@ -45,7 +45,7 @@
     "@angular/platform-browser-dynamic": "17.3.0",
     "@angular/router": "17.3.0",
     "@ckeditor/ckeditor5-angular": "^5.2.0",
-    "@dasch-swiss/dsp-js": "^10.2.2",
+    "@dasch-swiss/dsp-js": "^10.3.2",
     "@dasch-swiss/jdnconvertiblecalendar": "^0.0.3",
     "@dasch-swiss/jdnconvertiblecalendardateadapter": "^1.1.1",
     "@grafana/faro-web-sdk": "^1.14.1",
@@ -72,7 +72,6 @@
     "moment": "^2.29.4",
     "ng2-pdf-viewer": "^9.1.5",
     "ngx-color-picker": "^14.0.0",
-    "ngx-mat-select-search": "^7.0.10",
     "ngx-skeleton-loader": "^7.0.0",
     "openseadragon": "4.1.1",
     "rollbar": "^2.25.0",
