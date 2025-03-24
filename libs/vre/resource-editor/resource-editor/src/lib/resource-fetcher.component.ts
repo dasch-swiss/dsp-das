@@ -9,6 +9,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-resource-fetcher',
   template: `
+    <app-resource-version-warning *ngIf="resourceVersion" />
+
     <ng-container *ngIf="!loading">
       <app-resource *ngIf="resource; else noResourceTpl" [resource]="resource" />
     </ng-container>
