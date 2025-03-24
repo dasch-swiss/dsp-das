@@ -1,15 +1,18 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <app-resource-version-warning *ngIf="resourceVersion" />
+    <app-resource-version-warning
+      *ngIf="resourceVersion$ | async as resourceVersion"
+      [resourceVersion]="resourceVersion" />
 
     <ng-container *ngIf="!loading">
       <app-resource *ngIf="resource; else noResourceTpl" [resource]="resource" />
@@ -30,7 +33,12 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   loading!: boolean;
   private _ngUnsubscribe = new Subject<void>();
 
-  constructor(private _resourceFetcherService: ResourceFetcherService) {}
+  resourceVersion$ = this._route.queryParamMap.pipe(map(v => v.get('version')));
+
+  constructor(
+    private _resourceFetcherService: ResourceFetcherService,
+    private _route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
