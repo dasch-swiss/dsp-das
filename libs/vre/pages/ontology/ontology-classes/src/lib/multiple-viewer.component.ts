@@ -22,7 +22,7 @@ import { SplitSize } from './split-size.interface';
             <app-resource-fetcher
               *ngSwitchCase="'single'"
               [resourceIri]="selectedResources.resInfo[0].id"
-              (afterResourceDeleted)="editStoreResourceCount($event)" />
+              (afterResourceDeleted)="updateResourceCount($event)" />
 
             <!-- intermediate view -->
             <app-intermediate
@@ -64,7 +64,7 @@ export class MultipleViewerComponent {
     this._cdr.detectChanges();
   }
 
-  editStoreResourceCount(resource: ReadResource) {
+  updateResourceCount(resource: ReadResource) {
     this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
   }
 }
