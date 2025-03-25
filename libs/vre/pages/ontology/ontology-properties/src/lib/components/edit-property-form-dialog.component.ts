@@ -10,7 +10,6 @@ import {
   UpdateResourcePropertyComment,
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
-  UpdateResourceProperty,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
