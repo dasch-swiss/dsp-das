@@ -3,15 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
-import {
-  DeleteResourceDialogComponent,
-  EraseResourceDialogComponent,
-} from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { DeleteResourceDialogComponent } from 'vre/resource-editor/properties-display';
 
 @Component({
   selector: 'app-resource-toolbar',

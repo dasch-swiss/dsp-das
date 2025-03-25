@@ -24,7 +24,6 @@ export * from './lib/create-resource-dialog.component';
 export * from './lib/create-resource-form.component';
 export * from './lib/create-resource-page.component';
 export * from './lib/date-time';
-export * from './lib/delete-resource-dialog.component';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
 export * from './lib/erase-resource-dialog.component';

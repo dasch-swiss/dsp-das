@@ -8,3 +8,4 @@ export * from './lib/standoff-links-property.component';
 export * from './lib/incoming-links-property.component';
 export * from './lib/incoming-resource-pager.component';
 export * from './lib/incoming-standoff-link-value.component';
+export * from './lib/delete-resource-dialog.component';

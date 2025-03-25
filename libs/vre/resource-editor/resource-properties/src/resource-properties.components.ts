@@ -1,7 +1,6 @@
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
 import { CreateResourceFormComponent } from './lib/create-resource-form.component';
 import { CreateResourcePageComponent } from './lib/create-resource-page.component';
-import { DeleteResourceDialogComponent } from './lib/delete-resource-dialog.component';
 import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
 import { EraseResourceDialogComponent } from './lib/erase-resource-dialog.component';
@@ -78,7 +77,6 @@ export const ResourcePropertiesComponents = [
   UploadControlComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
-  DeleteResourceDialogComponent,
   EraseResourceDialogComponent,
   PropertyRowComponent,
   UploadComponent,

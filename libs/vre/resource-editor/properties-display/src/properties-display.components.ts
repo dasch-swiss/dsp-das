@@ -1,4 +1,5 @@
 import { AnnotationToolbarComponent } from './lib/annotation-toolbar.component';
+import { DeleteResourceDialogComponent } from './lib/delete-resource-dialog.component';
 import { IncomingLinksPropertyComponent } from './lib/incoming-links-property.component';
 import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager.component';
 import { IncomingStandoffLinkValueComponent } from './lib/incoming-standoff-link-value.component';
@@ -14,4 +15,5 @@ export const PropertiesDisplayComponents = [
   IncomingLinksPropertyComponent,
   IncomingResourcePagerComponent,
   IncomingStandoffLinkValueComponent,
+  DeleteResourceDialogComponent,
 ];
