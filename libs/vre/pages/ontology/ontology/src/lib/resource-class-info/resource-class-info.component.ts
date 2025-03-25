@@ -1,7 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
-  CanDoResponse,
   Constants,
   PropertyDefinition,
   ReadProject,
@@ -176,12 +175,10 @@ export class ResourceClassInfoComponent implements OnInit {
 
   canBeDeleted() {
     // check if the class can be deleted
-    this._oes
-      .canDeleteResourceClass(this.resourceClass.id)
-      .pipe(take(1))
-      .subscribe((response: CanDoResponse) => {
-        this.classCanBeDeleted = response.canDo;
-      });
+    this._oes.canDeleteResourceClass(this.resourceClass.id).pipe(take(1))
+      .subscribe(response => {
+      this.classCanBeDeleted = response.canDo;
+    });
   }
 
   /**

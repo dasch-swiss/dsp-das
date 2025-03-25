@@ -80,6 +80,9 @@
       "@dasch-swiss/vre/ontology/ontology-properties": [
         "libs/vre/pages/ontology/ontology-properties/src/index.ts"
       ],
+      "@dasch-swiss/vre/resource-editor/properties-display": [
+        "libs/vre/resource-editor/properties-display/src/index.ts"
+      ],
       "@dasch-swiss/vre/resource-editor/representations": [
         "libs/vre/resource-editor/representations/src/index.ts"
       ],

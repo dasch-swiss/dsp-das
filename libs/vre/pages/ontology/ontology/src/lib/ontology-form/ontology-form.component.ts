@@ -6,7 +6,6 @@ import {
   ApiResponseError,
   CreateOntology,
   KnoraApiConnection,
-  OntologyMetadata,
   ReadOntology,
   ReadProject,
   UpdateOntologyMetadata,
@@ -88,7 +87,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
 
     if (this.data.ontologyIri) {
-      this._currentOntology$.pipe(takeUntil(this._destroy$)).subscribe((response: ReadOntology) => {
+      this._currentOntology$.pipe(takeUntil(this._destroy$)).subscribe(response => {
         this._buildForm(response);
         this._lastModificationDate = response.lastModificationDate;
       });
@@ -163,8 +162,18 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this._dspApiConnection.v2.onto
       .createOntology(ontologyData)
       .pipe(take(1))
-      .subscribe((response: OntologyMetadata | ApiResponseError) => {
-        this.dialogRef.close(response instanceof ApiResponseError ? null : response);
+      .subscribe(response => {
+        this._store.dispatch([new ClearProjectOntologiesAction(this.project.shortcode)]);
+        // go to the new ontology page
+        this._router.navigate([
+          RouteConstants.project,
+          ProjectService.IriToUuid(this.project.id),
+          RouteConstants.ontology,
+          OntologyService.getOntologyName(response.id),
+          RouteConstants.editor,
+          RouteConstants.classes,
+        ]);
+        this.dialogRef.close();
       });
   }
 

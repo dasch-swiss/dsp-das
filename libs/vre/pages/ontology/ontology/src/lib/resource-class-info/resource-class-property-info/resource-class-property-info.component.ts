@@ -1,7 +1,6 @@
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  CanDoResponse,
   Cardinality,
   ClassDefinition,
   Constants,
@@ -83,7 +82,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     }
 
     // get the default property type for this property
-    this._ontoService.getDefaultPropType(this.propDef).subscribe((prop: DefaultProperty) => {
+    this._ontoService.getDefaultPropType(this.propDef).subscribe(prop => {
       this.propType = prop;
     });
   }
@@ -138,7 +137,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
   canBeRemovedFromClass(): void {
     this._oes
       .propertyCanBeRemovedFromClass(this.propCard, this.resourceClass.id)
-      .subscribe((canDoRes: CanDoResponse) => {
+      .subscribe(canDoRes => {
         this.propCanBeRemovedFromClass = canDoRes.canDo;
         this._cd.markForCheck();
       });
