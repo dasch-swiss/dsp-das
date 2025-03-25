@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
@@ -11,15 +11,6 @@ import { PropertyValueService } from './property-value.service';
   template: `
     <div class="action-bubble" data-cy="action-bubble">
       <div class="button-container d-flex">
-        <button
-          *ngIf="userHasPermission('edit')"
-          mat-button
-          class="edit edit-button"
-          matTooltip="edit"
-          (click)="$event.stopPropagation(); editAction.emit()"
-          data-cy="edit-button">
-          <mat-icon>edit</mat-icon>
-        </button>
         <ng-container *ngIf="date">
           <button
             mat-button
@@ -30,13 +21,26 @@ import { PropertyValueService } from './property-value.service';
             <mat-icon>info</mat-icon>
           </button>
         </ng-container>
-        <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
+
+        <span [matTooltip]="editTooltip">
+          <button
+            *ngIf="userHasPermission('edit')"
+            mat-button
+            class="edit edit-button"
+            [disabled]="resourceFromPreviousVersion"
+            (click)="$event.stopPropagation(); editAction.emit()"
+            data-cy="edit-button">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+
+        <span [matTooltip]="deleteTooltip">
           <button
             *ngIf="userHasPermission('delete')"
             mat-button
             class="delete"
             data-cy="delete-button"
-            [disabled]="!showDelete"
+            [disabled]="isDeleteDisabled"
             (click)="$event.stopPropagation(); deleteAction.emit()">
             <mat-icon>delete</mat-icon>
           </button>
@@ -53,13 +57,39 @@ import { PropertyValueService } from './property-value.service';
   ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
-export class PropertyValueActionBubbleComponent implements OnInit {
+export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
   @Input() showDelete!: boolean;
   @Input() date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
 
   infoTooltip$!: Observable<string>;
+
+  resourceFromPreviousVersion = false;
+
+  private _subscription!: Subscription;
+
+  get isDeleteDisabled() {
+    return this.resourceFromPreviousVersion || !this.showDelete;
+  }
+
+  get deleteTooltip() {
+    if (this.resourceFromPreviousVersion) {
+      return 'This value cannot be deleted because it is from a previous version of the resource.';
+    } else if (!this.showDelete) {
+      return 'This value cannot be deleted because it is required.';
+    } else {
+      return 'Delete';
+    }
+  }
+
+  get editTooltip() {
+    if (this.resourceFromPreviousVersion) {
+      return 'This value cannot be edited because it is from a previous version of the resource.';
+    } else {
+      return 'Edit';
+    }
+  }
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
@@ -68,6 +98,9 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();
+    this._subscription = this._resourceFetcherService.resourceVersion$.subscribe(version => {
+      this.resourceFromPreviousVersion = version !== undefined;
+    });
   }
 
   private _getInfoToolTip() {
@@ -86,5 +119,9 @@ export class PropertyValueActionBubbleComponent implements OnInit {
 
     const value = this._propertyValueService.editModeData.values[0];
     return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 }
