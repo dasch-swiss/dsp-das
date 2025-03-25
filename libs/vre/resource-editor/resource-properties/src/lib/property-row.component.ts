@@ -9,7 +9,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     class="property-row"
     [class.border-bottom]="borderBottom"
     [ngClass]="{ hidden: (showAllProperties | async) === false && isEmptyRow }">
-    <h3 class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</h3>
+    <div class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</div>
     <div style="flex: 1">
       <ng-content />
       <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />

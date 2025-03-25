@@ -8,18 +8,6 @@
   position: relative;
 }
 
-.resource-editor-value {
-  flex: 1;
-
-  &.highlighted {
-    background: $yellow_100;
-  }
-
-  &.edit {
-    background: inherit;
-  }
-}
-
 .icon {
   color: $secondary;
 }
