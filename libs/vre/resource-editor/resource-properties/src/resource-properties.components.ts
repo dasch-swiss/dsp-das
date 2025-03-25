@@ -17,7 +17,6 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueSwitcherComponent } from './lib/property-value-switcher.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
-import { ResourceInfoBarComponent } from './lib/resource-info-bar.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
 import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
 import { DateSwitchComponent } from './lib/switch-components/date-switch.component';
@@ -84,7 +83,6 @@ export const ResourcePropertiesComponents = [
   EraseResourceDialogComponent,
   IncomingStandoffLinkValueComponent,
   PropertyRowComponent,
-  ResourceInfoBarComponent,
   UploadComponent,
   FootnotesComponent,
   FootnoteTooltipComponent,

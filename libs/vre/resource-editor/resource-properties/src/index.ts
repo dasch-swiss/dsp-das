@@ -37,7 +37,6 @@ export * from './lib/property-value-action-bubble.component';
 export * from './lib/property-value-comment.component';
 export * from './lib/property-value.component';
 export * from './lib/property-values.component';
-export * from './lib/resource-info-bar.component';
 export * from './lib/resource-payloads-mapping';
 export * from './lib/sortByKeys';
 export * from './lib/upload-control.component';
