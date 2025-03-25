@@ -30,6 +30,7 @@ export * from './lib/erase-resource-dialog.component';
 export * from './lib/existing-property-value.component';
 export * from './lib/form-value-array.type';
 export * from './lib/property-row.component';
+export * from './lib/properties-display.service';
 export * from './lib/property-value-action-bubble.component';
 export * from './lib/property-value-comment.component';
 export * from './lib/property-value.component';

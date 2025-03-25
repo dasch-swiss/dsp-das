@@ -1,7 +1,7 @@
 import { Component, Input, Optional } from '@angular/core';
-import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { of } from 'rxjs';
 import { FormValueGroup } from './form-value-array.type';
+import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-property-value-comment',
