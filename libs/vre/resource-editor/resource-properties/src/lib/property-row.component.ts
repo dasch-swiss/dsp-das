@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { PropertiesDisplayService } from 'vre/resource-editor/properties-display';
 import { FootnoteService } from './footnote.service';
-import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-property-row',

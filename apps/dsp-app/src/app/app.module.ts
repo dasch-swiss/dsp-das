@@ -55,6 +55,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { PropertiesDisplayComponents } from 'vre/resource-editor/properties-display';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
@@ -74,6 +75,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SegmentSupportComponents,
     ...ResourcePageComponents,
     ...RepresentationsComponents,
+    ...PropertiesDisplayComponents,
     ...CommonToMoveComponents,
     ...ListComponents,
     ...UiComponents,
