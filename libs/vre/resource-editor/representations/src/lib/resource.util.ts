@@ -21,7 +21,11 @@ export class ResourceUtil {
   }
 
   public static versionIsValid(version: string) {
-    const xsdDateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-    return xsdDateRegex.test(version);
+    const isValidUtcDate = (dateStr: string): boolean => {
+      const date = new Date(dateStr);
+      return date instanceof Date && !isNaN(date.getTime()) && dateStr.endsWith('Z');
+    };
+
+    return isValidUtcDate(version);
   }
 }

@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -30,8 +30,13 @@ export class ResourceFetcherService {
       }
 
       if (!ResourceUtil.versionIsValid(version)) {
-        throw new UserFeedbackError('The resource version is not in a valid format.');
+        this._notificationService.openSnackBar(
+          'The resource version is not in a valid format. Showing resource in the current state.',
+          'error'
+        );
+        return undefined;
       }
+
       return version;
     })
   );
@@ -44,7 +49,8 @@ export class ResourceFetcherService {
     private _store: Store,
     private _route: ActivatedRoute,
     private _translateService: TranslateService,
-    private _componentCommsService: ComponentCommunicationEventService
+    private _componentCommsService: ComponentCommunicationEventService,
+    private _notificationService: NotificationService
   ) {}
 
   onInit(resourceIri: string) {
