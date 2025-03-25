@@ -10,7 +10,7 @@ import { PropertiesDisplayService } from './properties-display.service';
     [class.border-bottom]="borderBottom"
     [ngClass]="{ hidden: (showAllProperties | async) === false && isEmptyRow }">
     <div class="label mat-subtitle-2" [matTooltip]="tooltip ?? ''" matTooltipPosition="above">{{ label }}</div>
-    <div style="flex: 1" class="value" [ngClass]="{ 'with-padding': withPadding }">
+    <div style="flex: 1" class="value" [ngClass]="{ 'with-styling': singleRow }">
       <ng-content />
       <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
     </div>
@@ -24,7 +24,7 @@ export class PropertyRowComponent implements OnChanges {
   @Input({ required: true }) isEmptyRow!: boolean;
   @Input() tooltip: string | undefined;
   @Input() prop: PropertyInfoValues | undefined;
-  @Input() withPadding = true;
+  @Input() singleRow = true;
 
   showAllProperties = this._propertiesDisplayService.showAllProperties$;
 

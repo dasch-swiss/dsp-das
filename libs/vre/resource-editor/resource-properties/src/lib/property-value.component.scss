@@ -11,3 +11,11 @@
 .icon {
   color: $secondary;
 }
+
+.my-row {
+  padding: 16px;
+
+  &:hover {
+    background: $primary_100;
+  }
+}

@@ -20,11 +20,12 @@
 }
 
 .value {
-  &.with-padding {
+  &.with-styling {
     padding: 16px;
+
+    &:hover {
+      background: $primary_100;
+    }
   }
 
-  &:hover {
-    background: $primary_100;
-  }
 }

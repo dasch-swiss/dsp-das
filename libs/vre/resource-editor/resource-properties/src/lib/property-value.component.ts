@@ -34,14 +34,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-property-value',
   template: ` <div
     data-cy="property-value"
-    class="pos-relative"
-    style="padding: 16px"
+    class="pos-relative my-row"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
       *ngIf="
-        true ||
-        (!propertyValueService.keepEditMode && showBubble && (propertyValueService.lastOpenedItem$ | async) !== index)
+        !propertyValueService.keepEditMode && showBubble && (propertyValueService.lastOpenedItem$ | async) !== index
       "
       [date]="propertyValueService.editModeData?.values[index]?.valueCreationDate"
       [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"

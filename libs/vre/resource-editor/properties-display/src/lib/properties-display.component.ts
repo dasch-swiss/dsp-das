@@ -40,7 +40,7 @@ import { map } from 'rxjs/operators';
         [borderBottom]="true"
         [tooltip]="prop.propDef.comment"
         [prop]="prop"
-        [withPadding]="false"
+        [singleRow]="false"
         [label]="
           prop.propDef.label +
           (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
