@@ -8,7 +8,6 @@ export * from './lib/resource-tabs.component';
 export * from './lib/resource-toolbar.component';
 export * from './lib/resource-restriction.component';
 export * from './lib/annotation-tab.component';
-export * from './lib/annotation-toolbar.component';
 export * from './lib/resource-fetcher.component';
 export * from './lib/permission-info/permission-info.component';
 export * from './lib/segment-tab.component';

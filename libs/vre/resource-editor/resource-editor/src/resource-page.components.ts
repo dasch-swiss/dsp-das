@@ -1,5 +1,4 @@
 import { AnnotationTabComponent } from './lib/annotation-tab.component';
-import { AnnotationToolbarComponent } from './lib/annotation-toolbar.component';
 import { CompoundArrowNavigationComponent } from './lib/compound/compound-arrow-navigation.component';
 import { CompoundNavigationComponent } from './lib/compound/compound-navigation.component';
 import { CompoundSliderComponent } from './lib/compound/compound-slider.component';
@@ -32,7 +31,6 @@ export const ResourcePageComponents = [
   ResourceRepresentationComponent,
   ResourceTabsComponent,
   ResourceToolbarComponent,
-  AnnotationToolbarComponent,
   AnnotationTabComponent,
   SegmentTabComponent,
   PermissionInfoComponent,
