@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PropertiesDisplayService } from 'vre/resource-editor/properties-display';
+import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-properties-toolbar',

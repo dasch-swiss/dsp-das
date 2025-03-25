@@ -13,7 +13,6 @@ import { FootnotesComponent } from './lib/footnotes.component';
 import { IncomingLinksPropertyComponent } from './lib/incoming-links-property.component';
 import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager/incoming-resource-pager.component';
 import { IncomingStandoffLinkValueComponent } from './lib/incoming-standoff-link-value.component';
-import { PropertiesToolbarComponent } from './lib/properties-toolbar.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
@@ -82,7 +81,6 @@ export const ResourcePropertiesComponents = [
   CreateResourcePageComponent,
   CreateResourceFormComponent,
   UploadControlComponent,
-  PropertiesToolbarComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
   DeleteResourceDialogComponent,
