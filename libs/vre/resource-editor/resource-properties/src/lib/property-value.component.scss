@@ -8,14 +8,19 @@
   position: relative;
 }
 
-.icon {
-  color: $secondary;
-}
-
-.my-row {
+.value {
+  flex: 1;
   padding: 16px;
 
-  &:hover {
+  &.highlighted {
+    background: $yellow_100;
+  }
+
+  &.display:hover {
     background: $primary_100;
   }
+}
+
+.icon {
+  color: $secondary;
 }

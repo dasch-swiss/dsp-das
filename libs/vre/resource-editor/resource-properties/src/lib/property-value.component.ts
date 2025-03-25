@@ -47,7 +47,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
-      <div style="width: 100%" [ngClass]="{ edit: !displayMode, highlighted: isHighlighted && displayMode }">
+      <div class="value" [ngClass]="{ display: displayMode, highlighted: isHighlighted && displayMode }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
