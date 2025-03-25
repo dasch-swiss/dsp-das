@@ -48,4 +48,3 @@ export * from './lib/footnotes.component';
 export * from './lib/footnote-tooltip.component';
 export * from './lib/footnote.directive';
 export * from './lib/footnote-parser.pipe';
-export * from './lib/incoming-resource-pager/incoming-resource-pager.component';

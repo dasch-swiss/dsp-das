@@ -10,7 +10,6 @@ import { FootnoteParserPipe } from './lib/footnote-parser.pipe';
 import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
 import { FootnoteDirective } from './lib/footnote.directive';
 import { FootnotesComponent } from './lib/footnotes.component';
-import { IncomingResourcePagerComponent } from './lib/incoming-resource-pager/incoming-resource-pager.component';
 import { IncomingStandoffLinkValueComponent } from './lib/incoming-standoff-link-value.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
@@ -91,5 +90,4 @@ export const ResourcePropertiesComponents = [
   FootnoteTooltipComponent,
   FootnoteDirective,
   FootnoteParserPipe,
-  IncomingResourcePagerComponent,
 ];
