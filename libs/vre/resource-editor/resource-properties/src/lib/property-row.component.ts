@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { PropertiesDisplayService } from 'vre/resource-editor/properties-display';
 import { FootnoteService } from './footnote.service';
 
 @Component({

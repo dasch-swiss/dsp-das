@@ -1,6 +1,6 @@
 import { Component, Input, Optional } from '@angular/core';
+import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { of } from 'rxjs';
-import { PropertiesDisplayService } from 'vre/resource-editor/properties-display';
 import { FormValueGroup } from './form-value-array.type';
 
 @Component({
