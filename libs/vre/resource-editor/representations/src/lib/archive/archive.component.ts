@@ -26,9 +26,9 @@ import { ResourceUtil } from '../resource.util';
   styleUrls: ['./archive.component.scss'],
 })
 export class ArchiveComponent implements OnChanges {
-  @Input() src: FileRepresentation;
-  @Input() parentResource: ReadResource;
-  originalFilename: string;
+  @Input({ required: true }) src!: FileRepresentation;
+  @Input({ required: true }) parentResource!: ReadResource;
+  originalFilename?: string;
 
   failedToLoad = false;
 
@@ -93,7 +93,7 @@ export class ArchiveComponent implements OnChanges {
           this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
         )
       )
-      .subscribe((res2: ReadResource) => {
+      .subscribe(res2 => {
         this.src.fileValue.fileUrl = (
           res2.properties[Constants.HasArchiveFileValue][0] as ReadArchiveFileValue
         ).fileUrl;

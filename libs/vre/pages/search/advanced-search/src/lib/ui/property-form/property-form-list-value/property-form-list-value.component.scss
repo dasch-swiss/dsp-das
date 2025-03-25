@@ -3,8 +3,3 @@
   cursor: pointer;
   color: #737373;
 }
-
-::ng-deep div.custom-select-panel.mat-mdc-select-panel {
-  max-height: 600px;
-  overflow-y: auto;
-}

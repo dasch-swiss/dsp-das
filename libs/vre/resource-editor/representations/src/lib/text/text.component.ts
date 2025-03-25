@@ -8,7 +8,6 @@ import {
   UpdateFileValue,
   UpdateResource,
   UpdateValue,
-  WriteValueResponse,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { mergeMap } from 'rxjs/operators';
@@ -26,10 +25,10 @@ import { ResourceUtil } from '../resource.util';
   styleUrls: ['./text.component.scss'],
 })
 export class TextComponent implements OnChanges {
-  @Input() src: FileRepresentation;
-  @Input() parentResource: ReadResource;
+  @Input({ required: true }) src!: FileRepresentation;
+  @Input({ required: true }) parentResource!: ReadResource;
 
-  originalFilename: string;
+  originalFilename?: string;
 
   failedToLoad = false;
 
@@ -55,7 +54,7 @@ export class TextComponent implements OnChanges {
     );
   }
 
-  download(url: string) {
+  download() {
     this._rs.downloadProjectFile(this.src.fileValue, this.parentResource);
   }
 
@@ -86,12 +85,8 @@ export class TextComponent implements OnChanges {
 
     this._dspApiConnection.v2.values
       .updateValue(updateRes as UpdateResource<UpdateValue>)
-      .pipe(
-        mergeMap((res: WriteValueResponse) =>
-          this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)
-        )
-      )
-      .subscribe((res2: ReadResource) => {
+      .pipe(mergeMap(res => this._dspApiConnection.v2.values.getValue(this.parentResource.id, res.uuid)))
+      .subscribe(res2 => {
         this.src.fileValue.fileUrl = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).fileUrl;
         this.src.fileValue.filename = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).filename;
         this.src.fileValue.strval = (res2.properties[Constants.HasTextFileValue][0] as ReadTextFileValue).strval;
