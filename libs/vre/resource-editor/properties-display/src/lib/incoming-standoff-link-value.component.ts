@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IncomingOrStandoffLink } from './incoming-link.interface';
+import { IncomingOrStandoffLink } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
   selector: 'app-incoming-standoff-link-value',
