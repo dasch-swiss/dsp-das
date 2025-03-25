@@ -30,7 +30,7 @@ import {
               mat-mini-fab
               color="primary"
               class="link"
-              *ngIf="mayHaveMultipleProjects$ | async"
+              *ngIf="(mayHaveMultipleProjects$ | async) === false"
               matTooltip="Create a link object from this selection"
               [matTooltipPosition]="'above'"
               [disabled]="resources.count < 2"
@@ -73,7 +73,12 @@ export class IntermediateComponent {
   };
 
   get mayHaveMultipleProjects$(): Observable<boolean> {
-    return this._route.paramMap.pipe(map(params => !!params.get(RouteConstants.project)));
+    return this._route.paramMap.pipe(
+      map(params => {
+        const uuid = this._route.parent?.snapshot.params['uuid'];
+        return !params.get(RouteConstants.project) && !uuid;
+      })
+    );
   }
 
   constructor(
