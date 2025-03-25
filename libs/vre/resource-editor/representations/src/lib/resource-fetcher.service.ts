@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -8,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
+import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
@@ -19,20 +22,38 @@ export class ResourceFetcherService {
   private _resourceIsDeletedSubject = new Subject<void>();
   resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable();
 
+  resourceVersion$ = this._route.queryParamMap.pipe(
+    map(params => params.get('version')),
+    map(version => {
+      if (version === null) {
+        return undefined;
+      }
+
+      if (!ResourceUtil.versionIsValid(version)) {
+        throw new UserFeedbackError('The resource version is not in a valid format.');
+      }
+      return version;
+    })
+  );
+
   private _subscription: Subscription | undefined;
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _store: Store,
+    private _route: ActivatedRoute,
     private _translateService: TranslateService,
     private _componentCommsService: ComponentCommunicationEventService
   ) {}
 
-  onInit(resourceIri: string, resourceVersion?: string) {
+  onInit(resourceIri: string) {
     this._subscription = this._loadResourceSubject
       .asObservable()
-      .pipe(switchMap(() => this._getResource(resourceIri, resourceVersion)))
+      .pipe(
+        switchMap(() => this.resourceVersion$),
+        switchMap(resourceVersion => this._getResource(resourceIri, resourceVersion))
+      )
       .subscribe(res => this._resourceSubject.next(res));
 
     this._translateService.onLangChange

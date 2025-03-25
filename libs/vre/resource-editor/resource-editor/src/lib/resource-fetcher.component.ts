@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -26,19 +25,14 @@ import { map, takeUntil } from 'rxjs/operators';
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
-  @Input() resourceVersion?: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;
   loading!: boolean;
   private _ngUnsubscribe = new Subject<void>();
+  resourceVersion$ = this._resourceFetcherService.resourceVersion$;
 
-  resourceVersion$ = this._route.queryParamMap.pipe(map(v => v.get('version')));
-
-  constructor(
-    private _resourceFetcherService: ResourceFetcherService,
-    private _route: ActivatedRoute
-  ) {}
+  constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnInit() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
@@ -69,7 +63,7 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     this.loading = true;
     this._resourceFetcherService.onDestroy();
-    this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
+    this._resourceFetcherService.onInit(this.resourceIri);
   }
 
   ngOnDestroy() {

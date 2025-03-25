@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
   selector: 'app-resource-version-warning',
@@ -14,7 +16,21 @@ import { Component, Input } from '@angular/core';
 export class ResourceVersionWarningComponent {
   @Input({ required: true }) resourceVersion!: string;
 
+  constructor(
+    private _router: Router,
+    private _resourceFetcherService: ResourceFetcherService
+  ) {}
+
   displayCurrentVersion() {
-    // this._resourceFetcher.
+    this.removeQueryParam().then(() => {
+      this._resourceFetcherService.reload();
+    });
+  }
+
+  removeQueryParam() {
+    return this._router.navigate([], {
+      queryParams: { version: null }, // Set parameter to null to remove it
+      queryParamsHandling: 'merge',
+    });
   }
 }

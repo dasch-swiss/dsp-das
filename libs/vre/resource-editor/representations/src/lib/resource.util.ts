@@ -19,4 +19,9 @@ export class ResourceUtil {
     const permissions = PermissionUtil.allUserPermissions(resource.userHasPermission as Interaction);
     return permissions.includes(PermissionUtil.Permissions[interaction]);
   }
+
+  public static versionIsValid(version: string) {
+    const xsdDateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+    return xsdDateRegex.test(version);
+  }
 }
