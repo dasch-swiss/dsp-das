@@ -6,9 +6,17 @@ import { FootnoteService } from '../footnote.service';
   selector: 'app-rich-text-viewer',
   template: ` <div
       data-cy="rich-text-switch"
+      class="rich-text-viewer"
       [innerHTML]="control.value | footnoteParser | internalLinkReplacer | addTargetBlank"
       appFootnote></div>
     <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />`,
+  styles: [
+    `
+      :host ::ng-deep p {
+        margin-top: 0 !important;
+      }
+    `,
+  ],
 })
 export class RichTextViewerComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string | null>;
