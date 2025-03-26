@@ -12,8 +12,14 @@ import { FootnoteService } from '../footnote.service';
     <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />`,
   styles: [
     `
-      :host ::ng-deep p {
-        margin-top: 0 !important;
+      .rich-text-viewer ::ng-deep * {
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     `,
   ],
