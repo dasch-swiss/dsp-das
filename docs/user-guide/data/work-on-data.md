@@ -130,7 +130,7 @@ If your property is linked to another resource, you can search for an existing v
 
 Depending on the type of resource, an annotation can be created by drawing a region on the images or by selecting a segment for audio and video resources.
 
-#### Image region
+#### Image annotation
 
 To create a new region on an image, you click on the icon `Create Annotation` in the toolbar, then draw the desired square region you want on the image.
 
@@ -145,7 +145,7 @@ The new region information is displayed after the image viewer. You can edit or 
 
 ![Region created.](../../assets/images/region_new_annotation.png)*A new region has been created.*
 
-#### Video segment
+#### Video annotation
 
 To create a video segment, you click on the icon `Create Annotation` in the video player toolbar.
 
@@ -163,7 +163,7 @@ Below the video scrubber in the player toolbar, all segments are also shown and 
 
 You can edit or delete a segment or a property of a segment if you have the granted permissions. A segment has also an AKR URL you can copy and share.
 
-#### Audio segment
+#### Audio annotation
 
 To create an audio segment, you click on the icon `Create Annotation` in the audio player toolbar.
 
