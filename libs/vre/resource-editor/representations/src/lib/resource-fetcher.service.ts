@@ -26,9 +26,7 @@ export class ResourceFetcherService {
     this._loadResourceSubject.next(this._getResource(resourceIri));
   }
 
-  onDestroy() {
-    this._store.dispatch(new SetCurrentResourceAction(null));
-  }
+  onDestroy() {}
 
   reload() {
     this._reloadSubject.next(null);

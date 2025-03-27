@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Store } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -26,16 +28,18 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
     })
   );
 
-  constructor(private _resourceFetcherService: ResourceFetcherService) {}
+  constructor(
+    private _resourceFetcherService: ResourceFetcherService,
+    private _store: Store
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['resourceIri']) {
-      this._resourceFetcherService.onDestroy();
       this._resourceFetcherService.onInit(this.resourceIri);
     }
   }
 
   ngOnDestroy() {
-    this._resourceFetcherService.onDestroy();
+    this._store.dispatch(new SetCurrentResourceAction(null));
   }
 }
