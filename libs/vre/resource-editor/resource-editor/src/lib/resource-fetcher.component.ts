@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { mapTo, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -11,10 +11,6 @@ import { mapTo, tap } from 'rxjs/operators';
     <ng-template #loadingTpl>
       <app-progress-indicator />
     </ng-template>
-
-    <ng-container *ngIf="resourceDeleted$ | async">
-      <h3 style="text-align: center; margin-top: 50px">This resource does not exist.</h3>
-    </ng-container>
   `,
   providers: [ResourceFetcherService],
 })
@@ -23,22 +19,12 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource$ = this._resourceFetcherService.resource$.pipe(
-    tap(
-      v => {},
-      e => {
-        this.errorLoading = true;
-      }
-    )
-  );
-
-  resourceDeleted$ = this._resourceFetcherService.resourceIsDeleted$.pipe(
     tap(res => {
-      this.afterResourceDeleted.emit(res.res);
-    }),
-    mapTo(true)
+      if (res.res.isDeleted) {
+        this.afterResourceDeleted.emit(res.res);
+      }
+    })
   );
-
-  errorLoading = false;
 
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 

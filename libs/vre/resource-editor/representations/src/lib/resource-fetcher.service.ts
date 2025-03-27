@@ -6,24 +6,16 @@ import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-commo
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
   private _loadResourceSubject = new ReplaySubject<Observable<DspResource>>(1);
-  private _resourceFetcher$ = this._loadResourceSubject.asObservable();
-
   private _reloadSubject = new BehaviorSubject<null>(null);
 
   resource$ = combineLatest([this._loadResourceSubject.asObservable(), this._reloadSubject.asObservable()]).pipe(
     switchMap(([resource$]) => resource$)
-  );
-
-  private _resourceIsDeletedSubject = new Subject<void>();
-  resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable().pipe(
-    switchMap(() => this._resourceFetcher$),
-    switchMap(obs$ => obs$)
   );
 
   constructor(
@@ -45,7 +37,6 @@ export class ResourceFetcherService {
   }
 
   reload() {
-    console.log('reload mthd');
     this._reloadSubject.next(null);
   }
 
