@@ -1,5 +1,4 @@
 import { AnnotationTabComponent } from './lib/annotation-tab.component';
-import { AnnotationToolbarComponent } from './lib/annotation-toolbar.component';
 import { CompoundArrowNavigationComponent } from './lib/compound/compound-arrow-navigation.component';
 import { CompoundNavigationComponent } from './lib/compound/compound-navigation.component';
 import { CompoundSliderComponent } from './lib/compound/compound-slider.component';
@@ -9,6 +8,7 @@ import { ResourceFetcherComponent } from './lib/resource-fetcher.component';
 import { ResourceFileValueComponent } from './lib/resource-file-value.component';
 import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourceLegalComponent } from './lib/resource-legal.component';
+import { ResourceInfoBarComponent } from './lib/resource-info-bar.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceRestrictionComponent } from './lib/resource-restriction.component';
@@ -35,10 +35,10 @@ export const ResourcePageComponents = [
   ResourceRepresentationComponent,
   ResourceTabsComponent,
   ResourceToolbarComponent,
-  AnnotationToolbarComponent,
   AnnotationTabComponent,
   SegmentTabComponent,
   PermissionInfoComponent,
   ResourceRestrictionComponent,
   ResourceFileValueComponent,
+  ResourceInfoBarComponent,
 ];

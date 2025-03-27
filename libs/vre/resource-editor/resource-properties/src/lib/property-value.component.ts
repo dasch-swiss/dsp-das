@@ -34,7 +34,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-property-value',
   template: ` <div
     data-cy="property-value"
-    class="pos-relative"
+    class="pos-relative row"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
@@ -47,7 +47,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (deleteAction)="askToDelete()" />
 
     <div style="display: flex">
-      <div class="resource-editor-value" [ngClass]="{ edit: !displayMode, highlighted: isHighlighted && displayMode }">
+      <div class="value" [ngClass]="{ display: displayMode, highlighted: isHighlighted && displayMode }">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
 
@@ -207,8 +207,8 @@ export class PropertyValueComponent implements OnInit {
           this.propertyValueService.toggleOpenedValue(this.index);
           this._cdr.detectChanges();
         },
-        (e: ApiResponseError) => {
-          if (e.status === 400) {
+        e => {
+          if (e instanceof ApiResponseError && e.status === 400) {
             this._notification.openSnackBar('The value entered already exists.');
             return;
           }
