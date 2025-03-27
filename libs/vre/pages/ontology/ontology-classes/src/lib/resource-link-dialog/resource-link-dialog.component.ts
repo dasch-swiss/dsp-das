@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   Constants,
   CreateLinkValue,
@@ -10,7 +10,7 @@ import {
   KnoraApiConnection,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -21,6 +21,7 @@ import { map, takeUntil } from 'rxjs/operators';
 
 export interface ResourceLinkDialogProps {
   resources: FilteredResources;
+  projectUuid: string;
 }
 
 @Component({
@@ -39,7 +40,6 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   });
 
   selectedProject?: string;
-  routeProject?: string;
 
   usersProjects$: Observable<StoredProject[]> = combineLatest([
     this._store.select(ProjectsSelectors.currentProject),
@@ -62,13 +62,13 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
   isCurrentProjectMember$ = this._store.select(ProjectsSelectors.isCurrentProjectMember);
   isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
-  get isRouteProjectMember(): boolean {
+  get isProjectMember(): boolean {
     const userProjectGroups = this._store.selectSnapshot(UserSelectors.userProjectGroups);
     const user = this._store.selectSnapshot(UserSelectors.user)!;
     const isProjectMember = ProjectService.IsProjectMemberOrAdminOrSysAdmin(
       user,
       userProjectGroups,
-      this.routeProject!
+      this.data.projectUuid!
     );
     return isProjectMember;
   }
@@ -79,15 +79,12 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
-    private _activeRoute: ActivatedRoute,
     private _store: Store,
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}
 
-  ngOnInit() {
-    this.setProject();
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this._ngUnsubscribe.next();
@@ -107,29 +104,12 @@ export class ResourceLinkDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setProject() {
-    this.routeProject = decodeURIComponent(
-      this._activeRoute.snapshot.firstChild?.firstChild?.params[RouteConstants.project] || ''
-    );
-
-    if (this.routeProject && this.isRouteProjectMember) {
-      this.selectedProject = this.routeProject;
-      return;
-    }
-
-    this.usersProjects$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(usersProjects => {
-      if (usersProjects.length > 0) {
-        this.selectedProject = usersProjects[0].id;
-      }
-    });
-  }
-
   private _createPayload() {
     const linkObj = new CreateResource();
 
     linkObj.label = this.form.controls.label.value!;
     linkObj.type = Constants.LinkObj;
-    linkObj.attachedToProject = this.selectedProject!;
+    linkObj.attachedToProject = this.data.projectUuid;
 
     linkObj.properties[Constants.HasLinkToValue] = this.data.resources.resInfo.map(res => {
       const linkVal = new CreateLinkValue();

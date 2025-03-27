@@ -10,7 +10,7 @@
         (
           ((isCurrentProjectAdminOrSysAdmin$ | async) === true) || 
           ((isCurrentProjectMember$ | async) === true) ||
-          (isRouteProjectMember === true)
+          (isProjectMember === true)
         )
       ); 
       else notProjectMember

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -75,7 +76,7 @@ export class IntermediateComponent {
   get mayHaveMultipleProjects$(): Observable<boolean> {
     return this._route.paramMap.pipe(
       map(params => {
-        const uuid = this._route.parent?.snapshot.params['uuid'];
+        const uuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter];
         return !params.get(RouteConstants.project) && !uuid;
       })
     );
@@ -83,12 +84,17 @@ export class IntermediateComponent {
 
   constructor(
     private _dialog: MatDialog,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _projectService: ProjectService
   ) {}
 
   openDialog() {
+    const projectUuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter];
+    const projectIri = this._projectService.uuidToIri(
+      projectUuid ? projectUuid : this._route.snapshot.params[RouteConstants.project]
+    );
     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
-      data: { resources: this.resources },
+      data: { resources: this.resources, projectUuid: projectIri },
     });
   }
 }
