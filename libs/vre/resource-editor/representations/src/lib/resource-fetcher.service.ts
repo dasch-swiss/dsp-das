@@ -12,16 +12,19 @@ import { map, switchMap, take } from 'rxjs/operators';
 @Injectable()
 export class ResourceFetcherService {
   private _loadResourceSubject = new ReplaySubject<Observable<DspResource>>(1);
-  resourceFetcher$ = this._loadResourceSubject.asObservable().pipe(switchMap(obs$ => obs$));
+  private _resourceFetcher$ = this._loadResourceSubject.asObservable();
 
   private _reloadSubject = new BehaviorSubject<null>(null);
 
-  resource$ = combineLatest([this.resourceFetcher$, this._reloadSubject.asObservable()]).pipe(
-    map(([resource$]) => resource$)
+  resource$ = combineLatest([this._loadResourceSubject.asObservable(), this._reloadSubject.asObservable()]).pipe(
+    switchMap(([resource$]) => resource$)
   );
 
   private _resourceIsDeletedSubject = new Subject<void>();
-  resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable().pipe(switchMap(() => this.resourceFetcher$));
+  resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable().pipe(
+    switchMap(() => this._resourceFetcher$),
+    switchMap(obs$ => obs$)
+  );
 
   constructor(
     @Inject(DspApiConnectionToken)
