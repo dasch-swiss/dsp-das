@@ -1,6 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
+  ApiResponseError,
   Constants,
   PropertyDefinition,
   ReadProject,
@@ -77,6 +78,7 @@ export class ResourceClassInfoComponent implements OnInit {
   private getPropsToDisplay(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToDisplay[] {
     const propsToDisplay: PropToDisplay[] = [];
     let remainingProperties: PropertyDefinition[] = [];
+
     classProps.forEach((hasProp: PropToDisplay) => {
       const ontoIri = hasProp.propertyIndex.split(Constants.HashDelimiter)[0];
       // ignore http://api.knora.org/ontology/knora-api/v2 and ignore  http://www.w3.org/2000/01/rdf-schema
@@ -175,10 +177,15 @@ export class ResourceClassInfoComponent implements OnInit {
 
   canBeDeleted() {
     // check if the class can be deleted
-    this._oes.canDeleteResourceClass(this.resourceClass.id).pipe(take(1))
+    this._oes
+      .canDeleteResourceClass(this.resourceClass.id)
+      .pipe(take(1))
       .subscribe(response => {
-      this.classCanBeDeleted = response.canDo;
-    });
+        if (response instanceof ApiResponseError) {
+          return;
+        }
+        this.classCanBeDeleted = response.canDo;
+      });
   }
 
   /**

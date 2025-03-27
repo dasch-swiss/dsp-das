@@ -5,7 +5,6 @@ import { PropertyFormComponent } from './lib/components/property-form.component'
 import { CreatePropertyFormDialogComponent } from './lib/components/create-property-form-dialog.component';
 
 export const OntologyPropertyComponents = [
-    EditPropertyFormDialogComponent,
     CreatePropertyFormDialogComponent,
     EditPropertyFormDialogComponent,
     GuiAttrLinkComponent,

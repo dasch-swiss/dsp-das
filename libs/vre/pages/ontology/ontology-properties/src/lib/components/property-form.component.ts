@@ -1,28 +1,26 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
-  DefaultProperties,
-  LocalizationService,
-  PropertyCategory,
-  PropertyInfoObject,
+    DefaultProperties, DefaultProperty,
+    LocalizationService,
+    PropertyCategory,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { PropertyForm } from '../property-form.type';
+import { PropertyForm, PropertyData } from '../property-form.type';
 
 @Component({
   selector: 'app-property-form',
   template: ` <form [formGroup]="form">
     <mat-form-field style="width: 100%">
       <span matPrefix>
-        <mat-icon>{{ selectedProperty.icon }}</mat-icon>
+        <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
       </span>
       <mat-label>Property type</mat-label>
-      <mat-select [formControl]="form.controls.propType">
+      <mat-select [formControl]="form.controls.guiElement">
         <mat-select-trigger>
-          {{ selectedProperty.group }}
-          :&nbsp; {{ selectedProperty.label }}
+          {{ propertyData.propType.group }}
+          :&nbsp; {{ propertyData.propType.label }}
         </mat-select-trigger>
 
         <mat-optgroup *ngFor="let type of filteredProperties" [label]="type.group">
@@ -45,11 +43,11 @@ import { PropertyForm } from '../property-form.type';
       placeholder="Property label" />
 
     <app-gui-attr-list
-      *ngIf="formData.property.propType.objectType === Constants.ListValue"
+      *ngIf="propertyData.propType.objectType === Constants.ListValue"
       [control]="form.controls.guiAttr" />
 
     <app-gui-attr-link
-      *ngIf="formData.property.propType.objectType === Constants.LinkValue"
+      *ngIf="propertyData.propType.objectType === Constants.LinkValue"
       [control]="form.controls.guiAttr" />
 
     <app-multi-language-textarea
@@ -60,13 +58,7 @@ import { PropertyForm } from '../property-form.type';
   </form>`,
 })
 export class PropertyFormComponent implements OnInit {
-  @Input() formData!: {
-    property: PropertyInfoObject;
-    name?: string;
-    labels?: StringLiteralV2[];
-    comments?: StringLiteralV2[];
-    guiAttribute?: string;
-  };
+  @Input() propertyData!: PropertyData;
   @Output() afterFormInit = new EventEmitter<PropertyForm>();
 
   readonly Constants = Constants;
@@ -76,16 +68,6 @@ export class PropertyFormComponent implements OnInit {
 
   filteredProperties!: PropertyCategory[];
 
-  get selectedProperty() {
-    const selected = this.defaultProperties
-      .flatMap(el => el.elements)
-      .find(
-        e =>
-          e.objectType === this.formData.property.propType.objectType && e.guiEle === this.form.controls.propType.value
-      );
-    return selected;
-  }
-
   constructor(
     private _fb: FormBuilder,
     private _localizationService: LocalizationService
@@ -93,7 +75,7 @@ export class PropertyFormComponent implements OnInit {
 
   ngOnInit() {
     this.filteredProperties = this.defaultProperties.filter(
-      property => property.group === this.formData.property.propType.group
+      property => property.group === this.propertyData.propType.group
     );
 
     const defaultData = [
@@ -103,23 +85,23 @@ export class PropertyFormComponent implements OnInit {
       },
     ];
     this.form = this._fb.group({
-      propType: this._fb.control(
+        guiElement: this._fb.control(
         {
-          value: this.formData.property.propType.guiEle!,
+          value: this.propertyData.propType.guiEle!,
           disabled: this.filteredProperties[0].elements.length === 1,
         },
         { nonNullable: true }
       ),
-      name: this._fb.control<string>(this.formData.name ?? '', {
+      name: this._fb.control<string>(this.propertyData.name ?? '', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels ?? defaultData, [Validators.required]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments ?? defaultData, [Validators.required]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.labels ?? defaultData, [Validators.required]),
+      comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comments ?? defaultData, [Validators.required]),
       guiAttr: this._fb.control<string>(
         {
-          value: this.formData.guiAttribute!,
-          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.formData.property.propType.objectType!),
+          value: this.propertyData.guiAttribute!,
+          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.propertyData.propType.objectType!),
         },
         { nonNullable: true, validators: [Validators.required] }
       ),

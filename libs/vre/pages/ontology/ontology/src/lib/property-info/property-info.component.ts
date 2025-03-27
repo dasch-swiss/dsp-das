@@ -159,8 +159,8 @@ export class PropertyInfoComponent implements OnInit {
     });
   }
 
-  editResourceProperty(prop: PropertyInfoObject) {
-    this._oes.openEditProperty(prop);
+  editResourceProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
+    this._oes.openEditProperty(propDef, propType);
   }
 
   deleteResourceProperty(iri: string) {

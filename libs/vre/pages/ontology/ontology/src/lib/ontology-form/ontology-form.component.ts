@@ -6,6 +6,7 @@ import {
   ApiResponseError,
   CreateOntology,
   KnoraApiConnection,
+  OntologyMetadata,
   ReadOntology,
   ReadProject,
   UpdateOntologyMetadata,
@@ -142,12 +143,10 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
     ontologyData.comment = this.ontologyForm.controls.comment.value;
 
-    this._dspApiConnection.v2.onto
-      .updateOntology(ontologyData)
-      .subscribe((response: OntologyMetadata | ApiResponseError) => {
-        this.loading = false;
-        this.dialogRef.close(response instanceof ApiResponseError ? null : response);
-      });
+    this._dspApiConnection.v2.onto.updateOntology(ontologyData).subscribe((response: OntologyMetadata) => {
+      this.loading = false;
+      this.dialogRef.close(response instanceof ApiResponseError ? null : response);
+    });
   }
 
   private _createOntology() {

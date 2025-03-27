@@ -1,48 +1,32 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
-  ApiResponseError,
   Constants,
-  DeleteResourcePropertyComment,
-  KnoraApiConnection,
-  ReadOntology,
-  UpdateOntology,
-  UpdateResourcePropertyComment,
-  UpdateResourcePropertyGuiElement,
-  UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { JsLibParsedError } from '@dasch-swiss/vre/core/error-handler';
-import { SetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
-import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Store } from '@ngxs/store';
-import { switchMap, take } from 'rxjs/operators';
+import {  take } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
 import { OntologyEditService } from '../../../../ontology/src/lib/services/ontology-edit.service';
+import { PropertyData } from '../property-form.type';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 
-export interface EditPropertyFormDialogProps {
-  ontology: ReadOntology;
-  lastModificationDate: string;
-  propertyInfo: PropertyInfoObject;
-  resClassIri?: string;
-}
 
 @Component({
   selector: 'app-edit-property-form-dialog',
   template: ` <app-dialog-header
       title="Edit a property"
-      [subtitle]="data.propertyInfo.propType.group + ': ' + data.propertyInfo.propType.label" />
+      [subtitle]="data.propType.group + ': ' + data.propType.label" />
     <app-property-form
       mat-dialog-content
       (afterFormInit)="form = $event"
-      [formData]="{
-        property: data.propertyInfo,
-        name: data.propertyInfo.propDef.label,
-        labels: data.propertyInfo.propDef.labels,
-        comments: data.propertyInfo.propDef.comments,
-        guiAttribute: data.propertyInfo.propDef.guiAttributes[0],
+      [propertyData]="{
+        propType: data.propType,
+        name: data.propDef.label,
+        labels: data.propDef.labels,
+        comments: data.propDef.comments,
+        guiAttribute: data.propDef.guiAttributes[0],
       }" />
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -61,20 +45,11 @@ export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;
   form!: PropertyForm;
 
-  propertyInfo = this.data.propertyInfo;
-
-  get selectedProperty() {
-    return DefaultProperties.data.flatMap(el => el.elements).find(e => e.guiEle === this.form.controls.propType.value);
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _oes: OntologyEditService,
     private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, boolean>,
-    @Inject(MAT_DIALOG_DATA) public data: EditPropertyFormDialogProps,
-    private _store: Store,
-
+    @Inject(MAT_DIALOG_DATA) public data: PropertyInfoObject,
     private _notification: NotificationService
   ) {}
 
@@ -83,14 +58,14 @@ export class EditPropertyFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-      console.log(this.form.controls.labels);
-      if (this.form.controls.labels.touched) {
-          this._oes.updatePropertyLabels(this.propertyInfo.propDef!.id, this.form.controls.labels.value as StringLiteralV2[]).pipe(take(1)).subscribe(
-              result => { console.log(result); },
-          )
-      } else {
-          console.log('not dirty')
-      }
+        const propertyData: PropertyData = {
+            propType: this.data.propType,
+            labels : this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
+            comments : this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
+            guiAttribute : this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
+        }
+        this._oes.updateProperty(propertyData).pipe(take(1)).subscribe(() => this.onSuccess());
+
       /*
       this._oes.updateResourceProperty(
           this.propertyInfo.propDef!.id,
@@ -154,7 +129,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
   private onSuccess() {
     this.loading = false;
-    const msg = `Successfully updated ${this.propertyInfo.propDef.label}.`;
+    const msg = `Successfully updated ${this.data.propDef!.label}.`;
     this._notification.openSnackBar(msg);
     this.dialogRef.close();
   }
@@ -183,7 +158,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   private setGuiAttribute(guiAttr: string): string[] {
     let guiAttributes: string[];
 
-    switch (this.propertyInfo.propType.guiEle) {
+    switch (this.data.propType.guiEle) {
       case Constants.GuiColorPicker:
         guiAttributes = [`ncolors=${guiAttr}`];
         break;
