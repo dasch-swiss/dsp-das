@@ -6,23 +6,22 @@ import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-commo
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _loadResourceSubject = new Subject<Observable<DspResource>>();
+  private _loadResourceSubject = new ReplaySubject<Observable<DspResource>>(1);
   resourceFetcher$ = this._loadResourceSubject.asObservable().pipe(switchMap(obs$ => obs$));
 
   private _reloadSubject = new BehaviorSubject<null>(null);
 
   resource$ = combineLatest([this.resourceFetcher$, this._reloadSubject.asObservable()]).pipe(
-    tap(() => console.log('got it')),
     map(([resource$]) => resource$)
   );
 
   private _resourceIsDeletedSubject = new Subject<void>();
-  resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable();
+  resourceIsDeleted$ = this._resourceIsDeletedSubject.asObservable().pipe(switchMap(() => this.resourceFetcher$));
 
   constructor(
     @Inject(DspApiConnectionToken)
