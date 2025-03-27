@@ -4,17 +4,18 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
   private _loadResourceSubject = new ReplaySubject<Observable<DspResource>>(1);
-  private _reloadSubject = new BehaviorSubject<null>(null);
+  private _reloadSubject = new Subject();
 
-  resource$ = combineLatest([this._loadResourceSubject.asObservable(), this._reloadSubject.asObservable()]).pipe(
-    switchMap(([resource$]) => resource$)
-  );
+  resource$ = combineLatest([
+    this._loadResourceSubject.asObservable(),
+    this._reloadSubject.asObservable().pipe(startWith(null)),
+  ]).pipe(switchMap(([resource$]) => resource$));
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -26,8 +27,6 @@ export class ResourceFetcherService {
     this._loadResourceSubject.next(this._getResource(resourceIri));
   }
 
-  onDestroy() {}
-
   reload() {
     this._reloadSubject.next(null);
   }
@@ -37,9 +36,8 @@ export class ResourceFetcherService {
       map(response => {
         const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
-
-        // gather system property information
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
+
         this._store.dispatch(new SetCurrentResourceAction(res));
         return res;
       })
