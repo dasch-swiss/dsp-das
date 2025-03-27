@@ -12,9 +12,9 @@ import { mapTo, tap } from 'rxjs/operators';
       <app-progress-indicator />
     </ng-template>
 
-    <ng-template #noResourceTpl
-      ><h3 style="text-align: center; margin-top: 50px">This resource does not exist.</h3>
-    </ng-template>
+    <ng-container *ngIf="resourceDeleted$ | async">
+      <h3 style="text-align: center; margin-top: 50px">This resource does not exist.</h3>
+    </ng-container>
   `,
   providers: [ResourceFetcherService],
 })
@@ -24,12 +24,9 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
 
   resource$ = this._resourceFetcherService.resource$.pipe(
     tap(
-      v => {
-        this.loading = false;
-      },
+      v => {},
       e => {
         this.errorLoading = true;
-        this.loading = false;
       }
     )
   );
@@ -42,13 +39,11 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   );
 
   errorLoading = false;
-  loading!: boolean;
 
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['resourceIri']) {
-      this.loading = true;
       this._resourceFetcherService.onDestroy();
       this._resourceFetcherService.onInit(this.resourceIri);
     }
