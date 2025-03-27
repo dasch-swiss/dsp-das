@@ -1,70 +1,45 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <ng-container *ngIf="!loading">
-      <app-resource *ngIf="resource; else noResourceTpl" [resource]="resource" />
-    </ng-container>
+    <app-resource *ngIf="resource$ | async as resource; else loadingTpl" [resource]="resource" />
 
-    <ng-template #noResourceTpl
-      ><h3 style="text-align: center; margin-top: 50px">This resource does not exist.</h3>
+    <ng-template #loadingTpl>
+      <app-progress-indicator />
     </ng-template>
   `,
   providers: [ResourceFetcherService],
 })
-export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
+export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
-  resource?: DspResource;
-  loading!: boolean;
-  private _ngUnsubscribe = new Subject<void>();
-
-  constructor(private _resourceFetcherService: ResourceFetcherService) {}
-
-  ngOnInit() {
-    this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
-      if (resource === null) {
-        return;
+  resource$ = this._resourceFetcherService.resource$.pipe(
+    tap(res => {
+      if (res.res.isDeleted) {
+        this.afterResourceDeleted.emit(res.res);
       }
+    })
+  );
 
-      this.loading = false;
+  constructor(
+    private _resourceFetcherService: ResourceFetcherService,
+    private _store: Store
+  ) {}
 
-      if (resource.res.isDeleted) {
-        this.resource = undefined;
-        return;
-      }
-
-      this.resource = resource;
-    });
-
-    this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
-      if (!this.resource) {
-        throw new AppError('Resource is not defined');
-      }
-      this.afterResourceDeleted.emit(this.resource.res);
-
-      this.resource = undefined;
-    });
-  }
-
-  ngOnChanges() {
-    this.loading = true;
-    this._resourceFetcherService.onDestroy();
-    this._resourceFetcherService.onInit(this.resourceIri);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['resourceIri']) {
+      this._resourceFetcherService.onInit(this.resourceIri);
+    }
   }
 
   ngOnDestroy() {
-    this._resourceFetcherService.onDestroy();
-
-    this._ngUnsubscribe.next();
-    this._ngUnsubscribe.complete();
+    this._store.dispatch(new SetCurrentResourceAction(null));
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -9,7 +9,6 @@ import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-toolbar',
@@ -126,6 +125,7 @@ export class ResourceToolbarComponent {
     private _resourceService: ResourceService,
     private _resourceFetcherService: ResourceFetcherService,
     private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef,
     private _store: Store
   ) {}
 
@@ -134,22 +134,16 @@ export class ResourceToolbarComponent {
   }
 
   deleteResource() {
-    this._dialog
-      .open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, { data: this.resource.res })
-      .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._resourceFetcherService.resourceIsDeleted();
-      });
+    this._dialog.open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, {
+      data: this.resource.res,
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   eraseResource() {
-    this._dialog
-      .open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, { data: this.resource.res })
-      .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._resourceFetcherService.resourceIsDeleted();
-      });
+    this._dialog.open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, {
+      data: this.resource.res,
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 }
