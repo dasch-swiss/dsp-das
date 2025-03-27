@@ -34,7 +34,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-property-value',
   template: ` <div
     data-cy="property-value"
-    class="pos-relative my-row"
+    class="pos-relative row"
     (mouseenter)="showBubble = true"
     (mouseleave)="showBubble = false">
     <app-property-value-action-bubble
