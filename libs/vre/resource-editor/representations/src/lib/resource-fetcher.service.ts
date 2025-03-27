@@ -49,10 +49,6 @@ export class ResourceFetcherService {
     this._reloadSubject.next(null);
   }
 
-  resourceIsDeleted() {
-    this._resourceIsDeletedSubject.next();
-  }
-
   private _getResource(resourceIri: string) {
     return this._dspApiConnection.v2.res.getResource(resourceIri).pipe(
       map(response => {
