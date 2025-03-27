@@ -1,13 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
+import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
-import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class ResourceFetcherService {
@@ -21,15 +19,11 @@ export class ResourceFetcherService {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _store: Store,
-    private _translateService: TranslateService,
-    private _componentCommsService: ComponentCommunicationEventService
+    private _store: Store
   ) {}
 
   onInit(resourceIri: string) {
     this._loadResourceSubject.next(this._getResource(resourceIri));
-
-    this._handleTranslation();
   }
 
   onDestroy() {
@@ -52,20 +46,5 @@ export class ResourceFetcherService {
         return res;
       })
     );
-  }
-
-  private _handleTranslation() {
-    this._translateService.onLangChange
-      .pipe(
-        switchMap(() => this._store.select(OntologiesSelectors.projectOntology)),
-        map(currentOntology => {
-          if (currentOntology !== undefined && !!currentOntology.id) {
-            this._dspApiConnection.v2.ontologyCache.reloadCachedItem(currentOntology!.id).pipe(take(1));
-          }
-        })
-      )
-      .subscribe(() => {
-        this._componentCommsService.emit(new EmitEvent(Events.resourceLanguageChanged));
-      });
   }
 }
