@@ -42,6 +42,7 @@ export class ResourceFetcherService {
   }
 
   reload() {
+    console.log('reload mthd');
     this._reloadSubject.next(null);
   }
 
