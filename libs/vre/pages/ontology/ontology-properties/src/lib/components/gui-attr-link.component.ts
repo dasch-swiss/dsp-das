@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
+import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 
 export interface ClassToSelect {
   ontologyId: string;

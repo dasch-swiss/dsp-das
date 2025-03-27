@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'vre-resource-editor-property-form',
+  displayName: 'vre-ontology-property',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/property-form',
+  coverageDirectory: '../../../../../coverage/libs/vre/pages/ontology/property-form',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

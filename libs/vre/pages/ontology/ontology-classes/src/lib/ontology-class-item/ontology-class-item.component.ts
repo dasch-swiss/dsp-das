@@ -16,6 +16,7 @@ import {
   IClassItemsKeyValuePairs,
   LoadClassItemsCountAction,
   OntologyClassSelectors,
+  ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
 import {
   ComponentCommunicationEventService,
@@ -40,7 +41,7 @@ export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDest
 
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
-  @Input() projectMember: boolean;
+  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember) isMember$: Observable<boolean>;
 
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
 

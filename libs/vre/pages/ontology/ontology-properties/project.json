@@ -1,7 +1,7 @@
 {
-  "name": "vre-resource-editor-property-form",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/resource-editor/property-form/src",
+  "name": "vre-ontology-property",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/vre/pages/ontology/ontology-properties/src",
   "prefix": "dasch-swiss",
   "projectType": "library",
   "tags": [],
@@ -12,7 +12,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libs/vre/resource-editor/property-form/jest.config.ts"
+        "jestConfig": "libs/vre/pages/ontology/ontology-properties/jest.config.ts"
       }
     },
     "lint": {

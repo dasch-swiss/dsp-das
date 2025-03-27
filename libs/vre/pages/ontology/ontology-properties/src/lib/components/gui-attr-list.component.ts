@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ListsSelectors } from '@dasch-swiss/vre/core/state';
+import { ListsSelectors } from 'libs/vre/core/state/src';
 import { Store } from '@ngxs/store';
 import { PropertyForm } from '../property-form.type';
 

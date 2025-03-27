@@ -202,7 +202,7 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: !stopLoadingWhenCompleted,
-            projectOntologies: projectOntologiesState,
+            projectOntologies: { ...projectOntologiesState }, // batch update with a new reference!
           });
         },
         error: (error: ApiResponseError) => {
@@ -310,7 +310,7 @@ export class OntologiesState {
     const delCard = new UpdateResourceClassCardinality();
     delCard.id = resourceClass.id;
     delCard.cardinalities = [];
-    delCard.cardinalities = currentOntologyPropertiesToDisplay.filter(prop => prop.propertyIndex === property.iri);
+    delCard.cardinalities = currentOntologyPropertiesToDisplay.filter(prop => prop.propertyIndex === property.id);
     onto.entity = delCard;
 
     return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).pipe(
