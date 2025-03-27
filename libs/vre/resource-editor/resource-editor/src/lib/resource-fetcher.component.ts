@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
@@ -30,7 +30,38 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnInit() {
+    this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
+      if (!this.resource) {
+        throw new AppError('Resource is not defined');
+      }
+      this.afterResourceDeleted.emit(this.resource.res);
+
+      this.resource = undefined;
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const iriChanges = changes['resourceIri'];
+    if (iriChanges) {
+      if (iriChanges.isFirstChange()) {
+        this._fetchResource();
+      }
+      this.loading = true;
+      this._resourceFetcherService.onDestroy();
+      this._resourceFetcherService.onInit(this.resourceIri);
+    }
+  }
+
+  ngOnDestroy() {
+    this._resourceFetcherService.onDestroy();
+
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
+  }
+
+  private _fetchResource() {
     this._resourceFetcherService.resource$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(resource => {
+      console.log('got new resource', resource);
       if (resource === null) {
         return;
       }
@@ -44,27 +75,5 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
 
       this.resource = resource;
     });
-
-    this._resourceFetcherService.resourceIsDeleted$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(() => {
-      if (!this.resource) {
-        throw new AppError('Resource is not defined');
-      }
-      this.afterResourceDeleted.emit(this.resource.res);
-
-      this.resource = undefined;
-    });
-  }
-
-  ngOnChanges() {
-    this.loading = true;
-    this._resourceFetcherService.onDestroy();
-    this._resourceFetcherService.onInit(this.resourceIri);
-  }
-
-  ngOnDestroy() {
-    this._resourceFetcherService.onDestroy();
-
-    this._ngUnsubscribe.next();
-    this._ngUnsubscribe.complete();
   }
 }
