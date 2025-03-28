@@ -135,40 +135,7 @@ OFFSET ${offset}
    * @param {number} offset the offset to be used for paging. 0 is the default and is used to get the first page of results.
    */
   getIncomingLinksForResource(resourceIri: string, offset: number) {
-    const sparqlQueryStr = `
-PREFIX knora-api: <http://api.knora.org/ontology/knora-api/simple/v2#>
-
-CONSTRUCT {
-?incomingRes knora-api:isMainResource true .
-
-?incomingRes ?incomingProp <${resourceIri}> .
-
-} WHERE {
-
-?incomingRes a knora-api:Resource .
-
-?incomingRes ?incomingProp <${resourceIri}> .
-
-<${resourceIri}> a knora-api:Resource .
-
-?incomingProp knora-api:objectType knora-api:Resource .
-
-knora-api:isRegionOf knora-api:objectType knora-api:Resource .
-knora-api:isPartOf knora-api:objectType knora-api:Resource .
-
-FILTER NOT EXISTS {
-?incomingRes  knora-api:isRegionOf <${resourceIri}> .
-}
-
-FILTER NOT EXISTS {
-?incomingRes  knora-api:isPartOf <${resourceIri}> .
-?incomingRes knora-api:seqnum ?seqnum .
-}
-
-} OFFSET ${offset}
-`;
-
-    return this._dspApiConnection.v2.search.doExtendedSearch(sparqlQueryStr);
+    return this._dspApiConnection.v2.search.doSearchIncomingLinks(resourceIri, offset);
   }
 
   /**
