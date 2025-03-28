@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Observable } from 'rxjs';
@@ -88,13 +89,16 @@ export class IntermediateComponent {
     private _projectService: ProjectService
   ) {}
 
-  openDialog() {
-    const projectUuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter];
-    const projectIri = this._projectService.uuidToIri(
-      projectUuid ? projectUuid : this._route.snapshot.params[RouteConstants.project]
-    );
+  openDialog(): void {
+    const projectUuid =
+      this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ??
+      this._route.snapshot.params[RouteConstants.project];
+    if (!projectUuid) {
+      throw new AppError('Project UUID is missing.');
+    }
+
     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
-      data: { resources: this.resources, projectUuid: projectIri },
+      data: { resources: this.resources, projectUuid: this._projectService.uuidToIri(projectUuid) },
     });
   }
 }
