@@ -25,7 +25,6 @@ import { MediaPlayerService } from './media-player.service';
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss'],
   providers: [MediaControlService, MediaPlayerService],
 })
 export class VideoComponent implements OnChanges, OnDestroy {
@@ -34,6 +33,7 @@ export class VideoComponent implements OnChanges, OnDestroy {
   @Output() loaded = new EventEmitter<boolean>();
 
   @ViewChild('preview') preview!: ElementRef;
+  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef<HTMLVideoElement>;
 
   start = 0;
   video?: SafeUrl;
@@ -51,6 +51,10 @@ export class VideoComponent implements OnChanges, OnDestroy {
   readonly halfFrameWidth: number = Math.round(this.frameWidth / 2);
   private _ngUnsubscribe = new Subject<void>();
 
+  get isFullscreen(): boolean {
+    return !!document.fullscreenElement;
+  }
+
   constructor(
     private _sanitizer: DomSanitizer,
     public _mediaControl: MediaControlService,
@@ -60,12 +64,6 @@ export class VideoComponent implements OnChanges, OnDestroy {
     private _rs: RepresentationService,
     private _cdr: ChangeDetectorRef
   ) {}
-
-  @HostListener('document:keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
-    if (event.key === 'Escape' && this.cinemaMode) {
-      this.cinemaMode = false;
-    }
-  }
 
   ngOnChanges(): void {
     this._ngUnsubscribe.next();
@@ -162,6 +160,15 @@ export class VideoComponent implements OnChanges, OnDestroy {
           break;
       }
       this.videoError = vErr;
+    }
+  }
+
+  toggleCinemaMode() {
+    const video = this.videoElement.nativeElement;
+    if (this.isFullscreen) {
+      document.exitFullscreen();
+    } else {
+      video.requestFullscreen();
     }
   }
 
