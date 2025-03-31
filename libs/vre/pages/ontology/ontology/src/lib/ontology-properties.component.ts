@@ -21,7 +21,32 @@ import { map } from 'rxjs/operators';
       </mat-list>
     </div>
   `,
-  styleUrls: ['./ontology.component.scss'],
+  styles: `
+    @use 'config' as *;
+    .ontology-editor-list {
+      margin: 16px;
+
+      &.properties {
+        width: 80%;
+        margin: 16px 10%;
+
+        .property {
+          height: auto;
+          min-height: 56px !important;
+          margin: 4px 0;
+          padding: 16px 0;
+
+          &.odd {
+            background-color: $primary_50;
+          }
+
+          &:hover {
+            background-color: $black-14-opacity;
+          }
+        }
+      }
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPropertiesComponent implements OnInit {

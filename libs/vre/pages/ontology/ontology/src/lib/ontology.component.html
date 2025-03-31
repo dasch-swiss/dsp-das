@@ -115,8 +115,8 @@
       <mat-sidenav-content
         class="ontology-editor-canvas drag-drop-stop"
         *ngIf="(project$ | async) && (isOntologiesLoading$ | async) === false">
-        <app-ontology-properties *ngIf="view === 'properties'" />
         <app-ontology-editor-classes *ngIf="view === 'classes'" />
+        <app-ontology-properties *ngIf="view === 'properties'" />
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>

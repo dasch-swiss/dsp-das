@@ -1,7 +1,5 @@
 @use "config" as *;
 
-$width: 429px;
-
 .app-toolbar-action {
   &.select-form {
     margin-top: -18px;
@@ -106,37 +104,6 @@ $width: 429px;
       100vh - #{$sub-header-height} - #{$header-height} - #{$tab-bar-margin} - 100px
     );
     border-right: 1px solid rgba(0, 0, 0, 0.12);
-
-    .ontology-editor-grid {
-      display: grid;
-      grid-template-rows: auto; // value would be "masonry" as soon it's implemented in all browsers
-      grid-template-columns: repeat(auto-fill, minmax($width, 1fr));
-      grid-gap: 6px;
-    }
-
-    .ontology-editor-list {
-      margin: 16px;
-
-      &.properties {
-        width: 80%;
-        margin: 16px 10%;
-
-        .property {
-          height: auto;
-          min-height: 56px !important;
-          margin: 4px 0;
-          padding: 16px 0;
-
-          &.odd {
-            background-color: $primary_50;
-          }
-
-          &:hover {
-            background-color: $black-14-opacity;
-          }
-        }
-      }
-    }
   }
 }
 

@@ -19,7 +19,16 @@ import { map } from 'rxjs/operators';
       *ngFor="let resClass of ontoClasses$ | async; trackBy: trackByClassDefinitionFn"
       [resourceClass]="resClass" />
   </div>`,
-  styleUrls: ['./ontology.component.scss'],
+  styles: `
+    @use 'config' as *;
+
+    .ontology-editor-grid {
+      display: grid;
+      grid-template-rows: auto;
+      grid-template-columns: repeat(auto-fill, minmax(429px, 1fr));
+      grid-gap: 6px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyEditorClassesComponent implements OnInit, OnDestroy {
