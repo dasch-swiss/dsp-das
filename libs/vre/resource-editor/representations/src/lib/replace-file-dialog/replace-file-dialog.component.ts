@@ -5,8 +5,8 @@ import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@
 import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
-import { fileValueMapping } from '../../../../resource-properties/src/lib/file-value-mapping';
 import { FileRepresentationType } from '../file-representation.type';
+import { fileValueMapping } from '../file-value-mapping';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 export interface ReplaceFileDialogProps {
