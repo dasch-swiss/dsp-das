@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
@@ -12,7 +12,6 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 export interface ReplaceFileDialogProps {
   representation: FileRepresentationType;
   resource: ReadResource;
-  propId: string;
   title: string;
   subtitle: string;
 }
@@ -31,7 +30,7 @@ export interface ReplaceFileDialogProps {
         </div>
       </div>
 
-      <app-upload-control [representation]="data.representation" [formControl]="form" [resourceId]="data.propId" />
+      <app-upload-control [representation]="data.representation" [formControl]="form" [resourceId]="propId" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -51,7 +50,8 @@ export interface ReplaceFileDialogProps {
   `,
   styleUrls: ['./replace-file-dialog.component.scss'],
 })
-export class ReplaceFileDialogComponent {
+export class ReplaceFileDialogComponent implements OnInit {
+  propId!: string;
   form = this._fb.control<UpdateFileValue | null>(null, [Validators.required]);
 
   constructor(
@@ -64,9 +64,13 @@ export class ReplaceFileDialogComponent {
     private _fb: FormBuilder
   ) {}
 
+  ngOnInit() {
+    this.propId = this.data.resource.properties[this.data.representation][0].id;
+  }
+
   replaceFile() {
     const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
-    uploadedFile.id = this.data.propId;
+    uploadedFile.id = this.propId;
     uploadedFile.filename = this.form.getRawValue() as unknown as string;
 
     const updateRes = new UpdateResource<UpdateValue>();

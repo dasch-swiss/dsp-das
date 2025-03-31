@@ -120,7 +120,6 @@ export class StillImageToolbarComponent {
           title: 'Image',
           subtitle: 'Update image of the resource',
           representation: Constants.HasStillImageFileValue,
-          propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
           resource: this.resource,
         },
         viewContainerRef: this._viewContainerRef,

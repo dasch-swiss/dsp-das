@@ -67,7 +67,6 @@ export class VideoMoreButtonComponent {
         title: 'Video',
         subtitle: 'Update the video file of this resource',
         representation: Constants.HasMovingImageFileValue,
-        propId: this.parentResource.properties[Constants.HasMovingImageFileValue][0].id,
         resource: this.parentResource,
       },
       viewContainerRef: this._viewContainerRef,

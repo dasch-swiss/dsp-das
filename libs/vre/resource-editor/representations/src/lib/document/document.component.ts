@@ -81,7 +81,6 @@ export class DocumentComponent implements OnChanges {
         title: 'Document',
         subtitle: 'Update the document file of this resource',
         representation: Constants.HasDocumentFileValue,
-        propId: this.parentResource.properties[Constants.HasDocumentFileValue][0].id,
         resource: this.parentResource,
       },
       viewContainerRef: this._viewContainerRef,

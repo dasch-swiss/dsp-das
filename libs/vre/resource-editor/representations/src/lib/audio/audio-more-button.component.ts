@@ -46,7 +46,6 @@ export class AudioMoreButtonComponent {
         title: 'Audio',
         subtitle: 'Update the audio file of this resource',
         representation: Constants.HasAudioFileValue,
-        propId: this.parentResource.properties[Constants.HasAudioFileValue][0].id,
         resource: this.parentResource,
       },
       viewContainerRef: this._viewContainerRef,

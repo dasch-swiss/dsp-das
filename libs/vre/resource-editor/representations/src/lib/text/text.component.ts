@@ -53,7 +53,6 @@ export class TextComponent implements OnChanges {
         title: 'Text (csv, txt, xml)',
         subtitle: 'Update the text file of this resource',
         representation: Constants.HasTextFileValue,
-        propId: this.parentResource.properties[Constants.HasTextFileValue][0].id,
         resource: this.parentResource,
       },
       viewContainerRef: this._viewContainerRef,

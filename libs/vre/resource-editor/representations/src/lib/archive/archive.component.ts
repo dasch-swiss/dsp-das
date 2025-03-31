@@ -54,7 +54,6 @@ export class ArchiveComponent implements OnChanges {
         title: 'Archive',
         subtitle: 'Update the archive file of this resource',
         representation: Constants.HasArchiveFileValue,
-        propId: this.parentResource.properties[Constants.HasArchiveFileValue][0].id,
         resource: this.parentResource,
       },
       viewContainerRef: this._viewContainerRef,
