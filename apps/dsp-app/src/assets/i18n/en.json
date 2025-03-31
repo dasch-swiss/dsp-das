@@ -81,7 +81,7 @@
         "givenName": "First name",
         "familyName": "Last name",
         "email": "Email address",
-        "emailValidation": "This does not appear to be a valid email address.",
+        "emailValidation": "This email address appears to be invalid.",
         "username": "Username",
         "usernameHint": "Spaces and special characters are not allowed in username.",
         "password": "Password",
@@ -92,7 +92,7 @@
         "confirmPassword": "Confirm password",
         "requesterPassword": "Your password",
         "language": "Default language",
-        "sysAdmin": "System administrator rules",
+        "sysAdmin": "System administrator rights",
         "updateSuccess": "You have successfully updated the user's profile."
       },
       "title": {
@@ -103,10 +103,13 @@
         "deleteButton": "Suspend user account now",
         "password": "Update password",
         "ownPasswordSuccess": "You have successfully updated your password.",
-        "userPasswordSuccess": "You have successfully updated user's password."
+        "userPasswordSuccess": "You have successfully updated the user's password."
       }
     },
     "project": {
+      "advancedSearch": {
+        "propertyListValue": "Select an item"
+      },
       "general": {
         "description": "Description",
         "shortcode": "Short code",
@@ -204,7 +207,7 @@
       "systemAdministration": "System Administration",
       "logout": "Logout",
       "login": "LOGIN",
-      "home": "DSP-App Home Page",
+      "home": "DSP-APP Home Page",
       "myAccount": "My Account"
     }
   },
@@ -215,5 +218,9 @@
     "inputTooltip": "Enter the page number and apply with the Enter key.",
     "previousPage": "Previous page",
     "rangeLabelOf": "of"
+  },
+  "annotations": {
+    "create": "Create Annotation",
+    "label": "Annotations"
   }
 }

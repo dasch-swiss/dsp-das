@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-  ApiResponseError,
   Cardinality,
   Constants,
   CreateFileValue,
@@ -95,7 +94,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </ng-template>
   `,
   styles: [
-    '.row { display: flex}',
+    '.row { display: flex; padding: 16px 0;}',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
   ],
 })
@@ -164,7 +163,6 @@ export class CreateResourceFormComponent implements OnInit {
       .createResource(this._getPayload())
       .pipe(take(1))
       .subscribe(res => {
-        if (res instanceof ApiResponseError) return;
         this._store.dispatch(new LoadClassItemsCountAction(this.ontologyIri, this.resourceClass.id));
         this.createdResourceIri.emit(res.id);
       });
@@ -181,7 +179,7 @@ export class CreateResourceFormComponent implements OnInit {
           this._cd.detectChanges();
         })
       )
-      .subscribe((onto: ResourceClassAndPropertyDefinitions) => {
+      .subscribe(onto => {
         this.fileRepresentation = this._getFileRepresentation(onto);
 
         this.resourceClass = onto.classes[this.resourceClassIri];
