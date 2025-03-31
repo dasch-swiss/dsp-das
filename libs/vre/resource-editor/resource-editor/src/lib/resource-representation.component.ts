@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import {
   FileRepresentation,
@@ -40,16 +40,14 @@ import { map } from 'rxjs/operators';
       class="dsp-representation audio"
       *ngSwitchCase="representationConstants.audio"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [isAdmin]="isAdmin$ | async" />
+      [parentResource]="resource.res" />
 
     <app-video
       #video
       class="dsp-representation video"
       *ngSwitchCase="representationConstants.movingImage"
       [src]="representationToDisplay"
-      [parentResource]="resource.res"
-      [isAdmin]="isAdmin$ | async" />
+      [parentResource]="resource.res" />
 
     <app-archive
       #archive
@@ -66,31 +64,14 @@ import { map } from 'rxjs/operators';
       [parentResource]="resource.res" />
   </div>`,
 })
-export class ResourceRepresentationComponent implements OnInit {
+export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
 
   representationToDisplay!: FileRepresentation;
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
 
-  get attachedToProjectResource(): string {
-    return this.resource.res.attachedToProject;
-  }
-
-  isAdmin$: Observable<boolean> = combineLatest([
-    this._store.select(UserSelectors.user),
-    this._store.select(UserSelectors.userProjectAdminGroups),
-  ]).pipe(
-    map(([user, userProjectGroups]) => {
-      return this.attachedToProjectResource
-        ? ProjectService.IsProjectAdminOrSysAdmin(user!, userProjectGroups, this.attachedToProjectResource)
-        : false;
-    })
-  );
-
-  ngOnInit() {
+  ngOnChanges() {
     this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
   }
-
-  constructor(private _store: Store) {}
 }
