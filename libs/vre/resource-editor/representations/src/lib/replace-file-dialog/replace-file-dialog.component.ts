@@ -6,7 +6,6 @@ import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/val
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
 import { FileRepresentationType } from '../file-representation.type';
-import { fileValueMapping } from '../file-value-mapping';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 export interface ReplaceFileDialogProps {
@@ -69,15 +68,11 @@ export class ReplaceFileDialogComponent implements OnInit {
   }
 
   replaceFile() {
-    const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
-    uploadedFile.id = this.propId;
-    uploadedFile.filename = this.form.getRawValue() as unknown as string;
-
     const updateRes = new UpdateResource<UpdateValue>();
     updateRes.id = this.data.resource.id;
     updateRes.type = this.data.resource.type;
     updateRes.property = this.data.representation;
-    updateRes.value = uploadedFile;
+    updateRes.value = this.form.getRawValue()!;
 
     this._dspApiConnection.v2.values
       .updateValue(updateRes)
