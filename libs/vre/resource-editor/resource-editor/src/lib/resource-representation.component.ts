@@ -1,6 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { FileRepresentation, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
+import {
+  FileRepresentation,
+  getFileValue,
+  RepresentationConstants,
+} from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -62,10 +66,10 @@ import { map } from 'rxjs/operators';
       [parentResource]="resource.res" />
   </div>`,
 })
-export class ResourceRepresentationComponent {
+export class ResourceRepresentationComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) representationToDisplay!: FileRepresentation;
 
+  representationToDisplay!: FileRepresentation;
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
 
@@ -83,6 +87,10 @@ export class ResourceRepresentationComponent {
         : false;
     })
   );
+
+  ngOnInit() {
+    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
+  }
 
   constructor(private _store: Store) {}
 }

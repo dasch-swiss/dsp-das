@@ -16,7 +16,12 @@ import { CompoundService } from './compound/compound.service';
     <div class="content large middle">
       <div>
         <app-resource-header [resource]="resource" />
-        <app-resource-file-value *ngIf="!resourceIsObjectWithoutRepresentation" [resource]="resource" />
+
+        <ng-container *ngIf="!resourceIsObjectWithoutRepresentation">
+          <app-resource-legal [resource]="resource" />
+          <app-resource-representation [resource]="resource" />
+        </ng-container>
+
         <app-compound-viewer *ngIf="isCompoundNavigation" />
         <app-resource-tabs [resource]="resource" />
       </div>

@@ -1,26 +1,24 @@
-import { Component, Input } from '@angular/core';
-import { Constants, ReadFileValue } from '@dasch-swiss/dsp-js';
-import { FileRepresentation } from '@dasch-swiss/vre/resource-editor/representations';
+import { Component, Input, OnInit } from '@angular/core';
+import { getFileValue } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
   selector: 'app-resource-legal',
-  template: ` <h2>Legal infos</h2>
-    <!--<div>Copyright holder {{ legalInfos.copyrightHolder }}</div>-->
-    <div>License {{ license }}</div>
-    <div>Licensed on {{ licensedOn }}</div>
-    <div>Authorship {{ authorship }}</div>`,
+  template: ` <div>Copyright holder {{ legalInfos.copyrightHolder }}</div>
+    <div style="display: flex; justify-content: space-between">
+      <div>License {{ legalInfos.license.labelEn }}</div>
+      <div>Licensed on {{ resource.res.creationDate }}</div>
+    </div>
+    <div>Authorship {{ legalInfos.authorship }}</div>`,
 })
-export class ResourceLegalComponent {
+export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
-  @Input({ required: true }) representationToDisplay!: FileRepresentation;
 
   get legalInfos() {
-    return this.resource.res.properties[Constants.HasStillImageFileValue][0] as unknown as ReadFileValue;
+    return getFileValue(this.resource);
   }
 
-  copyrightHolder = 'copyrightHolderTODO';
-  license = 'license';
-  licensedOn = 'licensedOn';
-  authorship = 'authorship';
+  ngOnInit() {
+    console.log(this.resource);
+  }
 }
