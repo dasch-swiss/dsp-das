@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
 import { TooltipPosition } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
@@ -9,6 +11,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
+import { ResourceUtil } from '../resource.util';
 import { MediaPlayerService } from './media-player.service';
 
 @Component({
@@ -45,7 +48,7 @@ import { MediaPlayerService } from './media-player.service';
         data-cy="timeline-button"
         (click)="createVideoSegment()"
         [matTooltip]="'annotations.create' | translate"
-        *ngIf="isAdmin">
+        *ngIf="usercanEdit">
         <mat-icon svgIcon="draw_region_icon"></mat-icon>
       </button>
 
@@ -64,7 +67,6 @@ export class VideoToolbarComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
-  @Input({ required: true }) isAdmin!: boolean;
 
   @Output() toggleCinemaMode = new EventEmitter<void>();
 
@@ -75,11 +77,19 @@ export class VideoToolbarComponent {
   matTooltipPos: TooltipPosition = 'below';
   play = false;
 
+  get usercanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
+
   constructor(
-    private _viewContainerRef: ViewContainerRef,
     private _dialog: MatDialog,
-    public mediaPlayer: MediaPlayerService
-  ) {}
+    private _domSanitizer: DomSanitizer,
+    public mediaPlayer: MediaPlayerService,
+    private _matIconRegistry: MatIconRegistry,
+    private _viewContainerRef: ViewContainerRef
+  ) {
+    this._setupCssMaterialIcon();
+  }
 
   createVideoSegment() {
     this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
@@ -97,5 +107,12 @@ export class VideoToolbarComponent {
 
   goToStart() {
     this.mediaPlayer.navigate(0);
+  }
+
+  private _setupCssMaterialIcon() {
+    this._matIconRegistry.addSvgIcon(
+      'draw_region_icon',
+      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
+    );
   }
 }
