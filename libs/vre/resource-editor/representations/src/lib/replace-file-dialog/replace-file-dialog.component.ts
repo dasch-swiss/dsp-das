@@ -5,6 +5,7 @@ import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@
 import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
+import { fileValueMapping } from '../../../../resource-properties/src/lib/file-value-mapping';
 import { FileRepresentationType } from '../file-representation.type';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
@@ -64,11 +65,15 @@ export class ReplaceFileDialogComponent {
   ) {}
 
   replaceFile() {
+    const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
+    uploadedFile.id = this.data.propId;
+    uploadedFile.filename = this.form.getRawValue() as unknown as string;
+
     const updateRes = new UpdateResource<UpdateValue>();
     updateRes.id = this.data.resource.id;
     updateRes.type = this.data.resource.type;
     updateRes.property = this.data.representation;
-    updateRes.value = this.form.getRawValue()!;
+    updateRes.value = uploadedFile;
 
     this._dspApiConnection.v2.values
       .updateValue(updateRes)
