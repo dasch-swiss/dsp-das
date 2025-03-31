@@ -30,7 +30,6 @@ import {
   ProjectsSelectors,
   PropToDisplay,
   RemovePropertyAction,
-  SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/core/state';
 import {
@@ -51,8 +50,7 @@ import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { concat, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-// import { UpdateResourcePropertyGuiElement } from '../../../../../../3rd-party-services/api/src/lib/services/v2/ontology/update-resource-property-gui-element.interface';
+import { filter, map, switchMap, take, takeUntil, tap, last } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
   CreateResourceClassDialogProps,
@@ -306,22 +304,26 @@ export class OntologyEditService implements OnDestroy {
     this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
   }
 
-  updateProperty(formData: PropertyData) {
+  updateProperty(id: string, propertyData: PropertyData) {
     const updates: Observable<any>[] = [];
-    /*
-    if (formData.labels.length) {
-      updates.push(this.updatePropertyLabels(formData.propType, labels));
+
+    if (propertyData.labels !== undefined) {
+      updates.push(this.updatePropertyLabels(id, propertyData.labels));
     }
 
-    if (comments.length) {
-      updates.push(this.updatePropertyComments(id, comments));
+    if (propertyData.comments !== undefined) {
+      updates.push(this.updatePropertyComments(id, propertyData.comments));
+    }
+
+    if (propertyData.guiElement !== undefined) {
+      updates.push(this.updatePropertyGuiElement(id, propertyData.guiElement));
     }
 
     if (updates.length === 0) {
-      return of(); // or throwError or EMPTY depending on your needs
-    } */
+      return of();
+    }
 
-    return concat(...updates); // runs each one sequentially
+    return concat(...updates).pipe(last());
   }
 
   updatePropertyLabels(
@@ -348,13 +350,11 @@ export class OntologyEditService implements OnDestroy {
 
   updatePropertyGuiElement(
     id: string,
-    guiElement: string,
-    guiAttributes: string[]
+    guiElement: string
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
     const updateGuiElement = new UpdateResourcePropertyGuiElement();
     updateGuiElement.id = id;
     updateGuiElement.guiElement = guiElement;
-    updateGuiElement.guiAttributes = guiAttributes;
 
     const onto = this._getUpdateOntology<UpdateResourcePropertyGuiElement>(updateGuiElement);
     return this._updateResourceProperty(onto);

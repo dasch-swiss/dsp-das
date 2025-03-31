@@ -22,6 +22,7 @@ export interface PropertyData {
     name?: string;
     labels?: StringLiteralV2[];
     comments?: StringLiteralV2[];
+    guiElement?: string;
     guiAttribute?: string;
 }
 

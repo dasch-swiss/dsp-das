@@ -62,9 +62,9 @@ export class EditPropertyFormDialogComponent implements OnInit {
             propType: this.data.propType,
             labels : this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
             comments : this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
-            guiAttribute : this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
+            guiElement : this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
         }
-        this._oes.updateProperty(propertyData).pipe(take(1)).subscribe(() => this.onSuccess());
+        this._oes.updateProperty(this.data.propDef!.id, propertyData).pipe(take(1)).subscribe(() => this.onSuccess());
 
       /*
       this._oes.updateResourceProperty(

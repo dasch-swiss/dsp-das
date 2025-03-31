@@ -147,11 +147,7 @@ export class AddPropertyMenuComponent {
           availableProp.subPropertyOf.push(superProp);
         }
 
-        let propType: DefaultProperty;
-        // find corresponding default property to have more prop info
-        this._ontoService.getDefaultPropType(availableProp).subscribe(prop => {
-          propType = prop;
-        });
+        const propType = this._ontoService.getDefaultPropertyType(availableProp);
 
         const propToAdd: PropertyInfoObject = {
           propType,

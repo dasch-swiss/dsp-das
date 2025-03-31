@@ -1,8 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
@@ -72,7 +71,6 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   constructor(
-    @Inject(DspApiConnectionToken)
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
     private _projectService: ProjectService,
