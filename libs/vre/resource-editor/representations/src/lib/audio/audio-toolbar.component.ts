@@ -25,10 +25,9 @@ import { MediaPlayerService } from '../video/media-player.service';
         </button>
       </div>
       <div data-cy="player-time">{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
-
       <div>
         <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()" *ngIf="usercanEdit">
-          <mat-icon>draw_region_icon</mat-icon>
+          <mat-icon svgIcon="draw_region_icon"></mat-icon>
         </button>
         <app-audio-more-button [parentResource]="parentResource" />
       </div>
