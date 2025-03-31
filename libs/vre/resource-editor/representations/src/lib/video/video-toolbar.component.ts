@@ -9,6 +9,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { FileRepresentation } from '../file-representation';
 import { MovingImageSidecar } from '../moving-image-sidecar';
+import { ResourceUtil } from '../resource.util';
 import { MediaPlayerService } from './media-player.service';
 
 @Component({
@@ -44,18 +45,18 @@ import { MediaPlayerService } from './media-player.service';
         mat-icon-button
         data-cy="timeline-button"
         (click)="createVideoSegment()"
-        [matTooltip]="'Create a segment'"
-        *ngIf="isAdmin">
-        <mat-icon>view_timeline</mat-icon>
+        [matTooltip]="'annotations.create' | translate"
+        *ngIf="usercanEdit">
+        <mat-icon svgIcon="draw_region_icon"></mat-icon>
       </button>
 
       <button
         mat-icon-button
         data-cy="cinema-mode-button"
-        (click)="toggleCinemaMode()"
-        [matTooltip]="cinemaMode ? 'Default view' : 'Cinema mode'"
+        (click)="toggleCinemaMode.emit()"
+        [matTooltip]="isFullscreen ? 'Default view' : 'Cinema mode'"
         [matTooltipPosition]="matTooltipPos">
-        <mat-icon>{{ cinemaMode ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+        <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
       </button>
     </div>
   </mat-toolbar-row>`,
@@ -64,13 +65,19 @@ export class VideoToolbarComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
-  @Input({ required: true }) cinemaMode!: boolean;
-  @Input({ required: true }) isAdmin!: boolean;
 
-  @Output() cinemaModeChange = new EventEmitter<boolean>();
+  @Output() toggleCinemaMode = new EventEmitter<void>();
+
+  get isFullscreen() {
+    return document.fullscreenElement;
+  }
 
   matTooltipPos: TooltipPosition = 'below';
   play = false;
+
+  get usercanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
@@ -80,17 +87,16 @@ export class VideoToolbarComponent {
 
   createVideoSegment() {
     this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
-      ...DspDialogConfig.dialogDrawerConfig({
-        type: 'VideoSegment',
-        resource: this.parentResource,
-        videoDurationSecs: this.mediaPlayer.duration(),
-      }),
+      ...DspDialogConfig.dialogDrawerConfig(
+        {
+          type: 'VideoSegment',
+          resource: this.parentResource,
+          videoDurationSecs: this.mediaPlayer.duration(),
+        },
+        true
+      ),
       viewContainerRef: this._viewContainerRef,
     });
-  }
-
-  toggleCinemaMode() {
-    this.cinemaModeChange.emit(!this.cinemaMode);
   }
 
   goToStart() {

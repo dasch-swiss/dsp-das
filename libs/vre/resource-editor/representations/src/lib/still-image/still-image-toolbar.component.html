@@ -31,7 +31,7 @@
     <div
       class="clickable-icon"
       data-cy="still-image-region-button"
-      matTooltip="Draw Region"
+      matTooltip="{{ 'annotations.create' | translate }}"
       [class.disabled]="!userCanEdit || isReadStillImageExternalFileValue"
       (click)="toggleDrawMode()"
       [class.active]="osd.drawing">
