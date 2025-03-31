@@ -65,8 +65,6 @@ export class VideoToolbarComponent {
   @Input({ required: true }) src!: FileRepresentation;
   @Input({ required: true }) parentResource!: ReadResource;
   @Input({ required: true }) fileInfo!: MovingImageSidecar;
-  @Input({ required: true }) cinemaMode!: boolean;
-
 
   @Output() toggleCinemaMode = new EventEmitter<void>();
 
