@@ -31,3 +31,4 @@ export * from './lib/pipes/internal-link-replacer.pipe';
 export * from './lib/pipes/add-target-blank.pipe';
 export * from './lib/ck-editor/unescape-html';
 export * from './lib/alternated-list.component';
+export * from './lib/human-readable-date.pipe';

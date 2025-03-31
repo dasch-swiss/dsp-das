@@ -7,7 +7,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
   template: ` <div>Copyright holder {{ legalInfos.copyrightHolder }}</div>
     <div style="display: flex; justify-content: space-between">
       <div>License {{ legalInfos.license.labelEn }}</div>
-      <div>Licensed on {{ resource.res.creationDate }}</div>
+      <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
     </div>
     <div>Authorship {{ legalInfos.authorship }}</div>`,
 })

@@ -9,6 +9,7 @@ import { CommonInputComponent } from './lib/common-input.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
 import { HintComponent } from './lib/hint/hint.component';
+import { HumanReadableDatePipe } from './lib/human-readable-date.pipe';
 import { InvalidControlScrollDirective } from './lib/invalid-control-scroll.directive';
 import { PagerComponent } from './lib/pager/pager.component';
 import { AddTargetBlankPipe } from './lib/pipes/add-target-blank.pipe';
@@ -47,5 +48,6 @@ export const UiComponents = [
   InternalLinkReplacerPipe,
   AddTargetBlankPipe,
   AlternatedListComponent,
+  HumanReadableDatePipe,
 ];
 export const UiStandaloneComponents = [PagerComponent];
