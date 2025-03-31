@@ -1,21 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import {
-  Constants,
-  KnoraApiConnection,
-  ReadOntology,
-  ReadProject,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  DefaultProperty,
-  OntologyService,
-  ProjectService,
-  PropertyInfoObject,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { OntologyEditService } from '../services/ontology-edit.service';
@@ -84,7 +73,6 @@ export class PropertyInfoComponent implements OnInit {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
     private _projectService: ProjectService,
@@ -154,7 +142,7 @@ export class PropertyInfoComponent implements OnInit {
   trackByFn = (index: number, item: ShortInfo) => item.id;
 
   canBeDeleted(): void {
-    this._dspApiConnection.v2.onto.canDeleteResourceProperty(this.propDef.id).subscribe(canDoRes => {
+    this._oes.canDeleteResourceProperty(this.propDef.id).subscribe(canDoRes => {
       this.propCanBeDeleted = canDoRes.canDo;
     });
   }

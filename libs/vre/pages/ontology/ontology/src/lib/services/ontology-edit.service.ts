@@ -81,6 +81,8 @@ export class OntologyEditService implements OnDestroy {
 
   private _destroyed: Subject<void> = new Subject<void>();
 
+  private _canDeletePropertyMap = new Map<string, CanDoResponse>();
+
   get projectId(): string {
     return this._currentProject?.id || '';
   }
@@ -111,6 +113,7 @@ export class OntologyEditService implements OnDestroy {
 
     this._currentOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
       this._currentOntology = onto;
+      this._canDeletePropertyMap.clear();
     });
   }
 
@@ -412,6 +415,19 @@ export class OntologyEditService implements OnDestroy {
 
   canDeleteResourceClass(classId: string): Observable<CanDoResponse | ApiResponseError> {
     return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
+  }
+
+  canDeleteResourceProperty(propertyId: string): Observable<CanDoResponse> {
+    const canDo = this._canDeletePropertyMap.get(propertyId);
+    if (canDo) {
+      return of(canDo);
+    }
+
+    return this._dspApiConnection.v2.onto.canDeleteResourceProperty(propertyId).pipe(
+      tap((canDoRes: CanDoResponse) => {
+        this._canDeletePropertyMap.set(propertyId, canDoRes);
+      })
+    );
   }
 
   deleteProperty(iri: string) {
