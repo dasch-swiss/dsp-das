@@ -59,7 +59,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
         guiAttribute: this.form.controls.guiAttr.value,
         classDef: this.data.resClass,
     }
-    this._oes.createResourceProperty2(propData);
+    this._oes.createResourceProperty(propData);
 
     this.dialogRef.close();
   }

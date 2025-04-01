@@ -190,6 +190,7 @@ export class OntologiesState {
           } else {
             projectReadOntologies.push(ontology);
           }
+          console.log('LoafdOntologyAction projectReadOntologies', projectReadOntologies);
 
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
@@ -311,6 +312,7 @@ export class OntologiesState {
     delCard.id = resourceClass.id;
     delCard.cardinalities = [];
     delCard.cardinalities = currentOntologyPropertiesToDisplay.filter(prop => prop.propertyIndex === property.id);
+    console.log(delCard.cardinalities);
     onto.entity = delCard;
 
     return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).pipe(

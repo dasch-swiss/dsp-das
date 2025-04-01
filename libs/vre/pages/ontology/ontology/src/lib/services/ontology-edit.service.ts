@@ -209,13 +209,13 @@ export class OntologyEditService implements OnDestroy {
       });
   }
 
-  createResourceProperty2(propertyData: CreatePropertyData) {
+  createResourceProperty(propertyData: CreatePropertyData) {
     //     this._oes.createResourceProperty(this.getCreateResourceProperty(this.form, this.data.propType), this.data.resClass);
-    const createResProp = this.getCreateResourceProperty(propertyData);
+    const createResProp = this._getCreateResourceProperty(propertyData);
     this._createResourceProperty(createResProp, propertyData.classDef);
   }
 
-  getCreateResourceProperty(data: CreatePropertyData): CreateResourceProperty {
+  private _getCreateResourceProperty(data: CreatePropertyData): CreateResourceProperty {
     const createResProp = new CreateResourceProperty();
     createResProp.name = data.name;
     createResProp.label = data.labels;
@@ -277,6 +277,7 @@ export class OntologyEditService implements OnDestroy {
       .pipe(take(1))
       .subscribe((response: ResourcePropertyDefinitionWithAllLanguages) => {
         if (assignToClass) {
+          this._currentOntology!.lastModificationDate = response.lastModificationDate;
           this.assignPropertyToClass(response.id, assignToClass);
         } else {
           this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true));
@@ -294,14 +295,16 @@ export class OntologyEditService implements OnDestroy {
       });
   }
 
-  // Todo:  get the property per class from a centrtalised store, remove by performing the update, populate the store
-  removePropertyFromClass(
-    property: ResourcePropertyDefinitionWithAllLanguages,
-    resourceClass: ClassDefinition,
-    currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {
-    this._store.dispatch(new RemovePropertyAction(property, resourceClass, currentOntologyPropertiesToDisplay));
-    this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+  removePropertyFromClass(property: IHasProperty, classId: string) {
+    const delCard = this._getUpdateResourceClassCardinality(classId, [property]);
+    const onto = this._getUpdateOntology<UpdateResourceClassCardinality>(delCard);
+
+    this._dspApiConnection.v2.onto
+      .deleteCardinalityFromResourceClass(onto)
+      .pipe(take(1))
+      .subscribe(() => {
+        this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+      });
   }
 
   updateProperty(id: string, propertyData: PropertyData) {
@@ -446,7 +449,7 @@ export class OntologyEditService implements OnDestroy {
         )
       )
       .subscribe(() => {
-        this._store.dispatch(new SetCurrentProjectOntologyPropertiesAction(this.projectUuid));
+        this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectUuid, true));
       });
   }
 

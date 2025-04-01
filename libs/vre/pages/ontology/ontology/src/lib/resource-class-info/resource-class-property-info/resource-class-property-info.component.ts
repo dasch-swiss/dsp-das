@@ -147,8 +147,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
   }
 
   removePropertyFromClass(propDef: ResourcePropertyDefinitionWithAllLanguages): void {
-    this._store.dispatch(new RemovePropertyAction(propDef, this.resourceClass, this.props));
-    this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid!));
+    this._oes.removePropertyFromClass(this.propCard, this.resourceClass.id);
   }
 
   submitCardinalitiesChange(newValue: Cardinality) {
