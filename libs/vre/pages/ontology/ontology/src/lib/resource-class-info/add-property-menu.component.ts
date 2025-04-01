@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ClassDefinition, Constants, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, OntologyProperties, PropToAdd, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
   DefaultProperties,
@@ -9,7 +9,7 @@ import {
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -41,7 +41,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
     </mat-menu>
 
     <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
-      <ng-container *ngFor="let onto of existingProperties$ | async; trackBy: trackByPropToAddFn">
+      <ng-container *ngFor="let onto of availableProperties$ | async; trackBy: trackByPropToAddFn">
         <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">
           {{ onto.ontologyLabel }}
         </button>
@@ -95,12 +95,31 @@ export class AddPropertyMenuComponent {
   private ngUnsubscribe = new Subject<void>();
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  currentProjectOntologyProperties$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties);
-
-  // list of existing ontology properties, which are not in this resource class
-  existingProperties$ = this.currentProjectOntologyProperties$.pipe(
+  availableProperties$: Observable<PropToAdd[]> = combineLatest([
+    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this._store.select(OntologiesSelectors.currentProjectOntologyProperties),
+  ]).pipe(
     takeUntil(this.ngUnsubscribe),
-    map(ontoProperties => this.getExistingProperties([...this.resourceClass.propertiesList], [...ontoProperties]))
+    map(([ontologies, properties]) => {
+      return ontologies.map(onto => {
+        const ontoProperties = properties.filter(p => p.ontology === onto.id);
+        const classProps = [...(this.resourceClass?.propertiesList || [])];
+        const unusedProperties = ontoProperties
+          .flatMap(o => o.properties)
+          .filter(p => !classProps.some(c => c.propertyIndex === p.id));
+
+        return {
+          ontologyId: onto.id,
+          ontologyLabel: onto.label,
+          properties: unusedProperties.map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
+            return {
+              propType: this._ontoService.getDefaultPropertyType(prop),
+              propDef: prop,
+            };
+          }),
+        };
+      });
+    })
   );
 
   constructor(
@@ -123,57 +142,5 @@ export class AddPropertyMenuComponent {
 
   addNewProperty(propType: DefaultProperty) {
     this._oes.openAddNewProperty(propType, this.resourceClass);
-  }
-
-  private getExistingProperties(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToAdd[] {
-    if (classProps.length === 0 || ontoProperties.length === 0) {
-      return [];
-    }
-    const existingProperties: PropToAdd[] = [];
-    const currentProjectOntologies = this._store
-      .selectSnapshot(OntologiesSelectors.currentProjectOntologies)
-      .filter(p => !classProps.some(c => c.propertyIndex === p.id));
-    ontoProperties.forEach((op: OntologyProperties, i: number) => {
-      const onto = currentProjectOntologies.find(j => j?.id === op.ontology);
-      existingProperties.push({
-        ontologyId: op.ontology,
-        ontologyLabel: onto?.label,
-        properties: [],
-      });
-
-      op.properties.forEach((availableProp: ResourcePropertyDefinitionWithAllLanguages) => {
-        const superProp = this._ontoService.getSuperProperty(availableProp, currentProjectOntologies);
-        if (superProp && availableProp.subPropertyOf.indexOf(superProp) === -1) {
-          availableProp.subPropertyOf.push(superProp);
-        }
-
-        const propType = this._ontoService.getDefaultPropertyType(availableProp);
-
-        const propToAdd: PropertyInfoObject = {
-          propType,
-          propDef: availableProp,
-        };
-
-        if (this.isPropertyToAdd(classProps, availableProp)) {
-          existingProperties[i].properties.push(propToAdd);
-        }
-      });
-    });
-
-    return existingProperties;
-  }
-
-  private isPropertyToAdd(
-    classProps: PropToDisplay[],
-    availableProp: ResourcePropertyDefinitionWithAllLanguages
-  ): boolean {
-    return (
-      classProps.findIndex(x => x.propertyIndex === availableProp.id) === -1 &&
-      ((availableProp.subjectType &&
-        !availableProp.subjectType.includes('Standoff') &&
-        availableProp.objectType !== Constants.LinkValue &&
-        availableProp.subjectType !== this.resourceClass.id) ||
-        !availableProp.isLinkValueProperty)
-    );
   }
 }

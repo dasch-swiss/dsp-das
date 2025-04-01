@@ -50,14 +50,14 @@
         [cardinality]="propCard.cardinality"
         [classIri]="resourceClass.id"
         [propertyInfo]="{ propDef: this.propDef, propType: this.propType }"
-        (cardinalityChange)="submitCardinalitiesChange($event)"></app-cardinality>
+        (cardinalityChange)="updateCardinality($event)"></app-cardinality>
     </span>
   </div>
 </div>
 
 <mat-menu #classInfoMenu="matMenu">
   <div class="remove-menu-wrapper">
-    <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass(propDef)">
+    <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
       <mat-icon>link_off</mat-icon>
       <ngx-skeleton-loader
         *ngIf="propCanBeRemovedFromClass === undefined || propCanBeRemovedFromClass === null"

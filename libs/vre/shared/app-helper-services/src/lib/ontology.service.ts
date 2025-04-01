@@ -55,21 +55,18 @@ export class OntologyService {
   ): string | undefined {
     let superPropIri: string | undefined;
 
-    // get iri from sub properties
-    if (property.subPropertyOf.length) {
-      for (const subProp of property.subPropertyOf) {
-        const baseOntoIri = subProp.split(Constants.HashDelimiter)[0];
-        // compare with knora base ontology
-        if (baseOntoIri !== Constants.KnoraApiV2) {
-          // the property is not a subproperty of knora base ontology
-          // get property iri from another ontology
-          const onto = currentProjectOntologies.find(i => i?.id === baseOntoIri);
-          superPropIri = onto?.properties[subProp].subPropertyOf[0];
-        }
+    for (const subProp of property.subPropertyOf) {
+      const baseOntoIri = subProp.split(Constants.HashDelimiter)[0];
+      // compare with knora base ontology
+      if (baseOntoIri !== Constants.KnoraApiV2) {
+        // the property is not a subproperty of knora base ontology
+        // get property iri from another ontology
+        const onto = currentProjectOntologies.find(i => i?.id === baseOntoIri);
+        superPropIri = onto?.properties[subProp].subPropertyOf[0];
+      }
 
-        if (superPropIri) {
-          break;
-        }
+      if (superPropIri) {
+        break;
       }
     }
 
@@ -79,34 +76,90 @@ export class OntologyService {
   /**
    * get default property information for a certain ontology property
    */
-  getDefaultPropertyType(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
+  getDefaultProperty(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
     let propType: DefaultProperty | undefined;
 
-    for (const group of this.defaultProperties) {
+    for (const defaultProperty of this.defaultProperties) {
+      // TODO: WHUT IS THIS?
       if (property?.subPropertyOf.length) {
-        for (const subProp of property.subPropertyOf) {
+        for (const superProp of property.subPropertyOf) {
           // if subProp is of type "link to" or "part of" we have to check the subproperty;
           // otherwise we get the necessary property info from the objectType
-          if (subProp === Constants.HasLinkTo || subProp === Constants.IsPartOf) {
-            propType = group.elements.find(
-              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === subProp
+          if (superProp === Constants.HasLinkTo || superProp === Constants.IsPartOf) {
+            propType = defaultProperty.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === superProp
             );
-          } else if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
+          } else if (property.objectType === Constants.IntValue && superProp === Constants.SeqNum) {
             // if the property is of type number, but sub property of SeqNum,
             // select the correct default prop params
-            propType = group.elements.find(
+            propType = defaultProperty.elements.find(
               (i: DefaultProperty) => i.objectType === property.objectType && i.subPropOf === Constants.SeqNum
             );
           } else if (property.objectType === Constants.TextValue) {
             // if the property is of type text value, we have to check the gui element
             // to get the correct default prop params
-            propType = group.elements.find(
+            propType = defaultProperty.elements.find(
               (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
             );
           } else {
             // in all other cases the gui-element resp. the subProp is not relevant
             // because the object type is unique
-            propType = group.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
+            propType = defaultProperty.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
+          }
+          if (propType) {
+            break;
+          }
+        }
+        if (propType) {
+          break;
+        }
+      }
+    }
+
+    if (!propType) {
+      // property type could not be found in the list of default properties
+      // maybe it's not supported or it's a subproperty of another prop.
+      // e.g. if propDef.objectType === Constants.GeomValue || propDef.subPropertyOf[0] === Constants.HasRepresentation
+      // --> TODO: check if it's a subproperty of another one in this ontology
+      return DefaultProperties.unsupported;
+    }
+
+    // return of(propType);
+    return propType;
+  }
+
+  /**
+   * get default property information for a certain ontology property
+   */
+  getDefaultPropertyType(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
+    let propType: DefaultProperty | undefined;
+
+    for (const defaultProperty of this.defaultProperties) {
+      // TODO: WHUT IS THIS?
+      if (property?.subPropertyOf.length) {
+        for (const subProp of property.subPropertyOf) {
+          // if subProp is of type "link to" or "part of" we have to check the subproperty;
+          // otherwise we get the necessary property info from the objectType
+          if (subProp === Constants.HasLinkTo || subProp === Constants.IsPartOf) {
+            propType = defaultProperty.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === subProp
+            );
+          } else if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
+            // if the property is of type number, but sub property of SeqNum,
+            // select the correct default prop params
+            propType = defaultProperty.elements.find(
+              (i: DefaultProperty) => i.objectType === property.objectType && i.subPropOf === Constants.SeqNum
+            );
+          } else if (property.objectType === Constants.TextValue) {
+            // if the property is of type text value, we have to check the gui element
+            // to get the correct default prop params
+            propType = defaultProperty.elements.find(
+              (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
+            );
+          } else {
+            // in all other cases the gui-element resp. the subProp is not relevant
+            // because the object type is unique
+            propType = defaultProperty.elements.find((i: DefaultProperty) => i.objectType === property.objectType);
           }
           if (propType) {
             break;

@@ -71,19 +71,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
   }
 
   ngOnChanges(): void {
-    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
-
-    // get info about subproperties, if they are not a subproperty of knora base ontology
-    // in this case add it to the list of subproperty iris
-    const superProp = this._ontoService.getSuperProperty(this.propDef, currentProjectOntologies);
-    if (superProp) {
-      if (this.propDef.subPropertyOf.indexOf(superProp) === -1) {
-        this.propDef.subPropertyOf.push(superProp);
-      }
-    }
-
-    // get the default property type for this property
-    this._ontoService.getDefaultPropertyType(this.propDef);
+    this._ontoService.getDefaultProperty(this.propDef);
   }
 
   ngAfterContentInit() {
@@ -137,11 +125,11 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     });
   }
 
-  removePropertyFromClass(propDef: ResourcePropertyDefinitionWithAllLanguages): void {
+  removePropertyFromClass(): void {
     this._oes.removePropertyFromClass(this.propCard, this.resourceClass.id);
   }
 
-  submitCardinalitiesChange(newValue: Cardinality) {
+  updateCardinality(newValue: Cardinality) {
     const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.propCard.propertyIndex);
     if (propertyIdx !== -1) {
       this.props[propertyIdx] = this.propCard;
