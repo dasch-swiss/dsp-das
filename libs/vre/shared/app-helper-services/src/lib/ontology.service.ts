@@ -7,7 +7,6 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { Observable, of } from 'rxjs';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 
 /**
@@ -130,9 +129,6 @@ export class OntologyService {
     // return of(propType);
     return propType;
   }
-
-  getDefaultPropType = (property: ResourcePropertyDefinitionWithAllLanguages): Observable<DefaultProperty> =>
-    of(this.getDefaultPropertyType(property));
 
   /**
    * get the IRI base url without configured api protocol.
