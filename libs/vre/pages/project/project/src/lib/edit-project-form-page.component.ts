@@ -30,7 +30,7 @@ import { ProjectForm } from './reusable-project-form/project-form.type';
         appLoadingButton
         [isLoading]="loading"
         data-cy="submit-button">
-        {{ 'form.action.submit' | translate }}
+        {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>
   </app-centered-layout>`,
