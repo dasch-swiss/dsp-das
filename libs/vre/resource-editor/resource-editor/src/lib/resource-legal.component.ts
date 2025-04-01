@@ -31,7 +31,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       </div>
     </div>
   </div>`,
-  styles: ['.label { display: inline-block; width: 120px}'],
+  styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
