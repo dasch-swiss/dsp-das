@@ -7,8 +7,6 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
 @Component({
   selector: 'app-create-resource-form-legal',
   template: `
-    <h3 class="">Legal infos</h3>
-
     <app-create-resource-form-row [label]="'Copyright holder'" [tooltip]="'Copyright holder'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.copyrightHolder">

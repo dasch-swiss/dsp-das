@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
   selector: 'app-create-resource-page',
   template: `
     <app-centered-layout>
-      <h3 data-cy="create-resource-title">Create new resource of type: {{ classLabel }}</h3>
+      <h2 data-cy="create-resource-title">Create new resource of type: {{ classLabel }}</h2>
       <app-create-resource-form
         *ngIf="resourceClassIri"
         [resourceClassIri]="resourceClassIri"

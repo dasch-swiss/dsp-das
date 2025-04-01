@@ -26,7 +26,14 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       </div>
       <div>
         <div style="display: flex; justify-content: flex-end">
-          <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-sa.svg" alt="license" />
+          <img
+            src="http://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-sa.svg"
+            alt="license"
+            *ngIf="true" />
+          <a href="test" style="color: white; text-decoration: underline;" *ngIf="false"
+            >AI License
+            <mat-icon style="font-size: 16px;position: relative;top: 10px;">open_in_new</mat-icon>
+          </a>
         </div>
 
         <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
