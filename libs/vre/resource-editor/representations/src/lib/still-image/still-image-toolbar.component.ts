@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -35,10 +35,20 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
         display: flex;
         justify-content: space-between;
         padding-right: 16px;
+      }
 
-        button {
-          width: 32px !important;
-        }
+      .clickable-icon {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        width: 32px;
+      }
+
+      .clickable-icon.disabled {
+        pointer-events: none;
+        opacity: 0.5;
       }
     `,
   ],
@@ -82,7 +92,8 @@ export class StillImageToolbarComponent {
     private _dialog: MatDialog,
     private _domSanitizer: DomSanitizer,
     private _matIconRegistry: MatIconRegistry,
-    public osd: OpenSeaDragonService
+    public osd: OpenSeaDragonService,
+    private _viewContainerRef: ViewContainerRef
   ) {
     this._setupCssMaterialIcon();
   }
@@ -96,35 +107,34 @@ export class StillImageToolbarComponent {
   }
 
   replaceImage() {
-    let dialogRef;
     if (this.isReadStillImageExternalFileValue) {
-      dialogRef = this._dialog.open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps>(
-        EditThirdPartyIiifFormComponent,
-        DspDialogConfig.dialogDrawerConfig({
-          resourceId: this.resource.id,
-          fileValue: this.imageFileValue as ReadStillImageExternalFileValue,
-        })
-      );
+      this._dialog
+        .open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps>(
+          EditThirdPartyIiifFormComponent,
+          DspDialogConfig.dialogDrawerConfig({
+            resourceId: this.resource.id,
+            fileValue: this.imageFileValue as ReadStillImageExternalFileValue,
+          })
+        )
+        .afterClosed()
+        .pipe(
+          filter(data => !!data),
+          switchMap((data: UpdateFileValue) => this._replaceFile(data))
+        )
+        .subscribe(() => {
+          this.resourceFetcherService.reload();
+        });
     } else {
-      dialogRef = this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
+      this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
         data: {
           title: 'Image',
           subtitle: 'Update image of the resource',
           representation: Constants.HasStillImageFileValue,
-          propId: this.resource.properties[Constants.HasStillImageFileValue][0].id,
+          resource: this.resource,
         },
+        viewContainerRef: this._viewContainerRef,
       });
     }
-
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter(data => !!data),
-        switchMap((data: UpdateFileValue) => this._replaceFile(data))
-      )
-      .subscribe(() => {
-        this.resourceFetcherService.reload();
-      });
   }
 
   private _replaceFile(file: UpdateFileValue) {
