@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ClassDefinition } from '@dasch-swiss/dsp-js';
-import { OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyClassHelper, SortingService } from 'libs/vre/shared/app-helper-services/src';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

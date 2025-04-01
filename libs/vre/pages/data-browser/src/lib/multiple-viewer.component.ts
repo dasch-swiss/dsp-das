@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
-import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadResourceClassItemsCountAction } from 'libs/vre/core/state/src';
+import { FilteredResources, SearchParams } from 'libs/vre/shared/app-common-to-move/src';
 import { Store } from '@ngxs/store';
 import { SplitSize } from './split-size.interface';
 

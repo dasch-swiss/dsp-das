@@ -11,20 +11,20 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { RouteConstants } from 'libs/vre/core/config/src';
 import {
   IClassItemsKeyValuePairs,
   LoadClassItemsCountAction,
   OntologyClassSelectors,
   ProjectsSelectors,
-} from '@dasch-swiss/vre/core/state';
+} from 'libs/vre/core/state/src';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events,
   LocalizationService,
   OntologyService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+} from 'libs/vre/shared/app-helper-services/src';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, Subscription, combineLatest } from 'rxjs';

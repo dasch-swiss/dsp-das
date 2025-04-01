@@ -10,11 +10,11 @@ import {
   KnoraApiConnection,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DspApiConnectionToken } from 'libs/vre/core/config/src';
+import { ProjectsSelectors, UserSelectors } from 'libs/vre/core/state/src';
+import { ResourceService } from 'libs/vre/shared/app-common/src';
+import { FilteredResources, ShortResInfo } from 'libs/vre/shared/app-common-to-move/src';
+import { ProjectService } from 'libs/vre/shared/app-helper-services/src';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';

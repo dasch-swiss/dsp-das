@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { RouteConstants } from 'libs/vre/core/config/src';
+import { AppError } from 'libs/vre/core/error-handler/src';
+import { FilteredResources } from 'libs/vre/shared/app-common-to-move/src';
+import { ProjectService } from 'libs/vre/shared/app-helper-services/src';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {

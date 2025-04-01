@@ -1,7 +1,7 @@
 {
   "name": "vre-pages-ontology-data-browser",
-  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/pages/ontology/data-browser/src",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/vre/pages/data-browser/src",
   "prefix": "dasch-swiss",
   "projectType": "library",
   "tags": [],
@@ -12,7 +12,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "libs/vre/pages/ontology/data-browser/jest.config.ts"
+        "jestConfig": "libs/vre/pages/data-browser/jest.config.ts"
       }
     },
     "lint": {

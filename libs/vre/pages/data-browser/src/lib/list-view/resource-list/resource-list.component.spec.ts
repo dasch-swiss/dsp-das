@@ -5,7 +5,7 @@ import { MatLineModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MockResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
-import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceService } from 'libs/vre/shared/app-common/src';
 import { FilteredResources } from '../list-view.component';
 import { ResourceListComponent } from './resource-list.component';
 

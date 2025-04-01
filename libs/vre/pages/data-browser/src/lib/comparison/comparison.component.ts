@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
+import { LoadResourceClassItemsCountAction } from 'libs/vre/core/state/src';
 import { Store } from '@ngxs/store';
 import { ShortResInfo } from '../list-view/list-view.component';
 import { SplitSize } from '../split-size.interface';

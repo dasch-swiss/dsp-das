@@ -18,11 +18,11 @@ import {
   ReadResource,
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { DspApiConnectionToken, RouteConstants } from 'libs/vre/core/config/src';
+import { OntologiesSelectors } from 'libs/vre/core/state/src';
+import { FilteredResources, SearchParams } from 'libs/vre/shared/app-common-to-move/src';
+import { ComponentCommunicationEventService, EmitEvent, Events } from 'libs/vre/shared/app-helper-services/src';
+import { NotificationService } from 'libs/vre/ui/notification/src';
 import { Store } from '@ngxs/store';
 import { combineLatest, of, Subject, Subscription } from 'rxjs';
 import { map, take, takeUntil, tap } from 'rxjs/operators';

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChildren } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { FilteredResources } from 'libs/vre/shared/app-common-to-move/src';
 import { CheckboxUpdate } from '../list-view.component';
 import { ListViewService } from '../list-view.service';
 
