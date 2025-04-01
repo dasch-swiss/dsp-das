@@ -5,9 +5,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
   selector: 'app-resource-legal',
-  template: ` <div *ngIf="userCanEdit || fileValue.copyrightHolder !== ''">
-      Copyright holder {{ fileValue.copyrightHolder }}
-    </div>
+  template: ` <div class="mat-caption">
+    <div *ngIf="userCanEdit || fileValue.copyrightHolder !== ''">Copyright holder {{ fileValue.copyrightHolder }}</div>
     <div style="display: flex; justify-content: space-between" *ngIf="userCanEdit || licenseExists">
       <div>License {{ fileValue.license.labelEn }}</div>
       <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
@@ -15,7 +14,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
     <div *ngIf="userCanEdit || fileValue.authorship.length > 0">
       Authorship
       <span *ngFor="let author of fileValue.authorship; let last = last">{{ author }}{{ last ? '' : ',' }}</span>
-    </div>`,
+    </div>
+  </div>`,
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
