@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
-import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
+import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
 import { FileRepresentationType } from '../file-representation.type';
@@ -40,7 +40,6 @@ export interface ReplaceFileDialogProps {
         mat-raised-button
         type="submit"
         data-cy="replace-file-submit-button"
-        [disabled]="form.invalid"
         [color]="'primary'"
         (click)="replaceFile()">
         {{ 'form.action.submit' | translate }}
@@ -51,7 +50,15 @@ export interface ReplaceFileDialogProps {
 })
 export class ReplaceFileDialogComponent implements OnInit {
   propId!: string;
-  form = this._fb.control<UpdateFileValue | null>(null, [Validators.required]);
+
+  form = this._fb.group({
+    file: this._fb.control<string | null>(null, [Validators.required]),
+    legal: {
+      copyrightHolder: this._fb.control<string | null>(null, [Validators.required]),
+      license: this._fb.control<LicenseDto | null>(null, [Validators.required]),
+      authorship: this._fb.control<string[] | null>(null, [Validators.required]),
+    },
+  });
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -72,7 +79,12 @@ export class ReplaceFileDialogComponent implements OnInit {
     updateRes.id = this.data.resource.id;
     updateRes.type = this.data.resource.type;
     updateRes.property = this.data.representation;
-    updateRes.value = this.form.getRawValue()!;
+    const formValue = this.form.getRawValue();
+    const value = {
+      filename: formValue.file!,
+      copyrightHolder: 'julien',
+    };
+    updateRes.value = value as unknown as UpdateValue;
 
     this._dspApiConnection.v2.values
       .updateValue(updateRes)
