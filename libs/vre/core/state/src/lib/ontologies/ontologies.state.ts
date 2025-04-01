@@ -293,44 +293,6 @@ export class OntologiesState {
     });
   }
 
-  /**
-   * removes property from resource class
-   * @param property
-   */
-  @Action(RemovePropertyAction)
-  removePropertyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { property, resourceClass, currentOntologyPropertiesToDisplay }: RemovePropertyAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    const state = ctx.getState();
-
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
-    const delCard = new UpdateResourceClassCardinality();
-    delCard.id = resourceClass.id;
-    delCard.cardinalities = [];
-    delCard.cardinalities = currentOntologyPropertiesToDisplay.filter(prop => prop.propertyIndex === property.id);
-    console.log(delCard.cardinalities);
-    onto.entity = delCard;
-
-    return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).pipe(
-      take(1),
-      tap({
-        next: () => {
-          // ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
-          ctx.setState({ ...state, isLoading: false });
-          this._notification.openSnackBar(
-            `You have successfully removed "${property.label}" from "${resourceClass.label}".`
-          );
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-        },
-      })
-    );
-  }
 
   @Action(ReplacePropertyAction)
   replacePropertyAction(
