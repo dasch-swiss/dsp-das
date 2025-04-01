@@ -3,9 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { filter, finalize, map, startWith, switchMap, take } from 'rxjs/operators';
+import { finalize, map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authorship-form-field',
@@ -37,6 +36,7 @@ import { filter, finalize, map, startWith, switchMap, take } from 'rxjs/operator
 })
 export class AuthorshipFormFieldComponent implements OnInit {
   @Input() control!: FormControl<string[] | null>;
+  @Input({ required: true }) projectShortcode!: string;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   inputControl = new FormControl('');
@@ -51,14 +51,9 @@ export class AuthorshipFormFieldComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._store
-      .select(ProjectsSelectors.currentProject)
+    this._adminApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
       .pipe(
-        filter(project => project !== undefined),
-        take(1),
-        switchMap(project =>
-          this._adminApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project!.shortcode)
-        ),
         finalize(() => {
           this.loading = false;
         })

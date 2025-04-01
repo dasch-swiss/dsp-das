@@ -30,7 +30,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
     </app-create-resource-form-row>
 
     <app-create-resource-form-row [label]="'Authorship'" [tooltip]="'Authorship'">
-      <app-authorship-form-field [control]="formGroup.controls.authorship" />
+      <app-authorship-form-field [control]="formGroup.controls.authorship" [projectShortcode]="projectShortcode" />
     </app-create-resource-form-row>
   `,
   styles: [
