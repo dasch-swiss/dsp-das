@@ -23,11 +23,11 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
         </div>
       </div>
       <div>
-        <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
-
         <div style="display: flex; justify-content: flex-end">
           <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-sa.svg" alt="license" />
         </div>
+
+        <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
       </div>
     </div>
   </div>`,
