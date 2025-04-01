@@ -13,12 +13,11 @@ import {
 import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
-import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
+import { FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
-import { fileValueMapping } from './file-value-mapping';
 import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
