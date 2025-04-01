@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { getFileValue, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { getFileValue } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
@@ -9,37 +9,34 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
     <div
       class="mat-caption"
       style="border: 1px solid gray; padding: 8px; margin-top: 8px; position: relative; top: 5px">
-      <div *ngIf="userCanEdit || fileValue.copyrightHolder !== ''">
-        Copyright holder {{ fileValue.copyrightHolder }} Julien Schneider
-      </div>
-      <div style="display: flex; justify-content: space-between" *ngIf="userCanEdit || licenseExists">
-        <div>
-          License {{ fileValue.license.labelEn }}
-          <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-sa.svg" />
+      <div style="display: flex; justify-content: space-between" *ngIf="licenseExists">
+        <div style="display: flex">
+          <span class="label">License</span> {{ fileValue.license.labelEn }}
+          <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-sa.svg" alt="license" />
         </div>
         <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
       </div>
-      <div *ngIf="userCanEdit || fileValue.authorship.length > 0">
-        Authorship
+      <div *ngIf="true || fileValue.copyrightHolder !== ''">
+        <span class="label">Copyright holder</span> {{ fileValue.copyrightHolder }} Julien Schneider
+      </div>
+      <div *ngIf="true || fileValue.authorship.length > 0">
+        <span class="label">Authorship</span>
         <span>Julien,</span>
         <span>Dominique,</span>
         <span>Irmantas</span>
         <span *ngFor="let author of fileValue.authorship; let last = last">{{ author }}{{ last ? '' : ', ' }}</span>
       </div>
     </div>`,
+  styles: ['.label { display: inline-block; width: 120px}'],
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) resource!: DspResource;
 
-  get userCanEdit() {
-    return ResourceUtil.userCanEdit(this.resource.res);
-  }
-
   fileValue!: ReadFileValue;
-  licenseExists = false;
+  licenseExists!: boolean;
 
   ngOnInit() {
     this.fileValue = getFileValue(this.resource);
-    this.licenseExists = this.fileValue.license.id !== '';
+    this.licenseExists = true; // this.fileValue.license.id !== '';
   }
 }
