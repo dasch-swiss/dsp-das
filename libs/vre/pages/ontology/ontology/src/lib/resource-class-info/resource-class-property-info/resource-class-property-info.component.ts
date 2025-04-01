@@ -1,23 +1,14 @@
 import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ApiResponseError,
   Cardinality,
   ClassDefinition,
   Constants,
   IHasProperty,
   ResourcePropertyDefinitionWithAllLanguages,
-  UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  ListsSelectors,
-  LoadProjectOntologiesAction,
-  OntologiesSelectors,
-  PropToDisplay,
-  RemovePropertyAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, OntologiesSelectors, PropToDisplay, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, of, Subject } from 'rxjs';

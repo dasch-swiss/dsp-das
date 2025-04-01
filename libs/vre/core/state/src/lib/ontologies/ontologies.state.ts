@@ -27,7 +27,6 @@ import {
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
-  RemovePropertyAction,
   ReplacePropertyAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
@@ -292,7 +291,6 @@ export class OntologiesState {
       currentProjectOntologyProperties: ontoProperties,
     });
   }
-
 
   @Action(ReplacePropertyAction)
   replacePropertyAction(
