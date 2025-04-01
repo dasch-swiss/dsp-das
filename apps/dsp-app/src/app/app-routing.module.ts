@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/pages/ontology/ontology';
-import { OntologyClassInstanceComponent } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
+import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
 import {
   CollaborationComponent,
   CreateProjectFormPageComponent,
@@ -67,7 +67,7 @@ const routes: Routes = [
       {
         canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
-        component: OntologyClassInstanceComponent,
+        component: ResourceClassBrowserComponent,
       },
       {
         canActivate: [OntologyClassInstanceGuard],

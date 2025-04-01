@@ -4,14 +4,14 @@ import { OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-ontology-classes',
+  selector: 'app-resource-class-sidenav',
   template: `
     <div *ngFor="let class of classesToDisplay; trackBy: trackByFn">
-      <app-ontology-class-item [resClass]="class" />
+      <app-resource-class-sidenav-item [resClass]="class" />
     </div>
   `,
 })
-export class OntologyClassesComponent {
+export class ResourceClassSidenavComponent {
   @Input({ required: true }) resClasses!: ClassDefinition[];
 
   get classesToDisplay(): ClassDefinition[] {

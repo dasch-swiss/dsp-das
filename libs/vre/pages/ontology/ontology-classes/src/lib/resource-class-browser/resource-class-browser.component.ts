@@ -16,7 +16,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-ontology-class-instance',
+  selector: 'app-resource-class-browser',
   template: `
     <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
 
@@ -27,7 +27,7 @@ import { map, takeUntil, takeWhile } from 'rxjs/operators';
     </div>
   `,
 })
-export class OntologyClassInstanceComponent implements OnDestroy {
+export class ResourceClassBrowserComponent implements OnDestroy {
   @Select(OntologiesSelectors.projectOntologies)
   projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
@@ -108,7 +108,9 @@ export class OntologyClassInstanceComponent implements OnDestroy {
     protected _router: Router,
     protected _store: Store,
     protected _actions$: Actions
-  ) {}
+  ) {
+    console.log('ResourceClassBrowserComponent constructor');
+  }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

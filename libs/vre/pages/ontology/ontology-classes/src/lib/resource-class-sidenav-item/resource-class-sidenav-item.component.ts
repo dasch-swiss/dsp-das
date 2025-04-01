@@ -32,11 +32,11 @@ import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-ontology-class-item',
-  templateUrl: './ontology-class-item.component.html',
-  styleUrls: ['./ontology-class-item.component.scss'],
+  selector: 'app-resource-class-sidenav-item',
+  templateUrl: './resource-class-sidenav-item.component.html',
+  styleUrls: ['./resource-class-sidenav-item.component.scss'],
 })
-export class OntologyClassItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit, OnDestroy {
   destroyed: Subject<void> = new Subject<void>();
 
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
