@@ -29,7 +29,10 @@ export interface ReplaceFileDialogProps {
         </div>
       </div>
 
-      <app-upload-control [representation]="data.representation" [formControl]="form" [resourceId]="propId" />
+      <app-upload-control
+        [representation]="data.representation"
+        [formControl]="form.controls.file"
+        [resourceId]="propId" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -86,6 +89,7 @@ export class ReplaceFileDialogComponent implements OnInit {
     };
     updateRes.value = value as unknown as UpdateValue;
 
+    console.log('dd', updateRes);
     this._dspApiConnection.v2.values
       .updateValue(updateRes)
       .pipe(
