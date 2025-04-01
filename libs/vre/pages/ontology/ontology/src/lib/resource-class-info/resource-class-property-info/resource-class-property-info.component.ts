@@ -44,8 +44,6 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
 
   isDestroyed = new Subject<void>();
 
-  propType: DefaultProperty;
-
   propAttribute: string;
   propAttributeComment: string;
 
@@ -64,6 +62,10 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
           : parentParentParams[RouteConstants.uuidParameter];
     })
   );
+
+  get propType(): DefaultProperty {
+    return this._ontoService.getDefaultPropertyType(this.propDef);
+  }
 
   constructor(
     private _ontoService: OntologyService,
