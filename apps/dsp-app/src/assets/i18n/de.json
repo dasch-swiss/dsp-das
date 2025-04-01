@@ -195,11 +195,11 @@
       }
     },
     "resourceProperties": {
-      "comment": "Comment",
-      "delete": "Delete this resource",
-      "footnotes": "Footnotes",
+      "comment": "Kommentar",
+      "delete": "Diese Ressource löschen",
+      "footnotes": "Fußnoten",
       "valueComponents": {
-        "searchHelp": "Type 3 letters to search for an existing resource."
+        "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
       }
     }
   },
