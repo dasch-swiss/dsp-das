@@ -308,25 +308,28 @@ export class OntologyEditService implements OnDestroy {
     const updates: Observable<any>[] = [];
 
     if (propertyData.labels !== undefined) {
-      updates.push(this.updatePropertyLabels(id, propertyData.labels));
+      updates.push(this._updatePropertyLabels(id, propertyData.labels));
     }
 
     if (propertyData.comments !== undefined) {
-      updates.push(this.updatePropertyComments(id, propertyData.comments));
+      updates.push(this._updatePropertyComments(id, propertyData.comments));
     }
 
     if (propertyData.guiElement !== undefined) {
-      updates.push(this.updatePropertyGuiElement(id, propertyData.guiElement));
+      updates.push(this._updatePropertyGuiElement(id, propertyData.guiElement));
     }
 
     if (updates.length === 0) {
       return of();
     }
 
-    return concat(...updates).pipe(last());
+    return concat(...updates).pipe(
+      last(),
+      tap(() => this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true)))
+    );
   }
 
-  updatePropertyLabels(
+  private _updatePropertyLabels(
     id: string,
     labels: StringLiteralV2[]
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
@@ -337,7 +340,7 @@ export class OntologyEditService implements OnDestroy {
     return this._updateResourceProperty(onto);
   }
 
-  updatePropertyComments(
+  private _updatePropertyComments(
     id: string,
     comments: StringLiteralV2[]
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
@@ -348,7 +351,7 @@ export class OntologyEditService implements OnDestroy {
     return this._updateResourceProperty(onto);
   }
 
-  updatePropertyGuiElement(
+  private _updatePropertyGuiElement(
     id: string,
     guiElement: string
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
@@ -366,8 +369,9 @@ export class OntologyEditService implements OnDestroy {
     >
   ): Observable<ResourcePropertyDefinitionWithAllLanguages> {
     return this._dspApiConnection.v2.onto.updateResourceProperty(updateOntology).pipe(
-      filter((result): result is ResourcePropertyDefinitionWithAllLanguages => !!result),
-      tap(() => this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true)))
+      tap(res => {
+        this._currentOntology!.lastModificationDate = res?.lastModificationDate;
+      })
     );
   }
 
