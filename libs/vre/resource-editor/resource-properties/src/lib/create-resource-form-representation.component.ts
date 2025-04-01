@@ -10,7 +10,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
       *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl"
       [formControl]="control"
       [representation]="fileRepresentation"
-      style="display: block; margin-bottom: 8px" />
+      style="display: block; margin-bottom: 16px" />
 
     <ng-template #stillImageTpl>
       <mat-tab-group preserveContent style="min-height: 320px;" data-cy="stillimage-tab-group">

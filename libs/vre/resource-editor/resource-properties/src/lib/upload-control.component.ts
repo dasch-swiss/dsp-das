@@ -1,15 +1,12 @@
 import { ChangeDetectorRef, Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import {
-  FileRepresentationType,
-  UploadedFileResponse,
-  fileValueMapping,
-} from '@dasch-swiss/vre/resource-editor/representations';
+import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
   selector: 'app-upload-control',
   template: `
     <app-upload
+      style="margin-bottom: 16px;display: block;"
       [representation]="representation"
       (afterFileRemoved)="removeFile()"
       (afterFileUploaded)="afterFileUploaded($event)" />
