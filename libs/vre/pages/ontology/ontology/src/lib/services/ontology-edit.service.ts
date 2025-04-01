@@ -28,8 +28,6 @@ import {
   LoadProjectOntologiesAction,
   OntologiesSelectors,
   ProjectsSelectors,
-  PropToDisplay,
-  RemovePropertyAction,
   SetCurrentProjectOntologyPropertiesAction,
 } from '@dasch-swiss/vre/core/state';
 import {
