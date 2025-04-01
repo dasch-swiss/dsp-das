@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/ontology/data-browser';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/pages/ontology/ontology';
-import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
 import {
   CollaborationComponent,
   CreateProjectFormPageComponent,

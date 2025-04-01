@@ -8,7 +8,7 @@ import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav-
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav.component';
 import { ResourceLinkDialogComponent } from './lib/resource-link-dialog/resource-link-dialog.component';
 
-export const OntologyClassesComponents = [
+export const DataBrowserComponents = [
   ResourceClassSidenavComponent,
   MultipleViewerComponent,
   ResourceClassSidenavItemComponent,
