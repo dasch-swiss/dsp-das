@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
@@ -36,6 +36,8 @@ import { filter, finalize, map, startWith, switchMap, take } from 'rxjs/operator
   `,
 })
 export class AuthorshipFormFieldComponent implements OnInit {
+  @Input() control!: FormControl<string[] | null>;
+
   separatorKeysCodes: number[] = [ENTER, COMMA];
   inputControl = new FormControl('');
   selectedItems: string[] = [];
@@ -83,6 +85,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
         this.availableAuthorships.push(inputValue); // Add new item to options
       }
       this.selectedItems.push(inputValue);
+      this._updateFormControl();
     }
     event.chipInput!.clear();
     this.inputControl.setValue('');
@@ -98,5 +101,9 @@ export class AuthorshipFormFieldComponent implements OnInit {
 
   removeItem(item: string) {
     this.selectedItems = this.selectedItems.filter(i => i !== item);
+  }
+
+  private _updateFormControl() {
+    this.control.setValue(this.selectedItems);
   }
 }

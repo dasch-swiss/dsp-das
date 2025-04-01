@@ -98,7 +98,9 @@ export class ReplaceFileDialogComponent implements OnInit {
     const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
     uploadedFile.id = this.data.resource.properties[this.data.representation][0].id;
     uploadedFile.filename = formValue.file!;
-    uploadedFile.copyrightHolder = 'julien';
+    uploadedFile.copyrightHolder = formValue.legal.copyrightHolder!;
+    uploadedFile.license = formValue.legal.license!;
+    uploadedFile.authorship = formValue.legal.authorship!;
 
     const updateRes = new UpdateResource<UpdateFileValue>();
     updateRes.id = this.data.resource.id;
