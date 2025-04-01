@@ -7,7 +7,9 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
   selector: 'app-resource-legal',
   template: ` <div
     class="mat-caption"
-    style="border: 1px solid gray; padding: 8px; margin-top: 8px; position: relative; top: 5px">
+    style="border: 1px solid #292929;
+    background: #292929; border-radius: 8px;
+    color: white; padding: 8px; padding-bottom: 16px; margin-top: 8px; position: relative; top: 12px">
     <div style="display: flex; justify-content: space-between">
       <div>
         <div *ngIf="true || fileValue.copyrightHolder !== ''">
