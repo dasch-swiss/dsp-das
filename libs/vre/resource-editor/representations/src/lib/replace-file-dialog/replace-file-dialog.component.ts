@@ -88,6 +88,11 @@ export class ReplaceFileDialogComponent implements OnInit {
   }
 
   replaceFile() {
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
+
     const formValue = this.form.getRawValue();
 
     const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
