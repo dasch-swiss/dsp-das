@@ -1,9 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
-import { filter, finalize, map, switchMap, take } from 'rxjs/operators';
+import { Component, Input, OnInit } from '@angular/core';
+import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { Observable } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 import { CreateResourceFormLegal } from './create-resource-form.interface';
 
 @Component({
@@ -43,47 +41,40 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
     `,
   ],
 })
-export class CreateResourceFormLegalComponent {
+export class CreateResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
-
-  readonly project$ = this._store.select(ProjectsSelectors.currentProject).pipe(
-    filter(project => project !== undefined),
-    map(project => project as ReadProject),
-    take(1)
-  );
+  @Input({ required: true }) projectShortcode!: string;
 
   copyrightHoldersLoading = true;
   licensesLoading = true;
 
-  copyrightHolders$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project.shortcode)
-    ),
-    map(data => data.data),
-    finalize(() => {
-      this.copyrightHoldersLoading = false;
-    })
-  );
+  copyrightHolders$!: Observable<string[]>;
+  licenses$!: Observable<LicenseDto[]>;
+  authorships$!: Observable<string[]>;
 
-  licenses$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
-    ),
-    map(data => data.data),
-    finalize(() => {
-      this.licensesLoading = false;
-    })
-  );
+  constructor(private _copyrightApi: AdminProjectsLegalInfoApiService) {}
 
-  authorships$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project.shortcode)
-    ),
-    map(data => data.data)
-  );
+  ngOnInit() {
+    this.copyrightHolders$ = this._copyrightApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(this.projectShortcode)
+      .pipe(
+        map(data => data.data),
+        finalize(() => {
+          this.copyrightHoldersLoading = false;
+        })
+      );
 
-  constructor(
-    private _store: Store,
-    private _copyrightApi: AdminProjectsLegalInfoApiService
-  ) {}
+    this.licenses$ = this._copyrightApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(this.projectShortcode)
+      .pipe(
+        map(data => data.data),
+        finalize(() => {
+          this.licensesLoading = false;
+        })
+      );
+
+    this.authorships$ = this._copyrightApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
+      .pipe(map(data => data.data));
+  }
 }

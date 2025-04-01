@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute } from '@angular/router';
+import { KnoraApiConnection, ReadResource, UpdateFileValue, UpdateResource } from '@dasch-swiss/dsp-js';
 import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
 import { FileRepresentationType } from '../file-representation.type';
+import { fileValueMapping } from '../file-value-mapping';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 export interface ReplaceFileDialogProps {
@@ -33,6 +35,11 @@ export interface ReplaceFileDialogProps {
         [representation]="data.representation"
         [formControl]="form.controls.file"
         [resourceId]="propId" />
+
+      <app-create-resource-form-legal
+        *ngIf="projectShortcode"
+        [formGroup]="form.controls.legal"
+        [projectShortcode]="projectShortcode" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -53,14 +60,15 @@ export interface ReplaceFileDialogProps {
 })
 export class ReplaceFileDialogComponent implements OnInit {
   propId!: string;
+  projectShortcode?: string;
 
   form = this._fb.group({
     file: this._fb.control<string | null>(null, [Validators.required]),
-    legal: {
+    legal: this._fb.group({
       copyrightHolder: this._fb.control<string | null>(null, [Validators.required]),
       license: this._fb.control<LicenseDto | null>(null, [Validators.required]),
       authorship: this._fb.control<string[] | null>(null, [Validators.required]),
-    },
+    }),
   });
 
   constructor(
@@ -70,26 +78,30 @@ export class ReplaceFileDialogComponent implements OnInit {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.propId = this.data.resource.properties[this.data.representation][0].id;
+    this.projectShortcode = this._route.snapshot.params[RouteConstants.project];
   }
 
   replaceFile() {
-    const updateRes = new UpdateResource<UpdateValue>();
+    const formValue = this.form.getRawValue();
+
+    const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
+    uploadedFile.id = this.data.resource.properties[this.data.representation][0].id;
+    uploadedFile.filename = formValue.file!;
+    uploadedFile.copyrightHolder = 'julien';
+
+    const updateRes = new UpdateResource<UpdateFileValue>();
     updateRes.id = this.data.resource.id;
     updateRes.type = this.data.resource.type;
     updateRes.property = this.data.representation;
-    const formValue = this.form.getRawValue();
-    const value = {
-      filename: formValue.file!,
-      copyrightHolder: 'julien',
-    };
-    updateRes.value = value as unknown as UpdateValue;
 
-    console.log('dd', updateRes);
+    updateRes.value = uploadedFile;
+
     this._dspApiConnection.v2.values
       .updateValue(updateRes)
       .pipe(
