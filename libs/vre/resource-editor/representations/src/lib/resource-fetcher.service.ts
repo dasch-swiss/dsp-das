@@ -4,7 +4,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, EMPTY, Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ResourceFetcherService {
 
   resource$ = combineLatest([
     this._loadResourceSubject.asObservable(),
-    this._reloadSubject.asObservable().pipe(startWith(null)),
+    this._reloadSubject.asObservable().pipe(startWith(EMPTY)),
   ]).pipe(switchMap(([resource$]) => resource$));
 
   constructor(
