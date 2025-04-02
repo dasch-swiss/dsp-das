@@ -72,14 +72,6 @@ export class SetCurrentProjectOntologyPropertiesAction {
   constructor(public projectUuid: string) {}
 }
 
-export class ReplacePropertyAction {
-  static readonly type = '[Ontologies] Replace Property';
-  constructor(
-    public resourceClass: ClassDefinition,
-    public currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {}
-}
-
 export class CurrentOntologyCanBeDeletedAction {
   static readonly type = '[Ontologies] Current Ontology Can Be Deleted';
 }

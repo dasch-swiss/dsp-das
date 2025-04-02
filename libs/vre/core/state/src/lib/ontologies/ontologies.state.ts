@@ -27,7 +27,6 @@ import {
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
-  ReplacePropertyAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologiesLoadingAction,
@@ -290,44 +289,6 @@ export class OntologiesState {
       ...state,
       currentProjectOntologyProperties: ontoProperties,
     });
-  }
-
-  @Action(ReplacePropertyAction)
-  replacePropertyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { resourceClass, currentOntologyPropertiesToDisplay }: ReplacePropertyAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    const state = ctx.getState();
-
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
-    const addCard = new UpdateResourceClassCardinality();
-    addCard.id = resourceClass.id;
-    addCard.cardinalities = [];
-    currentOntologyPropertiesToDisplay.forEach((prop, index) => {
-      const propCard: IHasProperty = {
-        propertyIndex: prop.propertyIndex,
-        cardinality: prop.cardinality,
-        guiOrder: index + 1,
-      };
-
-      addCard.cardinalities.push(propCard);
-    });
-
-    onto.entity = addCard;
-
-    return this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).pipe(
-      take(1),
-      tap({
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        next: () => {},
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-        },
-      })
-    );
   }
 
   @Action(CurrentOntologyCanBeDeletedAction)

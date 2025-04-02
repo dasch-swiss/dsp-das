@@ -37,7 +37,7 @@
     <mat-list
       cdkDropList
       class="resource-class-properties"
-      (cdkDropListDropped)="drop($event, currentOntologyPropertiesToDisplay)"
+      (cdkDropListDropped)="onPropertyDropped($event, currentOntologyPropertiesToDisplay)"
       *ngIf="currentOntologyPropertiesToDisplay?.length; else noProperties">
       <app-resource-class-info-element
         *ngFor="let prop of (classPropertiesToDisplay$ | async); let i = index; trackBy: trackByPropToDisplayFn"

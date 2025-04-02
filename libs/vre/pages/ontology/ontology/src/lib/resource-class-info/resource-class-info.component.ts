@@ -1,44 +1,21 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {
   ApiResponseError,
-  Constants,
   IHasProperty,
   PropertyDefinition,
-  ReadProject,
   ResourceClassDefinitionWithAllLanguages,
-  ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
-  OntologiesSelectors,
-  OntologyProperties,
-  ProjectsSelectors,
-  PropToAdd,
-  PropToDisplay,
-  ReplacePropertyAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
-import {
-  DefaultClass,
   DefaultResourceClasses,
   LocalizationService,
   OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { map, take } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -54,26 +31,30 @@ export class ResourceClassInfoComponent {
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
-  projectsProperties$: Observable<PropertyDefinition[]> = this._store
+  projectsProperties$ = this._store
     .select(OntologiesSelectors.currentProjectOntologyProperties)
     .pipe(map(arr => arr.flatMap(o => o.properties)));
 
-  classProperties$: Observable<PropertyDefinition[]> = this.projectsProperties$.pipe(
+  classProperties$ = this.projectsProperties$.pipe(
     map((properties: PropertyDefinition[]) => {
       const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
       return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
     })
   );
 
-  classPropertiesToDisplay$: Observable<PropToDisplay[]> = this.classProperties$.pipe(
+  classPropertiesToDisplay$ = this.classProperties$.pipe(
     map((properties: PropertyDefinition[]) => {
-      return properties.map((property: PropertyDefinition) => {
-        const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
-          p => p.propertyIndex === property.id
-        ) as PropToDisplay;
-        propToDisplay.propDef = property;
-        return propToDisplay;
-      });
+      return properties
+        .map((property: PropertyDefinition) => {
+          const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
+            p => p.propertyIndex === property.id
+          ) as PropToDisplay;
+          propToDisplay.propDef = property;
+          return propToDisplay;
+        })
+        .sort((a, b) => {
+          return a.guiOrder - b.guiOrder;
+        });
     })
   );
 
@@ -94,9 +75,7 @@ export class ResourceClassInfoComponent {
   trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
 
   constructor(
-    private _actions$: Actions,
     private _localizationService: LocalizationService,
-    private _notification: NotificationService,
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
@@ -113,42 +92,25 @@ export class ResourceClassInfoComponent {
       });
   }
 
-  /**
-   * drag and drop property line
-   */
-  drop(event: CdkDragDrop<string[]>, currentOntologyPropertiesToDisplay: PropToDisplay[]) {
-    // set sort order for child component
-    moveItemInArray(
-      currentOntologyPropertiesToDisplay, // TODO items should be updated in state if LoadProjectOntologiesAction is not executed after this
-      event.previousIndex,
-      event.currentIndex
-    );
-
-    if (event.previousIndex !== event.currentIndex) {
-      // the dropped property item has a new index (= gui order)
-      // send the new gui-order to the api by
-      // preparing the UpdateOntology object first
-
-      // this._store.dispatch(new ReplacePropertyAction(this.resourceClass, currentOntologyPropertiesToDisplay));
-      this._actions$
-        .pipe(ofActionSuccessful(ReplacePropertyAction))
-        .pipe(take(1))
-        .subscribe(() => {
-          // successful request: update the view
-          // display success message
-          this._notification.openSnackBar(
-            `You have successfully changed the order of properties in the resource class "${this.resourceClass.label}".`
-          );
-        });
-    }
-  }
-
   editResourceClassInfo() {
     this._oes.openEditResourceClass(this.resourceClass);
   }
 
   deleteResourceClass() {
     this._oes.deleteResourceClass(this.resourceClass.id);
+  }
+
+  onPropertyDropped(event: CdkDragDrop<string[]>, properties: PropToDisplay[]) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+    moveItemInArray(properties, event.previousIndex, event.currentIndex);
+
+    properties.forEach((prop, index) => {
+      prop.guiOrder = index + 1;
+    });
+
+    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, properties);
   }
 
   openInDatabrowser() {

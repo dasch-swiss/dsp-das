@@ -463,6 +463,17 @@ export class OntologyEditService implements OnDestroy {
     return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto);
   }
 
+  updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
+    const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, properties);
+    const updateOntology = this._getUpdateOntology<UpdateResourceClassCardinality>(updateResourceClassCard);
+    this._dspApiConnection.v2.onto
+      .replaceGuiOrderOfCardinalities(updateOntology)
+      .pipe(take(1))
+      .subscribe(() => {
+        this._reloadAfterChanges();
+      });
+  }
+
   updateCardinalitiesOfResourceClass(classId: string, cardinalities: IHasProperty[] = []) {
     const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, cardinalities);
     this._updateCardinalityOfResourceClass(updateResourceClassCard);
