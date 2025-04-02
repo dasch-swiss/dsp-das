@@ -13,14 +13,13 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-resource-toolbar',
   template: `
-    <span class="action" [class.deleted]="resource.res.isDeleted">
+    <span class="action">
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
         color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
-        [disabled]="resource.res.isDeleted"
         (click)="openResource()">
         <mat-icon>open_in_new</mat-icon>
       </button>
@@ -32,7 +31,6 @@ import { Observable } from 'rxjs';
         data-cy="share-button"
         matTooltip="Share resource: {{ resource.res.versionArkUrl }}"
         matTooltipPosition="above"
-        [disabled]="resource.res.isDeleted"
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
@@ -47,8 +45,7 @@ import { Observable } from 'rxjs';
         class="more-menu"
         matTooltip="More"
         matTooltipPosition="above"
-        [matMenuTriggerFor]="more"
-        [disabled]="resource.res.isDeleted">
+        [matMenuTriggerFor]="more">
         <mat-icon>more_vert</mat-icon>
       </button>
     </span>

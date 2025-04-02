@@ -15,7 +15,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
         [matTooltip]="resourceClassType?.comment"
         matTooltipClass="header-tooltip"
         matTooltipPosition="above">
-        {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
+        {{ resourceClassType?.label }}
       </h3>
       <app-resource-toolbar [resource]="resource" />
     </div>
