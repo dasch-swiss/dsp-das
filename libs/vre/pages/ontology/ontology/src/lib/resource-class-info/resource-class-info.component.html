@@ -32,7 +32,7 @@
   <!-- resource class card content with list of properties -->
 
   <mat-card-content
-    *ngIf="expanded && (currentOntologyPropertiesToDisplay$ | async) as currentOntologyPropertiesToDisplay"
+    *ngIf="expanded && (classPropertiesToDisplay$ | async) as currentOntologyPropertiesToDisplay"
     class="resource-class-content">
     <mat-list
       cdkDropList
@@ -40,7 +40,7 @@
       (cdkDropListDropped)="drop($event, currentOntologyPropertiesToDisplay)"
       *ngIf="currentOntologyPropertiesToDisplay?.length; else noProperties">
       <app-resource-class-info-element
-        *ngFor="let prop of (currentOntologyPropertiesToDisplay$ | async); let i = index; trackBy: trackByPropToDisplayFn"
+        *ngFor="let prop of (classPropertiesToDisplay$ | async); let i = index; trackBy: trackByPropToDisplayFn"
         [prop]="prop"
         [props]="currentOntologyPropertiesToDisplay"
         [resourceClass]="resourceClass"

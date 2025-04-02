@@ -12,6 +12,7 @@ import {
 import {
   ApiResponseError,
   Constants,
+  IHasProperty,
   PropertyDefinition,
   ReadProject,
   ResourceClassDefinitionWithAllLanguages,
@@ -22,6 +23,7 @@ import {
   OntologiesSelectors,
   OntologyProperties,
   ProjectsSelectors,
+  PropToAdd,
   PropToDisplay,
   ReplacePropertyAction,
   UserSelectors,
@@ -34,8 +36,8 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -47,10 +49,32 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 export class ResourceClassInfoComponent implements OnInit {
   @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
 
-  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
+  project$ = this._store.select(ProjectsSelectors.currentProject);
 
-  currentProjectOntologyProperties$ = this._store.select(OntologiesSelectors.currentProjectOntologyProperties);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+
+  projectsProperties$: Observable<PropertyDefinition[]> = this._store
+    .select(OntologiesSelectors.currentProjectOntologyProperties)
+    .pipe(map(arr => arr.flatMap(o => o.properties)));
+
+  classProperties$: Observable<PropertyDefinition[]> = this.projectsProperties$.pipe(
+    map((properties: PropertyDefinition[]) => {
+      const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
+      return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
+    })
+  );
+
+  classPropertiesToDisplay$: Observable<PropToDisplay[]> = this.classProperties$.pipe(
+    map((properties: PropertyDefinition[]) => {
+      return properties.map((property: PropertyDefinition) => {
+        const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
+          p => p.propertyIndex === property.id
+        ) as PropToDisplay;
+        propToDisplay.propDef = property;
+        return propToDisplay;
+      });
+    })
+  );
 
   // set to false if it is a subclass of a default class inheriting the order
   expanded = true;
@@ -65,10 +89,6 @@ export class ResourceClassInfoComponent implements OnInit {
 
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
 
-  currentOntologyPropertiesToDisplay$: Observable<PropToDisplay[]> = this.currentProjectOntologyProperties$.pipe(
-    map(ontoProperties => this.getPropsToDisplay([...this.resourceClass.propertiesList], [...ontoProperties]))
-  );
-
   trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
 
   constructor(
@@ -82,43 +102,6 @@ export class ResourceClassInfoComponent implements OnInit {
   ngOnInit(): void {
     this.translateSubClassOfIri(this.resourceClass.subClassOf);
     this.getOntologiesLabelsInPreferredLanguage();
-  }
-
-  private getPropsToDisplay(classProps: PropToDisplay[], ontoProperties: OntologyProperties[]): PropToDisplay[] {
-    const propsToDisplay: PropToDisplay[] = [];
-    let remainingProperties: PropertyDefinition[] = [];
-
-    classProps.forEach((hasProp: PropToDisplay) => {
-      const ontoIri = hasProp.propertyIndex.split(Constants.HashDelimiter)[0];
-      // ignore http://api.knora.org/ontology/knora-api/v2 and ignore  http://www.w3.org/2000/01/rdf-schema
-      if (ontoIri !== Constants.KnoraApiV2 && ontoIri !== Constants.Rdfs) {
-        // get property definition from list of project ontologies
-        const index = ontoProperties.findIndex((item: OntologyProperties) => item.ontology === ontoIri);
-        remainingProperties = [...(ontoProperties[index]?.properties || [])];
-        hasProp.propDef = remainingProperties.find(
-          (obj: ResourcePropertyDefinitionWithAllLanguages) =>
-            obj.id === hasProp.propertyIndex &&
-            ((obj.subjectType && !obj.subjectType.includes('Standoff') && obj.objectType !== Constants.LinkValue) ||
-              !obj.isLinkValueProperty)
-        );
-
-        // propDef was found, add hasProp to the properties list which has to be displayed in this resource class
-        if (hasProp.propDef) {
-          if (propsToDisplay.indexOf(hasProp) === -1) {
-            propsToDisplay.push(hasProp);
-          }
-
-          // and remove from list of existing properties to avoid double cardinality entries
-          // because the prop displayed in the class cannot be added a second time,
-          // so we have to hide it from the list of "Add existing property"
-          const delProp = remainingProperties.indexOf(hasProp.propDef, 0);
-          if (delProp > -1) {
-            remainingProperties.splice(delProp, 1);
-          }
-        }
-      }
-    });
-    return propsToDisplay;
   }
 
   getOntologiesLabelsInPreferredLanguage(): void {
@@ -212,7 +195,8 @@ export class ResourceClassInfoComponent implements OnInit {
       // the dropped property item has a new index (= gui order)
       // send the new gui-order to the api by
       // preparing the UpdateOntology object first
-      this._store.dispatch(new ReplacePropertyAction(this.resourceClass, currentOntologyPropertiesToDisplay));
+
+      // this._store.dispatch(new ReplacePropertyAction(this.resourceClass, currentOntologyPropertiesToDisplay));
       this._actions$
         .pipe(ofActionSuccessful(ReplacePropertyAction))
         .pipe(take(1))
