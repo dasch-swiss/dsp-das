@@ -47,7 +47,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
 })
-export class ResourceClassInfoComponent implements OnInit {
+export class ResourceClassInfoComponent {
   @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
@@ -77,18 +77,19 @@ export class ResourceClassInfoComponent implements OnInit {
     })
   );
 
-  // set to false if it is a subclass of a default class inheriting the order
   expanded = true;
-
-  canChangeGuiOrder = false;
 
   classCanBeDeleted = false;
 
-  classLabel = '';
+  get classLabel() {
+    const lang = this._localizationService.getCurrentLanguage();
+    const preferedLangLabel = this.resourceClass.labels.find(l => l.language === lang);
+    return preferedLangLabel?.value || this.resourceClass.label || '';
+  }
 
-  subClassOfLabel = '';
-
-  readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
+  get defaultClassLabel() {
+    return this.resourceClass.subClassOf.map(superIri => DefaultResourceClasses.getLabel(superIri)).join(', ');
+  }
 
   trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
 
@@ -100,76 +101,7 @@ export class ResourceClassInfoComponent implements OnInit {
     private _store: Store
   ) {}
 
-  ngOnInit(): void {
-    this.translateSubClassOfIri(this.resourceClass.subClassOf);
-    this.getOntologiesLabelsInPreferredLanguage();
-  }
-
-  getOntologiesLabelsInPreferredLanguage(): void {
-    const preferredLanguage = this._localizationService.getCurrentLanguage();
-    const preferedLabelLiteral = this.resourceClass.labels.find(l => l.language === preferredLanguage);
-    this.classLabel = preferedLabelLiteral ? preferedLabelLiteral.value : this.resourceClass.label || '';
-  }
-
-  /**
-   * translates iris from "subclass of" array
-   * - display label from default resource classes (as part of DSP System Project)
-   * - in case the class is a subclass of another class in the same ontology: display this class label
-   * - in none of those cases display the name from the class IRI
-   *
-   * @param classIris
-   */
-  translateSubClassOfIri(classIris: string[]) {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    if (!ontology) {
-      return;
-    }
-
-    // reset the label
-    this.subClassOfLabel = '';
-
-    classIris.forEach((iri, index) => {
-      // get ontology iri from class iri
-      const splittedIri = iri.split('#');
-      const ontologyIri = splittedIri[0];
-      const className = splittedIri[1];
-
-      this.subClassOfLabel += index > 0 ? ', ' : '';
-
-      // find default class for the current class iri
-      const defaultClass = this.defaultClasses.find(i => i.iri === iri);
-      if (defaultClass) {
-        this.subClassOfLabel += defaultClass.label;
-        this.canChangeGuiOrder = true;
-      } else if (ontology.id === ontologyIri) {
-        // the class is not defined in the default classes
-        // but defined in the current ontology
-        // get class label from there
-        this.subClassOfLabel += ontology.classes[iri].label;
-        // in this case, the user can't update the cardinality incl. the gui order in this class
-        // we have to disable this update cardinality functionality
-        this.canChangeGuiOrder = false;
-      } else {
-        // the ontology iri of the upper class couldn't be found
-        // display the class name
-        if (className) {
-          this.subClassOfLabel += className;
-        } else {
-          // iri is not kind of [ontologyIri]#[className]
-          this.subClassOfLabel += iri
-            .split('/')
-            .filter(e => e)
-            .slice(-1);
-        }
-        // in this case, the user can't update the currentCardinality incl. the gui order in this class
-        // we have to disable this update currentCardinality functionality
-        this.canChangeGuiOrder = false;
-      }
-    });
-  }
-
   canBeDeleted() {
-    // check if the class can be deleted
     this._oes
       .canDeleteResourceClass(this.resourceClass.id)
       .pipe(take(1))

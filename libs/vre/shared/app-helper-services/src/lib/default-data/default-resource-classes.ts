@@ -135,7 +135,11 @@ export class DefaultResourceClasses {
       label: 'Archive',
       icons: ['archive', 'folder', 'folder_open'],
     },
-  ];
+  ] as const;
+
+  public static getLabel(iri: string): string {
+    return this.data.find(rc => rc.iri === iri)?.label || '';
+  }
 }
 
 /* --> DSP-1559: disable RTI class;

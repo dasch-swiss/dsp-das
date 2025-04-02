@@ -9,7 +9,7 @@
         {{ resourceClass.id | split: '#':1 }}
       </span>
       <span>&nbsp;&middot;&nbsp;</span>
-      <span matTooltip="subclass of" matTooltipPosition="above"> {{ subClassOfLabel }} </span>
+      <span matTooltip="subclass of" matTooltipPosition="above"> {{ defaultClassLabel }} </span>
     </mat-card-subtitle>
     <span class="resource-class-header-action">
       <span class="resource-class-more" *ngIf="(project$ | async)?.status">
