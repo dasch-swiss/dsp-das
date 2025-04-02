@@ -1,7 +1,7 @@
 <mat-card data-cy="class-card" appearance="outlined" class="resource-class" cdkDrag cdkDragBoundary=".drag-drop-stop">
   <!-- class card header -->
   <mat-card-header class="resource-class-header" cdkDragHandle>
-    <mat-card-title [matTooltip]="resourceClass.comment" matTooltipPosition="above">
+    <mat-card-title [matTooltip]="resourceClass?.comment || ''" matTooltipPosition="above">
       {{ classLabel | appTruncate: 24 }}
     </mat-card-title>
     <mat-card-subtitle>
@@ -61,19 +61,19 @@
     <button mat-menu-item class="res-class-edit" (click)="editResourceClassInfo()">Edit resource class info</button>
   </span>
   <span
-    [matTooltip]="classCanBeDeleted ? 'This class doesn\'t have any instances yet' : null"
+    [matTooltip]="classCanBeDeleted ? 'This class doesn\'t have any instances yet' : ''"
     matTooltipPosition="before">
     <button mat-menu-item (click)="openResourceInstances(resourceClass.id)" [disabled]="classCanBeDeleted">
       Open resource instances
     </button>
   </span>
   <span
-    *ngIf="(isAdmin$ | async) !== true || (project$ | async)?.status !== true"
-    [matTooltip]="classCanBeDeleted ? null : 'This class can\'t be deleted because it is in use'"
+    *ngIf="(isAdmin$ | async) === true && (project$ | async)?.status === true"
+    [matTooltip]="classCanBeDeleted ? '' : 'This class can\'t be deleted because it is in use'"
     matTooltipPosition="before">
     <button
       mat-menu-item
-      [disabled]="!classCanBeDeleted || (isAdmin$ | async) !== true || (project$ | async)?.status !== true"
+      [disabled]="!classCanBeDeleted"
       class="res-class-delete"
       data-cy="delete-button"
       (click)="deleteResourceClass()">
