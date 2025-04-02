@@ -27,8 +27,6 @@ import {
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
-  RemovePropertyAction,
-  ReplacePropertyAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologiesLoadingAction,
@@ -190,6 +188,7 @@ export class OntologiesState {
           } else {
             projectReadOntologies.push(ontology);
           }
+          console.log('LoafdOntologyAction projectReadOntologies', projectReadOntologies);
 
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
@@ -202,7 +201,7 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: !stopLoadingWhenCompleted,
-            projectOntologies: projectOntologiesState,
+            projectOntologies: { ...projectOntologiesState }, // batch update with a new reference!
           });
         },
         error: (error: ApiResponseError) => {
@@ -290,82 +289,6 @@ export class OntologiesState {
       ...state,
       currentProjectOntologyProperties: ontoProperties,
     });
-  }
-
-  /**
-   * removes property from resource class
-   * @param property
-   */
-  @Action(RemovePropertyAction)
-  removePropertyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { property, resourceClass, currentOntologyPropertiesToDisplay }: RemovePropertyAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    const state = ctx.getState();
-
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
-    const delCard = new UpdateResourceClassCardinality();
-    delCard.id = resourceClass.id;
-    delCard.cardinalities = [];
-    delCard.cardinalities = currentOntologyPropertiesToDisplay.filter(prop => prop.propertyIndex === property.iri);
-    onto.entity = delCard;
-
-    return this._dspApiConnection.v2.onto.deleteCardinalityFromResourceClass(onto).pipe(
-      take(1),
-      tap({
-        next: () => {
-          // ctx.dispatch(new SetCurrentOntologyPropertiesToDisplayAction(currentOntologyPropertiesToDisplay));
-          ctx.setState({ ...state, isLoading: false });
-          this._notification.openSnackBar(
-            `You have successfully removed "${property.label}" from "${resourceClass.label}".`
-          );
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-        },
-      })
-    );
-  }
-
-  @Action(ReplacePropertyAction)
-  replacePropertyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { resourceClass, currentOntologyPropertiesToDisplay }: ReplacePropertyAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    const state = ctx.getState();
-
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-    onto.lastModificationDate = <string>state.currentOntology?.lastModificationDate;
-    onto.id = <string>state.currentOntology?.id;
-    const addCard = new UpdateResourceClassCardinality();
-    addCard.id = resourceClass.id;
-    addCard.cardinalities = [];
-    currentOntologyPropertiesToDisplay.forEach((prop, index) => {
-      const propCard: IHasProperty = {
-        propertyIndex: prop.propertyIndex,
-        cardinality: prop.cardinality,
-        guiOrder: index + 1,
-      };
-
-      addCard.cardinalities.push(propCard);
-    });
-
-    onto.entity = addCard;
-
-    return this._dspApiConnection.v2.onto.replaceGuiOrderOfCardinalities(onto).pipe(
-      take(1),
-      tap({
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        next: () => {},
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
-        },
-      })
-    );
   }
 
   @Action(CurrentOntologyCanBeDeletedAction)
