@@ -136,7 +136,7 @@ export class OntologyEditService implements OnDestroy {
       .afterClosed()
       .pipe(filter((result): result is OntologyMetadata => !!result))
       .subscribe((created: OntologyMetadata) => {
-        this._store.dispatch(new LoadOntologyAction(created.id, this.projectId, true));
+        this._reloadAfterChanges();
       });
   }
 
@@ -152,7 +152,7 @@ export class OntologyEditService implements OnDestroy {
         )
       )
       .subscribe(() => {
-        this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+        this._reloadAfterChanges();
       });
   }
 
@@ -166,7 +166,7 @@ export class OntologyEditService implements OnDestroy {
       )
       .afterClosed()
       .subscribe(() => {
-        this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+        this._reloadAfterChanges();
       });
   }
 
@@ -181,7 +181,7 @@ export class OntologyEditService implements OnDestroy {
       )
       .afterClosed()
       .subscribe(() => {
-        this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true));
+        this._reloadAfterChanges();
       });
   }
 
@@ -202,7 +202,7 @@ export class OntologyEditService implements OnDestroy {
       .afterClosed()
       .subscribe(event => {
         if (event === true) {
-          this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectUuid, true));
+          this._reloadAfterChanges();
         }
       });
   }
@@ -278,7 +278,7 @@ export class OntologyEditService implements OnDestroy {
           this._currentOntology!.lastModificationDate = response.lastModificationDate;
           this.assignPropertyToClass(response.id, assignToClass);
         } else {
-          this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true));
+          this._reloadAfterChanges();
         }
       });
   }
@@ -289,7 +289,7 @@ export class OntologyEditService implements OnDestroy {
       .addCardinalityToResourceClass(updateOnto)
       .pipe(take(1))
       .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
-        this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+        this._reloadAfterChanges();
       });
   }
 
@@ -301,7 +301,7 @@ export class OntologyEditService implements OnDestroy {
       .deleteCardinalityFromResourceClass(onto)
       .pipe(take(1))
       .subscribe(() => {
-        this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+        this._reloadAfterChanges();
       });
   }
 
@@ -326,7 +326,7 @@ export class OntologyEditService implements OnDestroy {
 
     return concat(...updates).pipe(
       last(),
-      tap(() => this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true)))
+      tap(() => this._reloadAfterChanges())
     );
   }
 
@@ -398,7 +398,7 @@ export class OntologyEditService implements OnDestroy {
       .afterClosed()
       .pipe(map(result => result ?? false))
       .subscribe((created: boolean) => {
-        this._store.dispatch(new SetCurrentProjectOntologyPropertiesAction(this.projectUuid));
+        this._reloadAfterChanges();
       });
   }
 
@@ -414,7 +414,7 @@ export class OntologyEditService implements OnDestroy {
         )
       )
       .subscribe(() => {
-        this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectId, true));
+        this._reloadAfterChanges();
       });
   }
 
@@ -447,7 +447,7 @@ export class OntologyEditService implements OnDestroy {
         )
       )
       .subscribe(() => {
-        this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectUuid, true));
+        this._reloadAfterChanges();
       });
   }
 
@@ -474,7 +474,7 @@ export class OntologyEditService implements OnDestroy {
       .replaceCardinalityOfResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(response => {
-        this._store.dispatch(new LoadOntologyAction(this.ontologyId, this.projectUuid, true));
+        this._reloadAfterChanges();
       });
   }
 
@@ -513,6 +513,10 @@ export class OntologyEditService implements OnDestroy {
     updateOnto.lastModificationDate = this.lastModificationDate;
     updateOnto.entity = resProp;
     return updateOnto;
+  }
+
+  private _reloadAfterChanges() {
+    this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
   }
 
   ngOnDestroy() {
