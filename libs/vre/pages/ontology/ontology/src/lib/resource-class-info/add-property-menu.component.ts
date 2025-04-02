@@ -102,9 +102,9 @@ export class AddPropertyMenuComponent {
     takeUntil(this.ngUnsubscribe),
     map(([ontologies, properties]) => {
       return ontologies.map(onto => {
-        const ontoProperties = properties.filter(p => p.ontology === onto.id);
         const classProps = [...(this.resourceClass?.propertiesList || [])];
-        const unusedProperties = ontoProperties
+        const unusedProperties = properties
+          .filter(p => p.ontology === onto.id)
           .flatMap(o => o.properties)
           .filter(p => !classProps.some(c => c.propertyIndex === p.id));
 
