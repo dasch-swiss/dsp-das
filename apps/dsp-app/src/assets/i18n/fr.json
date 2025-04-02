@@ -4,230 +4,230 @@
   "pages": {
     "userSettings": {
       "loginForm": {
-        "login": "Accedi"
+        "login": "Connexion"
       },
       "account": {
-        "danger": "Zona pericolosa",
-        "deleteButton": "Sospendi account utente ora",
-        "delete": "Sospendi account utente",
-        "password": "Aggiorna password",
-        "edit": "Modifica profilo"
+        "danger": "Zone dangereuse",
+        "deleteButton": "Suspendre le compte utilisateur maintenant",
+        "delete": "Suspendre le compte utilisateur",
+        "password": "Mettre à jour le mot de passe",
+        "edit": "Modifier le profil"
       },
       "overview": {
-        "title": "Sfoglia i progetti di ricerca",
-        "myProjects": "I miei progetti",
-        "browseOtherResearchProjects": "Sfoglia altri progetti di ricerca"
+        "title": "Parcourir les projets de recherche",
+        "myProjects": "Mes projets",
+        "browseOtherResearchProjects": "Parcourir d'autres projets de recherche"
       },
       "userForm": {
-        "emailValidation": "Questo indirizzo email sembra non essere valido.",
-        "usernameHint": "Spazi e caratteri speciali non sono ammessi nel nome utente.",
-        "language": "Lingua predefinita",
-        "sysAdmin": "Diritti di amministratore di sistema",
-        "updateSuccess": "Hai aggiornato con successo il profilo dell'utente.",
-        "new": "Crea nuovo",
-        "profile": "Profilo utente",
-        "edit": "Modifica profilo",
-        "givenName": "Nome",
-        "familyName": "Cognome",
-        "email": "Indirizzo email",
-        "username": "Nome utente"
+        "emailValidation": "Cette adresse e-mail semble invalide.",
+        "usernameHint": "Les espaces et les caractères spéciaux ne sont pas autorisés dans le nom d'utilisateur.",
+        "language": "Langue par défaut",
+        "sysAdmin": "Droits d'administrateur système",
+        "updateSuccess": "Vous avez mis à jour avec succès le profil de l'utilisateur.",
+        "new": "Créer nouveau",
+        "profile": "Profil utilisateur",
+        "edit": "Modifier le profil",
+        "givenName": "Prénom",
+        "familyName": "Nom de famille",
+        "email": "Adresse e-mail",
+        "username": "Nom d'utilisateur"
       },
       "passwordForm": {
-        "username": "Nome utente",
-        "password": "Password",
-        "passwordLengthHint": "Usa almeno 8 caratteri.",
-        "passwordPatternHint": "La password dovrebbe avere almeno una lettera maiuscola e un numero.",
-        "oldPassword": "Vecchia password",
-        "newPassword": "Nuova password",
-        "confirmPassword": "Conferma password",
-        "requesterPassword": "La tua password",
-        "ownPasswordSuccess": "Hai aggiornato con successo la tua password.",
-        "userPasswordSuccess": "Hai aggiornato con successo la password dell'utente."
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "passwordLengthHint": "Utilisez au moins 8 caractères.",
+        "passwordPatternHint": "Le mot de passe doit contenir au moins une lettre majuscule et un chiffre.",
+        "oldPassword": "Ancien mot de passe",
+        "newPassword": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe",
+        "requesterPassword": "Votre mot de passe",
+        "ownPasswordSuccess": "Vous avez mis à jour avec succès votre mot de passe.",
+        "userPasswordSuccess": "Vous avez mis à jour avec succès le mot de passe de l'utilisateur."
       },
       "navigation": {
-        "myProjects": "I miei progetti",
-        "myAccount": "Il mio account"
+        "myProjects": "Mes projets",
+        "myAccount": "Mon compte"
       },
       "profile": {
-        "systemAdmin": "Amministratore di sistema",
-        "editMyProfile": "Modifica il mio profilo"
+        "systemAdmin": "Administrateur système",
+        "editMyProfile": "Modifier mon profil"
       },
       "userMenu": {
-        "signedInAs": "Connesso come",
-        "systemAdministration": "Amministrazione di sistema",
-        "logout": "Disconnetti",
-        "login": "ACCEDI",
-        "home": "Pagina iniziale DSP-APP",
-        "myAccount": "Il mio account"
+        "signedInAs": "Connecté en tant que",
+        "systemAdministration": "Administration système",
+        "logout": "Déconnexion",
+        "login": "CONNEXION",
+        "home": "Page d'accueil DSP-APP",
+        "myAccount": "Mon compte"
       }
     },
     "project": {
       "addUser": {
-        "title": "Aggiungi membro del progetto",
-        "description": "Aumenta il tuo team",
-        "select": "Seleziona dalla lista ...",
-        "usersLoading": "Caricamento utenti ...",
-        "newUser": "Nuovo utente"
+        "title": "Ajouter un membre au projet",
+        "description": "Augmenter votre équipe",
+        "select": "Sélectionner dans la liste ...",
+        "usersLoading": "Chargement des utilisateurs ...",
+        "newUser": "Nouvel utilisateur"
       },
       "general": {
-        "description": "Descrizione",
-        "shortcode": "Codice breve",
-        "shortname": "Nome breve",
-        "longname": "Nome del progetto",
-        "keywords": "Parole chiave",
-        "editSuccess": "Hai aggiornato con successo le informazioni del progetto."
+        "description": "Description",
+        "shortcode": "Code court",
+        "shortname": "Nom court",
+        "longname": "Nom du projet",
+        "keywords": "Mots clés",
+        "editSuccess": "Vous avez mis à jour avec succès les informations du projet."
       },
       "imageSettings": {
-        "off": "Spento",
-        "isWatermark": "Applica filigrana",
-        "ratio": "Rapporto",
-        "restrictImageSize": "Limita dimensioni immagine",
-        "absoluteWidth": "Larghezza assoluta in pixel da: {{min}} a: {{max}}",
-        "percentage": "Percentuale",
-        "updateConfirmation": "Hai aggiornato con successo le impostazioni dell'immagine del progetto.",
-        "info": "Per limitare le dimensioni della tua immagine, inserisci una percentuale o una larghezza in pixel assoluta. Non puoi fornire valori per entrambe le opzioni.",
-        "restrictions": "Le impostazioni dell'immagine possono essere applicate solo alle risorse che hanno impostato i permessi di visualizzazione limitati."
+        "off": "Éteint",
+        "isWatermark": "Appliquer un filigrane",
+        "ratio": "Rapport",
+        "restrictImageSize": "Limiter la taille de l'image",
+        "absoluteWidth": "Largeur absolue en pixels de: {{min}} à: {{max}}",
+        "percentage": "Pourcentage",
+        "updateConfirmation": "Vous avez mis à jour avec succès les paramètres de l'image du projet.",
+        "info": "Pour limiter la taille de votre image, entrez un pourcentage ou une largeur en pixels absolue. Vous ne pouvez pas fournir de valeurs pour les deux options.",
+        "restrictions": "Les paramètres de l'image peuvent être appliqués uniquement aux ressources ayant des autorisations de visualisation limitées."
       }
     },
     "system": {
       "usersList": {
-        "sortFamilyName": "Cognome",
-        "sortGivenName": "Nome"
+        "sortFamilyName": "Nom de famille",
+        "sortGivenName": "Prénom"
       },
       "users": {
-        "changePassword": "Cambia password"
+        "changePassword": "Changer le mot de passe"
       },
       "projectsList": {
-        "project": "Project",
-        "projects": "Projects",
-        "sortShortCode": "Short code",
-        "sortShortName": "Short name",
-        "sortProjectName": "Project name",
-        "statusActive": "Active",
-        "statusDeactivated": "Deactivated",
-        "createNew": "Create new project",
-        "projectAdmin": "Project Administrator",
-        "edit": "Edit project information",
-        "reactivate": "Reactivate project",
-        "deactivate": "Deactivate project",
-        "erase": "Erase project",
-        "eraseConfirmation": "Project “{{0}}” has been erased.",
-        "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-        "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
+        "project": "Projet",
+        "projects": "Projets",
+        "sortShortCode": "Code court",
+        "sortShortName": "Nom court",
+        "sortProjectName": "Nom du projet",
+        "statusActive": "Actif",
+        "statusDeactivated": "Désactivé",
+        "createNew": "Créer un nouveau projet",
+        "projectAdmin": "Administrateur du projet",
+        "edit": "Modifier les informations du projet",
+        "reactivate": "Réactiver le projet",
+        "deactivate": "Désactiver le projet",
+        "erase": "Effacer le projet",
+        "eraseConfirmation": "Le projet “{{0}}” a été effacé.",
+        "deactivateConfirmation": "Voulez-vous désactiver le projet “{{0}}” ?",
+        "reactivateConfirmation": "Voulez-vous réactiver le projet “{{0}}” ?",
         "eraseConfirmationDialog": {
-          "title": "Please enter required information to erase the project.",
-          "subtitle": "Erase project",
-          "warning": "WARNING: This action cannot be undone, so use it with care.",
-          "shortCode": "Project short code",
-          "systemAdminPassword": "System administrator password",
-          "cancel": "Cancel",
-          "confirm": "Confirm",
-          "shortCodeValidation": "Short code does not match",
-          "passwordValidation": "Password incorrect"
+          "title": "Veuillez entrer les informations requises pour effacer le projet.",
+          "subtitle": "Effacer le projet",
+          "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec précaution.",
+          "shortCode": "Code court du projet",
+          "systemAdminPassword": "Mot de passe de l'administrateur système",
+          "cancel": "Annuler",
+          "confirm": "Confirmer",
+          "shortCodeValidation": "Le code court ne correspond pas",
+          "passwordValidation": "Mot de passe incorrect"
         }
       }
     },
     "ontology": {
       "ontologyForm": {
-        "create": "Create new data model",
-        "edit": "Customize data model",
-        "name": "Set a unique name"
+        "create": "Créer un nouveau modèle de données",
+        "edit": "Personnaliser le modèle de données",
+        "name": "Définir un nom unique"
       },
       "list": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Supprimer le vocabulaire contrôlé"
       }
     },
     "search": {
-      "propertyFormListValue": "Seleziona un elemento",
+      "propertyFormListValue": "Sélectionner un élément",
       "searchPanel": {
-        "howToSearch": "Come cercare",
-        "expert": "Esperto",
-        "advancedSearch": "Ricerca avanzata",
-        "expertSearch": "Ricerca esperta"
+        "howToSearch": "Comment rechercher",
+        "expert": "Expert",
+        "advancedSearch": "Recherche avancée",
+        "expertSearch": "Recherche expert"
       },
       "fullTextSearch": {
-        "filterByProject": "Filtra per progetto",
-        "search": "Cerca",
-        "allProjects": "Tutti i progetti"
+        "filterByProject": "Filtrer par projet",
+        "search": "Rechercher",
+        "allProjects": "Tous les projets"
       }
     }
   },
   "resourceEditor": {
-    "properties": "Proprietà",
-    "labelAnnotations": "Annotazioni",
+    "properties": "Propriétés",
+    "labelAnnotations": "Annotations",
     "segmentSupport": {
-      "createAnnotation": "Crea annotazione"
+      "createAnnotation": "Créer une annotation"
     },
     "representations": {
-      "createAnnotation": "Crea annotazione",
-      "labelAnnotations": "Annotazioni",
+      "createAnnotation": "Créer une annotation",
+      "labelAnnotations": "Annotations",
       "video": {
-        "createAnnotation": "Crea annotazione"
+        "createAnnotation": "Créer une annotation"
       },
       "stillImage": {
-        "createAnnotation": "Crea annotazione",
-        "labelAnnotations": "Annotazioni"
+        "createAnnotation": "Créer une annotation",
+        "labelAnnotations": "Annotations"
       }
     },
     "propertiesDisplay": {
-      "incomingLinkTooltip": "Indica che questa risorsa è riferita da un'altra risorsa",
-      "incomingLinkLabel": "ha un link in entrata",
-      "standoffLinkTooltip": "Rappresenta un link in markup standoff da una risorsa a un'altra",
-      "standoffLinkLabel": "ha un link standoff",
+      "incomingLinkTooltip": "Indique que cette ressource est référencée par une autre ressource",
+      "incomingLinkLabel": "a un lien entrant",
+      "standoffLinkTooltip": "Représente un lien en balisage standoff d'une ressource à une autre",
+      "standoffLinkLabel": "a un lien standoff",
       "annotationToolbar": {
-        "delete": "Elimina questa risorsa"
+        "delete": "Supprimer cette ressource"
       }
     },
     "permissionInfo": {
-      "label": "Permessi",
-      "projectAdmin": "Amministratore del progetto",
-      "creator": "Creatore",
-      "projectMember": "Membro del progetto",
-      "knownUser": "Utente conosciuto",
-      "unknownUser": "Utente sconosciuto",
-      "usersPermissions": "I tuoi permessi",
+      "label": "Autorisations",
+      "projectAdmin": "Administrateur du projet",
+      "creator": "Créateur",
+      "projectMember": "Membre du projet",
+      "knownUser": "Utilisateur connu",
+      "unknownUser": "Utilisateur inconnu",
+      "usersPermissions": "Vos autorisations",
       "interactions": {
-        "restrictedView": "Permesso di visualizzazione limitata (RV)",
-        "view": "Permesso di visualizzazione (V)",
-        "modify": "Permesso di modifica (M)",
-        "delete": "Permesso di eliminazione (D)",
-        "changeRights": "Permesso di cambio diritti (CR)"
+        "restrictedView": "Autorisation de vue restreinte (RV)",
+        "view": "Autorisation de vue (V)",
+        "modify": "Autorisation de modification (M)",
+        "delete": "Autorisation de suppression (D)",
+        "changeRights": "Autorisation de changement des droits (CR)"
       }
     },
     "resourceProperties": {
-      "comment": "Comment",
-      "delete": "Delete this resource",
-      "footnotes": "Footnotes",
+      "comment": "Commentaire",
+      "delete": "Supprimer cette ressource",
+      "footnotes": "Notes de bas de page",
       "valueComponents": {
-        "searchHelp": "Type 3 letters to search for an existing resource."
+        "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."
       }
     }
   },
   "ui": {
     "form": {
       "action": {
-        "cancel": "Annulla",
-        "close": "Chiudi",
-        "submit": "Salva",
-        "retry": "Riprova",
-        "update": "Aggiorna",
-        "next": "Avanti",
-        "reset": "Reimposta"
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "submit": "Enregistrer",
+        "retry": "Réessayer",
+        "update": "Mettre à jour",
+        "next": "Suivant",
+        "reset": "Réinitialiser"
       }
     },
     "pager": {
-      "of": "di",
-      "previous": "Precedente",
-      "next": "Successivo",
-      "firstPage": "Prima pagina",
-      "lastPage": "Ultima pagina",
-      "nextPage": "Pagina successiva",
-      "inputTooltip": "Inserisci il numero della pagina e applica con il tasto Invio.",
-      "previousPage": "Pagina precedente",
-      "rangeLabelOf": "di"
+      "of": "de",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "firstPage": "Première page",
+      "lastPage": "Dernière page",
+      "nextPage": "Page suivante",
+      "inputTooltip": "Entrez le numéro de la page et appuyez sur Entrée pour aller à la page.",
+      "previousPage": "Page précédente",
+      "rangeLabelOf": "de"
     },
     "header": {
-      "help": "Aiuto"
+      "help": "Aide"
     }
   }
 }
