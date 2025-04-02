@@ -129,12 +129,12 @@
     },
     "ontology": {
       "ontologyForm": {
-        "create": "Create new data model",
-        "edit": "Customize data model",
-        "name": "Set a unique name"
+        "create": "Neues Datenmodell erstellen",
+        "edit": "Datenmodell anpassen",
+        "name": "Eindeutigen Namen festlegen"
       },
       "list": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Kontrolliertes Vokabular löschen"
       }
     },
     "search": {

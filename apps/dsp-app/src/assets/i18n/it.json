@@ -98,43 +98,43 @@
         "changePassword": "Cambia password"
       },
       "projectsList": {
-        "project": "Project",
-        "projects": "Projects",
-        "sortShortCode": "Short code",
-        "sortShortName": "Short name",
-        "sortProjectName": "Project name",
-        "statusActive": "Active",
-        "statusDeactivated": "Deactivated",
-        "createNew": "Create new project",
-        "projectAdmin": "Project Administrator",
-        "edit": "Edit project information",
-        "reactivate": "Reactivate project",
-        "deactivate": "Deactivate project",
-        "erase": "Erase project",
-        "eraseConfirmation": "Project “{{0}}” has been erased.",
-        "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-        "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
+        "project": "Progetto",
+        "projects": "Progetti",
+        "sortShortCode": "Codice breve del progetto",
+        "sortShortName": "Nome breve del progetto",
+        "sortProjectName": "Nome del progetto",
+        "statusActive": "Attivo",
+        "statusDeactivated": "Disattivato",
+        "createNew": "Crea nuovo progetto",
+        "projectAdmin": "Amministratore del progetto",
+        "edit": "Modifica informazioni del progetto",
+        "reactivate": "Riattiva il progetto",
+        "deactivate": "Disattiva il progetto",
+        "erase": "Cancella progetto",
+        "eraseConfirmation": "Il progetto “{{0}}” è stato cancellato.",
+        "deactivateConfirmation": "Vuoi disattivare il progetto “{{0}}”?",
+        "reactivateConfirmation": "Vuoi riattivare il progetto “{{0}}”?",
         "eraseConfirmationDialog": {
-          "title": "Please enter required information to erase the project.",
-          "subtitle": "Erase project",
-          "warning": "WARNING: This action cannot be undone, so use it with care.",
-          "shortCode": "Project short code",
-          "systemAdminPassword": "System administrator password",
-          "cancel": "Cancel",
-          "confirm": "Confirm",
-          "shortCodeValidation": "Short code does not match",
-          "passwordValidation": "Password incorrect"
+          "title": "Inserisci le informazioni richieste per cancellare il progetto.",
+          "subtitle": "Cancella progetto",
+          "warning": "ATTENZIONE: Questa azione non può essere annullata, usala con cautela.",
+          "shortCode": "Codice breve del progetto",
+          "systemAdminPassword": "Password dell'amministratore di sistema",
+          "cancel": "Annulla",
+          "confirm": "Conferma",
+          "shortCodeValidation": "Il codice breve non corrisponde",
+          "passwordValidation": "Password errata"
         }
       }
     },
     "ontology": {
       "ontologyForm": {
-        "create": "Create new data model",
-        "edit": "Customize data model",
-        "name": "Set a unique name"
+        "create": "Crea nuovo modello di dati",
+        "edit": "Personalizza modello di dati",
+        "name": "Imposta un nome univoco"
       },
       "list": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Elimina vocabolario controllato"
       }
     },
     "search": {
