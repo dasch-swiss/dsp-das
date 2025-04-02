@@ -1,5 +1,14 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   ApiResponseError,
   Constants,
@@ -63,11 +72,11 @@ export class ResourceClassInfoComponent implements OnInit {
   trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
 
   constructor(
+    private _actions$: Actions,
     private _localizationService: LocalizationService,
     private _notification: NotificationService,
     private _oes: OntologyEditService,
-    private _store: Store,
-    private _actions$: Actions
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
