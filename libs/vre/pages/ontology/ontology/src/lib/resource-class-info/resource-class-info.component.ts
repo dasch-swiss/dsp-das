@@ -32,6 +32,7 @@ import {
   DefaultClass,
   DefaultResourceClasses,
   LocalizationService,
+  OntologyService,
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -218,31 +219,12 @@ export class ResourceClassInfoComponent implements OnInit {
     this._oes.deleteResourceClass(this.resourceClass.id);
   }
 
-  /**
-   * opens resource instances in new tab using gravsearch
-   * @param iri
-   */
-  openResourceInstances(iri: string) {
-    // open resource instances in new tab:
-    // it's important not to indent the gravsearch.
-    const gravsearch = `
-PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-CONSTRUCT {
-
-?mainRes knora-api:isMainResource true .
-
-
-} WHERE {
-
-?mainRes a knora-api:Resource .
-
-?mainRes a <${iri}> .
-
-}
-
-OFFSET 0`;
-
-    const doSearchRoute = `/${RouteConstants.search}/${RouteConstants.gravSearch}/${encodeURIComponent(gravsearch)}`;
-    window.open(doSearchRoute, '_blank');
+  openInDatabrowser() {
+    const projectId = ProjectService.IriToUuid(this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id || '');
+    const ontologyName = OntologyService.getOntologyName(
+      this._store.selectSnapshot(OntologiesSelectors.currentOntology)?.id || ''
+    );
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectId}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.id.split('#')[1]}`;
+    window.open(dataBrowserRoute, '_blank');
   }
 }

@@ -63,9 +63,7 @@
   <span
     [matTooltip]="classCanBeDeleted ? 'This class doesn\'t have any instances yet' : ''"
     matTooltipPosition="before">
-    <button mat-menu-item (click)="openResourceInstances(resourceClass.id)" [disabled]="classCanBeDeleted">
-      Open resource instances
-    </button>
+    <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">Open resource instances</button>
   </span>
   <span
     *ngIf="(isAdmin$ | async) === true && (project$ | async)?.status === true"
