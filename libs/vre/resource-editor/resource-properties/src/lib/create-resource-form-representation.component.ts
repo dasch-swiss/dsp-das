@@ -13,7 +13,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
       style="display: block; margin-bottom: 16px" />
 
     <ng-template #stillImageTpl>
-      <mat-tab-group preserveContent style="min-height: 320px;" data-cy="stillimage-tab-group">
+      <mat-tab-group preserveContent data-cy="stillimage-tab-group">
         <mat-tab label="Upload Image">
           <app-upload-control [formControl]="control" [representation]="fileRepresentation" data-cy="upload-control" />
         </mat-tab>

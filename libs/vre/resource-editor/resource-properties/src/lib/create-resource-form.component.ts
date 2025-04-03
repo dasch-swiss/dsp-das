@@ -25,14 +25,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <h3>File</h3>
+      <ng-container *ngIf="form.controls.file && fileRepresentation">
+        <h3>File</h3>
 
-      <app-create-resource-form-file
-        *ngIf="form.controls.file && fileRepresentation"
-        [control]="form.controls.file"
-        [fileRepresentation]="fileRepresentation" />
-
-      <h3>Properties</h3>
+        <app-create-resource-form-file [control]="form.controls.file" [fileRepresentation]="fileRepresentation" />
+        <h3>Properties</h3>
+      </ng-container>
 
       <app-create-resource-form-row
         label="Resource label *"

@@ -39,7 +39,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
               style="width: 110px" />
           </div>
 
-          <div>Licensed on {{ resource.res.creationDate | humanReadableDate }}</div>
+          <div>Licensed on {{ fileValue.valueCreationDate | humanReadableDate }}</div>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@ export class ResourceLegalComponent implements OnInit {
   licenseExists!: boolean;
 
   get licenseHasLogo() {
-    return true;
+    return false;
   }
 
   ngOnInit() {
