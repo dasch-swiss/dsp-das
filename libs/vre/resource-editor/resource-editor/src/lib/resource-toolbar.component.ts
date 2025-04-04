@@ -86,7 +86,7 @@ import { filter } from 'rxjs/operators';
         matTooltipPosition="above"
         (click)="deleteResource()">
         <mat-icon>delete</mat-icon>
-        {{ 'form.resource.title.delete' | translate }}
+        {{ 'resourceEditor.resourceProperties.delete' | translate }}
       </button>
       <button
         *ngIf="isAdmin$ | async"
