@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Constants, CountQueryResponse, ReadFileValue } from '@dasch-swiss/dsp-js';
+import { Constants, CountQueryResponse, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
@@ -55,14 +55,14 @@ export class ResourceComponent implements OnChanges {
 
     this.representationsToDisplay = getFileValue(resource)!;
 
-    if (this._isStillImage(resource)) {
+    if (this._isStillImage(resource.res)) {
       this._regionService.initialize(resource.res.id);
       this._checkForAnnotationUri();
     }
   }
 
-  private _isStillImage(resource: DspResource) {
-    return resource.res.properties[Constants.HasStillImageFileValue] !== undefined;
+  private _isStillImage(resource: ReadResource) {
+    return resource.properties[Constants.HasStillImageFileValue] !== undefined;
   }
 
   private _isObjectWithoutRepresentation(resource: DspResource) {
