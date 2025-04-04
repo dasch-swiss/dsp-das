@@ -29,7 +29,7 @@ import { CompoundService } from './compound/compound.service';
           <span *ngIf="regionsCount > 0" [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false">
           </span>
         </ng-template>
-        <app-annotation-tab [resource]="resource" />
+        <app-annotation-tab [resource]="resource.res" />
       </mat-tab>
 
       <!-- audio & video annotations -->
