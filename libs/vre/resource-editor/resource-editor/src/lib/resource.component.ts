@@ -43,17 +43,17 @@ export class ResourceComponent implements OnChanges {
     this._compoundService.reset();
     this.isCompoundNavigation = false;
 
-    this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource);
+    this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource.res);
     this._onInit(this.resource);
   }
 
   private _onInit(resource: DspResource) {
-    if (this._isObjectWithoutRepresentation(resource)) {
+    if (this._isObjectWithoutRepresentation(resource.res)) {
       this._checkForCompoundNavigation(resource);
       return;
     }
 
-    this.representationsToDisplay = getFileValue(resource)!;
+    this.representationsToDisplay = getFileValue(resource.res)!;
 
     if (this._isStillImage(resource.res)) {
       this._regionService.initialize(resource.res.id);
@@ -65,7 +65,7 @@ export class ResourceComponent implements OnChanges {
     return resource.properties[Constants.HasStillImageFileValue] !== undefined;
   }
 
-  private _isObjectWithoutRepresentation(resource: DspResource) {
+  private _isObjectWithoutRepresentation(resource: ReadResource) {
     return getFileValue(resource) === null;
   }
 
