@@ -9,7 +9,6 @@ import {
   RegionGeometry,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
@@ -73,7 +72,7 @@ export class OsdDrawerService implements OnDestroy {
         }
 
         if (showRegions) {
-          this._removeOverlays(regions);
+          this._removeOverlays(regions.map(r => r.res));
           this._renderRegions(regions.map(r => r.res));
         }
       });
@@ -133,8 +132,8 @@ export class OsdDrawerService implements OnDestroy {
       });
   }
 
-  private _removeOverlays(keep: DspResource[] = []): void {
-    const elementsToRemove = this._getPolygonsToRemove(keep.map(r => r.res.id));
+  private _removeOverlays(keep: ReadResource[] = []): void {
+    const elementsToRemove = this._getPolygonsToRemove(keep.map(r => r.id));
     elementsToRemove.forEach(r => {
       const e = this._osd.viewer.getOverlayById(r);
       if (e) {
