@@ -74,7 +74,7 @@ export class OsdDrawerService implements OnDestroy {
 
         if (showRegions) {
           this._removeOverlays(regions);
-          this._renderRegions(regions);
+          this._renderRegions(regions.map(r => r.res));
         }
       });
   }
@@ -152,7 +152,7 @@ export class OsdDrawerService implements OnDestroy {
     return Object.keys(this._paintedPolygons).filter(el => !keep.includes(el));
   }
 
-  private _renderRegions(regions: DspResource[]): void {
+  private _renderRegions(regions: ReadResource[]): void {
     let imageXOffset = 0; // see documentation in this.openImages() for the usage of imageXOffset
 
     const stillImage = this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
