@@ -15,6 +15,7 @@ import { FootnoteParserPipe } from './lib/footnote-parser.pipe';
 import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
 import { FootnoteDirective } from './lib/footnote.directive';
 import { FootnotesComponent } from './lib/footnotes.component';
+import { MathJaxDirective } from './lib/mathjax/math-jax.directive';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
@@ -100,4 +101,5 @@ export const ResourcePropertiesComponents = [
   FootnoteParserPipe,
   AuthorshipFormFieldComponent,
   CreateResourceFormFileComponent,
+  MathJaxDirective,
 ];
