@@ -44,19 +44,19 @@ export class ResourceComponent implements OnChanges {
     this.isCompoundNavigation = false;
 
     this.resourceIsObjectWithoutRepresentation = this._isObjectWithoutRepresentation(this.resource.res);
-    this._onInit(this.resource);
+    this._onInit(this.resource.res);
   }
 
-  private _onInit(resource: DspResource) {
-    if (this._isObjectWithoutRepresentation(resource.res)) {
+  private _onInit(resource: ReadResource) {
+    if (this._isObjectWithoutRepresentation(resource)) {
       this._checkForCompoundNavigation(resource);
       return;
     }
 
-    this.representationsToDisplay = getFileValue(resource.res)!;
+    this.representationsToDisplay = getFileValue(resource)!;
 
-    if (this._isStillImage(resource.res)) {
-      this._regionService.initialize(resource.res.id);
+    if (this._isStillImage(resource)) {
+      this._regionService.initialize(resource.id);
       this._checkForAnnotationUri();
     }
   }
@@ -79,9 +79,9 @@ export class ResourceComponent implements OnChanges {
     this._regionService.selectRegion(annotation);
   }
 
-  private _checkForCompoundNavigation(resource: DspResource) {
+  private _checkForCompoundNavigation(resource: ReadResource) {
     this._incomingService
-      .getStillImageRepresentationsForCompoundResource(resource.res.id, 0, true)
+      .getStillImageRepresentationsForCompoundResource(resource.id, 0, true)
       .pipe(take(1))
       .subscribe(countQuery => {
         const countQuery_ = countQuery as CountQueryResponse;
