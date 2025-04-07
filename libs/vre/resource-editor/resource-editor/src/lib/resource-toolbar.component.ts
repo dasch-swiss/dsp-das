@@ -132,14 +132,14 @@ export class ResourceToolbarComponent {
 
   deleteResource() {
     this._dialog.open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, {
-      data: this.resource.res,
+      data: this.resource,
       viewContainerRef: this._viewContainerRef,
     });
   }
 
   eraseResource() {
     this._dialog.open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, {
-      data: this.resource.res,
+      data: this.resource,
       viewContainerRef: this._viewContainerRef,
     });
   }
