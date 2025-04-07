@@ -3,8 +3,10 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
+  ApiResponseError,
   CreateOntology,
   KnoraApiConnection,
+  OntologyMetadata,
   ReadOntology,
   ReadProject,
   UpdateOntologyMetadata,
@@ -86,7 +88,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
 
     if (this.data.ontologyIri) {
-      this._currentOntology$.pipe(take(1)).subscribe(response => {
+      this._currentOntology$.pipe(takeUntil(this._destroy$)).subscribe(response => {
         this._buildForm(response);
         this._lastModificationDate = response.lastModificationDate;
       });
@@ -105,7 +107,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return ontoName ? `${ontoName.charAt(0).toUpperCase()}${ontoName.slice(1)}` : '';
   }
 
-  private _buildForm(ontology: ReadOntology = null): void {
+  private _buildForm(ontology?: ReadOntology): void {
     this.ontologyForm = this._fb.group({
       name: [
         { value: this.ontologyName, disabled: !!ontology },
@@ -136,24 +138,15 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   private _updateOntology() {
     const ontologyData = new UpdateOntologyMetadata();
-    ontologyData.id = this.data.ontologyIri;
+    ontologyData.id = this.data.ontologyIri!;
     ontologyData.lastModificationDate = this._lastModificationDate;
     ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
     ontologyData.comment = this.ontologyForm.controls.comment.value;
 
-    const update = this._dspApiConnection.v2.onto
-      .updateOntology(ontologyData)
-      .pipe(
-        take(1),
-        tap({
-          error: () => {
-            this.loading = false;
-          },
-        })
-      )
-      .subscribe(() => {
-        this.dialogRef.close(true);
-      });
+    this._dspApiConnection.v2.onto.updateOntology(ontologyData).subscribe((response: OntologyMetadata) => {
+      this.loading = false;
+      this.dialogRef.close(response instanceof ApiResponseError ? null : response);
+    });
   }
 
   private _createOntology() {

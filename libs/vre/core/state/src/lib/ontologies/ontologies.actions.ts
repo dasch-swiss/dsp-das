@@ -1,5 +1,9 @@
-import { ClassDefinition, ReadOntology, UpdateOntologyMetadata } from '@dasch-swiss/dsp-js';
-import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  ClassDefinition,
+  ReadOntology,
+  ResourcePropertyDefinitionWithAllLanguages,
+  UpdateOntologyMetadata,
+} from '@dasch-swiss/dsp-js';
 import { PropToDisplay } from '../model-interfaces';
 
 export class LoadProjectOntologiesAction {
@@ -66,23 +70,6 @@ export class RemoveProjectOntologyAction {
 export class SetCurrentProjectOntologyPropertiesAction {
   static readonly type = '[Ontologies] Set Current Project Ontology Properties';
   constructor(public projectUuid: string) {}
-}
-
-export class RemovePropertyAction {
-  static readonly type = '[Ontologies] Remove Property';
-  constructor(
-    public property: DefaultClass,
-    public resourceClass: ClassDefinition,
-    public currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {}
-}
-
-export class ReplacePropertyAction {
-  static readonly type = '[Ontologies] Replace Property';
-  constructor(
-    public resourceClass: ClassDefinition,
-    public currentOntologyPropertiesToDisplay: PropToDisplay[]
-  ) {}
 }
 
 export class CurrentOntologyCanBeDeletedAction {
