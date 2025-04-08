@@ -12,9 +12,9 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { ProjectBaseService } from './project-base.service';
 import {
   EditListInfoDialogComponent,
@@ -36,7 +36,10 @@ export class ListPageComponent implements OnInit, OnDestroy {
   private readonly routeListIri$ = this._route.paramMap.pipe(map(params => params.get(RouteConstants.listParameter)));
 
   list$ = combineLatest([this._store.select(ListsSelectors.listsInProject), this.routeListIri$]).pipe(
-    map(([lists, listIri]) => lists.find(i => i.id.includes(listIri!)))
+    map(([lists, listIri]) => lists.find(i => i.id.includes(listIri!))),
+    tap(v => {
+      console.log('aa', v);
+    })
   );
 
   listIri$: Observable<string> = combineLatest([this._route.params, this.projectBaseService.currentProject$]).pipe(

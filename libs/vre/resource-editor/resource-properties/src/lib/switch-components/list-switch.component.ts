@@ -6,7 +6,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
 @Component({
   selector: 'app-list-switch',
   template: `
-    <app-list-viewer *ngIf="displayMode; else editMode" [control]="control" />
+    <app-list-viewer *ngIf="displayMode; else editMode" [control]="control" [propertyDef]="propertyDef" />
     <ng-template #editMode>
       <app-list-value [control]="control" [propertyDef]="propertyDef" />
     </ng-template>
