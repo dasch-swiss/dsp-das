@@ -11,6 +11,7 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
   selector: 'app-resource-legal',
   template: `
     <div
+      *ngIf="fileValue.copyrightHolder !== '' || fileValue.authorship.length > 0 || fileValue.license !== null"
       class="mat-caption"
       style="border: 1px solid #292929;
     background: #292929; border-radius: 8px;
@@ -67,13 +68,12 @@ export class ResourceLegalComponent implements OnChanges {
   constructor(public projectCommon: ProjectCommonService) {}
 
   ngOnChanges() {
-    this.projectCommon.onInit('0803');
+    this.projectCommon.onInit('0803'); // TODO BAD CODE!
     this.fileValue = getFileValue(this.resource);
 
     this.subscription?.unsubscribe();
 
     if (this.fileValue.license !== null) {
-      console.log('ss', this);
       if (LicensesLogoMapping.has(this.fileValue.license.id)) {
         this.licenseLogo = LicensesLogoMapping.get(this.fileValue.license.id);
       } else {
