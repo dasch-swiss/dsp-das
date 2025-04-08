@@ -14,16 +14,12 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       <div style="display: flex; justify-content: space-between">
         <div>
           <div *ngIf="true || fileValue.copyrightHolder !== ''">
-            <span class="label">Copyright holder</span> {{ fileValue.copyrightHolder }} Julien Schneider
+            <span class="label">Copyright holder</span> {{ fileValue.copyrightHolder }}
           </div>
 
           <div *ngIf="true || fileValue.authorship.length > 0" style="display: flex">
             <span class="label">Authorship</span>
             <div style="max-width: 400px">
-              <span>Julien,</span>
-              <span>Dominique,</span>
-              <span>Irmantas</span>
-
               <span *ngFor="let author of fileValue.authorship; let last = last"
                 >{{ author }}{{ last ? '' : ', ' }}</span
               >
@@ -69,6 +65,6 @@ export class ResourceLegalComponent implements OnInit {
 
   ngOnInit() {
     this.fileValue = getFileValue(this.resource);
-    this.licenseExists = true; // this.fileValue.license.id !== '';
+    this.licenseExists = this.fileValue.license !== null;
   }
 }
