@@ -88,6 +88,7 @@ export class ReplaceFileDialogComponent implements OnInit {
   }
 
   replaceFile() {
+    console.log('ss', this);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;

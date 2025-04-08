@@ -90,6 +90,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
     const selectedValue = event.option.viewValue;
     if (!this.selectedItems.includes(selectedValue)) {
       this.selectedItems.push(selectedValue);
+      this._updateFormControl();
     }
     this.inputControl.setValue('');
   }
