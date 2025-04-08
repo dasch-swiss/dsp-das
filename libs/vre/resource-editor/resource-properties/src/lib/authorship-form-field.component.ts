@@ -10,8 +10,8 @@ import { finalize, map, startWith } from 'rxjs/operators';
   selector: 'app-authorship-form-field',
   template: `
     <mat-form-field style="width: 100%">
-      <mat-label>Authorships</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Authorships">
+      <mat-label>Authorship</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Authorship">
         <mat-chip-row *ngFor="let authorship of selectedItems" (removed)="removeItem(authorship)">
           {{ authorship }}
           <button matChipRemove [attr.aria-label]="'remove ' + authorship">
@@ -27,7 +27,7 @@ import { finalize, map, startWith } from 'rxjs/operators';
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItem($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
-        <mat-option *ngFor="let option of availableAuthorships" [value]="option">
+        <mat-option *ngFor="let option of availableAuthorship" [value]="option">
           {{ option }}
         </mat-option>
       </mat-autocomplete>
@@ -41,7 +41,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   inputControl = new FormControl('');
   selectedItems: string[] = [];
-  availableAuthorships: string[] = [];
+  availableAuthorship: string[] = [];
 
   loading = true;
 
@@ -59,7 +59,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
         })
       )
       .subscribe(response => {
-        this.availableAuthorships = response.data;
+        this.availableAuthorship = response.data;
       });
   }
 
@@ -70,14 +70,14 @@ export class AuthorshipFormFieldComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.availableAuthorships.filter(option => option.toLowerCase().includes(filterValue));
+    return this.availableAuthorship.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   addItem(event: any) {
     const inputValue = event.value.trim();
     if (inputValue && !this.selectedItems.includes(inputValue)) {
-      if (!this.availableAuthorships.includes(inputValue)) {
-        this.availableAuthorships.push(inputValue); // Add new item to options
+      if (!this.availableAuthorship.includes(inputValue)) {
+        this.availableAuthorship.push(inputValue); // Add new item to options
       }
       this.selectedItems.push(inputValue);
       this._updateFormControl();

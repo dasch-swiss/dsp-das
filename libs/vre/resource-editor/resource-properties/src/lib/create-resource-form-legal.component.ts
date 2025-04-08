@@ -48,7 +48,7 @@ export class CreateResourceFormLegalComponent implements OnInit {
 
   copyrightHolders$!: Observable<string[]>;
   licenses$!: Observable<LicenseDto[]>;
-  authorships$!: Observable<string[]>;
+  authorship$!: Observable<string[]>;
 
   constructor(private _copyrightApi: AdminProjectsLegalInfoApiService) {}
 
@@ -71,7 +71,7 @@ export class CreateResourceFormLegalComponent implements OnInit {
         })
       );
 
-    this.authorships$ = this._copyrightApi
+    this.authorship$ = this._copyrightApi
       .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
       .pipe(map(data => data.data));
   }
