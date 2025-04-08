@@ -10,7 +10,7 @@ export interface AddRegionFormDialogProps {
   selector: 'app-add-region-form',
   template: `
     <app-dialog-header
-      [title]="'resourceEditor.representations.createAnnotation' | translate"
+      [title]="'resourceEditor.representations.addRegionFormDialog.createAnnotation' | translate"
       [subtitle]="'Add further properties'" />
     <mat-dialog-content>
       <form [formGroup]="regionForm" class="form-content">

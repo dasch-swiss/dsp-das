@@ -1,6 +1,4 @@
 {
-  "3rdPartyServices": {},
-  "core": {},
   "pages": {
     "userSettings": {
       "loginForm": {
@@ -69,12 +67,13 @@
         "usersLoading": "Chargement des utilisateurs ...",
         "newUser": "Nouvel utilisateur"
       },
-      "general": {
+      "reusableProjectForm": {
         "description": "Description",
         "shortcode": "Code court",
         "shortname": "Nom court",
-        "longname": "Nom du projet",
-        "keywords": "Mots clés",
+        "longname": "Nom du projet"
+      },
+      "editProjectFormPage": {
         "editSuccess": "Vous avez mis à jour avec succès les informations du projet."
       },
       "imageSettings": {
@@ -156,10 +155,14 @@
     "properties": "Propriétés",
     "labelAnnotations": "Annotations",
     "segmentSupport": {
-      "createAnnotation": "Créer une annotation"
+      "createSegmentDialog": {
+        "createAnnotation": "Créer une annotation"
+      }
     },
     "representations": {
-      "createAnnotation": "Créer une annotation",
+      "addRegionFormDialog": {
+        "createAnnotation": "Créer une annotation"
+      },
       "labelAnnotations": "Annotations",
       "video": {
         "createAnnotation": "Créer une annotation"
@@ -228,6 +231,9 @@
     },
     "header": {
       "help": "Aide"
+    },
+    "chipListInput": {
+      "keywords": "Mots clés"
     }
   }
 }
