@@ -55,3 +55,5 @@ export * from './lib/create-resource-form-file.component';
 
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/mathjax/math-jax.service';
+
+export * from './lib/project-common.service';
