@@ -67,6 +67,6 @@ export class ResourceRepresentationComponent implements OnChanges {
   protected readonly representationConstants = RepresentationConstants;
 
   ngOnChanges() {
-    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
+    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource.res)!);
   }
 }
