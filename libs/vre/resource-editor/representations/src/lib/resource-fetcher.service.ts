@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
@@ -13,30 +12,14 @@ export class ResourceFetcherService {
   private _reloadSubject = new BehaviorSubject(null);
   resource$!: Observable<DspResource>;
 
-  private _resourceVersionSubject = new BehaviorSubject<string | undefined>(undefined);
-  resourceVersion$ = this._resourceVersionSubject.asObservable();
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _store: Store,
-    private _route: ActivatedRoute
-  ) {
-    this._route.queryParams.subscribe(params => {
-      if (params['version']) {
-        this._resourceVersionSubject.next(params['version']);
-      }
-    });
-  }
+    private _store: Store
+  ) {}
 
-  onInit(resourceIri: string, version?: string) {
-    if (version) {
-      this._resourceVersionSubject.next(version);
-    }
-
-    this.resource$ = combineLatest([this._reloadSubject.asObservable(), this.resourceVersion$]).pipe(
-      switchMap(([reload, resourceVersion]) => this._getResource(resourceIri, resourceVersion))
-    );
+  onInit(resourceIri: string) {
+    this.resource$ = this._reloadSubject.asObservable().pipe(switchMap(() => this._getResource(resourceIri)));
   }
 
   reload() {
