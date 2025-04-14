@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -10,36 +10,33 @@ import { CompoundService } from './compound/compound.service';
 @Component({
   selector: 'app-resource-tabs',
   template: `
-    <mat-tab-group
-      *ngIf="!resource.res.isDeleted"
-      animationDuration="0ms"
-      [selectedIndex]="selectedTab"
-      (selectedTabChange)="onTabChange($event)">
+    <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedTab" (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resource.properties' | translate">
         <app-properties-display *ngIf="resource" [resource]="resource" />
       </mat-tab>
 
-      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource)">
+      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource.res)">
         <app-properties-display
           [resource]="incomingResource"
           [displayLabel]="true"
           [parentResourceId]="resource.res.id" />
       </mat-tab>
 
-      <!-- annotations -->
+      <!-- image annotations -->
       <mat-tab label="Annotations" *ngIf="displayAnnotations">
         <ng-template matTabLabel>
-          Annotations
+          {{ 'annotations.label' | translate }}
           <span *ngIf="regionsCount > 0" [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false">
           </span>
         </ng-template>
-        <app-annotation-tab *ngIf="regionsCount > 0" [resource]="resource" />
+        <app-annotation-tab [resource]="resource.res" />
       </mat-tab>
 
+      <!-- audio & video annotations -->
       <mat-tab label="Segments" *ngIf="segmentsService.segments.length > 0">
         <ng-template matTabLabel>
           <span [matBadge]="segmentsService.segments.length" matBadgeColor="primary" matBadgeOverlap="false">
-            Segments
+            {{ 'annotations.label' | translate }}
           </span>
         </ng-template>
         <app-segment-tab [resource]="resource.res" />
@@ -58,7 +55,10 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
   regionsCount = 0;
 
   get displayAnnotations() {
-    return this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.incomingResource;
+    return (
+      (this.resource.res.properties[Constants.HasStillImageFileValue] !== undefined || this.incomingResource) &&
+      this.regionsCount > 0
+    );
   }
 
   constructor(
@@ -68,8 +68,7 @@ export class ResourceTabsComponent implements OnInit, OnDestroy {
     public segmentsService: SegmentsService
   ) {}
 
-  resourceClassLabel = (resource: DspResource | undefined) =>
-    resource?.res.entityInfo?.classes[resource.res.type].label || '';
+  resourceClassLabel = (resource: ReadResource | undefined) => resource?.entityInfo?.classes[resource.type].label || '';
 
   ngOnInit() {
     this.segmentsService.highlightSegment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(segment => {

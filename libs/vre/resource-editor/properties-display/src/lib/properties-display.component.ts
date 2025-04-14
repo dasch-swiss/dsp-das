@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceSelectors } from '@dasch-swiss/vre/core/state';
+import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
   selector: 'app-properties-display',
@@ -40,6 +40,7 @@ import { PropertiesDisplayService } from './properties-display.service';
         [borderBottom]="true"
         [tooltip]="prop.propDef.comment"
         [prop]="prop"
+        [singleRow]="false"
         [label]="
           prop.propDef.label +
           (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
@@ -49,20 +50,12 @@ import { PropertiesDisplayService } from './properties-display.service';
     </ng-container>
 
     <app-standoff-links-property [resource]="resource" />
-    <app-incoming-links-property [resource]="resource" />
+    <app-incoming-links-property [resource]="resource.res" />
 
     <ng-template #noProperties>
       <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">
-        <div class="resource-editor-value">This resource has no defined properties.</div>
+        <div>This resource has no defined properties.</div>
       </app-property-row>
-      <div *ngIf="resource.res.isDeleted">
-        <app-property-row label="Deleted on" [borderBottom]="true" [isEmptyRow]="false">
-          <div class="resource-editor-value">{{ resource.res.deleteDate | date }}</div>
-        </app-property-row>
-        <app-property-row label="Comment" [borderBottom]="false" [isEmptyRow]="false">
-          <div class="resource-editor-value">{{ resource.res.deleteComment }}</div>
-        </app-property-row>
-      </div>
     </ng-template>
   `,
   styles: [

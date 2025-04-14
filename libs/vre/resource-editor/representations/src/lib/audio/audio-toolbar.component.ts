@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
 } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { ResourceUtil } from '../resource.util';
 import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
@@ -24,10 +27,9 @@ import { MediaPlayerService } from '../video/media-player.service';
         </button>
       </div>
       <div data-cy="player-time">{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
-
       <div>
-        <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()" *ngIf="isAdmin">
-          <mat-icon>view_timeline</mat-icon>
+        <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()" *ngIf="usercanEdit">
+          <mat-icon svgIcon="draw_region_icon"></mat-icon>
         </button>
         <app-audio-more-button [parentResource]="parentResource" />
       </div>
@@ -36,17 +38,23 @@ import { MediaPlayerService } from '../video/media-player.service';
 })
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;
-  @Input({ required: true }) isAdmin!: boolean;
 
   durationString!: string;
 
+  get usercanEdit() {
+    return ResourceUtil.userCanEdit(this.parentResource);
+  }
+
   constructor(
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef,
-    public mediaPlayer: MediaPlayerService
+    private _domSanitizer: DomSanitizer,
+    private _matIconRegistry: MatIconRegistry,
+    public mediaPlayer: MediaPlayerService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
+    this._setupCssMaterialIcon();
     this.durationString = this.parseTime(this.mediaPlayer.duration());
   }
 
@@ -79,5 +87,12 @@ export class AudioToolbarComponent implements OnInit {
       secondsString = `0${secondsString}`;
     }
     return `${minutesString}:${secondsString}`;
+  }
+
+  private _setupCssMaterialIcon() {
+    this._matIconRegistry.addSvgIcon(
+      'draw_region_icon',
+      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/draw-region-icon.svg')
+    );
   }
 }

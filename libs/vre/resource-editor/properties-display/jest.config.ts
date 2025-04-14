@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'vre-resource-editor-mathjax',
+  displayName: 'vre-resource-editor-properties-display',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/mathjax',
+  coverageDirectory: '../../../../coverage/libs/vre/resource-editor/properties-display',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

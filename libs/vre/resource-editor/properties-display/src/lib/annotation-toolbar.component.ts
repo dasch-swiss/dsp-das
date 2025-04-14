@@ -5,7 +5,6 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { RegionService, ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
-  DeleteResourceDialogComponent,
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -14,18 +13,18 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { DeleteResourceDialogComponent } from './delete-resource-dialog.component';
 
 @Component({
   selector: 'app-annotation-toolbar',
   template: `
-    <span class="action" [class.deleted]="resource.isDeleted">
+    <span class="action">
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
         color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
-        [disabled]="resource.isDeleted"
         (click)="openRegionInNewTab()">
         <mat-icon>open_in_new</mat-icon>
       </button>
@@ -37,7 +36,6 @@ import { take } from 'rxjs/operators';
         data-cy="share-button"
         matTooltip="Share resource: {{ resource.versionArkUrl }}"
         matTooltipPosition="above"
-        [disabled]="resource.isDeleted"
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
@@ -51,8 +49,7 @@ import { take } from 'rxjs/operators';
         class="more-menu"
         matTooltip="More"
         matTooltipPosition="above"
-        [matMenuTriggerFor]="more"
-        [disabled]="resource.isDeleted">
+        [matMenuTriggerFor]="more">
         <mat-icon>more_vert</mat-icon>
       </button>
     </span>

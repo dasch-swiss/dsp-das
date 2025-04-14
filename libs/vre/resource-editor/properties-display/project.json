@@ -1,8 +1,8 @@
 {
-  "name": "vre-resource-editor-mathjax",
+  "name": "vre-resource-editor-properties-display",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vre/resource-editor/mathjax/src",
-  "prefix": "dasch-swiss",
+  "sourceRoot": "libs/vre/resource-editor/properties-display/src",
+  "prefix": "lib",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -10,12 +10,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/vre/resource-editor/mathjax/jest.config.ts"
+        "jestConfig": "libs/vre/resource-editor/properties-display/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@nx/eslint:lint"
     }
   }
 }
