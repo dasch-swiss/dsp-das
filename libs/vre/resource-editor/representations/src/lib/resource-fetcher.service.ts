@@ -18,8 +18,10 @@ export class ResourceFetcherService {
     private _store: Store
   ) {}
 
-  onInit(resourceIri: string) {
-    this.resource$ = this._reloadSubject.asObservable().pipe(switchMap(() => this._getResource(resourceIri)));
+  onInit(resourceIri: string, resourceVersion?: string) {
+    this.resource$ = this._reloadSubject
+      .asObservable()
+      .pipe(switchMap(() => this._getResource(resourceIri, resourceVersion)));
   }
 
   reload() {

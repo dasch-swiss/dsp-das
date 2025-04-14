@@ -11,9 +11,7 @@ type HideReason = 'NotFound' | 'Deleted' | null;
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <app-resource-version-warning
-      *ngIf="resourceVersion$ | async as resourceVersion"
-      [resourceVersion]="resourceVersion" />
+    <app-resource-version-warning *ngIf="resourceVersion" [resourceVersion]="resourceVersion" />
 
     <ng-container *ngIf="!hideStatus; else hideTpl">
       <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
@@ -38,11 +36,12 @@ type HideReason = 'NotFound' | 'Deleted' | null;
 })
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
+  @Input() resourceVersion?: string;
+
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;
   hideStatus: HideReason = null;
-  resourceVersion$ = this._resourceFetcherService.resourceVersion$;
 
   subscription!: Subscription;
 
@@ -52,10 +51,11 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['resourceIri']) {
+    console.log('changes', changes);
+    if (changes['resourceIri'] || changes['resourceVersion']) {
       this.hideStatus = null;
       this.resource = undefined;
-      this._resourceFetcherService.onInit(this.resourceIri);
+      this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
 
       this.subscription?.unsubscribe();
       this.subscription = this._resourceFetcherService.resource$.subscribe(
