@@ -69,7 +69,7 @@ export class ResourceLegalComponent implements OnChanges {
 
   ngOnChanges() {
     this.projectCommon.onInit('0803'); // TODO BAD CODE!
-    this.fileValue = getFileValue(this.resource);
+    this.fileValue = getFileValue(this.resource.res);
 
     this.subscription?.unsubscribe();
 
