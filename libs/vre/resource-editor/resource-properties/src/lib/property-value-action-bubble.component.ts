@@ -99,10 +99,10 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();
     /*
-        this._subscription = this._resourceFetcherService.resourceVersion$.subscribe(version => {
-          this.resourceFromPreviousVersion = version !== undefined;
-        });
-         */
+            this._subscription = this._resourceFetcherService.resourceVersion$.subscribe(version => {
+              this.resourceFromPreviousVersion = version !== undefined;
+            });
+             */
   }
 
   private _getInfoToolTip() {
@@ -124,6 +124,6 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._subscription.unsubscribe();
+    this._subscription?.unsubscribe();
   }
 }

@@ -51,7 +51,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes', changes);
     if (changes['resourceIri'] || changes['resourceVersion']) {
       this.hideStatus = null;
       this.resource = undefined;

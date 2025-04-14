@@ -19,6 +19,7 @@ export class ResourceFetcherService {
   ) {}
 
   onInit(resourceIri: string, resourceVersion?: string) {
+    console.log('on init');
     this.resource$ = this._reloadSubject
       .asObservable()
       .pipe(switchMap(() => this._getResource(resourceIri, resourceVersion)));
@@ -31,6 +32,7 @@ export class ResourceFetcherService {
   private _getResource(resourceIri: string, resourceVersion?: string) {
     return this._dspApiConnection.v2.res.getResource(resourceIri, resourceVersion).pipe(
       map(response => {
+        console.log('resource', response);
         const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
