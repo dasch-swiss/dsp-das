@@ -70,6 +70,9 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
           this.resource = resource;
         },
         err => {
+          console.log(err, err instanceof ApiResponseError); // false
+          console.log(err.constructor.name); // What class is it?
+          console.log(Object.getPrototypeOf(err)); // Check prototype chain
           if (err instanceof ApiResponseError && err.status === 404) {
             this.hideStatus = 'NotFound';
           }
