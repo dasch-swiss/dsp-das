@@ -1,4 +1,3 @@
-export * from './lib/services/admin/administrative-permission-api.service';
 export * from './lib/services/admin/group-api.service';
 export * from './lib/services/admin/list-api.service';
 export * from './lib/services/admin/permission-api.service';
