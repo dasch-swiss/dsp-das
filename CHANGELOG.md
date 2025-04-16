@@ -1,5 +1,23 @@
 # Changelog
 
+## [11.29.3](https://github.com/dasch-swiss/dsp-das/compare/v11.29.2...v11.29.3) (2025-04-16)
+
+
+### Bug Fixes
+
+* a loaded resource is only fetched once ([#2239](https://github.com/dasch-swiss/dsp-das/issues/2239)) ([663c533](https://github.com/dasch-swiss/dsp-das/commit/663c533e532134cbbb34b5336c24010a33e29acc))
+* ontology class sorting (DEV-4786) ([#2242](https://github.com/dasch-swiss/dsp-das/issues/2242)) ([368a708](https://github.com/dasch-swiss/dsp-das/commit/368a708be31dfa90ed9d4369d424254d83aa4a2c))
+
+
+### Maintenances
+
+* **deps-dev:** bump @typescript-eslint/utils from 8.26.1 to 8.29.1 ([#2236](https://github.com/dasch-swiss/dsp-das/issues/2236)) ([f7c8fc8](https://github.com/dasch-swiss/dsp-das/commit/f7c8fc885c6d1836d4cd211ae078dbd422abc8d9))
+* **deps-dev:** bump ts-jest from 29.3.1 to 29.3.2 in the jest-deps group ([#2235](https://github.com/dasch-swiss/dsp-das/issues/2235)) ([556d3f7](https://github.com/dasch-swiss/dsp-das/commit/556d3f7697899efa1e1d17e71d2334a9c805491f))
+* **deps:** bump core-js from 3.40.0 to 3.41.0 ([#2237](https://github.com/dasch-swiss/dsp-das/issues/2237)) ([17082bc](https://github.com/dasch-swiss/dsp-das/commit/17082bc89bf57a56cbfb302c22445e8e297c78e4))
+* **deps:** bump the grafana-deps group with 2 updates ([#2234](https://github.com/dasch-swiss/dsp-das/issues/2234)) ([ff0f3df](https://github.com/dasch-swiss/dsp-das/commit/ff0f3df9a041b01b828c408a0be0268e7ec7d85e))
+* remove unused api services ([#2240](https://github.com/dasch-swiss/dsp-das/issues/2240)) ([4ec7737](https://github.com/dasch-swiss/dsp-das/commit/4ec77375ad28b68f1deab90aec266cbb4193c6bb))
+* update openapi generated code ([#2241](https://github.com/dasch-swiss/dsp-das/issues/2241)) ([f8979e7](https://github.com/dasch-swiss/dsp-das/commit/f8979e70577460e5e441758c36135ef1a5a0edfd))
+
 ## [11.29.2](https://github.com/dasch-swiss/dsp-das/compare/v11.29.1...v11.29.2) (2025-04-14)
 
 
