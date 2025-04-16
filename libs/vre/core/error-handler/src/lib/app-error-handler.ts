@@ -20,9 +20,7 @@ export class AppErrorHandler implements ErrorHandler {
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
 
   handleError(error: any): void {
-    console.log(error, error instanceof ApiResponseError);
     if (error instanceof ApiResponseError && error.error instanceof AjaxError) {
-      console.log('in js lib');
       // JS-LIB
       this.handleGenericError(error.error, error.url);
     } else if (error instanceof HttpErrorResponse) {
