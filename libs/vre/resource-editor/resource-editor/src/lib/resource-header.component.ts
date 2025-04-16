@@ -90,13 +90,13 @@ export class ResourceHeaderComponent {
   }
 
   get userCanEdit(): boolean {
-    return !this.resourceFetcherService.resourceVersion && ResourceUtil.userCanEdit(this.resource.res);
+    return !this._resourceFetcherService.resourceVersion && ResourceUtil.userCanEdit(this.resource.res);
   }
 
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private resourceFetcherService: ResourceFetcherService
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   openEditLabelDialog() {

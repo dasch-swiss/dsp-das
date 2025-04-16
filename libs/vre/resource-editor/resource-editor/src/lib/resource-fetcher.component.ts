@@ -37,7 +37,6 @@ type HideReason = 'NotFound' | 'Deleted' | null;
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
   @Input() resourceVersion?: string;
-
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;

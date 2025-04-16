@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { getFileValue, RegionService, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -35,8 +35,7 @@ export class ResourceComponent implements OnChanges {
     private _incomingService: IncomingService,
     private _compoundService: CompoundService,
     private _regionService: RegionService,
-    private _route: ActivatedRoute,
-    public resourceFetcherService: ResourceFetcherService
+    private _route: ActivatedRoute
   ) {}
 
   ngOnChanges() {
