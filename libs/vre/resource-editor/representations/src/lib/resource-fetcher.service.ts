@@ -6,11 +6,14 @@ import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-commo
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
   private _reloadSubject = new BehaviorSubject(null);
   resource$!: Observable<DspResource>;
+  userCanEdit$!: Observable<boolean>;
+  userCanDelete$!: Observable<boolean>;
   resourceVersion?: string;
 
   constructor(
@@ -26,6 +29,14 @@ export class ResourceFetcherService {
     );
 
     this.resourceVersion = resourceVersion;
+
+    this.userCanEdit$ = this.resource$.pipe(
+      map(resource => resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
+    );
+
+    this.userCanDelete$ = this.resource$.pipe(
+      map(resource => resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
+    );
   }
 
   reload() {
