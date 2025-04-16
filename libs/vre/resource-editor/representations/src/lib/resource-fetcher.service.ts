@@ -19,11 +19,10 @@ export class ResourceFetcherService {
   ) {}
 
   onInit(resourceIri: string, resourceVersion?: string) {
-    this.resource$ = this._reloadSubject
-      .asObservable()
-      .pipe(switchMap(() => this._getResource(resourceIri, resourceVersion)),
-          shareReplay({ bufferSize: 1, refCount: true })
-          );
+    this.resource$ = this._reloadSubject.asObservable().pipe(
+      switchMap(() => this._getResource(resourceIri, resourceVersion)),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
   }
 
   reload() {
