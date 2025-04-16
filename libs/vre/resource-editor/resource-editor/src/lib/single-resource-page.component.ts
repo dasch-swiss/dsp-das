@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /** TODO: This component resourcePage2 is the same as resourcePage, but with different routing parameters.
  * This routing issue should be addressed and refactor in order to remove those duplicated components.
@@ -25,10 +25,7 @@ export class SingleResourcePageComponent {
     })
   );
 
-  resourceVersion$ = this._route.queryParams.pipe(
-    tap(v => console.log('v', v)),
-    map(params => params['version'])
-  );
+  resourceVersion$ = this._route.queryParams.pipe(map(params => params['version']));
 
   constructor(
     private _route: ActivatedRoute,
