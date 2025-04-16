@@ -9,7 +9,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
       <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
           You are watching a resource dating from {{ resourceVersion }}.
-          <button mat-button color="primary" (click)="displayCurrentVersion()">See current version</button>
+          <button mat-button color="primary" (click)="navigateToCurrentVersion()">See current version</button>
         </div>
       </div>
     </app-alert-info>
@@ -23,7 +23,7 @@ export class ResourceVersionWarningComponent {
     private _resourceFetcherService: ResourceFetcherService
   ) {}
 
-  displayCurrentVersion() {
+  navigateToCurrentVersion() {
     this._removeQueryParam().then(() => {
       this._resourceFetcherService.reload();
     });
