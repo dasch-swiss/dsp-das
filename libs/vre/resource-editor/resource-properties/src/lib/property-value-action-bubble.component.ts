@@ -22,12 +22,11 @@ import { PropertyValueService } from './property-value.service';
           </button>
         </ng-container>
 
-        <span [matTooltip]="editTooltip">
+        <span [matTooltip]="'Edit'">
           <button
             *ngIf="userHasPermission('edit')"
             mat-button
             class="edit edit-button"
-            [disabled]="resourceFromPreviousVersion"
             (click)="$event.stopPropagation(); editAction.emit()"
             data-cy="edit-button">
             <mat-icon>edit</mat-icon>
@@ -65,29 +64,17 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
 
   infoTooltip$!: Observable<string>;
 
-  resourceFromPreviousVersion = false;
-
   private _subscription!: Subscription;
 
   get isDeleteDisabled() {
-    return this.resourceFromPreviousVersion || !this.showDelete;
+    return this._resourceFetcherService.resourceVersion || !this.showDelete;
   }
 
   get deleteTooltip() {
-    if (this.resourceFromPreviousVersion) {
-      return 'This value cannot be deleted because it is from a previous version of the resource.';
-    } else if (!this.showDelete) {
+    if (!this.showDelete) {
       return 'This value cannot be deleted because it is required.';
     } else {
       return 'Delete';
-    }
-  }
-
-  get editTooltip() {
-    if (this.resourceFromPreviousVersion) {
-      return 'This value cannot be edited because it is from a previous version of the resource.';
-    } else {
-      return 'Edit';
     }
   }
 
@@ -98,11 +85,6 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();
-    /*
-            this._subscription = this._resourceFetcherService.resourceVersion$.subscribe(version => {
-              this.resourceFromPreviousVersion = version !== undefined;
-            });
-             */
   }
 
   private _getInfoToolTip() {
@@ -115,6 +97,10 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
   }
 
   userHasPermission(permissionType: 'edit' | 'delete'): boolean {
+    if (this._resourceFetcherService.resourceVersion) {
+      return false;
+    }
+
     if (!this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0) {
       return false;
     }

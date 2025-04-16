@@ -90,7 +90,7 @@ export class ResourceHeaderComponent {
   }
 
   get userCanEdit(): boolean {
-    return !this.resourceFetcherService.resourceVersion || ResourceUtil.userCanEdit(this.resource.res);
+    return !this.resourceFetcherService.resourceVersion && ResourceUtil.userCanEdit(this.resource.res);
   }
 
   constructor(
