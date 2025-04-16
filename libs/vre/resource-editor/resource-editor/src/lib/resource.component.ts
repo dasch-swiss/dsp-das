@@ -12,13 +12,9 @@ import { CompoundService } from './compound/compound.service';
 @Component({
   selector: 'app-resource',
   template: `
-    <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
-    <app-resource-version-warning
-      *ngIf="resourceFetcherService.resourceVersion as resourceVersion"
-      [resourceVersion]="resourceVersion" />
-
     <div class="content large middle">
       <div>
+        <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
         <app-resource-header [resource]="resource" />
         <app-resource-representation [resource]="resource" *ngIf="!resourceIsObjectWithoutRepresentation" />
         <app-compound-viewer *ngIf="isCompoundNavigation" />
