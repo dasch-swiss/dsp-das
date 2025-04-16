@@ -30,5 +30,4 @@ export * from './lib/edit-third-party-iiif-form/edit-third-party-iiif-form.compo
 export * from './lib/edit-third-party-iiif-form/edit-third-party-iiif-types';
 export * from './lib/video/disable-context-menu.directive';
 export * from './lib/resource.util';
-export * from './lib/rxjs.utils';
 export * from './lib/file-value-mapping';

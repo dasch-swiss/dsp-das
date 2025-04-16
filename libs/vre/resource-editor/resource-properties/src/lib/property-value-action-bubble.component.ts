@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
@@ -22,7 +22,7 @@ import { PropertyValueService } from './property-value.service';
           </button>
         </ng-container>
 
-        <span [matTooltip]="'Edit'">
+        <span matTooltip="edit">
           <button
             *ngIf="userHasPermission('edit')"
             mat-button
@@ -39,7 +39,6 @@ import { PropertyValueService } from './property-value.service';
             mat-button
             class="delete"
             data-cy="delete-button"
-            [disabled]="isDeleteDisabled"
             (click)="$event.stopPropagation(); deleteAction.emit()">
             <mat-icon>delete</mat-icon>
           </button>
@@ -56,19 +55,13 @@ import { PropertyValueService } from './property-value.service';
   ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
-export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
+export class PropertyValueActionBubbleComponent implements OnInit {
   @Input() showDelete!: boolean;
   @Input() date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
 
   infoTooltip$!: Observable<string>;
-
-  private _subscription!: Subscription;
-
-  get isDeleteDisabled() {
-    return this._resourceFetcherService.resourceVersion || !this.showDelete;
-  }
 
   get deleteTooltip() {
     if (!this.showDelete) {
@@ -107,9 +100,5 @@ export class PropertyValueActionBubbleComponent implements OnInit, OnDestroy {
 
     const value = this._propertyValueService.editModeData.values[0];
     return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
-  }
-
-  ngOnDestroy() {
-    this._subscription?.unsubscribe();
   }
 }
