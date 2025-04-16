@@ -11,6 +11,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 export class ResourceFetcherService {
   private _reloadSubject = new BehaviorSubject(null);
   resource$!: Observable<DspResource>;
+  resourceVersion?: string;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -23,6 +24,8 @@ export class ResourceFetcherService {
       switchMap(() => this._getResource(resourceIri, resourceVersion)),
       shareReplay({ bufferSize: 1, refCount: true })
     );
+
+    this.resourceVersion = resourceVersion;
   }
 
   reload() {
