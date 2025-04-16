@@ -5,14 +5,14 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 @Component({
   selector: 'app-resource-version-warning',
   template: `
-    <div style="display: flex; justify-content: center">
-      <div style="padding: 16px; border: 1px solid #74a2cf; border-radius: 4px; margin-top: 16px">
+    <app-alert-info>
+      <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
           You are watching a resource dating from {{ resourceVersion }}.
           <button mat-button color="primary" (click)="displayCurrentVersion()">See current version</button>
         </div>
       </div>
-    </div>
+    </app-alert-info>
   `,
 })
 export class ResourceVersionWarningComponent {

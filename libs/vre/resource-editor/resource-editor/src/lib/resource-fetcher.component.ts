@@ -11,11 +11,13 @@ type HideReason = 'NotFound' | 'Deleted' | null;
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <app-resource-version-warning *ngIf="resourceVersion" [resourceVersion]="resourceVersion" />
+    <div class="content large middle">
+      <app-resource-version-warning *ngIf="resourceVersion" [resourceVersion]="resourceVersion" />
 
-    <ng-container *ngIf="!hideStatus; else hideTpl">
-      <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
-    </ng-container>
+      <ng-container *ngIf="!hideStatus; else hideTpl">
+        <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
+      </ng-container>
+    </div>
 
     <ng-template #hideTpl>
       <div style="display: flex; justify-content: center; padding: 16px">

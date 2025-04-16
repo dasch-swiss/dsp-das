@@ -1,3 +1,4 @@
+import { AlertInfoComponent } from './lib/alert-info.component';
 import { AnnotationTabComponent } from './lib/annotation-tab.component';
 import { CompoundArrowNavigationComponent } from './lib/compound/compound-arrow-navigation.component';
 import { CompoundNavigationComponent } from './lib/compound/compound-navigation.component';
@@ -39,4 +40,5 @@ export const ResourcePageComponents = [
   ResourceRestrictionComponent,
   ResourceVersionWarningComponent,
   ResourceInfoBarComponent,
+  AlertInfoComponent,
 ];
