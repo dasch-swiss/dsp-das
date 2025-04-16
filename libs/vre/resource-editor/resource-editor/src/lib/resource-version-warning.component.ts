@@ -24,12 +24,12 @@ export class ResourceVersionWarningComponent {
   ) {}
 
   displayCurrentVersion() {
-    this.removeQueryParam().then(() => {
+    this._removeQueryParam().then(() => {
       this._resourceFetcherService.reload();
     });
   }
 
-  removeQueryParam() {
+  private _removeQueryParam() {
     return this._router.navigate([], {
       queryParams: { version: null }, // Set parameter to null to remove it
       queryParamsHandling: 'merge',
