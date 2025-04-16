@@ -2,7 +2,7 @@ import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
@@ -90,12 +90,13 @@ export class ResourceHeaderComponent {
   }
 
   get userCanEdit(): boolean {
-    return ResourceUtil.userCanEdit(this.resource.res);
+    return !this.resourceFetcherService.resourceVersion || ResourceUtil.userCanEdit(this.resource.res);
   }
 
   constructor(
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private resourceFetcherService: ResourceFetcherService
   ) {}
 
   openEditLabelDialog() {
