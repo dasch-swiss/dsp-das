@@ -21,11 +21,11 @@ type HideReason = 'NotFound' | 'Deleted' | null;
 
     <ng-template #hideTpl>
       <div style="display: flex; justify-content: center; padding: 16px">
-        <h3 *ngIf="hideStatus === 'NotFound'">This resource is not found.</h3>
+        <h3 *ngIf="hideStatus === 'NotFound'">{{ 'resource.meta.notFound' | translate }}</h3>
 
         <div *ngIf="hideStatus === 'Deleted'" style="text-align: center">
-          <h3>This resource has been deleted.</h3>
-          <h4 *ngIf="resource?.res.deleteComment as comment">Reason: {{ comment }}</h4>
+          <h3>{{ 'resource.meta.deleted' | translate }}</h3>
+          <h4 *ngIf="resource?.res.deleteComment as comment">"{{ comment }}"</h4>
         </div>
       </div>
     </ng-template>

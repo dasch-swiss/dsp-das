@@ -8,8 +8,10 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
     <app-alert-info>
       <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
-          You are watching a resource dating from {{ resourceVersion }}.
-          <button mat-button color="primary" (click)="navigateToCurrentVersion()">See current version</button>
+          {{ 'resource.meta.versioned' | translate }} {{ resourceVersion }}.
+          <button mat-button color="primary" (click)="navigateToCurrentVersion()">
+            {{ 'resource.meta.seeCurrentVersion' | translate }}
+          </button>
         </div>
       </div>
     </app-alert-info>

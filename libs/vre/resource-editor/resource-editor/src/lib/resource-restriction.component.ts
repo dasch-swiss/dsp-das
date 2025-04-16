@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: ` <div *ngIf="showRestrictedMessage">
     <app-alert-info>
       <p>
-        This resource is restricted, file representations may be of lower quality and some properties may be hidden.
+        {{ 'resource.meta.restricted' | translate }}
       </p>
       <mat-icon class="close" data-cy="close-restricted-button" (click)="showRestrictedMessage = false"
         >clear
