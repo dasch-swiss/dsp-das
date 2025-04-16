@@ -33,7 +33,7 @@ import { PropertyValueService } from './property-value.service';
           </button>
         </span>
 
-        <span [matTooltip]="deleteTooltip">
+        <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
           <button
             *ngIf="userHasPermission('delete')"
             mat-button
@@ -62,14 +62,6 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   @Output() deleteAction = new EventEmitter();
 
   infoTooltip$!: Observable<string>;
-
-  get deleteTooltip() {
-    if (!this.showDelete) {
-      return 'This value cannot be deleted because it is required.';
-    } else {
-      return 'Delete';
-    }
-  }
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
