@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 
@@ -48,6 +49,7 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
+    private _notification: NotificationService,
     private _store: Store
   ) {}
 
@@ -55,6 +57,16 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
     if (changes['resourceIri'] || changes['resourceVersion']) {
       this.hideStatus = null;
       this.resource = undefined;
+
+      console.log(changes, 'changes');
+      if (
+        changes['resourceVersion']?.currentValue !== undefined &&
+        !ResourceUtil.versionIsValid(changes['resourceVersion'].currentValue)
+      ) {
+        this.resourceVersion = undefined;
+        this._notification.openSnackBar('The version you requested is not valid. The latest version is displayed.');
+      }
+
       this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
 
       this.subscription?.unsubscribe();
