@@ -2,9 +2,9 @@ import { ENTER, TAB } from '@angular/cdk/keycodes';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { Store } from '@ngxs/store';
-import { finalize, map, startWith } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authorship-form-field',
@@ -45,10 +45,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
 
   loading = true;
 
-  constructor(
-    private _adminApi: AdminProjectsLegalInfoApiService,
-    private _store: Store
-  ) {}
+  constructor(private _adminApi: AdminProjectsLegalInfoApiService) {}
 
   ngOnInit() {
     this._adminApi
@@ -63,17 +60,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
       });
   }
 
-  filteredOptions = this.inputControl.valueChanges.pipe(
-    startWith(''),
-    map(value => this._filter(value || ''))
-  );
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.availableAuthorship.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  addItem(event: any) {
+  addItem(event: MatChipInputEvent) {
     const inputValue = event.value.trim();
     if (inputValue && !this.selectedItems.includes(inputValue)) {
       if (!this.availableAuthorship.includes(inputValue)) {
@@ -82,7 +69,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
       this.selectedItems.push(inputValue);
       this._updateFormControl();
     }
-    event.chipInput!.clear();
+    event.chipInput.clear();
     this.inputControl.setValue('');
   }
 
