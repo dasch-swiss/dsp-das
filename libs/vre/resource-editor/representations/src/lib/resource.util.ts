@@ -23,7 +23,7 @@ export class ResourceUtil {
   public static versionIsValid(version: string) {
     const isValidUtcDate = (dateStr: string): boolean => {
       const date = new Date(dateStr);
-      return date instanceof Date && !isNaN(date.getTime()) && dateStr.endsWith('Z');
+      return !Number.isNaN(date.getTime()) && dateStr.endsWith('Z');
     };
 
     return isValidUtcDate(version);
