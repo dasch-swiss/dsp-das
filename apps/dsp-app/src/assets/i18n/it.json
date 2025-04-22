@@ -149,6 +149,13 @@
     }
   },
   "resource": {
+    "meta": {
+      "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
+      "versioned": "You are watching a resource dating from",
+      "seeCurrentVersion": "See current version",
+      "notFound": "This resource is not found.",
+      "deleted": "This resource has been deleted."
+    },
     "properties": "Proprietà",
     "comment": "Commento",
     "incomingLink": {
