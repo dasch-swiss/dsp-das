@@ -56,6 +56,6 @@ export class CreateCopyrightHolderDialogComponent {
           this.loading = false;
         })
       )
-      .subscribe(() => this._dialogRef.close());
+      .subscribe(() => this._dialogRef.close(true));
   }
 }

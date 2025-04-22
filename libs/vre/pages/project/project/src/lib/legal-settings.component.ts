@@ -5,7 +5,8 @@ import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-ser
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
@@ -55,10 +56,12 @@ import {
   `,
 })
 export class LegalSettingsComponent {
-  readonly project$ = this._store.select(ProjectsSelectors.currentProject).pipe(
+  private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
+
+  readonly project$ = this._reloadSubject.asObservable().pipe(
+    switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
     filter(project => project !== undefined),
-    map(project => project as ReadProject),
-    take(1)
+    map(project => project as ReadProject)
   );
 
   copyrightHolders$ = this.project$.pipe(
@@ -93,9 +96,16 @@ export class LegalSettingsComponent {
     if (!currentProject) {
       throw new AppError('No current project');
     }
-    this._dialog.open<CreateCopyrightHolderDialogComponent, CreateCopyrightHolderDialogProps>(
-      CreateCopyrightHolderDialogComponent,
-      { data: { projectShortcode: currentProject.shortcode } }
-    );
+    this._dialog
+      .open<CreateCopyrightHolderDialogComponent, CreateCopyrightHolderDialogProps, boolean>(
+        CreateCopyrightHolderDialogComponent,
+        { data: { projectShortcode: currentProject.shortcode } }
+      )
+      .afterClosed()
+      .subscribe(success => {
+        if (success) {
+          this._reloadSubject.next(undefined);
+        }
+      });
   }
 }
