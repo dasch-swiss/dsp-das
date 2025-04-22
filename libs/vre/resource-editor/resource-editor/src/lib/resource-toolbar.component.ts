@@ -1,27 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-toolbar',
   template: `
-    <span class="action" [class.deleted]="resource.res.isDeleted">
+    <span class="action">
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
         color="primary"
         data-cy="open-in-new-window-button"
         matTooltipPosition="above"
-        [disabled]="resource.res.isDeleted"
         (click)="openResource()">
         <mat-icon>open_in_new</mat-icon>
       </button>
@@ -31,14 +29,13 @@ import { filter } from 'rxjs/operators';
         mat-icon-button
         class="share-res"
         data-cy="share-button"
-        matTooltip="Share resource: {{ resource.res.versionArkUrl }}"
+        matTooltip="Share resource: {{ resource.versionArkUrl }}"
         matTooltipPosition="above"
-        [disabled]="resource.res.isDeleted"
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
 
-      <app-permission-info [resource]="resource.res" />
+      <app-permission-info [resource]="resource" />
       <!-- more menu with: delete, erase resource -->
       <button
         data-cy="resource-toolbar-more-button"
@@ -48,8 +45,7 @@ import { filter } from 'rxjs/operators';
         class="more-menu"
         matTooltip="More"
         matTooltipPosition="above"
-        [matMenuTriggerFor]="more"
-        [disabled]="resource.res.isDeleted">
+        [matMenuTriggerFor]="more">
         <mat-icon>more_vert</mat-icon>
       </button>
     </span>
@@ -60,7 +56,7 @@ import { filter } from 'rxjs/operators';
         matTooltip="Copy ARK url"
         matTooltipPosition="above"
         data-cy="copy-ark-url-button"
-        [cdkCopyToClipboard]="resource.res.versionArkUrl"
+        [cdkCopyToClipboard]="resource.versionArkUrl"
         (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy ARK url to clipboard
@@ -70,7 +66,7 @@ import { filter } from 'rxjs/operators';
         matTooltip="Copy internal link"
         data-cy="copy-internal-link-button"
         matTooltipPosition="above"
-        [cdkCopyToClipboard]="resource.res.id"
+        [cdkCopyToClipboard]="resource.id"
         (click)="notification.openSnackBar('Internal link copied to clipboard!')">
         <mat-icon>content_copy</mat-icon>
         Copy internal link to clipboard
@@ -113,12 +109,12 @@ import { filter } from 'rxjs/operators';
   ],
 })
 export class ResourceToolbarComponent {
-  @Input({ required: true }) resource!: DspResource;
+  @Input({ required: true }) resource!: ReadResource;
 
   isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   get userCanDelete() {
-    return ResourceUtil.userCanDelete(this.resource.res);
+    return ResourceUtil.userCanDelete(this.resource);
   }
 
   constructor(
@@ -126,30 +122,25 @@ export class ResourceToolbarComponent {
     private _resourceService: ResourceService,
     private _resourceFetcherService: ResourceFetcherService,
     private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef,
     private _store: Store
   ) {}
 
   openResource() {
-    window.open(`/resource${this._resourceService.getResourcePath(this.resource.res.id)}`, '_blank');
+    window.open(`/resource${this._resourceService.getResourcePath(this.resource.id)}`, '_blank');
   }
 
   deleteResource() {
-    this._dialog
-      .open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, { data: this.resource.res })
-      .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._resourceFetcherService.resourceIsDeleted();
-      });
+    this._dialog.open<DeleteResourceDialogComponent, ReadResource>(DeleteResourceDialogComponent, {
+      data: this.resource,
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   eraseResource() {
-    this._dialog
-      .open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, { data: this.resource.res })
-      .afterClosed()
-      .pipe(filter(response => !!response))
-      .subscribe(() => {
-        this._resourceFetcherService.resourceIsDeleted();
-      });
+    this._dialog.open<EraseResourceDialogComponent, ReadResource>(EraseResourceDialogComponent, {
+      data: this.resource,
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 }
