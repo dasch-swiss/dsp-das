@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, ReadResource, UpdateFileValue, UpdateResource } from '@dasch-swiss/dsp-js';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { AdminProjectsApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
 import { FileRepresentationType } from '../file-representation.type';
 import { fileValueMapping } from '../file-value-mapping';
@@ -77,18 +76,19 @@ export class ReplaceFileDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
+    private _adminProjectsApiService: AdminProjectsApiService,
     private _resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder,
-    private _route: ActivatedRoute
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit() {
     this.propId = this.data.resource.properties[this.data.representation][0].id;
-    this.projectShortcode = this._route.snapshot.params[RouteConstants.project];
+    this._adminProjectsApiService.getAdminProjectsIriProjectiri(this.data.resource.attachedToProject).subscribe(v => {
+      this.projectShortcode = v.project.shortcode as unknown as string;
+    });
   }
 
   replaceFile() {
-    console.log('ss', this);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
