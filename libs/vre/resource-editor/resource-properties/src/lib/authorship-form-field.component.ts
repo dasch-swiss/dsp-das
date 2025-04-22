@@ -1,4 +1,4 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ENTER, TAB } from '@angular/cdk/keycodes';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -38,7 +38,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
   @Input() control!: FormControl<string[] | null>;
   @Input({ required: true }) projectShortcode!: string;
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, TAB];
   inputControl = new FormControl('');
   selectedItems: string[] = [];
   availableAuthorship: string[] = [];
