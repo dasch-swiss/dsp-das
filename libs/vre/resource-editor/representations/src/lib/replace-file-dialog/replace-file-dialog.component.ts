@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateFileValue, UpdateResource } from '@dasch-swiss/dsp-js';
@@ -78,13 +78,15 @@ export class ReplaceFileDialogComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _adminProjectsApiService: AdminProjectsApiService,
     private _resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.propId = this.data.resource.properties[this.data.representation][0].id;
     this._adminProjectsApiService.getAdminProjectsIriProjectiri(this.data.resource.attachedToProject).subscribe(v => {
       this.projectShortcode = v.project.shortcode as unknown as string;
+      this._cdr.detectChanges();
     });
   }
 
