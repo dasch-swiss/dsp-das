@@ -58,7 +58,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
       this.hideStatus = null;
       this.resource = undefined;
 
-      console.log(changes, 'changes');
       if (
         changes['resourceVersion']?.currentValue !== undefined &&
         !ResourceUtil.versionIsValid(changes['resourceVersion'].currentValue)
