@@ -8,9 +8,9 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
     <app-alert-info>
       <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
-          {{ 'resource.meta.versioned' | translate }} {{ resourceVersion }}.
+          {{ 'resourceEditor.versioned' | translate }} {{ resourceVersion }}.
           <button mat-button color="primary" (click)="navigateToCurrentVersion()">
-            {{ 'resource.meta.seeCurrentVersion' | translate }}
+            {{ 'resourceEditor.seeCurrentVersion' | translate }}
           </button>
         </div>
       </div>
