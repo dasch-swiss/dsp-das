@@ -93,7 +93,7 @@ import { DeleteResourceDialogComponent } from './delete-resource-dialog.componen
         matTooltipPosition="above"
         (click)="deleteResource()">
         <mat-icon>delete</mat-icon>
-        {{ 'form.resource.title.delete' | translate }}
+        {{ 'resourceEditor.propertiesDisplay.annotationToolbar.delete' | translate }}
       </button>
       <button
         *ngIf="resourceFetcher.userCanDelete$ | async"
