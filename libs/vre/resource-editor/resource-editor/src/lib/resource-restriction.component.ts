@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: ` <div *ngIf="showRestrictedMessage">
     <app-alert-info>
       <p>
-        {{ 'resource.meta.restricted' | translate }}
+        {{ 'resourceEditor.restricted' | translate }}
       </p>
       <mat-icon class="close" data-cy="close-restricted-button" (click)="showRestrictedMessage = false"
         >clear
