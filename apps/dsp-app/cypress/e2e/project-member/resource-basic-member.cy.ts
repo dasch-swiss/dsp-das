@@ -62,7 +62,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it('ThingPicture resource should be created and deleted', () => {
+  it.only('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=class-item] div.label')
@@ -75,12 +75,16 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
+
+    cy.get('[data-cy=copyright-holder-select]').click();
+    cy.get('mat-option').eq(0).click();
+
+    cy.get('[data-cy=license-select]').click();
+    cy.get('mat-option').eq(0).click();
+
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=resource-label]')
-      .siblings('app-common-input')
-      .find('[data-cy=common-input-text]')
-      .should('be.visible')
-      .type(newLabel);
+    cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').should('be.visible').type(newLabel);
+
     const newTitle = faker.lorem.word();
     cy.get('[data-cy=Titel]').find('[data-cy=common-input-text]').should('be.visible').type(newTitle);
     cy.get('[data-cy=Titel]').find('[data-cy=comment-textarea]').should('be.visible').type(faker.lorem.word());

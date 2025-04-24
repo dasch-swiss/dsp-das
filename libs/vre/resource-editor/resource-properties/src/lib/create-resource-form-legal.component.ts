@@ -9,7 +9,10 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
   template: `
     <app-create-resource-form-row [label]="'Copyright holder'" [tooltip]="'Copyright holder'">
       <mat-form-field>
-        <mat-select placeholder="Choose" [formControl]="formGroup.controls.copyrightHolder">
+        <mat-select
+          placeholder="Choose"
+          [formControl]="formGroup.controls.copyrightHolder"
+          data-cy="copyright-holder-select">
           <mat-option *ngIf="copyrightHoldersLoading">Loading...</mat-option>
           <mat-option *ngFor="let copyrightHolder of copyrightHolders$ | async" [value]="copyrightHolder"
             >{{ copyrightHolder }}
@@ -20,7 +23,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
 
     <app-create-resource-form-row [label]="'License'" [tooltip]="'License'">
       <mat-form-field>
-        <mat-select placeholder="Choose" [formControl]="formGroup.controls.license">
+        <mat-select placeholder="Choose" [formControl]="formGroup.controls.license" data-cy="license-select">
           <mat-option *ngIf="licensesLoading">Loading...</mat-option>
           <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.labelEn }} </mat-option>
         </mat-select>
