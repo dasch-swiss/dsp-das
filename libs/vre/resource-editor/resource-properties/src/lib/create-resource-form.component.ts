@@ -240,7 +240,7 @@ export class CreateResourceFormComponent implements OnInit {
     const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
     createFile.license = formFileValue.legal.license!;
-    createFile.authorship = ['julien', 'julien2']; // formFileValue.legal.authorship!;
+    createFile.authorship = formFileValue.legal.authorship;
     createFile.filename = formFileValue.link!;
 
     return createFile;

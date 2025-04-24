@@ -21,6 +21,7 @@ import { finalize } from 'rxjs/operators';
       </mat-chip-grid>
       <input
         placeholder="New authorship..."
+        data-cy="authorship-chips"
         [formControl]="inputControl"
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"

@@ -21,6 +21,15 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   beforeEach(() => {
+    cy.loginAdmin();
+    cy.request(
+      'POST',
+      `${Cypress.env('apiUrl')}/admin/projects/shortcode/${Project0001Page.projectShortCode}/legal-info/copyright-holders`,
+      {
+        data: ['myHolder'],
+      }
+    ).then(response => expect(response.status).to.equal(200));
+
     cy.readFile('cypress/fixtures/user_profiles.json').then((json: UserProfiles) => {
       const users: UserProfiles = json;
       cy.login({
@@ -82,6 +91,8 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=license-select]').click();
     cy.get('mat-option').eq(0).click();
 
+    cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
+
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').should('be.visible').type(newLabel);
 
@@ -120,9 +131,15 @@ describe('Check project admin existing resource functionality', () => {
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy="more-vert-image-button"]').click({ force: true });
     cy.get('[data-cy="replace-image-button"]').should('be.visible').click();
-    cy.get('[data-cy="replace-file-submit-button"]').should('have.attr', 'disabled');
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
+
+    cy.get('[data-cy=copyright-holder-select]').click();
+    cy.get('mat-option').eq(0).click();
+
+    cy.get('[data-cy=license-select]').click();
+    cy.get('mat-option').eq(0).click();
+
     cy.get('[data-cy="replace-file-submit-button"]').should('not.have.attr', 'disabled');
     cy.get('[data-cy="replace-file-submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
