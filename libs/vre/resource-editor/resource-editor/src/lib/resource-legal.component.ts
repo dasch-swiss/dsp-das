@@ -11,14 +11,14 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
   selector: 'app-resource-legal',
   template: `
     <div
-      *ngIf="fileValue.copyrightHolder !== '' || fileValue.authorship.length > 0 || fileValue.license !== null"
+      *ngIf="fileValue.copyrightHolder || fileValue.authorship.length > 0 || fileValue.license !== null"
       class="mat-caption"
       style="border: 1px solid #292929;
     background: #292929; border-radius: 8px;
     color: #e4e9ed; padding: 8px; padding-bottom: 16px; margin-top: 8px; position: relative; top: 12px">
       <div style="display: flex; justify-content: space-between">
         <div>
-          <div *ngIf="fileValue.copyrightHolder !== ''">
+          <div *ngIf="fileValue.copyrightHolder">
             <span class="label">Copyright holder</span> {{ fileValue.copyrightHolder }}
           </div>
 
