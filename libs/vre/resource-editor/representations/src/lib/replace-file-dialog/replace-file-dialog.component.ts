@@ -64,9 +64,9 @@ export class ReplaceFileDialogComponent implements OnInit {
   form = this._fb.group({
     file: this._fb.control<string | null>(null, [Validators.required]),
     legal: this._fb.group({
-      copyrightHolder: this._fb.control<string | null>(null, [Validators.required]),
-      license: this._fb.control<LicenseDto | null>(null, [Validators.required]),
-      authorship: this._fb.control<string[] | null>(null, [Validators.required]),
+      copyrightHolder: this._fb.control<string | null>(null),
+      license: this._fb.control<LicenseDto | null>(null),
+      authorship: this._fb.control<string[] | null>(null),
     }),
   });
 

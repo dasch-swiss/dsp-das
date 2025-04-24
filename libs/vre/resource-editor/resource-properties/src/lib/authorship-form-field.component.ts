@@ -32,6 +32,10 @@ import { finalize } from 'rxjs/operators';
           {{ option }}
         </mat-option>
       </mat-autocomplete>
+
+      <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
+        {{ error | humanReadableError }}
+      </mat-error>
     </mat-form-field>
   `,
 })

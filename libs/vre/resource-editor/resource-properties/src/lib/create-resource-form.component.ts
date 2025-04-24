@@ -160,9 +160,9 @@ export class CreateResourceFormComponent implements OnInit {
       const fileFormGroup = this._fb.group({
         link: this._fb.control(null as string | null, [Validators.required]),
         legal: this._fb.group({
-          copyrightHolder: [null as string | null, Validators.required],
-          license: [null as LicenseDto | null, Validators.required],
-          authorship: [null as string[] | null, Validators.required],
+          copyrightHolder: [null as string | null],
+          license: [null as LicenseDto | null],
+          authorship: [null as string[] | null],
         }),
       });
       this.form.addControl('file', fileFormGroup);
