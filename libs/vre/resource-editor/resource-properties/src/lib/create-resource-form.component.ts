@@ -162,7 +162,7 @@ export class CreateResourceFormComponent implements OnInit {
         legal: this._fb.group({
           copyrightHolder: [null as string | null, Validators.required],
           license: [null as LicenseDto | null, Validators.required],
-          authorship: [null as string[] | null],
+          authorship: [null as string[] | null, Validators.required],
         }),
       });
       this.form.addControl('file', fileFormGroup);
@@ -240,7 +240,7 @@ export class CreateResourceFormComponent implements OnInit {
     const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
     createFile.license = formFileValue.legal.license!;
-    createFile.authorship = formFileValue.legal.authorship;
+    createFile.authorship = formFileValue.legal.authorship!;
     createFile.filename = formFileValue.link!;
 
     return createFile;
