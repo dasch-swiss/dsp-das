@@ -32,7 +32,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           [control]="form.controls.file.controls.link"
           [fileRepresentation]="fileRepresentation" />
 
-        <app-create-resource-form-legal [formGroup]="control?.controls.legal" />
+        <app-create-resource-form-legal [formGroup]="form.controls.file.controls.legal" />
         <h3>Properties</h3>
       </ng-container>
 
