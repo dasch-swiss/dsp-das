@@ -35,7 +35,7 @@ export interface ReplaceFileDialogProps {
         [formControl]="form.controls.file"
         [resourceId]="propId" />
 
-      <app-create-resource-form-legal [formGroup]="form.controls.legal" />
+      <app-resource-form-legal [formGroup]="form.controls.legal" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">

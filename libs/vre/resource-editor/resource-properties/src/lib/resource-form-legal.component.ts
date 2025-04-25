@@ -6,7 +6,7 @@ import { finalize, map, switchMap } from 'rxjs/operators';
 import { CreateResourceFormLegal } from './create-resource-form.interface';
 
 @Component({
-  selector: 'app-create-resource-form-legal',
+  selector: 'app-resource-form-legal',
   template: `
     <app-create-resource-form-row [label]="'Copyright holder'" [tooltip]="'Copyright holder'">
       <mat-form-field>
@@ -43,7 +43,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
     `,
   ],
 })
-export class CreateResourceFormLegalComponent implements OnInit {
+export class ResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
 
   copyrightHoldersLoading = true;
