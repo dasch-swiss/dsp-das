@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { getFileValue } from '@dasch-swiss/vre/resource-editor/representations';
-import { ProjectCommonService } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { LicensesLogoMapping } from './licenses-logo-mapping';
 
 @Component({
@@ -41,7 +41,7 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
       </div>
     </div>
     <ng-template #licenseWithLinkTpl>
-      <span style="display: flex; align-items: center" *ngIf="license">
+      <span style="display: flex; align-items: center" *ngIf="license$ && license$ | async as license">
         <a
           [href]="license.uri"
           style="color: white; text-decoration: underline; display: flex; align-items: center"
@@ -60,18 +60,17 @@ export class ResourceLegalComponent implements OnChanges {
   fileValue!: ReadFileValue;
 
   licenseLogo?: string;
-  licenses?: LicenseDto[];
-  license?: LicenseDto;
 
   subscription?: Subscription;
+  license$?: Observable<LicenseDto | undefined>;
 
-  constructor(public projectCommon: ProjectCommonService) {}
+  constructor(
+    private _resourceFetcher: ResourceFetcherService,
+    private _copyrightApi: AdminProjectsLegalInfoApiService
+  ) {}
 
   ngOnChanges() {
-    this.projectCommon.onInit('0803'); // TODO BAD CODE!
     this.fileValue = getFileValue(this.resource.res);
-
-    this.subscription?.unsubscribe();
 
     if (this.fileValue.license !== null) {
       if (LicensesLogoMapping.has(this.fileValue.license.id)) {
@@ -83,9 +82,11 @@ export class ResourceLegalComponent implements OnChanges {
   }
 
   private _fetchLicense() {
-    this.subscription = this.projectCommon.licenses$?.subscribe(licenses => {
-      this.licenses = licenses;
-      this.license = this.licenses?.find(license => license.id === this.fileValue.license?.id);
-    });
+    this.license$ = this._resourceFetcher.projectShortcode$.pipe(
+      switchMap(projectShortcode =>
+        this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
+      ),
+      map(data => data.data.find(license => license.id === this.fileValue.license?.id))
+    );
   }
 }
