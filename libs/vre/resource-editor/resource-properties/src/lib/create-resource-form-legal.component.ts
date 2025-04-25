@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs/operators';
 import { CreateResourceFormLegal } from './create-resource-form.interface';
 
 @Component({
@@ -31,7 +32,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
     </app-create-resource-form-row>
 
     <app-create-resource-form-row [label]="'Authorship'" [tooltip]="'Authorship'">
-      <app-authorship-form-field [control]="formGroup.controls.authorship" [projectShortcode]="projectShortcode" />
+      <app-authorship-form-field [control]="formGroup.controls.authorship" />
     </app-create-resource-form-row>
   `,
   styles: [
@@ -44,7 +45,6 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
 })
 export class CreateResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
-  @Input({ required: true }) projectShortcode!: string;
 
   copyrightHoldersLoading = true;
   licensesLoading = true;
@@ -53,29 +53,37 @@ export class CreateResourceFormLegalComponent implements OnInit {
   licenses$!: Observable<LicenseDto[]>;
   authorship$!: Observable<string[]>;
 
-  constructor(private _copyrightApi: AdminProjectsLegalInfoApiService) {}
+  constructor(
+    private _copyrightApi: AdminProjectsLegalInfoApiService,
+    private resourceFetcherService: ResourceFetcherService
+  ) {}
 
   ngOnInit() {
-    this.copyrightHolders$ = this._copyrightApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(this.projectShortcode)
-      .pipe(
-        map(data => data.data),
-        finalize(() => {
-          this.copyrightHoldersLoading = false;
-        })
-      );
+    this.copyrightHolders$ = this.resourceFetcherService.projectShortcode$.pipe(
+      switchMap(projectShortcode =>
+        this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(projectShortcode)
+      ),
+      map(data => data.data),
+      finalize(() => {
+        this.copyrightHoldersLoading = false;
+      })
+    );
 
-    this.licenses$ = this._copyrightApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(this.projectShortcode)
-      .pipe(
-        map(data => data.data),
-        finalize(() => {
-          this.licensesLoading = false;
-        })
-      );
+    this.licenses$ = this.resourceFetcherService.projectShortcode$.pipe(
+      switchMap(projectShortcode =>
+        this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
+      ),
+      map(data => data.data),
+      finalize(() => {
+        this.licensesLoading = false;
+      })
+    );
 
-    this.authorship$ = this._copyrightApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
-      .pipe(map(data => data.data));
+    this.authorship$ = this.resourceFetcherService.projectShortcode$.pipe(
+      switchMap(projectShortcode =>
+        this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(projectShortcode)
+      ),
+      map(data => data.data)
+    );
   }
 }

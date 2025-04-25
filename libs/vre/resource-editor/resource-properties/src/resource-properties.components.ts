@@ -1,6 +1,5 @@
 import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
-import { CreateResourceFormFileComponent } from './lib/create-resource-form-file.component';
 import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
 import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
 import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
@@ -100,6 +99,5 @@ export const ResourcePropertiesComponents = [
   FootnoteDirective,
   FootnoteParserPipe,
   AuthorshipFormFieldComponent,
-  CreateResourceFormFileComponent,
   MathJaxDirective,
 ];

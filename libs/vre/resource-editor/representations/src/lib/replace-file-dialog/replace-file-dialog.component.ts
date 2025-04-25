@@ -35,10 +35,7 @@ export interface ReplaceFileDialogProps {
         [formControl]="form.controls.file"
         [resourceId]="propId" />
 
-      <app-create-resource-form-legal
-        *ngIf="_resourceFetcher.projectShortcode$ | async as projectShortcode"
-        [formGroup]="form.controls.legal"
-        [projectShortcode]="projectShortcode" />
+      <app-create-resource-form-legal [formGroup]="form.controls.legal" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">

@@ -28,7 +28,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <ng-container *ngIf="form.controls.file && fileRepresentation">
         <h3>File</h3>
 
-        <app-create-resource-form-file [control]="form.controls.file" [fileRepresentation]="fileRepresentation" />
+        <app-create-resource-form-representation
+          [control]="form.controls.file.controls.link"
+          [fileRepresentation]="fileRepresentation" />
+
+        <app-create-resource-form-legal [formGroup]="control?.controls.legal" />
         <h3>Properties</h3>
       </ng-container>
 
