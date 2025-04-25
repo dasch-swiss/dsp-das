@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { finalize, map, switchMap, take } from 'rxjs/operators';
 import { CreateResourceFormLegal } from './create-resource-form.interface';
 
 @Component({
@@ -26,6 +26,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.license" data-cy="license-select">
           <mat-option *ngIf="licensesLoading">Loading...</mat-option>
+          <mat-option *ngIf="!licensesLoading" [value]="undefined">None</mat-option>
           <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.labelEn }} </mat-option>
         </mat-select>
       </mat-form-field>
@@ -59,7 +60,9 @@ export class ResourceFormLegalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.copyrightHolders$ = this.resourceFetcherService.projectShortcode$.pipe(
+    const projectShortcode$ = this.resourceFetcherService.projectShortcode$.pipe(take(1));
+
+    this.copyrightHolders$ = projectShortcode$.pipe(
       switchMap(projectShortcode =>
         this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(projectShortcode)
       ),
@@ -69,7 +72,8 @@ export class ResourceFormLegalComponent implements OnInit {
       })
     );
 
-    this.licenses$ = this.resourceFetcherService.projectShortcode$.pipe(
+    this.licenses$ = projectShortcode$.pipe(
+      take(1),
       switchMap(projectShortcode =>
         this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
       ),
@@ -79,7 +83,7 @@ export class ResourceFormLegalComponent implements OnInit {
       })
     );
 
-    this.authorship$ = this.resourceFetcherService.projectShortcode$.pipe(
+    this.authorship$ = projectShortcode$.pipe(
       switchMap(projectShortcode =>
         this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(projectShortcode)
       ),
