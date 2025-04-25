@@ -35,7 +35,10 @@ export interface ReplaceFileDialogProps {
         [formControl]="form.controls.file"
         [resourceId]="propId" />
 
-      <app-resource-form-legal [formGroup]="form.controls.legal" />
+      <app-resource-form-legal
+        *ngIf="resourceFetcher.projectShortcode$ | async as projectShortcode"
+        [formGroup]="form.controls.legal"
+        [projectShortcode]="projectShortcode" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -72,7 +75,7 @@ export class ReplaceFileDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceFetcher: ResourceFetcherService,
+    public resourceFetcher: ResourceFetcherService,
     private _fb: FormBuilder
   ) {}
 
@@ -106,7 +109,7 @@ export class ReplaceFileDialogComponent implements OnInit {
       .updateValue(updateRes)
       .pipe(
         finalize(() => {
-          this._resourceFetcher.reload();
+          this.resourceFetcher.reload();
           this.dialogRef.close();
         })
       )

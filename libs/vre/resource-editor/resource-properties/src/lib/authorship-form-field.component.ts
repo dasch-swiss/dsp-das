@@ -4,8 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { finalize, switchMap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authorship-form-field',
@@ -42,6 +41,7 @@ import { finalize, switchMap } from 'rxjs/operators';
 })
 export class AuthorshipFormFieldComponent implements OnInit {
   @Input() control!: FormControl<string[] | null>;
+  @Input({ required: true }) projectShortcode!: string;
 
   separatorKeysCodes: number[] = [ENTER, TAB];
   inputControl = new FormControl('');
@@ -50,17 +50,12 @@ export class AuthorshipFormFieldComponent implements OnInit {
 
   loading = true;
 
-  constructor(
-    private _adminApi: AdminProjectsLegalInfoApiService,
-    private resourceFetcherService: ResourceFetcherService
-  ) {}
+  constructor(private _adminApi: AdminProjectsLegalInfoApiService) {}
 
   ngOnInit() {
-    this.resourceFetcherService.projectShortcode$
+    this._adminApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
       .pipe(
-        switchMap(projectShortcode =>
-          this._adminApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(projectShortcode)
-        ),
         finalize(() => {
           this.loading = false;
         })

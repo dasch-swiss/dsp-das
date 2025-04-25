@@ -32,7 +32,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           [control]="form.controls.file.controls.link"
           [fileRepresentation]="fileRepresentation" />
 
-        <app-resource-form-legal [formGroup]="form.controls.file.controls.legal" />
+        <app-resource-form-legal
+          [formGroup]="form.controls.file.controls.legal"
+          [projectShortcode]="projectShortcode" />
         <h3>Properties</h3>
       </ng-container>
 
@@ -75,6 +77,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) projectShortcode!: string;
+
   @Output() createdResourceIri = new EventEmitter<string>();
 
   form: FormGroup<CreateResourceFormInterface> = this._fb.group({

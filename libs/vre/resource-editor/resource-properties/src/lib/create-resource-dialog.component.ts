@@ -5,6 +5,7 @@ export interface CreateResourceDialogProps {
   resourceType: string;
   resourceClassIri: string;
   projectIri: string;
+  projectShortcode: string;
 }
 
 @Component({
@@ -15,6 +16,7 @@ export interface CreateResourceDialogProps {
       <app-create-resource-form
         [resourceClassIri]="data.resourceClassIri"
         [projectIri]="data.projectIri"
+        [projectShortcode]="data.projectShortcode"
         (createdResourceIri)="onCreatedResource($event)" />
     </div>
   `,

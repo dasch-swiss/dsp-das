@@ -13,13 +13,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  KnoraApiConnection,
-  ReadProject,
-  ReadResource,
-  ReadResourceSequence,
-  ResourceClassDefinition,
-} from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
@@ -137,13 +131,14 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
     let myResourceId: string;
     event.stopPropagation();
-    const projectIri = (this._store.selectSnapshot(ProjectsSelectors.currentProject) as ReadProject)?.id;
+    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject)!;
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         data: {
           resourceType,
           resourceClassIri,
-          projectIri,
+          projectIri: project.id,
+          projectShortcode: project.shortcode,
         },
       })
       .afterClosed()
