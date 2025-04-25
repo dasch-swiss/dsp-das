@@ -12,7 +12,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadClassItemsCountAction } from '@dasch-swiss/vre/core/state';
 import { FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
@@ -207,8 +207,7 @@ export class CreateResourceFormComponent implements OnInit {
     createResource.label = this.form.controls.label.value;
     createResource.type = this.resourceClass.id;
     createResource.properties = this._getPropertiesObj();
-    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
-    createResource.attachedToProject = this.projectIri ? this.projectIri : resource!.res.attachedToProject;
+    createResource.attachedToProject = this.projectIri;
 
     return createResource;
   }
