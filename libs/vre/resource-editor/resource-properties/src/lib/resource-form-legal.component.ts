@@ -15,6 +15,7 @@ import { CreateResourceFormLegal } from './create-resource-form.interface';
           [formControl]="formGroup.controls.copyrightHolder"
           data-cy="copyright-holder-select">
           <mat-option *ngIf="copyrightHoldersLoading">Loading...</mat-option>
+          <mat-option *ngIf="!copyrightHoldersLoading" [value]="undefined">None</mat-option>
           <mat-option *ngFor="let copyrightHolder of copyrightHolders$ | async" [value]="copyrightHolder"
             >{{ copyrightHolder }}
           </mat-option>
