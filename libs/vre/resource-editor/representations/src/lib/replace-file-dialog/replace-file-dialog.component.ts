@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateFileValue, UpdateResource } from '@dasch-swiss/dsp-js';
-import { AdminProjectsApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { finalize } from 'rxjs/operators';
 import { FileRepresentationType } from '../file-representation.type';
@@ -36,7 +36,7 @@ export interface ReplaceFileDialogProps {
         [resourceId]="propId" />
 
       <app-create-resource-form-legal
-        *ngIf="projectShortcode"
+        *ngIf="_resourceFetcher.projectShortcode$ | async as projectShortcode"
         [formGroup]="form.controls.legal"
         [projectShortcode]="projectShortcode" />
     </mat-dialog-content>
@@ -59,7 +59,6 @@ export interface ReplaceFileDialogProps {
 })
 export class ReplaceFileDialogComponent implements OnInit {
   propId!: string;
-  projectShortcode?: string;
 
   form = this._fb.group({
     file: this._fb.control<string | null>(null, [Validators.required]),
@@ -76,18 +75,12 @@ export class ReplaceFileDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _adminProjectsApiService: AdminProjectsApiService,
     private _resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder,
-    private _cdr: ChangeDetectorRef
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit() {
     this.propId = this.data.resource.properties[this.data.representation][0].id;
-    this._adminProjectsApiService.getAdminProjectsIriProjectiri(this.data.resource.attachedToProject).subscribe(v => {
-      this.projectShortcode = v.project.shortcode as unknown as string;
-      this._cdr.detectChanges();
-    });
   }
 
   replaceFile() {
