@@ -17,7 +17,6 @@ export * from './lib/compound/compound-arrow-navigation.component';
 export * from './lib/compound/compound-navigation.component';
 export * from './lib/compound/compound-slider.component';
 export * from './lib/compound/compound-viewer.component';
-export * from './lib/resource-file-value.component';
 export * from './lib/resource-info-bar.component';
 export * from './lib/resource-version-warning.component';
 export * from './lib/alert-info.component';
