@@ -46,6 +46,9 @@ import { CompoundService } from './compound/compound.service';
   styles: [
     `
       :host ::ng-deep {
+        .mat-mdc-tab-body {
+          width: 100%;
+        }
         .mat-mdc-tab-body.mat-mdc-tab-body-active,
         .mat-mdc-tab-body-content,
         .mat-mdc-tab-body-wrapper {
