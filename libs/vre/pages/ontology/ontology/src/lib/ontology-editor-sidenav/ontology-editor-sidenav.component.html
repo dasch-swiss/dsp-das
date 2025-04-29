@@ -1,0 +1,51 @@
+<mat-list>
+  <a mat-list-item routerLinkActive="active" (click)="activateView('classes')">Classes</a>
+  <span *ngIf="view === 'classes'">
+    <button mat-button (click)="expandClasses = !expandClasses">
+      <mat-icon>{{ expandClasses ? 'compress' : 'expand' }}</mat-icon>
+      {{ expandClasses ? "Collapse all" : "Expand all" }}
+    </button>
+    <span mat-list-item *ngIf="(project$ | async)?.status && (isAdmin$ | async) === true">
+      <button mat-button data-cy="create-class-button" [matMenuTriggerFor]="addResClassMenu">
+        <mat-icon>add</mat-icon>
+        Create new class
+      </button>
+      <mat-menu #addResClassMenu="matMenu" xPosition="before">
+        <button
+          [attr.data-cy]="type.iri.split('#').pop()"
+          mat-menu-item
+          *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
+          (click)="createResourceClass(type)">
+          <mat-icon>{{ type.icons[0] }}</mat-icon>
+          {{ type.label }}
+        </button>
+      </mat-menu>
+    </span>
+  </span>
+  <mat-divider></mat-divider>
+  <a mat-list-item routerLinkActive="active" data-cy="properties-button" (click)="activateView('properties')"
+    >Properties</a
+  >
+  <button *ngIf="view === 'properties'" mat-button [matMenuTriggerFor]="newFromPropType">
+    <mat-icon>add</mat-icon>
+    Add Property
+  </button>
+  <mat-menu #newFromPropType="matMenu">
+    <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
+      <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
+      <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+        <button
+          mat-menu-item
+          *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
+          [value]="ele"
+          [attr.data-cy]="ele.label"
+          [matTooltip]="ele.description"
+          matTooltipPosition="after"
+          (click)="addNewProperty(ele)">
+          <mat-icon>{{ ele.icon }}</mat-icon>
+          {{ ele.label }}
+        </button>
+      </mat-menu>
+    </ng-container>
+  </mat-menu>
+</mat-list>

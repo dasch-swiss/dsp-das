@@ -1,0 +1,50 @@
+<mat-toolbar class="ontology-editor-header">
+  <mat-toolbar-row>
+    <span class="ontology-info" *ngIf="(ontology$ | async)?.label">
+      <h3
+        data-cy="ontology-label"
+        class="mat-headline-6"
+        [matTooltip]="(ontology$ | async).label + ((ontology$ | async).comment ? ' &mdash; ' + (ontology$ | async).comment : '')"
+        matTooltipPosition="above">
+        {{ (ontology$ | async)?.label }}
+      </h3>
+      <p class="mat-caption" matTooltipPosition="above">
+        <span *ngIf="(lastModificationDate$ | async)">
+          Updated on: {{ (lastModificationDate$ | async) | date:'medium' }}
+        </span>
+      </p>
+    </span>
+
+    <span class="fill-remaining-space"></span>
+
+    <!-- edit options -->
+    <span class="ontology-actions project-actions" *ngIf="(project$ | async)?.status">
+      <p class="mat-caption space-reducer">Data model configuration</p>
+      <span [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''">
+        <button
+          *ngIf="(ontology$ | async) as currentOntology"
+          color="primary"
+          data-cy="edit-ontology-button"
+          mat-button
+          [disabled]="(isAdmin$ | async) === false"
+          (click)="$event.stopPropagation(); editOntology(currentOntology)">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </span>
+      <span
+        *ngIf="(isAdmin$ | async)"
+        [matTooltip]="( ((currentOntologyCanBeDeleted$ | async) ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!'))">
+        <button
+          color="warn"
+          mat-button
+          *ngIf="(ontology$ | async)"
+          [disabled]="(currentOntologyCanBeDeleted$ | async) === false || (isAdmin$ | async) === false"
+          (click)="deleteOntology()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </span>
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>

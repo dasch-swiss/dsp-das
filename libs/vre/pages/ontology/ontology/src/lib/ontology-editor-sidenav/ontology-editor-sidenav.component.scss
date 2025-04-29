@@ -1,0 +1,12 @@
+@use "config" as *;
+
+button {
+  width: 100%;
+  text-align: left;
+  display: inline-block;
+}
+
+.active {
+  background-color: $primary_100;
+}
+

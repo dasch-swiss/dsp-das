@@ -8,7 +8,15 @@ import { PropToDisplay } from '../model-interfaces';
 
 export class LoadProjectOntologiesAction {
   static readonly type = '[Ontologies] Load Project Ontologies';
-  constructor(public projectIri: string) {}
+  constructor(
+    public projectIri: string,
+    from = ''
+  ) {
+    if (!from) {
+      console.error('fuck');
+    }
+    console.log('Load ProjectOntologiesAction from:', from);
+  }
 }
 
 export class SetOntologiesLoadingAction {

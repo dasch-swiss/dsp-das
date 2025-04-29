@@ -6,6 +6,7 @@ import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology-properties',
@@ -49,29 +50,10 @@ import { map } from 'rxjs/operators';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyPropertiesComponent implements OnInit {
-  @Select(OntologiesSelectors.projectOntology) currentOntology$: Observable<ReadOntology>;
-
-  properties$!: Observable<PropertyDefinition[]>;
+export class OntologyPropertiesComponent {
+  properties$: Observable<PropertyDefinition[]> = this._oes.currentOntologyProperties$;
 
   trackByPropertyDefinitionFn = (index: number, item: PropertyDefinition) => `${index}-${item.id}`;
 
-  constructor(private _sortingService: SortingService) {}
-
-  ngOnInit() {
-    this.properties$ = this.currentOntology$.pipe(
-      map(ontology => {
-        if (ontology) {
-          const props = getAllEntityDefinitionsAsArray(ontology.properties);
-          // return sorted array
-          return this._sortingService
-            .keySortByAlphabetical(props, 'label')
-            .filter(
-              resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff')
-            );
-        }
-        return [];
-      })
-    );
-  }
+  constructor(private _oes: OntologyEditService) {}
 }

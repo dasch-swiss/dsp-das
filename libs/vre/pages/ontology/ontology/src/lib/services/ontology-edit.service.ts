@@ -1,5 +1,6 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import {
   ApiResponseError,
   CanDoResponse,
@@ -7,7 +8,6 @@ import {
   CreateResourceProperty,
   IHasProperty,
   KnoraApiConnection,
-  OntologyMetadata,
   ReadOntology,
   ReadProject,
   ResourceClassDefinitionWithAllLanguages,
@@ -19,17 +19,13 @@ import {
   UpdateResourcePropertyGuiElement,
   CreateResourceClass,
   Constants,
+  CreateOntology,
+  UpdateOntologyMetadata,
 } from '@dasch-swiss/dsp-js';
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import {
-  LoadOntologyAction,
-  LoadProjectOntologiesAction,
-  OntologiesSelectors,
-  ProjectsSelectors,
-  SetCurrentProjectOntologyPropertiesAction,
-} from '@dasch-swiss/vre/core/state';
+import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   CreatePropertyData,
   CreatePropertyFormDialogComponent,
@@ -43,12 +39,14 @@ import {
   OntologyService,
   ProjectService,
   PropertyInfoObject,
+  SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { concat, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap, last } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, concat, Observable, of, pipe, Subject } from 'rxjs';
+import { filter, map, switchMap, take, takeUntil, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
   CreateResourceClassDialogProps,
@@ -58,7 +56,7 @@ import {
   EditResourceClassDialogProps,
 } from '../edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
-import { OntologyFormProps } from '../ontology-form/ontology-form.type';
+import { OntologyData } from '../ontology-form/ontology-form.type';
 
 export type UpdateOntologyT =
   | CreateResourceProperty
@@ -69,30 +67,86 @@ export type UpdateOntologyT =
 
 @Injectable({ providedIn: 'root' })
 export class OntologyEditService implements OnDestroy {
-  private _currentProject$ = this._store.select(ProjectsSelectors.currentProject);
-  private _currentProject?: ReadProject;
+  private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
+  currentOntology$ = this._currentOntology.asObservable();
 
-  private _currentOntology$ = this._store.select(OntologiesSelectors.currentOntology);
-  private _currentOntology: ReadOntology | null = null;
+  currentOntologyProperties$ = this.currentOntology$.pipe(
+    map(ontology => {
+      if (ontology) {
+        const props = ontology.getAllPropertyDefinitions();
+        return this._sortingService
+          .keySortByAlphabetical(props, 'label')
+          .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'));
+      }
+      return [];
+    })
+  );
+
+  currentOntologyClasses$ = this.currentOntology$.pipe(
+    map(ontology => {
+      if (ontology) {
+        return this._initOntoClasses(
+          ontology.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
+            ResourceClassDefinitionWithAllLanguages
+          )
+        );
+      }
+      return [];
+    })
+  );
+
+  currentOntologyCanBeDeleted$ = this.currentOntology$.pipe(
+    filter(onto => onto !== null),
+    map(onto => onto!.id),
+    distinctUntilChanged(),
+    switchMap(ontoId => this._dspApiConnection.v2.onto.canDeleteOntology(ontoId).pipe(map(canDo => canDo.canDo)))
+  );
+
+  private _isTransacting = new BehaviorSubject<boolean>(false);
+  isTransacting$ = this._isTransacting.asObservable();
+
+  private _ontologyIriToRequest = new BehaviorSubject<string | null>(null);
+  private _ontologyIriToRequest$ = this._ontologyIriToRequest.asObservable();
+
+  private _initOntology$ = combineLatest(
+    this._store.select(ProjectsSelectors.currentProject),
+    this._ontologyIriToRequest$
+  ).pipe(
+    filter(([project, ontoLabel]) => !!project && !!ontoLabel),
+    switchMap(([project, ontoLabel]) => {
+      console.log('ontoLabel', ontoLabel);
+      console.log('p', project);
+      const iriBase = this._ontologyService.getIriBaseUrl();
+      const iri = `${iriBase}/${RouteConstants.ontology}/${project!.shortcode}/${ontoLabel}/v2`;
+      return this._dspApiConnection.v2.onto.getOntology(iri, true).pipe(take(1));
+    })
+  );
 
   private _destroyed: Subject<void> = new Subject<void>();
 
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
+  private _currentProject?: ReadProject;
+
   get projectId(): string {
     return this._currentProject?.id || '';
   }
 
-  get projectUuid(): string {
-    return ProjectService.IriToUuid(this.projectId);
-  }
-
   get ontologyId(): string {
-    return this._currentOntology?.id || '';
+    return this._currentOntology.value?.id || '';
   }
 
   get lastModificationDate(): string {
-    return this._currentOntology?.lastModificationDate || '';
+    return this._currentOntology.value?.lastModificationDate || '';
+  }
+
+  set lastModificationDate(date: string | undefined) {
+    const currentOntology = this._currentOntology.value;
+    if (!currentOntology || !date) {
+      return;
+    }
+    currentOntology.lastModificationDate = date;
+    this._currentOntology.next(currentOntology);
   }
 
   constructor(
@@ -100,117 +154,200 @@ export class OntologyEditService implements OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     private _dialogService: DialogService,
+    private _notification: NotificationService,
     private _ontologyService: OntologyService,
+    private _sortingService: SortingService,
+    private _router: Router, // Todo: Move to component; this is components logic
     private _store: Store
   ) {
-    this._currentProject$.pipe(takeUntil(this._destroyed)).subscribe(project => {
-      this._currentProject = project;
+    this._store
+      .select(ProjectsSelectors.currentProject)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(project => {
+        this._currentProject = project;
+        console.log('current project', project);
+      });
+
+    this._initOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
+      this._currentOntology.next(onto);
     });
 
-    this._currentOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
-      this._currentOntology = onto;
+    this.currentOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
       this._canDeletePropertyMap.clear();
     });
+  }
+
+  initOntologyByLabel(label: string) {
+    // this._ontologyIriToRequest.next(label);
+    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+    const iriBase = this._ontologyService.getIriBaseUrl();
+    const iri = `${iriBase}/${RouteConstants.ontology}/${project!.shortcode}/${label}/v2`;
+    this._isTransacting.next(true);
+    this._dspApiConnection.v2.onto
+      .getOntology(iri, true)
+      .pipe(take(1))
+      .subscribe(onto => {
+        this._currentOntology.next(onto);
+        this._isTransacting.next(false);
+      });
+  }
+
+  private _initOntoClasses(allOntoClasses: ResourceClassDefinitionWithAllLanguages[]) {
+    // reset the ontology classes
+    const ontoClasses: ResourceClassDefinitionWithAllLanguages[] = [];
+
+    // display only the classes which are not a subClass of Standoff
+    allOntoClasses.forEach(resClass => {
+      if (resClass.subClassOf.length) {
+        const splittedSubClass = resClass.subClassOf[0].split('#');
+        if (!splittedSubClass[0].includes(Constants.StandoffOntology) && !splittedSubClass[1].includes('Standoff')) {
+          ontoClasses.push(resClass);
+        }
+      }
+    });
+    return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
   }
 
   openCreateNewOntology() {
     this._openOntologyForm();
   }
 
-  openEditOntology(iri: string) {
-    this._openOntologyForm(iri);
+  openEditOntology(ontology: ReadOntology) {
+    this._openOntologyForm(ontology);
   }
 
-  private _openOntologyForm(iri?: string): void {
-    this._dialog
-      .open<OntologyFormComponent, OntologyFormProps, OntologyMetadata | null>(
-        OntologyFormComponent,
-        DspDialogConfig.dialogDrawerConfig(
-          {
-            ontologyIri: iri,
-            projectIri: this.projectId,
-          },
-          true
-        )
-      )
+  private _openOntologyForm(ontology?: ReadOntology) {
+    const dialogRef = this._dialog.open<OntologyFormComponent, ReadOntology>(
+      OntologyFormComponent,
+      DspDialogConfig.dialogDrawerConfig(ontology, true)
+    );
+    dialogRef
       .afterClosed()
-      .pipe(filter((result): result is OntologyMetadata => !!result))
-      .subscribe((created: OntologyMetadata) => {
-        this._reloadAfterChanges();
+      .pipe(
+        take(1),
+        filter((result): result is OntologyData => !!result),
+        switchMap(ontologyData => {
+          if (ontology) {
+            return this._updateOntology(ontologyData);
+          } else {
+            return this._createOntology(ontologyData);
+          }
+        })
+      )
+      .pipe(take(1))
+      .subscribe(response => {
+        // this._store.dispatch([new ClearProjectOntologiesAction(this._currentProject!.shortcode)]);
+        this._afterTransaction();
+        if (!ontology) {
+          this._router.navigate([
+            RouteConstants.project,
+            ProjectService.IriToUuid(this.projectId),
+            RouteConstants.ontology,
+            OntologyService.getOntologyName(response.id),
+            RouteConstants.editor,
+            RouteConstants.classes,
+          ]);
+        }
       });
+  }
+
+  private _updateOntology(ontologyData: OntologyData) {
+    const updateOntology = new UpdateOntologyMetadata();
+    updateOntology.id = this.ontologyId;
+    updateOntology.lastModificationDate = this.lastModificationDate;
+    updateOntology.label = `${this._currentProject!.shortname}:${ontologyData.label}`;
+    updateOntology.comment = ontologyData.comment;
+
+    return this._dspApiConnection.v2.onto.updateOntology(updateOntology);
   }
 
   deleteCurrentOntology() {
     this._dialogService
       .afterConfirmation('Do you want to delete this data model ?')
       .pipe(
-        switchMap(() =>
+        tap(() => {
+          this._isTransacting.next(true);
           this._dspApiConnection.v2.onto.deleteOntology({
             id: this.ontologyId,
             lastModificationDate: this.lastModificationDate,
-          })
-        )
+          });
+        })
       )
       .subscribe(() => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
+  private _createOntology(ontologyData: OntologyData) {
+    const createOntology = new CreateOntology();
+    createOntology.label = `${this._currentProject!.shortname}:${ontologyData.label}`;
+    createOntology.name = ontologyData.name;
+    createOntology.comment = ontologyData.comment;
+    createOntology.attachedToProject = this.projectId;
+
+    return this._dspApiConnection.v2.onto.createOntology(createOntology);
+  }
+
   openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    this._dialog
-      .open<CreatePropertyFormDialogComponent, CreatePropertyFormDialogProps, boolean>(
-        CreatePropertyFormDialogComponent,
-        {
-          data: { propType, resClass: assignToClass },
-        }
-      )
+    const dialogRef = this._dialog.open<
+      CreatePropertyFormDialogComponent,
+      CreatePropertyFormDialogProps,
+      CreatePropertyData
+    >(CreatePropertyFormDialogComponent, {
+      data: { propType, resClass: assignToClass },
+    });
+
+    dialogRef
       .afterClosed()
-      .subscribe(() => {
-        this._reloadAfterChanges();
+      .pipe(
+        take(1),
+        filter((result): result is CreatePropertyData => !!result),
+        switchMap(propertyData => this._createResourceProperty(propertyData))
+      )
+      .subscribe(propDef => {
+        if (assignToClass) {
+          this.lastModificationDate = propDef.lastModificationDate;
+          this.assignPropertyToClass(propDef.id, assignToClass);
+        } else {
+          this._afterTransaction(`Successfully created ${propDef.label}.`);
+        }
       });
   }
 
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
-    this._dialog
-      .open<EditPropertyFormDialogComponent, PropertyInfoObject>(
-        EditPropertyFormDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({
-          propDef,
-          propType,
-        })
-      )
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyData>(
+      EditPropertyFormDialogComponent,
+      DspDialogConfig.dialogDrawerConfig({
+        propDef,
+        propType,
+      })
+    );
+
+    dialogRef
       .afterClosed()
+      .pipe(
+        take(1),
+        filter((result): result is PropertyData => !!result),
+        switchMap(propertyData => this._updateProperty(propDef.id, propertyData))
+      )
       .subscribe(() => {
-        this._reloadAfterChanges();
+        this._afterTransaction(`Successfully updated ${propDef.label}.`);
       });
   }
 
   openEditResourceClass(resClass: ResourceClassDefinitionWithAllLanguages): void {
-    this._dialog
-      .open<EditResourceClassDialogComponent, EditResourceClassDialogProps, boolean>(
-        EditResourceClassDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({
-          id: resClass.id,
-          title: resClass.label || '',
-          ontologyId: this.ontologyId,
-          lastModificationDate: this.lastModificationDate,
-          name: this._ontologyService.getNameFromIri(resClass.id),
-          comments: resClass.comments as MultiLanguages,
-          labels: resClass.labels as MultiLanguages,
-        })
-      )
-      .afterClosed()
-      .subscribe(event => {
-        if (event === true) {
-          this._reloadAfterChanges();
-        }
-      });
-  }
-
-  createResourceProperty(propertyData: CreatePropertyData) {
-    //     this._oes.createResourceProperty(this.getCreateResourceProperty(this.form, this.data.propType), this.data.resClass);
-    const createResProp = this._getCreateResourceProperty(propertyData);
-    this._createResourceProperty(createResProp, propertyData.classDef);
+    this._dialog.open<EditResourceClassDialogComponent, EditResourceClassDialogProps, boolean>(
+      EditResourceClassDialogComponent,
+      DspDialogConfig.dialogDrawerConfig({
+        id: resClass.id,
+        title: resClass.label || '',
+        ontologyId: this.ontologyId,
+        lastModificationDate: this.lastModificationDate,
+        name: this._ontologyService.getNameFromIri(resClass.id),
+        comments: resClass.comments as MultiLanguages,
+        labels: resClass.labels as MultiLanguages,
+      })
+    );
   }
 
   private _getCreateResourceProperty(data: CreatePropertyData): CreateResourceProperty {
@@ -222,7 +359,7 @@ export class OntologyEditService implements OnDestroy {
     createResProp.subPropertyOf = [data.propType.subPropOf];
 
     if (data.guiAttribute) {
-      createResProp.guiAttributes = this.getGuiAttribute(data.guiAttribute, data.propType);
+      createResProp.guiAttributes = this._getGuiAttribute(data.guiAttribute, data.propType);
     }
 
     if (
@@ -245,7 +382,7 @@ export class OntologyEditService implements OnDestroy {
     return createResProp;
   }
 
-  private getGuiAttribute(guiAttr: string, propType: DefaultProperty): string[] | undefined {
+  private _getGuiAttribute(guiAttr: string, propType: DefaultProperty): string[] | undefined {
     switch (propType.guiEle) {
       case Constants.GuiColorPicker:
         return [`ncolors=${guiAttr}`];
@@ -269,43 +406,37 @@ export class OntologyEditService implements OnDestroy {
     return undefined;
   }
 
-  private _createResourceProperty(resProp: CreateResourceProperty, assignToClass?: ClassDefinition) {
-    this._dspApiConnection.v2.onto
-      .createResourceProperty(this._getOntologyForCreateProperty(resProp))
-      .pipe(take(1))
-      .subscribe((response: ResourcePropertyDefinitionWithAllLanguages) => {
-        if (assignToClass) {
-          this._currentOntology!.lastModificationDate = response.lastModificationDate;
-          this.assignPropertyToClass(response.id, assignToClass);
-        } else {
-          this._reloadAfterChanges();
-        }
-      });
+  private _createResourceProperty(propertyData: CreatePropertyData) {
+    this._isTransacting.next(true);
+    const createProperty = this._getCreateResourceProperty(propertyData);
+    const onto = this._getUpdateOntology<CreateResourceProperty>(createProperty);
+    return this._dspApiConnection.v2.onto.createResourceProperty(onto).pipe(take(1));
   }
 
   assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition, position?: number) {
+    this._isTransacting.next(true);
     const updateOnto = this._getUpdateOntologyForPropertyAssignment(propertyId, classDefinition, position);
     this._dspApiConnection.v2.onto
       .addCardinalityToResourceClass(updateOnto)
       .pipe(take(1))
       .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
   removePropertyFromClass(property: IHasProperty, classId: string) {
     const delCard = this._getUpdateResourceClassCardinality(classId, [property]);
     const onto = this._getUpdateOntology<UpdateResourceClassCardinality>(delCard);
-
+    this._isTransacting.next(true);
     this._dspApiConnection.v2.onto
       .deleteCardinalityFromResourceClass(onto)
       .pipe(take(1))
       .subscribe(() => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
-  updateProperty(id: string, propertyData: PropertyData) {
+  private _updateProperty(id: string, propertyData: PropertyData) {
     const updates: Observable<any>[] = [];
 
     if (propertyData.labels !== undefined) {
@@ -324,9 +455,12 @@ export class OntologyEditService implements OnDestroy {
       return of();
     }
 
+    this._isTransacting.next(true);
     return concat(...updates).pipe(
       last(),
-      tap(() => this._reloadAfterChanges())
+      tap(() => {
+        this._afterTransaction();
+      })
     );
   }
 
@@ -371,7 +505,7 @@ export class OntologyEditService implements OnDestroy {
   ): Observable<ResourcePropertyDefinitionWithAllLanguages> {
     return this._dspApiConnection.v2.onto.updateResourceProperty(updateOntology).pipe(
       tap(res => {
-        this._currentOntology!.lastModificationDate = res?.lastModificationDate;
+        this.lastModificationDate = res?.lastModificationDate;
       })
     );
   }
@@ -398,7 +532,7 @@ export class OntologyEditService implements OnDestroy {
       .afterClosed()
       .pipe(map(result => result ?? false))
       .subscribe((created: boolean) => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
@@ -406,6 +540,8 @@ export class OntologyEditService implements OnDestroy {
     this._dialogService
       .afterConfirmation('Do you want to delete this resource class?')
       .pipe(
+        take(1),
+        tap(() => this._isTransacting.next(true)),
         switchMap(() =>
           this._dspApiConnection.v2.onto.deleteResourceClass({
             id: resClassIri,
@@ -413,8 +549,10 @@ export class OntologyEditService implements OnDestroy {
           })
         )
       )
-      .subscribe(() => {
-        this._reloadAfterChanges();
+      .subscribe({
+        next: () => {
+          this._afterTransaction();
+        },
       });
   }
 
@@ -439,6 +577,7 @@ export class OntologyEditService implements OnDestroy {
     this._dialogService
       .afterConfirmation('Do you want to delete this property?')
       .pipe(
+        take(1),
         switchMap(() =>
           this._dspApiConnection.v2.onto.deleteResourceProperty({
             id: iri,
@@ -447,7 +586,7 @@ export class OntologyEditService implements OnDestroy {
         )
       )
       .subscribe(() => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
@@ -470,7 +609,7 @@ export class OntologyEditService implements OnDestroy {
       .replaceGuiOrderOfCardinalities(updateOntology)
       .pipe(take(1))
       .subscribe(() => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
@@ -485,7 +624,7 @@ export class OntologyEditService implements OnDestroy {
       .replaceCardinalityOfResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(response => {
-        this._reloadAfterChanges();
+        this._afterTransaction();
       });
   }
 
@@ -517,17 +656,12 @@ export class OntologyEditService implements OnDestroy {
     return this._getUpdateOntology<UpdateResourceClassCardinality>(updateCard);
   }
 
-  private _getOntologyForCreateProperty(resProp: CreateResourceProperty): UpdateOntology<CreateResourceProperty> {
-    const updateOnto = new UpdateOntology<CreateResourceProperty>();
-
-    updateOnto.id = this.ontologyId;
-    updateOnto.lastModificationDate = this.lastModificationDate;
-    updateOnto.entity = resProp;
-    return updateOnto;
-  }
-
-  private _reloadAfterChanges() {
-    this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+  private _afterTransaction(notification?: string) {
+    this.lastModificationDate = this._currentOntology.value?.lastModificationDate;
+    this._isTransacting.next(false);
+    if (notification) {
+      this._notification.openSnackBar(notification);
+    }
   }
 
   ngOnDestroy() {

@@ -1,11 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import {
-  ApiResponseError,
-  IHasProperty,
-  PropertyDefinition,
-  ResourceClassDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ApiResponseError, PropertyDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
@@ -15,6 +10,7 @@ import {
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -24,39 +20,14 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
 })
-export class ResourceClassInfoComponent {
+export class ResourceClassInfoComponent implements OnInit {
   @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
 
+  classPropertiesToDisplay$: Observable<PropToDisplay[]>;
+
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
-  projectsProperties$ = this._store
-    .select(OntologiesSelectors.currentProjectOntologyProperties)
-    .pipe(map(arr => arr.flatMap(o => o.properties)));
-
-  classProperties$ = this.projectsProperties$.pipe(
-    map((properties: PropertyDefinition[]) => {
-      const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
-      return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
-    })
-  );
-
-  classPropertiesToDisplay$ = this.classProperties$.pipe(
-    map((properties: PropertyDefinition[]) => {
-      return properties
-        .map((property: PropertyDefinition) => {
-          const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
-            p => p.propertyIndex === property.id
-          ) as PropToDisplay;
-          propToDisplay.propDef = property;
-          return propToDisplay;
-        })
-        .sort((a, b) => {
-          return a.guiOrder - b.guiOrder;
-        });
-    })
-  );
 
   expanded = true;
 
@@ -79,6 +50,31 @@ export class ResourceClassInfoComponent {
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
+
+  ngOnInit() {
+    const classProperties$ = this._oes.currentOntologyProperties$.pipe(
+      map((properties: PropertyDefinition[]) => {
+        const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
+        return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
+      })
+    );
+
+    this.classPropertiesToDisplay$ = classProperties$.pipe(
+      map((properties: PropertyDefinition[]) => {
+        return properties
+          .map((property: PropertyDefinition) => {
+            const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
+              p => p.propertyIndex === property.id
+            ) as PropToDisplay;
+            propToDisplay.propDef = property;
+            return propToDisplay;
+          })
+          .sort((a, b) => {
+            return (a.guiOrder || 0) - (b.guiOrder || 0);
+          });
+      })
+    );
+  }
 
   canBeDeleted() {
     this._oes

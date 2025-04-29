@@ -5,7 +5,6 @@ import {
     CreatePropertyFormDialogProps,
     PropertyForm
 } from '@dasch-swiss/vre/ontology/ontology-properties';
-import { OntologyEditService } from '../../../../ontology/src/lib/services/ontology-edit.service';
 
 @Component({
   selector: 'app-create-property-form-dialog',
@@ -35,9 +34,8 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   form!: PropertyForm;
 
   constructor(
-    private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, boolean>,
+    private dialogRef: MatDialogRef<CreatePropertyFormDialogComponent, CreatePropertyData>,
     @Inject(MAT_DIALOG_DATA) public data: CreatePropertyFormDialogProps,
-    private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
@@ -49,18 +47,16 @@ export class CreatePropertyFormDialogComponent implements OnInit {
     this.form = form;
   }
 
-  onSubmit() {
+    onSubmit() {
+        const propData: CreatePropertyData = {
+            propType: this.data.propType,
+            name: this.form.controls.name.value,
+            labels: this.form.getRawValue().labels,
+            comments: this.form.getRawValue().comments,
+            guiAttribute: this.form.controls.guiAttr.value,
+            classDef: this.data.resClass,
+        };
 
-    const propData: CreatePropertyData = {
-        propType: this.data.propType,
-        name: this.form.controls.name.value,
-        labels: this.form.getRawValue().labels,
-        comments: this.form.getRawValue().comments,
-        guiAttribute: this.form.controls.guiAttr.value,
-        classDef: this.data.resClass,
+        this.dialogRef.close(propData);
     }
-    this._oes.createResourceProperty(propData);
-
-    this.dialogRef.close();
-  }
 }

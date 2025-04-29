@@ -1,14 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  Constants,
-} from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import {  take } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
-import { OntologyEditService } from '../../../../ontology/src/lib/services/ontology-edit.service';
 import { PropertyData } from '../property-form.type';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 
@@ -46,160 +39,21 @@ export class EditPropertyFormDialogComponent implements OnInit {
   form!: PropertyForm;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _oes: OntologyEditService,
-    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, boolean>,
-    @Inject(MAT_DIALOG_DATA) public data: PropertyInfoObject,
-    private _notification: NotificationService
+    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, PropertyData>,
+    @Inject(MAT_DIALOG_DATA) public data: PropertyInfoObject
   ) {}
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
   }
 
-  onSubmit() {
+    onSubmit() {
         const propertyData: PropertyData = {
             propType: this.data.propType,
-            labels : this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
-            comments : this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
-            guiElement : this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
-        }
-        this._oes.updateProperty(this.data.propDef!.id, propertyData).pipe(take(1)).subscribe(() => this.onSuccess());
-
-      /*
-      this._oes.updateResourceProperty(
-          this.propertyInfo.propDef!.id,
-          this.form.controls.labels.value as StringLiteralV2[],
-          this.form.controls.comments.value as StringLiteralV2[],
-          this.selectedProperty?.guiEle
-      )
-          .pipe(take(1))
-          .subscribe(propertyCommentResponse => {
-          if (propertyCommentResponse instanceof ApiResponseError) {
-              throw new JsLibParsedError();
-          }
-
-          // this.final();
-          this.onSuccess();
-
-          });*/
-  }
-
-  /*
-  _onSubmit() {
-      // label
-      const onto4Label = this.getUpdateOntolgyForPropertyLabel();
-
-      this._dspApiConnection.v2.onto
-          .updateResourceProperty(onto4Label)
-          .pipe(
-              switchMap(propertyLabelResponse => {
-
-                  const onto4Comment = this.getUpdateOntologyForPropertyComment();
-
-                  this.lastModificationDate = propertyLabelResponse.lastModificationDate;
-                  onto4Comment.lastModificationDate = this.lastModificationDate;
-
-                  if (onto4Comment.entity.comments.length) {
-                      // if the comments array is not empty, send a request to update the comments
-                      return this._dspApiConnection.v2.onto.updateResourceProperty(onto4Comment);
-                  } else {
-                      // if the comments array is empty, send a request to remove the comments
-                      const deleteResourcePropertyComment = new DeleteResourcePropertyComment();
-                      deleteResourcePropertyComment.id = this.propertyInfo.propDef.id;
-                      deleteResourcePropertyComment.lastModificationDate = this.lastModificationDate;
-
-                      return this._dspApiConnection.v2.onto.deleteResourcePropertyComment(deleteResourcePropertyComment);
-                  }
-              })
-          )
-          .subscribe(propertyCommentResponse => {
-              if (propertyCommentResponse instanceof ApiResponseError) {
-                  throw new JsLibParsedError();
-              }
-
-              this.lastModificationDate = propertyCommentResponse.lastModificationDate;
-              this.final();
-
-              this.ontology.lastModificationDate = this.lastModificationDate;
-              this._store.dispatch(new SetCurrentOntologyAction(this.ontology));
-          });
-  }
-  */
-
-  private onSuccess() {
-    this.loading = false;
-    const msg = `Successfully updated ${this.data.propDef!.label}.`;
-    this._notification.openSnackBar(msg);
-    this.dialogRef.close();
-  }
-/*
-  private replaceGuiElement() {
-    const onto4guiEle = new UpdateOntology<UpdateResourcePropertyGuiElement>();
-    onto4guiEle.id = this.ontology.id;
-    onto4guiEle.lastModificationDate = this.lastModificationDate;
-
-    const updateGuiEle = new UpdateResourcePropertyGuiElement();
-    updateGuiEle.id = this.propertyInfo.propDef.id;
-    updateGuiEle.guiElement = this.selectedProperty.guiEle;
-    const guiAttr = false; // TODO it was this.propertyForm.controls['guiAttr'].value;
-    if (guiAttr) {
-      updateGuiEle.guiAttributes = this.setGuiAttribute(guiAttr);
+            labels: this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
+            comments: this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
+            guiElement: this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
+        };
+        this.dialogRef.close(propertyData);
     }
-
-    onto4guiEle.entity = updateGuiEle;
-
-    this._dspApiConnection.v2.onto.replaceGuiElementOfProperty(onto4guiEle).subscribe(guiEleResponse => {
-      this.lastModificationDate = guiEleResponse.lastModificationDate;
-      this.onSuccess();
-    });
-  }*/
-
-  private setGuiAttribute(guiAttr: string): string[] {
-    let guiAttributes: string[];
-
-    switch (this.data.propType.guiEle) {
-      case Constants.GuiColorPicker:
-        guiAttributes = [`ncolors=${guiAttr}`];
-        break;
-      case Constants.GuiList:
-      case Constants.GuiPulldown:
-      case Constants.GuiRadio:
-        guiAttributes = [`hlist=<${guiAttr}>`];
-        break;
-      case Constants.GuiSimpleText:
-        // --> TODO could have two guiAttr fields: size and maxlength
-        // we suggest to use default value for size; we do not support this guiAttr in DSP-App
-        guiAttributes = [`maxlength=${guiAttr}`];
-        break;
-      case Constants.GuiSpinbox:
-        // --> TODO could have two guiAttr fields: min and max
-        guiAttributes = [`min=${guiAttr}`, `max=${guiAttr}`];
-        break;
-      case Constants.GuiTextarea:
-        // --> TODO could have four guiAttr fields: width, cols, rows, wrap
-        // we suggest to use default values; we do not support this guiAttr in DSP-App
-        guiAttributes = ['width=100%'];
-        break;
-    }
-
-    return guiAttributes;
-  }
-
-  /*
-  private final() {
-    // if property type is supported and is of type TextValue and the guiElement is different from its initial value, call replaceGuiElement() to update the guiElement
-    // this only works for the TextValue object type currently
-    // https://docs.dasch.swiss/latest/DSP-API/03-apis/api-v2/ontology-information/#changing-the-gui-element-and-gui-attributes-of-a-property
-    if (
-      this.propertyInfo.propDef.objectType === Constants.TextValue &&
-      this.propertyInfo.propDef.guiElement !== this.selectedProperty.guiEle
-    ) {
-      this.replaceGuiElement();
-    } else {
-      this.onSuccess();
-    }
-  }
-
-   */
 }

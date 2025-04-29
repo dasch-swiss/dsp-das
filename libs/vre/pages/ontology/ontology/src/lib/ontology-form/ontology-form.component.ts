@@ -1,31 +1,14 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import {
-  ApiResponseError,
-  CreateOntology,
-  KnoraApiConnection,
-  OntologyMetadata,
-  ReadOntology,
-  ReadProject,
-  UpdateOntologyMetadata,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ClearProjectOntologiesAction, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
-import { OntologyForm, OntologyFormProps } from './ontology-form.type';
-
-export interface NewOntology {
-  projectIri: string;
-  name: string;
-  label: string;
-}
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { OntologyForm, OntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-ontology-form',
@@ -34,16 +17,7 @@ export interface NewOntology {
 export class OntologyFormComponent implements OnInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();
 
-  @Select(OntologiesSelectors.currentOntology)
-  private _currentOntology$: Observable<ReadOntology>;
-
-  private _lastModificationDate: string;
-
-  ontologyForm: OntologyForm;
-
-  loading = false;
-
-  project: ReadProject;
+  ontologyForm!: OntologyForm;
 
   readonly forbiddenNames = ['knora', 'salsah', 'standoff', 'ontology', 'simple', 'shared'] as const;
 
@@ -59,7 +33,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   };
 
   get ontologyName(): string {
-    return this.data.ontologyIri ? OntologyService.getOntologyName(this.data.ontologyIri) : '';
+    return this.data?.id ? OntologyService.getOntologyName(this.data.id) : '';
   }
 
   get existingOntologyNames(): string[] {
@@ -75,26 +49,14 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _fb: FormBuilder,
-    private _router: Router,
     private _store: Store,
-    @Inject(MAT_DIALOG_DATA) public data: OntologyFormProps,
-    public dialogRef: MatDialogRef<OntologyFormComponent>
+    @Inject(MAT_DIALOG_DATA) public data: OntologyData,
+    public dialogRef: MatDialogRef<OntologyFormComponent, OntologyData>
   ) {}
 
   ngOnInit() {
-    this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-
-    if (this.data.ontologyIri) {
-      this._currentOntology$.pipe(takeUntil(this._destroy$)).subscribe(response => {
-        this._buildForm(response);
-        this._lastModificationDate = response.lastModificationDate;
-      });
-    } else {
-      this._buildForm();
-    }
+    this._buildForm(this.data);
 
     this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
       if (this.ontologyForm.controls.label.pristine) {
@@ -107,7 +69,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return ontoName ? `${ontoName.charAt(0).toUpperCase()}${ontoName.slice(1)}` : '';
   }
 
-  private _buildForm(ontology?: ReadOntology): void {
+  private _buildForm(ontology?: OntologyData): void {
     this.ontologyForm = this._fb.group({
       name: [
         { value: this.ontologyName, disabled: !!ontology },
@@ -128,52 +90,13 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   }
 
   submitData() {
-    this.loading = true;
-    if (this.data.ontologyIri) {
-      this._updateOntology();
-    } else {
-      this._createOntology();
-    }
-  }
-
-  private _updateOntology() {
-    const ontologyData = new UpdateOntologyMetadata();
-    ontologyData.id = this.data.ontologyIri!;
-    ontologyData.lastModificationDate = this._lastModificationDate;
-    ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
-    ontologyData.comment = this.ontologyForm.controls.comment.value;
-
-    this._dspApiConnection.v2.onto.updateOntology(ontologyData).subscribe((response: OntologyMetadata) => {
-      this.loading = false;
-      this.dialogRef.close(response instanceof ApiResponseError ? null : response);
-    });
-  }
-
-  private _createOntology() {
-    const ontologyData = new CreateOntology();
-    ontologyData.label = `${this.project.shortname}:${this.ontologyForm.controls.label.value}`;
-    ontologyData.name = this.ontologyForm.controls.name.value;
-    if (this.ontologyForm.controls.comment.value) {
-      ontologyData.comment = this.ontologyForm.controls.comment.value;
-    }
-    ontologyData.attachedToProject = this.project.id;
-
-    this._dspApiConnection.v2.onto
-      .createOntology(ontologyData)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch([new ClearProjectOntologiesAction(this.project.shortcode)]);
-        // go to the new ontology page
-        this._router.navigate([
-          RouteConstants.project,
-          ProjectService.IriToUuid(this.project.id),
-          RouteConstants.ontology,
-          OntologyService.getOntologyName(response.id),
-          RouteConstants.editor,
-          RouteConstants.classes,
-        ]);
-        this.dialogRef.close();
-      });
+    const ontologyData: OntologyData = {
+      name: this.ontologyForm.controls.name.value,
+      label: this.ontologyForm.controls.label.value,
+      comment: this.ontologyForm.controls.comment.value,
+      id: this.data?.id,
+    };
+    this.dialogRef.close(ontologyData);
   }
 
   ngOnDestroy() {

@@ -1,120 +1,13 @@
 <div *ngIf="!disableContent">
   <!-- main content: overview shows resource classes of ontology -->
   <div class="ontology-editor">
-    <mat-toolbar *ngIf="ontology$ | async" class="ontology-editor-header">
-      <mat-toolbar-row>
-        <span class="ontology-info">
-          <h3
-            data-cy="ontology-label"
-            class="mat-headline-6"
-            [matTooltip]="(ontology$ | async).label + ((ontology$ | async).comment ? ' &mdash; ' + (ontology$ | async).comment : '')"
-            matTooltipPosition="above">
-            {{ (ontology$ | async)?.label }}
-          </h3>
-          <p class="mat-caption" matTooltipPosition="above">
-            <span *ngIf="(lastModificationDate$ | async)">
-              Updated on: {{ (lastModificationDate$ | async) | date:'medium' }}
-            </span>
-          </p>
-        </span>
-
-        <span class="fill-remaining-space"></span>
-
-        <!-- edit options -->
-        <span class="ontology-actions project-actions" *ngIf="(project$ | async)?.status">
-          <p class="mat-caption space-reducer">Data model configuration</p>
-          <span [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''">
-            <button
-              *ngIf="(ontology$ | async) as currentOntology"
-              color="primary"
-              data-cy="edit-ontology-button"
-              mat-button
-              [disabled]="(isAdmin$ | async) === false"
-              (click)="$event.stopPropagation(); editOntology(currentOntology.id)">
-              <mat-icon>edit</mat-icon>
-              Edit
-            </button>
-          </span>
-          <span
-            *ngIf="(isAdmin$ | async)"
-            [matTooltip]="( ((currentOntologyCanBeDeleted$ | async) ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!'))">
-            <button
-              color="warn"
-              mat-button
-              *ngIf="(ontology$ | async)"
-              [disabled]="(currentOntologyCanBeDeleted$ | async) === false || (isAdmin$ | async) === false"
-              (click)="$event.stopPropagation(); deleteOntology()">
-              <mat-icon>delete</mat-icon>
-              Delete
-            </button>
-          </span>
-        </span>
-      </mat-toolbar-row>
-    </mat-toolbar>
-
+    <app-ontology-editor-header />
     <mat-sidenav-container class="ontology-editor-container">
       <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
-        <mat-list>
-          <a mat-list-item routerLinkActive="active" (click)="activateView('classes')">Classes</a>
-          <span *ngIf="view === 'classes'">
-            <button
-              mat-button
-              (click)="expandClasses = !expandClasses"
-              [disabled]="!ontoClasses || !ontoClasses.length">
-              <mat-icon>{{ expandClasses ? 'compress' : 'expand' }}</mat-icon>
-              {{ expandClasses ? "Collapse all" : "Expand all" }}
-            </button>
-            <span
-              mat-list-item
-              *ngIf="(project$ | async)?.status && (isAdmin$ | async) === true && (ontology$ | async)?.id">
-              <button mat-button data-cy="create-class-button" [matMenuTriggerFor]="addResClassMenu">
-                <mat-icon>add</mat-icon>
-                Create new class
-              </button>
-              <mat-menu #addResClassMenu="matMenu" xPosition="before">
-                <button
-                  [attr.data-cy]="type.iri.split('#').pop()"
-                  mat-menu-item
-                  *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
-                  (click)="createResourceClass(type)">
-                  <mat-icon>{{ type.icons[0] }}</mat-icon>
-                  {{ type.label }}
-                </button>
-              </mat-menu>
-            </span>
-          </span>
-          <mat-divider></mat-divider>
-          <a mat-list-item routerLinkActive="active" data-cy="properties-button" (click)="activateView('properties')"
-            >Properties</a
-          >
-          <button *ngIf="view === 'properties'" mat-button [matMenuTriggerFor]="newFromPropType">
-            <mat-icon>add</mat-icon>
-            Add Property
-          </button>
-          <mat-menu #newFromPropType="matMenu">
-            <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
-              <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
-              <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
-                <button
-                  mat-menu-item
-                  *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
-                  [value]="ele"
-                  [attr.data-cy]="ele.label"
-                  [matTooltip]="ele.description"
-                  matTooltipPosition="after"
-                  (click)="addNewProperty(ele)">
-                  <mat-icon>{{ ele.icon }}</mat-icon>
-                  {{ ele.label }}
-                </button>
-              </mat-menu>
-            </ng-container>
-          </mat-menu>
-        </mat-list>
+        <app-ontology-editor-sidenav [(view)]="view" />
       </mat-sidenav>
-
-      <mat-sidenav-content
-        class="ontology-editor-canvas drag-drop-stop"
-        *ngIf="(project$ | async) && (isOntologiesLoading$ | async) === false">
+      <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop" *ngIf="(project$ | async)">
+        <app-progress-indicator *ngIf="(isTransacting$ | async)" />
         <app-ontology-editor-classes *ngIf="view === 'classes'" />
         <app-ontology-properties *ngIf="view === 'properties'" />
       </mat-sidenav-content>

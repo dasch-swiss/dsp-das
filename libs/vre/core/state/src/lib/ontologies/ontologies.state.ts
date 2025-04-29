@@ -188,7 +188,6 @@ export class OntologiesState {
           } else {
             projectReadOntologies.push(ontology);
           }
-          console.log('LoafdOntologyAction projectReadOntologies', projectReadOntologies);
 
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
           // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
@@ -222,7 +221,7 @@ export class OntologiesState {
       tap({
         next: () => {
           const projectIri = this._projectService.uuidToIri(projectUuid);
-          ctx.dispatch(new LoadProjectOntologiesAction(projectIri));
+          ctx.dispatch(new LoadProjectOntologiesAction(projectIri, 'updateOntologyAction'));
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true });

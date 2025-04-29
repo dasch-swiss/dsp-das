@@ -3,6 +3,8 @@ import { CreateResourceClassDialogComponent } from './lib/create-resource-class-
 import { DataModelsComponent } from './lib/data-models/data-models.component';
 import { EditResourceClassDialogComponent } from './lib/edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { OntologyEditorClassesComponent } from './lib/ontology-editor-classes.component';
+import { OntologyEditorHeaderComponent } from './lib/ontology-editor-header/ontology-editor-header.component';
+import { OntologyEditorSidenavComponent } from './lib/ontology-editor-sidenav/ontology-editor-sidenav.component';
 import { OntologyFormComponent } from './lib/ontology-form/ontology-form.component';
 import { OntologyPropertiesComponent } from './lib/ontology-properties.component';
 import { OntologyComponent } from './lib/ontology.component';
@@ -21,6 +23,8 @@ export const OntologyComponents = [
   EditResourceClassDialogComponent,
   OntologyFormComponent,
   OntologyComponent,
+  OntologyEditorHeaderComponent,
+  OntologyEditorSidenavComponent,
   OntologyEditorClassesComponent,
   OntologyPropertiesComponent,
   PropertyInfoComponent,

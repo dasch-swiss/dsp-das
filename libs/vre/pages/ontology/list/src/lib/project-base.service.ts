@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   IKeyValuePairs,
   LoadProjectMembershipAction,
@@ -28,7 +29,7 @@ export class ProjectBaseService {
     this._store.select(UserSelectors.user).pipe(filter(user => user !== null)) as Observable<ReadUser>,
     this._store.select(UserSelectors.userProjectAdminGroups),
     this._route.params,
-    this._route.parent.params,
+    this._route.parent?.params,
   ]).pipe(
     takeUntil(this.destroyed),
     map(([user, userProjectGroups, params, parentParams]) => {
@@ -59,9 +60,9 @@ export class ProjectBaseService {
     protected _cd: ChangeDetectorRef,
     protected _actions$: Actions
   ) {
-    this.projectUuid = this._route.snapshot.params.uuid
-      ? this._route.snapshot.params.uuid
-      : this._route.parent.snapshot.params.uuid;
+    this.projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter]
+      ? this._route.snapshot.params[RouteConstants.uuidParameter]
+      : this._route.parent?.snapshot.params[RouteConstants.uuidParameter];
   }
 
   onInit(): void {
@@ -98,7 +99,7 @@ export class ProjectBaseService {
               .subscribe(() => this.setProjectData());
             this._store.dispatch([new LoadProjectsAction()]);
           } else if (!this.isOntologiesAvailable()) {
-            this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid));
+            this._store.dispatch(new LoadProjectOntologiesAction(this.projectUuid, 'project-base-service'));
           }
         },
       });
@@ -125,14 +126,7 @@ export class ProjectBaseService {
     }
 
     this._titleService.setTitle(this.project.shortname);
-    this._store.dispatch(new LoadProjectOntologiesAction(this.project.id));
-  }
-
-  protected static navigationEndFilter(event: Observable<any>) {
-    return event.pipe(
-      filter(e => e instanceof NavigationEnd),
-      filter(e => !(e as NavigationEnd).url.startsWith('api'))
-    );
+    this._store.dispatch(new LoadProjectOntologiesAction(this.project.id, 'setProjectData'));
   }
 
   private isOntologiesAvailable(): boolean {
