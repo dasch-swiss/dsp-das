@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -132,11 +132,10 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     event.stopPropagation();
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        data: {
+        ...DspDialogConfig.mediumDialog({
           resourceType,
           resourceClassIri,
-        },
-        viewContainerRef: this._viewContainerRef,
+        }),
       })
       .afterClosed()
       .pipe(
