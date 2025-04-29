@@ -1,8 +1,8 @@
 import { ENTER, TAB } from '@angular/cdk/keycodes';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { finalize } from 'rxjs/operators';
 
@@ -19,19 +19,21 @@ import { finalize } from 'rxjs/operators';
           </button>
         </mat-chip-row>
       </mat-chip-grid>
+
       <input
         placeholder="New authorship..."
         data-cy="authorship-chips"
-        [formControl]="inputControl"
+        #test
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="addItem($event)" />
+        (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
         <mat-option *ngFor="let option of availableAuthorship" [value]="option">
           {{ option }}
         </mat-option>
       </mat-autocomplete>
+      <mat-hint>Press Enter or Tab to add an item.</mat-hint>
 
       <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
         {{ error | humanReadableError }}
@@ -42,15 +44,17 @@ import { finalize } from 'rxjs/operators';
 export class AuthorshipFormFieldComponent implements OnInit {
   @Input() control!: FormControl<string[] | null>;
   @Input({ required: true }) projectShortcode!: string;
+  @ViewChild(MatChipInput, { static: true }) chipInput!: MatChipInput;
 
-  separatorKeysCodes: number[] = [ENTER, TAB];
-  inputControl = new FormControl('');
+  readonly separatorKeysCodes: number[] = [ENTER, TAB];
   selectedItems: string[] = [];
   availableAuthorship: string[] = [];
-
   loading = true;
 
-  constructor(private _adminApi: AdminProjectsLegalInfoApiService) {}
+  constructor(
+    private _adminApi: AdminProjectsLegalInfoApiService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this._adminApi
@@ -65,17 +69,8 @@ export class AuthorshipFormFieldComponent implements OnInit {
       });
   }
 
-  addItem(event: MatChipInputEvent) {
-    const inputValue = event.value.trim();
-    if (inputValue && !this.selectedItems.includes(inputValue)) {
-      if (!this.availableAuthorship.includes(inputValue)) {
-        this.availableAuthorship.push(inputValue); // Add new item to options
-      }
-      this.selectedItems.push(inputValue);
-      this._updateFormControl();
-    }
-    event.chipInput.clear();
-    this.inputControl.setValue('');
+  addItemFromMaterial(event: MatChipInputEvent) {
+    this._addItem(event.value.trim());
   }
 
   selectItem(event: MatAutocompleteSelectedEvent) {
@@ -84,11 +79,28 @@ export class AuthorshipFormFieldComponent implements OnInit {
       this.selectedItems.push(selectedValue);
       this._updateFormControl();
     }
-    this.inputControl.setValue('');
+    this.chipInput.clear();
   }
 
   removeItem(item: string) {
     this.selectedItems = this.selectedItems.filter(i => i !== item);
+    this._updateFormControl();
+  }
+
+  private _addItem(inputValue: string) {
+    this.chipInput.clear();
+
+    if (this.selectedItems.includes(inputValue)) {
+      return;
+    }
+
+    if (!this.availableAuthorship.includes(inputValue)) {
+      this.availableAuthorship.push(inputValue);
+    }
+
+    this.selectedItems.push(inputValue);
+    this._updateFormControl();
+    this._cdr.detectChanges();
   }
 
   private _updateFormControl() {
