@@ -72,7 +72,7 @@ CONSTRUCT {
 }
 OFFSET 0`;
 
-        this.linkToSearchList = `/project/3ABR_2i8QYGSIDvmP9mlEw/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
+        this.linkToSearchList = `/project/${resource.res.attachedToProject}/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
       }
     );
   }
