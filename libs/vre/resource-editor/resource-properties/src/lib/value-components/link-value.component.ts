@@ -9,7 +9,6 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -87,7 +86,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef,
-    private _viewContainerRef: ViewContainerRef,
     public _linkValueDataService: LinkValueDataService
   ) {}
 
