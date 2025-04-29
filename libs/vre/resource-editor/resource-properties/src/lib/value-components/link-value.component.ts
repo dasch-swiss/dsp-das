@@ -9,15 +9,14 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
@@ -88,9 +87,8 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     private _cd: ChangeDetectorRef,
-    public _linkValueDataService: LinkValueDataService,
-    private _resourceFetcherService: ResourceFetcherService,
-    private _store: Store
+    private _viewContainerRef: ViewContainerRef,
+    public _linkValueDataService: LinkValueDataService
   ) {}
 
   ngOnInit() {
@@ -132,21 +130,16 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   openCreateResourceDialog(event: any, resourceClassIri: string, resourceType: string) {
     let myResourceId: string;
     event.stopPropagation();
-    this._resourceFetcherService.projectShortcode$
+    this._dialog
+      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
+        data: {
+          resourceType,
+          resourceClassIri,
+        },
+        viewContainerRef: this._viewContainerRef,
+      })
+      .afterClosed()
       .pipe(
-        take(1),
-        switchMap(projectShortcode =>
-          this._dialog
-            .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-              data: {
-                resourceType,
-                resourceClassIri,
-                projectIri: this.readResource!.attachedToProject,
-                projectShortcode,
-              },
-            })
-            .afterClosed()
-        ),
         filter(resourceId => {
           if (!resourceId) {
             this.control.reset();
