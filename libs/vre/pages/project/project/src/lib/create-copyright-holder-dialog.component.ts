@@ -15,7 +15,7 @@ export interface CreateCopyrightHolderDialogProps {
 
     <app-common-input label="Copyright holder" [control]="form.controls.copyrightHolder" />
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -23,7 +23,7 @@ export interface CreateCopyrightHolderDialogProps {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        Save
+        {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
 })

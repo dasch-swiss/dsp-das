@@ -34,7 +34,7 @@ import {
           <app-alternated-list>
             <div *ngFor="let item of licenses$ | async" style="display: flex; align-items: center; gap: 8px">
               {{ item.labelEn }}
-              <a [href]="item.uri">
+              <a [href]="item.uri" target="_blank">
                 <mat-icon>launch</mat-icon>
               </a>
             </div>
@@ -104,7 +104,7 @@ export class LegalSettingsComponent {
       .afterClosed()
       .subscribe(success => {
         if (success) {
-          this._reloadSubject.next(undefined);
+          this._reloadSubject.next();
         }
       });
   }

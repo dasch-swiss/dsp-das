@@ -15,7 +15,7 @@ import { CompoundService } from './compound/compound.service';
     <app-resource-restriction *ngIf="resource.res.userHasPermission === 'RV'" />
     <app-resource-header [resource]="resource" />
     <ng-container *ngIf="!resourceIsObjectWithoutRepresentation">
-      <app-resource-legal [resource]="resource" />
+      <app-resource-legal [resource]="resource.res" />
       <app-resource-representation [resource]="resource" />
     </ng-container>
     <app-compound-viewer *ngIf="isCompoundNavigation" />
