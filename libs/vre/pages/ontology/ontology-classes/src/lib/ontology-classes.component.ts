@@ -18,7 +18,7 @@ export class OntologyClassesComponent {
   get classesToDisplay(): ClassDefinition[] {
     const classesToDisplay = OntologyClassHelper.GetClassesToDisplay(this.resClasses);
     const language = this._localizationService.getCurrentLanguage();
-    return this._sortingService.labelSortByAlphabetical(classesToDisplay, 'label', language);
+    return this._sortingService.sortLabelsAlphabetically(classesToDisplay, 'label', language);
   }
 
   constructor(
