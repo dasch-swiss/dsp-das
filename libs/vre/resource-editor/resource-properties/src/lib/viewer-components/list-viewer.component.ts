@@ -29,7 +29,7 @@ export class ListViewerComponent implements OnInit {
   labels$!: Observable<string[]>;
 
   linkToSearchList?: string;
-  nodeIdSubject = new Subject<string>();
+  private _nodeIdSubject = new Subject<string>();
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -49,14 +49,14 @@ export class ListViewerComponent implements OnInit {
       map(v => {
         const tree = ListViewerComponent.lookFor([v as ListNodeV2], this.control.value) as ListNodeV2[];
         const nodeId = tree[tree.length - 1].id;
-        this.nodeIdSubject.next(nodeId);
+        this._nodeIdSubject.next(nodeId);
         return tree.slice(1).map(node => node.label);
       })
     );
   }
 
   private _fetchSearchLink() {
-    combineLatest([this._resourceFetcher.resource$, this.nodeIdSubject.asObservable()]).subscribe(
+    combineLatest([this._resourceFetcher.resource$, this._nodeIdSubject.asObservable()]).subscribe(
       ([resource, nodeId]) => {
         const searchClassesQuery = `
    PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
