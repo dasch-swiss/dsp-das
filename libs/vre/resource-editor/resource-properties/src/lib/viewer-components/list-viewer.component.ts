@@ -47,11 +47,10 @@ export class ListViewerComponent implements OnInit {
     this.labels$ = (this._dspApiConnection.v2.list.getNode(this.control.value) as Observable<ListNodeV2>).pipe(
       switchMap(v => this._dspApiConnection.v2.list.getList(v.hasRootNode!)),
       map(v => {
-        const tree = ListViewerComponent.lookFor([v as ListNodeV2], this.control.value);
-        const finalTree = tree as ListNodeV2[];
-        const nodeId = finalTree[finalTree.length - 1].id;
+        const tree = ListViewerComponent.lookFor([v as ListNodeV2], this.control.value) as ListNodeV2[];
+        const nodeId = tree[tree.length - 1].id;
         this.nodeIdSubject.next(nodeId);
-        return (tree as ListNodeV2[]).slice(1).map(node => node.label);
+        return tree.slice(1).map(node => node.label);
       })
     );
   }
