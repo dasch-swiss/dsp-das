@@ -87,18 +87,18 @@ export class AuthorshipFormFieldComponent implements OnInit {
     this._updateFormControl();
   }
 
-  private _addItem(inputValue: string) {
+  private _addItem(authorship: string) {
     this.chipInput.clear();
 
-    if (this.selectedItems.includes(inputValue)) {
+    if (authorship === '' || this.selectedItems.includes(authorship)) {
       return;
     }
 
-    if (!this.availableAuthorship.includes(inputValue)) {
-      this.availableAuthorship.push(inputValue);
+    if (!this.availableAuthorship.includes(authorship)) {
+      this.availableAuthorship.push(authorship);
     }
 
-    this.selectedItems.push(inputValue);
+    this.selectedItems.push(authorship);
     this._updateFormControl();
     this._cdr.detectChanges();
   }
