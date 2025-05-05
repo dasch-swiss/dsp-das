@@ -34,7 +34,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       #audio
       class="dsp-representation audio"
       *ngSwitchCase="representationConstants.audio"
-      [src]="representationToDisplay"
+      [src]="representationToDisplay.fileValue"
       [parentResource]="resource.res" />
 
     <app-video
