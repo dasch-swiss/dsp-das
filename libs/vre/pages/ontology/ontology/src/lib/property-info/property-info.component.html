@@ -85,8 +85,12 @@
       </span>
       <span
         matTooltipPosition="above"
-        [matTooltip]="((!propCanBeDeleted) ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
-        <button mat-button [disabled]="!propCanBeDeleted" class="delete" (click)="deleteResourceProperty(propDef.id)">
+        [matTooltip]="((canBeDeleted$ | async) === false ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
+        <button
+          mat-button
+          [disabled]="(canBeDeleted$ | async) !== true"
+          class="delete"
+          (click)="deleteResourceProperty(propDef.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

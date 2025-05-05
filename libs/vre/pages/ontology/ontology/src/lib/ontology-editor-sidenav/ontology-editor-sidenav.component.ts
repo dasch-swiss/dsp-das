@@ -25,7 +25,9 @@ export class OntologyEditorSidenavComponent {
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  expandClasses = true;
+  @Input() expandClasses = true;
+  @Output() expandClassesChange = new EventEmitter<boolean>();
+
   @Input() view: 'classes' | 'properties' = 'classes';
   @Output() viewChange = new EventEmitter<'classes' | 'properties'>();
 

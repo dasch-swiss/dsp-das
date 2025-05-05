@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
@@ -9,7 +9,6 @@ import {
   IHasProperty,
   KnoraApiConnection,
   ReadOntology,
-  ReadProject,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
@@ -25,7 +24,7 @@ import {
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   CreatePropertyData,
   CreatePropertyFormDialogComponent,
@@ -46,7 +45,7 @@ import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, concat, Observable, of, pipe, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap, last, distinctUntilChanged } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
   CreateResourceClassDialogProps,
@@ -66,7 +65,7 @@ export type UpdateOntologyT =
   | CreateResourceClass;
 
 @Injectable({ providedIn: 'root' })
-export class OntologyEditService implements OnDestroy {
+export class OntologyEditService {
   private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
   currentOntology$ = this._currentOntology.asObservable();
 
@@ -81,6 +80,10 @@ export class OntologyEditService implements OnDestroy {
       return [];
     })
   );
+
+  currentProjectsOntologyIds$ = this._dspApiConnection.v2.onto
+    .getOntologiesByProjectIri(this.projectId)
+    .pipe(map(result => result.ontologies.map(o => o.id)));
 
   currentOntologyClasses$ = this.currentOntology$.pipe(
     map(ontology => {
@@ -105,31 +108,10 @@ export class OntologyEditService implements OnDestroy {
   private _isTransacting = new BehaviorSubject<boolean>(false);
   isTransacting$ = this._isTransacting.asObservable();
 
-  private _ontologyIriToRequest = new BehaviorSubject<string | null>(null);
-  private _ontologyIriToRequest$ = this._ontologyIriToRequest.asObservable();
-
-  private _initOntology$ = combineLatest(
-    this._store.select(ProjectsSelectors.currentProject),
-    this._ontologyIriToRequest$
-  ).pipe(
-    filter(([project, ontoLabel]) => !!project && !!ontoLabel),
-    switchMap(([project, ontoLabel]) => {
-      console.log('ontoLabel', ontoLabel);
-      console.log('p', project);
-      const iriBase = this._ontologyService.getIriBaseUrl();
-      const iri = `${iriBase}/${RouteConstants.ontology}/${project!.shortcode}/${ontoLabel}/v2`;
-      return this._dspApiConnection.v2.onto.getOntology(iri, true).pipe(take(1));
-    })
-  );
-
-  private _destroyed: Subject<void> = new Subject<void>();
-
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
-  private _currentProject?: ReadProject;
-
   get projectId(): string {
-    return this._currentProject?.id || '';
+    return this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id || '';
   }
 
   get ontologyId(): string {
@@ -159,44 +141,37 @@ export class OntologyEditService implements OnDestroy {
     private _sortingService: SortingService,
     private _router: Router, // Todo: Move to component; this is components logic
     private _store: Store
-  ) {
-    this._store
-      .select(ProjectsSelectors.currentProject)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(project => {
-        this._currentProject = project;
-        console.log('current project', project);
-      });
-
-    this._initOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
-      this._currentOntology.next(onto);
-    });
-
-    this.currentOntology$.pipe(takeUntil(this._destroyed)).subscribe(onto => {
-      this._canDeletePropertyMap.clear();
-    });
-  }
+  ) {}
 
   initOntologyByLabel(label: string) {
-    // this._ontologyIriToRequest.next(label);
+    this._isTransacting.next(true);
+    this._canDeletePropertyMap.clear();
+
     const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
+    if (!project) {
+      return;
+    }
     const iriBase = this._ontologyService.getIriBaseUrl();
     const iri = `${iriBase}/${RouteConstants.ontology}/${project!.shortcode}/${label}/v2`;
-    this._isTransacting.next(true);
     this._dspApiConnection.v2.onto
       .getOntology(iri, true)
       .pipe(take(1))
       .subscribe(onto => {
+        this._canDeletePropertyMap.clear();
         this._currentOntology.next(onto);
         this._isTransacting.next(false);
       });
   }
 
+  unloadOntology() {
+    this._canDeletePropertyMap.clear();
+    this._currentOntology.next(null);
+  }
+
   private _initOntoClasses(allOntoClasses: ResourceClassDefinitionWithAllLanguages[]) {
-    // reset the ontology classes
     const ontoClasses: ResourceClassDefinitionWithAllLanguages[] = [];
 
-    // display only the classes which are not a subClass of Standoff
+    // classes which are not a subClass of Standoff
     allOntoClasses.forEach(resClass => {
       if (resClass.subClassOf.length) {
         const splittedSubClass = resClass.subClassOf[0].split('#');
@@ -236,7 +211,6 @@ export class OntologyEditService implements OnDestroy {
       )
       .pipe(take(1))
       .subscribe(response => {
-        // this._store.dispatch([new ClearProjectOntologiesAction(this._currentProject!.shortcode)]);
         this._afterTransaction();
         if (!ontology) {
           this._router.navigate([
@@ -255,7 +229,7 @@ export class OntologyEditService implements OnDestroy {
     const updateOntology = new UpdateOntologyMetadata();
     updateOntology.id = this.ontologyId;
     updateOntology.lastModificationDate = this.lastModificationDate;
-    updateOntology.label = `${this._currentProject!.shortname}:${ontologyData.label}`;
+    updateOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
     updateOntology.comment = ontologyData.comment;
 
     return this._dspApiConnection.v2.onto.updateOntology(updateOntology);
@@ -280,7 +254,7 @@ export class OntologyEditService implements OnDestroy {
 
   private _createOntology(ontologyData: OntologyData) {
     const createOntology = new CreateOntology();
-    createOntology.label = `${this._currentProject!.shortname}:${ontologyData.label}`;
+    createOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
     createOntology.name = ontologyData.name;
     createOntology.comment = ontologyData.comment;
     createOntology.attachedToProject = this.projectId;
@@ -368,14 +342,14 @@ export class OntologyEditService implements OnDestroy {
       [Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf)
     ) {
       createResProp.objectType = data.guiAttribute;
-      createResProp.subjectType = data.classDef.id;
+      // createResProp.subjectType = data.classDef.id;
     } else {
       createResProp.objectType = data.propType.objectType;
     }
 
     if ([Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) && data.guiAttribute) {
       createResProp.objectType = data.guiAttribute;
-      createResProp.subjectType = data.classDef?.id || '';
+      // createResProp.subjectType = data.classDef?.id || '';
     } else {
       createResProp.objectType = data.propType.objectType || '';
     }
@@ -437,7 +411,7 @@ export class OntologyEditService implements OnDestroy {
   }
 
   private _updateProperty(id: string, propertyData: PropertyData) {
-    const updates: Observable<any>[] = [];
+    const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
     if (propertyData.labels !== undefined) {
       updates.push(this._updatePropertyLabels(id, propertyData.labels));
@@ -556,11 +530,11 @@ export class OntologyEditService implements OnDestroy {
       });
   }
 
-  canDeleteResourceClass(classId: string): Observable<CanDoResponse | ApiResponseError> {
+  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
     return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
   }
 
-  canDeleteResourceProperty(propertyId: string): Observable<CanDoResponse> {
+  canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
     const canDo = this._canDeletePropertyMap.get(propertyId);
     if (canDo) {
       return of(canDo);
@@ -658,14 +632,10 @@ export class OntologyEditService implements OnDestroy {
 
   private _afterTransaction(notification?: string) {
     this.lastModificationDate = this._currentOntology.value?.lastModificationDate;
+    this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);
     if (notification) {
       this._notification.openSnackBar(notification);
     }
-  }
-
-  ngOnDestroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 }

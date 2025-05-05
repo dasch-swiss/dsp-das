@@ -10,7 +10,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -97,16 +97,13 @@ export class AddPropertyMenuComponent {
 
   availableProperties$: Observable<PropToAdd[]> = combineLatest([
     this._store.select(OntologiesSelectors.currentProjectOntologies),
-    this._store.select(OntologiesSelectors.currentProjectOntologyProperties),
+    this._oes.currentOntologyProperties$,
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
     map(([ontologies, properties]) => {
       return ontologies.map(onto => {
         const classProps = [...(this.resourceClass?.propertiesList || [])];
-        const unusedProperties = properties
-          .filter(p => p.ontology === onto.id)
-          .flatMap(o => o.properties)
-          .filter(p => !classProps.some(c => c.propertyIndex === p.id));
+        const unusedProperties = properties.filter(p => !classProps.some(c => c.propertyIndex === p.id));
 
         return {
           ontologyId: onto.id,
@@ -119,6 +116,13 @@ export class AddPropertyMenuComponent {
           }),
         };
       });
+    })
+  );
+
+  availableProperties2$ = this._oes.currentOntologyProperties$.pipe(
+    map(props => {
+      const usedIds = (this.resourceClass?.propertiesList || []).map(c => c.propertyIndex);
+      return props.filter(p => !usedIds.includes(p.id));
     })
   );
 

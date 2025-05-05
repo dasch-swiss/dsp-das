@@ -5,7 +5,8 @@ import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-servi
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -58,7 +59,14 @@ export class PropertyInfoComponent implements OnInit {
   usedByClasses: ShortInfo[] = [];
 
   showActionBubble = false;
-  propCanBeDeleted = false;
+
+  readonly canBeDeletedTrigger$ = new Subject<void>();
+
+  readonly canBeDeleted$ = this.canBeDeletedTrigger$.pipe(
+    switchMap(() => this._oes.canDeleteResourceProperty$(this.propDef.id)),
+    map(res => res.canDo),
+    startWith(undefined)
+  );
 
   isLockHovered = false;
 
@@ -139,12 +147,6 @@ export class PropertyInfoComponent implements OnInit {
 
   trackByFn = (index: number, item: ShortInfo) => item.id;
 
-  canBeDeleted(): void {
-    this._oes.canDeleteResourceProperty(this.propDef.id).subscribe(canDoRes => {
-      this.propCanBeDeleted = canDoRes.canDo;
-    });
-  }
-
   editResourceProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
     this._oes.openEditProperty(propDef, propType);
   }
@@ -154,7 +156,7 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   mouseEnter() {
-    this.canBeDeleted();
+    this.canBeDeletedTrigger$.next();
     this.showActionBubble = true;
   }
 

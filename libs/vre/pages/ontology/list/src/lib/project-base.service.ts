@@ -66,8 +66,8 @@ export class ProjectBaseService {
   }
 
   onInit(): void {
-    this._loadMembership();
-    this._loadProject();
+    // this._loadMembership();
+    // this._loadProject();
   }
 
   onDestroy(): void {

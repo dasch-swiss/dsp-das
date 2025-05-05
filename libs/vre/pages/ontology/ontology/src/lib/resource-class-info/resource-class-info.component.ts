@@ -25,7 +25,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
 
-  classPropertiesToDisplay$: Observable<PropToDisplay[]>;
+  classPropertiesToDisplay$!: Observable<PropToDisplay[]>;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
@@ -78,7 +78,7 @@ export class ResourceClassInfoComponent implements OnInit {
 
   canBeDeleted() {
     this._oes
-      .canDeleteResourceClass(this.resourceClass.id)
+      .canDeleteResourceClass$(this.resourceClass.id)
       .pipe(take(1))
       .subscribe(response => {
         if (response instanceof ApiResponseError) {

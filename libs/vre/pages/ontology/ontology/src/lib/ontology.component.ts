@@ -1,18 +1,11 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadProjectAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  DefaultClass,
-  DefaultProperties,
-  DefaultProperty,
-  DefaultResourceClasses,
-  PropertyCategory,
-} from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
@@ -27,12 +20,13 @@ export class OntologyComponent implements OnInit, OnDestroy {
 
   view: 'classes' | 'properties' = 'classes';
 
-  destroyed: Subject<void> = new Subject<void>();
+  expandAllClasses = true;
 
-  // disable content on small devices
   disableContent = false;
 
   isTransacting$ = this._oes.isTransacting$;
+
+  private _destroy = new Subject<void>();
 
   constructor(
     private _route: ActivatedRoute,
@@ -46,34 +40,34 @@ export class OntologyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.setPageProps();
+    this._setupPage();
 
-    const ontoLabel = this._route.snapshot.params[RouteConstants.ontoParameter];
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-
-    this.project$.pipe(takeUntil(this.destroyed)).subscribe(project => {
+    this.project$.pipe(takeUntil(this._destroy)).subscribe(project => {
       if (!project) {
         return;
       }
+      const ontoLabel = this._route.snapshot.params[RouteConstants.ontoParameter];
       this._oes.initOntologyByLabel(ontoLabel);
     });
 
+    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
     this._store.dispatch(new LoadProjectAction(projectUuid));
   }
 
-  private setPageProps() {
+  private _setupPage() {
     this.disableContent = window.innerWidth <= 768;
     this.view = this._route.snapshot.params['view'] ? this._route.snapshot.params['view'] : RouteConstants.classes;
 
     combineLatest([this.project$, this.ontology$])
-      .pipe(takeUntil(this.destroyed))
+      .pipe(take(1))
       .subscribe(([project, currentOntology]) => {
         this._titleService.setTitle(`Project ${project?.shortname} | Data model${currentOntology ? '' : 's'}`);
       });
   }
 
   ngOnDestroy() {
-    this.destroyed.next();
-    this.destroyed.complete();
+    this._destroy.next();
+    this._destroy.complete();
+    this._oes.unloadOntology();
   }
 }

@@ -4,9 +4,9 @@
     <app-ontology-editor-header />
     <mat-sidenav-container class="ontology-editor-container">
       <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
-        <app-ontology-editor-sidenav [(view)]="view" />
+        <app-ontology-editor-sidenav [(view)]="view" [(expandClasses)]="expandAllClasses" />
       </mat-sidenav>
-      <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop" *ngIf="(project$ | async)">
+      <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
         <app-progress-indicator *ngIf="(isTransacting$ | async)" />
         <app-ontology-editor-classes *ngIf="view === 'classes'" />
         <app-ontology-properties *ngIf="view === 'properties'" />
