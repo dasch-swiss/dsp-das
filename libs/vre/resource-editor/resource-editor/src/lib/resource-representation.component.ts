@@ -48,7 +48,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       #archive
       class="dsp-representation archive"
       *ngSwitchCase="representationConstants.archive"
-      [src]="representationToDisplay"
+      [src]="representationToDisplay.fileValue"
       [parentResource]="resource.res" />
 
     <app-text
