@@ -246,18 +246,18 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _getCreateFileValue() {
     const formFileValue = this.form.controls.file!.getRawValue();
-    let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+    const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
 
     if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
-      createFile = new CreateStillImageExternalFileValue();
-      (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
-      delete createFile.filename;
+      const createFile2 = new CreateStillImageExternalFileValue();
+      createFile2.externalUrl = formFileValue.link!;
+      console.log('temp', createFile2);
+      return createFile2;
     }
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
     createFile.license = formFileValue.legal.license!;
     createFile.authorship = formFileValue.legal.authorship!;
     createFile.filename = formFileValue.link!;
-    console.log('aa', formFileValue, createFile);
 
     return createFile;
   }
