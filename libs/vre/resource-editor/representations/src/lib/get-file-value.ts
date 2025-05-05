@@ -10,9 +10,8 @@ import {
   ReadStillImageFileValue,
   ReadTextFileValue,
 } from '@dasch-swiss/dsp-js';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
 
-export function getFileValue(resource: ReadResource): ReadFileValue {
+export function getFileValue(resource: ReadResource): ReadFileValue | null {
   if (resource.properties[Constants.HasStillImageFileValue]) {
     if (resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       return resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
@@ -32,6 +31,5 @@ export function getFileValue(resource: ReadResource): ReadFileValue {
   } else if (resource.properties[Constants.HasTextFileValue]) {
     return resource.properties[Constants.HasTextFileValue][0] as ReadTextFileValue;
   }
-
-  throw new AppError('Resource does not have a file value property');
+  return null; // is object without representation
 }
