@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
@@ -12,8 +12,9 @@ import {
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { combineLatest } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { ListItemService } from './list-item/list-item.service';
 import { EditListInfoDialogComponent } from './reusable-list-info-form/edit-list-info-dialog.component';
 
 @Component({
@@ -21,18 +22,25 @@ import { EditListInfoDialogComponent } from './reusable-list-info-form/edit-list
   selector: 'app-list',
   templateUrl: './list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
+  providers: [ListItemService],
 })
-export class ListPageComponent implements OnInit {
+export class ListPageComponent implements OnInit, OnDestroy {
   disableContent = false;
 
-  private readonly routeListIri$ = this._route.paramMap.pipe(map(params => params.get(RouteConstants.listParameter)));
+  private readonly routeListIri$ = this._route.paramMap.pipe(
+    take(1),
+    map(params => params.get(RouteConstants.listParameter))
+  );
 
-  currentList$ = combineLatest([this._store.select(ListsSelectors.listsInProject), this.routeListIri$]).pipe(
+  rootListNodeInfo$ = combineLatest([this._store.select(ListsSelectors.listsInProject), this.routeListIri$]).pipe(
     map(([lists, listIri]) => lists.find(i => i.id.includes(listIri!)))
   );
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+
   isListsLoading$ = this._store.select(ListsSelectors.isListsLoading);
+
+  private _destroy = new Subject<void>();
 
   constructor(
     private _dialog: DialogService,
@@ -40,7 +48,8 @@ export class ListPageComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
-    private _actions$: Actions
+    private _actions$: Actions,
+    private _listItemService: ListItemService
   ) {}
 
   @HostListener('window:resize', ['$event']) onWindowResize() {
@@ -49,6 +58,11 @@ export class ListPageComponent implements OnInit {
 
   ngOnInit() {
     this.disableContent = window.innerWidth <= 768;
+    this.rootListNodeInfo$.pipe(takeUntil(this._destroy)).subscribe(list => {
+      if (list && list.isRootNode && list.projectIri) {
+        this._listItemService.setProjectInfos(list.projectIri, list.id);
+      }
+    });
   }
 
   editList(list: ListNodeInfo) {
@@ -60,7 +74,7 @@ export class ListPageComponent implements OnInit {
 
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
-      .afterConfirmation('Do yu want to delete this controlled vocabulary?', list.labels[0].value)
+      .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
       .pipe(
         take(1),
         switchMap(() => this._store.dispatch(new DeleteListNodeAction(list.id)))
@@ -71,5 +85,10 @@ export class ListPageComponent implements OnInit {
         const projectUuid = ProjectService.IriToUuid(list.projectIri!);
         this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
       });
+  }
+
+  ngOnDestroy() {
+    this._destroy.next();
+    this._destroy.complete();
   }
 }

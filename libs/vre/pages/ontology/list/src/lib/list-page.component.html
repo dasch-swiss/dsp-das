@@ -1,12 +1,10 @@
 <div *ngIf="!disableContent">
   <app-progress-indicator *ngIf="isListsLoading$ | async" />
 
-  <!-- display only when loading is finished and project member has value -->
   <div *ngIf="(isListsLoading$ | async) === false">
     <div class="content large middle">
-      <!-- main content: show selected list -->
-      <ng-container *ngIf="(currentList$ | async) as list">
-        <div class="list-editor" #listEditor>
+      <ng-container *ngIf="(rootListNodeInfo$ | async) as list">
+        <div class="list-editor">
           <mat-toolbar class="more-space-bottom">
             <mat-toolbar-row>
               <h3
@@ -51,7 +49,7 @@
             </mat-toolbar-row>
           </mat-toolbar>
 
-          <app-list-item *ngIf="((isListsLoading$ | async) === false)" [rootNode]="list" [isAdmin]="isAdmin$ | async" />
+          <app-list-item *ngIf="((isListsLoading$ | async) === false)" [node]="list" [isAdmin]="isAdmin$ | async" />
         </div>
       </ng-container>
     </div>
