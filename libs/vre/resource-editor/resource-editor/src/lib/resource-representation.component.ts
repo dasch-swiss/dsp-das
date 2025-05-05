@@ -41,7 +41,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       #video
       class="dsp-representation video"
       *ngSwitchCase="representationConstants.movingImage"
-      [src]="representationToDisplay"
+      [src]="representationToDisplay.fileValue"
       [parentResource]="resource.res" />
 
     <app-archive
