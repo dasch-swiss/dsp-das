@@ -27,7 +27,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       class="dsp-representation document"
       [class.pdf]="representationToDisplay.fileValue.filename.split('.').pop() === 'pdf'"
       *ngSwitchCase="representationConstants.document"
-      [src]="representationToDisplay"
+      [src]="representationToDisplay.fileValue"
       [parentResource]="resource.res" />
 
     <app-audio
