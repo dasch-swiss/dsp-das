@@ -20,8 +20,7 @@ import { ListItemService } from './list-item.service';
   providers: [ListItemService],
 })
 export class ListItemComponent implements OnInit, OnDestroy {
-  @Input() rootNodeIri: string;
-  @Input() projectUuid: string;
+  @Input() rootNode: ListNode;
   @Input() isAdmin = false;
 
   children: ListNode[] = [];
@@ -35,12 +34,12 @@ export class ListItemComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.listItemService.setProjectInfos(this.projectUuid, this.rootNodeIri);
+    this.listItemService.setProjectInfos(this.rootNode.projectIri, this.rootNode.id);
 
     this.subscription = this.listItemService.onUpdate$
       .pipe(
         startWith(true),
-        switchMap(() => this._listApiService.get(this.rootNodeIri))
+        switchMap(() => this._listApiService.get(this.rootNode.id))
       )
       .subscribe(result => {
         if (result['node']) {

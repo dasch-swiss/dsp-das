@@ -5,7 +5,7 @@
   <div *ngIf="(isListsLoading$ | async) === false">
     <div class="content large middle">
       <!-- main content: show selected list -->
-      <ng-container *ngIf="(list$ | async) as list">
+      <ng-container *ngIf="(currentList$ | async) as list">
         <div class="list-editor" #listEditor>
           <mat-toolbar class="more-space-bottom">
             <mat-toolbar-row>
@@ -26,14 +26,12 @@
               </p>
               <span class="fill-remaining-space"></span>
 
-              <span
-                class="project-actions"
-                *ngIf="(projectBaseService.currentProject$ | async)?.status && (projectBaseService.isAdmin$ | async)">
+              <span class="project-actions" *ngIf="(isAdmin$ | async)">
                 <p class="mat-caption space-reducer">Controlled vocabulary configuration</p>
                 <button
                   color="primary"
                   mat-button
-                  (click)="$event.stopPropagation(); editList(list)"
+                  (click)="$event.stopPropagation(); editList(list!)"
                   matTooltip="Edit controlled vocabulary info"
                   data-cy="edit-button">
                   <mat-icon>edit</mat-icon>
@@ -53,11 +51,7 @@
             </mat-toolbar-row>
           </mat-toolbar>
 
-          <app-list-item
-            *ngIf="((isListsLoading$ | async) === false) && (projectBaseService.currentProject$ | async) as project"
-            [rootNodeIri]="list.id"
-            [projectUuid]="project.id"
-            [isAdmin]="projectBaseService.isAdmin$ | async" />
+          <app-list-item *ngIf="((isListsLoading$ | async) === false)" [rootNode]="list" [isAdmin]="isAdmin$ | async" />
         </div>
       </ng-container>
     </div>

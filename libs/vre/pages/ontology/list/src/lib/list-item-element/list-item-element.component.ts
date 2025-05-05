@@ -23,11 +23,7 @@ import { ListItemService } from '../list-item/list-item.service';
           <app-action-bubble *ngIf="showActionBubble" [position]="position" [length]="length" [node]="node" />
         </div>
 
-        <app-list-item
-          *ngIf="showChildren"
-          [projectUuid]="listItemService.projectInfos.projectIri"
-          [rootNodeIri]="node.id"
-          [isAdmin]="isAdmin" />
+        <app-list-item *ngIf="showChildren" [rootNode]="node" [isAdmin]="isAdmin" />
       </div>
     </div>
   `,
@@ -39,7 +35,6 @@ export class ListItemElementComponent implements OnInit, OnChanges {
   @Input() length: number;
 
   @Output() refreshChildren = new EventEmitter<ListNode[]>();
-  @Output() updateView = new EventEmitter<unknown>();
 
   @Input() isAdmin = false;
   showChildren = false;
