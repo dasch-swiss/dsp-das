@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import {
+  CreateStillImageExternalFileValue,
   ReadStillImageExternalFileValue,
   UpdateExternalStillImageFileValue,
-  CreateStillImageExternalFileValue,
 } from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -85,9 +85,7 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
       this.previewStatus = state === 'PENDING' ? 'LOADING' : 'IDLE';
       if (state !== 'PENDING' && this.iiifUrlControl.value && this.iiifUrlControl.valid) {
-        const fileValue = this._getValue();
-        fileValue.externalUrl = this.iiifUrlControl.value;
-        this.onChange(fileValue);
+        this.onChange(this.iiifUrlControl.value);
       } else {
         this.onChange(null);
       }

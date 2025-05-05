@@ -4,6 +4,8 @@ import {
   Cardinality,
   Constants,
   CreateResource,
+  CreateStillImageExternalFileValue,
+  CreateStillImageFileValue,
   CreateValue,
   KnoraApiConnection,
   ResourceClassAndPropertyDefinitions,
@@ -244,11 +246,18 @@ export class CreateResourceFormComponent implements OnInit {
 
   private _getCreateFileValue() {
     const formFileValue = this.form.controls.file!.getRawValue();
-    const createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+    let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+
+    if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
+      createFile = new CreateStillImageExternalFileValue();
+      (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
+      delete createFile.filename;
+    }
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
     createFile.license = formFileValue.legal.license!;
     createFile.authorship = formFileValue.legal.authorship!;
     createFile.filename = formFileValue.link!;
+    console.log('aa', formFileValue, createFile);
 
     return createFile;
   }
