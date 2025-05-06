@@ -1,5 +1,6 @@
 import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
+import { CreateResourceFormFileComponent } from './lib/create-resource-form-file.component';
 import { CreateResourceFormImageComponent } from './lib/create-resource-form-image.component';
 import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
 import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
@@ -91,6 +92,7 @@ export const ResourcePropertiesComponents = [
   CreateResourceFormPropertiesComponent,
   CreateResourceFormRowComponent,
   CreateResourceFormImageComponent,
+  CreateResourceFormFileComponent,
   UploadControlComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,

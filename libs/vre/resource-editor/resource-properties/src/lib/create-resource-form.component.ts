@@ -20,6 +20,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
+import { FileForm } from './file-form.type';
 import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -29,15 +30,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
       <ng-container *ngIf="form.controls.file && fileRepresentation">
         <h3>File</h3>
+        <app-create-resource-form-file
+          [form]="form.controls.file"
+          [projectShortcode]="projectShortcode"
+          [fileRepresentation]="fileRepresentation" />
 
-        <app-create-resource-form-representation
-          [control]="form.controls.file.controls.link"
-          [fileRepresentation]="fileRepresentation"
-          (externalImageSelected)="externalImageSelected = $event" />
-
-        <app-resource-form-legal
-          [formGroup]="form.controls.file.controls.legal"
-          [projectShortcode]="projectShortcode" />
         <h3>Properties</h3>
       </ng-container>
 
@@ -171,13 +168,13 @@ export class CreateResourceFormComponent implements OnInit {
   private _buildForm() {
     if (this.fileRepresentation) {
       const fileFormGroup = this._fb.group({
-        link: this._fb.control(null as string | null, [Validators.required]),
+        link: [null as string | null, [Validators.required]],
         legal: this._fb.group({
-          copyrightHolder: [null as string | null],
-          license: [null as LicenseDto | null],
-          authorship: [null as string[] | null],
+          copyrightHolder: null as string | null,
+          license: null as LicenseDto | null,
+          authorship: null as string[] | null,
         }),
-      });
+      }) as unknown as FileForm;
       this.form.addControl('file', fileFormGroup);
     }
 

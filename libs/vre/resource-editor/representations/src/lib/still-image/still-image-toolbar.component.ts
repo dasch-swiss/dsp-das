@@ -14,7 +14,6 @@ import {
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { filter, switchMap } from 'rxjs/operators';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -22,7 +21,6 @@ import {
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { ResourceUtil } from '../resource.util';
-import { EditIiifDialogComponent, IiifDialogProps } from './edit-iiif-dialog.component';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 
 @Component({
@@ -102,34 +100,15 @@ export class StillImageToolbarComponent {
   }
 
   replaceImage() {
-    if (this.isReadStillImageExternalFileValue) {
-      this._dialog
-        .open<EditIiifDialogComponent, IiifDialogProps>(
-          EditIiifDialogComponent,
-          DspDialogConfig.mediumDialog({
-            resourceId: this.resource.id,
-            externalUrl: (this.imageFileValue as ReadStillImageExternalFileValue).externalUrl,
-          })
-        )
-        .afterClosed()
-        .pipe(
-          filter(data => !!data),
-          switchMap((data: UpdateFileValue) => this._replaceFile(data))
-        )
-        .subscribe(() => {
-          this.resourceFetcherService.reload();
-        });
-    } else {
-      this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
-        ...DspDialogConfig.mediumDialog({
-          title: 'Image',
-          subtitle: 'Update image of the resource',
-          representation: Constants.HasStillImageFileValue,
-          resource: this.resource,
-        }),
-        viewContainerRef: this._viewContainerRef,
-      });
-    }
+    this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
+      ...DspDialogConfig.mediumDialog({
+        title: 'Image',
+        subtitle: 'Update image of the resource',
+        representation: Constants.HasStillImageFileValue,
+        resource: this.resource,
+      }),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   private _replaceFile(file: UpdateFileValue) {
