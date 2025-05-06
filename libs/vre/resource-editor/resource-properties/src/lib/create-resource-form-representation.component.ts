@@ -6,26 +6,30 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
 @Component({
   selector: 'app-create-resource-form-representation',
   template: `
-    <app-upload-control
-      *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl"
-      [formControl]="control"
-      [representation]="fileRepresentation"
-      style="display: block; margin-bottom: 16px" />
+    <app-create-resource-form-row
+      [label]="'File'"
+      [tooltip]="'File'"
+      *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl">
+      <app-upload-control
+        [formControl]="control"
+        [representation]="fileRepresentation"
+        style="display: block; margin-bottom: 16px" />
+    </app-create-resource-form-row>
 
     <ng-template #stillImageTpl>
-      <mat-tab-group
-        preserveContent
-        [animationDuration]="0"
-        data-cy="stillimage-tab-group"
-        (selectedTabChange)="externalImageSelected.emit($event.index === 1)">
-        <mat-tab label="Upload Image" style="padding-top: 16px">
-          <app-upload-control [formControl]="control" [representation]="fileRepresentation" data-cy="upload-control" />
-        </mat-tab>
+      <app-create-resource-form-row [label]="'Image'" [tooltip]="'Image'">
+        <mat-chip-listbox aria-label="File source" style="margin-bottom: 8px; margin-top: 8px">
+          <mat-chip-option (click)="isLocal = true" [selected]="isLocal">Upload file</mat-chip-option>
+          <mat-chip-option (click)="isLocal = false" [selected]="!isLocal">Link external IIIF image</mat-chip-option>
+        </mat-chip-listbox>
 
-        <mat-tab label="External IIIF URL">
-          <app-third-part-iiif [control]="control" />
-        </mat-tab>
-      </mat-tab-group>
+        <app-upload-control
+          *ngIf="isLocal"
+          [formControl]="control"
+          [representation]="fileRepresentation"
+          data-cy="upload-control" />
+        <app-third-part-iiif [control]="control" *ngIf="!isLocal" />
+      </app-create-resource-form-row>
     </ng-template>
   `,
   styles: [
@@ -41,4 +45,5 @@ export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @Output() externalImageSelected = new EventEmitter<boolean>();
   protected readonly Constants = Constants;
+  isLocal = true;
 }

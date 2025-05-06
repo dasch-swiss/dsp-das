@@ -17,7 +17,6 @@ import { Component, Input } from '@angular/core';
       .grid-h3 {
         width: 140px;
         margin-right: 10px;
-        text-align: right;
         margin-top: 16px;
         color: rgb(107, 114, 128);
         cursor: help;

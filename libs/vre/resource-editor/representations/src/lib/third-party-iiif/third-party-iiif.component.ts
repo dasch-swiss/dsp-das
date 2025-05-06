@@ -17,30 +17,18 @@ import { IIIFUrl } from './third-party-iiif';
       <img [src]="previewImageUrl" (load)="previewStatus = 'IDLE'" alt="IIIF Preview" height="240" />
     </div>
 
-    <app-create-resource-form-row [label]="'IIIF Image URL'" [tooltip]="'IIIF Image URL'">
-      <mat-form-field class="third-party-iiif-field">
-        <mat-label>IIIF Image URL</mat-label>
-        <input
-          matInput
-          [formControl]="control"
-          placeholder="Enter IIIF image URL"
-          data-cy="external-iiif-input"
-          placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
-        <button
-          type="button"
-          color="primary"
-          mat-icon-button
-          matSuffix
-          matTooltip="Paste from clipboard"
-          (click)="pasteFromClipboard()"
-          data-cy="external-iiif-paste">
-          <mat-icon>content_paste</mat-icon>
-        </button>
+    <mat-form-field class="third-party-iiif-field">
+      <mat-label>IIIF Image URL</mat-label>
+      <input
+        matInput
+        [formControl]="control"
+        placeholder="Enter IIIF image URL"
+        data-cy="external-iiif-input"
+        placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
 
-        <mat-hint>The URL must point to a valid IIIF image (jpg, tif, jp2, png).</mat-hint>
-        <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
-      </mat-form-field>
-    </app-create-resource-form-row>
+      <mat-hint>The URL must point to a valid IIIF image (jpg, tif, jp2, png).</mat-hint>
+      <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
+    </mat-form-field>
   `,
   styleUrls: ['./third-party-iiif.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,7 +36,7 @@ import { IIIFUrl } from './third-party-iiif';
 export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
 
-  previewImageUrl: string | undefined;
+  previewImageUrl?: string;
   previewStatus: 'LOADING' | 'IDLE' = 'IDLE';
 
   private subscription!: Subscription;
@@ -78,22 +66,7 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
     });
   }
 
-  pasteFromClipboard() {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      navigator.clipboard.readText().then(text => {
-        this.control.setValue(text);
-        this.control.markAsTouched();
-      });
-    }
-  }
-
-  resetIfInvalid() {
-    if (this.control.invalid) {
-      this.control.reset();
-    }
-  }
-
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

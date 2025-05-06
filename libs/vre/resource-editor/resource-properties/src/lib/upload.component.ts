@@ -19,17 +19,11 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
         appDragDrop
         (click)="fileInput.click()"
         (fileDropped)="_addFile($event.item(0))"
-        style="cursor: pointer">
-        <div style="text-align: center; padding: 16px; border: 1px solid black">
-          <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
-          <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
-          <div class="mat-subtitle-2">
-            The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}
-          </div>
-        </div>
-        <div class="mat-subtitle-2" style="background: black; color: white; text-align: center; padding: 8px">
-          Drag and drop or click to upload
-        </div>
+        class="zone">
+        <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
+        <mat-icon style="transform: scale(1.6); margin: 8px 0; color: gray">cloud_upload</mat-icon>
+        <div class="mat-subtitle-1">Drag and drop or click to upload.</div>
+        <div class="mat-subtitle-2">File types supported: {{ allowedFileTypes.join(', ') }}</div>
       </div>
     </ng-container>
 
@@ -58,7 +52,25 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
       </table>
     </ng-template>
   `,
-  styles: ['td {padding: 8px; text-align: center}'],
+  styles: [
+    `
+      td {
+        padding: 8px;
+        text-align: center;
+      }
+
+      .zone {
+        cursor: pointer;
+        text-align: center;
+        padding: 16px;
+        border: 1px gray dashed;
+
+        &:hover {
+          background: #ececec !important;
+        }
+      }
+    `,
+  ],
 })
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
