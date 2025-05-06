@@ -12,54 +12,35 @@ import { IIIFUrl } from './third-party-iiif';
 @Component({
   selector: 'app-third-part-iiif',
   template: `
-    <div class="third-party-iiif-preview">
-      <div
-        *ngIf="(!previewImageUrl || !control.valid) && previewStatus === 'IDLE'"
-        class="third-party-iiif-preview-placeholder">
-        <mat-icon class="iiif-preview-icon">preview</mat-icon>
-        <div>[ preview ]</div>
-        <div class="mat-subtitle-2 iiif-url-explanation">
-          The URL must point to a valid IIIF image (jpg, tif, jp2, png). <br />Example:
-          https://example.org/image-service/abcd1234/full/max/0/default.jpg
-        </div>
-      </div>
-      <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
-      <img
-        *ngIf="control?.valid"
-        [src]="previewImageUrl"
-        (load)="previewStatus = 'IDLE'"
-        alt="IIIF Preview"
-        height="240" />
+    <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
+    <div class="third-party-iiif-preview" *ngIf="control.valid">
+      <img [src]="previewImageUrl" (load)="previewStatus = 'IDLE'" alt="IIIF Preview" height="240" />
     </div>
 
-    <div class="mat-subtitle-2 paste-url-explanation">Paste a valid IIIF image URL to preview it here.</div>
+    <app-create-resource-form-row [label]="'IIIF Image URL'" [tooltip]="'IIIF Image URL'">
+      <mat-form-field class="third-party-iiif-field">
+        <mat-label>IIIF Image URL</mat-label>
+        <input
+          matInput
+          [formControl]="control"
+          placeholder="Enter IIIF image URL"
+          data-cy="external-iiif-input"
+          placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
+        <button
+          type="button"
+          color="primary"
+          mat-icon-button
+          matSuffix
+          matTooltip="Paste from clipboard"
+          (click)="pasteFromClipboard()"
+          data-cy="external-iiif-paste">
+          <mat-icon>content_paste</mat-icon>
+        </button>
 
-    <mat-form-field class="third-party-iiif-field">
-      <mat-label>IIIF Image URL</mat-label>
-      <input matInput [formControl]="control" placeholder="Enter IIIF image URL" data-cy="external-iiif-input" />
-      <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
-      <button
-        *ngIf="control.value"
-        [disabled]="control.valid"
-        (click)="resetIfInvalid()"
-        mat-icon-button
-        matSuffix
-        type="button"
-        color="primary"
-        data-cy="external-iiif-reset">
-        <mat-icon>{{ control.valid ? 'check' : 'close' }}</mat-icon>
-      </button>
-      <button
-        type="button"
-        color="primary"
-        mat-icon-button
-        matSuffix
-        matTooltip="Paste from clipboard"
-        (click)="pasteFromClipboard()"
-        data-cy="external-iiif-paste">
-        <mat-icon>content_paste</mat-icon>
-      </button>
-    </mat-form-field>
+        <mat-hint>The URL must point to a valid IIIF image (jpg, tif, jp2, png).</mat-hint>
+        <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
+      </mat-form-field>
+    </app-create-resource-form-row>
   `,
   styleUrls: ['./third-party-iiif.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

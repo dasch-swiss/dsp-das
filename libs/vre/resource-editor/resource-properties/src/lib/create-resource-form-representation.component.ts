@@ -18,7 +18,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
         [animationDuration]="0"
         data-cy="stillimage-tab-group"
         (selectedTabChange)="externalImageSelected.emit($event.index === 1)">
-        <mat-tab label="Upload Image">
+        <mat-tab label="Upload Image" style="padding-top: 16px">
           <app-upload-control [formControl]="control" [representation]="fileRepresentation" data-cy="upload-control" />
         </mat-tab>
 
@@ -28,6 +28,13 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
       </mat-tab-group>
     </ng-template>
   `,
+  styles: [
+    `
+      :host ::ng-deep .mat-mdc-tab-body {
+        padding-top: 24px;
+      }
+    `,
+  ],
 })
 export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

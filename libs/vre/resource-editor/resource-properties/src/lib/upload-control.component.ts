@@ -5,12 +5,14 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
 @Component({
   selector: 'app-upload-control',
   template: `
-    <app-upload
-      style="margin-bottom: 16px;display: block;"
-      [representation]="representation"
-      (afterFileRemoved)="removeFile()"
-      (afterFileUploaded)="afterFileUploaded($event)" />
-    <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
+    <app-create-resource-form-row [label]="'File to upload'" [tooltip]="'File'">
+      <app-upload
+        style="margin-bottom: 16px;display: block;"
+        [representation]="representation"
+        (afterFileRemoved)="removeFile()"
+        (afterFileUploaded)="afterFileUploaded($event)" />
+      <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
+    </app-create-resource-form-row>
   `,
 })
 export class UploadControlComponent implements ControlValueAccessor {

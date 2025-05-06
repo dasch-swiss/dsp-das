@@ -23,7 +23,6 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
         <div style="text-align: center; padding: 16px; border: 1px solid black">
           <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
           <mat-icon style="transform: scale(1.6); margin: 8px 0;">cloud_upload</mat-icon>
-          <div>Upload file</div>
           <div class="mat-subtitle-2">
             The following file types are supported: <br />{{ allowedFileTypes.join(', ') }}
           </div>
