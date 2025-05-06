@@ -26,6 +26,7 @@ export * from './lib/create-resource-dialog.component';
 export * from './lib/create-resource-form.component';
 export * from './lib/create-resource-form-row.component';
 export * from './lib/create-resource-form-representation.component';
+export * from './lib/create-resource-form-image.component';
 export * from './lib/resource-form-legal.component';
 export * from './lib/create-resource-form-properties.component';
 export * from './lib/create-resource-page.component';
