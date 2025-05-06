@@ -123,10 +123,6 @@ export class CreateResourceFormComponent implements OnInit {
     private _cd: ChangeDetectorRef
   ) {}
 
-  test(event) {
-    console.log(event);
-  }
-
   ngOnInit(): void {
     this._getResourceProperties();
   }
@@ -261,6 +257,7 @@ export class CreateResourceFormComponent implements OnInit {
     } else {
       createFile.filename = formFileValue.link!;
     }
+
     createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
     createFile.license = formFileValue.legal.license!;
     createFile.authorship = formFileValue.legal.authorship!;
