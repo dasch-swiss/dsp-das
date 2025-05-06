@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { FileForm } from './file-form.type';
 
 @Component({
@@ -10,9 +12,26 @@ import { FileForm } from './file-form.type';
 
     <app-resource-form-legal [formGroup]="form.controls.legal" [projectShortcode]="projectShortcode" />`,
 })
-export class CreateResourceFormFileComponent {
-  @Input({ required: true }) form!: FileForm;
+export class CreateResourceFormFileComponent implements OnInit {
   @Input({ required: true }) projectShortcode!: string;
   @Input({ required: true }) fileRepresentation!: string;
   @Output() externalImageSelected = new EventEmitter<boolean>();
+  @Output() afterFormCreated = new EventEmitter<FileForm>();
+
+  form!: FileForm;
+
+  constructor(private _fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.form = this._fb.group({
+      link: [null as string | null, [Validators.required]],
+      legal: this._fb.group({
+        copyrightHolder: null as string | null,
+        license: null as LicenseDto | null,
+        authorship: null as string[] | null,
+      }),
+    }) as unknown as FileForm;
+
+    this.afterFormCreated.emit(this.form);
+  }
 }

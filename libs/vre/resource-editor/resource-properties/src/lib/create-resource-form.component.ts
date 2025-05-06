@@ -12,7 +12,6 @@ import {
   ResourceClassDefinitionWithPropertyDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/core/state';
 import { FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
@@ -28,12 +27,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <ng-container *ngIf="form.controls.file && fileRepresentation">
+      <ng-container *ngIf="fileRepresentation">
         <h3>File</h3>
         <app-create-resource-form-file
-          [form]="form.controls.file"
           [projectShortcode]="projectShortcode"
-          [fileRepresentation]="fileRepresentation" />
+          [fileRepresentation]="fileRepresentation"
+          (afterFormCreated)="afterFileFormCreated($event)" />
 
         <h3>Properties</h3>
       </ng-container>
@@ -124,6 +123,10 @@ export class CreateResourceFormComponent implements OnInit {
     this._getResourceProperties();
   }
 
+  afterFileFormCreated(fileForm: FileForm) {
+    this.form.addControl('file', fileForm);
+  }
+
   submitData() {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
@@ -166,18 +169,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _buildForm() {
-    if (this.fileRepresentation) {
-      const fileFormGroup = this._fb.group({
-        link: [null as string | null, [Validators.required]],
-        legal: this._fb.group({
-          copyrightHolder: null as string | null,
-          license: null as LicenseDto | null,
-          authorship: null as string[] | null,
-        }),
-      }) as unknown as FileForm;
-      this.form.addControl('file', fileFormGroup);
-    }
-
     this.properties
       .filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!))
       .forEach(prop => {
