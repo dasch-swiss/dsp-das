@@ -108,7 +108,7 @@ export class StillImageToolbarComponent {
           EditIiifDialogComponent,
           DspDialogConfig.mediumDialog({
             resourceId: this.resource.id,
-            fileValue: this.imageFileValue as ReadStillImageExternalFileValue,
+            externalUrl: (this.imageFileValue as ReadStillImageExternalFileValue).externalUrl,
           })
         )
         .afterClosed()

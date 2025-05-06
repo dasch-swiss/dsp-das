@@ -23,7 +23,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
         </mat-tab>
 
         <mat-tab label="External IIIF URL">
-          <app-third-part-iiif [formControl]="control" />
+          <app-third-part-iiif [control]="control" />
         </mat-tab>
       </mat-tab-group>
     </ng-template>

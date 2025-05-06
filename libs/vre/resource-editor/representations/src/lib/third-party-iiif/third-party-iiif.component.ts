@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
   iiifUrlValidator,
   infoJsonUrlValidatorAsync,
@@ -12,43 +11,66 @@ import { IIIFUrl } from './third-party-iiif';
 
 @Component({
   selector: 'app-third-part-iiif',
-  templateUrl: './third-party-iiif.component.html',
+  template: `
+    <div class="third-party-iiif-preview">
+      <div
+        *ngIf="(!previewImageUrl || !control.valid) && previewStatus === 'IDLE'"
+        class="third-party-iiif-preview-placeholder">
+        <mat-icon class="iiif-preview-icon">preview</mat-icon>
+        <div>[ preview ]</div>
+        <div class="mat-subtitle-2 iiif-url-explanation">
+          The URL must point to a valid IIIF image (jpg, tif, jp2, png). <br />Example:
+          https://example.org/image-service/abcd1234/full/max/0/default.jpg
+        </div>
+      </div>
+      <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
+      <img
+        *ngIf="control?.valid"
+        [src]="previewImageUrl"
+        (load)="previewStatus = 'IDLE'"
+        alt="IIIF Preview"
+        height="240" />
+    </div>
+
+    <div class="mat-subtitle-2 paste-url-explanation">Paste a valid IIIF image URL to preview it here.</div>
+
+    <mat-form-field class="third-party-iiif-field">
+      <mat-label>IIIF Image URL</mat-label>
+      <input matInput [formControl]="control" placeholder="Enter IIIF image URL" data-cy="external-iiif-input" />
+      <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
+      <button
+        *ngIf="control.value"
+        [disabled]="control.valid"
+        (click)="resetIfInvalid()"
+        mat-icon-button
+        matSuffix
+        type="button"
+        color="primary"
+        data-cy="external-iiif-reset">
+        <mat-icon>{{ control.valid ? 'check' : 'close' }}</mat-icon>
+      </button>
+      <button
+        type="button"
+        color="primary"
+        mat-icon-button
+        matSuffix
+        matTooltip="Paste from clipboard"
+        (click)="pasteFromClipboard()"
+        data-cy="external-iiif-paste">
+        <mat-icon>content_paste</mat-icon>
+      </button>
+    </mat-form-field>
+  `,
   styleUrls: ['./third-party-iiif.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ThirdPartyIiifComponent),
-      multi: true,
-    },
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  onChange: (value: any) => void = () => {};
-  onTouched: () => void = () => {};
-
-  writeValue(value: string | null): void {
-    if (value) {
-      this.iiifUrlControl.patchValue(value?.externalUrl || '');
-      this._initialFileValue = value;
-      this.iiifUrlControl.updateValueAndValidity();
-    }
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  iiifUrlControl: FormControl<string | null>;
+export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
+  @Input({ required: true }) control!: FormControl<string | null>;
 
   previewImageUrl: string | undefined;
   previewStatus: 'LOADING' | 'IDLE' = 'IDLE';
 
-  private _destroy$ = new Subject<void>();
+  private subscription!: Subscription;
 
   readonly validatorErrors = [
     { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL.' },
@@ -61,25 +83,16 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     private _cdr: ChangeDetectorRef,
     private _fb: FormBuilder
   ) {
-    this.iiifUrlControl = this._fb.control('', {
+    this.control = this._fb.control('', {
       validators: [Validators.required, iiifUrlValidator(), isExternalHostValidator()],
       asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
     });
   }
 
   ngOnInit() {
-    this.iiifUrlControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(urlStr => {
+    this.subscription = this.control.valueChanges.subscribe(urlStr => {
       const iiifUrl = IIIFUrl.createUrl(urlStr || '');
       this.previewImageUrl = iiifUrl?.previewImageUrl;
-    });
-
-    this.iiifUrlControl.statusChanges.pipe(takeUntil(this._destroy$)).subscribe(state => {
-      this.previewStatus = state === 'PENDING' ? 'LOADING' : 'IDLE';
-      if (state !== 'PENDING' && this.iiifUrlControl.value && this.iiifUrlControl.valid) {
-        this.onChange(this.iiifUrlControl.value);
-      } else {
-        this.onChange(null);
-      }
       this._cdr.detectChanges();
     });
   }
@@ -87,20 +100,19 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
   pasteFromClipboard() {
     if (navigator.clipboard && navigator.clipboard.readText) {
       navigator.clipboard.readText().then(text => {
-        this.iiifUrlControl.setValue(text);
-        this.iiifUrlControl.markAsTouched();
+        this.control.setValue(text);
+        this.control.markAsTouched();
       });
     }
   }
 
   resetIfInvalid() {
-    if (this.iiifUrlControl.invalid) {
-      this.iiifUrlControl.reset();
+    if (this.control.invalid) {
+      this.control.reset();
     }
   }
 
   ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }

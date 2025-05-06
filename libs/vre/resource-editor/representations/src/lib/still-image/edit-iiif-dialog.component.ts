@@ -1,19 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js';
 
 export interface IiifDialogProps {
   resourceId: string;
-  fileValue: ReadStillImageExternalFileValue;
+  externalUrl: string;
 }
 
 @Component({
   selector: 'app-edit-third-party-iiif-dialog',
   template: `
-    <form [formGroup]="form">
-      <app-third-part-iiif [formControl]="form.controls.fileValue" />
-    </form>
+    <app-third-part-iiif [control]="control" />
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
       <button
@@ -21,7 +18,7 @@ export interface IiifDialogProps {
         color="primary"
         appLoadingButton
         [isLoading]="loading"
-        [disabled]="!form?.valid || loading"
+        [disabled]="!control?.valid || loading"
         (click)="submitData()"
         data-cy="submit-button">
         {{ 'ui.form.action.submit' | translate }}
@@ -30,20 +27,16 @@ export interface IiifDialogProps {
   `,
 })
 export class EditIiifDialogComponent {
-  form = new FormGroup({
-    fileValue: new FormControl(this.data.fileValue, [Validators.required]),
-  });
-
+  control = new FormControl(this.data.externalUrl, [Validators.required]);
   loading = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IiifDialogProps,
-    public dialogRef: MatDialogRef<IiifDialogProps>
+    private _dialogRef: MatDialogRef<IiifDialogProps>
   ) {}
 
   submitData() {
     this.loading = true;
-    delete (this.form.value.fileValue as any)?.filename;
-    this.dialogRef.close(this.form.value.fileValue);
+    this._dialogRef.close();
   }
 }
