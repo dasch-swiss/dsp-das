@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
@@ -29,13 +29,9 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
     </ng-template>
   `,
 })
-export class CreateResourceFormRepresentationComponent implements OnChanges {
+export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @Output() externalImageSelected = new EventEmitter<boolean>();
   protected readonly Constants = Constants;
-
-  ngOnChanges() {
-    console.log('representation', this);
-  }
 }
