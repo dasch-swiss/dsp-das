@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import {
   iiifUrlValidator,
   infoJsonUrlValidatorAsync,
@@ -13,16 +14,15 @@ import { IIIFUrl } from './third-party-iiif';
   selector: 'app-third-part-iiif',
   template: `
     <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
-    <div class="third-party-iiif-preview" *ngIf="control.valid">
+    <div class="third-party-iiif-preview" *ngIf="previewImageUrl">
       <img [src]="previewImageUrl" (load)="previewStatus = 'IDLE'" alt="IIIF Preview" height="240" />
     </div>
 
-    <mat-form-field class="third-party-iiif-field">
+    <mat-form-field style="width: 100%">
       <mat-label>IIIF Image URL</mat-label>
       <input
         matInput
         [formControl]="control"
-        placeholder="Enter IIIF image URL"
         data-cy="external-iiif-input"
         placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
 
@@ -33,7 +33,7 @@ import { IIIFUrl } from './third-party-iiif';
   styles: [
     `
       .third-party-iiif-preview {
-        width: calc(100% - 2px);
+        width: 100%;
         border: 1px solid #000;
         border-radius: 2px;
         padding: 16px 0;
@@ -42,10 +42,6 @@ import { IIIFUrl } from './third-party-iiif';
         justify-content: center;
         background-color: #f2f2f2;
         overflow: hidden;
-      }
-
-      .third-party-iiif-field {
-        width: 100%;
       }
     `,
   ],
@@ -77,11 +73,15 @@ export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.control.valueChanges.subscribe(urlStr => {
-      const iiifUrl = IIIFUrl.createUrl(urlStr || '');
-      this.previewImageUrl = iiifUrl?.previewImageUrl;
-      this._cdr.detectChanges();
+    this.subscription = this.control.valueChanges.pipe(startWith(this.control.value)).subscribe(urlStr => {
+      this.preview(urlStr ?? '');
     });
+  }
+
+  preview(urlStr: string) {
+    const iiifUrl = IIIFUrl.createUrl(urlStr);
+    this.previewImageUrl = iiifUrl?.previewImageUrl;
+    this._cdr.detectChanges();
   }
 
   ngOnDestroy() {
