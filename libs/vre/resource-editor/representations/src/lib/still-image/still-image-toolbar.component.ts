@@ -15,8 +15,6 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { filter, switchMap } from 'rxjs/operators';
-import { EditThirdPartyIiifFormComponent } from '../edit-third-party-iiif-form/edit-third-party-iiif-form.component';
-import { ThirdPartyIiifProps } from '../edit-third-party-iiif-form/edit-third-party-iiif-types';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -24,6 +22,7 @@ import {
 import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { ResourceUtil } from '../resource.util';
+import { EditIiifDialogComponent, IiifDialogProps } from './edit-iiif-dialog.component';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 
 @Component({
@@ -105,9 +104,9 @@ export class StillImageToolbarComponent {
   replaceImage() {
     if (this.isReadStillImageExternalFileValue) {
       this._dialog
-        .open<EditThirdPartyIiifFormComponent, ThirdPartyIiifProps>(
-          EditThirdPartyIiifFormComponent,
-          DspDialogConfig.dialogDrawerConfig({
+        .open<EditIiifDialogComponent, IiifDialogProps>(
+          EditIiifDialogComponent,
+          DspDialogConfig.mediumDialog({
             resourceId: this.resource.id,
             fileValue: this.imageFileValue as ReadStillImageExternalFileValue,
           })

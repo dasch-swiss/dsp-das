@@ -5,7 +5,8 @@
     <mat-icon class="iiif-preview-icon">preview</mat-icon>
     <div>[ preview ]</div>
     <div class="mat-subtitle-2 iiif-url-explanation">
-      The URL must point to a valid IIIF image (jpg, tif, jp2, png). <br />Example: {{ exampleString }}
+      The URL must point to a valid IIIF image (jpg, tif, jp2, png). <br />Example:
+      https://example.org/image-service/abcd1234/full/max/0/default.jpg
     </div>
   </div>
   <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
@@ -16,6 +17,7 @@
     alt="IIIF Preview"
     height="240" />
 </div>
+
 <div class="mat-subtitle-2 paste-url-explanation">Paste a valid IIIF image URL to preview it here.</div>
 
 <mat-form-field class="third-party-iiif-field">

@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import {
-  CreateStillImageExternalFileValue,
-  ReadStillImageExternalFileValue,
-  UpdateExternalStillImageFileValue,
-} from '@dasch-swiss/dsp-js';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -32,7 +27,7 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: ReadStillImageExternalFileValue | null): void {
+  writeValue(value: string | null): void {
     if (value) {
       this.iiifUrlControl.patchValue(value?.externalUrl || '');
       this._initialFileValue = value;
@@ -48,8 +43,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     this.onTouched = fn;
   }
 
-  private _initialFileValue: ReadStillImageExternalFileValue | null = null; // if editing an existing file value
-
   iiifUrlControl: FormControl<string | null>;
 
   previewImageUrl: string | undefined;
@@ -63,8 +56,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
     { errorKey: 'infoJsonError', message: 'The IIIF info JSON can not be loaded from the third party server.' },
     { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
   ];
-
-  readonly exampleString = 'https://example.org/image-service/abcd1234/full/max/0/default.jpg';
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -91,18 +82,6 @@ export class ThirdPartyIiifComponent implements ControlValueAccessor, OnInit, On
       }
       this._cdr.detectChanges();
     });
-  }
-
-  private _getValue(): CreateStillImageExternalFileValue | UpdateExternalStillImageFileValue {
-    if (this._initialFileValue) {
-      const updateValue: UpdateExternalStillImageFileValue = new UpdateExternalStillImageFileValue();
-      updateValue.id = this._initialFileValue.id;
-      return updateValue;
-    } else {
-      const fileValue = new CreateStillImageExternalFileValue();
-      delete (fileValue as any).filename;
-      return fileValue;
-    }
   }
 
   pasteFromClipboard() {
