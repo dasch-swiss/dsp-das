@@ -32,12 +32,23 @@ export class CreateResourceFormImageComponent {
 
   isUploadFileTab = true;
 
+  cachedValue: { upload?: string; external?: string } = { upload: undefined, external: undefined };
+
   onChange(event: MatChipListboxChange) {
     if (event.value === undefined) {
       this.matChipListbox.value = this.isUploadFileTab;
       return;
     }
 
+    if (event.value === true) {
+      // upload file case
+      this.cachedValue.external = this.control.value!;
+    } else {
+      this.cachedValue.upload = this.control.value!;
+    }
     this.isUploadFileTab = event.value;
+
+    const patchedValue = event.value === true ? this.cachedValue.upload : this.cachedValue.external;
+    this.control.setValue(patchedValue ?? null);
   }
 }
