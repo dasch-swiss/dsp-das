@@ -30,7 +30,25 @@ import { IIIFUrl } from './third-party-iiif';
       <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
     </mat-form-field>
   `,
-  styleUrls: ['./third-party-iiif.component.scss'],
+  styles: [
+    `
+      .third-party-iiif-preview {
+        width: calc(100% - 2px);
+        border: 1px solid #000;
+        border-radius: 2px;
+        padding: 16px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        background-color: #f2f2f2;
+        overflow: hidden;
+      }
+
+      .third-party-iiif-field {
+        width: 100%;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
