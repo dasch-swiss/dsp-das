@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
@@ -13,7 +13,11 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
       style="display: block; margin-bottom: 16px" />
 
     <ng-template #stillImageTpl>
-      <mat-tab-group preserveContent data-cy="stillimage-tab-group">
+      <mat-tab-group
+        preserveContent
+        [animationDuration]="0"
+        data-cy="stillimage-tab-group"
+        (selectedTabChange)="externalImageSelected.emit($event.index === 1)">
         <mat-tab label="Upload Image">
           <app-upload-control [formControl]="control" [representation]="fileRepresentation" data-cy="upload-control" />
         </mat-tab>
@@ -28,6 +32,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
 export class CreateResourceFormRepresentationComponent implements OnChanges {
   @Input({ required: true }) control!: FormControl<string | null>;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
+  @Output() externalImageSelected = new EventEmitter<boolean>();
   protected readonly Constants = Constants;
 
   ngOnChanges() {

@@ -32,7 +32,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
         <app-create-resource-form-representation
           [control]="form.controls.file.controls.link"
-          [fileRepresentation]="fileRepresentation" />
+          [fileRepresentation]="fileRepresentation"
+          (externalImageSelected)="externalImageSelected = $event" />
 
         <app-resource-form-legal
           [formGroup]="form.controls.file.controls.legal"
@@ -88,6 +89,8 @@ export class CreateResourceFormComponent implements OnInit {
     properties: this._fb.group({}),
   });
 
+  externalImageSelected = false;
+
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
 
@@ -119,6 +122,10 @@ export class CreateResourceFormComponent implements OnInit {
     private _store: Store,
     private _cd: ChangeDetectorRef
   ) {}
+
+  test(event) {
+    console.log(event);
+  }
 
   ngOnInit(): void {
     this._getResourceProperties();
@@ -248,7 +255,7 @@ export class CreateResourceFormComponent implements OnInit {
     const formFileValue = this.form.controls.file!.getRawValue();
     let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
 
-    if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
+    if (createFile instanceof CreateStillImageFileValue && this.externalImageSelected) {
       createFile = new CreateStillImageExternalFileValue();
       (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
     } else {
