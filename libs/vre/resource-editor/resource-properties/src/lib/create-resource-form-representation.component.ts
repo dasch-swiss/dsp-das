@@ -8,7 +8,6 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
   template: `
     <app-create-resource-form-row
       [label]="'File'"
-      [tooltip]="'File'"
       *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl">
       <app-upload-control
         [formControl]="control"
