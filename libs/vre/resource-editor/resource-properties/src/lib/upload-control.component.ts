@@ -14,13 +14,12 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
   `,
 })
 export class UploadControlComponent implements ControlValueAccessor {
-  @Input() resourceId?: string;
   @Input({ required: true }) representation!: FileRepresentationType;
+
+  loading = false;
 
   onChange!: (value: any) => void;
   onTouched!: () => void;
-
-  loading = false;
 
   constructor(
     private _cdr: ChangeDetectorRef,
