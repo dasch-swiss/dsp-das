@@ -18,20 +18,18 @@ export class CreateResourceFormFileComponent implements OnInit {
   @Output() externalImageSelected = new EventEmitter<boolean>();
   @Output() afterFormCreated = new EventEmitter<FileForm>();
 
-  form!: FileForm;
+  form = this._fb.group({
+    link: [null as string | null, [Validators.required]],
+    legal: this._fb.group({
+      copyrightHolder: null as string | null,
+      license: null as LicenseDto | null,
+      authorship: null as string[] | null,
+    }),
+  });
 
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit() {
-    this.form = this._fb.group({
-      link: [null as string | null, [Validators.required]],
-      legal: this._fb.group({
-        copyrightHolder: null as string | null,
-        license: null as LicenseDto | null,
-        authorship: null as string[] | null,
-      }),
-    }) as unknown as FileForm;
-
     this.afterFormCreated.emit(this.form);
   }
 }

@@ -53,21 +53,17 @@ export class CreateResourceFormImageComponent {
     }
 
     if (isUploadFileTab) {
-      // upload file case
       this.cachedValue.external = this.control.value!;
-    } else {
-      this.cachedValue.upload = this.control.value!;
-    }
-    this.isUploadFileTab = isUploadFileTab;
-
-    if (isUploadFileTab) {
       this.control.setValidators([Validators.required]);
       this.control.setValue(this.cachedValue.upload ?? null);
     } else {
+      this.cachedValue.upload = this.control.value!;
       this.control.setValidators(this.externalControlValidators.validators);
       this.control.setAsyncValidators(this.externalControlValidators.asyncValidators);
       this.control.setValue(this.cachedValue.external ?? null);
     }
+
+    this.isUploadFileTab = isUploadFileTab;
     this.control.updateValueAndValidity();
   }
 }

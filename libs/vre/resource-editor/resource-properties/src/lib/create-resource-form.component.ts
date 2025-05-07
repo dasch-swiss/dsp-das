@@ -126,7 +126,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   submitData() {
-    console.log('aaa', this);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
