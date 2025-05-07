@@ -10,7 +10,7 @@ export interface IiifDialogProps {
 @Component({
   selector: 'app-edit-third-party-iiif-dialog',
   template: `
-    <app-third-part-iiif [control]="control" />
+    <app-iiif-control [control]="control" />
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
       <button

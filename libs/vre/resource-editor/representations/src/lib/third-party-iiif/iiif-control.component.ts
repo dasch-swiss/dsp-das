@@ -11,7 +11,7 @@ import {
 import { IIIFUrl } from './third-party-iiif';
 
 @Component({
-  selector: 'app-third-part-iiif',
+  selector: 'app-iiif-control',
   template: `
     <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
     <div class="third-party-iiif-preview" *ngIf="previewImageUrl">
@@ -47,7 +47,7 @@ import { IIIFUrl } from './third-party-iiif';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ThirdPartyIiifComponent implements OnInit, OnDestroy {
+export class IiifControlComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
 
   previewImageUrl?: string;

@@ -11,7 +11,7 @@ import { EditIiifDialogComponent } from './lib/still-image/edit-iiif-dialog.comp
 import { StillImageToolbarComponent } from './lib/still-image/still-image-toolbar.component';
 import { StillImageComponent } from './lib/still-image/still-image.component';
 import { TextComponent } from './lib/text/text.component';
-import { ThirdPartyIiifComponent } from './lib/third-party-iiif/third-party-iiif.component';
+import { IiifControlComponent } from './lib/third-party-iiif/iiif-control.component';
 import { DisableContextMenuDirective } from './lib/video/disable-context-menu.directive';
 import { VideoMoreButtonComponent } from './lib/video/video-more-button.component';
 import { VideoOverlayComponent } from './lib/video/video-overlay.component';
@@ -38,6 +38,6 @@ export const RepresentationsComponents = [
   VideoMoreButtonComponent,
   VideoToolbarComponent,
   VideoOverlayComponent,
-  ThirdPartyIiifComponent,
+  IiifControlComponent,
   DisableContextMenuDirective,
 ];

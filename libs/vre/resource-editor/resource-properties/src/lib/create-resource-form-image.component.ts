@@ -27,7 +27,7 @@ import {
       [formControl]="control"
       [representation]="fileRepresentation"
       data-cy="upload-control" />
-    <app-third-part-iiif [control]="control" *ngIf="!isUploadFileTab" />
+    <app-iiif-control [control]="control" *ngIf="!isUploadFileTab" />
   </app-create-resource-form-row>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

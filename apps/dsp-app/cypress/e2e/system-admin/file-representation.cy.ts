@@ -29,7 +29,7 @@ describe('File representation', () => {
         cy.get('[data-cy=stillimage-tab-group]').within(() => {
           cy.contains('.mdc-tab__text-label', 'External IIIF URL').click();
         });
-        cy.get('app-third-part-iiif').should('be.visible');
+        cy.get('app-iiif-control').should('be.visible');
 
         // create
         po.addInitialLabel();

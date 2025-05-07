@@ -25,7 +25,7 @@ export * from './lib/video/video-overlay.component';
 export * from './lib/audio/audio-toolbar.component';
 export * from './lib/audio/audio-more-button.component';
 export * from './lib/audio/media-slider.component';
-export * from './lib/third-party-iiif/third-party-iiif.component';
+export * from './lib/third-party-iiif/iiif-control.component';
 export * from './lib/third-party-iiif/iiif-url-validator';
 export * from './lib/still-image/edit-iiif-dialog.component';
 export * from './lib/video/disable-context-menu.directive';
