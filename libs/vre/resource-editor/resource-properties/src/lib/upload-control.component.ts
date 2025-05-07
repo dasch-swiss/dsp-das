@@ -1,31 +1,42 @@
-import { ChangeDetectorRef, Component, Input, Self } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Component, Input, OnInit, Self } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
   selector: 'app-upload-control',
   template: `
-    <app-upload
-      style="margin-bottom: 16px;display: block;"
-      [representation]="representation"
-      (afterFileRemoved)="removeFile()"
-      (afterFileUploaded)="afterFileUploaded($event)" />
-    <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
+    <ng-container *ngIf="!control.value; else testTpl">
+      <app-upload
+        style="margin-bottom: 16px;display: block;"
+        [representation]="representation"
+        (afterFileRemoved)="removeFile()"
+        (afterFileUploaded)="afterFileUploaded($event)" />
+      <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
+    </ng-container>
+
+    <ng-template #testTpl>
+      <app-uploaded-file [internalFilename]="control.value" (removeFile)="control.setValue('')" />
+    </ng-template>
   `,
 })
-export class UploadControlComponent implements ControlValueAccessor {
+export class UploadControlComponent implements ControlValueAccessor, OnInit {
   @Input({ required: true }) representation!: FileRepresentationType;
 
   loading = false;
 
+  get control() {
+    return this.ngControl['form'] as FormControl<string>;
+  }
+
   onChange!: (value: any) => void;
   onTouched!: () => void;
 
-  constructor(
-    private _cdr: ChangeDetectorRef,
-    @Self() public ngControl: NgControl
-  ) {
+  constructor(@Self() public ngControl: NgControl) {
     ngControl.valueAccessor = this;
+  }
+
+  ngOnInit() {
+    console.log('tt', this);
   }
 
   writeValue(value: null): void {}
@@ -41,8 +52,6 @@ export class UploadControlComponent implements ControlValueAccessor {
   afterFileUploaded(res: UploadedFileResponse) {
     this.onChange(res.internalFilename);
     this.onTouched();
-
-    this._cdr.detectChanges();
   }
 
   removeFile() {

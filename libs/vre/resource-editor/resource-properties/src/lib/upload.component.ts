@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { AdminFilesApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import {
   FileRepresentationType,
@@ -15,12 +14,7 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
   selector: 'app-upload',
   template: `
     <ng-container *ngIf="!loading; else loadingTpl">
-      <div
-        *ngIf="!fileToUpload"
-        appDragDrop
-        (click)="fileInput.click()"
-        (fileDropped)="_addFile($event.item(0))"
-        class="zone">
+      <div appDragDrop (click)="fileInput.click()" (fileDropped)="addFile($event.item(0))" class="zone">
         <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
         <mat-icon style="transform: scale(1.6); margin: 8px 0; color: gray">cloud_upload</mat-icon>
         <div class="mat-subtitle-1">Drag and drop or click to upload.</div>
@@ -31,24 +25,9 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
     <ng-template #loadingTpl>
       <app-progress-indicator />
     </ng-template>
-
-    <mat-card *ngIf="fileToUpload">
-      <mat-card-content style="display: flex; align-items: center">
-        <mat-icon color="primary">description</mat-icon>
-        <div style="flex: 1; margin-left: 8px">{{ fileToUpload.name }}</div>
-        <button mat-icon-button (click)="removeFile()">
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-card-content>
-    </mat-card>
   `,
   styles: [
     `
-      td {
-        padding: 8px;
-        text-align: center;
-      }
-
       .zone {
         cursor: pointer;
         text-align: center;
@@ -64,13 +43,9 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 })
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
-  @Output() afterFileRemoved = new EventEmitter<void>();
   @Output() afterFileUploaded = new EventEmitter<UploadedFileResponse>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  readonly Math = Math;
-
-  fileToUpload: File | undefined;
   loading = false;
 
   shortcode?: string; // TODO REMOVE
@@ -92,15 +67,14 @@ export class UploadComponent {
     private _store: Store,
     private _upload: UploadFileService,
     private _cdr: ChangeDetectorRef,
-    private _actions$: Actions,
-    private _adminFilesApi: AdminFilesApiService
+    private _actions$: Actions
   ) {}
 
   addFileFromClick(event: any) {
-    this._addFile(event.target.files[0]);
+    this.addFile(event.target.files[0]);
   }
 
-  _addFile(file: File) {
+  addFile(file: File) {
     const regex = /\.([^.\\/:*?"<>|\r\n]+)$/;
     const supportedExtensions = file.name.match(regex);
     const fileExtension = supportedExtensions![1].toLowerCase();
@@ -109,7 +83,6 @@ export class UploadComponent {
       return;
     }
 
-    this.fileToUpload = file;
     this._uploadFile(file);
   }
 
@@ -150,18 +123,9 @@ export class UploadComponent {
         })
       )
       .subscribe(res => {
-        console.log('uploaded file', res);
-        this._upload.getFileInfo('7720nz5nV9p-FtmN5dmYUL8', this.shortcode).subscribe(file_ => {
-          console.log('last response', file_);
-        });
         this.afterFileUploaded.emit(res);
       });
 
     this.fileInput.nativeElement.value = '';
-  }
-
-  removeFile() {
-    this.fileToUpload = undefined;
-    this.afterFileRemoved.emit();
   }
 }

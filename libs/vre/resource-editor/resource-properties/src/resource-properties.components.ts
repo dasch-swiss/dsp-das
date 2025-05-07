@@ -39,6 +39,7 @@ import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.com
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
+import { UploadedFileComponent } from './lib/uploaded-file.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { LinkValueComponent } from './lib/value-components/link-value.component';
 import { ListValueComponent } from './lib/value-components/list-value.component';
@@ -99,6 +100,7 @@ export const ResourcePropertiesComponents = [
   EraseResourceDialogComponent,
   PropertyRowComponent,
   UploadComponent,
+  UploadedFileComponent,
   FootnotesComponent,
   FootnoteTooltipComponent,
   FootnoteDirective,
