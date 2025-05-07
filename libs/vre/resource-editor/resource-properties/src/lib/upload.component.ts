@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { AdminFilesApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import {
   FileRepresentationType,
@@ -15,7 +16,7 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
   template: `
     <ng-container *ngIf="!loading; else loadingTpl">
       <div
-        *ngIf="!fileToUpload; else showFileTemplate"
+        *ngIf="!fileToUpload"
         appDragDrop
         (click)="fileInput.click()"
         (fileDropped)="_addFile($event.item(0))"
@@ -31,26 +32,15 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
       <app-progress-indicator />
     </ng-template>
 
-    <ng-template #showFileTemplate>
-      <table *ngIf="fileToUpload" style="text-align: center; width: 100%; border: 1px solid lightgray">
-        <tr style="background: lightblue">
-          <th>Name</th>
-          <th>Size</th>
-          <th>Last Modified Date</th>
-          <th>Delete</th>
-        </tr>
-        <tr>
-          <td>{{ fileToUpload.name }}</td>
-          <td>{{ Math.floor(fileToUpload.size / 1000) }} kb</td>
-          <td>{{ fileToUpload.lastModified | date }}</td>
-          <td>
-            <button mat-icon-button (click)="removeFile()">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </table>
-    </ng-template>
+    <mat-card *ngIf="fileToUpload">
+      <mat-card-content style="display: flex; align-items: center">
+        <mat-icon color="primary">description</mat-icon>
+        <div style="flex: 1; margin-left: 8px">{{ fileToUpload.name }}</div>
+        <button mat-icon-button (click)="removeFile()">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
   `,
   styles: [
     `
@@ -83,6 +73,7 @@ export class UploadComponent {
   fileToUpload: File | undefined;
   loading = false;
 
+  shortcode?: string; // TODO REMOVE
   private readonly _fileTypesMapping = {
     [Constants.HasMovingImageFileValue]: ['mp4'],
     [Constants.HasAudioFileValue]: ['mp3', 'wav'],
@@ -101,7 +92,8 @@ export class UploadComponent {
     private _store: Store,
     private _upload: UploadFileService,
     private _cdr: ChangeDetectorRef,
-    private _actions$: Actions
+    private _actions$: Actions,
+    private _adminFilesApi: AdminFilesApiService
   ) {}
 
   addFileFromClick(event: any) {
@@ -149,6 +141,7 @@ export class UploadComponent {
         take(1),
         map(prj => prj!.shortcode),
         mergeMap(sc => {
+          this.shortcode = sc;
           return this._upload.upload(file, sc);
         }),
         finalize(() => {
@@ -157,6 +150,10 @@ export class UploadComponent {
         })
       )
       .subscribe(res => {
+        console.log('uploaded file', res);
+        this._upload.getFileInfo('7720nz5nV9p-FtmN5dmYUL8', this.shortcode).subscribe(file_ => {
+          console.log('last response', file_);
+        });
         this.afterFileUploaded.emit(res);
       });
 

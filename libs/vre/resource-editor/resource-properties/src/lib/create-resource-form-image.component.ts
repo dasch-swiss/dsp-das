@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
-import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
+import {
+  FileRepresentationType,
+  iiifUrlValidator,
+  infoJsonUrlValidatorAsync,
+  isExternalHostValidator,
+  previewImageUrlValidatorAsync,
+} from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
   selector: 'app-create-resource-form-image',
@@ -30,7 +36,11 @@ export class CreateResourceFormImageComponent {
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @ViewChild(MatChipListbox) matChipListbox!: MatChipListbox;
 
-  externalControl = new FormControl('external', { validators: [Validators.required] });
+  externalControl = new FormControl('external', {
+    validators: [Validators.required, iiifUrlValidator(), isExternalHostValidator()],
+    asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
+  });
+
   internalControl = new FormControl('internal', { validators: [Validators.required] });
 
   isUploadFileTab = true;
