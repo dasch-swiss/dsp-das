@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
 import {
@@ -27,9 +27,9 @@ import {
       [formControl]="control"
       [representation]="fileRepresentation"
       data-cy="upload-control" />
+
     <app-iiif-control [control]="control" *ngIf="!isUploadFileTab" />
   </app-create-resource-form-row>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceFormImageComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

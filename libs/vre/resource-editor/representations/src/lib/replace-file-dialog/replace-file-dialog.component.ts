@@ -1,10 +1,14 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, UpdateFileValue, UpdateResource } from '@dasch-swiss/dsp-js';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import {
+  KnoraApiConnection,
+  ReadResource,
+  UpdateExternalStillImageFileValue,
+  UpdateFileValue,
+  UpdateResource,
+  UpdateStillImageFileValue,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { finalize } from 'rxjs/operators';
 import { FileForm } from '../../../../resource-properties/src/lib/file-form.type';
 import { FileRepresentationType } from '../file-representation.type';
 import { fileValueMapping } from '../file-value-mapping';
@@ -34,6 +38,7 @@ export interface ReplaceFileDialogProps {
       <app-create-resource-form-file
         *ngIf="resourceFetcher.projectShortcode$ | async as projectShortcode"
         [fileRepresentation]="data.representation"
+        (afterFormCreated)="form = $event"
         [projectShortcode]="projectShortcode" />
     </mat-dialog-content>
 
@@ -53,17 +58,8 @@ export interface ReplaceFileDialogProps {
   `,
   styleUrls: ['./replace-file-dialog.component.scss'],
 })
-export class ReplaceFileDialogComponent implements OnInit {
-  propId!: string;
-
-  form = this._fb.group({
-    link: [null as string | null, [Validators.required]],
-    legal: this._fb.group({
-      copyrightHolder: null as string | null,
-      license: null as LicenseDto | null,
-      authorship: null as string[] | null,
-    }),
-  }) as unknown as FileForm;
+export class ReplaceFileDialogComponent {
+  form!: FileForm;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -71,13 +67,8 @@ export class ReplaceFileDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    public resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder
+    public resourceFetcher: ResourceFetcherService
   ) {}
-
-  ngOnInit() {
-    this.propId = this.data.resource.properties[this.data.representation][0].id;
-  }
 
   replaceFile() {
     this.form.markAllAsTouched();
@@ -86,10 +77,16 @@ export class ReplaceFileDialogComponent implements OnInit {
     }
 
     const formValue = this.form.getRawValue();
+    let uploadedFile = fileValueMapping.get(this.data.representation)!.update();
 
-    const uploadedFile = fileValueMapping.get(this.data.representation)!.update();
+    if (uploadedFile instanceof UpdateStillImageFileValue && formValue.link!.startsWith('http')) {
+      uploadedFile = new UpdateExternalStillImageFileValue();
+      (uploadedFile as UpdateExternalStillImageFileValue).externalUrl = formValue.link!;
+    } else {
+      uploadedFile.filename = formValue.link!;
+    }
+
     uploadedFile.id = this.data.resource.properties[this.data.representation][0].id;
-    uploadedFile.filename = formValue.link!;
     uploadedFile.copyrightHolder = formValue.legal.copyrightHolder!;
     uploadedFile.license = formValue.legal.license!;
     uploadedFile.authorship = formValue.legal.authorship!;
@@ -101,14 +98,9 @@ export class ReplaceFileDialogComponent implements OnInit {
 
     updateRes.value = uploadedFile;
 
-    this._dspApiConnection.v2.values
-      .updateValue(updateRes)
-      .pipe(
-        finalize(() => {
-          this.resourceFetcher.reload();
-          this.dialogRef.close();
-        })
-      )
-      .subscribe();
+    this._dspApiConnection.v2.values.updateValue(updateRes).subscribe(() => {
+      this.resourceFetcher.reload();
+      this.dialogRef.close();
+    });
   }
 }
