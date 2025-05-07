@@ -25,6 +25,7 @@ import {
     <app-upload-control
       *ngIf="isUploadFileTab"
       [formControl]="control"
+      [projectShortcode]="projectShortcode"
       [representation]="fileRepresentation"
       data-cy="upload-control" />
 
@@ -33,6 +34,7 @@ import {
 })
 export class CreateResourceFormImageComponent {
   @Input({ required: true }) control!: FormControl<string | null>;
+  @Input({ required: true }) projectShortcode!: string;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @ViewChild(MatChipListbox) matChipListbox!: MatChipListbox;
 

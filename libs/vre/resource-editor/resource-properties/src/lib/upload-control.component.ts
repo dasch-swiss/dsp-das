@@ -9,18 +9,22 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
       <app-upload
         style="margin-bottom: 16px;display: block;"
         [representation]="representation"
-        (afterFileRemoved)="removeFile()"
+        [projectShortcode]="projectShortcode"
         (afterFileUploaded)="afterFileUploaded($event)" />
       <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
     </ng-container>
 
     <ng-template #uploadedFileTpl>
-      <app-uploaded-file [internalFilename]="control.value" (removeFile)="control.setValue('')" />
+      <app-uploaded-file
+        [internalFilename]="control.value"
+        [projectShortcode]="projectShortcode"
+        (removeFile)="control.setValue('')" />
     </ng-template>
   `,
 })
 export class UploadControlComponent implements ControlValueAccessor {
   @Input({ required: true }) representation!: FileRepresentationType;
+  @Input({ required: true }) projectShortcode!: string;
 
   loading = false;
 
@@ -48,10 +52,5 @@ export class UploadControlComponent implements ControlValueAccessor {
   afterFileUploaded(res: UploadedFileResponse) {
     this.onChange(res.internalFilename);
     this.onTouched();
-  }
-
-  removeFile() {
-    this.ngControl.control!.setValue(null);
-    this.ngControl.control!.markAsUntouched();
   }
 }

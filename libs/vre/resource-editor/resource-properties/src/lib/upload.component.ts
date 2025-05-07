@@ -1,14 +1,12 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { LoadProjectAction, ProjectsSelectors, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import {
   FileRepresentationType,
   UploadedFileResponse,
   UploadFileService,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload',
@@ -43,12 +41,12 @@ import { filter, finalize, map, mergeMap, take } from 'rxjs/operators';
 })
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;
+  @Input({ required: true }) projectShortcode!: string;
   @Output() afterFileUploaded = new EventEmitter<UploadedFileResponse>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   loading = false;
 
-  shortcode?: string; // TODO REMOVE
   private readonly _fileTypesMapping = {
     [Constants.HasMovingImageFileValue]: ['mp4'],
     [Constants.HasAudioFileValue]: ['mp3', 'wav'],
@@ -64,10 +62,7 @@ export class UploadComponent {
 
   constructor(
     private _notification: NotificationService,
-    private _store: Store,
-    private _upload: UploadFileService,
-    private _cdr: ChangeDetectorRef,
-    private _actions$: Actions
+    private _upload: UploadFileService
   ) {}
 
   addFileFromClick(event: any) {
@@ -83,43 +78,16 @@ export class UploadComponent {
       return;
     }
 
-    this._uploadFile(file);
-  }
-
-  private _uploadFile(file: File): void {
-    this.loading = true;
-    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
-    const project = this._store.selectSnapshot(ProjectsSelectors.contextProject);
-    if (resource && !project) {
-      this._actions$
-        .pipe(ofActionSuccessful(LoadProjectAction))
-        .pipe(take(1))
-        .subscribe(() => {
-          this._uploadProjectFile(file);
-        });
-      this._store.dispatch(new LoadProjectAction(resource.res.attachedToProject, false));
-    } else {
-      this._uploadProjectFile(file);
-    }
-
-    this.fileInput.nativeElement.value = '';
+    this._uploadProjectFile(file);
   }
 
   private _uploadProjectFile(file: File): void {
     this.loading = true;
-    this._store
-      .select(ProjectsSelectors.contextProject)
+    this._upload
+      .upload(file, this.projectShortcode)
       .pipe(
-        filter(v => v !== undefined),
-        take(1),
-        map(prj => prj!.shortcode),
-        mergeMap(sc => {
-          this.shortcode = sc;
-          return this._upload.upload(file, sc);
-        }),
         finalize(() => {
           this.loading = false;
-          this._cdr.detectChanges();
         })
       )
       .subscribe(res => {

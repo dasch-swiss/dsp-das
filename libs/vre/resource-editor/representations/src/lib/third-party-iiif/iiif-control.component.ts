@@ -17,7 +17,7 @@ import { IIIFUrl } from './third-party-iiif';
         matInput
         [formControl]="control"
         data-cy="external-iiif-input"
-        placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
+        placeholder="https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
 
       <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
     </mat-form-field>

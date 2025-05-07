@@ -8,6 +8,7 @@ import { FileForm } from './file-form.type';
   template: ` <app-create-resource-form-representation
       [control]="form.controls.link"
       [fileRepresentation]="fileRepresentation"
+      [projectShortcode]="projectShortcode"
       (externalImageSelected)="externalImageSelected.emit($event)" />
 
     <app-resource-form-legal [formGroup]="form.controls.legal" [projectShortcode]="projectShortcode" />`,

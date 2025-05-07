@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UploadFileService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UploadedFileResponse, UploadFileService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-uploaded-file',
@@ -13,11 +14,18 @@ import { UploadFileService } from '@dasch-swiss/vre/resource-editor/representati
     </mat-card-content>
   </mat-card>`,
 })
-export class UploadedFileComponent {
+export class UploadedFileComponent implements OnInit {
   @Input({ required: true }) internalFilename!: string;
+  @Input({ required: true }) projectShortcode!: string;
+
   @Output() removeFile = new EventEmitter<void>();
 
-  fileToUpload$ = this._uploadFileService.getFileInfo('7720nz5nV9p-FtmN5dmYUL8', '0803'); // TODO
+  fileToUpload$!: Observable<UploadedFileResponse>;
 
   constructor(private _uploadFileService: UploadFileService) {}
+
+  ngOnInit() {
+    const assetId = this.internalFilename.split('.')[0];
+    this.fileToUpload$ = this._uploadFileService.getFileInfo(assetId, this.projectShortcode);
+  }
 }

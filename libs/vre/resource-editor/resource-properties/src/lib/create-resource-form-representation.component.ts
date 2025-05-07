@@ -11,18 +11,23 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
       *ngIf="fileRepresentation !== Constants.HasStillImageFileValue; else stillImageTpl">
       <app-upload-control
         [formControl]="control"
+        [projectShortcode]="projectShortcode"
         [representation]="fileRepresentation"
         style="display: block; margin-bottom: 16px" />
     </app-create-resource-form-row>
 
     <ng-template #stillImageTpl>
-      <app-create-resource-form-image [control]="control" [fileRepresentation]="fileRepresentation" />
+      <app-create-resource-form-image
+        [control]="control"
+        [fileRepresentation]="fileRepresentation"
+        [projectShortcode]="projectShortcode" />
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;
+  @Input({ required: true }) projectShortcode!: string;
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @Output() externalImageSelected = new EventEmitter<boolean>();
   protected readonly Constants = Constants;
