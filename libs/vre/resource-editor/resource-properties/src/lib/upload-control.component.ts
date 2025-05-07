@@ -5,7 +5,7 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
 @Component({
   selector: 'app-upload-control',
   template: `
-    <ng-container *ngIf="!control.value; else testTpl">
+    <ng-container *ngIf="!control.value; else uploadedFileTpl">
       <app-upload
         style="margin-bottom: 16px;display: block;"
         [representation]="representation"
@@ -14,7 +14,7 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
       <mat-error *ngIf="ngControl.touched && ngControl.errors">{{ ngControl.errors | humanReadableError }}</mat-error>
     </ng-container>
 
-    <ng-template #testTpl>
+    <ng-template #uploadedFileTpl>
       <app-uploaded-file [internalFilename]="control.value" (removeFile)="control.setValue('')" />
     </ng-template>
   `,

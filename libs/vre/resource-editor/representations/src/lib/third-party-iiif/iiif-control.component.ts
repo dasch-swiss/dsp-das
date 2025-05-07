@@ -19,7 +19,6 @@ import { IIIFUrl } from './third-party-iiif';
         data-cy="external-iiif-input"
         placeholder="Example: https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
 
-      <mat-hint>The URL must point to a valid IIIF image (jpg, tif, jp2, png).</mat-hint>
       <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
     </mat-form-field>
   `,
