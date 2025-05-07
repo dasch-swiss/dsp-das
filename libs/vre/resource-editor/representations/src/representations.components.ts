@@ -7,7 +7,6 @@ import { MediaSliderComponent } from './lib/audio/media-slider.component';
 import { AvTimelineComponent } from './lib/av-timeline/av-timeline.component';
 import { DocumentComponent } from './lib/document/document.component';
 import { ReplaceFileDialogComponent } from './lib/replace-file-dialog/replace-file-dialog.component';
-import { EditIiifDialogComponent } from './lib/still-image/edit-iiif-dialog.component';
 import { StillImageToolbarComponent } from './lib/still-image/still-image-toolbar.component';
 import { StillImageComponent } from './lib/still-image/still-image.component';
 import { TextComponent } from './lib/text/text.component';
@@ -29,7 +28,6 @@ export const RepresentationsComponents = [
   DocumentComponent,
   MediaSliderComponent,
   ReplaceFileDialogComponent,
-  EditIiifDialogComponent,
   StillImageComponent,
   StillImageToolbarComponent,
   TextComponent,
