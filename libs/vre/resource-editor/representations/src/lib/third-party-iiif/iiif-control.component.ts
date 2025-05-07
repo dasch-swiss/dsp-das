@@ -1,21 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import {
-  iiifUrlValidator,
-  infoJsonUrlValidatorAsync,
-  isExternalHostValidator,
-  previewImageUrlValidatorAsync,
-} from './iiif-url-validator';
 import { IIIFUrl } from './third-party-iiif';
 
 @Component({
   selector: 'app-iiif-control',
   template: `
-    <app-progress-indicator *ngIf="previewStatus === 'LOADING'" />
     <div class="third-party-iiif-preview" *ngIf="previewImageUrl">
-      <img [src]="previewImageUrl" (load)="previewStatus = 'IDLE'" alt="IIIF Preview" height="240" />
+      <img [src]="previewImageUrl" alt="IIIF Preview" height="240" />
     </div>
 
     <mat-form-field style="width: 100%">
@@ -51,7 +44,6 @@ export class IiifControlComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
 
   previewImageUrl?: string;
-  previewStatus: 'LOADING' | 'IDLE' = 'IDLE';
 
   private subscription!: Subscription;
 
@@ -62,15 +54,7 @@ export class IiifControlComponent implements OnInit, OnDestroy {
     { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
   ];
 
-  constructor(
-    private _cdr: ChangeDetectorRef,
-    private _fb: FormBuilder
-  ) {
-    this.control = this._fb.control('', {
-      validators: [Validators.required, iiifUrlValidator(), isExternalHostValidator()],
-      asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
-    });
-  }
+  constructor(private _cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.subscription = this.control.valueChanges.pipe(startWith(this.control.value)).subscribe(urlStr => {
