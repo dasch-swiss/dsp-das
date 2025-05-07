@@ -55,7 +55,6 @@ export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('resource', this.resource);
     if (this.isViewInitialized && changes['resource']) {
       this._osdDrawerService.update(this.resource);
       this._loadImage();

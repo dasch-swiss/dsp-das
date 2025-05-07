@@ -57,14 +57,10 @@ export class IiifControlComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.control.valueChanges.pipe(startWith(this.control.value)).subscribe(urlStr => {
-      this.preview(urlStr ?? '');
+      const url = IIIFUrl.createUrl(urlStr ?? '');
+      this.previewImageUrl = url?.previewImageUrl;
+      this._cdr.detectChanges();
     });
-  }
-
-  preview(urlStr: string) {
-    const iiifUrl = IIIFUrl.createUrl(urlStr);
-    this.previewImageUrl = iiifUrl?.previewImageUrl;
-    this._cdr.detectChanges();
   }
 
   ngOnDestroy() {
