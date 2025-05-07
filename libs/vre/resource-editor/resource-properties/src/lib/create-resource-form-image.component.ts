@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
 
@@ -30,25 +30,28 @@ export class CreateResourceFormImageComponent {
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @ViewChild(MatChipListbox) matChipListbox!: MatChipListbox;
 
+  externalControl = new FormControl('external', { validators: [Validators.required] });
+  internalControl = new FormControl('internal', { validators: [Validators.required] });
+
   isUploadFileTab = true;
 
   cachedValue: { upload?: string; external?: string } = { upload: undefined, external: undefined };
 
   onChange(event: MatChipListboxChange) {
-    if (event.value === undefined) {
+    const isUploadFileTab = event.value as boolean | undefined;
+    if (isUploadFileTab === undefined) {
       this.matChipListbox.value = this.isUploadFileTab;
       return;
     }
 
-    if (event.value === true) {
+    if (isUploadFileTab) {
       // upload file case
       this.cachedValue.external = this.control.value!;
     } else {
       this.cachedValue.upload = this.control.value!;
     }
-    this.isUploadFileTab = event.value;
+    this.isUploadFileTab = isUploadFileTab;
 
-    const patchedValue = event.value === true ? this.cachedValue.upload : this.cachedValue.external;
-    this.control.setValue(patchedValue ?? null);
+    this.control = isUploadFileTab ? this.internalControl : this.externalControl;
   }
 }
