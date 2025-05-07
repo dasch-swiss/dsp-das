@@ -36,12 +36,10 @@ export class CreateResourceFormImageComponent {
   @Input({ required: true }) fileRepresentation!: FileRepresentationType;
   @ViewChild(MatChipListbox) matChipListbox!: MatChipListbox;
 
-  externalControl = new FormControl('external', {
+  readonly externalControlValidators = {
     validators: [Validators.required, iiifUrlValidator(), isExternalHostValidator()],
     asyncValidators: [previewImageUrlValidatorAsync(), infoJsonUrlValidatorAsync()],
-  });
-
-  internalControl = new FormControl('internal', { validators: [Validators.required] });
+  };
 
   isUploadFileTab = true;
 
@@ -62,6 +60,14 @@ export class CreateResourceFormImageComponent {
     }
     this.isUploadFileTab = isUploadFileTab;
 
-    this.control = isUploadFileTab ? this.internalControl : this.externalControl;
+    if (isUploadFileTab) {
+      this.control.setValidators([Validators.required]);
+      this.control.setValue(this.cachedValue.upload ?? null);
+    } else {
+      this.control.setValidators(this.externalControlValidators.validators);
+      this.control.setAsyncValidators(this.externalControlValidators.asyncValidators);
+      this.control.setValue(this.cachedValue.external ?? null);
+    }
+    this.control.updateValueAndValidity();
   }
 }

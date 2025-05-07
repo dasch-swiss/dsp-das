@@ -85,8 +85,6 @@ export class CreateResourceFormComponent implements OnInit {
     properties: this._fb.group({}),
   });
 
-  externalImageSelected = false;
-
   resourceClass!: ResourceClassDefinitionWithPropertyDefinition;
   fileRepresentation: FileRepresentationType | undefined;
 
@@ -128,6 +126,7 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   submitData() {
+    console.log('aaa', this);
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
@@ -239,7 +238,7 @@ export class CreateResourceFormComponent implements OnInit {
     const formFileValue = this.form.controls.file!.getRawValue();
     let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
 
-    if (createFile instanceof CreateStillImageFileValue && this.externalImageSelected) {
+    if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
       createFile = new CreateStillImageExternalFileValue();
       (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
     } else {
