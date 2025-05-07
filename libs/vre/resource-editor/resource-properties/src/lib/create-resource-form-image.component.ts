@@ -18,8 +18,8 @@ import {
       [required]="true"
       (change)="onChange($event)"
       [value]="isUploadFileTab">
-      <mat-chip-option [value]="true"> Upload file</mat-chip-option>
-      <mat-chip-option [value]="false"> Link external IIIF image</mat-chip-option>
+      <mat-chip-option [value]="true" data-cy="upload-file-chip"> Upload file</mat-chip-option>
+      <mat-chip-option [value]="false" data-cy="external-image-chip"> Link external IIIF image </mat-chip-option>
     </mat-chip-listbox>
 
     <app-upload-control
