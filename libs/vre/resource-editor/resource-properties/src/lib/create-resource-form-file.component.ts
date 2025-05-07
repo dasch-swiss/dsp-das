@@ -25,7 +25,7 @@ export class CreateResourceFormFileComponent implements OnInit {
       license: null as LicenseDto | null,
       authorship: null as string[] | null,
     }),
-  });
+  }) as unknown as FileForm;
 
   constructor(private _fb: FormBuilder) {}
 

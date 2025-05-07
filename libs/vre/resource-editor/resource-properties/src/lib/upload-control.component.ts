@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Self } from '@angular/core';
+import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/resource-editor/representations';
 
@@ -19,7 +19,7 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
     </ng-template>
   `,
 })
-export class UploadControlComponent implements ControlValueAccessor, OnInit {
+export class UploadControlComponent implements ControlValueAccessor {
   @Input({ required: true }) representation!: FileRepresentationType;
 
   loading = false;
