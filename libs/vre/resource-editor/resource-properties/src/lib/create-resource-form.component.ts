@@ -14,12 +14,11 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LoadClassItemsCountAction } from '@dasch-swiss/vre/core/state';
-import { FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
+import { FileForm, FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
-import { FileForm } from './file-form.type';
 import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 

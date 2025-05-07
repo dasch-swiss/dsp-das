@@ -9,7 +9,7 @@ import {
   UpdateStillImageFileValue,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { FileForm } from '../../../../resource-properties/src/lib/file-form.type';
+import { FileForm } from '../file-form.type';
 import { FileRepresentationType } from '../file-representation.type';
 import { fileValueMapping } from '../file-value-mapping';
 import { ResourceFetcherService } from '../resource-fetcher.service';

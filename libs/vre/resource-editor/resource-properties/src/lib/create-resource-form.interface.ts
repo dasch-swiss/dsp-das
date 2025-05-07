@@ -1,5 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { FileForm } from './file-form.type';
+import { FileForm } from '@dasch-swiss/vre/resource-editor/representations';
 import { FormValueArray } from './form-value-array.type';
 
 export interface CreateResourceFormInterface {

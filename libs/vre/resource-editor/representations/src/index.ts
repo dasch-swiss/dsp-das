@@ -30,3 +30,4 @@ export * from './lib/third-party-iiif/iiif-url-validator';
 export * from './lib/video/disable-context-menu.directive';
 export * from './lib/resource.util';
 export * from './lib/file-value-mapping';
+export * from './lib/file-form.type';
