@@ -1,82 +1,41 @@
-@use '@angular/material' as mat;
-@use '../../../../../../../../apps/dsp-app/src/styles/responsive' as *;
-@use '../../../../../../../../apps/dsp-app/src/styles/typography' as t;
+.project-overview-subtitle {
+  margin-top: 2rem;
+}
 
-.overview {
-  .title-bar {
-    .title {
-      font-weight: 700;
-      font-size: 20px;
-      line-height: 28px;
-    }
-  }
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;;
 
-  .title-bar.admin {
+  .search-icon {
+    margin-right: 0.5rem;
+    color: var(--gray-500);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-
-    .title {
-      display: inline-block;
-    }
   }
 
-  .project-tiles {
-    display: grid;
-    grid-template-columns: 22% 22% 22% 22%;
-    grid-column-gap: 4%;
-    padding-bottom: 2%;
-  }
-
-  .project-tile-container {
-    text-align: center;
-    padding-bottom: 15%;
+  input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 1rem;
+    background: transparent;
   }
 }
 
-@media (max-width: map-get($grid-breakpoints, notebook)) {
-  .overview .project-tiles {
-    grid-template-columns: 30% 30% 30%;
-    grid-column-gap: 5%;
+.project-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 1200px) and (pointer: fine) and (hover: hover) {
+    grid-template-columns: 1fr 1fr;
   }
-}
 
-@media (max-width: map-get($grid-breakpoints, tablet)) {
-  .overview {
-    padding: 5%;
-
-    .project-tiles {
-      grid-template-columns: 47.5% 47.5%;
-      grid-column-gap: 5%;
-    }
-  }
-}
-
-@media (max-width: map-get($grid-breakpoints, phone)) {
-  .overview {
-    padding: 10%;
-
-    .title-bar.admin {
-      display: block;
-      padding-bottom: 5%;
-
-      .title {
-        display: block;
-      }
-    }
-
-    .project-tiles {
-      grid-template-columns: 100%;
-    }
-
-    .project-tile-container {
-      padding-bottom: 5%;
-    }
-  }
-}
-
-@media (max-width: map-get($grid-breakpoints, phone)) {
-  .overview {
-    padding: 5%;
+  @media (min-width: 1800px) and (pointer: fine) and (hover: hover) {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }

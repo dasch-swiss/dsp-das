@@ -1,54 +1,68 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StoredProject } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
-import { Select, Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Store } from '@ngxs/store';
+import { combineLatest, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
-  animations: [ReplaceAnimation.animation],
 })
-export class OverviewComponent implements OnInit {
-  @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  // list of projects a user is a member of
-  @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.otherProjects) userOtherActiveProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.allProjects) allProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<ReadProject[]>;
-  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
+export class OverviewComponent implements OnInit, AfterViewInit {
+  @ViewChild('filterInput') filterInput!: ElementRef;
+  private _filter$ = new BehaviorSubject<string>('');
 
-  loadingTiles = new Array(8);
+  activeProjects$ = combineLatest([this._store.select(ProjectsSelectors.allActiveProjects), this._filter$]).pipe(
+    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
+  );
+
+  usersActiveProjects$ = combineLatest([this._store.select(UserSelectors.userActiveProjects), this._filter$]).pipe(
+    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
+  );
+
+  notUsersActiveProjects$ = combineLatest([this._store.select(ProjectsSelectors.otherProjects), this._filter$]).pipe(
+    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
+  );
+
+  userHasProjects$ = this.usersActiveProjects$.pipe(map(projects => projects.length > 0));
+
+  loading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
   constructor(
-    private _titleService: Title,
+    private _router: Router,
     private _store: Store
-  ) {
-    this._titleService.setTitle('Projects Overview');
-  }
+  ) {}
 
   ngOnInit() {
-    this._loadProjects();
+    this._store.dispatch(new LoadProjectsAction());
+  }
+
+  ngAfterViewInit(): void {
+    this.filterInput.nativeElement.focus();
+  }
+
+  filterProjects(value: string) {
+    this._filter$.next(value);
+  }
+
+  private matchesSearchTerm(project: StoredProject, searchTerm: string): boolean {
+    const lower = searchTerm.toLowerCase();
+    return (
+      project.longname?.toLowerCase().includes(lower) ||
+      project.shortcode.toLowerCase().includes(lower) ||
+      project.shortname.toLowerCase().includes(lower)
+    );
   }
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item.id}`;
 
-  private _loadProjects(): void {
-    combineLatest([this.isProjectsLoading$, this.allProjects$])
-      .pipe(
-        filter(([isProjectsLoading]) => isProjectsLoading === false),
-        take(1)
-      )
-      .subscribe(([isProjectsLoading, allProjects]) => {
-        if (allProjects.length === 0) {
-          this._store.dispatch(new LoadProjectsAction());
-        }
-      });
+  navigateToProject(id: string) {
+    this._router.navigate([RouteConstants.project, ProjectService.IriToUuid(id)]);
   }
 }

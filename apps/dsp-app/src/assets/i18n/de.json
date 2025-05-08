@@ -1,5 +1,11 @@
 {
   "pages": {
+    "landingPage": {
+      "title": "Forschungsprojekte",
+      "usersProjects": "Meine Projekte",
+      "notUsersProjects": "Andere Forschungsprojekte",
+      "filterProjects": "Projekte filtern/durchsuchen ..."
+    },
     "userSettings": {
       "loginForm": {
         "login": "Anmelden"
@@ -10,11 +16,6 @@
         "delete": "Konto löschen",
         "password": "Passwort aktualisieren",
         "edit": "Profil anpassen"
-      },
-      "overview": {
-        "title": "Forschungsprojekte durchsuchen",
-        "myProjects": "Meine Projekte",
-        "browseOtherResearchProjects": "Andere Forschungsprojekte durchsuchen"
       },
       "userForm": {
         "emailValidation": "Das ist keine gültige Email Adresse",

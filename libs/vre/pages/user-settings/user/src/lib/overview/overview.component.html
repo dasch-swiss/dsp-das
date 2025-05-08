@@ -1,76 +1,46 @@
 <div class="content extra-large middle">
-  <div class="overview">
-    <div *ngIf="isProjectsLoading$ | async" [@replaceAnimation]>
-      <div class="title-bar admin">
-        <div class="title">
-          <p>{{ 'pages.userSettings.overview.title' | translate }}</p>
-        </div>
-      </div>
-      <div class="project-tiles">
-        <div *ngFor="let item of loadingTiles" class="project-tile-container">
-          <app-project-tile isLoading="true" />
-        </div>
-      </div>
+  <div>
+    <h2>{{ 'pages.landingPage.title' | translate }}</h2>
+  </div>
+  <div class="search-input-wrapper extra-large">
+    <span class="search-icon">
+      <mat-icon>search</mat-icon>
+    </span>
+    <input
+      #filterInput
+      type="text"
+      placeholder="{{'pages.landingPage.filterProjects' | translate}}"
+      (input)="filterProjects(filterInput.value)" />
+  </div>
+  <div *ngIf="(userHasProjects$ | async) === true">
+    <div class="project-overview-subtitle">
+      <h3>{{ 'pages.landingPage.usersProjects' | translate }}</h3>
     </div>
-
-    <!-- user is a system admin -->
-    <div *ngIf="(allProjects$ | async).length > 0 && ((isSysAdmin$ | async) && (isProjectsLoading$ | async) === false)">
-      <!-- list all projects -->
-      <div class="title-bar admin">
-        <div class="title">
-          <p>{{ 'pages.userSettings.overview.title' | translate }}</p>
-        </div>
-      </div>
-      <div class="project-tiles">
-        <div *ngFor="let proj of allActiveProjects$ | async; trackBy: trackByFn" class="project-tile-container">
-          <app-project-tile [project]="proj" [sysAdmin]="true" />
-        </div>
-      </div>
+    <div class="project-grid">
+      <app-project-card
+        *ngFor="let project of usersActiveProjects$ | async; trackBy: trackByFn"
+        [project]="project"
+        (projectClicked)="navigateToProject(project.id)" />
     </div>
-    <!-- user is logged in and not a system admin -->
-    <div *ngIf="(isSysAdmin$ | async) === false && (user$ | async)">
-      <ng-container *ngIf="(userActiveProjects$ | async).length > 0">
-        <div class="title-bar">
-          <div class="title">
-            <p>{{ 'pages.userSettings.overview.myProjects' | translate }}</p>
-          </div>
-        </div>
-        <div class="project-tiles">
-          <div *ngFor="let userProj of userActiveProjects$ | async; trackBy: trackByFn" class="project-tile-container">
-            <app-project-tile [project]="userProj" [sysAdmin]="false" />
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="(userOtherActiveProjects$ | async).length > 0">
-        <div class="title-bar other-projects">
-          <div class="title">
-            <p>{{ 'pages.userSettings.overview.browseOtherResearchProjects' | translate }}</p>
-          </div>
-        </div>
-        <div class="project-tiles">
-          <div
-            *ngFor="let otherProj of userOtherActiveProjects$ | async; trackBy: trackByFn"
-            class="project-tile-container">
-            <app-project-tile [project]="otherProj" [sysAdmin]="false" />
-          </div>
-        </div>
-      </ng-container>
+    <div class="project-overview-subtitle">
+      <h3>{{ 'pages.landingPage.notUsersProjects' | translate }}</h3>
     </div>
-
-    <!-- user is not logged in -->
-    <div
-      *ngIf="((allActiveProjects$ | async).length > 0) && (((isProjectsLoading$ | async) === false) && user$ | async | isFalsy)">
-      <!-- list all projects -->
-      <div class="title-bar admin">
-        <div class="title">
-          <p>{{ 'pages.userSettings.overview.title' | translate }}</p>
-        </div>
-      </div>
-      <div class="project-tiles">
-        <div *ngFor="let proj of allActiveProjects$ | async; trackBy: trackByFn" class="project-tile-container">
-          <app-project-tile [project]="proj" [sysAdmin]="false" />
-        </div>
-      </div>
+    <div class="project-grid">
+      <app-project-card
+        *ngFor="let project of notUsersActiveProjects$ | async; trackBy: trackByFn"
+        [project]="project"
+        (projectClicked)="navigateToProject(project.id)" />
     </div>
+  </div>
+  <div *ngIf="(userHasProjects$ | async) === false && (activeProjects$| async)?.length">
+    <div class="project-grid">
+      <app-project-card
+        *ngFor="let project of activeProjects$ | async; trackBy: trackByFn"
+        [project]="project"
+        (projectClicked)="navigateToProject(project.id)" />
+    </div>
+  </div>
+  <div *ngIf="(loading$ | async)">
+    <app-progress-indicator />
   </div>
 </div>
