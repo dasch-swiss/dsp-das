@@ -10,7 +10,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     <div class="project-card-wrapper">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" tabindex="0" (keydown.enter)="navigate()">
-          <img [src]="'https://picsum.photos/400/200/?blur=1&random=' + index" alt="image of project" />
+          <img mat-card-image [src]="'https://picsum.photos/400/200/?blur=1&random=' + index" alt="image of project" />
           <div class="project-content">
             <div class="project-details">
               <mat-card-title class="project-title">
@@ -72,7 +72,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
       .project-card:hover,
       .project-card:focus {
-        background-color: var(--element-active-hover);
+        background-color: white;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         position: absolute;
         z-index: 1;
