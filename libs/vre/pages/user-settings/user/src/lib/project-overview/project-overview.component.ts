@@ -7,11 +7,11 @@ import { map } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+  selector: 'app-project-overview',
+  templateUrl: './project-overview.component.html',
+  styleUrls: ['./project-overview.component.scss'],
 })
-export class OverviewComponent implements OnInit, AfterViewInit {
+export class ProjectOverviewComponent implements OnInit, AfterViewInit {
   @ViewChild('filterInput') filterInput!: ElementRef;
   private _filter$ = new BehaviorSubject<string>('');
 

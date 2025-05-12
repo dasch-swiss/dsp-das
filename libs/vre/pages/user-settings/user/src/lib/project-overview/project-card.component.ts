@@ -7,7 +7,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 @Component({
   selector: 'app-project-card',
   template: `
-    <div class="project-card-wrapper">
+    <div class="project-card-wrapper" data-cy="project-card">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
           <img
