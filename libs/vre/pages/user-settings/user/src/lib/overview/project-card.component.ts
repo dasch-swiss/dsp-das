@@ -56,6 +56,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
           padding: 1rem;
 
           .project-title {
+            color: black;
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
