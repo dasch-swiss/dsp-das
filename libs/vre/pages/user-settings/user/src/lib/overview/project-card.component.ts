@@ -10,6 +10,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     <div class="project-card-wrapper">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" tabindex="0" (keydown.enter)="navigate()">
+          <img [src]="'https://picsum.photos/400/200/?blur=1&random=' + index" alt="image of project" />
           <div class="project-content">
             <div class="project-details">
               <mat-card-title class="project-title">
@@ -85,6 +86,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: StoredProject;
+  @Input({ required: true }) index!: number;
 
   get projectUuid() {
     return ProjectService.IriToUuid(this.project.id);
