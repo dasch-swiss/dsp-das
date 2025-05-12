@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { FileRepresentation } from '../file-representation';
+import { Constants, ReadResource, ReadTextFileValue } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -15,7 +15,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   styleUrls: ['./text.component.scss'],
 })
 export class TextComponent implements OnChanges {
-  @Input({ required: true }) src!: FileRepresentation;
+  @Input({ required: true }) src!: ReadTextFileValue;
   @Input({ required: true }) parentResource!: ReadResource;
 
   originalFilename?: string;
@@ -30,7 +30,7 @@ export class TextComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this._rs.getFileInfo(this.src.fileValue.fileUrl).subscribe(
+    this._rs.getFileInfo(this.src.fileUrl).subscribe(
       res => {
         this.originalFilename = res['originalFilename'];
       },
@@ -41,17 +41,17 @@ export class TextComponent implements OnChanges {
   }
 
   download() {
-    this._rs.downloadProjectFile(this.src.fileValue, this.parentResource);
+    this._rs.downloadProjectFile(this.src, this.parentResource);
   }
 
   openReplaceFileDialog() {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
-      data: {
+      ...DspDialogConfig.mediumDialog({
         title: 'Text (csv, txt, xml)',
         subtitle: 'Update the text file of this resource',
         representation: Constants.HasTextFileValue,
         resource: this.parentResource,
-      },
+      }),
       viewContainerRef: this._viewContainerRef,
     });
   }

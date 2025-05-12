@@ -3,6 +3,7 @@ import {
   ReadArchiveFileValue,
   ReadAudioFileValue,
   ReadDocumentFileValue,
+  ReadFileValue,
   ReadMovingImageFileValue,
   ReadResource,
   ReadStillImageExternalFileValue,
@@ -10,7 +11,7 @@ import {
   ReadTextFileValue,
 } from '@dasch-swiss/dsp-js';
 
-export function getFileValue(resource: ReadResource) {
+export function getFileValue(resource: ReadResource): ReadFileValue | null {
   if (resource.properties[Constants.HasStillImageFileValue]) {
     if (resource.properties[Constants.HasStillImageFileValue][0].type === Constants.StillImageFileValue) {
       return resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
@@ -30,6 +31,5 @@ export function getFileValue(resource: ReadResource) {
   } else if (resource.properties[Constants.HasTextFileValue]) {
     return resource.properties[Constants.HasTextFileValue][0] as ReadTextFileValue;
   }
-
-  return null; // when it is an object without representation
+  return null; // is object without representation
 }
