@@ -31,11 +31,11 @@
   gap: 1.5rem;
   grid-template-columns: 1fr;
 
-  @media (min-width: 1200px) and (pointer: fine) and (hover: hover) {
+  @media (min-width: 768px) and (pointer: fine) and (hover: hover) {
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (min-width: 1800px) and (pointer: fine) and (hover: hover) {
+  @media (min-width: 1200px) and (pointer: fine) and (hover: hover) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
