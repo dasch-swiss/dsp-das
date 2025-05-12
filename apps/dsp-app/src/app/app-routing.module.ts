@@ -1,9 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { OntologyPropertyComponents } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
-import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/pages/ontology/ontology';
+import {
+  DataModelsComponent,
+  OntologyComponent,
+  OntologyEditorClassesComponent,
+  OntologyPropertiesComponent,
+} from '@dasch-swiss/vre/pages/ontology/ontology';
 import {
   CollaborationComponent,
   CreateProjectFormPageComponent,
@@ -55,15 +61,33 @@ const routes: Routes = [
         path: RouteConstants.dataModels,
         component: DataModelsComponent,
       },
+      // Redirect from ontology root to editor
       {
         path: RouteConstants.ontologyRelative,
-        component: OntologyComponent,
-        canActivate: [AuthGuard],
+        redirectTo: RouteConstants.ontologyEditorRelative,
+        pathMatch: 'full',
       },
       {
-        path: RouteConstants.OntologyEditorViewRelative,
+        path: RouteConstants.ontologyEditorRelative,
         component: OntologyComponent,
         canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: RouteConstants.classes,
+          },
+          {
+            path: RouteConstants.classes,
+            component: OntologyEditorClassesComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: RouteConstants.properties,
+            component: OntologyPropertiesComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
       },
       {
         canActivate: [OntologyClassInstanceGuard],

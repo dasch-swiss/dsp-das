@@ -1,18 +1,59 @@
-<div *ngIf="!disableContent">
-  <!-- main content: overview shows resource classes of ontology -->
-  <div class="ontology-editor">
-    <app-ontology-editor-header />
-    <mat-sidenav-container class="ontology-editor-container">
-      <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
-        <app-ontology-editor-sidenav [(view)]="view" [(expandClasses)]="expandAllClasses" />
-      </mat-sidenav>
-      <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
-        <app-progress-indicator *ngIf="(isTransacting$ | async)" />
-        <app-ontology-editor-classes *ngIf="view === 'classes'" />
-        <app-ontology-properties *ngIf="view === 'properties'" />
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
+<div class="ontology-editor" *ngIf="!disableContent">
+  <app-ontology-editor-header />
+  <mat-sidenav-container class="ontology-editor-container">
+    <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
+      <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>
+      <button
+        [disabled]="!(project$ | async)?.status && (isAdmin$ | async) !== true"
+        mat-button
+        data-cy="create-class-button"
+        [matMenuTriggerFor]="addResClassMenu">
+        <mat-icon>add</mat-icon>
+        Create new class
+      </button>
+      <mat-menu #addResClassMenu="matMenu" xPosition="before">
+        <button
+          [attr.data-cy]="type.iri.split('#').pop()"
+          mat-menu-item
+          *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
+          (click)="createResourceClass(type)">
+          <mat-icon>{{ type.icons[0] }}</mat-icon>
+          {{ type.label }}
+        </button>
+      </mat-menu>
+      <mat-divider></mat-divider>
+      <a class="sidenav-link" mat-list-item [routerLink]="['properties']" routerLinkActive="active">Properties</a>
+      <button
+        mat-button
+        [disabled]="!(project$ | async)?.status && (isAdmin$ | async) !== true"
+        [matMenuTriggerFor]="newFromPropType">
+        <mat-icon>add</mat-icon>
+        Add Property
+      </button>
+      <mat-menu #newFromPropType="matMenu">
+        <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
+          <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
+          <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+            <button
+              mat-menu-item
+              *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
+              [value]="ele"
+              [attr.data-cy]="ele.label"
+              [matTooltip]="ele.description"
+              matTooltipPosition="after"
+              (click)="addNewProperty(ele)">
+              <mat-icon>{{ ele.icon }}</mat-icon>
+              {{ ele.label }}
+            </button>
+          </mat-menu>
+        </ng-container>
+      </mat-menu>
+    </mat-sidenav>
+    <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
+      <app-progress-indicator *ngIf="(isTransacting$ | async)" />
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
 
 <app-status *ngIf="disableContent" [status]="204"></app-status>

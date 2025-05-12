@@ -2,7 +2,6 @@ export * from './ontology.components';
 export * from './lib/ontology.component';
 export * from './lib/ontology-properties.component';
 export * from './lib/ontology-editor-header/ontology-editor-header.component';
-export * from './lib/ontology-editor-sidenav/ontology-editor-sidenav.component';
 export * from './lib/ontology-editor-classes.component';
 export * from './lib/create-resource-class-dialog/create-resource-class-dialog.component';
 export * from './lib/data-models/data-models.component';
