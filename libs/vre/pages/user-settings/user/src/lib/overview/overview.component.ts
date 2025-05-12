@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { combineLatest, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -34,10 +31,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
 
   loading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
-  constructor(
-    private _router: Router,
-    private _store: Store
-  ) {}
+  constructor(private _store: Store) {}
 
   ngOnInit() {
     this._store.dispatch(new LoadProjectsAction());
@@ -61,8 +55,4 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item.id}`;
-
-  navigateToProject(id: string) {
-    this._router.navigate([RouteConstants.project, ProjectService.IriToUuid(id)]);
-  }
 }

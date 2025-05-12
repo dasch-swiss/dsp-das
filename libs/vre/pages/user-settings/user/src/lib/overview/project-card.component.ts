@@ -1,29 +1,29 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { StoredProject } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   selector: 'app-project-card',
   template: `
     <div class="project-card-wrapper">
-      <mat-card
-        class="project-card"
-        appearance="outlined"
-        tabindex="0"
-        (click)="projectClicked.emit()"
-        (keydown.enter)="projectClicked.emit()">
-        <div class="project-content">
-          <div class="project-details">
-            <mat-card-title class="project-title">
-              {{ project.longname }}
-            </mat-card-title>
-            <mat-card-subtitle class="project-subtitle">
-              <span>{{ project.shortname }}</span>
-              <span>|</span>
-              <span>{{ project.shortcode }}</span>
-            </mat-card-subtitle>
+      <a [routerLink]="[RouteConstants.project, projectUuid]">
+        <mat-card class="project-card" appearance="outlined" tabindex="0" (keydown.enter)="navigate()">
+          <div class="project-content">
+            <div class="project-details">
+              <mat-card-title class="project-title">
+                {{ project.longname }}
+              </mat-card-title>
+              <mat-card-subtitle class="project-subtitle">
+                <span>{{ project.shortname }}</span>
+                <span>|</span>
+                <span>{{ project.shortcode }}</span>
+              </mat-card-subtitle>
+            </div>
           </div>
-        </div>
-      </mat-card>
+        </mat-card>
+      </a>
     </div>
   `,
   styles: [
@@ -50,6 +50,7 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
           display: flex;
           width: 100%;
         }
+
         .project-details {
           padding: 1rem;
 
@@ -66,6 +67,7 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
           }
         }
       }
+
       .project-card:hover,
       .project-card:focus {
         background-color: var(--element-active-hover);
@@ -83,5 +85,16 @@ import { StoredProject } from '@dasch-swiss/dsp-js';
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: StoredProject;
-  @Output() projectClicked: EventEmitter<void> = new EventEmitter();
+
+  get projectUuid() {
+    return ProjectService.IriToUuid(this.project.id);
+  }
+
+  constructor(private _router: Router) {}
+
+  navigate() {
+    this._router.navigate([RouteConstants.project, this.projectUuid]);
+  }
+
+  protected readonly RouteConstants = RouteConstants;
 }

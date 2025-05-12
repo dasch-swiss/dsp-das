@@ -17,10 +17,7 @@
       <h3>{{ 'pages.landingPage.usersProjects' | translate }}</h3>
     </div>
     <div class="project-grid">
-      <app-project-card
-        *ngFor="let project of usersActiveProjects$ | async; trackBy: trackByFn"
-        [project]="project"
-        (projectClicked)="navigateToProject(project.id)" />
+      <app-project-card *ngFor="let project of usersActiveProjects$ | async; trackBy: trackByFn" [project]="project" />
     </div>
     <div class="project-overview-subtitle">
       <h3>{{ 'pages.landingPage.notUsersProjects' | translate }}</h3>
@@ -28,16 +25,12 @@
     <div class="project-grid">
       <app-project-card
         *ngFor="let project of notUsersActiveProjects$ | async; trackBy: trackByFn"
-        [project]="project"
-        (projectClicked)="navigateToProject(project.id)" />
+        [project]="project" />
     </div>
   </div>
   <div *ngIf="(userHasProjects$ | async) === false && (activeProjects$| async)?.length">
     <div class="project-grid">
-      <app-project-card
-        *ngFor="let project of activeProjects$ | async; trackBy: trackByFn"
-        [project]="project"
-        (projectClicked)="navigateToProject(project.id)" />
+      <app-project-card *ngFor="let project of activeProjects$ | async; trackBy: trackByFn" [project]="project" />
     </div>
   </div>
   <div *ngIf="(loading$ | async)">
