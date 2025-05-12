@@ -1,19 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  FileRepresentation,
-  getFileValue,
-  RepresentationConstants,
-} from '@dasch-swiss/vre/resource-editor/representations';
+import { ReadFileValue } from '@dasch-swiss/dsp-js';
+import { getFileValue, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-representation',
-  template: ` <div class="representation-container center" [ngSwitch]="representationToDisplay.fileValue.type">
+  template: ` <div class="representation-container center" [ngSwitch]="fileValue.type">
     <app-still-image
       #stillImage
       class="dsp-representation stillimage"
@@ -30,50 +22,48 @@ import { map } from 'rxjs/operators';
     <app-document
       #document
       class="dsp-representation document"
-      [class.pdf]="representationToDisplay.fileValue.filename.split('.').pop() === 'pdf'"
+      [class.pdf]="fileValue.filename.split('.').pop() === 'pdf'"
       *ngSwitchCase="representationConstants.document"
-      [src]="representationToDisplay"
+      [src]="fileValue"
       [parentResource]="resource.res" />
 
     <app-audio
       #audio
       class="dsp-representation audio"
       *ngSwitchCase="representationConstants.audio"
-      [src]="representationToDisplay"
+      [src]="fileValue"
       [parentResource]="resource.res" />
 
     <app-video
       #video
       class="dsp-representation video"
       *ngSwitchCase="representationConstants.movingImage"
-      [src]="representationToDisplay"
+      [src]="fileValue"
       [parentResource]="resource.res" />
 
     <app-archive
       #archive
       class="dsp-representation archive"
       *ngSwitchCase="representationConstants.archive"
-      [src]="representationToDisplay"
+      [src]="fileValue"
       [parentResource]="resource.res" />
 
     <app-text
       #text
       class="dsp-representation text"
       *ngSwitchCase="representationConstants.text"
-      [src]="representationToDisplay"
+      [src]="fileValue"
       [parentResource]="resource.res" />
   </div>`,
 })
 export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
-  representationToDisplay!: FileRepresentation;
 
+  fileValue!: ReadFileValue;
   loading = false;
   protected readonly representationConstants = RepresentationConstants;
 
-  constructor(private _store: Store) {}
-
   ngOnChanges() {
-    this.representationToDisplay = new FileRepresentation(getFileValue(this.resource)!);
+    this.fileValue = getFileValue(this.resource.res);
   }
 }

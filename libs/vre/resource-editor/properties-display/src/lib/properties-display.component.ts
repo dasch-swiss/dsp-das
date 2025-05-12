@@ -9,12 +9,18 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-properties-display',
   template: `
-    <div style="display: flex; align-items: center; background: #EAEFF3">
-      <h3 style="margin: 0 16px" *ngIf="displayLabel" data-cy="property-header">{{ resource.res.label }}</h3>
-      <div style="display: flex; justify-content: end; flex: 1">
+    <div style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3">
+      <div style="display: flex; flex: 0 0 auto">
         <app-properties-toolbar [showToggleProperties]="true" [showOnlyIcons]="displayLabel" style="flex-shrink: 0" />
         <app-annotation-toolbar *ngIf="displayLabel" [resource]="resource.res" [parentResourceId]="parentResourceId" />
       </div>
+
+      <h3
+        style="margin: 0 16px; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+        *ngIf="displayLabel"
+        data-cy="property-header">
+        {{ resource.res.label }}
+      </h3>
     </div>
 
     <div
@@ -50,20 +56,12 @@ import { map } from 'rxjs/operators';
     </ng-container>
 
     <app-standoff-links-property [resource]="resource" />
-    <app-incoming-links-property [resource]="resource" />
+    <app-incoming-links-property [resource]="resource.res" />
 
     <ng-template #noProperties>
       <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">
         <div>This resource has no defined properties.</div>
       </app-property-row>
-      <div *ngIf="resource.res.isDeleted">
-        <app-property-row label="Deleted on" [borderBottom]="true" [isEmptyRow]="false">
-          <div>{{ resource.res.deleteDate | date }}</div>
-        </app-property-row>
-        <app-property-row label="Comment" [borderBottom]="false" [isEmptyRow]="false">
-          <div>{{ resource.res.deleteComment }}</div>
-        </app-property-row>
-      </div>
     </ng-template>
   `,
   styles: [

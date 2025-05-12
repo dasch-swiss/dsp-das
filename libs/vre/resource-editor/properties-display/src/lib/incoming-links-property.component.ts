@@ -3,7 +3,6 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-s
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { sortByKeys } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Observable, of } from 'rxjs';
 import { expand, map, reduce, take, takeWhile } from 'rxjs/operators';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
@@ -12,8 +11,8 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
   selector: 'app-incoming-links-property',
   template: `
     <app-property-row
-      [tooltip]="'resource.incomingLink.tooltip' | translate"
-      [label]="'resource.incomingLink.label' | translate"
+      [tooltip]="'resourceEditor.propertiesDisplay.incomingLinkTooltip' | translate"
+      [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
       <ng-container *ngIf="allIncomingLinks.length > 0">
@@ -30,7 +29,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
   `,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
-  @Input({ required: true }) resource!: DspResource;
+  @Input({ required: true }) resource!: ReadResource;
 
   get slidedLinks() {
     return this.allIncomingLinks.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
@@ -50,7 +49,7 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     this.allIncomingLinks = [];
     this.loading = true;
 
-    this._getIncomingLinksRecursively$(this.resource.res.id)
+    this._getIncomingLinksRecursively$(this.resource.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
         this.loading = false;

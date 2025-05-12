@@ -2,7 +2,7 @@ import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
@@ -15,9 +15,9 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
         [matTooltip]="resourceClassType?.comment"
         matTooltipClass="header-tooltip"
         matTooltipPosition="above">
-        {{ resourceClassType?.label }}<span *ngIf="resource.res.isDeleted">(deleted)</span>
+        {{ resourceClassType?.label }}
       </h3>
-      <app-resource-toolbar [resource]="resource" />
+      <app-resource-toolbar [resource]="resource.res" />
     </div>
     <div class="resource-label" style="display: flex; justify-content: space-between">
       <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>
@@ -27,11 +27,11 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
         color="primary"
         matTooltip="Edit label"
         (click)="openEditLabelDialog()"
-        *ngIf="userCanEdit">
+        *ngIf="resourceFetcherService.userCanEdit$ | async">
         <mat-icon>edit</mat-icon>
       </button>
     </div>
-    <app-resource-info-bar [resource]="resource" />
+    <app-resource-info-bar [resource]="resource.res" />
   </div>`,
   styles: [
     `
@@ -89,27 +89,16 @@ export class ResourceHeaderComponent {
     return this.resource.res.entityInfo.classes[this.resource.res.type];
   }
 
-  get userCanEdit(): boolean {
-    return ResourceUtil.userCanEdit(this.resource.res);
-  }
-
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _resourceFetcher: ResourceFetcherService
+    public resourceFetcherService: ResourceFetcherService
   ) {}
 
   openEditLabelDialog() {
-    this._dialog
-      .open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
-        ...DspDialogConfig.smallDialog<ReadResource>(this.resource.res),
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
-      .subscribe(answer => {
-        if (answer) {
-          this._resourceFetcher.reload();
-        }
-      });
+    this._dialog.open<EditResourceLabelDialogComponent, ReadResource, boolean>(EditResourceLabelDialogComponent, {
+      ...DspDialogConfig.smallDialog<ReadResource>(this.resource.res),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 }

@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Cardinality,
   Constants,
-  CreateFileValue,
   CreateResource,
+  CreateStillImageExternalFileValue,
+  CreateStillImageFileValue,
   CreateValue,
   KnoraApiConnection,
   ResourceClassAndPropertyDefinitions,
@@ -12,68 +13,41 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { LoadClassItemsCountAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
-import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
+import { LoadClassItemsCountAction } from '@dasch-swiss/vre/core/state';
+import { FileForm, FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
 import { finalize, switchMap, take } from 'rxjs/operators';
-import { FormValueArray, FormValueGroup } from './form-value-array.type';
+import { CreateResourceFormInterface } from './create-resource-form.interface';
+import { FormValueGroup } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-create-resource-form',
   template: `
     <form *ngIf="!loading; else loadingTemplate" [formGroup]="form" appInvalidControlScroll>
-      <app-upload-control
-        *ngIf="form.controls.file && fileRepresentation && fileRepresentation !== Constants.HasStillImageFileValue"
-        [formControl]="form.controls.file"
-        [representation]="fileRepresentation"
-        style="display: block; margin-bottom: 8px" />
+      <ng-container *ngIf="fileRepresentation">
+        <h3>File</h3>
+        <app-create-resource-form-file
+          [projectShortcode]="projectShortcode"
+          [fileRepresentation]="fileRepresentation"
+          (afterFormCreated)="afterFileFormCreated($event)" />
 
-      <mat-tab-group
-        *ngIf="fileRepresentation === Constants.HasStillImageFileValue && form.controls.file"
-        preserveContent
-        style="min-height: 320px;"
-        data-cy="stillimage-tab-group">
-        <mat-tab label="Upload Image">
-          <app-upload-control
-            [formControl]="form.controls.file"
-            [representation]="fileRepresentation"
-            data-cy="upload-control" />
-        </mat-tab>
+        <h3>Properties</h3>
+      </ng-container>
 
-        <mat-tab label="External IIIF URL">
-          <app-third-part-iiif [formControl]="form.controls.file" />
-        </mat-tab>
-      </mat-tab-group>
+      <app-create-resource-form-row
+        label="Resource label *"
+        tooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
+        data-cy="resource-label">
+        <app-common-input [control]="form.controls.label" data-cy="label-input" label="Text value" />
+      </app-create-resource-form-row>
 
-      <div style="display: flex">
-        <h3
-          data-cy="resource-label"
-          class="mat-subtitle-2 grid-h3"
-          matTooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
-          matTooltipPosition="above">
-          Resource label *
-        </h3>
-        <app-common-input [control]="form.controls.label" style="flex: 1" data-cy="label-input" label="Text value" />
-      </div>
-
-      <div
-        class="row"
-        *ngFor="let prop of myProperties; let last = last"
-        [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'">
-        <h3 class="grid-h3 mat-subtitle-2" [matTooltip]="prop.propDef.comment" matTooltipPosition="above">
-          {{ prop.propDef.label
-          }}{{ prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '' }}
-        </h3>
-
-        <app-property-value-switcher
-          style="flex: 1"
-          [attr.data-cy]="prop.propDef.label"
-          [myProperty]="prop"
-          [formArray]="form.controls.properties.controls[prop.propDef.id]"
-          [resourceClassIri]="resourceClassIri" />
-      </div>
+      <app-create-resource-form-properties
+        *ngIf="properties"
+        [resourceClassIri]="resourceClassIri"
+        [properties]="properties"
+        [formGroup]="form.controls.properties" />
 
       <div style="display: flex; justify-content: end">
         <button
@@ -84,7 +58,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           data-cy="submit-button"
           [isLoading]="loading"
           (click)="submitData()">
-          {{ 'form.action.submit' | translate }}
+          {{ 'ui.form.action.submit' | translate }}
         </button>
       </div>
     </form>
@@ -101,13 +75,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
   @Input({ required: true }) projectIri!: string;
+  @Input({ required: true }) projectShortcode!: string;
+
   @Output() createdResourceIri = new EventEmitter<string>();
 
-  form: FormGroup<{
-    label: FormControl<string>;
-    properties: FormGroup<{ [key: string]: FormValueArray }>;
-    file?: FormControl<CreateFileValue | null>;
-  }> = this._fb.group({
+  form: FormGroup<CreateResourceFormInterface> = this._fb.group({
     label: this._fb.control('', { nonNullable: true, validators: [Validators.required] }),
     properties: this._fb.group({}),
   });
@@ -116,7 +88,7 @@ export class CreateResourceFormComponent implements OnInit {
   fileRepresentation: FileRepresentationType | undefined;
 
   properties!: PropertyInfoValues[];
-  loading = false;
+  loading = true;
 
   mapping = new Map<string, string>();
   readonly resourceClassTypes = [
@@ -136,10 +108,6 @@ export class CreateResourceFormComponent implements OnInit {
     return this.resourceClassIri.split('#')[0];
   }
 
-  get myProperties() {
-    return this.properties?.filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!)) ?? [];
-  }
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -150,6 +118,10 @@ export class CreateResourceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this._getResourceProperties();
+  }
+
+  afterFileFormCreated(fileForm: FileForm) {
+    this.form.addControl('file', fileForm);
   }
 
   submitData() {
@@ -169,7 +141,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _getResourceProperties() {
-    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(this.ontologyIri)
       .pipe(
@@ -181,7 +152,6 @@ export class CreateResourceFormComponent implements OnInit {
       )
       .subscribe(onto => {
         this.fileRepresentation = this._getFileRepresentation(onto);
-
         this.resourceClass = onto.classes[this.resourceClassIri];
         this.properties = this.resourceClass
           .getResourcePropertiesList()
@@ -196,10 +166,6 @@ export class CreateResourceFormComponent implements OnInit {
   }
 
   private _buildForm() {
-    if (this.fileRepresentation) {
-      this.form.addControl('file', this._fb.control(null, [Validators.required]));
-    }
-
     this.properties
       .filter(prop => propertiesTypeMapping.has(prop.propDef.objectType!))
       .forEach(prop => {
@@ -235,8 +201,7 @@ export class CreateResourceFormComponent implements OnInit {
     createResource.label = this.form.controls.label.value;
     createResource.type = this.resourceClass.id;
     createResource.properties = this._getPropertiesObj();
-    const resource = this._store.selectSnapshot(ResourceSelectors.resource);
-    createResource.attachedToProject = this.projectIri ? this.projectIri : resource!.res.attachedToProject;
+    createResource.attachedToProject = this.projectIri;
 
     return createResource;
   }
@@ -262,9 +227,27 @@ export class CreateResourceFormComponent implements OnInit {
       });
 
     if (this.fileRepresentation && this.form.controls.file!.value) {
-      propertiesObj[this.fileRepresentation] = [this.form.controls.file!.value];
+      propertiesObj[this.fileRepresentation] = [this._getCreateFileValue()];
     }
     return propertiesObj;
+  }
+
+  private _getCreateFileValue() {
+    const formFileValue = this.form.controls.file!.getRawValue();
+    let createFile = fileValueMapping.get(this.fileRepresentation!)!.create();
+
+    if (createFile instanceof CreateStillImageFileValue && formFileValue.link!.startsWith('http')) {
+      createFile = new CreateStillImageExternalFileValue();
+      (createFile as CreateStillImageExternalFileValue).externalUrl = formFileValue.link!;
+    } else {
+      createFile.filename = formFileValue.link!;
+    }
+
+    createFile.copyrightHolder = formFileValue.legal.copyrightHolder!;
+    createFile.license = formFileValue.legal.license!;
+    createFile.authorship = formFileValue.legal.authorship!;
+
+    return createFile;
   }
 
   private getOptionalValueItems = (iri: string, controls: FormValueGroup[], properties: PropertyInfoValues[]) =>

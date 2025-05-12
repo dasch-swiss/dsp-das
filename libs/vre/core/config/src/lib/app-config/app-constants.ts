@@ -17,10 +17,11 @@ export const AvailableLanguages: StringLiteral[] = [
     language: 'it',
     value: 'Italian (Italiano)',
   },
-  {
-    language: 'rm',
-    value: 'Romanic (Rumantsch)',
-  },
+  /* Not supported */
+  // {
+  //   language: 'rm',
+  //   value: 'Romanic (Rumantsch)',
+  // },
 ];
 
 export class RouteConstants {
@@ -44,6 +45,7 @@ export class RouteConstants {
   static readonly ontology = 'ontology';
   static readonly dataModels = 'data-models';
   static readonly imageSettings = 'image-settings';
+  static readonly legalSettings = 'legal-settings';
 
   static readonly resource = 'resource';
 

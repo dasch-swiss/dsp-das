@@ -1,6 +1,6 @@
-<div *ngIf="src && src.fileValue.fileUrl">
+<div *ngIf="src && src.fileUrl">
   <!-- in case of an error -->
-  <app-status [status]="404" [url]="src.fileValue.fileUrl" [representation]="'text'" *ngIf="failedToLoad" />
+  <app-status [status]="404" [url]="src.fileUrl" [representation]="'text'" *ngIf="failedToLoad" />
 
   <div class="file-representation">
     <div class="container">
@@ -24,7 +24,11 @@
           <button class="menu-content" mat-menu-item (click)="download()" [disabled]="failedToLoad">
             Download file
           </button>
-          <button [disabled]="!usercanEdit" class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+          <button
+            *ngIf="resourceFetcherService.userCanEdit$ | async"
+            class="menu-content"
+            mat-menu-item
+            (click)="openReplaceFileDialog()">
             Replace file
           </button>
         </mat-menu>
@@ -32,4 +36,4 @@
     </div>
   </div>
 </div>
-<div *ngIf="!src || !src.fileValue.fileUrl">No valid file url found for this resource.</div>
+<div *ngIf="!src || !src.fileUrl">No valid file url found for this resource.</div>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ClassDefinition } from '@dasch-swiss/dsp-js';
-import { OntologyClassHelper, SortingService } from 'libs/vre/shared/app-helper-services/src';
+import { LocalizationService, OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,10 +17,14 @@ export class ResourceClassSidenavComponent {
 
   get classesToDisplay(): ClassDefinition[] {
     const classesToDisplay = OntologyClassHelper.GetClassesToDisplay(this.resClasses);
-    return this._sortingService.keySortByAlphabetical(classesToDisplay, 'label');
+    const language = this._localizationService.getCurrentLanguage();
+    return this._sortingService.sortLabelsAlphabetically(classesToDisplay, 'label', language);
   }
 
-  constructor(private _sortingService: SortingService) {}
+  constructor(
+    private _sortingService: SortingService,
+    private _localizationService: LocalizationService
+  ) {}
 
   trackByFn = (index: number, item: ClassDefinition) => `${index}-${item.id}`;
 }

@@ -1,5 +1,61 @@
 # Changelog
 
+## [11.30.0](https://github.com/dasch-swiss/dsp-das/compare/v11.29.2...v11.30.0) (2025-04-28)
+
+
+### Enhancements
+
+* a user can see a resource with previous versionning ([#2248](https://github.com/dasch-swiss/dsp-das/issues/2248)) ([8bdb7da](https://github.com/dasch-swiss/dsp-das/commit/8bdb7da1a91f4db068aebedab93a0388af6e388a))
+
+
+### Bug Fixes
+
+* a loaded resource is only fetched once ([#2239](https://github.com/dasch-swiss/dsp-das/issues/2239)) ([663c533](https://github.com/dasch-swiss/dsp-das/commit/663c533e532134cbbb34b5336c24010a33e29acc))
+* bool expression (DEV-4826) ([#2254](https://github.com/dasch-swiss/dsp-das/issues/2254)) ([c9f771d](https://github.com/dasch-swiss/dsp-das/commit/c9f771de21211f22f6acf4d76bd6b39e0fc332cd))
+* ontology class sorting (DEV-4786) ([#2242](https://github.com/dasch-swiss/dsp-das/issues/2242)) ([368a708](https://github.com/dasch-swiss/dsp-das/commit/368a708be31dfa90ed9d4369d424254d83aa4a2c))
+
+
+### Maintenances
+
+* **deps-dev:** bump @typescript-eslint/utils from 8.26.1 to 8.29.1 ([#2236](https://github.com/dasch-swiss/dsp-das/issues/2236)) ([f7c8fc8](https://github.com/dasch-swiss/dsp-das/commit/f7c8fc885c6d1836d4cd211ae078dbd422abc8d9))
+* **deps-dev:** bump ts-jest from 29.3.1 to 29.3.2 in the jest-deps group ([#2235](https://github.com/dasch-swiss/dsp-das/issues/2235)) ([556d3f7](https://github.com/dasch-swiss/dsp-das/commit/556d3f7697899efa1e1d17e71d2334a9c805491f))
+* **deps:** bump core-js from 3.40.0 to 3.41.0 ([#2237](https://github.com/dasch-swiss/dsp-das/issues/2237)) ([17082bc](https://github.com/dasch-swiss/dsp-das/commit/17082bc89bf57a56cbfb302c22445e8e297c78e4))
+* **deps:** bump the grafana-deps group with 2 updates ([#2234](https://github.com/dasch-swiss/dsp-das/issues/2234)) ([ff0f3df](https://github.com/dasch-swiss/dsp-das/commit/ff0f3df9a041b01b828c408a0be0268e7ec7d85e))
+* **deps:** bump the grafana-deps group with 2 updates ([#2244](https://github.com/dasch-swiss/dsp-das/issues/2244)) ([1860fb7](https://github.com/dasch-swiss/dsp-das/commit/1860fb7cb924b029d59ca2a7a8a7668ed664b108))
+* remove unused api services ([#2240](https://github.com/dasch-swiss/dsp-das/issues/2240)) ([4ec7737](https://github.com/dasch-swiss/dsp-das/commit/4ec77375ad28b68f1deab90aec266cbb4193c6bb))
+* translation labels (DEV-4735) ([#2216](https://github.com/dasch-swiss/dsp-das/issues/2216)) ([45bf3a1](https://github.com/dasch-swiss/dsp-das/commit/45bf3a17e2b1af11b821fc28e5857ccc60bb9af4))
+* update openapi generated code ([#2241](https://github.com/dasch-swiss/dsp-das/issues/2241)) ([f8979e7](https://github.com/dasch-swiss/dsp-das/commit/f8979e70577460e5e441758c36135ef1a5a0edfd))
+* update swc and types/jwc-decode dependencies ([#2250](https://github.com/dasch-swiss/dsp-das/issues/2250)) ([f2900f8](https://github.com/dasch-swiss/dsp-das/commit/f2900f8eedc0df0e8eb7292e64601994710f4c18))
+
+
+### Documentation
+
+* update translations README ([#2251](https://github.com/dasch-swiss/dsp-das/issues/2251)) ([9c5ea0a](https://github.com/dasch-swiss/dsp-das/commit/9c5ea0aa98f9f97184afbb5ee7e3c85d791adfb5))
+
+## [11.29.2](https://github.com/dasch-swiss/dsp-das/compare/v11.29.1...v11.29.2) (2025-04-14)
+
+
+### Maintenances
+
+* update the rule when PRs should be triggered ([#2232](https://github.com/dasch-swiss/dsp-das/issues/2232)) ([a780476](https://github.com/dasch-swiss/dsp-das/commit/a780476c703f419215bae153732ec2a7f5dc7e10))
+
+## [11.29.1](https://github.com/dasch-swiss/dsp-das/compare/v11.29.0...v11.29.1) (2025-04-08)
+
+
+### Bug Fixes
+
+* side nav css (DEV-4725) ([#2220](https://github.com/dasch-swiss/dsp-das/issues/2220)) ([c12bb8f](https://github.com/dasch-swiss/dsp-das/commit/c12bb8fd3d40a038afc7ff6f32d5696ff3b9b4b6))
+
+
+### Maintenances
+
+* **deps-dev:** bump chai from 5.1.2 to 5.2.0 ([#2227](https://github.com/dasch-swiss/dsp-das/issues/2227)) ([4324382](https://github.com/dasch-swiss/dsp-das/commit/43243820dc3d4dadfcb0687922d2840dd9cfe6b3))
+* **deps-dev:** bump prettier from 3.5.1 to 3.5.3 ([#2224](https://github.com/dasch-swiss/dsp-das/issues/2224)) ([ddc4e47](https://github.com/dasch-swiss/dsp-das/commit/ddc4e477ab45d081f79d4c6fc17da23cf1237bf6))
+* **deps:** bump json2typescript from 1.5.1 to 1.6.1 ([#2226](https://github.com/dasch-swiss/dsp-das/issues/2226)) ([3be4f8b](https://github.com/dasch-swiss/dsp-das/commit/3be4f8bec7a79cb198df90d407651a9aa4c9cd39))
+* **deps:** bump the grafana-deps group with 2 updates ([#2223](https://github.com/dasch-swiss/dsp-das/issues/2223)) ([973c7c4](https://github.com/dasch-swiss/dsp-das/commit/973c7c4a31ae6763a041421985828b87b6c1dc53))
+* improve resource fetcher logic ([#2202](https://github.com/dasch-swiss/dsp-das/issues/2202)) ([dfedd05](https://github.com/dasch-swiss/dsp-das/commit/dfedd052ca3d8ab82ac7c12a5422988058d74b2b))
+* use ReadResource when it's possible rather than DspResource. ([#2222](https://github.com/dasch-swiss/dsp-das/issues/2222)) ([2109943](https://github.com/dasch-swiss/dsp-das/commit/2109943068d2945c8f4893cd47a8deb94963e8d8))
+
 ## [11.29.0](https://github.com/dasch-swiss/dsp-das/compare/v11.28.0...v11.29.0) (2025-04-04)
 
 

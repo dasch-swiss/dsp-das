@@ -1,11 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
-import { UpdateFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/update/update-file-value';
+import {
+  KnoraApiConnection,
+  ReadResource,
+  UpdateExternalStillImageFileValue,
+  UpdateFileValue,
+  UpdateResource,
+  UpdateStillImageFileValue,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { finalize } from 'rxjs/operators';
+import { FileForm } from '../file-form.type';
 import { FileRepresentationType } from '../file-representation.type';
+import { fileValueMapping } from '../file-value-mapping';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 export interface ReplaceFileDialogProps {
@@ -29,29 +35,31 @@ export interface ReplaceFileDialogProps {
         </div>
       </div>
 
-      <app-upload-control [representation]="data.representation" [formControl]="form" [resourceId]="propId" />
+      <app-create-resource-form-file
+        *ngIf="resourceFetcher.projectShortcode$ | async as projectShortcode"
+        [fileRepresentation]="data.representation"
+        (afterFormCreated)="form = $event"
+        [projectShortcode]="projectShortcode" />
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
       <button mat-button type="button" data-cy="replace-file-cancel-button" (click)="dialogRef.close()">
-        {{ 'form.action.cancel' | translate }}
+        {{ 'ui.form.action.cancel' | translate }}
       </button>
       <button
         mat-raised-button
         type="submit"
         data-cy="replace-file-submit-button"
-        [disabled]="form.invalid"
         [color]="'primary'"
         (click)="replaceFile()">
-        {{ 'form.action.submit' | translate }}
+        {{ 'ui.form.action.submit' | translate }}
       </button>
     </mat-dialog-actions>
   `,
   styleUrls: ['./replace-file-dialog.component.scss'],
 })
-export class ReplaceFileDialogComponent implements OnInit {
-  propId!: string;
-  form = this._fb.control<UpdateFileValue | null>(null, [Validators.required]);
+export class ReplaceFileDialogComponent {
+  form!: FileForm;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -59,29 +67,40 @@ export class ReplaceFileDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ReplaceFileDialogComponent>,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceFetcher: ResourceFetcherService,
-    private _fb: FormBuilder
+    public resourceFetcher: ResourceFetcherService
   ) {}
 
-  ngOnInit() {
-    this.propId = this.data.resource.properties[this.data.representation][0].id;
-  }
-
   replaceFile() {
-    const updateRes = new UpdateResource<UpdateValue>();
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
+
+    const formValue = this.form.getRawValue();
+    let uploadedFile = fileValueMapping.get(this.data.representation)!.update();
+
+    if (uploadedFile instanceof UpdateStillImageFileValue && formValue.link!.startsWith('http')) {
+      uploadedFile = new UpdateExternalStillImageFileValue();
+      (uploadedFile as UpdateExternalStillImageFileValue).externalUrl = formValue.link!;
+    } else {
+      uploadedFile.filename = formValue.link!;
+    }
+
+    uploadedFile.id = this.data.resource.properties[this.data.representation][0].id;
+    uploadedFile.copyrightHolder = formValue.legal.copyrightHolder!;
+    uploadedFile.license = formValue.legal.license!;
+    uploadedFile.authorship = formValue.legal.authorship!;
+
+    const updateRes = new UpdateResource<UpdateFileValue>();
     updateRes.id = this.data.resource.id;
     updateRes.type = this.data.resource.type;
     updateRes.property = this.data.representation;
-    updateRes.value = this.form.getRawValue()!;
 
-    this._dspApiConnection.v2.values
-      .updateValue(updateRes)
-      .pipe(
-        finalize(() => {
-          this._resourceFetcher.reload();
-          this.dialogRef.close();
-        })
-      )
-      .subscribe();
+    updateRes.value = uploadedFile;
+
+    this._dspApiConnection.v2.values.updateValue(updateRes).subscribe(() => {
+      this.resourceFetcher.reload();
+      this.dialogRef.close();
+    });
   }
 }

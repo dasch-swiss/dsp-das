@@ -1,15 +1,14 @@
 import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { FileRepresentation } from '../file-representation';
+import { Constants, ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { getFileValue } from '../get-file-value';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
 } from '../replace-file-dialog/replace-file-dialog.component';
 import { RepresentationService } from '../representation.service';
-import { ResourceUtil } from '../resource.util';
+import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
   selector: 'app-audio-more-button',
@@ -18,45 +17,44 @@ import { ResourceUtil } from '../resource.util';
     </button>
     <mat-menu #more="matMenu" class="representation-menu">
       <button mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
-      <button mat-menu-item [cdkCopyToClipboard]="src.fileValue.fileUrl">Copy audio URL to clipboard</button>
+      <button mat-menu-item [cdkCopyToClipboard]="fileValue.fileUrl">Copy audio URL to clipboard</button>
       <button mat-menu-item (click)="download()">Download audio</button>
-      <button mat-menu-item [disabled]="!userCanEdit" (click)="openReplaceFileDialog()">Replace file</button>
+      <button mat-menu-item *ngIf="resourceFetcherService.userCanEdit$ | async" (click)="openReplaceFileDialog()">
+        Replace file
+      </button>
     </mat-menu>`,
 })
 export class AudioMoreButtonComponent {
   @Input({ required: true }) parentResource!: ReadResource;
 
-  get src() {
-    return new FileRepresentation(getFileValue(new DspResource(this.parentResource))!);
-  }
-
-  get userCanEdit() {
-    return ResourceUtil.userCanEdit(this.parentResource);
+  get fileValue() {
+    return getFileValue(this.parentResource) as ReadAudioFileValue;
   }
 
   constructor(
     private _dialog: MatDialog,
     private _rs: RepresentationService,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    public resourceFetcherService: ResourceFetcherService
   ) {}
 
   openReplaceFileDialog() {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
-      data: {
+      ...DspDialogConfig.mediumDialog({
         title: 'Audio',
         subtitle: 'Update the audio file of this resource',
         representation: Constants.HasAudioFileValue,
         resource: this.parentResource,
-      },
+      }),
       viewContainerRef: this._viewContainerRef,
     });
   }
 
   openIIIFnewTab() {
-    window.open(this.src.fileValue.fileUrl, '_blank');
+    window.open(this.fileValue.fileUrl, '_blank');
   }
 
   download() {
-    this._rs.downloadProjectFile(this.src.fileValue, this.parentResource);
+    this._rs.downloadProjectFile(this.fileValue, this.parentResource);
   }
 }
