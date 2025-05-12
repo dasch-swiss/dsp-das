@@ -9,9 +9,13 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
   template: `
     <div class="project-card-wrapper">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
-        <mat-card class="project-card" appearance="outlined" tabindex="0" (keydown.enter)="navigate()">
-          <img mat-card-image [src]="'https://picsum.photos/400/200/?blur=1&random=' + index" alt="image of project" />
-          <div class="project-content">
+        <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
+          <img
+            mat-card-image
+            [src]="'https://picsum.photos/400/200/?blur=1&random=' + index"
+            alt="image of project"
+            class="img" />
+          <mat-card-content class="project-content">
             <div class="project-details">
               <mat-card-title class="project-title">
                 {{ project.longname }}
@@ -22,7 +26,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
                 <span>{{ project.shortcode }}</span>
               </mat-card-subtitle>
             </div>
-          </div>
+          </mat-card-content>
         </mat-card>
       </a>
     </div>
@@ -31,6 +35,10 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     `
       :host {
         display: block;
+      }
+
+      .img {
+        filter: sepia(0.6);
       }
 
       .project-card-wrapper {
@@ -49,11 +57,10 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
         .project-content {
           display: flex;
-          width: 100%;
         }
 
         .project-details {
-          padding: 1rem;
+          padding-top: 8px;
 
           .project-title {
             color: black;
