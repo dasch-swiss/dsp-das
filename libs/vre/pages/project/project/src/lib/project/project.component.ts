@@ -171,7 +171,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
               .subscribe(() => this.setProjectData());
             this._store.dispatch([new LoadProjectsAction()]);
           } else {
-            this._store.dispatch(new LoadProjectOntologiesAction(projectUuid, 'project-component'));
+            this._store.dispatch(new LoadProjectOntologiesAction(projectUuid));
           }
         },
       });
@@ -184,7 +184,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     }
 
     this._titleService.setTitle(project.shortname);
-    this._store.dispatch(new LoadProjectOntologiesAction(project.id, 'project-component setProjectData'));
+    this._store.dispatch(new LoadProjectOntologiesAction(project.id));
   }
 
   ngOnDestroy() {

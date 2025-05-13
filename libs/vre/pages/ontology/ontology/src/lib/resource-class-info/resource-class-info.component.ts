@@ -1,6 +1,11 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { ApiResponseError, PropertyDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  ApiResponseError,
+  ClassDefinition,
+  PropertyDefinition,
+  ResourceClassDefinitionWithAllLanguages,
+} from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
@@ -20,10 +25,12 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
 })
-export class ResourceClassInfoComponent implements OnInit {
+export class ResourceClassInfoComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
+
+  classProperties$!: Observable<PropertyDefinition[]>;
 
   classPropertiesToDisplay$!: Observable<PropToDisplay[]>;
 
@@ -51,15 +58,15 @@ export class ResourceClassInfoComponent implements OnInit {
     private _store: Store
   ) {}
 
-  ngOnInit() {
-    const classProperties$ = this._oes.currentOntologyProperties$.pipe(
+  ngOnChanges() {
+    this.classProperties$ = this._oes.currentOntologyProperties$.pipe(
       map((properties: PropertyDefinition[]) => {
         const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
         return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
       })
     );
 
-    this.classPropertiesToDisplay$ = classProperties$.pipe(
+    this.classPropertiesToDisplay$ = this.classProperties$.pipe(
       map((properties: PropertyDefinition[]) => {
         return properties
           .map((property: PropertyDefinition) => {

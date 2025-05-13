@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -12,22 +17,37 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   styleUrls: ['./ontology-editor-header.component.scss'],
 })
 export class OntologyEditorHeaderComponent {
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-  project$ = this._store.select(ProjectsSelectors.currentProject);
   ontology$ = this._oes.currentOntology$;
   currentOntologyCanBeDeleted$ = this._oes.currentOntologyCanBeDeleted$;
-  lastModificationDate$ = this._oes.currentOntology$.pipe(map(x => x?.lastModificationDate));
+  project$ = this._store.select(ProjectsSelectors.currentProject);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   constructor(
+    private _dialog: MatDialog,
     private _oes: OntologyEditService,
+    private _router: Router,
     private _store: Store
   ) {}
 
   editOntology(ontology: ReadOntology) {
-    this._oes.openEditOntology(ontology);
+    const dialogRef = this._dialog.open<OntologyFormComponent, ReadOntology>(
+      OntologyFormComponent,
+      DspDialogConfig.dialogDrawerConfig(ontology, true)
+    );
+    dialogRef.afterClosed().pipe(take(1)).subscribe();
   }
 
-  deleteOntology() {
-    this._oes.deleteCurrentOntology();
+  deleteOntology(ontology: ReadOntology) {
+    this._oes
+      .deleteOntology$(ontology)
+      .pipe(take(1))
+      .subscribe(delResponse => {
+        this.navigateToDataModels();
+      });
+  }
+  navigateToDataModels() {
+    const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id;
+    const projectUuid = ProjectService.IriToUuid(projectIri);
+    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 }

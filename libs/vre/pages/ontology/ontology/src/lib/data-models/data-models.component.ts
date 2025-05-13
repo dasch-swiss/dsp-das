@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ListNodeInfo, OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
+import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
+import { OntologyData } from '../ontology-form/ontology-form.type';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -26,7 +30,7 @@ export class DataModelsComponent {
   @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
 
   constructor(
-    private _oes: OntologyEditService,
+    private _dialog: MatDialog,
     protected _route: ActivatedRoute,
     protected _router: Router,
     protected _store: Store,
@@ -63,6 +67,13 @@ export class DataModelsComponent {
   }
 
   createNewOntology() {
-    this._oes.openCreateNewOntology();
+    const dialogRef = this._dialog.open<OntologyFormComponent>(
+      OntologyFormComponent,
+      DspDialogConfig.dialogDrawerConfig(null, true)
+    );
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(o => this.navigateToOntology(o.id));
   }
 }

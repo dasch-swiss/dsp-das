@@ -24,7 +24,13 @@ import {
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import {
+  OntologiesSelectors,
+  ProjectsSelectors,
+  RemoveProjectOntologyAction,
+  SetCurrentOntologyAction,
+  UpdateProjectOntologyAction,
+} from '@dasch-swiss/vre/core/state';
 import {
   CreatePropertyData,
   CreatePropertyFormDialogComponent,
@@ -44,7 +50,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, concat, Observable, of, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, concat, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
@@ -54,7 +60,6 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../edit-resource-class-dialog/edit-resource-class-dialog.component';
-import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
 import { OntologyData } from '../ontology-form/ontology-form.type';
 
 export type UpdateOntologyT =
@@ -80,10 +85,6 @@ export class OntologyEditService {
       return [];
     })
   );
-
-  currentProjectsOntologyIds$ = this._dspApiConnection.v2.onto
-    .getOntologiesByProjectIri(this.projectId)
-    .pipe(map(result => result.ontologies.map(o => o.id)));
 
   currentOntologyClasses$ = this.currentOntology$.pipe(
     map(ontology => {
@@ -129,6 +130,7 @@ export class OntologyEditService {
     }
     currentOntology.lastModificationDate = date;
     this._currentOntology.next(currentOntology);
+    this.updateCurrentOntologyInStoreIfNeeded(currentOntology);
   }
 
   constructor(
@@ -139,7 +141,6 @@ export class OntologyEditService {
     private _notification: NotificationService,
     private _ontologyService: OntologyService,
     private _sortingService: SortingService,
-    private _router: Router, // Todo: Move to component; this is components logic
     private _store: Store
   ) {}
 
@@ -147,20 +148,45 @@ export class OntologyEditService {
     this._isTransacting.next(true);
     this._canDeletePropertyMap.clear();
 
-    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (!project) {
-      return;
+    const ontologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+    const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyName(onto.id) == label);
+
+    if (ontologyFromStore) {
+      this._currentOntology.next(ontologyFromStore);
+      this._isTransacting.next(false);
+    } else {
+      this.loadOntologyByLabel(label);
     }
+  }
+
+  private loadOntologyByLabel(label: string) {
+    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
     const iriBase = this._ontologyService.getIriBaseUrl();
-    const iri = `${iriBase}/${RouteConstants.ontology}/${project!.shortcode}/${label}/v2`;
+    const iri = `${iriBase}/${RouteConstants.ontology}/${project?.shortcode}/${label}/v2`;
+    this._loadOntology(iri);
+  }
+
+  private _loadOntology(iri: string) {
     this._dspApiConnection.v2.onto
       .getOntology(iri, true)
       .pipe(take(1))
       .subscribe(onto => {
-        this._canDeletePropertyMap.clear();
         this._currentOntology.next(onto);
         this._isTransacting.next(false);
+        this.updateCurrentOntologyInStoreIfNeeded(onto);
       });
+  }
+
+  private updateCurrentOntologyInStoreIfNeeded(ontology: ReadOntology) {
+    const currentOntology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
+    if (
+      !currentOntology ||
+      currentOntology.id !== ontology.id ||
+      currentOntology.lastModificationDate !== ontology.lastModificationDate
+    ) {
+      this._store.dispatch(new UpdateProjectOntologyAction(ontology, this.projectId));
+      this._store.dispatch(new SetCurrentOntologyAction(ontology));
+    }
   }
 
   unloadOntology() {
@@ -183,83 +209,51 @@ export class OntologyEditService {
     return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
   }
 
-  openCreateNewOntology() {
-    this._openOntologyForm();
-  }
-
-  openEditOntology(ontology: ReadOntology) {
-    this._openOntologyForm(ontology);
-  }
-
-  private _openOntologyForm(ontology?: ReadOntology) {
-    const dialogRef = this._dialog.open<OntologyFormComponent, ReadOntology>(
-      OntologyFormComponent,
-      DspDialogConfig.dialogDrawerConfig(ontology, true)
-    );
-    dialogRef
-      .afterClosed()
-      .pipe(
-        take(1),
-        filter((result): result is OntologyData => !!result),
-        switchMap(ontologyData => {
-          if (ontology) {
-            return this._updateOntology(ontologyData);
-          } else {
-            return this._createOntology(ontologyData);
-          }
-        })
-      )
-      .pipe(take(1))
-      .subscribe(response => {
-        this._afterTransaction();
-        if (!ontology) {
-          this._router.navigate([
-            RouteConstants.project,
-            ProjectService.IriToUuid(this.projectId),
-            RouteConstants.ontology,
-            OntologyService.getOntologyName(response.id),
-            RouteConstants.editor,
-            RouteConstants.classes,
-          ]);
-        }
-      });
-  }
-
-  private _updateOntology(ontologyData: OntologyData) {
-    const updateOntology = new UpdateOntologyMetadata();
-    updateOntology.id = this.ontologyId;
-    updateOntology.lastModificationDate = this.lastModificationDate;
-    updateOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
-    updateOntology.comment = ontologyData.comment;
-
-    return this._dspApiConnection.v2.onto.updateOntology(updateOntology);
-  }
-
-  deleteCurrentOntology() {
-    this._dialogService
-      .afterConfirmation('Do you want to delete this data model ?')
-      .pipe(
-        tap(() => {
-          this._isTransacting.next(true);
-          this._dspApiConnection.v2.onto.deleteOntology({
-            id: this.ontologyId,
-            lastModificationDate: this.lastModificationDate,
-          });
-        })
-      )
-      .subscribe(() => {
-        this._afterTransaction();
-      });
-  }
-
-  private _createOntology(ontologyData: OntologyData) {
+  createOntology(ontologyData: OntologyData) {
     const createOntology = new CreateOntology();
     createOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
     createOntology.name = ontologyData.name;
     createOntology.comment = ontologyData.comment;
     createOntology.attachedToProject = this.projectId;
 
-    return this._dspApiConnection.v2.onto.createOntology(createOntology);
+    return this._dspApiConnection.v2.onto.createOntology(createOntology).pipe(
+      tap(onto => {
+        this._notification.openSnackBar('created successfully');
+      })
+    );
+  }
+
+  updateOntology(ontologyData: OntologyData) {
+    const updateOntology = new UpdateOntologyMetadata();
+    updateOntology.id = this.ontologyId;
+    updateOntology.lastModificationDate = this.lastModificationDate;
+    updateOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
+    updateOntology.comment = ontologyData.comment;
+
+    return this._dspApiConnection.v2.onto.updateOntology(updateOntology).pipe(
+      tap(onto => {
+        this.lastModificationDate = onto.lastModificationDate;
+        this._notification.openSnackBar('updated successfully');
+      })
+    );
+  }
+
+  deleteOntology$(ontology: ReadOntology) {
+    return this._dialogService.afterConfirmation('Do you want to delete this data model ?').pipe(
+      switchMap(del => {
+        return this._dspApiConnection.v2.onto
+          .deleteOntology({
+            id: ontology.id,
+            lastModificationDate: this.lastModificationDate,
+          })
+          .pipe(
+            tap(() => {
+              this._store.dispatch(new RemoveProjectOntologyAction(ontology.id, this.projectId));
+              this._currentOntology.next(null);
+            })
+          );
+      })
+    );
   }
 
   openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
@@ -506,7 +500,9 @@ export class OntologyEditService {
       .afterClosed()
       .pipe(map(result => result ?? false))
       .subscribe((created: boolean) => {
-        this._afterTransaction();
+        if (created) {
+          this._afterTransaction();
+        }
       });
   }
 
@@ -631,7 +627,7 @@ export class OntologyEditService {
   }
 
   private _afterTransaction(notification?: string) {
-    this.lastModificationDate = this._currentOntology.value?.lastModificationDate;
+    this._loadOntology(this.ontologyId);
     this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);
     if (notification) {

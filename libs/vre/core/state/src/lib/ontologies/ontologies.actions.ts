@@ -1,22 +1,11 @@
-import {
-  ClassDefinition,
-  ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntologyMetadata,
-} from '@dasch-swiss/dsp-js';
-import { PropToDisplay } from '../model-interfaces';
+import { ReadOntology, UpdateOntologyMetadata } from '@dasch-swiss/dsp-js';
 
 export class LoadProjectOntologiesAction {
   static readonly type = '[Ontologies] Load Project Ontologies';
   constructor(
     public projectIri: string,
-    from = ''
-  ) {
-    if (!from) {
-      console.error('fuck');
-    }
-    console.log('Load ProjectOntologiesAction from:', from);
-  }
+    public ontologyName?: string
+  ) {}
 }
 
 export class SetOntologiesLoadingAction {

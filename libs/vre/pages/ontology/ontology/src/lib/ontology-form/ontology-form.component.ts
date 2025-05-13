@@ -1,13 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { OntologyEditService } from '../services/ontology-edit.service';
 import { OntologyForm, OntologyData } from './ontology-form.type';
 
 @Component({
@@ -50,9 +52,10 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private _fb: FormBuilder,
+    private _oes: OntologyEditService,
     private _store: Store,
     @Inject(MAT_DIALOG_DATA) public data: OntologyData,
-    public dialogRef: MatDialogRef<OntologyFormComponent, OntologyData>
+    public dialogRef: MatDialogRef<OntologyFormComponent, OntologyMetadata>
   ) {}
 
   ngOnInit() {
@@ -85,7 +88,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
         ontology?.label?.includes(':') ? ontology.label.split(':')[1] : ontology?.label || '',
         [Validators.required, Validators.minLength(3)],
       ],
-      comment: [ontology ? ontology.comment : ''],
+      comment: [ontology ? ontology.comment : '', Validators.required],
     });
   }
 
@@ -96,7 +99,12 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       comment: this.ontologyForm.controls.comment.value,
       id: this.data?.id,
     };
-    this.dialogRef.close(ontologyData);
+    const transaction$ = this.data?.id
+      ? this._oes.updateOntology(ontologyData)
+      : this._oes.createOntology(ontologyData);
+    transaction$.pipe(take(1)).subscribe(o => {
+      this.dialogRef.close(o);
+    });
   }
 
   ngOnDestroy() {

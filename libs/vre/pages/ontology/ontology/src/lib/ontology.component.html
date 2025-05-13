@@ -50,7 +50,7 @@
       </mat-menu>
     </mat-sidenav>
     <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
-      <app-progress-indicator *ngIf="(isTransacting$ | async)" />
+      <app-progress-indicator class="floating-center" *ngIf="(isTransacting$ | async)" />
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

@@ -11,7 +11,12 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { OntologyClassHelper, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  OntologyClassHelper,
+  OntologyService,
+  ProjectService,
+  SortingService,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
@@ -96,11 +101,15 @@ export class OntologiesState {
     if (index > -1) {
       readOntologies.splice(index, 1);
     }
+    console.log('patching');
     ctx.patchState(state);
   }
 
   @Action(LoadProjectOntologiesAction)
-  loadProjectOntologiesAction(ctx: StateContext<OntologiesStateModel>, { projectIri }: LoadProjectOntologiesAction) {
+  loadProjectOntologiesAction(
+    ctx: StateContext<OntologiesStateModel>,
+    { projectIri, ontologyName }: LoadProjectOntologiesAction
+  ) {
     ctx.patchState({ isOntologiesLoading: true, isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
 
@@ -140,6 +149,17 @@ export class OntologiesState {
             )
             .pipe(switchMap(() => this._actions$.pipe(ofActionSuccessful(LoadOntologyAction), take(1)))) // last action dispatched
             .subscribe(() => {
+              if (ontologyName) {
+                const readOntology = ctx
+                  .getState()
+                  .projectOntologies[
+                    projectIri
+                  ].readOntologies.find(o => o.id === OntologyService.getOntologyName(ontologyName));
+                if (readOntology) {
+                  ctx.dispatch(new SetCurrentOntologyAction(readOntology));
+                }
+              }
+
               ctx.dispatch(new LoadListsInProjectAction(projectIri));
               ontoMeta.ontologies.forEach(onto => {
                 const readOntology = ctx
@@ -221,7 +241,7 @@ export class OntologiesState {
       tap({
         next: () => {
           const projectIri = this._projectService.uuidToIri(projectUuid);
-          ctx.dispatch(new LoadProjectOntologiesAction(projectIri, 'updateOntologyAction'));
+          ctx.dispatch(new LoadProjectOntologiesAction(projectIri));
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ hasLoadingErrors: true });

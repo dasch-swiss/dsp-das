@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadProjectAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
   DefaultProperties,
@@ -57,9 +57,6 @@ export class OntologyComponent implements OnInit, OnDestroy {
       const ontoLabel = this._route.snapshot.params[RouteConstants.ontoParameter];
       this._oes.initOntologyByLabel(ontoLabel);
     });
-
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-    this._store.dispatch(new LoadProjectAction(projectUuid));
   }
 
   private _setupPage() {
