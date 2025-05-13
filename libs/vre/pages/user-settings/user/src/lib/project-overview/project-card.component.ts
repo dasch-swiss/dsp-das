@@ -12,7 +12,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
           <img
             mat-card-image
-            [src]="'https://picsum.photos/400/200/?blur=1&random=' + index"
+            [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
             alt="image of project"
             class="img" />
           <mat-card-content class="project-content">
