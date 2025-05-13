@@ -10,11 +10,14 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     <div class="project-card-wrapper" data-cy="project-card">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
-          <img
-            mat-card-image
-            [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
-            alt="image of project"
-            class="img" />
+          <div class="image-container">
+            <img
+              mat-card-image
+              [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
+              alt="image of project"
+              class="img" />
+          </div>
+
           <mat-card-content class="project-content">
             <div class="project-details">
               <mat-card-title class="project-title">
@@ -88,6 +91,18 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         .project-details .project-title {
           -webkit-line-clamp: unset;
         }
+      }
+
+      .image-container {
+        width: 100%;
+        height: 200px; /* Or any fixed height you want */
+        overflow: hidden;
+      }
+
+      .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures it covers the container without distortion */
       }
     `,
   ],
