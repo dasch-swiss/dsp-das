@@ -74,6 +74,9 @@ export class OntologyEditService {
   private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
   currentOntology$ = this._currentOntology.asObservable();
 
+  latestChangedItem = new BehaviorSubject<string | null>(null);
+  latestChangedItemId$ = this.latestChangedItem.asObservable();
+
   currentOntologyProperties$ = this.currentOntology$.pipe(
     map(ontology => {
       if (ontology) {
@@ -388,7 +391,7 @@ export class OntologyEditService {
       .addCardinalityToResourceClass(updateOnto)
       .pipe(take(1))
       .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
-        this._afterTransaction();
+        this._afterTransaction(propertyId);
       });
   }
 
@@ -400,7 +403,7 @@ export class OntologyEditService {
       .deleteCardinalityFromResourceClass(onto)
       .pipe(take(1))
       .subscribe(() => {
-        this._afterTransaction();
+        this._afterTransaction(classId);
       });
   }
 
@@ -427,7 +430,7 @@ export class OntologyEditService {
     return concat(...updates).pipe(
       last(),
       tap(() => {
-        this._afterTransaction();
+        this._afterTransaction(id);
       })
     );
   }
@@ -501,7 +504,7 @@ export class OntologyEditService {
       .pipe(map(result => result ?? false))
       .subscribe((created: boolean) => {
         if (created) {
-          this._afterTransaction();
+          this._afterTransaction(resClassInfo.iri);
         }
       });
   }
@@ -521,7 +524,7 @@ export class OntologyEditService {
       )
       .subscribe({
         next: () => {
-          this._afterTransaction();
+          this._afterTransaction(resClassIri);
         },
       });
   }
@@ -556,7 +559,7 @@ export class OntologyEditService {
         )
       )
       .subscribe(() => {
-        this._afterTransaction();
+        this._afterTransaction(iri);
       });
   }
 
@@ -579,7 +582,7 @@ export class OntologyEditService {
       .replaceGuiOrderOfCardinalities(updateOntology)
       .pipe(take(1))
       .subscribe(() => {
-        this._afterTransaction();
+        this._afterTransaction(classId);
       });
   }
 
@@ -594,7 +597,7 @@ export class OntologyEditService {
       .replaceCardinalityOfResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(response => {
-        this._afterTransaction();
+        this._afterTransaction(classCardinality.id);
       });
   }
 
@@ -626,10 +629,11 @@ export class OntologyEditService {
     return this._getUpdateOntology<UpdateResourceClassCardinality>(updateCard);
   }
 
-  private _afterTransaction(notification?: string) {
+  private _afterTransaction(id: string, notification?: string) {
     this._loadOntology(this.ontologyId);
     this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);
+    this.latestChangedItem.next(id);
     if (notification) {
       this._notification.openSnackBar(notification);
     }

@@ -1,15 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { MatRipple } from '@angular/material/core';
 import { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-info-element',
   template: ` <div cdkDrag [cdkDragDisabled]="(isAdmin$ | async) !== true">
     <div class="drag-n-drop-placeholder" *cdkDragPlaceholder></div>
-    <mat-list-item class="property">
+    <mat-list-item class="property" matRipple #cardRipple="matRipple">
       <span cdkDragHandle matListItemIcon class="list-icon gui-order">
         <span [class.hide-on-hover]="(isAdmin$ | async) === true"> {{ i + 1 }}) </span>
         <span *ngIf="(isAdmin$ | async) === true" class="display-on-hover drag-n-drop-handle">
@@ -60,13 +62,23 @@ import { Observable } from 'rxjs';
     `,
   ],
 })
-export class ResourceClassInfoElementComponent {
+export class ResourceClassInfoElementComponent implements AfterViewInit {
   @Input() resourceClass: ClassDefinition;
   @Input() prop: PropToDisplay;
   @Input() props: PropToDisplay[];
   @Input() i: number; // index
 
+  @ViewChild('cardRipple') cardRipple: MatRipple;
+
   @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
 
-  constructor(protected ps: ProjectService) {}
+  constructor(private _oes: OntologyEditService) {}
+
+  ngAfterViewInit() {
+    if (this._oes.latestChangedItem.value === this.prop.propDef?.id) {
+      this.cardRipple.launch({
+        persistent: false,
+      });
+    }
+  }
 }

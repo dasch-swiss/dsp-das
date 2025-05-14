@@ -44,8 +44,7 @@
         [prop]="prop"
         [props]="currentOntologyPropertiesToDisplay"
         [resourceClass]="resourceClass"
-        [i]="i">
-      </app-resource-class-info-element>
+        [i]="i" />
     </mat-list>
 
     <app-add-property-menu [resourceClass]="resourceClass" [disabled]="(isAdmin$ | async) !== true" />

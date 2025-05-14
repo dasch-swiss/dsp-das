@@ -1,11 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
-import {
-  ApiResponseError,
-  ClassDefinition,
-  PropertyDefinition,
-  ResourceClassDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ApiResponseError, PropertyDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
