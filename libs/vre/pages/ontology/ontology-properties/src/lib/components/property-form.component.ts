@@ -35,7 +35,6 @@ import { PropertyForm, PropertyData } from '../property-form.type';
       label="Property name"
       data-cy="name-input"
       prefixIcon="fingerprint"
-      [disabled]="!!propertyData.name"
       [control]="form.controls.name" />
     <app-multi-language-input
       [formArray]="form.controls.labels"
@@ -93,10 +92,16 @@ export class PropertyFormComponent implements OnInit {
         },
         { nonNullable: true }
       ),
-      name: this._fb.control<string>(this.propertyData.name ?? '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
+        name: this._fb.control(
+            {
+                value: this.propertyData.name ?? '',
+                disabled: !!this.propertyData.name,
+            },
+            {
+                nonNullable: true,
+                validators: [Validators.required],
+            }
+        ),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.labels ?? defaultData, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comments ?? defaultData, [Validators.required]),
       guiAttr: this._fb.control<string>(

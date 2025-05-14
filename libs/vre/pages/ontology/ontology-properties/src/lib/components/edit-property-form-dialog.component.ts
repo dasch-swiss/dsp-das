@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyForm } from '../property-form.type';
 import { PropertyData } from '../property-form.type';
-import { OntologyService, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 
 
 @Component({
@@ -48,7 +48,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   }
 
     get name(): string {
-        return this.data?.propDef?.id ? OntologyService.getOntologyName(this.data.propDef.id) : '';
+      return this.data.propDef!.id.split('#').pop()!
     }
 
     onSubmit() {
