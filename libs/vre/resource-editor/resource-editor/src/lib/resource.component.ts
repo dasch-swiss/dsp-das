@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Constants, CountQueryResponse, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { Constants, CountQueryResponse, KnoraApiConnection, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
@@ -30,9 +30,11 @@ export class ResourceComponent implements OnChanges {
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
+    @Inject(DspApiConnectionToken)
     private _cdr: ChangeDetectorRef,
-    private _incomingService: IncomingService,
     private _compoundService: CompoundService,
+    private _dspApi: KnoraApiConnection,
+    private _incomingService: IncomingService,
     private _regionService: RegionService,
     private _route: ActivatedRoute
   ) {}
@@ -78,11 +80,12 @@ export class ResourceComponent implements OnChanges {
   }
 
   private _checkForCompoundNavigation(resource: ReadResource) {
-    this._incomingService
-      .getStillImageRepresentationsForCompoundResource(resource.id, 0, true)
+    this._dspApi.v2.search
+      .doSearchStillImageRepresentationsCount(resource.id)
       .pipe(take(1))
       .subscribe(countQuery => {
         const countQuery_ = countQuery as CountQueryResponse;
+        console.log(777777, countQuery_);
         this.isCompoundNavigation = countQuery_.numberOfResults > 0;
         if (this.isCompoundNavigation) {
           this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);

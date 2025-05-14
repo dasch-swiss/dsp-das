@@ -23,10 +23,10 @@ export class CompoundService {
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
+    private _cd: ChangeDetectorRef,
+    private _dspApi: KnoraApiConnection,
     private _incomingService: IncomingService,
     private _regionService: RegionService,
-    private _cd: ChangeDetectorRef,
     private _store: Store
   ) {}
 
@@ -52,10 +52,11 @@ export class CompoundService {
   }
 
   private _loadIncomingResourcesPage(compoundPosition: DspCompoundPosition): void {
-    this._incomingService
-      .getStillImageRepresentationsForCompoundResource(this._resource!.res.id, compoundPosition.offset)
+    this._dspApi.v2.search
+      .doSearchStillImageRepresentations(this._resource!.res.id, compoundPosition.offset)
       .subscribe(res => {
         const incomingImageRepresentations = res as ReadResourceSequence;
+        console.log(333333, incomingImageRepresentations);
 
         if (incomingImageRepresentations.resources.length === 0) {
           this.incomingResource.next(undefined);
@@ -67,7 +68,7 @@ export class CompoundService {
   }
 
   private _loadIncomingResource(iri: string) {
-    this._dspApiConnection.v2.res.getResource(iri).subscribe(res => {
+    this._dspApi.v2.res.getResource(iri).subscribe(res => {
       const response = res as ReadResource;
 
       const incomingResource = new DspResource(response);
