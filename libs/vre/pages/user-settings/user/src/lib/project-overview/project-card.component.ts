@@ -10,11 +10,13 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     <div class="project-card-wrapper" data-cy="project-card">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
-          <div class="image-container">
+          <div mat-card-image class="image-container">
             <img
+              *ngIf="!imageCantLoad; else backgroundTpl"
               mat-card-image
               [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
               alt="image of project"
+              (error)="imageCantLoad = true"
               class="img" />
           </div>
 
@@ -33,6 +35,15 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         </mat-card>
       </a>
     </div>
+
+    <ng-template #backgroundTpl>
+      <div
+        style="background: #ffecbd; color: #bfa153; height: 200px; display: flex; align-items: center; justify-content: center;
+   font-size: 48px;
+    font-weight: bold; text-transform: uppercase">
+        <span>{{ project.shortname }}</span>
+      </div>
+    </ng-template>
   `,
   styles: [
     `
@@ -41,7 +52,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
       }
 
       .img {
-        filter: sepia(0.6);
+        filter: sepia(0.8);
       }
 
       .project-card-wrapper {
@@ -97,6 +108,17 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         width: 100%;
         height: 200px; /* Or any fixed height you want */
         overflow: hidden;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.1) 100%);
+        }
       }
 
       .image-container img {
@@ -104,12 +126,20 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         height: 100%;
         object-fit: cover; /* Ensures it covers the container without distortion */
       }
+
+      .vignette {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 200px rgba(0, 0, 0, 0.9) inset;
+      }
     `,
   ],
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: StoredProject;
   @Input({ required: true }) index!: number;
+
+  imageCantLoad = false;
 
   get projectUuid() {
     return ProjectService.IriToUuid(this.project.id);
