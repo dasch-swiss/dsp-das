@@ -30,11 +30,9 @@ export class ResourceComponent implements OnChanges {
   resourceIsObjectWithoutRepresentation!: boolean;
 
   constructor(
-    @Inject(DspApiConnectionToken)
     private _cdr: ChangeDetectorRef,
     private _compoundService: CompoundService,
-    private _dspApi: KnoraApiConnection,
-    private _incomingService: IncomingService,
+    @Inject(DspApiConnectionToken) private _dspApi: KnoraApiConnection,
     private _regionService: RegionService,
     private _route: ActivatedRoute
   ) {}
