@@ -53,12 +53,12 @@ export class CompoundService {
       .doSearchStillImageRepresentations(this._resource!.res.id, compoundPosition.offset)
       .subscribe(res => {
         const incomingImageRepresentations = res as ReadResourceSequence;
-        console.log(333333, incomingImageRepresentations);
 
         if (incomingImageRepresentations.resources.length === 0) {
           this.incomingResource.next(undefined);
           return;
         }
+
         this._resource!.incomingRepresentations = incomingImageRepresentations.resources;
         this._loadIncomingResource(this._resource!.incomingRepresentations[compoundPosition.position].id);
       });

@@ -5,7 +5,6 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { IncomingService } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { take } from 'rxjs/operators';
 import { CompoundService } from './compound/compound.service';
 
@@ -83,7 +82,6 @@ export class ResourceComponent implements OnChanges {
       .pipe(take(1))
       .subscribe(countQuery => {
         const countQuery_ = countQuery as CountQueryResponse;
-        console.log(777777, countQuery_);
         this.isCompoundNavigation = countQuery_.numberOfResults > 0;
         if (this.isCompoundNavigation) {
           this._compoundService.onInit(new DspCompoundPosition(countQuery_.numberOfResults), this.resource);
