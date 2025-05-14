@@ -38,7 +38,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
   propAttribute: string;
   propAttributeComment: string;
 
-  propCanBeRemovedFromClass: boolean;
+  propCanBeRemovedFromClass: boolean | null = null;
 
   projectUuid$: Observable<string> = combineLatest([
     this._route.params,

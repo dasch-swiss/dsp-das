@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import {
   ApiResponseError,
   CanDoResponse,
@@ -75,7 +74,6 @@ export class OntologyEditService {
   currentOntology$ = this._currentOntology.asObservable();
 
   latestChangedItem = new BehaviorSubject<string | null>(null);
-  latestChangedItemId$ = this.latestChangedItem.asObservable();
 
   currentOntologyProperties$ = this.currentOntology$.pipe(
     map(ontology => {
@@ -280,7 +278,7 @@ export class OntologyEditService {
           this.lastModificationDate = propDef.lastModificationDate;
           this.assignPropertyToClass(propDef.id, assignToClass);
         } else {
-          this._afterTransaction(`Successfully created ${propDef.label}.`);
+          this._afterTransaction(propDef.id, `Successfully created ${propDef.label}.`);
         }
       });
   }
@@ -302,7 +300,7 @@ export class OntologyEditService {
         switchMap(propertyData => this._updateProperty(propDef.id, propertyData))
       )
       .subscribe(() => {
-        this._afterTransaction(`Successfully updated ${propDef.label}.`);
+        this._afterTransaction(propDef.id, `Successfully updated ${propDef.label}.`);
       });
   }
 
@@ -504,7 +502,7 @@ export class OntologyEditService {
       .pipe(map(result => result ?? false))
       .subscribe((created: boolean) => {
         if (created) {
-          this._afterTransaction(resClassInfo.iri);
+          this._afterTransaction(resClassInfo.iri, `Successfully created ${resClassInfo.label}.`);
         }
       });
   }
@@ -524,7 +522,7 @@ export class OntologyEditService {
       )
       .subscribe({
         next: () => {
-          this._afterTransaction(resClassIri);
+          this._afterTransaction(resClassIri, `Successfully deleted ${resClassIri}.`);
         },
       });
   }
@@ -559,7 +557,7 @@ export class OntologyEditService {
         )
       )
       .subscribe(() => {
-        this._afterTransaction(iri);
+        this._afterTransaction(iri, `Successfully deleted ${iri}.`);
       });
   }
 

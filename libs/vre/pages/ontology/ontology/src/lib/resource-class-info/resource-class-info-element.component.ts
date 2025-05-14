@@ -2,7 +2,6 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { OntologyEditService } from '../services/ontology-edit.service';
@@ -18,8 +17,6 @@ import { OntologyEditService } from '../services/ontology-edit.service';
           <mat-icon>drag_indicator</mat-icon>
         </span>
       </span>
-      <!-- display only properties if they exist in list of properties;
-                                                                                                                                                                                                                                                       objectType is not a linkValue (otherwise we have the property twice) -->
       <span matListItemTitle>
         <app-resource-class-property-info
           class="property-info"
@@ -79,6 +76,7 @@ export class ResourceClassInfoElementComponent implements AfterViewInit {
       this.cardRipple.launch({
         persistent: false,
       });
+      this._oes.latestChangedItem.next(null);
     }
   }
 }
