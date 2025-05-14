@@ -46,8 +46,7 @@ export class OntologyEditorHeaderComponent {
       });
   }
   navigateToDataModels() {
-    const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id;
-    const projectUuid = ProjectService.IriToUuid(projectIri);
+    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
     this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 }

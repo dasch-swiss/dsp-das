@@ -1,5 +1,4 @@
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import {
   Cardinality,
   ClassDefinition,
@@ -7,12 +6,16 @@ import {
   IHasProperty,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors, PropToDisplay, UserSelectors } from '@dasch-swiss/vre/core/state';
+import {
+  ListsSelectors,
+  OntologiesSelectors,
+  ProjectsSelectors,
+  PropToDisplay,
+  UserSelectors,
+} from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -20,8 +23,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   templateUrl: './resource-class-property-info.component.html',
   styleUrls: ['./resource-class-property-info.component.scss'],
 })
-export class ResourceClassPropertyInfoComponent implements OnChanges, AfterContentInit, OnDestroy {
-  @Input() propDef: ResourcePropertyDefinitionWithAllLanguages;
+export class ResourceClassPropertyInfoComponent implements OnChanges, AfterContentInit {
+  @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
   @Input() propCard: IHasProperty;
 
@@ -31,91 +34,64 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
 
   @Select(UserSelectors.isMemberOfSystemAdminGroup) isAdmin$!: Observable<boolean>;
 
-  projectUuid?: string;
-
-  isDestroyed = new Subject<void>();
-
-  propAttribute: string;
-  propAttributeComment: string;
+  propAttribute?: string;
+  propAttributeComment?: string;
 
   propCanBeRemovedFromClass: boolean | null = null;
-
-  projectUuid$: Observable<string> = combineLatest([
-    this._route.params,
-    this._route.parent?.params,
-    this._route.parent?.parent ? this._route.parent.parent.params : of({}),
-  ]).pipe(
-    map(([params, parentParams, parentParentParams]) => {
-      return params[RouteConstants.uuidParameter]
-        ? params[RouteConstants.uuidParameter]
-        : parentParams[RouteConstants.uuidParameter]
-          ? parentParams[RouteConstants.uuidParameter]
-          : parentParentParams[RouteConstants.uuidParameter];
-    })
-  );
 
   get propType(): DefaultProperty {
     return this._ontoService.getDefaultPropertyType(this.propDef);
   }
 
+  get listUrl() {
+    const re = /\<([^)]+)\>/;
+    const match = this.propDef.guiAttributes[0]?.match(re);
+    const listIri = match?.[1]?.length ? match[1] : '';
+    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
+    return listIri && projectUuid ? `/project/${projectUuid}/list/${listIri.split('/').pop()}` : null;
+  }
+
   constructor(
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
-    private _route: ActivatedRoute,
     private _store: Store,
     private _cd: ChangeDetectorRef
-  ) {
-    this.projectUuid$.pipe().subscribe((projectUuid: string) => {
-      this.projectUuid = projectUuid;
-    });
-  }
+  ) {}
 
   ngOnChanges(): void {
     this._ontoService.getDefaultProperty(this.propDef);
   }
 
   ngAfterContentInit() {
-    // get current ontology to get linked res class information
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
-    if (ontology && currentProjectOntologies && this.propDef.isLinkProperty) {
-      // this property is a link property to another resource class
-      // get the base ontology of object type
-      const baseOnto = this.propDef.objectType.split('#')[0];
-      if (baseOnto !== ontology.id) {
-        // get class info from another ontology
-        const onto = currentProjectOntologies.find(i => i.id === baseOnto);
-        if (!onto) {
-          if (this.propDef.objectType === Constants.Region) {
-            this.propAttribute = 'Region';
-          } // else no ontology found
-        } else {
-          this.propAttribute = onto.classes[this.propDef.objectType].label;
-          this.propAttributeComment = onto.classes[this.propDef.objectType].comment;
-        }
-      } else {
-        this.propAttribute = ontology.classes[this.propDef.objectType].label;
-        this.propAttributeComment = ontology.classes[this.propDef.objectType].comment;
-      }
+    if (!this.propDef.isLinkProperty) {
+      this._setAttributesForLinkProperty();
     }
 
-    // get current ontology lists to get linked list information
-    this._store
-      .select(ListsSelectors.listsInProject)
-      .pipe(takeUntil(this.isDestroyed))
-      .subscribe(currentOntologyLists => {
-        if (currentOntologyLists && this.propDef.objectType === Constants.ListValue) {
-          // this property is a list property
-          const re = /\<([^)]+)\>/;
-          const listIri = this.propDef.guiAttributes[0].match(re)[1];
-          const listUrl = `/project/${this.projectUuid}/list/${listIri.split('/').pop()}`;
-          const list = currentOntologyLists.find(i => i.id === listIri);
-          if (list) {
-            this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
-            this.propAttributeComment = list.comments.length ? list.comments[0].value : null;
-          }
-        }
-      });
+    if (this.propDef.objectType === Constants.ListValue) {
+      this._setAttributesForListProperty();
+    }
+  }
+
+  private _setAttributesForListProperty() {
+    const currentOntologyLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
+    const list = currentOntologyLists.find(i => i.id === this.listUrl);
+    if (list) {
+      this.propAttribute = `<a href="${this.listUrl}">${list.labels[0].value}</a>`;
+      this.propAttributeComment = list.comments.length ? list.comments[0].value : undefined;
+    }
+  }
+
+  private _setAttributesForLinkProperty() {
+    if (this.propDef.objectType === Constants.Region) {
+      this.propAttribute = 'Region';
+      return;
+    }
+
+    const propertiesBaseOntologyId = this.propDef.objectType?.split('#')[0];
+    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+    const baseOntology = currentProjectOntologies.find(i => i.id === propertiesBaseOntologyId);
+    this.propAttribute = baseOntology?.classes[this.propDef.objectType!].label;
+    this.propAttributeComment = baseOntology?.classes[this.propDef.objectType!].comment;
   }
 
   canBeRemovedFromClass(): void {
@@ -129,6 +105,10 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     this._oes.removePropertyFromClass(this.propCard, this.resourceClass.id);
   }
 
+  openEditProperty() {
+    this._oes.openEditProperty(this.propDef, this.propType);
+  }
+
   updateCardinality(newValue: Cardinality) {
     const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.propCard.propertyIndex);
     if (propertyIdx !== -1) {
@@ -136,10 +116,5 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
       this.props[propertyIdx].cardinality = newValue;
       this._oes.updateCardinalitiesOfResourceClass(this.resourceClass.id, this.props);
     }
-  }
-
-  ngOnDestroy() {
-    this.isDestroyed.next();
-    this.isDestroyed.complete();
   }
 }

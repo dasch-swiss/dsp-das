@@ -3,8 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
     DefaultProperties, DefaultProperty,
-    LocalizationService,
-    PropertyCategory,
+    LocalizationService, OntologyService,
+    PropertyCategory
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { PropertyForm, PropertyData } from '../property-form.type';
@@ -35,6 +35,7 @@ import { PropertyForm, PropertyData } from '../property-form.type';
       label="Property name"
       data-cy="name-input"
       prefixIcon="fingerprint"
+      [disabled]="!!propertyData.name"
       [control]="form.controls.name" />
     <app-multi-language-input
       [formArray]="form.controls.labels"

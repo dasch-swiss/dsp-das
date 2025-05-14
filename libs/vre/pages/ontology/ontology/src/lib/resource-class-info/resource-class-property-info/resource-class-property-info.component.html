@@ -59,18 +59,11 @@
   <div class="remove-menu-wrapper">
     <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
       <mat-icon>link_off</mat-icon>
-      <ngx-skeleton-loader
-        *ngIf="propCanBeRemovedFromClass === null"
-        count="1"
-        appearance="line"
-        class="skeleton"
-        [theme]="{
-                        'margin-bottom': 0,
-                        'vertical-align': 'middle',
-                        'min-width' : '16em'
-                    }">
-      </ngx-skeleton-loader>
-      <span *ngIf="propCanBeRemovedFromClass">remove property from class</span>
+      <span>remove property from class</span>
+    </button>
+    <button mat-menu-item (click)="openEditProperty()">
+      <mat-icon>edit</mat-icon>
+      <span>Edit property</span>
     </button>
   </div>
 </mat-menu>

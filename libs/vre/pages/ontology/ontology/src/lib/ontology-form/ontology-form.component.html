@@ -3,6 +3,7 @@
   [subtitle]="ontologyName ? ('pages.ontology.ontologyForm.edit' | translate) : ''" />
 <form [formGroup]="ontologyForm" class="form-content">
   <app-common-input
+    [disabled]="!!ontologyName"
     [control]="ontologyForm.controls.name"
     [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
     [label]="'pages.ontology.ontologyForm.name' | translate"

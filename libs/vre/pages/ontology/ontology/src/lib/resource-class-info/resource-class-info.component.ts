@@ -7,7 +7,6 @@ import {
   DefaultResourceClasses,
   LocalizationService,
   OntologyService,
-  ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -112,11 +111,11 @@ export class ResourceClassInfoComponent implements OnChanges {
   }
 
   openInDatabrowser() {
-    const projectId = ProjectService.IriToUuid(this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id || '');
+    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
     const ontologyName = OntologyService.getOntologyName(
       this._store.selectSnapshot(OntologiesSelectors.currentOntology)?.id || ''
     );
-    const dataBrowserRoute = `/${RouteConstants.project}/${projectId}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.id.split('#')[1]}`;
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.id.split('#')[1]}`;
     window.open(dataBrowserRoute, '_blank');
   }
 }

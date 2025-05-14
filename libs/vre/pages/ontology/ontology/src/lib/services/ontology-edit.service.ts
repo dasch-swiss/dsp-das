@@ -41,7 +41,6 @@ import {
   DefaultClass,
   DefaultProperty,
   OntologyService,
-  ProjectService,
   PropertyInfoObject,
   SortingService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -585,6 +584,7 @@ export class OntologyEditService {
   }
 
   updateCardinalitiesOfResourceClass(classId: string, cardinalities: IHasProperty[] = []) {
+    this._isTransacting.next(true);
     const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, cardinalities);
     this._updateCardinalityOfResourceClass(updateResourceClassCard);
   }

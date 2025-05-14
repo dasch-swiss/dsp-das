@@ -10,12 +10,14 @@ import { FormControl } from '@angular/forms';
       <input
         matInput
         data-cy="common-input-text"
+        [disabled]="disabled"
         [placeholder]="label"
         [formControl]="control"
         *ngIf="type === 'text'" />
       <input
         matInput
         data-cy="common-input-number"
+        [disabled]="disabled"
         [placeholder]="label"
         [formControl]="control"
         *ngIf="type === 'number'"
@@ -33,4 +35,5 @@ export class CommonInputComponent {
   @Input() prefixIcon: string | null = null;
   @Input() validatorErrors: { errorKey: string; message: string }[] | null = null;
   @Input() type: 'number' | 'text' = 'text';
+  @Input() disabled = false;
 }
