@@ -21,7 +21,7 @@ export interface DeleteValueDialogProps {
       You can leave a comment to explain your choice.
 
       <mat-form-field style="display: block; width: 100%; margin-top: 16px">
-        <mat-label>Textarea</mat-label>
+        <mat-label>Reason</mat-label>
         <textarea
           matInput
           data-cy="delete-comment"
