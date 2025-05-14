@@ -406,6 +406,7 @@ export class OntologyEditService {
 
   private _updateProperty(id: string, propertyData: PropertyData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
+    console.log(propertyData);
 
     if (propertyData.labels !== undefined) {
       updates.push(this._updatePropertyLabels(id, propertyData.labels));
@@ -415,9 +416,10 @@ export class OntologyEditService {
       updates.push(this._updatePropertyComments(id, propertyData.comments));
     }
 
-    if (propertyData.guiElement !== undefined) {
-      updates.push(this._updatePropertyGuiElement(id, propertyData.guiElement));
-    }
+    // Todo: FIX!
+    // if (propertyData.guiElement !== undefined) {
+    //  updates.push(this._updatePropertyGuiElement(id, propertyData.guiElement));
+    // }
 
     if (updates.length === 0) {
       return of();
@@ -437,9 +439,11 @@ export class OntologyEditService {
     labels: StringLiteralV2[]
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
     const updateLabel = new UpdateResourcePropertyLabel();
+    console.log(labels);
     updateLabel.id = id;
     updateLabel.labels = labels;
     const onto = this._getUpdateOntology<UpdateResourcePropertyLabel>(updateLabel);
+    console.log(onto);
     return this._updateResourceProperty(onto);
   }
 
