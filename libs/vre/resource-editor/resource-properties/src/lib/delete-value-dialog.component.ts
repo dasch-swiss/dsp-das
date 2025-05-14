@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -44,7 +44,7 @@ export interface DeleteValueDialogProps {
     </div>
   `,
 })
-export class DeleteValueDialogComponent implements OnInit {
+export class DeleteValueDialogComponent {
   loading = false;
   comment: string | undefined;
 
@@ -58,10 +58,6 @@ export class DeleteValueDialogComponent implements OnInit {
     private _resourceFetcherService: ResourceFetcherService,
     private _cd: ChangeDetectorRef
   ) {}
-
-  ngOnInit() {
-    this.dialogRef.updateSize('800px', '');
-  }
 
   deleteValue() {
     const resource = this.propertyValueService.editModeData?.resource as ReadResource;
