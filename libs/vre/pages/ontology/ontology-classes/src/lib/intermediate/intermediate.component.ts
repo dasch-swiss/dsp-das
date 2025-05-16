@@ -1,12 +1,23 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, Subject } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 import {
   ResourceLinkDialogComponent,
   ResourceLinkDialogProps,
@@ -32,7 +43,7 @@ import {
               mat-mini-fab
               color="primary"
               class="link"
-              *ngIf="(mayHaveMultipleProjects$ | async) === false"
+              *ngIf="mayHaveMultipleProjects === false"
               matTooltip="Create a link object from this selection"
               [matTooltipPosition]="'above'"
               [disabled]="resources.count < 2"
@@ -62,43 +73,92 @@ import {
   `,
   styleUrls: ['./intermediate.component.scss'],
 })
-export class IntermediateComponent {
-  @Input({ required: true }) resources!: FilteredResources;
+export class IntermediateComponent implements OnInit, OnDestroy {
+  private _resourcesSubject = new BehaviorSubject<FilteredResources | null>(null);
+  private _resources!: FilteredResources;
+
+  destroyed: Subject<void> = new Subject<void>();
+
+  mayHaveMultipleProjects = true;
+  uniqueSelectedProjectIris = new Set<string>();
+
+  @Input({ required: true })
+  set resources(value: FilteredResources) {
+    this.uniqueSelectedProjectIris.clear();
+    this.mayHaveMultipleProjects = true;
+    this._resources = value;
+    this._resourcesSubject.next(value);
+  }
+
+  get resources(): FilteredResources {
+    return this._resources;
+  }
+
   @Output() action = new EventEmitter<string>();
 
   itemPluralMapping = {
     resource: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       '=1': 'Resource',
       other: 'Resources',
     },
   };
 
-  get mayHaveMultipleProjects$(): Observable<boolean> {
-    return this._route.paramMap.pipe(
-      map(params => {
-        const uuid = this._route.parent?.snapshot.params[RouteConstants.uuidParameter];
-        return !params.get(RouteConstants.project) && !uuid;
-      })
-    );
-  }
-
   constructor(
     private _dialog: MatDialog,
     private _route: ActivatedRoute,
-    private _projectService: ProjectService
+    private _projectService: ProjectService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _cd: ChangeDetectorRef
   ) {}
+
+  ngOnInit() {
+    this.collectSelectedProjectIrisSubscription();
+  }
+
+  ngOnDestroy() {
+    this.destroyed.next();
+    this.destroyed.complete();
+  }
+
+  collectSelectedProjectIrisSubscription(): void {
+    this._resourcesSubject
+      .pipe(
+        takeUntil(this.destroyed),
+        switchMap(resources => {
+          if (!resources || resources.resInfo.length === 0) return [null];
+          return forkJoin(resources.resInfo.map(res => this._dspApiConnection.v2.res.getResource(res.id, undefined)));
+        }),
+        map((fetchedResources: any[] | null) => {
+          if (!fetchedResources) return;
+
+          fetchedResources.forEach(res => {
+            if (res.attachedToProject) {
+              this.uniqueSelectedProjectIris.add(res.attachedToProject);
+            }
+          });
+
+          this.mayHaveMultipleProjects = this.uniqueSelectedProjectIris.size > 1;
+          this._cd.markForCheck();
+        })
+      )
+      .subscribe();
+  }
 
   openDialog(): void {
     const projectUuid =
       this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ??
       this._route.snapshot.params[RouteConstants.project];
+
     if (!projectUuid) {
       throw new AppError('Project UUID is missing.');
     }
 
     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
-      data: { resources: this.resources, projectUuid: this._projectService.uuidToIri(projectUuid) },
+      data: {
+        resources: this.resources,
+        projectUuid: this._projectService.uuidToIri(projectUuid),
+      },
     });
   }
 }
