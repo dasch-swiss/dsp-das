@@ -71,6 +71,8 @@ export class CardinalityComponent implements OnInit {
     const dialogConfig: MatDialogConfig = {
       data: cardinalityInfo,
       autoFocus: false,
+      minWidth: '800px',
+      minHeight: '200px',
     };
 
     this._dialogRef = this._dialog.open(CardinalityChangeDialogComponent, dialogConfig);

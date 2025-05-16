@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/core/session';

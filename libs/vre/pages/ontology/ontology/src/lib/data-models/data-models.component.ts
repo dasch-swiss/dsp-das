@@ -1,17 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
-import { AppConfigService, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ProjectBase } from '@dasch-swiss/vre/pages/project/project';
+import { ListNodeInfo, OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
-import { OntologyFormProps } from '../ontology-form/ontology-form.type';
+import { OntologyData } from '../ontology-form/ontology-form.type';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,27 +18,13 @@ import { OntologyFormProps } from '../ontology-form/ontology-form.type';
   templateUrl: './data-models.component.html',
   styleUrls: ['./data-models.component.scss'],
 })
-export class DataModelsComponent extends ProjectBase implements OnInit {
+export class DataModelsComponent {
   protected readonly RouteConstants = RouteConstants;
 
-  get ontologiesMetadata$(): Observable<OntologyMetadata[]> {
-    const uuid = this._route.parent.snapshot.params.uuid;
-    const iri = `${this._appInit.dspAppConfig.iriBase}/projects/${uuid}`;
-    if (!uuid) {
-      return of({} as OntologyMetadata[]);
-    }
+  ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
 
-    return this._store.select(OntologiesSelectors.projectOntologies).pipe(
-      map(ontologies => {
-        if (!ontologies || !ontologies[iri]) {
-          return [];
-        }
-
-        return ontologies[iri].ontologiesMetadata;
-      })
-    );
-  }
-
+  @Select(UserSelectors.isMemberOfSystemAdminGroup) isAdmin$!: Observable<string[]>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isProjectMember$!: Observable<string[]>;
   @Select(UserSelectors.isLoggedIn) isLoggedIn$: Observable<boolean>;
   @Select(OntologiesSelectors.isLoading) isLoading$: Observable<boolean>;
   @Select(ListsSelectors.listsInProject) listsInProject$: Observable<ListNodeInfo[]>;
@@ -48,19 +33,9 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
     private _dialog: MatDialog,
     protected _route: ActivatedRoute,
     protected _router: Router,
-    protected _appInit: AppConfigService,
     protected _store: Store,
-    protected _projectService: ProjectService,
-    protected _titleService: Title,
-    protected _cd: ChangeDetectorRef,
-    protected _actions$: Actions
-  ) {
-    super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-  }
+    protected _projectService: ProjectService
+  ) {}
 
   trackByFn = (index: number, item: ListNodeInfo) => `${index}-${item.id}`;
 
@@ -92,15 +67,13 @@ export class DataModelsComponent extends ProjectBase implements OnInit {
   }
 
   createNewOntology() {
-    this._dialog.open<OntologyFormComponent, OntologyFormProps, null>(
+    const dialogRef = this._dialog.open<OntologyFormComponent>(
       OntologyFormComponent,
-      DspDialogConfig.dialogDrawerConfig(
-        {
-          ontologyIri: null,
-          projectIri: this.projectIri,
-        },
-        true
-      )
+      DspDialogConfig.dialogDrawerConfig(null, true)
     );
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(o => this.navigateToOntology(o.id));
   }
 }

@@ -7,11 +7,6 @@ import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { Store } from '@ngxs/store';
 import { ListInfoForm } from './list-info-form.type';
 
-export class EditListInfoDialogProps {
-  projectIri: string;
-  list: ListNodeInfo;
-}
-
 @Component({
   selector: 'app-edit-list-info-dialog',
   template: `
@@ -38,11 +33,11 @@ export class EditListInfoDialogComponent {
   form: ListInfoForm;
   loading = false;
 
-  formData = { labels: this.data.list.labels as MultiLanguages, comments: this.data.list.comments as MultiLanguages };
+  formData = { labels: this.data.labels as MultiLanguages, comments: this.data.comments as MultiLanguages };
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: EditListInfoDialogProps,
+    public data: ListNodeInfo,
     private _dialogRef: MatDialogRef<EditListInfoDialogComponent>,
     private _listApiService: ListApiService,
     private _store: Store
@@ -51,7 +46,7 @@ export class EditListInfoDialogComponent {
   submitForm() {
     const listInfoUpdateData: UpdateListInfoRequest = new UpdateListInfoRequest();
     listInfoUpdateData.projectIri = this.data.projectIri;
-    listInfoUpdateData.listIri = this.data.list.id;
+    listInfoUpdateData.listIri = this.data.id;
     listInfoUpdateData.labels = this.form.value.labels as StringLiteral[];
     listInfoUpdateData.comments = this.form.value.comments as StringLiteral[];
 
