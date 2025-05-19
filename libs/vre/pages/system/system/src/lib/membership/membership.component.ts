@@ -82,7 +82,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
 
   selectedValue: string | null = null;
 
-  @Input() user: ReadUser;
+  @Input({ required: true }) user!: ReadUser;
   @Output() closeDialog = new EventEmitter<any>();
 
   user$ = this._store.select(UserSelectors.allUsers).pipe(
@@ -102,7 +102,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  @Select(ProjectsSelectors.isMembershipLoading) isMembershipLoading$: Observable<boolean>;
+  @Select(ProjectsSelectors.isMembershipLoading) isMembershipLoading$!: Observable<boolean>;
 
   constructor(private _store: Store) {}
 
@@ -126,8 +126,11 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item?.id}`;
 
-  userIsProjectAdmin(permissions: PermissionsData, iri: string): boolean {
-    return permissions.groupsPerProject[iri].indexOf(Constants.ProjectAdminGroupIRI) > -1;
+  userIsProjectAdmin(permissions: PermissionsData, projectIri: string): boolean {
+    if (!permissions || !projectIri || !permissions.groupsPerProject?.[projectIri]) {
+      return false;
+    }
+    return permissions.groupsPerProject[projectIri].includes(Constants.ProjectAdminGroupIRI);
   }
 
   private getProjects(projects: StoredProject[], user: ReadUser): AutocompleteItem[] {
