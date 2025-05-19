@@ -1,23 +1,15 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { BehaviorSubject, forkJoin, Subject } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { BehaviorSubject, combineLatest, forkJoin, Observable } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import {
   ResourceLinkDialogComponent,
   ResourceLinkDialogProps,
@@ -43,7 +35,7 @@ import {
               mat-mini-fab
               color="primary"
               class="link"
-              *ngIf="mayHaveMultipleProjects === false"
+              *ngIf="(isMember$ | async) && (mayHaveMultipleProjects$ | async) === false"
               matTooltip="Create a link object from this selection"
               [matTooltipPosition]="'above'"
               [disabled]="resources.count < 2"
@@ -73,19 +65,50 @@ import {
   `,
   styleUrls: ['./intermediate.component.scss'],
 })
-export class IntermediateComponent implements OnInit, OnDestroy {
+export class IntermediateComponent {
   private _resourcesSubject = new BehaviorSubject<FilteredResources | null>(null);
   private _resources!: FilteredResources;
 
-  destroyed: Subject<void> = new Subject<void>();
+  readonly uniqueSelectedProjectIris$ = this._resourcesSubject.pipe(
+    switchMap(resources =>
+      !resources || resources.resInfo.length === 0
+        ? [new Set<string>()]
+        : forkJoin(resources.resInfo.map(res => this._dspApiConnection.v2.res.getResource(res.id))).pipe(
+            map(fetchedResources => {
+              const iris = new Set<string>();
+              for (const res of fetchedResources) {
+                if (res.attachedToProject) {
+                  iris.add(res.attachedToProject);
+                }
+              }
+              return iris;
+            })
+          )
+    ),
+    shareReplay(1)
+  );
 
-  mayHaveMultipleProjects = true;
-  uniqueSelectedProjectIris = new Set<string>();
+  readonly isMember$: Observable<boolean> = combineLatest([
+    this._store.select(UserSelectors.user),
+    this._store.select(UserSelectors.userProjectAdminGroups),
+    this.uniqueSelectedProjectIris$,
+  ]).pipe(
+    map(([user, userProjectGroups, projectIrisSet]) => {
+      const projectIri = projectIrisSet?.values().next().value;
+      return (
+        !!user &&
+        !!userProjectGroups &&
+        projectIrisSet?.size === 1 &&
+        !!projectIri &&
+        ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, projectIri)
+      );
+    })
+  );
+
+  readonly mayHaveMultipleProjects$ = this.uniqueSelectedProjectIris$.pipe(map(set => set.size > 1));
 
   @Input({ required: true })
   set resources(value: FilteredResources) {
-    this.uniqueSelectedProjectIris.clear();
-    this.mayHaveMultipleProjects = true;
     this._resources = value;
     this._resourcesSubject.next(value);
   }
@@ -109,41 +132,8 @@ export class IntermediateComponent implements OnInit, OnDestroy {
     private _projectService: ProjectService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _cd: ChangeDetectorRef
+    private _store: Store
   ) {}
-
-  ngOnInit() {
-    this.collectSelectedProjectIrisSubscription();
-  }
-
-  ngOnDestroy() {
-    this.destroyed.next();
-    this.destroyed.complete();
-  }
-
-  collectSelectedProjectIrisSubscription(): void {
-    this._resourcesSubject
-      .pipe(
-        takeUntil(this.destroyed),
-        switchMap(resources => {
-          if (!resources || resources.resInfo.length === 0) return [null];
-          return forkJoin(resources.resInfo.map(res => this._dspApiConnection.v2.res.getResource(res.id, undefined)));
-        }),
-        map((fetchedResources: any[] | null) => {
-          if (!fetchedResources) return;
-
-          fetchedResources.forEach(res => {
-            if (res.attachedToProject) {
-              this.uniqueSelectedProjectIris.add(res.attachedToProject);
-            }
-          });
-
-          this.mayHaveMultipleProjects = this.uniqueSelectedProjectIris.size > 1;
-          this._cd.markForCheck();
-        })
-      )
-      .subscribe();
-  }
 
   openDialog(): void {
     const projectUuid =
