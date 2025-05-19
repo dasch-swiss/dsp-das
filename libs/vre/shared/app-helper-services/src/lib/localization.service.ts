@@ -7,6 +7,9 @@ import { Injectable } from '@angular/core';
 import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
 import { TranslateService } from '@ngx-translate/core';
 
+export type Language = 'en' | 'fr' | 'de' | 'it';
+export type Locale = 'en-GB' | 'fr-CH' | 'de-CH' | 'it-CH';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,12 +23,12 @@ export class LocalizationService {
     this.setLocale(this._locale);
   }
 
-  availableLocales = [
+  private _availableLocales = [
     { locale: 'en-GB', localeData: en_GB },
     { locale: 'fr-CH', localeData: fr_CH },
     { locale: 'de-CH', localeData: de_CH },
     { locale: 'it-CH', localeData: it_CH },
-  ];
+  ] as const;
 
   constructor(private translateService: TranslateService) {}
 
@@ -34,8 +37,10 @@ export class LocalizationService {
     this.locale = 'en-GB';
   }
 
-  getCurrentLanguage(): string {
-    return this.translateService.currentLang ? this.translateService.currentLang : this.getLanguage();
+  getCurrentLanguage(): Language {
+    return this.translateService.currentLang
+      ? (this.translateService.currentLang as Language)
+      : (this.getLanguage() as Language);
   }
 
   setLanguage(language: string) {
@@ -52,21 +57,23 @@ export class LocalizationService {
     return key ? JSON.parse(key) : this.getLanguageFromBrowser();
   }
 
-  private getLanguageFromBrowser(): string {
+  private getLanguageFromBrowser(): Language {
     const browserLang = this.translateService.getBrowserLang();
     const availableLanguageExp = AvailableLanguages.map(lang => lang.language).join('|');
-    return browserLang?.match(`/${availableLanguageExp}/`) ? browserLang : this.defaultLanguage;
+    return browserLang?.match(`/${availableLanguageExp}/`)
+      ? (browserLang as Language)
+      : (this.defaultLanguage as Language);
   }
 
   private setDefaultLanguage() {
     this.setLanguage(this.getLanguage());
   }
 
-  private setLocale(locale: string) {
-    let localeItem = this.availableLocales.find(item => item.locale === locale);
+  private setLocale(locale: Locale) {
+    let localeItem = this._availableLocales.find(item => item.locale === locale);
 
     if (!localeItem) {
-      localeItem = { locale: 'en', localeData: en_GB };
+      localeItem = { locale: 'en-GB', localeData: en_GB };
     }
 
     registerLocaleData(localeItem.localeData, locale);

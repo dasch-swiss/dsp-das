@@ -1,4 +1,5 @@
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { Language } from '../localization.service';
 import { DefaultClass } from './default-properties';
 
 export class DefaultResourceClasses {

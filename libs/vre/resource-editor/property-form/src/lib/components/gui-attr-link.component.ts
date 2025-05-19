@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
-import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
+import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { LocalizationService, OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 
 export interface ClassToSelect {
   ontologyId: string;
   ontologyLabel: string;
-  classes: ClassDefinition[];
+  classes: ResourceClassDefinitionWithAllLanguages[];
 }
 
 @Component({
@@ -21,7 +21,7 @@ export interface ClassToSelect {
       <mat-label>Select resource class</mat-label>
       <mat-select [formControl]="control">
         <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
-          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ oClass.label }}</mat-option>
+          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ getClassLabel(oClass) }}</mat-option>
         </mat-optgroup>
       </mat-select>
       <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
@@ -42,7 +42,7 @@ export class GuiAttrLinkComponent {
         const classDef = this._sortingService.keySortByAlphabetical(
           getAllEntityDefinitionsAsArray(onto.classes),
           'label'
-        );
+        ) as ResourceClassDefinitionWithAllLanguages[];
         if (classDef.length) {
           const ontoClasses: ClassToSelect = {
             ontologyId: onto.id,
@@ -56,8 +56,16 @@ export class GuiAttrLinkComponent {
     })
   );
 
+    getClassLabel(classDef: ResourceClassDefinitionWithAllLanguages) {
+        return OntologyClassHelper.getClassLabelByLanguage(
+            classDef,
+            this._localizationService.getCurrentLanguage()
+        );
+    }
+
   constructor(
     private _store: Store,
-    private _sortingService: SortingService
+    private _sortingService: SortingService,
+    private _localizationService: LocalizationService,
   ) {}
 }

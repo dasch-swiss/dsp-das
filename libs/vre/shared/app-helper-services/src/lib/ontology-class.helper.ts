@@ -1,5 +1,6 @@
-import { ClassDefinition, Constants } from '@dasch-swiss/dsp-js';
+import { ClassDefinition, Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
+import { Language } from './localization.service';
 
 export class OntologyClassHelper {
   static GetClassesToDisplay(resClasses: ClassDefinition[]): ClassDefinition[] {
@@ -18,5 +19,10 @@ export class OntologyClassHelper {
 
   static GetReadOntologyClassesToDisplay(readOntologyClasses: { [index: string]: ClassDefinition }): ClassDefinition[] {
     return OntologyClassHelper.GetClassesToDisplay(getAllEntityDefinitionsAsArray(readOntologyClasses));
+  }
+
+  public static getClassLabelByLanguage(resourceClass: ResourceClassDefinitionWithAllLanguages, language: Language) {
+    const preferedLangLabel = resourceClass.labels.find(l => l.language === language);
+    return preferedLangLabel?.value || resourceClass.label || '';
   }
 }
