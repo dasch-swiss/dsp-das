@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
-import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
+import { ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertyForm } from '../property-form.type';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 
 export interface ClassToSelect {
   ontologyId: string;
   ontologyLabel: string;
-  classes: ClassDefinition[];
+  classes: ResourceClassDefinitionWithAllLanguages[];
 }
 
 @Component({
@@ -34,29 +34,36 @@ export interface ClassToSelect {
 export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
 
-  ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
-    map((response: ReadOntology[]) => {
-      // reset list of ontology classes
-      const ontologyClasses = [] as ClassToSelect[];
-      response.forEach(onto => {
-        const classDef = this._sortingService.keySortByAlphabetical(
-          getAllEntityDefinitionsAsArray(onto.classes),
-          'label'
-        );
-        if (classDef.length) {
-          const ontoClasses: ClassToSelect = {
-            ontologyId: onto.id,
-            ontologyLabel: onto.label,
-            classes: classDef,
-          };
-          ontologyClasses.push(ontoClasses);
-        }
-      });
-      return ontologyClasses;
-    })
-  );
+    ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
+        map((response: ReadOntology[]) => {
+            // reset list of ontology classes
+            const lang = this._localizationService.getCurrentLanguage();
+            const ontologyClasses = [] as ClassToSelect[];
+            response.forEach(onto => {
+                const classDef = this._sortingService.sortLabelsAlphabetically(
+                    getAllEntityDefinitionsAsArray(onto.classes),
+                    'label',
+                    lang
+                ) as ResourceClassDefinitionWithAllLanguages[];
+                if (classDef.length) {
+                    const ontoClasses: ClassToSelect = {
+                        ontologyId: onto.id,
+                        ontologyLabel: onto.label,
+                        classes: classDef,
+                    };
+                    ontologyClasses.push(ontoClasses);
+                }
+            });
+            return ontologyClasses;
+        })
+    );
+
+    getClassLabel(classDef: ResourceClassDefinitionWithAllLanguages) {
+        return OntologyClassHelper.getClassLabelByLanguage(classDef, this._localizationService.getCurrentLanguage());
+    }
 
   constructor(
+      private _localizationService: LocalizationService,
     private _store: Store,
     private _sortingService: SortingService
   ) {}
