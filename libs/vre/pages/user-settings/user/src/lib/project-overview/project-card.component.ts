@@ -37,10 +37,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
     </div>
 
     <ng-template #backgroundTpl>
-      <div
-        style="background: #ffecbd; color: #bfa153; height: 200px; display: flex; align-items: center; justify-content: center;
-   font-size: 48px;
-    font-weight: bold; text-transform: uppercase">
+      <div class="backup-text" [ngClass]="{ small: project.shortname.length > 10 }">
         <span>{{ project.shortname }}</span>
       </div>
     </ng-template>
@@ -127,10 +124,20 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         object-fit: cover; /* Ensures it covers the container without distortion */
       }
 
-      .vignette {
-        width: 100%;
-        height: 100%;
-        box-shadow: 0 0 200px rgba(0, 0, 0, 0.9) inset;
+      .backup-text {
+        background: #ffecbd;
+        color: #bfa153;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        &.small {
+          font-size: 24px;
+        }
       }
     `,
   ],
