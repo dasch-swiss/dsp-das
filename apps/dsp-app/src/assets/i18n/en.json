@@ -4,7 +4,7 @@
       "title": "Research Projects",
       "usersProjects": "My Projects",
       "notUsersProjects": "Other Research Projects",
-      "filterProjects": "Search projects ..."
+      "filterProjects": "Filter projects"
     },
     "userSettings": {
       "loginForm": {
@@ -147,7 +147,7 @@
       },
       "fullTextSearch": {
         "filterByProject": "Filter by project",
-        "search": "Search",
+        "search": "Search all data",
         "allProjects": "All projects"
       }
     }

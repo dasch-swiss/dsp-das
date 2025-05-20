@@ -49,7 +49,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
       }
 
       .img {
-        filter: sepia(0.8);
+        filter: sepia(0.5);
       }
 
       .project-card-wrapper {
