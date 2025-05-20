@@ -20,16 +20,16 @@ import { map, takeUntil } from 'rxjs/operators';
     } @else {
       <div class="app-projects">
         <app-projects-list
-          [list]="activeProjects$ | async"
-          [status]="true"
+          [projectsList]="activeProjects$ | async"
+          [isUserActive]="true"
           (refreshParent)="updateAndRefresh()"
-          [createNew]="true"
+          [createNewButtonEnabled]="true"
           [isUsersProjects]="isUsersProjects"
           data-cy="active-projects-section" />
         <!-- already deactivated projects: disable the menu -->
         <app-projects-list
-          [list]="inactiveProjects$ | async"
-          [status]="false"
+          [projectsList]="inactiveProjects$ | async"
+          [isUserActive]="false"
           [isUsersProjects]="isUsersProjects"
           (refreshParent)="updateAndRefresh()"
           data-cy="inactive-projects-section" />
