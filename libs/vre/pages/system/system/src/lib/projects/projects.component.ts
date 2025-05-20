@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { LoadProjectsAction, LoadUserAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -38,7 +38,7 @@ import { map, takeUntil } from 'rxjs/operators';
   `,
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
-  private _ngUnsubscribe: Subject<void> = new Subject<void>();
+  private _ngUnsubscribe = new Subject<void>();
 
   @Input() isUsersProjects = false;
 
@@ -58,11 +58,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
   }
 
-  userActiveProjects$: Observable<StoredProject[]> = this._store.select(UserSelectors.userActiveProjects);
-  userInactiveProjects$: Observable<StoredProject[]> = this._store.select(UserSelectors.userInactiveProjects);
-  allActiveProjects$: Observable<StoredProject[]> = this._store.select(ProjectsSelectors.allActiveProjects);
-  allInactiveProjects$: Observable<StoredProject[]> = this._store.select(ProjectsSelectors.allInactiveProjects);
-  isProjectsLoading$: Observable<boolean> = this._store.select(ProjectsSelectors.isProjectsLoading);
+  userActiveProjects$ = this._store.select(UserSelectors.userActiveProjects);
+  userInactiveProjects$ = this._store.select(UserSelectors.userInactiveProjects);
+  allActiveProjects$ = this._store.select(ProjectsSelectors.allActiveProjects);
+  allInactiveProjects$ = this._store.select(ProjectsSelectors.allInactiveProjects);
+  isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
   constructor(
     private _store: Store,
@@ -82,7 +82,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._ngUnsubscribe.complete();
   }
 
-  updateAndRefresh(): void {
+  updateAndRefresh() {
     this._store.dispatch(new LoadProjectsAction());
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     if (!currentUser) throw new Error('Current user not found.');

@@ -17,28 +17,27 @@ import {
   UserSelectors,
 } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
-import { Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { combineLatest, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-membership',
   template: `
-    <app-progress-indicator *ngIf="isMembershipLoading$ | async" />
-
-    <div *ngIf="(isMembershipLoading$ | async) === false">
+    @if (isMembershipLoading$ | async) {
+      <app-progress-indicator />
+    } @else {
       <div class="mat-headline-6 mb-2">
         This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
       </div>
 
-      <!-- list of projects where the user is member of -->
       <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
         <div class="flex-1">
           <div>{{ project.longname }} ({{ project.shortname }})</div>
-          <div *ngIf="userIsProjectAdmin((user$ | async)?.permissions, project.id)">
+          @if (userIsProjectAdmin((user$ | async)?.permissions, project.id)) {
             User is <strong>Project admin</strong>
-          </div>
+          }
         </div>
 
         <button
@@ -73,7 +72,7 @@ import { map, takeUntil } from 'rxjs/operators';
           <mat-icon>add</mat-icon>
         </button>
       </div>
-    </div>
+    }
   `,
   styleUrls: ['./membership.component.scss'],
 })
