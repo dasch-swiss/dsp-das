@@ -78,7 +78,7 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./membership.component.scss'],
 })
 export class MembershipComponent implements AfterViewInit, OnDestroy {
-  private ngUnsubscribe = new Subject<void>();
+  private _ngUnsubscribe = new Subject<void>();
 
   selectedValue: string | null = null;
 
@@ -86,13 +86,13 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   @Output() closeDialog = new EventEmitter<any>();
 
   user$ = this._store.select(UserSelectors.allUsers).pipe(
-    takeUntil(this.ngUnsubscribe),
+    takeUntil(this._ngUnsubscribe),
     map(users => users.find(u => u.id === this.user.id))
   );
 
   projects$ = combineLatest([this._store.select(ProjectsSelectors.allProjects), this.user$]).pipe(
-    takeUntil(this.ngUnsubscribe),
-    map(([projects, user]) => this.getProjects(projects, user))
+    takeUntil(this._ngUnsubscribe),
+    map(([projects, user]) => this._getProjects(projects, user))
   );
 
   readonly itemPluralMapping = {
@@ -111,8 +111,8 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
   removeFromProject(iri: string) {
@@ -133,7 +133,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
     return permissions.groupsPerProject[projectIri].includes(Constants.ProjectAdminGroupIRI);
   }
 
-  private getProjects(projects: StoredProject[], user: ReadUser): AutocompleteItem[] {
+  private _getProjects(projects: StoredProject[], user: ReadUser): AutocompleteItem[] {
     return projects
       .filter(
         p =>
