@@ -7,77 +7,85 @@ import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 /**
- * projects component handles the list of projects
- * It's used in user-profile, on system-projects
- * but also on the landing page
- *
- * We build to lists: one with active projects
- * and another one with already deactivate (inactive) projects
- *
+ * ProjectsComponent handles the list of projects.
+ * It's used in user-profile, on system-projects but also on the landing page.
+ * We build two lists: one with active projects and another one with deactivated projects.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects',
-  templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss'],
+  template: `
+    @if (isProjectsLoading$ | async) {
+      <app-progress-indicator />
+    } @else {
+      <div class="app-projects">
+        <app-projects-list
+          [list]="activeProjects$ | async"
+          [status]="true"
+          (refreshParent)="updateAndRefresh()"
+          [createNew]="true"
+          [isUsersProjects]="isUsersProjects"
+          data-cy="active-projects-section" />
+        <!-- already deactivated projects: disable the menu -->
+        <app-projects-list
+          [list]="inactiveProjects$ | async"
+          [status]="false"
+          [isUsersProjects]="isUsersProjects"
+          (refreshParent)="updateAndRefresh()"
+          data-cy="inactive-projects-section" />
+      </div>
+    }
+  `,
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private _ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input() isUsersProjects = false;
 
   get activeProjects$(): Observable<StoredProject[]> {
     return combineLatest([this.userActiveProjects$, this.allActiveProjects$]).pipe(
-      takeUntil(this.ngUnsubscribe),
+      takeUntil(this._ngUnsubscribe),
       map(([userActiveProjects, allActiveProjects]) => (this.isUsersProjects ? userActiveProjects : allActiveProjects))
     );
   }
 
   get inactiveProjects$(): Observable<StoredProject[]> {
     return combineLatest([this.userInactiveProjects$, this.allInactiveProjects$]).pipe(
-      takeUntil(this.ngUnsubscribe),
+      takeUntil(this._ngUnsubscribe),
       map(([userInactiveProjects, allInactiveProjects]) =>
         this.isUsersProjects ? userInactiveProjects : allInactiveProjects
       )
     );
   }
 
-  @Select(UserSelectors.userActiveProjects) userActiveProjects$: Observable<StoredProject[]>;
-  @Select(UserSelectors.userInactiveProjects) userInactiveProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.allActiveProjects) allActiveProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.allInactiveProjects)
-  allInactiveProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.isProjectsLoading)
-  isProjectsLoading$: Observable<boolean>;
+  userActiveProjects$: Observable<StoredProject[]> = this._store.select(UserSelectors.userActiveProjects);
+  userInactiveProjects$: Observable<StoredProject[]> = this._store.select(UserSelectors.userInactiveProjects);
+  allActiveProjects$: Observable<StoredProject[]> = this._store.select(ProjectsSelectors.allActiveProjects);
+  allInactiveProjects$: Observable<StoredProject[]> = this._store.select(ProjectsSelectors.allInactiveProjects);
+  isProjectsLoading$: Observable<boolean> = this._store.select(ProjectsSelectors.isProjectsLoading);
 
   constructor(
-    private _titleService: Title,
-    private _store: Store
+    private _store: Store,
+    private _titleService: Title
   ) {}
 
   ngOnInit() {
-    if (this.isUsersProjects) {
-      this._titleService.setTitle('Your projects');
-    } else {
-      this._titleService.setTitle('All projects from DSP');
-    }
+    this._titleService.setTitle(this.isUsersProjects ? 'Your projects' : 'All projects from DSP');
 
     if (this._store.selectSnapshot(ProjectsSelectors.allProjects).length === 0) {
-      this.refresh();
+      this.updateAndRefresh();
     }
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this._ngUnsubscribe.next();
+    this._ngUnsubscribe.complete();
   }
 
-  /**
-   * refresh list of projects after updating one
-   */
-  refresh(): void {
+  updateAndRefresh(): void {
     this._store.dispatch(new LoadProjectsAction());
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
+    if (!currentUser) throw new Error('Current user not found.');
     this._store.dispatch(new LoadUserAction(currentUser.username));
   }
 }

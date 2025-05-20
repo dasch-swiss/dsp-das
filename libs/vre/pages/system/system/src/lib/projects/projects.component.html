@@ -4,7 +4,7 @@
   <app-projects-list
     [list]="activeProjects$ | async"
     [status]="true"
-    (refreshParent)="refresh()"
+    (refreshParent)="updateAndRefresh()"
     [createNew]="true"
     [isUsersProjects]="isUsersProjects"
     data-cy="active-projects-section" />
@@ -13,6 +13,6 @@
     [list]="inactiveProjects$ | async"
     [status]="false"
     [isUsersProjects]="isUsersProjects"
-    (refreshParent)="refresh()"
+    (refreshParent)="updateAndRefresh()"
     data-cy="inactive-projects-section" />
 </div>

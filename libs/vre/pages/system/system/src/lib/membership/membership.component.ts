@@ -102,7 +102,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
     },
   };
 
-  @Select(ProjectsSelectors.isMembershipLoading) isMembershipLoading$!: Observable<boolean>;
+  isMembershipLoading$ = this._store.select(ProjectsSelectors.isMembershipLoading);
 
   constructor(private _store: Store) {}
 
