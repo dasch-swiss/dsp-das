@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged, startWith, takeWhile } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -10,7 +10,6 @@ import { PropertyValueService } from './property-value.service';
     <app-property-value-display [index]="index" [itemTpl]="itemTpl" *ngIf="displayMode" />
     <app-property-value-edit [index]="index" [itemTpl]="itemTpl" *ngIf="!displayMode" />
   `,
-  styleUrls: ['./property-value.component.scss'],
 })
 export class PropertyValueComponent implements OnInit {
   @Input({ required: true }) itemTpl!: TemplateRef<any>;
@@ -33,22 +32,6 @@ export class PropertyValueComponent implements OnInit {
 
   ngOnInit() {
     this._setupDisplayMode();
-    this._watchAndSetupCommentStatus();
-  }
-
-  private _watchAndSetupCommentStatus() {
-    this.subscription = this.group.controls.item.statusChanges
-      .pipe(
-        startWith(null),
-        takeWhile(() => this.group !== undefined)
-      )
-      .subscribe(status => {
-        if (status === 'INVALID' || this.group.controls.item.value === null) {
-          this.group.controls.comment.disable();
-        } else if (status === 'VALID') {
-          this.group.controls.comment.enable();
-        }
-      });
   }
 
   private _setupDisplayMode() {

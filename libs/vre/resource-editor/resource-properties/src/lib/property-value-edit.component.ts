@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, Inject, Input, Optional, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  TemplateRef,
+} from '@angular/core';
 import {
   ApiResponseError,
   Cardinality,
@@ -12,14 +21,15 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { finalize, take, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value-edit',
   template: `
-    <div *ngIf="!loading; else loadingTpl" style="display: flex;">
+    <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
       <div style="flex: 1">
         <ng-container
           *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: false }"></ng-container>
@@ -40,11 +50,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValueEditComponent {
+export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
   @Input({ required: true }) itemTpl!: TemplateRef<any>;
 
   loading = false;
+  private _subscription!: Subscription;
 
   get group() {
     return this.propertyValueService.formArray.at(this.index);
@@ -59,6 +70,14 @@ export class PropertyValueEditComponent {
   ) {}
 
   protected readonly Cardinality = Cardinality;
+
+  ngOnInit() {
+    this._watchAndSetupCommentStatus();
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
 
   onSave() {
     if (this.propertyValueService.currentlyAdding && this.index === this.propertyValueService.formArray.length - 1) {
@@ -160,5 +179,20 @@ export class PropertyValueEditComponent {
       entity.valueHasComment = group.controls.comment.value;
     }
     return entity;
+  }
+
+  private _watchAndSetupCommentStatus() {
+    this._subscription = this.group.controls.item.statusChanges
+      .pipe(
+        startWith(null),
+        takeWhile(() => this.group !== undefined)
+      )
+      .subscribe(status => {
+        if (status === 'INVALID' || this.group.controls.item.value === null) {
+          this.group.controls.comment.disable();
+        } else if (status === 'VALID') {
+          this.group.controls.comment.enable();
+        }
+      });
   }
 }
