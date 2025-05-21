@@ -58,7 +58,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       <app-common-input [control]="item" style="width: 100%" data-cy="text-input" label="Text value" />
     </ng-template>
 
-    <ng-template #textHtmlEditorTpl> This value cannot be edited. </ng-template>
+    <ng-template #textHtmlEditorTpl> This value cannot be edited.</ng-template>
 
     <ng-template #paragraphEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
@@ -104,8 +104,38 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
+  @ViewChild('intEditorTpl') intEditorTpl!: TemplateRef<any>;
+  @ViewChild('decimalEditorTpl') decimalEditorTpl!: TemplateRef<any>;
+  @ViewChild('booleanEditorTpl') booleanEditorTpl!: TemplateRef<any>;
+  @ViewChild('colorEditorTpl') colorEditorTpl!: TemplateRef<any>;
   @ViewChild('textEditorTpl') textEditorTpl!: TemplateRef<any>;
-  @ViewChild('textTpl') textTpl!: TemplateRef<any>;
+  @ViewChild('textHtmlEditorTpl') textHtmlEditorTpl!: TemplateRef<any>;
+  @ViewChild('paragraphEditorTpl') paragraphEditorTpl!: TemplateRef<any>;
+  @ViewChild('richTextEditorTpl') richTextEditorTpl!: TemplateRef<any>;
+  @ViewChild('dateEditorTpl') dateEditorTpl!: TemplateRef<any>;
+  @ViewChild('timeEditorTpl') timeEditorTpl!: TemplateRef<any>;
+  @ViewChild('intervalEditorTpl') intervalEditorTpl!: TemplateRef<any>;
+  @ViewChild('listEditorTpl') listEditorTpl!: TemplateRef<any>;
+  @ViewChild('geoNameEditorTpl') geoNameEditorTpl!: TemplateRef<any>;
+  @ViewChild('linkEditorTpl') linkEditorTpl!: TemplateRef<any>;
+  @ViewChild('uriEditorTpl') uriEditorTpl!: TemplateRef<any>;
+
+  @ViewChild('intDisplayTpl') intDisplayTpl!: TemplateRef<any>;
+  @ViewChild('decimalDisplayTpl') decimalDisplayTpl!: TemplateRef<any>;
+  @ViewChild('booleanDisplayTpl') booleanDisplayTpl!: TemplateRef<any>;
+  @ViewChild('colorDisplayTpl') colorDisplayTpl!: TemplateRef<any>;
+  @ViewChild('textDisplayTpl') textDisplayTpl!: TemplateRef<any>;
+  @ViewChild('textHtmlDisplayTpl') textHtmlDisplayTpl!: TemplateRef<any>;
+  @ViewChild('paragraphDisplayTpl') paragraphDisplayTpl!: TemplateRef<any>;
+  @ViewChild('richTextDisplayTpl') richTextDisplayTpl!: TemplateRef<any>;
+  @ViewChild('dateDisplayTpl') dateDisplayTpl!: TemplateRef<any>;
+  @ViewChild('timeDisplayTpl') timeDisplayTpl!: TemplateRef<any>;
+  @ViewChild('intervalDisplayTpl') intervalDisplayTpl!: TemplateRef<any>;
+  @ViewChild('listDisplayTpl') listDisplayTpl!: TemplateRef<any>;
+  @ViewChild('geoNameDisplayTpl') geoNameDisplayTpl!: TemplateRef<any>;
+  @ViewChild('linkDisplayTpl') linkDisplayTpl!: TemplateRef<any>;
+  @ViewChild('uriDisplayTpl') uriDisplayTpl!: TemplateRef<any>;
+  @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
   get propertyDefinition() {
     // TODO NEEDED?
@@ -129,7 +159,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
   private _getDisplayTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.TextValue:
-        return this.textTpl;
+        return this.textDisplayTpl;
       default: {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
