@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { Constants } from '@dasch-swiss/dsp-js';
+import { Constants, ReadTextValueAsHtml, ReadTextValueAsString, ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
@@ -208,5 +208,27 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
     }
+  }
+
+  private _manageTextValue() {
+    if (this.myProperty.values.length === 0) {
+      return this._defaultTextBehavior();
+    }
+
+    const value = this.myProperty.values[0] as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
+
+    if (value instanceof ReadTextValueAsString) {
+      return this._defaultTextBehavior();
+    }
+
+    if (value instanceof ReadTextValueAsXml && value.mapping === Constants.StandardMapping) {
+      return this.richTextTpl;
+    }
+
+    if (value instanceof ReadTextValueAsHtml) {
+      return this.textHtmlTpl;
+    }
+
+    throw new Error('The text value is not supported');
   }
 }
