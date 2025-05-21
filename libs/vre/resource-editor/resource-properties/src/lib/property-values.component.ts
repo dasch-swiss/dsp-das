@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -21,7 +21,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   ],
   template: ` <app-property-value
       *ngFor="let group of propertyValueService.formArray.controls; let index = index"
-      [itemTpl]="itemTpl"
       [index]="index"
       style="width: 100%" />
 
@@ -40,8 +39,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     </button>`,
 })
 export class PropertyValuesComponent implements OnInit {
-  @Input() itemTpl!: TemplateRef<any>;
-
   @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
   isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
 

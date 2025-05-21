@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -7,12 +7,11 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-value',
   template: `
-    <app-property-value-display [index]="index" [itemTpl]="itemTpl" *ngIf="displayMode" />
-    <app-property-value-edit [index]="index" [itemTpl]="itemTpl" *ngIf="!displayMode" />
+    <app-property-value-display [index]="index" *ngIf="displayMode" />
+    <app-property-value-edit [index]="index" *ngIf="!displayMode" />
   `,
 })
 export class PropertyValueComponent implements OnInit {
-  @Input({ required: true }) itemTpl!: TemplateRef<any>;
   @Input({ required: true }) index!: number;
 
   get initialFormValue(): { item: any; comment: string | null } {

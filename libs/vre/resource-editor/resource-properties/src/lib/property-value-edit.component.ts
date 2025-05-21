@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  TemplateRef,
-} from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef } from '@angular/core';
 import {
   ApiResponseError,
   Cardinality,
@@ -29,10 +20,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-property-value-edit',
   template: `
+    <app-property-value-switcher-2
+      [myProperty]="propertyValueService.propertyDefinition"
+      [editMode]="true"
+      (templateFound)="template = $event" />
+
     <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
       <div style="flex: 1">
-        <ng-container
-          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: false }"></ng-container>
+        <ng-container *ngIf="template">
+          <ng-container *ngTemplateOutlet="template; context: { item: group?.controls.item }"></ng-container>
+        </ng-container>
       </div>
       <div style="display: flex; flex-direction: column; padding-top: 16px">
         <button (click)="goToDisplayMode()" mat-icon-button color="primary" *ngIf="!propertyValueService.keepEditMode">
@@ -48,16 +45,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator [size]="'xsmall'" />
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
-  @Input({ required: true }) itemTpl!: TemplateRef<any>;
+  template?: TemplateRef<any>;
 
   loading = false;
   private _subscription!: Subscription;
 
   get group() {
+    console.log('group', this.propertyValueService.formArray.at(this.index));
     return this.propertyValueService.formArray.at(this.index);
   }
 

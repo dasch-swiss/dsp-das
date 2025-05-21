@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -9,7 +9,7 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-value-switcher',
   providers: [PropertyValueService],
-  template: ` <app-property-values [itemTpl]="itemTpl" /> `,
+  template: ` <app-property-values /> `,
 })
 export class PropertyValueSwitcherComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueArray;
@@ -17,7 +17,6 @@ export class PropertyValueSwitcherComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;
 
   @Input({ required: true }) myProperty!: PropertyInfoValues;
-  @Input({ required: true }) itemTpl!: TemplateRef<any>;
 
   get cardinality() {
     return this.myProperty.guiDef.cardinality;

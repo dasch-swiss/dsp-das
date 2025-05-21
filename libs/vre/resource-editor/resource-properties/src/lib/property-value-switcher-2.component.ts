@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { JsLibPotentialError } from './JsLibPotentialError';
 
 @Component({
   selector: 'app-property-value-switcher-2',
@@ -11,12 +10,12 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #textTpl let-item="item">
-      <h2>Working</h2>
+      <span>{{ item.value }}</span>
     </ng-template>
   `,
 })
 export class PropertyValueSwitcher2Component implements AfterViewInit {
-  @Input({ required: true }) myProperty!: PropertyInfoValues;
+  @Input({ required: true }) myProperty!: PropertyInfoValues['propDef'];
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
@@ -25,7 +24,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
 
   get propertyDefinition() {
     // TODO NEEDED?
-    return JsLibPotentialError.setAs(this.myProperty.propDef);
+    return this.myProperty;
   }
 
   ngAfterViewInit() {
