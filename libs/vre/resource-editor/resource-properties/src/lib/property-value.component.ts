@@ -14,17 +14,9 @@ import { PropertyValueService } from './property-value.service';
 export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
 
-  get initialFormValue(): { item: any; comment: string | null } {
-    return this.group.getRawValue();
-  }
-
-  displayMode = true;
+  displayMode!: boolean;
   subscription!: Subscription;
   protected readonly Cardinality = Cardinality;
-
-  get group() {
-    return this.propertyValueService.formArray.at(this.index);
-  }
 
   constructor(public propertyValueService: PropertyValueService) {}
 
@@ -42,10 +34,6 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
         this.propertyValueService.currentlyAdding = false;
         return;
-      }
-
-      if (value === null && this.propertyValueService.formArray.length > 0) {
-        this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
       }
 
       this.displayMode = this.index !== value;
