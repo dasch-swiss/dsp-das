@@ -25,7 +25,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">
-      <app-list-value [control]="item" [propertyDef]="propertyDefinition" />
+      <!-- TODO -->
     </ng-template>
 
     <ng-template #colorEditorTpl let-control="item">
@@ -100,7 +100,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
   `,
 })
 export class PropertyValueSwitcher2Component implements AfterViewInit {
-  @Input({ required: true }) myProperty!: PropertyInfoValues['propDef'];
+  @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
@@ -139,7 +139,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
 
   get propertyDefinition() {
     // TODO NEEDED?
-    return this.myProperty;
+    return this.myProperty.propDef;
   }
 
   ngAfterViewInit() {
@@ -157,7 +157,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
       case Constants.ColorValue:
         return this.colorEditorTpl;
       case Constants.TextValue:
-        return this._manageTextValue();
+        return this._manageTextEditorValue();
       case Constants.DateValue:
         return this.dateEditorTpl;
       case Constants.TimeValue:
@@ -189,7 +189,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
       case Constants.ColorValue:
         return this.colorDisplayTpl;
       case Constants.TextValue:
-        return this._manageTextValue();
+        return this._manageTextDisplayValue();
       case Constants.DateValue:
         return this.dateDisplayTpl;
       case Constants.TimeValue:
@@ -210,25 +210,41 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
     }
   }
 
-  private _manageTextValue() {
+  private _manageTextEditorValue() {
     if (this.myProperty.values.length === 0) {
-      return this._defaultTextBehavior();
+      return this._defaultTextEditorBehavior();
     }
 
     const value = this.myProperty.values[0] as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
 
     if (value instanceof ReadTextValueAsString) {
-      return this._defaultTextBehavior();
+      return this._defaultTextEditorBehavior();
     }
 
     if (value instanceof ReadTextValueAsXml && value.mapping === Constants.StandardMapping) {
-      return this.richTextTpl;
+      return this.richTextEditorTpl;
     }
 
     if (value instanceof ReadTextValueAsHtml) {
-      return this.textHtmlTpl;
+      return this.textHtmlEditorTpl;
     }
 
     throw new Error('The text value is not supported');
+  }
+
+  private _defaultTextEditorBehavior() {
+    switch (this.propertyDefinition.guiElement) {
+      case Constants.GuiRichText:
+        return this.richTextEditorTpl;
+      case Constants.GuiTextarea:
+        return this.paragraphEditorTpl;
+      default:
+        return this.textEditorTpl;
+    }
+  }
+
+  private _manageTextDisplayValue() {
+    // TODO !!
+    return this.defaultDisplayTpl;
   }
 }
