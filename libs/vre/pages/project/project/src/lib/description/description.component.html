@@ -23,9 +23,6 @@
   </h3>
 
   <div class="description-rm">
-    <div>
-      <p class="project-longname">{{ project.longname }}</p>
-    </div>
     <section class="project description" *ngFor="let desc of sortedDescriptions$ | async">
       <div [innerHtml]="desc.value"></div>
     </section>
