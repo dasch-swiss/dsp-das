@@ -34,10 +34,6 @@ export class PropertyValueComponent implements OnInit {
   }
 
   private _setupDisplayMode() {
-    if (this.propertyValueService.keepEditMode) {
-      this.displayMode = false;
-      return;
-    }
     this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
       if (this.propertyValueService.currentlyAdding && !this.displayMode) {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);

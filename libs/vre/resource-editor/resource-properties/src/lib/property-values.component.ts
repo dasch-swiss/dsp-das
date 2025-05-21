@@ -30,7 +30,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       data-cy="add-property-value-button"
       *ngIf="
         (isCurrentProjectAdminSysAdminOrMember$ | async) &&
-        (!propertyValueService.currentlyAdding || propertyValueService.keepEditMode) &&
+        !propertyValueService.currentlyAdding &&
         (propertyValueService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
         propertyValueService.propertyDefinition.isEditable

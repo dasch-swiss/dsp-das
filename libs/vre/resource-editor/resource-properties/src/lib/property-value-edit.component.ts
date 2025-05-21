@@ -30,7 +30,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         </ng-container>
       </div>
       <div style="display: flex; flex-direction: column; padding-top: 16px">
-        <button (click)="goToDisplayMode()" mat-icon-button color="primary" *ngIf="!propertyValueService.keepEditMode">
+        <button (click)="goToDisplayMode()" mat-icon-button color="primary">
           <mat-icon>undo</mat-icon>
         </button>
         <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
@@ -52,7 +52,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   private _subscription!: Subscription;
 
   get group() {
-    console.log('group', this.propertyValueService.formArray.at(this.index));
     return this.propertyValueService.formArray.at(this.index);
   }
 

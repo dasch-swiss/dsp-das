@@ -22,10 +22,6 @@ export class PropertyValueService {
     this._editModeData = data;
   }
 
-  get keepEditMode() {
-    return this._editModeData === null;
-  }
-
   toggleOpenedValue(index: number) {
     if (this.lastOpenedItem$.value === null || this.lastOpenedItem$.value !== index) {
       this.lastOpenedItem$.next(index);
