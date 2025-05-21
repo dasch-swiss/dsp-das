@@ -1,6 +1,7 @@
 <app-progress-indicator *ngIf="isLoading$ | async" />
 <div *ngIf="(readProject$ | async) as project" class="content large middle">
   <div>
+    <img [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'" alt="project image" />
     <p>Project Description</p>
   </div>
   <!--  mobile version: status and edit icon displayed before the title -->
