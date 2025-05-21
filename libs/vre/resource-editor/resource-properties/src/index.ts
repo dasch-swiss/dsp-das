@@ -60,3 +60,6 @@ export * from './lib/authorship-form-field.component';
 
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/mathjax/math-jax.service';
+
+export * from './lib/property-value-switcher-2.component';
+export * from './lib/property-value-creator.component';
