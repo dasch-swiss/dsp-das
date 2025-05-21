@@ -26,13 +26,15 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
       <div style="flex: 1">
         <ng-container *ngIf="template">
-          <ng-container *ngTemplateOutlet="template; context: { item: group?.controls.item }"></ng-container>
+          <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
         </ng-container>
       </div>
+
       <div style="display: flex; flex-direction: column; padding-top: 16px">
         <button (click)="goToDisplayMode()" mat-icon-button color="primary">
           <mat-icon>undo</mat-icon>
         </button>
+
         <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
           <mat-icon>save</mat-icon>
         </button>

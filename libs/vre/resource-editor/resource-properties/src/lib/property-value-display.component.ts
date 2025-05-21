@@ -18,7 +18,7 @@ import { PropertyValueService } from './property-value.service';
       (mouseleave)="showBubble = false">
       <app-property-value-action-bubble
         *ngIf="showBubble && (propertyValueService.lastOpenedItem$ | async) !== index"
-        [date]="propertyValueService.editModeData.values[index]?.valueCreationDate"
+        [date]="propertyValueService.editModeData.values[index].valueCreationDate"
         [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
         (editAction)="propertyValueService.toggleOpenedValue(index)"
         (deleteAction)="askToDelete()" />
@@ -26,10 +26,10 @@ import { PropertyValueService } from './property-value.service';
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
         <ng-container *ngIf="itemTpl">
           <ng-container
-            *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: true }"></ng-container>
+            *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: true }"></ng-container>
         </ng-container>
 
-        <app-property-value-comment [displayMode]="true" [control]="group?.controls.comment" />
+        <app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />
       </div>
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
@@ -54,9 +54,6 @@ export class PropertyValueDisplayComponent implements OnInit {
 
   ngOnInit() {
     this._highlightArkValue();
-    this.propertyValueService.lastOpenedItem$.subscribe(v => {
-      console.log('got last opened value:', v, this.index);
-    });
   }
 
   protected readonly Cardinality = Cardinality;
