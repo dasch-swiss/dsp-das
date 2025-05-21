@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { PropertyValueService } from './property-value.service';
     <app-property-value-edit [index]="index" *ngIf="!displayMode" />
   `,
 })
-export class PropertyValueComponent implements OnInit {
+export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
 
   get initialFormValue(): { item: any; comment: string | null } {
@@ -19,7 +19,6 @@ export class PropertyValueComponent implements OnInit {
   }
 
   displayMode = true;
-  loading = false;
   subscription!: Subscription;
   protected readonly Cardinality = Cardinality;
 
@@ -33,8 +32,12 @@ export class PropertyValueComponent implements OnInit {
     this._setupDisplayMode();
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   private _setupDisplayMode() {
-    this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
+    this.subscription = this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
       if (this.propertyValueService.currentlyAdding && !this.displayMode) {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
         this.propertyValueService.currentlyAdding = false;
