@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -9,12 +9,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-existing-property-value',
   template: `
+    <app-property-value-switcher-2 [myProperty]="prop" [editMode]="false" (templateFound)="template = $event" />
+
     <app-property-value-switcher
-      *ngIf="resource.type"
+      *ngIf="resource.type && template"
       [myProperty]="prop"
       [formArray]="formArray"
       [resourceClassIri]="resource.type"
+      [itemTpl]="template"
       [editModeData]="{ resource, values: prop.values }" />
+
     <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
@@ -24,6 +28,7 @@ export class ExistingPropertyValueComponent implements OnChanges {
   @Input({ required: true }) prop!: PropertyInfoValues;
   @Input({ required: true }) resource!: ReadResource;
 
+  template?: TemplateRef<any>;
   formArray!: FormValueArray;
 
   constructor(

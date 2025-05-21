@@ -17,6 +17,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 })
 export class PropertyValueSwitcher2Component implements AfterViewInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
+  @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
   @ViewChild('textEditorTpl') textEditorTpl!: TemplateRef<any>;
@@ -28,13 +29,23 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.templateFound.emit(this._getTemplate());
+    this.templateFound.emit(this.editMode ? this._getEditorTemplate() : this._getDisplayTemplate());
   }
 
-  private _getTemplate(): TemplateRef<any> {
+  private _getEditorTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.TextValue:
         return this.textEditorTpl;
+      default: {
+        throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
+      }
+    }
+  }
+
+  private _getDisplayTemplate(): TemplateRef<any> {
+    switch (this.propertyDefinition.objectType) {
+      case Constants.TextValue:
+        return this.textTpl;
       default: {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
