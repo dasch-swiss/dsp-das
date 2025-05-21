@@ -24,9 +24,7 @@ export class PropertyValueComponent implements OnInit {
 
   displayMode = true;
   loading = false;
-
   subscription!: Subscription;
-
   protected readonly Cardinality = Cardinality;
 
   get group() {

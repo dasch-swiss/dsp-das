@@ -78,6 +78,7 @@ export class PropertyValueEditComponent {
   }
 
   get group() {
+    console.log(this.propertyValueService.formArray.at(this.index));
     return this.propertyValueService.formArray.at(this.index);
   }
 
