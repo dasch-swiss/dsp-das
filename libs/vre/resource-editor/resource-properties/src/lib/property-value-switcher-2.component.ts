@@ -5,13 +5,98 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 @Component({
   selector: 'app-property-value-switcher-2',
   template: `
+    <ng-template #intEditorTpl let-item="item">
+      <mat-form-field style="width: 100%">
+        <input matInput [formControl]="item" type="number" data-cy="int-input" />
+        <mat-error *ngIf="item.errors as errors">
+          {{ errors | humanReadableError }}
+        </mat-error>
+      </mat-form-field>
+    </ng-template>
+
+    <ng-template #decimalEditorTpl let-item="item">
+      <mat-form-field style="width: 100%">
+        <input matInput [formControl]="item" type="number" step="0.05" />
+      </mat-form-field>
+    </ng-template>
+
+    <ng-template #booleanEditorTpl let-item="item">
+      <!-- TODO -->
+    </ng-template>
+
+    <ng-template #listEditorTpl let-item="item">
+      <app-list-value [control]="item" [propertyDef]="propertyDefinition" />
+    </ng-template>
+
+    <ng-template #colorEditorTpl let-control="item">
+      <mat-form-field appearance="outline" style="cursor: pointer">
+        <mat-label>{{ control.value }}</mat-label>
+        <!-- check the ngx-color-picker doc to know more about the options - https://www.npmjs.com/package/ngx-color-picker -->
+        <input
+          data-cy="color-picker-input"
+          matInput
+          placeholder="Select a color"
+          class="color-picker-input color"
+          [formControl]="control"
+          [colorPicker]="control.value"
+          [style.background]="control.value"
+          [style.color]="control.value"
+          (colorPickerChange)="control.patchValue($event)"
+          [cpOutputFormat]="'hex'"
+          [cpFallbackColor]="'#ff0000'"
+          [cpDisabled]="false"
+          style="cursor: pointer"
+          readonly />
+      </mat-form-field>
+    </ng-template>
+
+    <ng-template #richTextEditorTpl let-item="item">
+      <app-ck-editor [control]="item" />
+    </ng-template>
+
     <ng-template #textEditorTpl let-item="item">
       <app-common-input [control]="item" style="width: 100%" data-cy="text-input" label="Text value" />
     </ng-template>
 
+    <ng-template #textHtmlEditorTpl> This value cannot be edited. </ng-template>
+
+    <ng-template #paragraphEditorTpl let-item="item">
+      <mat-form-field style="width: 100%">
+        <textarea matInput [formControl]="item" rows="9" placeholder="Text value"></textarea>
+      </mat-form-field>
+    </ng-template>
+
+    <ng-template #dateEditorTpl let-control="item">
+      <app-date-value-handler [formControl]="control" />
+      <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>
+    </ng-template>
+
+    <ng-template #timeEditorTpl let-item="item">
+      <app-time-value [control]="item" />
+    </ng-template>
+
+    <ng-template #intervalEditorTpl let-item="item">
+      <!-- TODO -->
+    </ng-template>
+
+    <ng-template #geoNameEditorTpl let-item="item">
+      <app-geoname-value [control]="item" />
+    </ng-template>
+
+    <ng-template #linkTpl let-item="item">
+      <!-- TODO -->
+    </ng-template>
+
+    <ng-template #uriTpl let-item="item">
+      <!-- TODO -->
+    </ng-template>
+
+    <!-- VIEWERS -->
     <ng-template #textTpl let-item="item">
       <span>{{ item.value }}</span>
     </ng-template>
+
+    <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })
 export class PropertyValueSwitcher2Component implements AfterViewInit {
