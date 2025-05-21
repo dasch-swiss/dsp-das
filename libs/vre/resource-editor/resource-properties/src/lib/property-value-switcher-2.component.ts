@@ -148,8 +148,30 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
 
   private _getEditorTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
+      case Constants.IntValue:
+        return this.intEditorTpl;
+      case Constants.DecimalValue:
+        return this.decimalEditorTpl;
+      case Constants.BooleanValue:
+        return this.booleanEditorTpl;
+      case Constants.ColorValue:
+        return this.colorEditorTpl;
       case Constants.TextValue:
-        return this.textEditorTpl;
+        return this._manageTextValue();
+      case Constants.DateValue:
+        return this.dateEditorTpl;
+      case Constants.TimeValue:
+        return this.timeEditorTpl;
+      case Constants.IntervalValue:
+        return this.intervalEditorTpl;
+      case Constants.ListValue:
+        return this.listEditorTpl;
+      case Constants.GeonameValue:
+        return this.geoNameEditorTpl;
+      case Constants.LinkValue:
+        return this.linkEditorTpl;
+      case Constants.UriValue:
+        return this.uriEditorTpl;
       default: {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
@@ -158,8 +180,30 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
 
   private _getDisplayTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
+      case Constants.IntValue:
+        return this.intDisplayTpl;
+      case Constants.DecimalValue:
+        return this.decimalDisplayTpl;
+      case Constants.BooleanValue:
+        return this.booleanDisplayTpl;
+      case Constants.ColorValue:
+        return this.colorDisplayTpl;
       case Constants.TextValue:
-        return this.textDisplayTpl;
+        return this._manageTextValue();
+      case Constants.DateValue:
+        return this.dateDisplayTpl;
+      case Constants.TimeValue:
+        return this.timeDisplayTpl;
+      case Constants.IntervalValue:
+        return this.intervalDisplayTpl;
+      case Constants.ListValue:
+        return this.listDisplayTpl;
+      case Constants.GeonameValue:
+        return this.geoNameDisplayTpl;
+      case Constants.LinkValue:
+        return this.linkDisplayTpl;
+      case Constants.UriValue:
+        return this.uriDisplayTpl;
       default: {
         throw Error(`Unrecognized property ${this.propertyDefinition.objectType}`);
       }
