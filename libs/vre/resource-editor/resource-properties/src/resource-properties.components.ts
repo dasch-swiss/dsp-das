@@ -19,6 +19,8 @@ import { MathJaxDirective } from './lib/mathjax/math-jax.directive';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
+import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
+import { PropertyValueEditComponent } from './lib/property-value-edit.component';
 import { PropertyValueSwitcherComponent } from './lib/property-value-switcher.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
@@ -84,6 +86,8 @@ export const ResourcePropertiesComponents = [
   PropertyValueSwitcherComponent,
   PropertyValueActionBubbleComponent,
   PropertyValueComponent,
+  PropertyValueEditComponent,
+  PropertyValueDisplayComponent,
   ExistingPropertyValueComponent,
   CreateResourceDialogComponent,
   CreateResourcePageComponent,
