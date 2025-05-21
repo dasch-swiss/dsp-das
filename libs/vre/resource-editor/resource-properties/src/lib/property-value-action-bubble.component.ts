@@ -86,7 +86,7 @@ export class PropertyValueActionBubbleComponent implements OnInit {
       return false;
     }
 
-    if (!this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0) {
+    if (this._propertyValueService.editModeData.values.length === 0) {
       return false;
     }
 

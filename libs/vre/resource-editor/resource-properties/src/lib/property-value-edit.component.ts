@@ -4,8 +4,6 @@ import {
   Cardinality,
   CreateValue,
   KnoraApiConnection,
-  ReadResource,
-  ReadValue,
   UpdateResource,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
@@ -101,7 +99,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       createVal.valueHasComment = this.group.controls.comment.value;
     }
 
-    const resource = this.propertyValueService.editModeData?.resource as ReadResource;
+    const resource = this.propertyValueService.editModeData.resource;
     const updateRes = new UpdateResource();
     updateRes.id = resource.id;
     updateRes.type = resource.type;
@@ -154,10 +152,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   private _getPayload(index: number) {
     const updateResource = new UpdateResource<UpdateValue>();
-    const { resource, values } = this.propertyValueService.editModeData as {
-      resource: ReadResource;
-      values: ReadValue[];
-    };
+    const { resource, values } = this.propertyValueService.editModeData;
     updateResource.id = resource.id;
     updateResource.property = values[index].property;
     updateResource.type = resource.type;
@@ -167,7 +162,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   private _getUpdatedValue(index: number) {
     const group = this.propertyValueService.formArray.at(index);
-    const values = this.propertyValueService.editModeData?.values as ReadValue[];
+    const values = this.propertyValueService.editModeData.values;
     const id = values[index].id;
     const entity = propertiesTypeMapping
       .get(this.propertyValueService.propertyDefinition.objectType!)!

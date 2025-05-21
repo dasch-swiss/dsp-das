@@ -20,7 +20,7 @@ import { PropertyValueService } from './property-value.service';
         *ngIf="
           !propertyValueService.keepEditMode && showBubble && (propertyValueService.lastOpenedItem$ | async) !== index
         "
-        [date]="propertyValueService.editModeData?.values[index]?.valueCreationDate"
+        [date]="propertyValueService.editModeData.values[index]?.valueCreationDate"
         [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
         (editAction)="propertyValueService.toggleOpenedValue(index)"
         (deleteAction)="askToDelete()" />
@@ -73,6 +73,6 @@ export class PropertyValueDisplayComponent implements OnInit {
   private _highlightArkValue() {
     this.isHighlighted =
       this._route.snapshot.queryParams['highlightValue'] ===
-      this.propertyValueService.editModeData?.values[this.index].uuid;
+      this.propertyValueService.editModeData.values[this.index].uuid;
   }
 }
