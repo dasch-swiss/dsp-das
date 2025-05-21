@@ -141,20 +141,24 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     this._router.navigate([RouteConstants.project, uuid, RouteConstants.settings, RouteConstants.edit]);
   }
 
-  askToDeactivateProject(name: string, id: string) {
+  changeProjectStatus(name: string, id: string, activate: boolean) {
+    const confirmationKey = activate
+      ? 'pages.system.projectsList.reactivateConfirmation'
+      : 'pages.system.projectsList.deactivateConfirmation';
+
     this._dialogService
-      .afterConfirmation(
-        this._translateService.instant('pages.system.projectsList.deactivateConfirmation', {
-          0: name,
-        })
+      .afterConfirmation(this._translateService.instant(confirmationKey, { 0: name }))
+      .pipe(
+        switchMap(() =>
+          activate ? this._projectApiService.update(id, { status: true }) : this._projectApiService.delete(id)
+        )
       )
-      .pipe(switchMap(() => this._projectApiService.delete(id)))
       .subscribe(() => {
         this.refreshParent.emit();
       });
   }
 
-  askToEraseProject(project: StoredProject) {
+  eraseProject(project: StoredProject) {
     this._dialog
       .open<EraseProjectDialogComponent, IEraseProjectDialogProps>(EraseProjectDialogComponent, {
         data: <IEraseProjectDialogProps>{
@@ -173,19 +177,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
             0: erasedProject.shortname,
           })
         );
-      });
-  }
-
-  askToActivateProject(name: string, id: string) {
-    this._dialogService
-      .afterConfirmation(
-        this._translateService.instant('pages.system.projectsList.reactivateConfirmation', {
-          0: name,
-        })
-      )
-      .pipe(switchMap(() => this._projectApiService.update(id, { status: true })))
-      .subscribe(() => {
-        this.refreshParent.emit();
       });
   }
 
