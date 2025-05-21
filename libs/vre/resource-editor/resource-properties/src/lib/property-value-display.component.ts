@@ -21,15 +21,14 @@ import { PropertyValueService } from './property-value.service';
       (editAction)="propertyValueService.toggleOpenedValue(index)"
       (deleteAction)="askToDelete()" />
 
-    <div style="display: flex">
-      <div class="value" [ngClass]="{ highlighted: isHighlighted }">
-        <ng-container
-          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: true }"></ng-container>
+    <div class="value" [ngClass]="{ highlighted: isHighlighted }">
+      <ng-container
+        *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: true }"></ng-container>
 
-        <app-property-value-comment [displayMode]="true" [control]="group?.controls.comment" />
-      </div>
+      <app-property-value-comment [displayMode]="true" [control]="group?.controls.comment" />
     </div>
   </div>`,
+  styleUrls: ['./property-value-display.component.scss'],
 })
 export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;

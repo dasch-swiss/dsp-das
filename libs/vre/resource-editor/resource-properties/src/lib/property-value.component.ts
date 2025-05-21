@@ -9,8 +9,6 @@ import { PropertyValueService } from './property-value.service';
   template: `
     <app-property-value-display [index]="index" [itemTpl]="itemTpl" *ngIf="displayMode" />
     <app-property-value-edit [index]="index" [itemTpl]="itemTpl" *ngIf="!displayMode" />
-
-    <app-progress-indicator *ngIf="loading" [size]="'xsmall'" style="margin-top: 8px" />
   `,
   styleUrls: ['./property-value.component.scss'],
 })

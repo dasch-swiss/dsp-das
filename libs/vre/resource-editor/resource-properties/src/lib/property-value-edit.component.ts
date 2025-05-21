@@ -18,29 +18,33 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value-edit',
-  template: ` <div>
-    <ng-container
-      *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: false }"></ng-container>
-    <div style="display: flex; flex-direction: column; padding-top: 16px">
-      <button
-        (click)="goToDisplayMode()"
-        mat-icon-button
-        color="primary"
-        *ngIf="!propertyValueService.keepEditMode && !loading">
-        <mat-icon>undo</mat-icon>
-      </button>
-      <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
-        <mat-icon>save</mat-icon>
-      </button>
+  template: `
+    <div *ngIf="!loading; else loadingTpl" style="display: flex;">
+      <div style="flex: 1">
+        <ng-container
+          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: false }"></ng-container>
+      </div>
+      <div style="display: flex; flex-direction: column; padding-top: 16px">
+        <button (click)="goToDisplayMode()" mat-icon-button color="primary" *ngIf="!propertyValueService.keepEditMode">
+          <mat-icon>undo</mat-icon>
+        </button>
+        <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
     </div>
-  </div>`,
+
+    <ng-template #loadingTpl>
+      <app-progress-indicator [size]="'xsmall'" />
+    </ng-template>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValueEditComponent {
   @Input({ required: true }) index!: number;
   @Input({ required: true }) itemTpl!: TemplateRef<any>;
 
-  loading = false; // TODO RANDOM VALUE HERE
+  loading = false;
 
   get group() {
     return this.propertyValueService.formArray.at(this.index);
