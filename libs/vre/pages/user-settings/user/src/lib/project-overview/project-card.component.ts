@@ -11,13 +11,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
           <div mat-card-image class="image-container">
-            <img
-              *ngIf="!imageCantLoad; else backgroundTpl"
-              mat-card-image
-              [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
-              alt="image of project"
-              (error)="imageCantLoad = true"
-              class="img" />
+            <app-project-image-cover [project]="project" />
           </div>
 
           <mat-card-content class="project-content">
@@ -35,21 +29,11 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         </mat-card>
       </a>
     </div>
-
-    <ng-template #backgroundTpl>
-      <div class="backup-text" [ngClass]="{ small: project.shortname.length > 10 }">
-        <span>{{ project.shortname }}</span>
-      </div>
-    </ng-template>
   `,
   styles: [
     `
       :host {
         display: block;
-      }
-
-      .img {
-        filter: sepia(0.5);
       }
 
       .project-card-wrapper {
@@ -105,39 +89,6 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         width: 100%;
         height: 200px; /* Or any fixed height you want */
         overflow: hidden;
-
-        &::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.1) 100%);
-        }
-      }
-
-      .image-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Ensures it covers the container without distortion */
-      }
-
-      .backup-text {
-        background: #ffecbd;
-        color: #bfa153;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 48px;
-        font-weight: bold;
-        text-transform: uppercase;
-
-        &.small {
-          font-size: 24px;
-        }
       }
     `,
   ],

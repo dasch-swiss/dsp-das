@@ -14,3 +14,4 @@ export * from './lib/existing-names.validator';
 export * from './lib/autocomplete-item.interface';
 export * from './lib/login-form/login-form.component';
 export * from './lib/user-form/user-form.type';
+export * from './lib/project-image-cover.component';
