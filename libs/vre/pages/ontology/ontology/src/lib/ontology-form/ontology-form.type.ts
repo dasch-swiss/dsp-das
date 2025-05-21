@@ -1,8 +1,10 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-export interface OntologyFormProps {
-  projectIri: string;
-  ontologyIri?: string;
+export interface OntologyData {
+  name: string;
+  label: string;
+  comment: string;
+  id?: string;
 }
 
 export type OntologyForm = FormGroup<{

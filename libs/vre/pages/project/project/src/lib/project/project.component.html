@@ -79,7 +79,7 @@
             *ngFor="let onto of projectOntologies$ | async; trackBy: trackByFn; let first = first"
             multi
             [displayMode]="'flat'">
-            <mat-expansion-panel [expanded]="first">
+            <mat-expansion-panel [expanded]="(expandedOntologyId$ | async) === onto.id">
               <mat-expansion-panel-header>
                 <div class="sidenav-panel-header">
                   <mat-panel-title class="mat-subtitle-1">
@@ -95,9 +95,7 @@
                 </div>
               </mat-expansion-panel-header>
               <!-- list of ontology classes -->
-              <app-ontology-classes
-                [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)"
-                [projectMember]="(isAdmin$ | async) || (isMember$ | async)" />
+              <app-resource-class-sidenav [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)" />
             </mat-expansion-panel>
             <mat-divider></mat-divider>
           </mat-accordion>

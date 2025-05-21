@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
-import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/pages/ontology/ontology';
-import { OntologyClassInstanceComponent } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
+import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
+import {
+  DataModelsComponent,
+  OntologyComponent,
+  OntologyEditorClassesComponent,
+  OntologyPropertiesComponent,
+} from '@dasch-swiss/vre/pages/ontology/ontology';
 import {
   CollaborationComponent,
   CreateProjectFormPageComponent,
@@ -55,20 +60,38 @@ const routes: Routes = [
         path: RouteConstants.dataModels,
         component: DataModelsComponent,
       },
+      // Redirect from ontology root to editor
       {
         path: RouteConstants.ontologyRelative,
-        component: OntologyComponent,
-        canActivate: [AuthGuard],
+        redirectTo: RouteConstants.ontologyEditorRelative,
+        pathMatch: 'full',
       },
       {
-        path: RouteConstants.OntologyEditorViewRelative,
+        path: RouteConstants.ontologyEditorRelative,
         component: OntologyComponent,
         canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: RouteConstants.classes,
+          },
+          {
+            path: RouteConstants.classes,
+            component: OntologyEditorClassesComponent,
+            canActivate: [AuthGuard],
+          },
+          {
+            path: RouteConstants.properties,
+            component: OntologyPropertiesComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
       },
       {
         canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
-        component: OntologyClassInstanceComponent,
+        component: ResourceClassBrowserComponent,
       },
       {
         canActivate: [OntologyClassInstanceGuard],
@@ -78,11 +101,6 @@ const routes: Routes = [
       {
         path: RouteConstants.JulienOntologyClassRelative,
         component: ResourcePageComponent,
-      },
-      {
-        path: RouteConstants.addList,
-        component: CreateListInfoPageComponent,
-        canActivate: [AuthGuard],
       },
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -8,6 +8,8 @@ import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/a
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { Store } from '@ngxs/store';
+import { take } from 'rxjs/operators';
+import { OntologyEditService } from '../services/ontology-edit.service';
 import { ResourceClassForm } from './resource-class-form.type';
 
 @Component({
@@ -39,6 +41,7 @@ import { ResourceClassForm } from './resource-class-form.type';
     </form>
   `,
   styles: [':host ::ng-deep .name-input .mat-icon { padding-right: 24px; }'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceClassFormComponent implements OnInit {
   @Input() formData: {
@@ -56,30 +59,35 @@ export class ResourceClassFormComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _os: OntologyService,
-    private _store: Store
+    private _oes: OntologyEditService,
+    private _os: OntologyService
   ) {}
 
   ngOnInit() {
-    this.ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    const resourceClasses = getAllEntityDefinitionsAsArray(this.ontology.classes);
-    const resourceProperties = getAllEntityDefinitionsAsArray(this.ontology.properties);
+    this._oes.currentOntology$.pipe(take(1)).subscribe(ontology => {
+      if (!ontology) {
+        return;
+      }
 
-    // set list of all existing resource class names to avoid same name twice
-    resourceClasses.forEach((resClass: ClassDefinition) => {
-      const name = this._os.getNameFromIri(resClass.id);
-      this.existingNames.push(new RegExp(`(?:^|W)${name.toLowerCase()}(?:$|W)`));
+      const resourceClasses = getAllEntityDefinitionsAsArray(ontology.classes);
+      const resourceProperties = getAllEntityDefinitionsAsArray(ontology.properties);
+
+      // set list of all existing resource class names to avoid same name twice
+      resourceClasses.forEach((resClass: ClassDefinition) => {
+        const name = this._os.getNameFromIri(resClass.id);
+        this.existingNames.push(new RegExp(`(?:^|W)${name.toLowerCase()}(?:$|W)`));
+      });
+
+      // add all resource properties to the same list
+      resourceProperties.forEach((resProp: PropertyDefinition) => {
+        const name = this._os.getNameFromIri(resProp.id);
+        this.existingNames.push(new RegExp(`(?:^|W)${name}(?:$|W)`));
+      });
+
+      this.buildForm();
+
+      this.afterFormInit.emit(this.form);
     });
-
-    // add all resource properties to the same list
-    resourceProperties.forEach((resProp: PropertyDefinition) => {
-      const name = this._os.getNameFromIri(resProp.id);
-      this.existingNames.push(new RegExp(`(?:^|W)${name}(?:$|W)`));
-    });
-
-    this.buildForm();
-
-    this.afterFormInit.emit(this.form);
   }
 
   buildForm() {
