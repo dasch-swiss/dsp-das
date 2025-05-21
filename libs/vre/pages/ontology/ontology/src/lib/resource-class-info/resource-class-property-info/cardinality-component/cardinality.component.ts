@@ -9,21 +9,11 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
   styles: ['.toggles { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px;}'],
   template: `
     <div class="toggles">
-      <mat-slide-toggle
-        [disabled]="disabled"
-        [matTooltip]="'Whether the property in this class can have multiple values or not'"
-        matTooltipPosition="above"
-        [(ngModel)]="multipleToggleState"
-        (change)="onToggleChange()">
+      <mat-slide-toggle [disabled]="disabled" [(ngModel)]="multipleToggleState" (change)="onToggleChange()">
         Multiple values
       </mat-slide-toggle>
 
-      <mat-slide-toggle
-        [disabled]="disabled"
-        [matTooltip]="'Whether the property in this class must have one value or not'"
-        matTooltipPosition="above"
-        [(ngModel)]="requiredToggleState"
-        (change)="onToggleChange()">
+      <mat-slide-toggle [disabled]="disabled" [(ngModel)]="requiredToggleState" (change)="onToggleChange()">
         Required
       </mat-slide-toggle>
     </div>

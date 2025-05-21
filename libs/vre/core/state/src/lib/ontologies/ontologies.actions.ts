@@ -8,6 +8,14 @@ export class LoadProjectOntologiesAction {
   ) {}
 }
 
+export class SetOntologyAction {
+  static readonly type = '[Ontologies] Set Ontology';
+  constructor(
+    public ontology: ReadOntology,
+    public projectIri: string
+  ) {}
+}
+
 export class SetOntologiesLoadingAction {
   static readonly type = '[Ontologies] Set Ontologies Loading';
   constructor(public isLoading: boolean) {}

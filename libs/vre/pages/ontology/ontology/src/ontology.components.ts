@@ -10,7 +10,7 @@ import { OntologyComponent } from './lib/ontology.component';
 import { PropertyInfoComponent } from './lib/property-info/property-info.component';
 import { ResourceClassFormComponent } from './lib/resource-class-form/resource-class-form.component';
 import { AddPropertyMenuComponent } from './lib/resource-class-info/add-property-menu.component';
-import { ResourceClassInfoElementComponent } from './lib/resource-class-info/resource-class-info-element.component';
+import { PropertyItemComponent } from './lib/resource-class-info/property-item.component';
 import { ResourceClassInfoComponent } from './lib/resource-class-info/resource-class-info.component';
 import { CardinalityChangeDialogComponent } from './lib/resource-class-info/resource-class-property-info/cardinality-component/cardinality-change-dialog.component';
 import { CardinalityComponent } from './lib/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';
@@ -29,7 +29,7 @@ export const OntologyComponents = [
   ResourceClassFormComponent,
   AddPropertyMenuComponent,
   ResourceClassInfoComponent,
-  ResourceClassInfoElementComponent,
+  PropertyItemComponent,
   ResourceClassPropertyInfoComponent,
   CardinalityComponent,
   CardinalityChangeDialogComponent,

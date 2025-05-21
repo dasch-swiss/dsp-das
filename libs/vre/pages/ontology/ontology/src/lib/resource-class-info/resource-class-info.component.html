@@ -30,7 +30,6 @@
     </span>
   </mat-card-header>
   <!-- resource class card content with list of properties -->
-
   <mat-card-content
     *ngIf="expanded && (classPropertiesToDisplay$ | async) as currentPropertiesToDisplay"
     class="resource-class-content">
@@ -39,12 +38,11 @@
       class="resource-class-properties"
       (cdkDropListDropped)="onPropertyDropped($event, currentPropertiesToDisplay)"
       *ngIf="currentPropertiesToDisplay?.length; else noProperties">
-      <app-resource-class-info-element
+      <app-property-item
         *ngFor="let prop of (classPropertiesToDisplay$ | async); let i = index; trackBy: trackByPropToDisplayFn"
         [prop]="prop"
         [props]="currentPropertiesToDisplay"
-        [resourceClass]="resourceClass"
-        [i]="i" />
+        [resourceClass]="resourceClass" />
     </mat-list>
 
     <app-add-property-menu [resourceClass]="resourceClass" [disabled]="(isAdmin$ | async) !== true" />

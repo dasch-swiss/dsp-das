@@ -54,7 +54,9 @@
 }
 
 .edit-menu {
-  align-self: flex-end;
+  position: absolute;
+  top: 0;
+  right: 0;
   align-items: center;
 }
 

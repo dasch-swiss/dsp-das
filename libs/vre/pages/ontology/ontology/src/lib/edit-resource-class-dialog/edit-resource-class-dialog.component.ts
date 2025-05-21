@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   DeleteResourceClassComment,
@@ -46,6 +46,7 @@ export interface EditResourceClassDialogProps {
       </button>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditResourceClassDialogComponent implements OnInit {
   loading = false;

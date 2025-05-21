@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ApiResponseError, PropertyDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
   DefaultResourceClasses,
   LocalizationService,
@@ -14,10 +14,10 @@ import { map, take } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceClassInfoComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
@@ -112,9 +112,7 @@ export class ResourceClassInfoComponent implements OnChanges {
 
   openInDatabrowser() {
     const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
-    const ontologyName = OntologyService.getOntologyName(
-      this._store.selectSnapshot(OntologiesSelectors.currentOntology)?.id || ''
-    );
+    const ontologyName = OntologyService.getOntologyName(this._oes.ontologyId || '');
     const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.id.split('#')[1]}`;
     window.open(dataBrowserRoute, '_blank');
   }

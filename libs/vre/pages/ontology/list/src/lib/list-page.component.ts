@@ -14,8 +14,8 @@ import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
 import { ListItemService } from './list-item/list-item.service';
-import { EditListInfoDialogComponent } from './reusable-list-info-form/edit-list-info-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,8 +66,8 @@ export class ListPageComponent implements OnInit, OnDestroy {
   }
 
   editList(list: ListNodeInfo) {
-    this._matDialog.open<EditListInfoDialogComponent, ListNodeInfo, boolean>(
-      EditListInfoDialogComponent,
+    this._matDialog.open<ListInfoFormComponent, ListNodeInfo>(
+      ListInfoFormComponent,
       DspDialogConfig.dialogDrawerConfig(list, true)
     );
   }

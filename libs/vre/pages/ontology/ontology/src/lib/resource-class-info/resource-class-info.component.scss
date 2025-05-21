@@ -14,8 +14,10 @@
 
   .resource-class-header {
     cursor: move;
-    margin-left: -12px;
-    padding: 0px 16px 0;
+    margin-left: -.5em;
+    margin-bottom: .5em;
+    padding: 0 16px 0;
+
 
     .resource-class-header-action {
       position: absolute;
@@ -47,78 +49,6 @@
 
   &:active {
     @include mat.elevation(8);
-  }
-}
-
-.drag-n-drop-placeholder {
-  background: #ccc;
-  border: dotted 3px #999;
-  min-height: 54px;
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.property {
-  &.odd {
-    background-color: $primary_50;
-  }
-
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: $primary_100;
-
-    .gui-order {
-      .display-on-hover {
-        display: block;
-      }
-
-      .hide-on-hover {
-        display: none;
-      }
-    }
-  }
-
-
-  .gui-order {
-    .display-on-hover {
-      display: none;
-    }
-
-    .drag-n-drop-handle {
-      cursor: move;
-    }
-  }
-
-  .list-icon {
-    color: $black;
-    margin-right: 10px;
-  }
-
-  &.link {
-    border-top: 1px solid rgba(black, 0.12);
-    cursor: pointer;
-  }
-}
-
-.cdk-drag-preview {
-  background-color: rgba(254, 254, 254, 1);
-  @include box-shadow();
-  cursor: move;
-
-  .gui-order {
-    .display-on-hover {
-      display: block;
-    }
-
-    .hide-on-hover {
-      display: none;
-    }
-  }
-
-  .property-info {
-    position: fixed;
-    left: 32px;
-    top: 4px;
   }
 }
 

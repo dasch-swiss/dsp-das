@@ -1,12 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, take } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -20,6 +20,7 @@ export interface ShortInfo {
   selector: 'app-property-info',
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     // the fade-in/fade-out animation.
     // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
@@ -50,8 +51,6 @@ export class PropertyInfoComponent implements OnInit {
   @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
 
   project!: ReadProject | undefined;
-
-  private _projectOntologies: ReadOntology[] = [];
 
   propAttribute: string | undefined;
   propAttributeComment: string | undefined;
@@ -84,20 +83,23 @@ export class PropertyInfoComponent implements OnInit {
     private _projectService: ProjectService,
     private _store: Store
   ) {
-    this._projectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
   }
 
   ngOnInit() {
-    this._collectUsedByClasses();
+    this._store.select(OntologiesSelectors.currentProjectOntologies).subscribe(ontologies => {
+      if (ontologies.length) {
+        this._collectUsedByClasses(ontologies);
 
-    if (this.propDef.isLinkProperty || this.propDef.objectType === Constants.ListValue) {
-      this._setAdditionalAttributes();
-    }
+        if (this.propDef.isLinkProperty || this.propDef.objectType === Constants.ListValue) {
+          this._setAdditionalAttributes(ontologies);
+        }
+      }
+    });
   }
 
-  private _collectUsedByClasses() {
-    this._projectOntologies.forEach(onto => {
+  private _collectUsedByClasses(projectsOntologies: ReadOntology[]) {
+    projectsOntologies.forEach(onto => {
       getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
         const usedByClass = resClass.propertiesList.some(prop => prop.propertyIndex === this.propDef.id);
         const isAlreadyAdded = this.usedByClasses.some(c => c.id === resClass.id);
@@ -115,7 +117,7 @@ export class PropertyInfoComponent implements OnInit {
     this.usedByClasses.sort((a, b) => (a.label > b.label ? 1 : -1));
   }
 
-  private _setAdditionalAttributes() {
+  private _setAdditionalAttributes(projectsOntologies: ReadOntology[]) {
     if (this.propDef.objectType && this.propDef.objectType === Constants.Region) {
       this.propAttribute = 'Region';
       return;
@@ -126,7 +128,7 @@ export class PropertyInfoComponent implements OnInit {
       const onto =
         this.propertiesBaseOntology === currentOntology?.id
           ? currentOntology
-          : this._projectOntologies.find(i => i.id === this.propertiesBaseOntology);
+          : projectsOntologies.find(i => i.id === this.propertiesBaseOntology);
 
       this.propAttribute = onto?.classes[this.propDef.objectType]?.label ?? '';
       this.propAttributeComment = onto?.classes[this.propDef.objectType]?.comment ?? '';

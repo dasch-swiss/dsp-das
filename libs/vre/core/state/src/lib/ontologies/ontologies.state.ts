@@ -35,6 +35,7 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologiesLoadingAction,
+  SetOntologyAction,
   UpdateOntologyAction,
   UpdateProjectOntologyAction,
 } from './ontologies.actions';
@@ -101,8 +102,31 @@ export class OntologiesState {
     if (index > -1) {
       readOntologies.splice(index, 1);
     }
-    console.log('patching');
     ctx.patchState(state);
+  }
+  @Action(SetOntologyAction)
+  setOntologyAction(ctx: StateContext<OntologiesStateModel>, { ontology, projectIri }: SetOntologyAction) {
+    const state = ctx.getState();
+    const existing = state.projectOntologies[projectIri]?.readOntologies || [];
+
+    const updatedOntologies = [...existing];
+    const idx = updatedOntologies.findIndex(onto => onto.id === ontology.id);
+    if (idx > -1) {
+      updatedOntologies[idx] = ontology;
+    } else {
+      updatedOntologies.push(ontology);
+    }
+
+    ctx.setState({
+      ...state,
+      projectOntologies: {
+        ...state.projectOntologies,
+        [projectIri]: {
+          ...state.projectOntologies[projectIri],
+          readOntologies: updatedOntologies,
+        },
+      },
+    });
   }
 
   @Action(LoadProjectOntologiesAction)
@@ -112,6 +136,7 @@ export class OntologiesState {
   ) {
     ctx.patchState({ isOntologiesLoading: true, isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
+    console.log(projectIri);
 
     // get all project ontologies
     return this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
@@ -161,18 +186,6 @@ export class OntologiesState {
               }
 
               ctx.dispatch(new LoadListsInProjectAction(projectIri));
-              ontoMeta.ontologies.forEach(onto => {
-                const readOntology = ctx
-                  .getState()
-                  .projectOntologies[projectIri].readOntologies.find(o => o.id === onto.id);
-                if (readOntology) {
-                  ctx.dispatch(
-                    OntologyClassHelper.GetReadOntologyClassesToDisplay(readOntology.classes).map(
-                      resClass => new LoadClassItemsCountAction(onto.id, resClass.id)
-                    )
-                  );
-                }
-              });
               ctx.patchState({ isOntologiesLoading: false });
             });
         },

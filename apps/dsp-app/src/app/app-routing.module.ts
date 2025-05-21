@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { OntologyPropertyComponents } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
-import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
+import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
   DataModelsComponent,
   OntologyComponent,
@@ -102,11 +101,6 @@ const routes: Routes = [
       {
         path: RouteConstants.JulienOntologyClassRelative,
         component: ResourcePageComponent,
-      },
-      {
-        path: RouteConstants.addList,
-        component: CreateListInfoPageComponent,
-        canActivate: [AuthGuard],
       },
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,

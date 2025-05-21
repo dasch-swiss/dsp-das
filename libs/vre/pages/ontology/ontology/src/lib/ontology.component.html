@@ -1,5 +1,7 @@
 <div class="ontology-editor" *ngIf="!disableContent">
-  <app-ontology-editor-header />
+  <div class="overlay-blocker" *ngIf="(isTransacting$ | async)">
+    <app-progress-indicator class="floating-center" />
+  </div>
   <mat-sidenav-container class="ontology-editor-container">
     <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
       <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>
@@ -50,9 +52,7 @@
       </mat-menu>
     </mat-sidenav>
     <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
-      <div class="overlay-blocker" *ngIf="(isTransacting$ | async)">
-        <app-progress-indicator class="floating-center" />
-      </div>
+      <app-ontology-editor-header />
       <router-outlet />
     </mat-sidenav-content>
   </mat-sidenav-container>

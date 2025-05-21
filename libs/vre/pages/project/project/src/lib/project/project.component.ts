@@ -131,7 +131,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     this.projectUuid$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(uuid => {
       this.projectUuid = uuid;
-      console.log('uuid', uuid);
       this._loadProject(uuid);
     });
 
@@ -229,7 +228,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
       }
       case url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.dataModels}`) ||
         url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}`) ||
-        url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.addList}`) ||
         url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.list}`) ||
         url.startsWith(`/${RouteConstants.project}/${projectUuid}/${RouteConstants.addOntology}`): {
         return RouteConstants.dataModels;

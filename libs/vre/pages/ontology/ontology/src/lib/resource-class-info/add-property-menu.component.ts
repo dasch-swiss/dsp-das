@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, PropToAdd } from '@dasch-swiss/vre/core/state';
 import {
@@ -86,6 +86,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPropertyMenuComponent {
   @Input() resourceClass: ClassDefinition | undefined = undefined;

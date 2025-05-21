@@ -11,7 +11,7 @@ export * from './lib/property-info/property-info.component';
 export * from './lib/resource-class-form/resource-class-form.component';
 export * from './lib/resource-class-form/resource-class-form.type';
 export * from './lib/resource-class-info/resource-class-info.component';
-export * from './lib/resource-class-info/resource-class-info-element.component';
+export * from './lib/resource-class-info/property-item.component';
 export * from './lib/resource-class-info/add-property-menu.component';
 export * from './lib/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 export * from './lib/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';

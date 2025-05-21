@@ -59,8 +59,6 @@ export class RouteConstants {
   static readonly editor = 'editor';
 
   static readonly list = 'list';
-  static readonly addList = 'add-list';
-
   static readonly addClassInstance = 'add';
 
   static readonly cookiePolicy = 'cookie-policy';

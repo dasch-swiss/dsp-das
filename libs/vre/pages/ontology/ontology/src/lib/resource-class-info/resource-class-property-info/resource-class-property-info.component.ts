@@ -1,29 +1,35 @@
-import { AfterContentInit, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   Cardinality,
   ClassDefinition,
   Constants,
   IHasProperty,
+  ListNodeInfo,
+  ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import {
-  ListsSelectors,
-  OntologiesSelectors,
-  ProjectsSelectors,
-  PropToDisplay,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-property-info',
   templateUrl: './resource-class-property-info.component.html',
   styleUrls: ['./resource-class-property-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceClassPropertyInfoComponent implements OnChanges, AfterContentInit {
+export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, OnDestroy {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
   @Input() propCard: IHasProperty;
@@ -32,12 +38,18 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
 
   @Input() resourceClass: ClassDefinition;
 
-  @Select(UserSelectors.isMemberOfSystemAdminGroup) isAdmin$!: Observable<boolean>;
+  @Input() active = false;
+
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   propAttribute?: string;
   propAttributeComment?: string;
 
+  menuOpen = false;
+
   propCanBeRemovedFromClass: boolean | null = null;
+
+  private _destroy = new Subject<void>();
 
   get propType(): DefaultProperty {
     return this._ontoService.getDefaultPropertyType(this.propDef);
@@ -62,35 +74,50 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
     this._ontoService.getDefaultProperty(this.propDef);
   }
 
-  ngAfterContentInit() {
+  ngOnInit() {
     if (!this.propDef.isLinkProperty) {
-      this._setAttributesForLinkProperty();
+      this._store
+        .select(OntologiesSelectors.currentProjectOntologies)
+        .pipe(
+          takeUntil(this._destroy),
+          filter(ontologies => !!ontologies && ontologies.length > 0)
+        )
+        .subscribe(ontologies => {
+          this._setAttributesForLinkProperty(ontologies);
+        });
     }
 
     if (this.propDef.objectType === Constants.ListValue) {
-      this._setAttributesForListProperty();
+      this._store
+        .select(ListsSelectors.listsInProject)
+        .pipe(
+          takeUntil(this._destroy),
+          filter(lists => !!lists && lists.length > 0)
+        )
+        .subscribe(lists => {
+          this._setAttributesForListProperty(lists);
+        });
     }
   }
 
-  private _setAttributesForListProperty() {
-    const currentOntologyLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
-    const list = currentOntologyLists.find(i => i.id === this.listUrl);
+  private _setAttributesForListProperty(lists: ListNodeInfo[]) {
+    const list = lists.find(i => i.id.split('/').pop() === this.listUrl?.split('/').pop());
     if (list) {
       this.propAttribute = `<a href="${this.listUrl}">${list.labels[0].value}</a>`;
       this.propAttributeComment = list.comments.length ? list.comments[0].value : undefined;
     }
   }
 
-  private _setAttributesForLinkProperty() {
+  private _setAttributesForLinkProperty(currentProjectOntologies: ReadOntology[]) {
     if (this.propDef.objectType === Constants.Region) {
       this.propAttribute = 'Region';
       return;
     }
 
     const propertiesBaseOntologyId = this.propDef.objectType?.split('#')[0];
-    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
     const baseOntology = currentProjectOntologies.find(i => i.id === propertiesBaseOntologyId);
     this.propAttribute = baseOntology?.classes[this.propDef.objectType!].label;
+    console.log('this.propAttribute', this.propAttribute);
     this.propAttributeComment = baseOntology?.classes[this.propDef.objectType!].comment;
   }
 
@@ -116,5 +143,10 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, AfterConte
       this.props[propertyIdx].cardinality = newValue;
       this._oes.updateCardinalitiesOfResourceClass(this.resourceClass.id, this.props);
     }
+  }
+
+  ngOnDestroy() {
+    this._destroy.next();
+    this._destroy.complete();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { OntologyMetadata } from '@dasch-swiss/dsp-js';
@@ -15,6 +15,7 @@ import { OntologyForm, OntologyData } from './ontology-form.type';
 @Component({
   selector: 'app-ontology-form',
   templateUrl: './ontology-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyFormComponent implements OnInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();

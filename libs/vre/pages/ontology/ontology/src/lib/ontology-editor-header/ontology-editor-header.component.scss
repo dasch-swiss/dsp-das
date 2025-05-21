@@ -3,39 +3,37 @@
   top: 0;
   height: 80px;
 
+  ::ng-deep mat-toolbar-row {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
   .back-button {
+    max-width: 1rem;
     margin-right: 1em;
+    display: flex;
+    align-items: center;
   }
 
   .ontology-info {
-    width: calc(100% - 176px - 32px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     h3,
     p {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 100%;
       margin: 0;
       padding: 0;
     }
-
-    h3 {
-      margin-top: 6px;
-    }
   }
 
-  .mat-toolbar-row,
   .mat-toolbar-row span {
+    display: flex;
+    align-items: center;
     height: 100%;
-    padding-top: 8px;
-  }
-
-  .mat-toolbar-row {
-    padding-right: 0;
-
-    .ontology-actions {
-      width: 176px;
-    }
   }
 }

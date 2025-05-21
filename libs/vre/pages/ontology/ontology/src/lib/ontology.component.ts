@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import {
+  LoadListsInProjectAction,
+  LoadProjectOntologiesAction,
+  OntologiesSelectors,
+  ProjectsSelectors,
+} from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
   DefaultProperties,
@@ -16,10 +21,10 @@ import { take, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ontology',
   templateUrl: './ontology.component.html',
   styleUrls: ['./ontology.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyComponent implements OnInit, OnDestroy {
   project$ = this._store.select(ProjectsSelectors.currentProject);

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   Constants,
@@ -44,6 +44,7 @@ export interface CreatePropertyFormDialogProps {
         Submit
       </button>
     </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreatePropertyFormDialogComponent implements OnInit {
   loading = false;
