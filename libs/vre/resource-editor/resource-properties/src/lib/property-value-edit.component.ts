@@ -1,16 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  Input,
-  Optional,
-  TemplateRef,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input, Optional, TemplateRef } from '@angular/core';
 import {
   ApiResponseError,
   Cardinality,
-  Constants,
   CreateValue,
   KnoraApiConnection,
   ReadResource,
@@ -38,22 +29,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         *ngIf="!propertyValueService.keepEditMode && !loading">
         <mat-icon>undo</mat-icon>
       </button>
-      <button
-        (click)="onSave()"
-        mat-icon-button
-        data-cy="save-button"
-        color="primary"
-        [disabled]="
-          group.value.item === null ||
-          group.value.item === '' ||
-          (!isBoolean && valueIsUnchanged) ||
-          (isBoolean && isRequired && valueIsUnchanged)
-        ">
+      <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
         <mat-icon>save</mat-icon>
       </button>
     </div>
   </div>`,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValueEditComponent {
   @Input({ required: true }) index!: number;
@@ -61,35 +42,13 @@ export class PropertyValueEditComponent {
 
   loading = false; // TODO RANDOM VALUE HERE
 
-  get isRequired() {
-    return [Cardinality._1, Cardinality._1_n].includes(this.propertyValueService.cardinality);
-  }
-
-  get isBoolean() {
-    return this.propertyValueService.propertyDefinition.objectType === Constants.BooleanValue;
-  }
-
-  get valueIsUnchanged(): boolean {
-    return (
-      (this.initialFormValue.item === this.group?.controls.item.value &&
-        this.initialFormValue.comment === this.group.value.comment) ||
-      (this.initialFormValue.comment === null && this.group.value.comment === '')
-    );
-  }
-
   get group() {
-    console.log(this.propertyValueService.formArray.at(this.index));
     return this.propertyValueService.formArray.at(this.index);
-  }
-
-  get initialFormValue(): { item: any; comment: string | null } {
-    return this.group.getRawValue();
   }
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _cdr: ChangeDetectorRef,
     private _notification: NotificationService,
     @Optional() private _resourceFetcherService: ResourceFetcherService,
     public propertyValueService: PropertyValueService
@@ -142,7 +101,6 @@ export class PropertyValueEditComponent {
         () => {
           this.propertyValueService.currentlyAdding = false;
           this.propertyValueService.toggleOpenedValue(this.index);
-          this._cdr.detectChanges();
         },
         e => {
           if (e instanceof ApiResponseError && e.status === 400) {
@@ -171,7 +129,6 @@ export class PropertyValueEditComponent {
       )
       .subscribe(() => {
         this.propertyValueService.toggleOpenedValue(this.index);
-        this._cdr.detectChanges();
       });
   }
 
