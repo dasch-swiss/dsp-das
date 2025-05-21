@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Constants, ReadTextValueAsHtml, ReadTextValueAsString, ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { JsLibPotentialError } from './JsLibPotentialError';
 
 @Component({
   selector: 'app-property-value-switcher-2',
@@ -138,8 +139,7 @@ export class PropertyValueSwitcher2Component implements AfterViewInit {
   @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
   get propertyDefinition() {
-    // TODO NEEDED?
-    return this.myProperty.propDef;
+    return JsLibPotentialError.setAs(this.myProperty.propDef);
   }
 
   ngAfterViewInit() {
