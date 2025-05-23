@@ -20,7 +20,7 @@ export class SortButtonComponent implements OnInit {
    * An array of SortProp objects for the selection menu:
    * SortProp: { key: string, label: string }
    */
-  @Input() sortProps: SortProp[];
+  @Input({ required: true }) sortProps!: SortProp[];
 
   /**
    * @param position string
@@ -50,7 +50,7 @@ export class SortButtonComponent implements OnInit {
    * EventEmitter when a user selected a sort property;
    * This is the selected key
    */
-  @Output() sortKeyChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() sortKeyChange = new EventEmitter<string>();
 
   menuXPos: 'before' | 'after' = 'after';
 
@@ -62,9 +62,6 @@ export class SortButtonComponent implements OnInit {
     this.sortBy(this.activeKey);
   }
 
-  /**
-   * @param key a string to sort by
-   */
   sortBy(key: string) {
     this.activeKey = key || this.sortProps[0].key;
     this.sortKeyChange.emit(this.activeKey);

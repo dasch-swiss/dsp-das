@@ -41,7 +41,7 @@ export class EraseProjectDialogComponent {
     private _store: Store
   ) {}
 
-  submit(): void {
+  submit() {
     if (this.eraseForm.invalid) throw new Error('Form is invalid.');
 
     this.isLoading = true;

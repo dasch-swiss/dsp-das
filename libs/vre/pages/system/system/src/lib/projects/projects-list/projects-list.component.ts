@@ -92,12 +92,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item.id}`;
 
-  /**
-   * Returns true, when the user is entitled to edit the given project. This is
-   * the case when a user is either system admin or project admin of the project.
-   *
-   * @param  projectIri the iri of the project to be checked
-   */
   userHasPermission$(projectIri: string): Observable<boolean> {
     return combineLatest([this.user$.pipe(filter(user => !!user)), this.userProjectAdminGroups$]).pipe(
       takeUntil(this._ngUnsubscribe),
@@ -105,11 +99,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Returns true when the user is project admin of the given project.
-   *
-   * @param  projectIri the iri of the project to be checked
-   */
   userIsProjectAdmin$(projectIri: string): Observable<boolean> {
     return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
       takeUntil(this._ngUnsubscribe),
@@ -118,11 +107,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Navigates to the project pages (e.g. board, collaboration or ontology)
-   *
-   * @param iri
-   */
   openProjectPage(iri: string) {
     const uuid = ProjectService.IriToUuid(iri);
 
