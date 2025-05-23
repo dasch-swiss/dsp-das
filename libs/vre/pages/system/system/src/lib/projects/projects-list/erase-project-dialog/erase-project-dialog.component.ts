@@ -56,10 +56,8 @@ export class EraseProjectDialogComponent {
           this.isLoading = false;
         })
       )
-      .subscribe({
-        next: response => {
-          this._dialogRef.close(response.project);
-        },
+      .subscribe(response => {
+        this._dialogRef.close(response.project);
       });
   }
 

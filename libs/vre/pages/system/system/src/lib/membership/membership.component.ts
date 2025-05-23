@@ -35,9 +35,11 @@ import { map, takeUntil } from 'rxjs/operators';
       <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
         <div class="flex-1">
           <div>{{ project.longname }} ({{ project.shortname }})</div>
-          @if (userIsProjectAdmin((user$ | async)?.permissions, project.id)) {
-            User is <strong>Project admin</strong>
-          }
+          <div>
+            @if (isUserProjectAdmin((user$ | async)?.permissions, project.id)) {
+              User is <strong>Project admin</strong>
+            }
+          </div>
         </div>
 
         <button
@@ -125,7 +127,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item?.id}`;
 
-  userIsProjectAdmin(permissions: PermissionsData, projectIri: string): boolean {
+  isUserProjectAdmin(permissions: PermissionsData, projectIri: string): boolean {
     if (!permissions.groupsPerProject) return false;
 
     return permissions.groupsPerProject[projectIri].includes(Constants.ProjectAdminGroupIRI);
