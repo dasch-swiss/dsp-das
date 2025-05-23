@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -125,24 +126,33 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     this._router.navigate([RouteConstants.project, uuid, RouteConstants.settings, RouteConstants.edit]);
   }
 
-  changeProjectStatus(name: string, id: string, activate: boolean) {
-    const confirmationKey = activate
-      ? 'pages.system.projectsList.reactivateConfirmation'
-      : 'pages.system.projectsList.deactivateConfirmation';
-
+  askToActivateProject(name: string, id: string) {
     this._dialogService
-      .afterConfirmation(this._translateService.instant(confirmationKey, { 0: name }))
-      .pipe(
-        switchMap(() =>
-          activate ? this._projectApiService.update(id, { status: true }) : this._projectApiService.delete(id)
-        )
+      .afterConfirmation(
+        this._translateService.instant('pages.system.projectsList.reactivateConfirmation', {
+          0: name,
+        })
       )
+      .pipe(switchMap(() => this._projectApiService.update(id, { status: true })))
       .subscribe(() => {
         this.refreshParent.emit();
       });
   }
 
-  eraseProject(project: StoredProject) {
+  askToDeactivateProject(name: string, id: string) {
+    this._dialogService
+      .afterConfirmation(
+        this._translateService.instant('pages.system.projectsList.deactivateConfirmation', {
+          0: name,
+        })
+      )
+      .pipe(switchMap(() => this._projectApiService.delete(id)))
+      .subscribe(() => {
+        this.refreshParent.emit();
+      });
+  }
+
+  askToEraseProject(project: StoredProject) {
     this._dialog
       .open<EraseProjectDialogComponent, IEraseProjectDialogProps>(EraseProjectDialogComponent, {
         data: <IEraseProjectDialogProps>{
@@ -166,7 +176,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   sortList(key: any) {
     if (!this.projectsList) {
-      throw new Error('List is not defined.');
+      throw new AppError('List is not defined.');
     }
     this.projectsList = this._sortingService.keySortByAlphabetical(this.projectsList, key);
     localStorage.setItem('sortProjectsBy', key);

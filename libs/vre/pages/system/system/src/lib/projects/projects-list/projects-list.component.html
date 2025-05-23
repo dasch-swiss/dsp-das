@@ -73,7 +73,7 @@
           <button
             mat-menu-item
             *ngIf="isUserActive"
-            (click)="changeProjectStatus(project.shortname, project.id, false)"
+            (click)="askToDeactivateProject(project.shortname, project.id)"
             data-cy="deactivate-button">
             {{ 'pages.system.projectsList.deactivate' | translate }}
           </button>
@@ -81,14 +81,14 @@
             mat-menu-item
             *ngIf="allowEraseProject && (isSysAdmin$ | async)"
             class="warn"
-            (click)="eraseProject(project)"
+            (click)="askToEraseProject(project)"
             data-cy="erase-button">
             {{ 'pages.system.projectsList.erase' | translate }}
           </button>
           <button
             mat-menu-item
             *ngIf="!isUserActive"
-            (click)="changeProjectStatus(project.shortname, project.id, true)"
+            (click)="askToActivateProject(project.shortname, project.id)"
             data-cy="reactivate-button">
             {{ 'pages.system.projectsList.reactivate' | translate }}
           </button>

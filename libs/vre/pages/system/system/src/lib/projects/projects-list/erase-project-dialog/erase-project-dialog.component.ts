@@ -4,10 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
 import { Store } from '@ngxs/store';
-import { of } from 'rxjs';
-import { catchError, finalize, switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 
 export interface IEraseProjectDialogProps {
   project: ReadProject;
@@ -36,14 +34,12 @@ export class EraseProjectDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: IEraseProjectDialogProps,
     private _dialogRef: MatDialogRef<EraseProjectDialogComponent>,
     @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection,
-    private _errorHandler: AppErrorHandler,
     private _projectApiService: ProjectApiService,
     private _store: Store
   ) {}
 
   submit() {
-    if (this.eraseForm.invalid) throw new Error('Form is invalid.');
-
+    if (this.eraseForm.invalid) return;
     this.isLoading = true;
 
     const currentUser = this._store.selectSnapshot(state => state.user).user;
@@ -51,17 +47,9 @@ export class EraseProjectDialogComponent {
     const shortCode = this.eraseForm.controls.shortCode.value;
 
     this._dspApiConnection.v2.auth
-      .login('username', currentUser.username, password!) // TODO [BE] should be dedicated endpoint
+      .login('username', currentUser.username, password!)
       .pipe(
-        catchError(() => {
-          this.eraseForm.controls.password.setErrors({ invalidPassword: true });
-          return of(null);
-        })
-      )
-      .pipe(
-        switchMap(loginResult => {
-          if (!loginResult) return of(null);
-
+        switchMap(() => {
           return this._projectApiService.erase(shortCode!);
         }),
         finalize(() => {
@@ -70,11 +58,7 @@ export class EraseProjectDialogComponent {
       )
       .subscribe({
         next: response => {
-          if (!response) return;
           this._dialogRef.close(response.project);
-        },
-        error: err => {
-          this._errorHandler.handleError(`Unexpected error during submit: ${err}`);
         },
       });
   }

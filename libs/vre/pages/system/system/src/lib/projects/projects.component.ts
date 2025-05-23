@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { LoadProjectsAction, LoadUserAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
@@ -26,7 +27,6 @@ import { map, takeUntil } from 'rxjs/operators';
           [createNewButtonEnabled]="true"
           [isUsersProjects]="isUsersProjects"
           data-cy="active-projects-section" />
-        <!-- already deactivated projects: disable the menu -->
         <app-projects-list
           [projectsList]="inactiveProjects$ | async"
           [isUserActive]="false"
@@ -85,7 +85,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   updateAndRefresh() {
     this._store.dispatch(new LoadProjectsAction());
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
-    if (!currentUser) throw new Error('Current user not found.');
+    if (!currentUser) throw new AppError('Current user not found.');
     this._store.dispatch(new LoadUserAction(currentUser.username));
   }
 }

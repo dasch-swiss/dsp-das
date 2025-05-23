@@ -126,9 +126,8 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   trackByFn = (index: number, item: StoredProject) => `${index}-${item?.id}`;
 
   userIsProjectAdmin(permissions: PermissionsData, projectIri: string): boolean {
-    if (!permissions || !projectIri || !permissions.groupsPerProject?.[projectIri]) {
-      return false;
-    }
+    if (!permissions.groupsPerProject) return false;
+
     return permissions.groupsPerProject[projectIri].includes(Constants.ProjectAdminGroupIRI);
   }
 
@@ -139,7 +138,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
           p.status &&
           p.id !== Constants.SystemProjectIRI &&
           p.id !== Constants.DefaultSharedOntologyIRI &&
-          !user.projects.some(userProject => userProject.id === p.id)
+          user.projects.every(userProject => userProject.id !== p.id)
       )
       .map(p => ({
         iri: p.id,
