@@ -1,5 +1,28 @@
 # Changelog
 
+## [11.32.0](https://github.com/dasch-swiss/dsp-das/compare/v11.31.2...v11.32.0) (2025-05-23)
+
+
+### Enhancements
+
+* add new licenses logo for CC0 and CC PDM 1.0 ([#2305](https://github.com/dasch-swiss/dsp-das/issues/2305)) ([703e7bb](https://github.com/dasch-swiss/dsp-das/commit/703e7bbc366693632680cf19828348ab9fe874d3))
+
+
+### Bug Fixes
+
+* add copyright legals to compound viewer ([#2302](https://github.com/dasch-swiss/dsp-das/issues/2302)) ([498601c](https://github.com/dasch-swiss/dsp-das/commit/498601cfd784e1f3c4ba38cd7ee7b17b21b3a556))
+* resource editor displays a message when resource access is unauthorized ([#2306](https://github.com/dasch-swiss/dsp-das/issues/2306)) ([0b122cd](https://github.com/dasch-swiss/dsp-das/commit/0b122cdf9874441d609d8ddece7e8fda1c9e55f3))
+
+
+### Maintenances
+
+* **deps-dev:** bump @openapitools/openapi-generator-cli from 2.20.0 to 2.20.2 ([#2300](https://github.com/dasch-swiss/dsp-das/issues/2300)) ([25920d9](https://github.com/dasch-swiss/dsp-das/commit/25920d9a8f577da3cb18b5270013281ba7f9fed5))
+* **deps-dev:** bump @types/node from 20.17.46 to 20.17.48 in the types-deps group ([#2298](https://github.com/dasch-swiss/dsp-das/issues/2298)) ([cb00688](https://github.com/dasch-swiss/dsp-das/commit/cb00688cc77978b6a462187a2c9877e66bae8b72))
+* **deps-dev:** bump @typescript-eslint/utils from 8.32.0 to 8.32.1 ([#2299](https://github.com/dasch-swiss/dsp-das/issues/2299)) ([5d7d0c9](https://github.com/dasch-swiss/dsp-das/commit/5d7d0c974e86619ef376db1f83734c9255bee369))
+* **deps-dev:** bump ts-jest from 29.3.2 to 29.3.4 in the jest-deps group ([#2297](https://github.com/dasch-swiss/dsp-das/issues/2297)) ([56e52e7](https://github.com/dasch-swiss/dsp-das/commit/56e52e7f489939100532ee2b566bae451812839b))
+* **deps:** bump zod from 3.24.3 to 3.25.1 ([#2301](https://github.com/dasch-swiss/dsp-das/issues/2301)) ([03ec278](https://github.com/dasch-swiss/dsp-das/commit/03ec2785cb87dd717ee0e36e08302656f8b24856))
+* refactor Membership, Projects, EraseProjectDialog, SortButton Components (DEV-4931) ([#2304](https://github.com/dasch-swiss/dsp-das/issues/2304)) ([e76d3be](https://github.com/dasch-swiss/dsp-das/commit/e76d3be723f9d867c70f8c74579519a2c4a60d15))
+
 ## [11.31.2](https://github.com/dasch-swiss/dsp-das/compare/v11.31.1...v11.31.2) (2025-05-14)
 
 
