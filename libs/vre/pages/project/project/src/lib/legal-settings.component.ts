@@ -19,21 +19,20 @@ import {
       <div style="display: flex;justify-content: center; margin: 32px;">
         <div style="border: 1px solid; padding: 16px">Attention: any action you do here is permanent.</div>
       </div>
-      <div style="display: flex; justify-content: space-between; gap: 16px">
-        <section>
-          <h2>
-            Copyright holders
-            <button color="primary" mat-raised-button (click)="addCopyrightHolder()">Add</button>
-          </h2>
-          <app-alternated-list>
-            <div *ngFor="let item of copyrightHolders$ | async">{{ item }}</div>
-          </app-alternated-list>
-        </section>
-        <section>
-          <h2>Licenses</h2>
-          <app-legal-settings-licenses />
-        </section>
-      </div>
+      <section>
+        <h2>
+          Copyright holders
+          <button color="primary" mat-raised-button (click)="addCopyrightHolder()">Add</button>
+        </h2>
+        <app-alternated-list>
+          <div *ngFor="let item of copyrightHolders$ | async">{{ item }}</div>
+        </app-alternated-list>
+      </section>
+
+      <section>
+        <h2>Licenses</h2>
+        <app-legal-settings-licenses />
+      </section>
       <h2 style="display: flex; align-items: center; gap: 8px">
         Authorships - Overview
         <mat-icon

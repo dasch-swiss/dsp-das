@@ -10,13 +10,13 @@ import { filter, map, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-legal-settings-licenses',
   template: `
-    <table>
-      <tr>
+    <table style="width: 100%">
+      <tr style="text-align: left">
         <th>Label</th>
         <th>Recommended</th>
         <th>Enabled for project</th>
       </tr>
-      <tr *ngFor="let item of licenses$ | async" style="display: flex; align-items: center; gap: 8px">
+      <tr *ngFor="let item of licenses$ | async">
         <td>
           {{ item.labelEn }}
           <a [href]="item.uri" target="_blank">
@@ -24,7 +24,8 @@ import { filter, map, switchMap } from 'rxjs/operators';
           </a>
         </td>
         <td>
-          <mat-icon>{{ item.isRecommended ? 'thumb_up' : 'thumb_down' }}</mat-icon>
+          <mat-icon *ngIf="item.isRecommended" [color]="'accent'">thumb_up</mat-icon>
+          <mat-icon *ngIf="!item.isRecommended">thumb_down</mat-icon>
         </td>
         <td>
           <mat-checkbox [checked]="item.isEnabled" (change)="editEnableStatus($event, item.id)"></mat-checkbox>
