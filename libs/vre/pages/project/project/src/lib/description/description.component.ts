@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
@@ -25,7 +24,7 @@ export class DescriptionComponent implements OnDestroy {
     map(([params, allProjects]) => {
       const project = allProjects.find(x => x.id.split('/').pop() === params.get(RouteConstants.uuidParameter));
       if (!project) {
-        throw new AppError('Project not found');
+        return null;
       }
 
       this.hasManualLicense = LicenseCaptionsMapping.get(project.shortcode);
