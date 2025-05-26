@@ -34,7 +34,7 @@ import {
         <app-legal-settings-licenses />
       </section>
       <h2 style="display: flex; align-items: center; gap: 8px">
-        Authorships - Overview
+        Authorship - Overview
         <mat-icon
           color="primary"
           matTooltip="The authorship overview is read-only. To add a new authorship, please update them directly in the resource.">
