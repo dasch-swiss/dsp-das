@@ -33,6 +33,20 @@ import { filter, map, switchMap } from 'rxjs/operators';
       </tr>
     </table>
   `,
+  styles: [
+    `
+      tr {
+        &:nth-child(odd) {
+          background-color: #f2f2f2;
+        }
+
+        td,
+        th {
+          padding: 8px;
+        }
+      }
+    `,
+  ],
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
