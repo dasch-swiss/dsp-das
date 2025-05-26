@@ -31,14 +31,7 @@ import {
         </section>
         <section>
           <h2>Licenses</h2>
-          <app-alternated-list>
-            <div *ngFor="let item of licenses$ | async" style="display: flex; align-items: center; gap: 8px">
-              {{ item.labelEn }}
-              <a [href]="item.uri" target="_blank">
-                <mat-icon>launch</mat-icon>
-              </a>
-            </div>
-          </app-alternated-list>
+          <app-legal-settings-licenses />
         </section>
       </div>
       <h2 style="display: flex; align-items: center; gap: 8px">
@@ -67,13 +60,6 @@ export class LegalSettingsComponent {
   copyrightHolders$ = this.project$.pipe(
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project.shortcode)
-    ),
-    map(data => data.data)
-  );
-
-  licenses$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
     ),
     map(data => data.data)
   );
