@@ -11,7 +11,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
   template: `
     <table>
       <tr>
-        <th style="width: 400px">Label</th>
+        <th>Label</th>
         <th>Recommended</th>
         <th>Enabled for project</th>
       </tr>
@@ -21,6 +21,10 @@ import { filter, map, switchMap } from 'rxjs/operators';
           <a [href]="item.uri" target="_blank">
             <mat-icon>launch</mat-icon>
           </a>
+        </td>
+        <td>{{ item.isRecommended }}</td>
+        <td>
+          <mat-checkbox [checked]="item.isEnabled"></mat-checkbox>
         </td>
       </tr>
     </table>
