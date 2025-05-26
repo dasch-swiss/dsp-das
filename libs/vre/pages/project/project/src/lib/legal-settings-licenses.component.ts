@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -22,9 +23,11 @@ import { filter, map, switchMap } from 'rxjs/operators';
             <mat-icon>launch</mat-icon>
           </a>
         </td>
-        <td>{{ item.isRecommended }}</td>
         <td>
-          <mat-checkbox [checked]="item.isEnabled"></mat-checkbox>
+          <mat-icon>{{ item.isRecommended ? 'thumb_up' : 'thumb_down' }}</mat-icon>
+        </td>
+        <td>
+          <mat-checkbox [checked]="item.isEnabled" (change)="editEnableStatus($event, item.id)"></mat-checkbox>
         </td>
       </tr>
     </table>
@@ -50,4 +53,26 @@ export class LegalSettingsLicensesComponent {
     private _copyrightApi: AdminProjectsLegalInfoApiService,
     private _store: Store
   ) {}
+
+  editEnableStatus(event: MatCheckboxChange, licenseIri: string) {
+    console.log(event);
+    const isEnabled = event.checked;
+    this.project$
+      .pipe(
+        switchMap(project => {
+          if (isEnabled) {
+            return this._copyrightApi.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(
+              project.shortcode,
+              licenseIri
+            );
+          } else {
+            return this._copyrightApi.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(
+              project.shortcode,
+              licenseIri
+            );
+          }
+        })
+      )
+      .subscribe();
+  }
 }
