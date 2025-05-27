@@ -17,11 +17,11 @@ import {
   template: `
     <app-centered-layout>
       <div style="display: flex;justify-content: center; margin: 32px;">
-        <div style="border: 1px solid; padding: 16px">Attention: any action you do here is permanent.</div>
+        <div style="border: 1px solid; padding: 16px">{{ 'pages.project.legalSettings.warning' | translate }}</div>
       </div>
       <section class="section">
         <h2>
-          Copyright holders
+          {{ 'pages.project.legalSettings.copyrightHolders' | translate }}
           <button color="primary" mat-raised-button (click)="addCopyrightHolder()">Add</button>
         </h2>
         <app-alternated-list>
@@ -30,15 +30,13 @@ import {
       </section>
 
       <section class="section">
-        <h2>Licenses</h2>
+        <h2>{{ 'pages.project.legalSettings.licenses' | translate }}</h2>
         <app-legal-settings-licenses />
       </section>
       <section class="section">
         <h2 style="display: flex; align-items: center; gap: 8px">
-          Authorship - Overview
-          <mat-icon
-            color="primary"
-            matTooltip="The authorship overview is read-only. To add a new authorship, please update them directly in the resource.">
+          {{ 'pages.project.legalSettings.authorship' | translate }}
+          <mat-icon color="primary" [matTooltip]="'pages.project.legalSettings.authorshipTooltip' | translate">
             info
           </mat-icon>
         </h2>
@@ -49,7 +47,7 @@ import {
           </app-alternated-list>
 
           <div *ngIf="authorship.length === 0">
-            There are no authorship yet. To add a new authorship, please update them directly in the resource.
+            {{ 'pages.project.legalSettings.noAuthorship' | translate }}
           </div>
         </ng-container>
       </section>
