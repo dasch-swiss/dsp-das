@@ -1,5 +1,11 @@
 {
   "pages": {
+    "landingPage": {
+      "title": "Projets de recherche",
+      "usersProjects": "Mes projets",
+      "notUsersProjects": "Autres projets de recherche",
+      "filterProjects": "Filter projects"
+    },
     "userSettings": {
       "loginForm": {
         "login": "Connexion"
@@ -10,11 +16,6 @@
         "delete": "Suspendre le compte utilisateur",
         "password": "Mettre à jour le mot de passe",
         "edit": "Modifier le profil"
-      },
-      "overview": {
-        "title": "Parcourir les projets de recherche",
-        "myProjects": "Mes projets",
-        "browseOtherResearchProjects": "Parcourir d'autres projets de recherche"
       },
       "userForm": {
         "emailValidation": "Cette adresse e-mail semble invalide.",
@@ -146,8 +147,12 @@
       },
       "fullTextSearch": {
         "filterByProject": "Filtrer par projet",
-        "search": "Rechercher",
+        "search": "Search all data",
         "allProjects": "Tous les projets"
+      },
+      "advancedSearch": {
+        "title": "Advanced Search",
+        "usePreviousSearch": "Use Previous Search"
       }
     }
   },
@@ -160,6 +165,7 @@
     "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
     "notFound": "This resource is not found.",
     "deleted": "This resource has been deleted.",
+    "unauthorized": "You do not have access to this resource.",
     "segmentSupport": {
       "createSegmentDialog": {
         "createAnnotation": "Créer une annotation"
