@@ -23,7 +23,7 @@ import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
         *ngIf="nonRecommendedLicenses.length > 0"
         [licenses]="nonRecommendedLicenses"
         [project]="project"
-        [label]="'Non recommended'"
+        [label]="'Not recommended'"
         (refresh)="refresh()" />
     </ng-container>
   </ng-container>`,
