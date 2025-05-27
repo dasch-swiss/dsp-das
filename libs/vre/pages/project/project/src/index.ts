@@ -16,3 +16,4 @@ export * from './lib/image-settings/image-settings.component';
 export * from './lib/legal-settings.component';
 export * from './lib/legal-settings-licenses.component';
 export * from './lib/create-copyright-holder-dialog.component';
+export * from './lib/licenses-enabled-table.component';

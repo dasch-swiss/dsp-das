@@ -1,52 +1,32 @@
 import { Component } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-legal-settings-licenses',
-  template: `
-    <table style="width: 100%">
-      <tr style="text-align: left">
-        <th>Label</th>
-        <th>Recommended</th>
-        <th>Enabled for project</th>
-      </tr>
-      <tr *ngFor="let item of licenses$ | async">
-        <td>
-          {{ item.labelEn }}
-          <a [href]="item.uri" target="_blank">
-            <mat-icon>launch</mat-icon>
-          </a>
-        </td>
-        <td>
-          <mat-icon *ngIf="item.isRecommended" [color]="'accent'">thumb_up</mat-icon>
-          <mat-icon *ngIf="!item.isRecommended">thumb_down</mat-icon>
-        </td>
-        <td>
-          <mat-checkbox [checked]="item.isEnabled" (change)="editEnableStatus($event, item.id)"></mat-checkbox>
-        </td>
-      </tr>
-    </table>
-  `,
-  styles: [
-    `
-      tr {
-        &:nth-child(odd) {
-          background-color: #f2f2f2;
-        }
+  template: ` <ng-container *ngIf="project$ | async as project">
+    <div *ngIf="recommendedLicenses$ | async as recommendedLicenses" style="margin-bottom: 24px">
+      <app-licenses-enabled-table
+        *ngIf="recommendedLicenses.length > 0"
+        [licenses]="recommendedLicenses"
+        [project]="project"
+        [label]="'Recommended'"
+        (refresh)="refresh()" />
+    </div>
 
-        td,
-        th {
-          padding: 8px;
-        }
-      }
-    `,
-  ],
+    <ng-container *ngIf="nonRecommendedLicenses$ | async as nonRecommendedLicenses">
+      <app-licenses-enabled-table
+        *ngIf="nonRecommendedLicenses.length > 0"
+        [licenses]="nonRecommendedLicenses"
+        [project]="project"
+        [label]="'Non recommended'"
+        (refresh)="refresh()" />
+    </ng-container>
+  </ng-container>`,
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
@@ -61,33 +41,19 @@ export class LegalSettingsLicensesComponent {
     switchMap(project =>
       this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
     ),
-    map(data => data.data)
+    map(data => data.data),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
+
+  recommendedLicenses$ = this.licenses$.pipe(map(licenses => licenses.filter(license => license.isRecommended)));
+  nonRecommendedLicenses$ = this.licenses$.pipe(map(licenses => licenses.filter(license => !license.isRecommended)));
 
   constructor(
     private _copyrightApi: AdminProjectsLegalInfoApiService,
     private _store: Store
   ) {}
 
-  editEnableStatus(event: MatCheckboxChange, licenseIri: string) {
-    console.log(event);
-    const isEnabled = event.checked;
-    this.project$
-      .pipe(
-        switchMap(project => {
-          if (isEnabled) {
-            return this._copyrightApi.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriEnable(
-              project.shortcode,
-              licenseIri
-            );
-          } else {
-            return this._copyrightApi.putAdminProjectsShortcodeProjectshortcodeLegalInfoLicensesLicenseiriDisable(
-              project.shortcode,
-              licenseIri
-            );
-          }
-        })
-      )
-      .subscribe();
+  refresh() {
+    this._reloadSubject.next();
   }
 }
