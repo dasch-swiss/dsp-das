@@ -10,19 +10,22 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
         <th>{{ label }}</th>
         <th>Enabled ({{ enabledLicensesNumber }})</th>
       </tr>
-      <tr *ngFor="let item of licenses">
-        <td>
-          {{ item.labelEn }}
-          <a [href]="item.uri" target="_blank">
-            <mat-icon>launch</mat-icon>
-          </a>
-        </td>
-        <td>
-          <mat-checkbox
-            [checked]="item.isEnabled"
-            (change)="$event.checked ? enable(item.id) : disable(item.id)"></mat-checkbox>
-        </td>
-      </tr>
+
+      @for (license of licenses; track license) {
+        <tr>
+          <td>
+            {{ license.labelEn }}
+            <a [href]="license.uri" target="_blank">
+              <mat-icon>launch</mat-icon>
+            </a>
+          </td>
+          <td>
+            <mat-checkbox
+              [checked]="license.isEnabled"
+              (change)="$event.checked ? enable(license.id) : disable(license.id)"></mat-checkbox>
+          </td>
+        </tr>
+      }
     </table>
   `,
   styles: [
