@@ -28,7 +28,7 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
   styles: [
     `
       table {
-        border: 1px solid #ebebeb;
+        border: 1px solid #f2f2f2;
       }
 
       tr {

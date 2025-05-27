@@ -19,7 +19,7 @@ import {
       <div style="display: flex;justify-content: center; margin: 32px;">
         <div style="border: 1px solid; padding: 16px">Attention: any action you do here is permanent.</div>
       </div>
-      <section>
+      <section class="section">
         <h2>
           Copyright holders
           <button color="primary" mat-raised-button (click)="addCopyrightHolder()">Add</button>
@@ -29,23 +29,39 @@ import {
         </app-alternated-list>
       </section>
 
-      <section>
+      <section class="section">
         <h2>Licenses</h2>
         <app-legal-settings-licenses />
       </section>
-      <h2 style="display: flex; align-items: center; gap: 8px">
-        Authorship - Overview
-        <mat-icon
-          color="primary"
-          matTooltip="The authorship overview is read-only. To add a new authorship, please update them directly in the resource.">
-          info
-        </mat-icon>
-      </h2>
-      <app-alternated-list>
-        <div *ngFor="let item of authorships$ | async">{{ item }}</div>
-      </app-alternated-list>
+      <section class="section">
+        <h2 style="display: flex; align-items: center; gap: 8px">
+          Authorship - Overview
+          <mat-icon
+            color="primary"
+            matTooltip="The authorship overview is read-only. To add a new authorship, please update them directly in the resource.">
+            info
+          </mat-icon>
+        </h2>
+
+        <ng-container *ngIf="authorships$ | async as authorship">
+          <app-alternated-list>
+            <div *ngFor="let item of authorship">{{ item }}</div>
+          </app-alternated-list>
+
+          <div *ngIf="authorship.length === 0">
+            There are no authorship yet. To add a new authorship, please update them directly in the resource.
+          </div>
+        </ng-container>
+      </section>
     </app-centered-layout>
   `,
+  styles: [
+    `
+      .section {
+        margin-bottom: 48px;
+      }
+    `,
+  ],
 })
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
