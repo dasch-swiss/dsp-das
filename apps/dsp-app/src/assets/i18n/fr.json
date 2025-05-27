@@ -87,6 +87,10 @@
         "updateConfirmation": "Vous avez mis à jour avec succès les paramètres de l'image du projet.",
         "info": "Pour limiter la taille de votre image, entrez un pourcentage ou une largeur en pixels absolue. Vous ne pouvez pas fournir de valeurs pour les deux options.",
         "restrictions": "Les paramètres de l'image peuvent être appliqués uniquement aux ressources ayant des autorisations de visualisation limitées."
+      },
+      "legalSettings": {
+        "recommended": "Recommended",
+        "notRecommended": "Not recommended"
       }
     },
     "system": {

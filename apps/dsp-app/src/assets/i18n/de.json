@@ -87,6 +87,10 @@
         "updateConfirmation": "Sie haben die Bildeinstellungen des Projekts erfolgreich aktualisiert.",
         "info": "Um die Grösse Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht beide Optionen gleichzeitig angeben.",
         "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsrechte festgelegt sind."
+      },
+      "legalSettings": {
+        "recommended": "Recommended",
+        "notRecommended": "Not recommended"
       }
     },
     "system": {

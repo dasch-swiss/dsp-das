@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -14,7 +14,7 @@ import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
         *ngIf="recommendedLicenses.length > 0"
         [licenses]="recommendedLicenses"
         [project]="project"
-        [label]="'Recommended'"
+        [label]="'pages.project.legalSettings.recommended' | translate"
         (refresh)="refresh()" />
     </div>
 
@@ -23,10 +23,11 @@ import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
         *ngIf="nonRecommendedLicenses.length > 0"
         [licenses]="nonRecommendedLicenses"
         [project]="project"
-        [label]="'Not recommended'"
+        [label]="'pages.project.legalSettings.notRecommended' | translate"
         (refresh)="refresh()" />
     </ng-container>
   </ng-container>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

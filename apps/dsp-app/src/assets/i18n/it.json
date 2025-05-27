@@ -87,6 +87,10 @@
         "updateConfirmation": "Hai aggiornato con successo le impostazioni dell'immagine del progetto.",
         "info": "Per limitare le dimensioni della tua immagine, inserisci una percentuale o una larghezza in pixel assoluta. Non puoi fornire valori per entrambe le opzioni.",
         "restrictions": "Le impostazioni dell'immagine possono essere applicate solo alle risorse che hanno impostato i permessi di visualizzazione limitati."
+      },
+      "legalSettings": {
+        "recommended": "Recommended",
+        "notRecommended": "Not recommended"
       }
     },
     "system": {
