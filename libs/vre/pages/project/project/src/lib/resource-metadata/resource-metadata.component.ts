@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,4 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ResourceMetadataComponent {
   constructor(private _ts: TranslateService) {}
+
+  exportMetadata() {
+    console.log('Exporting metadata...');
+  }
 }
