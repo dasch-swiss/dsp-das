@@ -9,7 +9,9 @@ import { ImageDisplayAbsoluteComponent } from './lib/image-settings/image-displa
 import { ImageDisplayRatioComponent } from './lib/image-settings/image-display-ratio.component';
 import { ImageSettingsComponent } from './lib/image-settings/image-settings.component';
 import { SettingsPageComponent } from './lib/image-settings/settings-page.component';
+import { LegalSettingsLicensesComponent } from './lib/legal-settings-licenses.component';
 import { LegalSettingsComponent } from './lib/legal-settings.component';
+import { LicensesEnabledTableComponent } from './lib/licenses-enabled-table.component';
 import { ProjectComponent } from './lib/project/project.component';
 import { ReusableProjectFormComponent } from './lib/reusable-project-form/reusable-project-form.component';
 
@@ -28,4 +30,6 @@ export const ProjectComponents = [
   ImageSettingsComponent,
   LegalSettingsComponent,
   CreateCopyrightHolderDialogComponent,
+  LegalSettingsLicensesComponent,
+  LicensesEnabledTableComponent,
 ];
