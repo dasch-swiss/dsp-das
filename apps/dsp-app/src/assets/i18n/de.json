@@ -93,19 +93,20 @@
         "text": {
           "description": "Exportieren Sie beschreibende Metadaten für sämtliche Ressourcen dieses Projekts als CSV.",
           "note": "Hinweis: Diese Datei enthält ausschliesslich Metadaten – nicht die Daten des Projekts.",
-          "list": {
-            "title": "Die Metadaten umfassen:",
-            "iri": "Ressourcen-IRI",
-            "ark": "ARK-URL (Permalink)",
-            "class": "Ressourcen-Klasse",
+          "listTitle": "Die Metadaten umfassen:",
+          "listContent": {
             "label": "Label",
+            "class": "Ressourcen-Klasse",
+            "ark": "ARK-URL (Permalink)",
+            "timestampArk": "ARK mit Zeitstempel",
+            "iri": "Ressourcen-IRI",
             "createdBy": "Erstellt von",
             "creationDate": "Erstellungsdatum",
             "modified": "Letztes Änderungsdatum (falls vorhanden)",
             "deleted": "Löschdatum (falls vorhanden)"
-          },
-          "button": "Exportieren als CSV"
-        }
+          }
+        },
+        "button": "Exportieren als CSV"
       }
     },
     "system": {
