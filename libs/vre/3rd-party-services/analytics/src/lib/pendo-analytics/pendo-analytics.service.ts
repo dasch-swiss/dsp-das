@@ -25,10 +25,15 @@ export class PendoAnalyticsService {
           this.removeActiveUser();
           return;
         }
-        const token = this._accessTokenService.getTokenUser();
+        const token = this._accessTokenService.getAccessToken();
         if (!token) return;
 
-        this._setActiveUser(token);
+        const decodedToken = this._accessTokenService.decodedAccessToken(token);
+        if (!decodedToken || !decodedToken.sub) {
+          return;
+        }
+
+        this._setActiveUser(decodedToken.sub);
       });
   }
 
