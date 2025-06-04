@@ -1,17 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-// import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { LicensesLogoMapping } from './licenses-logo-mapping';
-
-interface LicenseDto {
-  id: string;
-  uri: string;
-  labelEn: string;
-}
 
 @Component({
   selector: 'app-resource-legal',
@@ -62,7 +55,7 @@ export class ResourceLegalComponent implements OnChanges {
   licenseLogo?: string;
 
   subscription?: Subscription;
-  license$?: Observable<LicenseDto | undefined>;
+  license$?: Observable<ProjectLicenseDto | undefined>;
 
   constructor(
     private _resourceFetcher: ResourceFetcherService,

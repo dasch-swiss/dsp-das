@@ -1,13 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-// import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { FileForm } from '@dasch-swiss/vre/resource-editor/representations';
-
-interface LicenseDto {
-  id: string;
-  uri: string;
-  labelEn: string;
-}
 
 @Component({
   selector: 'app-create-resource-form-file',
@@ -29,7 +23,7 @@ export class CreateResourceFormFileComponent implements OnInit {
     link: [null as string | null, [Validators.required]],
     legal: this._fb.group({
       copyrightHolder: null as string | null,
-      license: null as LicenseDto | null,
+      license: null as ProjectLicenseDto | null,
       authorship: null as string[] | null,
     }),
   }) as unknown as FileForm;
