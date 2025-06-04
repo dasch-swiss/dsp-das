@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { PendoAnalyticsService } from './pendo-analytics.service';
 import { DspInstrumentationToken } from '@dasch-swiss/vre/core/config';
 import { AuthService, AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { of } from 'rxjs';
 import { v5 as uuidv5 } from 'uuid';
+import { PendoAnalyticsService } from './pendo-analytics.service';
 
 describe('PendoAnalyticsService', () => {
   let service: PendoAnalyticsService;
@@ -19,8 +19,8 @@ describe('PendoAnalyticsService', () => {
         PendoAnalyticsService,
         { provide: DspInstrumentationToken, useValue: { environment: 'test' } },
         { provide: AuthService, useValue: authSpy },
-        { provide: AccessTokenService, useValue: accessTokenSpy }
-      ]
+        { provide: AccessTokenService, useValue: accessTokenSpy },
+      ],
     });
 
     service = TestBed.inject(PendoAnalyticsService);

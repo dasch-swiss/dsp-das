@@ -14,7 +14,7 @@ describe('AccessTokenService', () => {
     it('should return user IRI from valid JWT token', () => {
       const mockToken = 'valid-token';
       const mockDecodedToken = { sub: 'http://rdf.dasch.swiss/users/testuser' };
-      
+
       spyOn(service, 'getAccessToken').and.returnValue(mockToken);
       spyOn(service, 'decodedAccessToken').and.returnValue(mockDecodedToken);
 
@@ -43,7 +43,7 @@ describe('AccessTokenService', () => {
     it('should return null when token has no sub field', () => {
       const mockToken = 'valid-token';
       const mockDecodedToken = { iat: 1616239022 };
-      
+
       spyOn(service, 'getAccessToken').and.returnValue(mockToken);
       spyOn(service, 'decodedAccessToken').and.returnValue(mockDecodedToken);
 
@@ -55,7 +55,7 @@ describe('AccessTokenService', () => {
     it('should return null when decoded token has empty sub field', () => {
       const mockToken = 'valid-token';
       const mockDecodedToken = { sub: '' };
-      
+
       spyOn(service, 'getAccessToken').and.returnValue(mockToken);
       spyOn(service, 'decodedAccessToken').and.returnValue(mockDecodedToken);
 
