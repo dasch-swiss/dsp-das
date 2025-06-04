@@ -12,7 +12,7 @@ export class PendoAnalyticsService {
   private _accessTokenService: AccessTokenService = inject(AccessTokenService);
   private environment: string = this.config.environment;
 
-  setup() {
+  setup(): void {
     if (this.config.environment !== 'prod') {
       return;
     }
@@ -25,16 +25,26 @@ export class PendoAnalyticsService {
           this.removeActiveUser();
           return;
         }
-        const token = this._accessTokenService.getAccessToken();
-        if (!token) return;
+        const userIri = this._accessTokenService.getTokenUser();
+        if (!userIri) return;
 
-        const decodedToken = this._accessTokenService.decodedAccessToken(token);
-        if (!decodedToken || !decodedToken.sub) {
-          return;
-        }
-
-        this._setActiveUser(decodedToken.sub);
+        const hashedUserId = this.hashUserIri(userIri);
+        this._setActiveUser(hashedUserId);
       });
+  }
+
+  /**
+   * Hash user IRI to create anonymous identifier for Pendo analytics
+   */
+  private hashUserIri(userIri: string): string {
+    // Simple hash function to create consistent anonymous ID
+    let hash = 0;
+    for (let i = 0; i < userIri.length; i++) {
+      const char = userIri.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash).toString();
   }
 
   /**
