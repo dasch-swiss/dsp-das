@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DspInstrumentationConfig, DspInstrumentationToken } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService, AuthService } from '@dasch-swiss/vre/core/session';
+import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -34,17 +35,11 @@ export class PendoAnalyticsService {
   }
 
   /**
-   * Hash user IRI to create anonymous identifier for Pendo analytics
+   * Generate UUID v5 from user IRI to create anonymous identifier for Pendo analytics
    */
   private hashUserIri(userIri: string): string {
-    // Simple hash function to create consistent anonymous ID
-    let hash = 0;
-    for (let i = 0; i < userIri.length; i++) {
-      const char = userIri.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    return Math.abs(hash).toString();
+    const id: string = uuidv5(userIri, uuidv5.URL);
+    return id;
   }
 
   /**
