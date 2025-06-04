@@ -1,7 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+// import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { FileForm } from '@dasch-swiss/vre/resource-editor/representations';
+
+interface LicenseDto {
+  id: string;
+  uri: string;
+  labelEn: string;
+}
 
 @Component({
   selector: 'app-create-resource-form-file',

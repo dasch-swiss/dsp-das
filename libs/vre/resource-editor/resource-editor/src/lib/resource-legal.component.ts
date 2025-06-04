@@ -1,10 +1,17 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+// import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { LicensesLogoMapping } from './licenses-logo-mapping';
+
+interface LicenseDto {
+  id: string;
+  uri: string;
+  labelEn: string;
+}
 
 @Component({
   selector: 'app-resource-legal',

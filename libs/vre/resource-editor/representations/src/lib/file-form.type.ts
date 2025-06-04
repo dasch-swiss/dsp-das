@@ -1,5 +1,11 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+// import { LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+
+interface LicenseDto {
+  id: string;
+  uri: string;
+  labelEn: string;
+}
 
 export type CreateResourceFormLegal = FormGroup<{
   copyrightHolder: FormControl<string | null>;
