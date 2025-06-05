@@ -1,12 +1,11 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, Inject } from '@angular/core';
-import { KnoraApiConfig, ReadProject } from '@dasch-swiss/dsp-js';
+import { HttpResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { ExportFormat, V2MetadataApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConfigToken } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -25,8 +24,6 @@ export class ResourceMetadataComponent {
 
   constructor(
     private _ats: AccessTokenService,
-    @Inject(DspApiConfigToken) private _dspApiConfig: KnoraApiConfig,
-    private _http: HttpClient,
     private _ms: V2MetadataApiService,
     private _store: Store
   ) {}
@@ -73,42 +70,4 @@ export class ResourceMetadataComponent {
         return 'text/plain';
     }
   }
-
-  //   downloadCustom(shortcode = '0001', format: ExportFormat = 'CSV'): void {
-  //     this._getResourceMetadata(shortcode, format).subscribe(response => {
-  //       const blob = new Blob([response], { type: this._getMimeType(format) });
-  //       const url = window.URL.createObjectURL(blob);
-  //       const link = document.createElement('a');
-  //       console.log(response.headers.get('Content-Disposition'));
-  //       link.href = url;
-  //       link.download = `metadata.${format}`;
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //       window.URL.revokeObjectURL(url);
-  //     });
-  //   }
-
-  //   private _getResourceMetadata(shortcode: string, format: ExportFormat): Observable<any> {
-  //     const baseUrl = this._getIriBaseUrl();
-
-  //     const headers = new HttpHeaders({
-  //       Accept: this._getMimeType(format),
-  //       'Content-Disposition': 'attachment',
-  //     });
-
-  //     return this._http.get(
-  //       `${baseUrl}/v2/metadata/projects/${encodeURIComponent(shortcode)}/resources?format=${format}`,
-  //       {
-  //         headers,
-  //         responseType: 'text',
-  //       }
-  //     );
-  //   }
-
-  //   private _getIriBaseUrl(): string {
-  //     return `${this._dspApiConfig.apiProtocol}://${this._dspApiConfig.apiHost}${
-  //       this._dspApiConfig.apiPort !== null ? `:${this._dspApiConfig.apiPort}` : ''
-  //     }${this._dspApiConfig.apiPath}`;
-  //   }
 }
