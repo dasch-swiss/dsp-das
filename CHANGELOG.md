@@ -1,5 +1,28 @@
 # Changelog
 
+## [11.33.0](https://github.com/dasch-swiss/dsp-das/compare/v11.32.0...v11.33.0) (2025-06-06)
+
+
+### Enhancements
+
+* Add Project Resources Metadata export feature (DEV-4938) ([#2312](https://github.com/dasch-swiss/dsp-das/issues/2312)) ([6366ffa](https://github.com/dasch-swiss/dsp-das/commit/6366ffa72243340082a47774291d55c98f76ef5e))
+* make metadata export user friendly and improve the code (DEV-4938) ([#2331](https://github.com/dasch-swiss/dsp-das/issues/2331)) ([1b82296](https://github.com/dasch-swiss/dsp-das/commit/1b82296cca7182b53147fbfe0d8c145a89d17141))
+
+
+### Bug Fixes
+
+* Prevent JWT tokens from being sent to Pendo analytics (DEV-5006) ([#2329](https://github.com/dasch-swiss/dsp-das/issues/2329)) ([41a7dec](https://github.com/dasch-swiss/dsp-das/commit/41a7dec9b98f9d7cf05eb4d1dfe5d7dc1bf5c1fa))
+* replace LicenseDto with ProjectLicenseDto (DEV-5018) ([#2328](https://github.com/dasch-swiss/dsp-das/issues/2328)) ([6c94f3c](https://github.com/dasch-swiss/dsp-das/commit/6c94f3c5172543791d0bde322f10658ee0232505))
+
+
+### Maintenances
+
+* **deps-dev:** bump @cypress/code-coverage from 3.14.3 to 3.14.4 in the test-coverage-deps group ([#2325](https://github.com/dasch-swiss/dsp-das/issues/2325)) ([cb5b4c7](https://github.com/dasch-swiss/dsp-das/commit/cb5b4c7b5988df427919143195a893ebc9090f00))
+* **deps-dev:** bump @types/node from 20.17.50 to 20.17.57 in the types-deps group ([#2326](https://github.com/dasch-swiss/dsp-das/issues/2326)) ([8d7dfb3](https://github.com/dasch-swiss/dsp-das/commit/8d7dfb31077209ec9dbf27f6c31326319d3e7394))
+* **deps-dev:** bump eslint-plugin-prettier from 5.4.0 to 5.4.1 ([#2324](https://github.com/dasch-swiss/dsp-das/issues/2324)) ([ad06434](https://github.com/dasch-swiss/dsp-das/commit/ad06434fd9b44ca0471b0e4ce4e9f69ec5340592))
+* **deps-dev:** bump postcss from 8.5.3 to 8.5.4 in the postcss-deps group ([#2327](https://github.com/dasch-swiss/dsp-das/issues/2327)) ([d9491cc](https://github.com/dasch-swiss/dsp-das/commit/d9491ccebe9dc56d040fde1c8299ba55bbc1aacf))
+* **deps:** bump @sentry/cli from 2.45.0 to 2.46.0 in the sentry-deps group ([#2323](https://github.com/dasch-swiss/dsp-das/issues/2323)) ([ea7c18c](https://github.com/dasch-swiss/dsp-das/commit/ea7c18cf844fb27b857732c8af106a3465cf899a))
+
 ## [11.32.0](https://github.com/dasch-swiss/dsp-das/compare/v11.31.2...v11.32.0) (2025-05-28)
 
 
