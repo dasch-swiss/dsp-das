@@ -37,6 +37,7 @@ export class ResourceMetadataComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._destroy$.next();
+    this._destroy$.complete();
   }
 
   exportMetadata() {
