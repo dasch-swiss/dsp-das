@@ -1,5 +1,11 @@
 {
   "pages": {
+    "landingPage": {
+      "title": "Projets de recherche",
+      "usersProjects": "Mes projets",
+      "notUsersProjects": "Autres projets de recherche",
+      "filterProjects": "Filter projects"
+    },
     "userSettings": {
       "loginForm": {
         "login": "Connexion"
@@ -10,11 +16,6 @@
         "delete": "Suspendre le compte utilisateur",
         "password": "Mettre à jour le mot de passe",
         "edit": "Modifier le profil"
-      },
-      "overview": {
-        "title": "Parcourir les projets de recherche",
-        "myProjects": "Mes projets",
-        "browseOtherResearchProjects": "Parcourir d'autres projets de recherche"
       },
       "userForm": {
         "emailValidation": "Cette adresse e-mail semble invalide.",
@@ -86,6 +87,37 @@
         "updateConfirmation": "Vous avez mis à jour avec succès les paramètres de l'image du projet.",
         "info": "Pour limiter la taille de votre image, entrez un pourcentage ou une largeur en pixels absolue. Vous ne pouvez pas fournir de valeurs pour les deux options.",
         "restrictions": "Les paramètres de l'image peuvent être appliqués uniquement aux ressources ayant des autorisations de visualisation limitées."
+      },
+      "resourceMetadata": {
+        "tab": "Métadonnées de ressource",
+        "title": "Exporter les métadonnées",
+        "text": {
+          "description": "Exporter les métadonnées descriptives de chaque ressource de ce projet au format CSV.",
+          "note": "Remarque : ce fichier ne contient que les métadonnées, et non les données du projet.",
+          "listTitle": "Ces métadonnées comprennent:",
+          "listContent": {
+            "label": "LLabel (étiquette)abel",
+            "class": "Classe de ressource",
+            "ark": "URL ARK  (lien permanent)",
+            "timestampArk": "ARK avec horodatage",
+            "iri": "IRI de la ressource",
+            "createdBy": "Créé par",
+            "creationDate": "Date de création",
+            "modified": "Date de dernière modification (si disponible)",
+            "deleted": "Datte de suppression (si disponible)"
+          }
+        },
+        "button": "Exporter au format CSV"
+      },
+      "legalSettings": {
+        "warning": "Attention: any action you do here is permanent",
+        "copyrightHolders": "Copyright holders",
+        "licenses": "Licenses",
+        "authorship": "Authorship",
+        "authorshipTooltip": "The authorship overview is read-only. To add a new authorship, please update them directly in the resource.",
+        "noAuthorship": "There are no authorship yet. To add a new authorship, please update them directly in the resource.",
+        "recommended": "Recommended",
+        "notRecommended": "Not recommended"
       }
     },
     "system": {
@@ -146,8 +178,12 @@
       },
       "fullTextSearch": {
         "filterByProject": "Filtrer par projet",
-        "search": "Rechercher",
+        "search": "Search all data",
         "allProjects": "Tous les projets"
+      },
+      "advancedSearch": {
+        "title": "Advanced Search",
+        "usePreviousSearch": "Use Previous Search"
       }
     }
   },
@@ -160,6 +196,7 @@
     "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
     "notFound": "This resource is not found.",
     "deleted": "This resource has been deleted.",
+    "unauthorized": "You do not have access to this resource.",
     "segmentSupport": {
       "createSegmentDialog": {
         "createAnnotation": "Créer une annotation"
