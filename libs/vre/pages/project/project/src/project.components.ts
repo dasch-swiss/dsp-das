@@ -13,23 +13,25 @@ import { LegalSettingsLicensesComponent } from './lib/legal-settings-licenses.co
 import { LegalSettingsComponent } from './lib/legal-settings.component';
 import { LicensesEnabledTableComponent } from './lib/licenses-enabled-table.component';
 import { ProjectComponent } from './lib/project/project.component';
+import { ResourceMetadataComponent } from './lib/resource-metadata/resource-metadata.component';
 import { ReusableProjectFormComponent } from './lib/reusable-project-form/reusable-project-form.component';
 
 export const ProjectComponents = [
-  CreateProjectFormPageComponent,
-  EditProjectFormPageComponent,
-  ReusableProjectFormComponent,
-  ProjectComponent,
-  CollaborationComponent,
   AddUserComponent,
-  SelectGroupComponent,
+  CollaborationComponent,
+  CreateCopyrightHolderDialogComponent,
+  CreateProjectFormPageComponent,
   DescriptionComponent,
-  SettingsPageComponent,
+  EditProjectFormPageComponent,
   ImageDisplayAbsoluteComponent,
   ImageDisplayRatioComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
-  CreateCopyrightHolderDialogComponent,
+  ProjectComponent,
+  ResourceMetadataComponent,
+  ReusableProjectFormComponent,
+  SelectGroupComponent,
+  SettingsPageComponent,
   LegalSettingsLicensesComponent,
   LicensesEnabledTableComponent,
 ];

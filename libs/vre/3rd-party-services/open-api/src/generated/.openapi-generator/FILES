@@ -84,6 +84,7 @@ model/list-change-position-request.ts
 model/list-change-request.ts
 model/list-child-node-adm.ts
 model/list-child-node-info-adm.ts
+model/list-create-child-node-request.ts
 model/list-create-root-node-request.ts
 model/list-delete-response-adm.ts
 model/list-get-response-adm.ts

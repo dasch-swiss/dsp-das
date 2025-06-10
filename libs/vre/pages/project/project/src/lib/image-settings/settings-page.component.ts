@@ -41,6 +41,12 @@ export class SettingsPageComponent {
       icon: 'edit_square',
     },
     {
+      label: 'Resource Metadata',
+      shortLabel: 'Resource Metadata',
+      route: RouteConstants.resourceMetadata,
+      icon: 'code_blocks',
+    },
+    {
       label: 'Image Settings',
       shortLabel: 'Image Settings',
       route: RouteConstants.imageSettings,

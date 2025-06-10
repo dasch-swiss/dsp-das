@@ -58,6 +58,7 @@ export * from './list-change-position-request';
 export * from './list-change-request';
 export * from './list-child-node-adm';
 export * from './list-child-node-info-adm';
+export * from './list-create-child-node-request';
 export * from './list-create-root-node-request';
 export * from './list-delete-response-adm';
 export * from './list-get-response-adm';
