@@ -18,6 +18,7 @@ import {
   LegalSettingsComponent,
   ProjectComponent,
   SettingsPageComponent,
+  ResourceMetadataComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
 import {
@@ -26,7 +27,7 @@ import {
   SystemComponent,
   UsersComponent,
 } from '@dasch-swiss/vre/pages/system/system';
-import { OverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -37,7 +38,7 @@ import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance
 const routes: Routes = [
   {
     path: RouteConstants.home,
-    component: OverviewComponent,
+    component: ProjectOverviewComponent,
   },
   {
     path: RouteConstants.help,
@@ -120,6 +121,10 @@ const routes: Routes = [
           {
             path: RouteConstants.edit,
             component: EditProjectFormPageComponent,
+          },
+          {
+            path: RouteConstants.resourceMetadata,
+            component: ResourceMetadataComponent,
           },
           {
             path: RouteConstants.imageSettings,

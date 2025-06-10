@@ -1,5 +1,11 @@
 {
   "pages": {
+    "landingPage": {
+      "title": "Forschungsprojekte",
+      "usersProjects": "Meine Projekte",
+      "notUsersProjects": "Andere Forschungsprojekte",
+      "filterProjects": "Filter projects"
+    },
     "userSettings": {
       "loginForm": {
         "login": "Anmelden"
@@ -10,11 +16,6 @@
         "delete": "Konto löschen",
         "password": "Passwort aktualisieren",
         "edit": "Profil anpassen"
-      },
-      "overview": {
-        "title": "Forschungsprojekte durchsuchen",
-        "myProjects": "Meine Projekte",
-        "browseOtherResearchProjects": "Andere Forschungsprojekte durchsuchen"
       },
       "userForm": {
         "emailValidation": "Das ist keine gültige Email Adresse",
@@ -86,6 +87,27 @@
         "updateConfirmation": "Sie haben die Bildeinstellungen des Projekts erfolgreich aktualisiert.",
         "info": "Um die Grösse Ihres Bildes zu begrenzen, geben Sie entweder einen Prozentsatz oder eine absolute Pixelbreite ein. Sie können nicht beide Optionen gleichzeitig angeben.",
         "restrictions": "Bildeinstellungen können nur auf die Ressourcen angewendet werden, für die eingeschränkte Ansichtsrechte festgelegt sind."
+      },
+      "resourceMetadata": {
+        "tab": "Ressourcen-Metadaten",
+        "title": "Metadaten exportieren",
+        "text": {
+          "description": "Exportieren Sie beschreibende Metadaten für sämtliche Ressourcen dieses Projekts als CSV.",
+          "note": "Hinweis: Diese Datei enthält ausschliesslich Metadaten – nicht die Daten des Projekts.",
+          "listTitle": "Die Metadaten umfassen:",
+          "listContent": {
+            "label": "Label",
+            "class": "Ressourcen-Klasse",
+            "ark": "ARK-URL (Permalink)",
+            "timestampArk": "ARK mit Zeitstempel",
+            "iri": "Ressourcen-IRI",
+            "createdBy": "Erstellt von",
+            "creationDate": "Erstellungsdatum",
+            "modified": "Letztes Änderungsdatum (falls vorhanden)",
+            "deleted": "Löschdatum (falls vorhanden)"
+          }
+        },
+        "button": "Exportieren als CSV"
       }
     },
     "system": {
@@ -146,8 +168,12 @@
       },
       "fullTextSearch": {
         "filterByProject": "Nach Projekt filtern",
-        "search": "Suche",
+        "search": "Search all data",
         "allProjects": "Alle Projekte"
+      },
+      "advancedSearch": {
+        "title": "Advanced Search",
+        "usePreviousSearch": "Use Previous Search"
       }
     }
   },
@@ -160,6 +186,7 @@
     "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
     "notFound": "This resource is not found.",
     "deleted": "This resource has been deleted.",
+    "unauthorized": "You do not have access to this resource.",
     "segmentSupport": {
       "createSegmentDialog": {
         "createAnnotation": "Annotation hinzufügen"
