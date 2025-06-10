@@ -17,10 +17,6 @@ export class PropertyValueSwitcherComponent implements OnInit {
 
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
-  get cardinality() {
-    return this.myProperty.guiDef.cardinality;
-  }
-
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
   }
@@ -35,6 +31,6 @@ export class PropertyValueSwitcherComponent implements OnInit {
     this._propertyValueService.editModeData = this.editModeData;
     this._propertyValueService.propertyDefinition = this.propertyDefinition;
     this._propertyValueService.formArray = this.formArray;
-    this._propertyValueService.cardinality = this.cardinality;
+    this._propertyValueService.cardinality = this.myProperty.guiDef.cardinality;
   }
 }
