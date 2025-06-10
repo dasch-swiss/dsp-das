@@ -13,8 +13,6 @@ import { PropertyValueService } from './property-value.service';
 export class PropertyValueInitializerComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
-  @Input({ required: true }) resourceClassIri!: string;
-
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
   get propertyDefinition() {

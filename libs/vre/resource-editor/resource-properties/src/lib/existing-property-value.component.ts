@@ -13,7 +13,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       *ngIf="resource.type"
       [myProperty]="prop"
       [formArray]="formArray"
-      [resourceClassIri]="resource.type"
       [editModeData]="{ resource, values: prop.values }" />
 
     <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
