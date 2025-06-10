@@ -35,7 +35,7 @@ export * from './lib/date-time';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
 export * from './lib/erase-resource-dialog.component';
-export * from './lib/existing-property-value.component';
+export * from './lib/property-value-to-form.component';
 export * from './lib/form-value-array.type';
 export * from './lib/property-row.component';
 export * from './lib/properties-display.service';

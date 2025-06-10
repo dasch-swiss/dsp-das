@@ -7,7 +7,7 @@ import { FormValueArray } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-existing-property-value',
+  selector: 'app-property-value-to-form',
   template: `
     <app-property-value-initializer
       *ngIf="resource.type"
@@ -20,7 +20,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   styles: [':host { display: block; position: relative; width: 100%}'],
   providers: [FootnoteService],
 })
-export class ExistingPropertyValueComponent implements OnChanges {
+export class PropertyValueToFormComponent implements OnChanges {
   @Input({ required: true }) prop!: PropertyInfoValues;
   @Input({ required: true }) resource!: ReadResource;
 
