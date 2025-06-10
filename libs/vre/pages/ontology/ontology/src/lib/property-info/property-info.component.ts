@@ -1,21 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import {
-  Constants,
-  KnoraApiConnection,
-  ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  DefaultClass,
-  DefaultProperty,
-  OntologyService,
-  PropertyInfoObject,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith, switchMap, take } from 'rxjs/operators';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
   id: string;
@@ -28,6 +20,7 @@ export interface ShortInfo {
   selector: 'app-property-info',
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     // the fade-in/fade-out animation.
     // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
@@ -55,17 +48,9 @@ export interface ShortInfo {
 export class PropertyInfoComponent implements OnInit {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
-  @Input() projectUuid!: string;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
 
-  @Input() projectStatus!: boolean;
-
-  @Input() userCanEdit = false;
-
-  @Output() editResourceProperty: EventEmitter<PropertyInfoObject> = new EventEmitter<PropertyInfoObject>();
-
-  @Output() deleteResourceProperty: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
-
-  private _projectOntologies: ReadOntology[] = [];
+  project!: ReadProject | undefined;
 
   propAttribute: string | undefined;
   propAttributeComment: string | undefined;
@@ -73,7 +58,14 @@ export class PropertyInfoComponent implements OnInit {
   usedByClasses: ShortInfo[] = [];
 
   showActionBubble = false;
-  propCanBeDeleted = false;
+
+  readonly canBeDeletedTrigger$ = new Subject<void>();
+
+  readonly canBeDeleted$ = this.canBeDeletedTrigger$.pipe(
+    switchMap(() => this._oes.canDeleteResourceProperty$(this.propDef.id)),
+    map(res => res.canDo),
+    startWith(undefined)
+  );
 
   isLockHovered = false;
 
@@ -86,24 +78,28 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
+    private _oes: OntologyEditService,
+    private _projectService: ProjectService,
     private _store: Store
   ) {
-    this._projectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
+    this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
   }
 
   ngOnInit() {
-    this._collectUsedByClasses();
+    this._store.select(OntologiesSelectors.currentProjectOntologies).subscribe(ontologies => {
+      if (ontologies.length) {
+        this._collectUsedByClasses(ontologies);
 
-    if (this.propDef.isLinkProperty || this.propDef.objectType === Constants.ListValue) {
-      this._setAdditionalAttributes();
-    }
+        if (this.propDef.isLinkProperty || this.propDef.objectType === Constants.ListValue) {
+          this._setAdditionalAttributes(ontologies);
+        }
+      }
+    });
   }
 
-  private _collectUsedByClasses() {
-    this._projectOntologies.forEach(onto => {
+  private _collectUsedByClasses(projectsOntologies: ReadOntology[]) {
+    projectsOntologies.forEach(onto => {
       getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
         const usedByClass = resClass.propertiesList.some(prop => prop.propertyIndex === this.propDef.id);
         const isAlreadyAdded = this.usedByClasses.some(c => c.id === resClass.id);
@@ -121,7 +117,7 @@ export class PropertyInfoComponent implements OnInit {
     this.usedByClasses.sort((a, b) => (a.label > b.label ? 1 : -1));
   }
 
-  private _setAdditionalAttributes() {
+  private _setAdditionalAttributes(projectsOntologies: ReadOntology[]) {
     if (this.propDef.objectType && this.propDef.objectType === Constants.Region) {
       this.propAttribute = 'Region';
       return;
@@ -132,7 +128,7 @@ export class PropertyInfoComponent implements OnInit {
       const onto =
         this.propertiesBaseOntology === currentOntology?.id
           ? currentOntology
-          : this._projectOntologies.find(i => i.id === this.propertiesBaseOntology);
+          : projectsOntologies.find(i => i.id === this.propertiesBaseOntology);
 
       this.propAttribute = onto?.classes[this.propDef.objectType]?.label ?? '';
       this.propAttributeComment = onto?.classes[this.propDef.objectType]?.comment ?? '';
@@ -141,8 +137,10 @@ export class PropertyInfoComponent implements OnInit {
 
     if (this.propDef.objectType === Constants.ListValue) {
       const currentProjectsLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
+      const projectUuid = this._projectService.uuidToIri(this.project.id);
+
       const listIri = this.propDef.guiAttributes[0].split('<')[1].replace(/>/g, '');
-      const listUrl = `/project/${this.projectUuid}/lists/${encodeURIComponent(listIri)}`;
+      const listUrl = `/project/${projectUuid}/lists/${encodeURIComponent(listIri)}`;
       const list = currentProjectsLists.find(i => i.id === listIri);
       this.propAttribute = `<a href="${listUrl}">${list?.labels[0].value}</a>`;
       this.propAttributeComment = list?.comments.length ? list.comments[0].value : '';
@@ -151,14 +149,16 @@ export class PropertyInfoComponent implements OnInit {
 
   trackByFn = (index: number, item: ShortInfo) => item.id;
 
-  canBeDeleted(): void {
-    this._dspApiConnection.v2.onto.canDeleteResourceProperty(this.propDef.id).subscribe(canDoRes => {
-      this.propCanBeDeleted = canDoRes.canDo;
-    });
+  editResourceProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
+    this._oes.openEditProperty(propDef, propType);
+  }
+
+  deleteResourceProperty(iri: string) {
+    this._oes.deleteProperty(iri);
   }
 
   mouseEnter() {
-    this.canBeDeleted();
+    this.canBeDeletedTrigger$.next();
     this.showActionBubble = true;
   }
 

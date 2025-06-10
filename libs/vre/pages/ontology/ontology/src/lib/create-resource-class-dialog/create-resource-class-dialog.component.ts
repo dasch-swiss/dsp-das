@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateResourceClass, KnoraApiConnection, StringLiteral, UpdateOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -33,6 +33,7 @@ export interface CreateResourceClassDialogProps {
       </button>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceClassDialogComponent implements OnInit {
   loading = false;
@@ -56,24 +57,13 @@ export class CreateResourceClassDialogComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-
-    this._dspApiConnection.v2.onto
-      .createResourceClass(this._createOntology())
-      .pipe(
-        tap(
-          () => {
-            this.loading = false;
-            this.dialogRef.close();
-          },
-          () => {
-            this.loading = false;
-          }
-        )
-      )
-      .subscribe();
+    this._dspApiConnection.v2.onto.createResourceClass(this._getUpdateOntology()).subscribe(() => {
+      this.loading = false;
+      this.dialogRef.close(true);
+    });
   }
 
-  private _createOntology() {
+  private _getUpdateOntology() {
     const onto = new UpdateOntology<CreateResourceClass>();
 
     onto.id = this.data.ontologyId;
@@ -81,7 +71,7 @@ export class CreateResourceClassDialogComponent implements OnInit {
 
     const newResClass = new CreateResourceClass();
 
-    newResClass.name = this.form.value.name;
+    newResClass.name = this.form.value.name!;
     newResClass.label = this.form.value.labels as StringLiteral[];
     newResClass.comment = this.form.value.comments as StringLiteral[];
     newResClass.subClassOf = [this.data.id];

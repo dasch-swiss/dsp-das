@@ -1,206 +1,152 @@
 import {
-  AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
+  OnInit,
 } from '@angular/core';
 import {
   Cardinality,
   ClassDefinition,
   Constants,
   IHasProperty,
-  KnoraApiConnection,
+  ListNodeInfo,
+  ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
-  UpdateOntology,
-  UpdateResourceClassCardinality,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, LoadOntologyAction, OntologiesSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
-import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-property-info',
   templateUrl: './resource-class-property-info.component.html',
   styleUrls: ['./resource-class-property-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceClassPropertyInfoComponent implements OnChanges, AfterContentInit, OnDestroy {
-  @Input() propDef: ResourcePropertyDefinitionWithAllLanguages;
+export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, OnDestroy {
+  @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
   @Input() propCard: IHasProperty;
 
-  @Input() props: PropToDisplay[];
-
-  @Input() classIri?: string;
-
-  @Input() projectUuid: string;
-
-  @Input() lastModificationDate?: string;
-
-  @Input() userCanEdit: boolean; // is user a project admin or sys admin?
-
-  @Output() removePropertyFromClass: EventEmitter<DefaultClass> = new EventEmitter<DefaultClass>();
+  @Input() props: PropToDisplay[]; // Todo: remove this, input the single prop and get propsOfClass from the thore or so
 
   @Input() resourceClass: ClassDefinition;
 
-  isDestroyed = new Subject<void>();
+  @Input() active = false;
 
-  propType: DefaultProperty;
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
-  propAttribute: string;
-  propAttributeComment: string;
+  propAttribute?: string;
+  propAttributeComment?: string;
 
-  propCanBeRemovedFromClass: boolean;
+  menuOpen = false;
+
+  propCanBeRemovedFromClass: boolean | null = null;
+
+  private _destroy = new Subject<void>();
+
+  get propType(): DefaultProperty {
+    return this._ontoService.getDefaultPropertyType(this.propDef);
+  }
+
+  get listUrl() {
+    const re = /\<([^)]+)\>/;
+    const match = this.propDef.guiAttributes[0]?.match(re);
+    const listIri = match?.[1]?.length ? match[1] : '';
+    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
+    return listIri && projectUuid ? `/project/${projectUuid}/list/${listIri.split('/').pop()}` : null;
+  }
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _ontoService: OntologyService,
+    private _oes: OntologyEditService,
     private _store: Store,
     private _cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(): void {
-    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
-
-    // get info about subproperties, if they are not a subproperty of knora base ontology
-    // in this case add it to the list of subproperty iris
-    const superProp = this._ontoService.getSuperProperty(this.propDef, currentProjectOntologies);
-    if (superProp) {
-      if (this.propDef.subPropertyOf.indexOf(superProp) === -1) {
-        this.propDef.subPropertyOf.push(superProp);
-      }
-    }
-
-    // get the default property type for this property
-    this._ontoService.getDefaultPropType(this.propDef).subscribe(prop => {
-      this.propType = prop;
-    });
+    this._ontoService.getDefaultProperty(this.propDef);
   }
 
-  ngAfterContentInit() {
-    // get current ontology to get linked res class information
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    const currentProjectOntologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
-    if (ontology && currentProjectOntologies && this.propDef.isLinkProperty) {
-      // this property is a link property to another resource class
-      // get the base ontology of object type
-      const baseOnto = this.propDef.objectType.split('#')[0];
-      if (baseOnto !== ontology.id) {
-        // get class info from another ontology
-        const onto = currentProjectOntologies.find(i => i.id === baseOnto);
-        if (!onto) {
-          if (this.propDef.objectType === Constants.Region) {
-            this.propAttribute = 'Region';
-          } // else no ontology found
-        } else {
-          this.propAttribute = onto.classes[this.propDef.objectType].label;
-          this.propAttributeComment = onto.classes[this.propDef.objectType].comment;
-        }
-      } else {
-        this.propAttribute = ontology.classes[this.propDef.objectType].label;
-        this.propAttributeComment = ontology.classes[this.propDef.objectType].comment;
-      }
+  ngOnInit() {
+    if (!this.propDef.isLinkProperty) {
+      this._store
+        .select(OntologiesSelectors.currentProjectOntologies)
+        .pipe(
+          takeUntil(this._destroy),
+          filter(ontologies => !!ontologies && ontologies.length > 0)
+        )
+        .subscribe(ontologies => {
+          this._setAttributesForLinkProperty(ontologies);
+        });
     }
 
-    // get current ontology lists to get linked list information
-    this._store
-      .select(ListsSelectors.listsInProject)
-      .pipe(takeUntil(this.isDestroyed))
-      .subscribe(currentOntologyLists => {
-        if (currentOntologyLists && this.propDef.objectType === Constants.ListValue) {
-          // this property is a list property
-          const re = /\<([^)]+)\>/;
-          const listIri = this.propDef.guiAttributes[0].match(re)[1];
-          const listUrl = `/project/${this.projectUuid}/list/${listIri.split('/').pop()}`;
-          const list = currentOntologyLists.find(i => i.id === listIri);
-          if (list) {
-            this.propAttribute = `<a href="${listUrl}">${list.labels[0].value}</a>`;
-            this.propAttributeComment = list.comments.length ? list.comments[0].value : null;
-          }
-        }
-      });
+    if (this.propDef.objectType === Constants.ListValue) {
+      this._store
+        .select(ListsSelectors.listsInProject)
+        .pipe(
+          takeUntil(this._destroy),
+          filter(lists => !!lists && lists.length > 0)
+        )
+        .subscribe(lists => {
+          this._setAttributesForListProperty(lists);
+        });
+    }
   }
 
-  /**
-   * determines whether a property can be removed from a class or not
-   */
+  private _setAttributesForListProperty(lists: ListNodeInfo[]) {
+    const list = lists.find(i => i.id.split('/').pop() === this.listUrl?.split('/').pop());
+    if (list) {
+      this.propAttribute = `<a href="${this.listUrl}">${list.labels[0].value}</a>`;
+      this.propAttributeComment = list.comments.length ? list.comments[0].value : undefined;
+    }
+  }
+
+  private _setAttributesForLinkProperty(currentProjectOntologies: ReadOntology[]) {
+    if (this.propDef.objectType === Constants.Region) {
+      this.propAttribute = 'Region';
+      return;
+    }
+
+    const propertiesBaseOntologyId = this.propDef.objectType?.split('#')[0];
+    const baseOntology = currentProjectOntologies.find(i => i.id === propertiesBaseOntologyId);
+    this.propAttribute = baseOntology?.classes[this.propDef.objectType!].label;
+    console.log('this.propAttribute', this.propAttribute);
+    this.propAttributeComment = baseOntology?.classes[this.propDef.objectType!].comment;
+  }
+
   canBeRemovedFromClass(): void {
-    // check if the property can be removed from res class
-    if (!this.lastModificationDate) {
-      // guard
-      return;
-    }
-
-    // property can only be removed from class if it's not inherited from another prop or class
-    if (this.propCard.isInherited) {
-      // other guard
-      this.propCanBeRemovedFromClass = false;
-      return;
-    }
-    const onto = new UpdateOntology<UpdateResourceClassCardinality>();
-
-    onto.lastModificationDate = this.lastModificationDate;
-
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    onto.id = ontology.id;
-
-    const delCard = new UpdateResourceClassCardinality();
-
-    delCard.id = this.classIri;
-
-    delCard.cardinalities = [];
-
-    delCard.cardinalities = [this.propCard];
-    onto.entity = delCard;
-
-    this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto).subscribe(canDoRes => {
+    this._oes.propertyCanBeRemovedFromClass(this.propCard, this.resourceClass.id).subscribe(canDoRes => {
       this.propCanBeRemovedFromClass = canDoRes.canDo;
       this._cd.markForCheck();
     });
   }
 
-  submitCardinalitiesChange(newValue: Cardinality) {
-    const ontology = this._store.selectSnapshot(OntologiesSelectors.currentOntology);
-    // get the ontology, the class and its properties
-    const classUpdate = new UpdateOntology<UpdateResourceClassCardinality>();
-    classUpdate.lastModificationDate = this.lastModificationDate;
-    classUpdate.id = ontology.id;
-    const changedClass = new UpdateResourceClassCardinality();
-    changedClass.id = this.classIri; // TODO this.resClassIri;
-    // find the prop in the this.props array and replace with this.propCard
-    this.props.forEach((prop, index) => {
-      if (prop.propertyIndex === this.propCard.propertyIndex) {
-        this.props[index] = this.propCard;
-      }
-    });
+  removePropertyFromClass(): void {
+    this._oes.removePropertyFromClass(this.propCard, this.resourceClass.id);
+  }
 
-    changedClass.cardinalities = this.props;
-    // get the property for replacing the cardinality
-    const idx = changedClass.cardinalities.findIndex(c => c.propertyIndex === this.propDef.id);
-    changedClass.cardinalities[idx].cardinality = newValue;
+  openEditProperty() {
+    this._oes.openEditProperty(this.propDef, this.propType);
+  }
 
-    classUpdate.entity = changedClass;
-    this._dspApiConnection.v2.onto
-      .replaceCardinalityOfResourceClass(classUpdate)
-      .pipe(
-        tap(() => {
-          this._store.dispatch(new LoadOntologyAction(ontology?.id || '', this.projectUuid, true));
-        }),
-        take(1)
-      )
-      .subscribe(response => {});
+  updateCardinality(newValue: Cardinality) {
+    const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.propCard.propertyIndex);
+    if (propertyIdx !== -1) {
+      this.props[propertyIdx] = this.propCard;
+      this.props[propertyIdx].cardinality = newValue;
+      this._oes.updateCardinalitiesOfResourceClass(this.resourceClass.id, this.props);
+    }
   }
 
   ngOnDestroy() {
-    this.isDestroyed.next();
-    this.isDestroyed.complete();
+    this._destroy.next();
+    this._destroy.complete();
   }
 }
