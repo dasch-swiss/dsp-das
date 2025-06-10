@@ -13,21 +13,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from 'libs/vre/core/config/src';
 import {
-  IClassItemsKeyValuePairs,
   LoadClassItemsCountAction,
   OntologyClassSelectors,
   ProjectsSelectors,
 } from 'libs/vre/core/state/src';
 import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events,
   LocalizationService,
   OntologyService,
 } from 'libs/vre/shared/app-helper-services/src';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -41,22 +37,13 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
 
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
-  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember) isMember$: Observable<boolean>;
-
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
 
-  get results$(): Observable<number> {
-    return combineLatest([
-      this._store.select(OntologyClassSelectors.classItems),
-      this._store.select(OntologyClassSelectors.isLoading),
-    ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
-  }
+  isMember$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember);
 
   classLink: string;
 
   icon: string;
-
-  componentCommsSubscriptions: Subscription[] = [];
 
   tooltipDisabled = true;
 
@@ -71,17 +58,20 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
 
   ontologiesLabel: string;
 
-  @Select(OntologyClassSelectors.classItems) classItems$: Observable<IClassItemsKeyValuePairs>;
+    get results$(): Observable<number> {
+        return combineLatest([
+            this._store.select(OntologyClassSelectors.classItems),
+            this._store.select(OntologyClassSelectors.isLoading),
+        ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
+    }
 
   constructor(
-    private _route: ActivatedRoute,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _cdr: ChangeDetectorRef,
-    private _store: Store,
     private _actions$: Actions,
     private _cd: ChangeDetectorRef,
-    private _router: Router,
     private _localizationService: LocalizationService,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _store: Store,
     private _translateService: TranslateService
   ) {
     this._actions$.pipe(takeUntil(this.destroyed), ofActionSuccessful(LoadClassItemsCountAction)).subscribe(() => {
@@ -90,10 +80,11 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
   }
 
   ngOnInit(): void {
-    const uuid = this._route.snapshot.params.uuid;
-    const splitIri = this.resClass.id.split('#');
-    const ontologyName = OntologyService.getOntologyName(splitIri[0]);
-    this.classLink = `${RouteConstants.projectRelative}/${uuid}/${RouteConstants.ontology}/${ontologyName}/${splitIri[1]}`;
+    const projectUuid = this._route.snapshot.paramMap.get(RouteConstants.uuidParameter);
+    const [ontologyIri, className] = this.resClass.id.split('#');
+    const ontologyName = OntologyService.getOntologyName(ontologyIri);
+    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, this.resClass.id));
+    this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
     this.icon = this._getIcon();
     this._translateService.onLangChange.pipe(takeUntil(this.destroyed)).subscribe(() => {
       this.getOntologiesLabelsInPreferredLanguage();
@@ -103,28 +94,18 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
 
   ngAfterViewInit(): void {
     this.tooltipDisabled = !this.isTextOverflowing(this.resClassLabel.nativeElement);
-    this._cdr.detectChanges();
+    this._cd.detectChanges();
   }
 
   ngOnDestroy(): void {
-    this.componentCommsSubscriptions.forEach(sub => sub.unsubscribe());
     this.destroyed.next();
     this.destroyed.complete();
   }
 
-  selectItem() {
-    this._componentCommsService.emit(new EmitEvent(Events.unselectedListItem));
-  }
-
   isTextOverflowing(element: HTMLElement): boolean {
-    if (element) {
       return element.scrollHeight > element.clientHeight;
-    }
   }
 
-  /**
-   * Gets the ontology label in the preferred language of the user
-   */
   private getOntologiesLabelsInPreferredLanguage(): void {
     const prefferedLanguage = this._localizationService.getCurrentLanguage();
     if (this.resClass.labels) {
@@ -134,11 +115,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
     }
   }
 
-  /**
-   * return the correct mat-icon depending on the subclass of the resource
-   *
-   * @returns mat-icon name as string
-   */
   private _getIcon(): string {
     switch (this.resClass.subClassOf[0]) {
       case Constants.AudioRepresentation:
