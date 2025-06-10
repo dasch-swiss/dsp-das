@@ -5,7 +5,11 @@ import { FormValueArray } from './form-value-array.type';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <app-template-switcher [myProperty]="myProperty" (templateFound)="template = $event" [editMode]="true" />
+    <app-template-switcher
+      [myPropertyDefinition]="myProperty.propDef"
+      [value]="myProperty.values[0]"
+      (templateFound)="template = $event"
+      [editMode]="true" />
 
     <ng-container *ngIf="template">
       <ng-container *ngTemplateOutlet="template; context: { item: formArray.at(0).controls.item }"></ng-container>

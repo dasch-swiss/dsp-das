@@ -1,6 +1,12 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { Constants, ReadTextValueAsHtml, ReadTextValueAsString, ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
-import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import {
+  Constants,
+  PropertyDefinition,
+  ReadTextValueAsHtml,
+  ReadTextValueAsString,
+  ReadTextValueAsXml,
+  ReadValue,
+} from '@dasch-swiss/dsp-js';
 import { JsLibPotentialError } from './JsLibPotentialError';
 
 @Component({
@@ -101,7 +107,8 @@ import { JsLibPotentialError } from './JsLibPotentialError';
   `,
 })
 export class TemplateSwitcherComponent implements AfterViewInit {
-  @Input({ required: true }) myProperty!: PropertyInfoValues;
+  @Input({ required: true }) value!: ReadValue;
+  @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
@@ -139,7 +146,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
   get propertyDefinition() {
-    return JsLibPotentialError.setAs(this.myProperty.propDef);
+    return JsLibPotentialError.setAs(this.myPropertyDefinition);
   }
 
   ngAfterViewInit() {
@@ -212,11 +219,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _manageTextEditorValue() {
-    if (this.myProperty.values.length === 0) {
-      return this._defaultTextEditorBehavior();
-    }
-
-    const value = this.myProperty.values[0] as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
+    const value = this.value as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
 
     if (value instanceof ReadTextValueAsString) {
       return this._defaultTextEditorBehavior();

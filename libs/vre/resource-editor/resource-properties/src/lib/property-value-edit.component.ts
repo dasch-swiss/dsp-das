@@ -19,7 +19,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   selector: 'app-property-value-edit',
   template: `
     <app-template-switcher
-      [myProperty]="propertyValueService.propertyDefinition"
+      [myPropertyDefinition]="propertyValueService.propertyDefinition"
+      [value]="propertyValueService.editModeData.values[index]"
       [editMode]="true"
       (templateFound)="template = $event" />
 
