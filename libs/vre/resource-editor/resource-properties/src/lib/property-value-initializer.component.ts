@@ -6,11 +6,11 @@ import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
-  selector: 'app-property-value-switcher',
+  selector: 'app-property-value-initializer',
   providers: [PropertyValueService],
   template: ` <app-property-values /> `,
 })
-export class PropertyValueSwitcherComponent implements OnInit {
+export class PropertyValueInitializerComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) resourceClassIri!: string;

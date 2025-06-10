@@ -9,7 +9,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-existing-property-value',
   template: `
-    <app-property-value-switcher
+    <app-property-value-initializer
       *ngIf="resource.type"
       [myProperty]="prop"
       [formArray]="formArray"

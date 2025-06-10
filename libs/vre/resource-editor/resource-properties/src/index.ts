@@ -1,4 +1,4 @@
-export * from './lib/property-value-switcher.component';
+export * from './lib/property-value-initializer.component';
 export * from './lib/switch-components/color-switch.component';
 export * from './lib/switch-components/interval-switch.component';
 export * from './lib/value-components/geoname-value.component';

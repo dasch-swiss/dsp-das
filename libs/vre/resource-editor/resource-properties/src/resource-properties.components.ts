@@ -22,7 +22,7 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
-import { PropertyValueSwitcherComponent } from './lib/property-value-switcher.component';
+import { PropertyValueInitializerComponent } from './lib/property-value-initializer.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
@@ -85,7 +85,7 @@ export const ResourcePropertiesComponents = [
   TextTypesSelectorComponent,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
-  PropertyValueSwitcherComponent,
+  PropertyValueInitializerComponent,
   PropertyValueActionBubbleComponent,
   PropertyValueComponent,
   PropertyValueEditComponent,
