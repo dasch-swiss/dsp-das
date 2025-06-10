@@ -179,6 +179,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _getDisplayTemplate(): TemplateRef<any> {
+    console.log('aa', this);
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
         return this.intDisplayTpl;

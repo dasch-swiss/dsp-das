@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ValidatorFn } from '@angular/forms';
 import { ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
@@ -25,8 +24,6 @@ export class PropertyValueSwitcherComponent implements OnInit {
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
   }
-
-  validators: ValidatorFn[] | undefined;
 
   constructor(private _propertyValueService: PropertyValueService) {}
 

@@ -6,7 +6,7 @@ import { FormValueArray } from './form-value-array.type';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-create-resource-form-properties',
+  selector: 'yapp-create-resource-form-properties',
   template: `
     <app-create-resource-form-row
       *ngFor="let prop of myProperties; let last = last"
