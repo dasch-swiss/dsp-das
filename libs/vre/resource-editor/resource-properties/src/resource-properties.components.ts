@@ -22,7 +22,6 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
-import { PropertyValueSwitcher2Component } from './lib/property-value-switcher-2.component';
 import { PropertyValueSwitcherComponent } from './lib/property-value-switcher.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
@@ -41,6 +40,7 @@ import { TextTypesSelectorComponent } from './lib/switch-components/text-types-s
 import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
 import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
+import { TemplateSwitcherComponent } from './lib/template-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
@@ -114,6 +114,6 @@ export const ResourcePropertiesComponents = [
   AuthorshipFormFieldComponent,
   MathJaxDirective,
 
-  PropertyValueSwitcher2Component,
+  TemplateSwitcherComponent,
   PropertyValueCreatorComponent,
 ];

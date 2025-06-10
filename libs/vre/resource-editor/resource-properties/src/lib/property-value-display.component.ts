@@ -7,7 +7,7 @@ import { PropertyValueService } from './property-value.service';
 
 @Component({
   selector: 'app-property-value-display',
-  template: ` <app-property-value-switcher-2
+  template: ` <app-template-switcher
       [myProperty]="propertyValueService.propertyDefinition"
       [editMode]="false"
       (templateFound)="itemTpl = $event" />

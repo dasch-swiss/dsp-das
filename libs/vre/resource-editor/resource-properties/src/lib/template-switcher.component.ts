@@ -4,7 +4,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
 
 @Component({
-  selector: 'app-property-value-switcher-2',
+  selector: 'app-template-switcher',
   template: `
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
@@ -100,7 +100,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })
-export class PropertyValueSwitcher2Component implements AfterViewInit {
+export class TemplateSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
