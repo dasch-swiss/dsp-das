@@ -36,8 +36,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         userCanAdd &&
         !propertyValueService.currentlyAdding &&
         (propertyValueService.formArray.controls.length === 0 ||
-          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
-        propertyValueService.propertyDefinition.isEditable
+          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality))
       ">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
