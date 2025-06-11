@@ -5,7 +5,6 @@ import { FormValueArray } from './form-value-array.type';
 
 @Injectable()
 export class PropertyValueService {
-  test = 'test';
   private _editModeData!: { resource: ReadResource; values: ReadValue[] };
   propertyDefinition!: ResourcePropertyDefinition;
   formArray!: FormValueArray;
