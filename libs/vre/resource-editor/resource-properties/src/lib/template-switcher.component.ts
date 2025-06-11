@@ -103,6 +103,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-interval-viewer [control]="item" />
     </ng-template>
 
+    <ng-template #timeDisplayTpl let-item="item">
+      <app-time-viewer [control]="item" />
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })

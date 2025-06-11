@@ -52,6 +52,7 @@ import { TimeValueComponent } from './lib/value-components/time-value.component'
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
+import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
 const valueComponents = [
   GeonameValueComponent,
@@ -62,7 +63,7 @@ const valueComponents = [
   IntervalValueComponent,
 ];
 
-const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent];
+const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
 const switchComponents = [
   TimeSwitchComponent,
