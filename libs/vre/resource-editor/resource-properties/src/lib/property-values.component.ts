@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -32,7 +33,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       (click)="addItem()"
       data-cy="add-property-value-button"
       *ngIf="
-        (isCurrentProjectAdminSysAdminOrMember$ | async) &&
+        userCanAdd &&
         !propertyValueService.currentlyAdding &&
         (propertyValueService.formArray.controls.length === 0 ||
           [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
@@ -51,6 +52,10 @@ export class PropertyValuesComponent implements OnInit {
   isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
 
   protected readonly Cardinality = Cardinality;
+
+  get userCanAdd() {
+    return ResourceUtil.userCanEdit(this.editModeData.resource);
+  }
 
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
