@@ -91,20 +91,24 @@ export class AddPropertyMenuComponent {
   private ngUnsubscribe = new Subject<void>();
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
+  unusedProperties$ = this._oes.currentOntologyProperties$.pipe(
+    map(props => {
+      const usedIds = (this.resourceClass?.propertiesList || []).map(c => c.propertyIndex);
+      return props.filter(p => !usedIds.includes(p.id));
+    })
+  );
+
   availableProperties$: Observable<PropToAdd[]> = combineLatest([
     this._store.select(OntologiesSelectors.currentProjectOntologies),
-    this._oes.currentOntologyProperties$,
+    this.unusedProperties$,
   ]).pipe(
     takeUntil(this.ngUnsubscribe),
     map(([ontologies, properties]) => {
       return ontologies.map(onto => {
-        const classProps = [...(this.resourceClass?.propertiesList || [])];
-        const unusedProperties = properties.filter(p => !classProps.some(c => c.propertyIndex === p.id));
-
         return {
           ontologyId: onto.id,
           ontologyLabel: onto.label,
-          properties: unusedProperties.map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
+          properties: properties.map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
             return {
               propType: this._ontoService.getDefaultPropertyType(prop),
               propDef: prop,
@@ -112,13 +116,6 @@ export class AddPropertyMenuComponent {
           }),
         };
       });
-    })
-  );
-
-  availableProperties2$ = this._oes.currentOntologyProperties$.pipe(
-    map(props => {
-      const usedIds = (this.resourceClass?.propertiesList || []).map(c => c.propertyIndex);
-      return props.filter(p => !usedIds.includes(p.id));
     })
   );
 

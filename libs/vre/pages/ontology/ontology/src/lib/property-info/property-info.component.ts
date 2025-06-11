@@ -4,8 +4,8 @@ import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAll
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
 import { map, startWith, switchMap, take } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -48,7 +48,7 @@ export interface ShortInfo {
 export class PropertyInfoComponent implements OnInit {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   project!: ReadProject | undefined;
 
