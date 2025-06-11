@@ -24,7 +24,6 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 export class TimeInputComponent implements OnInit {
   @Input({ required: true }) control!: FormControl;
   @Input({ required: true }) label!: string;
-  @Input() validatorErrors: ValidatorError[] | null = null;
 
   possibleErrors!: ValidatorError[];
   readonly errorStateMatcher = new TimeInputErrorStateMatcher();
@@ -35,7 +34,6 @@ export class TimeInputComponent implements OnInit {
         errorKey: 'pattern',
         message: 'Please enter a valid time in format hh:mm:ss',
       },
-      ...(this.validatorErrors ?? []),
     ];
   }
 }
