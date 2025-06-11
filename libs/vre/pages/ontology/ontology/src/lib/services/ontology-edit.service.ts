@@ -144,7 +144,6 @@ export class OntologyEditService {
   initOntologyByLabel(label: string) {
     this._isTransacting.next(true);
     this._canDeletePropertyMap.clear();
-    console.log(label);
     const ontologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
     const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyName(onto.id) == label);
 

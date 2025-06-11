@@ -17,11 +17,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   selector: 'app-add-property-menu',
   template: `
     <mat-list style="border-top: 1px solid rgba(0, 0, 0, .12);">
-      <mat-list-item
-        *ngIf="!disabled"
-        class="property link"
-        data-cy="add-property-button"
-        [matMenuTriggerFor]="addPropertyMenu">
+      <mat-list-item class="property link" data-cy="add-property-button" [matMenuTriggerFor]="addPropertyMenu">
         <mat-icon matListItemIcon class="list-icon">add</mat-icon>
         <span matListItemTitle>Add property</span>
       </mat-list-item>
@@ -90,7 +86,6 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 })
 export class AddPropertyMenuComponent {
   @Input() resourceClass: ClassDefinition | undefined = undefined;
-  @Input() disabled = false;
   @Output() updatePropertyAssignment = new EventEmitter<string>();
 
   private ngUnsubscribe = new Subject<void>();

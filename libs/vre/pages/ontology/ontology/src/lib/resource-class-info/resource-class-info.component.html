@@ -32,7 +32,7 @@
         </button>
       </span>
       <span class="resource-class-size" [matTooltip]="(expanded ? 'Collapse class' : 'Expand class')">
-        <button mat-icon-button (click)="expanded = !expanded" [disabled]="(isAdmin$ | async) !== true">
+        <button mat-icon-button (click)="expanded = !expanded">
           <mat-icon>{{ expanded ? "expand_less" : "expand_more" }}</mat-icon>
         </button>
       </span>
@@ -54,7 +54,7 @@
         [resourceClass]="resourceClass" />
     </mat-list>
 
-    <app-add-property-menu [resourceClass]="resourceClass" [disabled]="(isAdmin$ | async) !== true" />
+    <app-add-property-menu *ngIf="(isAdmin$ | async)" [resourceClass]="resourceClass" />
   </mat-card-content>
 </mat-card>
 
