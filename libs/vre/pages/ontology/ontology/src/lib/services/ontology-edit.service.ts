@@ -227,7 +227,7 @@ export class OntologyEditService {
     const updateOntology = new UpdateOntologyMetadata();
     updateOntology.id = this.ontologyId;
     updateOntology.lastModificationDate = this.lastModificationDate;
-    updateOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
+    updateOntology.label = ontologyData.label;
     updateOntology.comment = ontologyData.comment;
 
     return this._dspApiConnection.v2.onto.updateOntology(updateOntology).pipe(

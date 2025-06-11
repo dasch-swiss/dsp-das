@@ -33,11 +33,21 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
   ],
   template: `
     <div class="cardinality-checkbox">
-      <input type="checkbox" [disabled]="disabled" [(ngModel)]="multipleToggleState" (change)="onToggleChange()" />
+      <input
+        type="checkbox"
+        matTooltip="Whether the mproperty in this class can have multiple values or not"
+        [disabled]="disabled"
+        [(ngModel)]="multipleToggleState"
+        (change)="onToggleChange()" />
       <label>Multiple values</label>
     </div>
     <div class="cardinality-checkbox">
-      <input type="checkbox" [disabled]="disabled" [(ngModel)]="requiredToggleState" (change)="onToggleChange()" />
+      <input
+        type="checkbox"
+        matTooltip="Whether the property in this class must have a value or not"
+        [disabled]="disabled"
+        [(ngModel)]="requiredToggleState"
+        (change)="onToggleChange()" />
       <label>Required</label>
     </div>
   `,

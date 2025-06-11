@@ -21,6 +21,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();
 
   ontologyForm!: OntologyForm;
+  loading = false;
 
   readonly forbiddenNames = ['knora', 'salsah', 'standoff', 'ontology', 'simple', 'shared'] as const;
 
@@ -61,12 +62,15 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._buildForm(this.data);
+    console.log(this.data);
 
-    this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
-      if (this.ontologyForm.controls.label.pristine) {
-        this.ontologyForm.controls.label.patchValue(this._proposeLabel(this.ontologyForm.controls.name.value));
-      }
-    });
+    if (!this.data?.id) {
+      this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
+        if (this.ontologyForm.controls.label.pristine) {
+          this.ontologyForm.controls.label.patchValue(this._proposeLabel(this.ontologyForm.controls.name.value));
+        }
+      });
+    }
   }
 
   private _proposeLabel(ontoName = '') {
@@ -85,15 +89,13 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
           existingNamesValidator(this.blackListedNames),
         ],
       ],
-      label: [
-        ontology?.label?.includes(':') ? ontology.label.split(':')[1] : ontology?.label || '',
-        [Validators.required, Validators.minLength(3)],
-      ],
+      label: [ontology?.label || '', [Validators.required, Validators.minLength(3)]],
       comment: [ontology ? ontology.comment : '', Validators.required],
     });
   }
 
   submitData() {
+    this.loading = true;
     const ontologyData: OntologyData = {
       name: this.ontologyForm.controls.name.value,
       label: this.ontologyForm.controls.label.value,

@@ -6,7 +6,6 @@
   class="resource-class"
   cdkDrag
   cdkDragBoundary=".drag-drop-stop">
-  <!-- class card header -->
   <mat-card-header class="resource-class-header" cdkDragHandle>
     <mat-card-title [matTooltip]="resourceClass?.comment || ''" matTooltipPosition="above">
       {{ classLabel | appTruncate: 24 }}

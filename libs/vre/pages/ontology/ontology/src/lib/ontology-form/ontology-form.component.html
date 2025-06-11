@@ -27,6 +27,7 @@
     mat-raised-button
     color="primary"
     appLoadingButton
+    [isLoading]="loading"
     [disabled]="!ontologyForm?.valid"
     (click)="submitData()"
     data-cy="submit-button">

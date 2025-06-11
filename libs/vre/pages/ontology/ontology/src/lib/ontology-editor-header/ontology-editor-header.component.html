@@ -7,7 +7,7 @@
       <h3
         data-cy="ontology-label"
         class="mat-headline-6"
-        [matTooltip]="ontology.label + ontology.comment ? ' &mdash; ' + ontology.comment : ''"
+        [matTooltip]="ontology?.comment ?  ontology.label + ' &mdash; ' + ontology?.comment : ''"
         matTooltipPosition="above">
         {{ ontology.label }}
       </h3>
