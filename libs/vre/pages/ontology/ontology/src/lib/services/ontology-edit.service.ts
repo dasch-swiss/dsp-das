@@ -573,6 +573,7 @@ export class OntologyEditService {
   }
 
   updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
+    this._isTransacting.next(true);
     const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, properties);
     const updateOntology = this._getUpdateOntology<UpdateResourceClassCardinality>(updateResourceClassCard);
     this._dspApiConnection.v2.onto
