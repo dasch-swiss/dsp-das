@@ -111,7 +111,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
   `,
 })
 export class TemplateSwitcherComponent implements AfterViewInit {
-  @Input({ required: true }) value!: ReadValue;
+  @Input({ required: true }) value!: ReadValue | undefined;
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
   @Input({ required: true }) editMode!: boolean;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
@@ -223,6 +223,10 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _manageTextEditorValue() {
+    if (this.value === undefined) {
+      return this._defaultTextEditorBehavior();
+    }
+
     const value = this.value as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
 
     if (value instanceof ReadTextValueAsString) {
