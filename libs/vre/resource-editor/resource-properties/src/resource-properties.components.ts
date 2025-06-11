@@ -21,7 +21,6 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
-import { PropertyValueInitializerComponent } from './lib/property-value-initializer.component';
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
@@ -85,7 +84,6 @@ export const ResourcePropertiesComponents = [
   TextTypesSelectorComponent,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
-  PropertyValueInitializerComponent,
   PropertyValueActionBubbleComponent,
   PropertyValueComponent,
   PropertyValueEditComponent,
