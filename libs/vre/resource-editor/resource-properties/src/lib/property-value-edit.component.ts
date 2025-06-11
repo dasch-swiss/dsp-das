@@ -176,6 +176,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private _watchAndSetupCommentStatus() {
+    console.log('in prop value edit', this.propertyValueService.formArray);
     this._subscription = this.group.controls.item.statusChanges
       .pipe(
         startWith(null),

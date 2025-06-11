@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Cardinality } from '@dasch-swiss/dsp-js';
@@ -35,7 +35,7 @@ import { PropertyValueService } from './property-value.service';
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
 })
-export class PropertyValueDisplayComponent implements OnInit {
+export class PropertyValueDisplayComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) index!: number;
 
   get group() {
@@ -55,6 +55,11 @@ export class PropertyValueDisplayComponent implements OnInit {
 
   ngOnInit() {
     this._highlightArkValue();
+    console.log('pvdisplay', this.group);
+  }
+
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit', this);
   }
 
   protected readonly Cardinality = Cardinality;

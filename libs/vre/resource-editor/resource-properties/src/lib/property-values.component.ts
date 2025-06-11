@@ -66,14 +66,21 @@ export class PropertyValuesComponent implements OnInit {
   }
 
   addItem() {
-    this.propertyValueService.formArray.push(
-      this._fb.group({
-        item: propertiesTypeMapping
-          .get(this.propertyValueService.propertyDefinition.objectType!)!
-          .control() as AbstractControl,
-        comment: this._fb.control(''),
-      })
-    );
+    this.propertyValueService.test = 'new value changed';
+    const formGroup = this._fb.group({
+      item: propertiesTypeMapping
+        .get(this.propertyValueService.propertyDefinition.objectType!)!
+        .control() as AbstractControl,
+      comment: this._fb.control(''),
+    });
+
+    const array = this.propertyValueService.formArray;
+    array.push(formGroup);
+    this.propertyValueService.formArray = array;
+
+    this.propertyValueService.formArray.updateValueAndValidity();
+    console.log('in prop values', this.propertyValueService.formArray);
+
     this.propertyValueService.toggleOpenedValue(this.propertyValueService.formArray.length - 1);
     this.propertyValueService.currentlyAdding = true;
   }
