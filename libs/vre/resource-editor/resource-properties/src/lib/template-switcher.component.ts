@@ -90,20 +90,12 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-geoname-value [control]="item" />
     </ng-template>
 
-    <ng-template #linkTpl let-item="item">
-      <!-- TODO -->
-    </ng-template>
-
-    <ng-template #uriTpl let-item="item">
-      <!-- TODO -->
-    </ng-template>
-
     <!-- VIEWERS -->
-    <ng-template #textTpl let-item="item">
+    <ng-template #basicDisplayTpl let-item="item">
       <span>{{ item.value }}</span>
     </ng-template>
 
-    <ng-template #defaultTpl><span style="width: 100%">Nothing to show</span></ng-template>
+    <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })
 export class TemplateSwitcherComponent implements AfterViewInit {
@@ -128,7 +120,6 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   @ViewChild('linkEditorTpl') linkEditorTpl!: TemplateRef<any>;
   @ViewChild('uriEditorTpl') uriEditorTpl!: TemplateRef<any>;
 
-  @ViewChild('intDisplayTpl') intDisplayTpl!: TemplateRef<any>;
   @ViewChild('decimalDisplayTpl') decimalDisplayTpl!: TemplateRef<any>;
   @ViewChild('booleanDisplayTpl') booleanDisplayTpl!: TemplateRef<any>;
   @ViewChild('colorDisplayTpl') colorDisplayTpl!: TemplateRef<any>;
@@ -143,6 +134,8 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   @ViewChild('geoNameDisplayTpl') geoNameDisplayTpl!: TemplateRef<any>;
   @ViewChild('linkDisplayTpl') linkDisplayTpl!: TemplateRef<any>;
   @ViewChild('uriDisplayTpl') uriDisplayTpl!: TemplateRef<any>;
+
+  @ViewChild('basicDisplayTpl') basicDisplayTpl!: TemplateRef<any>;
   @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
   get propertyDefinition() {
@@ -156,7 +149,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   private _getEditorTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return this.intEditorTpl;
+        return this.basicDisplayTpl;
       case Constants.DecimalValue:
         return this.decimalEditorTpl;
       case Constants.BooleanValue:
@@ -186,10 +179,9 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _getDisplayTemplate(): TemplateRef<any> {
-    console.log('aa', this);
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return this.intDisplayTpl;
+        return this.basicDisplayTpl;
       case Constants.DecimalValue:
         return this.decimalDisplayTpl;
       case Constants.BooleanValue:
