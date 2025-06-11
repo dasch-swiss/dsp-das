@@ -16,7 +16,7 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
 
   displayMode!: boolean;
   subscription!: Subscription;
-  protected readonly Cardinality = Cardinality;
+  readonly Cardinality = Cardinality;
 
   constructor(public propertyValueService: PropertyValueService) {}
 

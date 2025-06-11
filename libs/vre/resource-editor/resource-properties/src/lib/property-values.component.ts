@@ -10,16 +10,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values',
-  styles: [
-    `
-      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
-      .add-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-      }
-    `,
-  ],
   template: ` <app-property-value
       *ngFor="let group of propertyValueService.formArray.controls; let index = index"
       [index]="index"
@@ -32,6 +22,15 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       *ngIf="userCanAdd && !propertyValueService.currentlyAdding && matchesCardinality">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
+  styles: [
+    `
+      .add-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    `,
+  ],
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
