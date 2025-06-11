@@ -5,6 +5,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -50,6 +51,10 @@ export class PropertyValuesComponent implements OnInit {
   isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
 
   protected readonly Cardinality = Cardinality;
+
+  get propertyDefinition() {
+    return JsLibPotentialError.setAs(this.myProperty.propDef);
+  }
 
   constructor(
     public propertyValueService: PropertyValueService,
