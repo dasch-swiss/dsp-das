@@ -20,7 +20,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
             >drag_indicator
           </mat-icon>
           <mat-icon
-            *ngIf="!isHovered"
+            *ngIf="!isHovered || (isAdmin$ | async) !== true"
             [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + prop.propDef?.id?.split('#')[1] + ')'"
             matTooltipPosition="above"
             >{{ propType?.icon }}
