@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .lower-prop-container {
@@ -13,25 +17,3 @@
   flex-direction: row;
   justify-content: space-between;
 }
-
-.edit-menu {
-  position: absolute;
-  top: 0.2rem;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.menu-icon-button {
-  font-size: medium;
-  cursor: pointer;
-}
-
-.remove-menu-wrapper {
-  min-width: 18em;
-  width: 18em;
-}
-
-

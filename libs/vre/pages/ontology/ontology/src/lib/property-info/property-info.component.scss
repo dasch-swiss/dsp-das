@@ -4,11 +4,11 @@
   width: 100%;
 }
 
-.property-info.standalone {
+.property-info {
   padding: 16px;
 }
 
-.upper-prop-container {
+.prop-container {
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -16,10 +16,6 @@
 
 .additional-info {
   color: $primary_700;
-}
-
-.flex {
-  display: flex !important;
 }
 
 .mat-line {

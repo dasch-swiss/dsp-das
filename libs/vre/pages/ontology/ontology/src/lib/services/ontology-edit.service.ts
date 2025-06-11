@@ -87,7 +87,7 @@ export class OntologyEditService {
   currentOntologyProperties$ = this.currentOntology$.pipe(
     map(ontology => {
       if (ontology) {
-        const props = ontology.getAllPropertyDefinitions();
+        const props = ontology.getAllPropertyDefinitions() as ResourcePropertyDefinitionWithAllLanguages[];
         return this._sortingService
           .keySortByAlphabetical(props, 'label')
           .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'));

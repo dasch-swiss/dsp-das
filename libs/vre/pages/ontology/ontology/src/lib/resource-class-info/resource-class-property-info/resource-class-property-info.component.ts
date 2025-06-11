@@ -1,14 +1,5 @@
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-import {
-  Cardinality,
   ClassDefinition,
   Constants,
   IHasProperty,
@@ -16,12 +7,11 @@ import {
   ReadOntology,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { ListsSelectors, OntologiesSelectors, ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-property-info',
@@ -32,22 +22,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, OnDestroy {
   @Input({ required: true }) propDef!: ResourcePropertyDefinitionWithAllLanguages;
 
-  @Input() propCard: IHasProperty;
-
-  @Input() props: PropToDisplay[]; // Todo: remove this, input the single prop and get propsOfClass from the thore or so
-
-  @Input() resourceClass: ClassDefinition;
-
-  @Input() active = false;
-
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
   propAttribute?: string;
   propAttributeComment?: string;
-
-  menuOpen = false;
-
-  propCanBeRemovedFromClass: boolean | null = null;
 
   private _destroy = new Subject<void>();
 
@@ -65,9 +41,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, On
 
   constructor(
     private _ontoService: OntologyService,
-    private _oes: OntologyEditService,
-    private _store: Store,
-    private _cd: ChangeDetectorRef
+    private _store: Store
   ) {}
 
   ngOnChanges(): void {
@@ -75,7 +49,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, On
   }
 
   ngOnInit() {
-    if (!this.propDef.isLinkProperty) {
+    if (this.propDef.isLinkProperty) {
       this._store
         .select(OntologiesSelectors.currentProjectOntologies)
         .pipe(
@@ -117,32 +91,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, On
     const propertiesBaseOntologyId = this.propDef.objectType?.split('#')[0];
     const baseOntology = currentProjectOntologies.find(i => i.id === propertiesBaseOntologyId);
     this.propAttribute = baseOntology?.classes[this.propDef.objectType!].label;
-    console.log('this.propAttribute', this.propAttribute);
     this.propAttributeComment = baseOntology?.classes[this.propDef.objectType!].comment;
-  }
-
-  canBeRemovedFromClass(): void {
-    this._oes.propertyCanBeRemovedFromClass(this.propCard, this.resourceClass.id).subscribe(canDoRes => {
-      this.propCanBeRemovedFromClass = canDoRes.canDo;
-      this._cd.markForCheck();
-    });
-  }
-
-  removePropertyFromClass(): void {
-    this._oes.removePropertyFromClass(this.propCard, this.resourceClass.id);
-  }
-
-  openEditProperty() {
-    this._oes.openEditProperty(this.propDef, this.propType);
-  }
-
-  updateCardinality(newValue: Cardinality) {
-    const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.propCard.propertyIndex);
-    if (propertyIdx !== -1) {
-      this.props[propertyIdx] = this.propCard;
-      this.props[propertyIdx].cardinality = newValue;
-      this._oes.updateCardinalitiesOfResourceClass(this.resourceClass.id, this.props);
-    }
   }
 
   ngOnDestroy() {

@@ -6,6 +6,7 @@ import {
   ReadOntology,
   ReadProject,
   ReadUser,
+  ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 
@@ -38,7 +39,7 @@ export interface OntologyProperties {
 }
 
 export interface PropToDisplay extends IHasProperty {
-  propDef?: PropertyDefinition;
+  propDef: ResourcePropertyDefinitionWithAllLanguages;
 }
 
 export interface PropToAdd {

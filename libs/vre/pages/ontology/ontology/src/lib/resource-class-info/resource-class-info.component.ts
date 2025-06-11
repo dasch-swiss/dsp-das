@@ -1,6 +1,10 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { ApiResponseError, PropertyDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import {
+  ApiResponseError,
+  ResourceClassDefinitionWithAllLanguages,
+  ResourcePropertyDefinitionWithAllLanguages,
+} from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
@@ -24,11 +28,14 @@ export class ResourceClassInfoComponent implements OnChanges {
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
 
-  classProperties$!: Observable<PropertyDefinition[]>;
+  classProperties$!: Observable<ResourcePropertyDefinitionWithAllLanguages[]>;
 
   classPropertiesToDisplay$!: Observable<PropToDisplay[]>;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+
+  classHovered = false;
+  menuOpen = false;
 
   expanded = true;
 
@@ -54,16 +61,18 @@ export class ResourceClassInfoComponent implements OnChanges {
 
   ngOnChanges() {
     this.classProperties$ = this._oes.currentOntologyProperties$.pipe(
-      map((properties: PropertyDefinition[]) => {
+      map((properties: ResourcePropertyDefinitionWithAllLanguages[]) => {
         const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
-        return properties.filter((property: PropertyDefinition) => propertyIdsOfClass.includes(property.id));
+        return properties.filter((property: ResourcePropertyDefinitionWithAllLanguages) =>
+          propertyIdsOfClass.includes(property.id)
+        );
       })
     );
 
     this.classPropertiesToDisplay$ = this.classProperties$.pipe(
-      map((properties: PropertyDefinition[]) => {
+      map((properties: ResourcePropertyDefinitionWithAllLanguages[]) => {
         return properties
-          .map((property: PropertyDefinition) => {
+          .map((property: ResourcePropertyDefinitionWithAllLanguages) => {
             const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
               p => p.propertyIndex === property.id
             ) as PropToDisplay;

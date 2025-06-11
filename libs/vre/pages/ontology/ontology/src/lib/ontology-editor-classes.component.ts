@@ -15,7 +15,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     .ontology-editor-grid {
       display: grid;
       grid-template-rows: auto;
-      grid-template-columns: repeat(auto-fill, minmax(429px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
       grid-gap: 6px;
     }
   `,
