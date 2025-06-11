@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef } from '@angular/core';
 import {
   ApiResponseError,
   Cardinality,
@@ -12,6 +12,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
 import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
+import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -20,9 +21,9 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-template-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
-      [value]="propertyValueService.editModeData.values[index]"
+      [value]="group.controls.item.value"
       [editMode]="true"
-      (templateFound)="template = $event" />
+      (templateFound)="foundTemplate($event)" />
 
     <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
       <div style="flex: 1">
@@ -49,21 +50,19 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
+  @Input({ required: true }) group!: FormValueGroup;
   template?: TemplateRef<any>;
 
   loading = false;
   private _subscription!: Subscription;
-
-  get group() {
-    return this.propertyValueService.formArray.at(this.index);
-  }
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _notification: NotificationService,
     @Optional() private _resourceFetcherService: ResourceFetcherService,
-    public propertyValueService: PropertyValueService
+    public propertyValueService: PropertyValueService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   protected readonly Cardinality = Cardinality;
@@ -74,6 +73,12 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._subscription.unsubscribe();
+  }
+
+  foundTemplate(template: TemplateRef<any>) {
+    console.log('template', template, this);
+    this.template = template;
+    this._cd.detectChanges(); // Ensure the template is rendered after it is found
   }
 
   onSave() {
@@ -176,7 +181,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private _watchAndSetupCommentStatus() {
-    console.log('in prop value edit', this.propertyValueService.formArray);
+    console.log('in prop value edit', this.propertyValueService.formArray, this.group);
     this._subscription = this.group.controls.item.statusChanges
       .pipe(
         startWith(null),

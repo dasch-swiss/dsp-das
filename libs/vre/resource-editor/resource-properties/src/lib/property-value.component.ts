@@ -2,17 +2,19 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
   selector: 'app-property-value',
   template: `
     <app-property-value-display [index]="index" *ngIf="displayMode" />
-    <app-property-value-edit [index]="index" *ngIf="!displayMode" />
+    <app-property-value-edit [index]="index" [group]="group" *ngIf="!displayMode" />
   `,
 })
 export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
+  @Input({ required: true }) group!: FormValueGroup;
 
   displayMode!: boolean;
   subscription!: Subscription;

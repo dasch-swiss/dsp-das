@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Cardinality } from '@dasch-swiss/dsp-js';
@@ -11,7 +19,7 @@ import { PropertyValueService } from './property-value.service';
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
       [editMode]="false"
-      (templateFound)="itemTpl = $event" />
+      (templateFound)="templateFound($event)" />
     <div
       data-cy="property-value"
       class="pos-relative row"
@@ -25,24 +33,25 @@ import { PropertyValueService } from './property-value.service';
         (deleteAction)="askToDelete()" />
 
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
-        <ng-container *ngIf="itemTpl">
+        <ng-container *ngIf="template">
           <ng-container
-            *ngTemplateOutlet="itemTpl; context: { item: group.controls.item, displayMode: true }"></ng-container>
+            *ngTemplateOutlet="template; context: { item: group.controls.item, displayMode: true }"></ng-container>
         </ng-container>
 
         <app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />
       </div>
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValueDisplayComponent implements OnInit, AfterViewInit {
+export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;
 
   get group() {
     return this.propertyValueService.formArray.at(this.index);
   }
 
-  itemTpl?: TemplateRef<any>;
+  template?: TemplateRef<any>;
   isHighlighted!: boolean;
   showBubble = false;
 
@@ -50,16 +59,17 @@ export class PropertyValueDisplayComponent implements OnInit, AfterViewInit {
     public propertyValueService: PropertyValueService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this._highlightArkValue();
-    console.log('pvdisplay', this.group);
   }
 
-  ngAfterViewInit() {
-    console.log('ngAfterViewInit', this);
+  templateFound(template: TemplateRef<any>) {
+    this.template = template;
+    this._cd.detectChanges();
   }
 
   protected readonly Cardinality = Cardinality;

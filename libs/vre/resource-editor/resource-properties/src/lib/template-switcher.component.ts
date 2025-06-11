@@ -149,7 +149,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   private _getEditorTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return this.basicDisplayTpl;
+        return this.intEditorTpl;
       case Constants.DecimalValue:
         return this.decimalEditorTpl;
       case Constants.BooleanValue:

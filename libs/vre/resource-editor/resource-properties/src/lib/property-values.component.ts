@@ -13,6 +13,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: ` <app-property-value
       *ngFor="let group of propertyValueService.formArray.controls; let index = index"
       [index]="index"
+      [group]="group"
       style="width: 100%" />
 
     <button
@@ -66,7 +67,6 @@ export class PropertyValuesComponent implements OnInit {
   }
 
   addItem() {
-    this.propertyValueService.test = 'new value changed';
     const formGroup = this._fb.group({
       item: propertiesTypeMapping
         .get(this.propertyValueService.propertyDefinition.objectType!)!
@@ -74,13 +74,7 @@ export class PropertyValuesComponent implements OnInit {
       comment: this._fb.control(''),
     });
 
-    const array = this.propertyValueService.formArray;
-    array.push(formGroup);
-    this.propertyValueService.formArray = array;
-
-    this.propertyValueService.formArray.updateValueAndValidity();
-    console.log('in prop values', this.propertyValueService.formArray);
-
+    this.propertyValueService.formArray.push(formGroup);
     this.propertyValueService.toggleOpenedValue(this.propertyValueService.formArray.length - 1);
     this.propertyValueService.currentlyAdding = true;
   }
