@@ -83,7 +83,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #intervalEditorTpl let-item="item">
-      <!-- TODO -->
+      <app-interval-value [control]="item" />
     </ng-template>
 
     <ng-template #geoNameEditorTpl let-item="item">
@@ -97,6 +97,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 
     <ng-template #booleanDisplayTpl let-item="item">
       <app-toggle-switch [control]="item" [displayMode]="true" />
+    </ng-template>
+
+    <ng-template #intervalDisplayTpl let-item="item">
+      <app-interval-viewer [control]="item" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>

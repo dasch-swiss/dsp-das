@@ -44,10 +44,12 @@ import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
+import { IntervalValueComponent } from './lib/value-components/interval-value.component';
 import { LinkValueComponent } from './lib/value-components/link-value.component';
 import { ListValueComponent } from './lib/value-components/list-value.component';
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
+import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 
@@ -57,9 +59,10 @@ const valueComponents = [
   ListValueComponent,
   NestedMenuComponent,
   TimeValueComponent,
+  IntervalValueComponent,
 ];
 
-const viewerComponents = [RichTextViewerComponent, ListViewerComponent];
+const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent];
 
 const switchComponents = [
   TimeSwitchComponent,
