@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -32,15 +32,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       mat-icon-button
       (click)="addItem()"
       data-cy="add-property-value-button"
-      *ngIf="
-        userCanAdd &&
-        !propertyValueService.currentlyAdding &&
-        (propertyValueService.formArray.controls.length === 0 ||
-          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality))
-      ">
+      *ngIf="userCanAdd && !propertyValueService.currentlyAdding && matchesCardinality">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>`,
   providers: [PropertyValueService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValuesComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueArray;
@@ -54,6 +50,13 @@ export class PropertyValuesComponent implements OnInit {
 
   get userCanAdd() {
     return ResourceUtil.userCanEdit(this.editModeData.resource);
+  }
+
+  get matchesCardinality() {
+    return (
+      this.propertyValueService.formArray.controls.length === 0 ||
+      [Cardinality._0_n, Cardinality._1_n].includes(this.propertyValueService.cardinality)
+    );
   }
 
   get propertyDefinition() {
