@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
@@ -42,9 +39,6 @@ export class PropertyValuesComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) myProperty!: PropertyInfoValues;
-
-  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
-  isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
 
   protected readonly Cardinality = Cardinality;
 
