@@ -28,7 +28,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #booleanEditorTpl let-item="item">
-      <!-- TODO -->
+      <app-toggle-switch [control]="item" [displayMode]="false" />
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">
@@ -93,6 +93,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     <!-- VIEWERS -->
     <ng-template #basicDisplayTpl let-item="item">
       <span>{{ item.value }}</span>
+    </ng-template>
+
+    <ng-template #booleanDisplayTpl let-item="item">
+      <app-toggle-switch [control]="item" [displayMode]="true" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>

@@ -98,7 +98,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.BooleanValue,
     {
       control: (value?: ReadBooleanValue) => {
-        const booleanValue = value ? value.bool : false;
+        const booleanValue = value ? value.bool : null;
         return new FormControl(booleanValue);
       },
 
