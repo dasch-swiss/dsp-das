@@ -48,10 +48,5 @@ export class PropertyValueToFormComponent implements OnChanges {
         });
       })
     );
-
-    console.log('initializer form array', this.formArray);
-    this.formArray.valueChanges.subscribe(value => {
-      console.log('form array value changes', value);
-    });
   }
 }

@@ -76,9 +76,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   foundTemplate(template: TemplateRef<any>) {
-    console.log('template', template, this);
     this.template = template;
-    this._cd.detectChanges(); // Ensure the template is rendered after it is found
+    this._cd.detectChanges();
   }
 
   onSave() {
@@ -181,7 +180,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private _watchAndSetupCommentStatus() {
-    console.log('in prop value edit', this.propertyValueService.formArray, this.group);
     this._subscription = this.group.controls.item.statusChanges
       .pipe(
         startWith(null),
