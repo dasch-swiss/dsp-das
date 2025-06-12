@@ -61,7 +61,7 @@ Simply make your changes and click "Save."
 
 ---
 
-## Legal Settings for Media Assets
+### Legal Settings for Media Assets
 
 To ensure consistent and accurate legal attribution, **all media assets** - including images, audio, video, PDFs, documents, and other digital files - must include specific legal metadata. The following **three fields are mandatory** for each asset:
 
@@ -69,12 +69,12 @@ To ensure consistent and accurate legal attribution, **all media assets** - incl
 2. **License** – Specifies the license under which the asset is made available.
 3. **Authorship** – Lists the creator(s) of the asset.
 
-These requirements apply to all types of media and support compliance with legal standards and reuse conditions.
+These requirements apply to all types of media and support compliance with legal standards and conditions for reuse.
 
 
 ---
 
-### 1. Copyright Holders
+#### 1. Copyright Holders
 
 Each media asset must include exactly **one copyright holder**. Users can choose from predefined options or add custom entries where necessary. The following default copyright holders are available:
 
@@ -82,29 +82,27 @@ Each media asset must include exactly **one copyright holder**. Users can choose
 
 - **Public Domain – Not Protected by Copyright**: Default option, always visible for assets that are in the public domain.
 
-- **Legal Name of Project**: Custom option added by system admins for your specific project.
+- **Legal Name of Project**: Custom option added by system admins for a specific project.
 
 Additional copyright holders can be defined by project admins.
 
 ---
 
-### 2. Licenses
+#### 2. Licenses
 
-Each media asset must be associated with **one license**. A range of standard licenses is available, with more to be added in future releases.
+Each media asset must be associated with exactly **one license**. A range of standard licenses is available, with more to be added in future releases.
 
 #### License Enable/Disable and Recommendation
 
-- Project admins can **enable** or **disable** license options, so only the licenses relevant to the project are available for resource creation.
+- Project admins can **enable** or **disable** license options, so that only the licenses relevant to the project are available for resource creation.
 
-- Licenses are marked as **recommended** (highlighted for users and these are preferred by DaSCH) or **not recommended**.
+- Licenses are marked as **recommended** (highlighted for users, preferred by DaSCH) or **not recommended**.
 
-- Disabled licenses are hidden during resource creation.
+- Disabled licenses are not displayed during resource creation.
 
-#### Available License Options
+##### Available License Options
 
-##### Recommended Licenses
-
-###### Creative Commons Licenses
+###### Recommended Licenses (Creative Commons and Special Licenses)
 
 - [CC BY 4.0 – Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)
 - [CC BY-SA 4.0 – Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/)
@@ -126,18 +124,18 @@ Each media asset must be associated with **one license**. A range of standard li
 
 ---
 
-### 3. Authorship
+#### 3. Authorship
 
-Each asset must include **at least one authorship entry**. Project members or project admin may select from predefined options or specify authors manually when creating or editing assets.
+Each asset must include **at least one authorship entry**. Project members or project admins may select from predefined options or specify authors manually when creating or editing assets.
 
-#### Predefined Authorship Options
+##### Predefined Authorship Options
 
-- **Author Unknown**
-- **AI-Generated Content**
+- Author Unknown
+- AI-Generated Content
 
 Custom authorship entries can be entered directly during resource creation.
 
-#### Accessing Legal Settings
+##### Accessing Legal Settings
 
 1. Navigate to your project.
 2. Open the **Project Settings** menu (usually accessible via the gear or settings icon).
@@ -178,9 +176,9 @@ Under the **Authorship** section:
 
 ### Notes
 
-- All three legal fields (copyright holder, license, authorship) are **required**.
+- All three legal fields (copyright holder, license and authorship) are **required**.
 
-- These settings support compliance with legal, ethical, and reuse standards.
+- These settings support compliance with legal, ethical and reusability standards.
 
 - The list of available options may be extended over time to reflect changes in policy or usage needs.
 
