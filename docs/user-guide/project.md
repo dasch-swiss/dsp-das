@@ -71,17 +71,18 @@ To ensure consistent and accurate legal attribution, **all media assets** - incl
 
 These requirements apply to all types of media and support compliance with legal standards and reuse conditions.
 
+
 ---
 
 ## 1. Copyright Holders
 
 Each media asset must include exactly **one copyright holder**. Users can choose from predefined options or add custom entries where necessary. The following default copyright holders are available:
 
-- **AI-Generated Content – Not Protected by Copyright**: Indicates the content was generated with artificial intelligence and is not protected by copyright.
+- **AI-Generated Content – Not Protected by Copyright**: Default option, always visible for AI-created, non-copyrightable content.
 
-- **Public Domain – Not Protected by Copyright**: Indicates the asset is freely available and not protected by copyright.
+- **Public Domain – Not Protected by Copyright**: Default option, always visible for assets that are in the public domain.
 
-- **Legal Name of Project**: This will be added by System Admins.
+- **Legal Name of Project**: Custom option added by system admins for your specific project.
 
 Additional copyright holders can be defined by project admins.
 
@@ -94,10 +95,9 @@ Each media asset must be associated with **one license**. A range of standard li
 ### License Enable/Disable and Recommendation
 
 - Project admins can **enable** or **disable** license options,
-  making only approved licenses available within projects.
+  so only the licenses relevant to the project are available for resource creation.
 
-- Licenses are marked as **recommended** (highlighted for users) or
-  **not recommended**.
+- Licenses are marked as **recommended** (highlighted for users and these are preferred by DaSCH) or **not recommended**.
 
 - Disabled licenses are hidden during resource creation.
 
@@ -112,10 +112,9 @@ Each media asset must be associated with **one license**. A range of standard li
 - [CC BY-NC-SA 4.0 – Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 - [CC BY-ND 4.0 – Attribution-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nd/4.0/)
 - [CC BY-NC-ND 4.0 – Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-
-- **AI-Generated Content** – Not Protected by Copyright
-- **Unknown License** – Contact Copyright Holder for Permission
-- **Public Domain** – Not Protected by Copyright
+- [AI-Generated Content – Not Protected by Copyright](https://www.dasch.swiss/licenses/ai-generated)
+- [Unknown License – Contact Copyright Holder for Permission](https://www.dasch.swiss/licenses/unknown)
+- [Public Domain – Not Protected by Copyright](https://www.dasch.swiss/licenses/public-domain)
 
 ### Not Recommended Licenses
 
@@ -143,6 +142,8 @@ Custom authorship entries can be entered directly during resource creation.
 1. Navigate to your project.
 2. Open the **Project Settings** menu (usually accessible via the gear or settings icon).
 3. Click on the **Legal Settings** tab.
+
+![Legal Settings](../assets/images/legal-settings-view.png) Only project admins can access this view within the Legal Settings section.
 
 ### Managing Copyright Holders
 
