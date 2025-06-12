@@ -52,7 +52,7 @@ The metadata consists of the following columns:
 
 - **Label:** This is the descriptive string that needs to be provided when creating a resource. It should help you identify each resource.
 
-- **Resource Class:** The IRI of the class of the present resource, as defined in your data model. You can see the class name at the end of the IRI, after the # sign. E.g. #Author in http://api.dasch.swiss/ontology/0810/dasch/v2#Author.
+- **Resource Class:** The IRI of the class of the present resource, as defined in your data model. You can see the class name at the end of the IRI, after the # sign. E.g. #Author in [http://api.dasch.swiss/ontology/0810/dasch/v2#Author](http://api.dasch.swiss/ontology/0810/dasch/v2#Author).
 
 - **ARK URL (Permalink):** The permalink to this resource. Please use this link, if you plan to reference, cite or to share a link to this resource with others. This ARK does not have a timestamp attached, and will therefore always point to the most recent version of the resource.
 
