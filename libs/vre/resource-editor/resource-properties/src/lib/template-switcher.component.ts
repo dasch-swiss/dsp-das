@@ -99,7 +99,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #booleanDisplayTpl let-item="item">
-      <app-toggle-switch [control]="item" [displayMode]="true" />
+      <mat-slide-toggle *ngIf="item.value !== null" [checked]="item.value" [disabled]="true" />
     </ng-template>
 
     <ng-template #intervalDisplayTpl let-item="item">
