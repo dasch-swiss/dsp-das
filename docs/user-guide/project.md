@@ -176,7 +176,7 @@ Under the **Authorship** section:
 
 ### Notes
 
-- All three legal fields (copyright holder, license authorship) are **required**.
+- All three legal fields (copyright holder, license, authorship) are **required**.
 - These settings support compliance with legal, ethical, and reuse standards.
 - The list of available options may be extended over time to reflect changes in policy or usage needs.
 
