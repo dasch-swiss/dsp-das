@@ -35,7 +35,6 @@ import { ListSwitchComponent } from './lib/switch-components/list-switch.compone
 import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
 import { TextHtmlSwitchComponent } from './lib/switch-components/text-html-switch.component';
 import { TextSwitchComponent } from './lib/switch-components/text-switch.component';
-import { TextTypesSelectorComponent } from './lib/switch-components/text-types-selector.component';
 import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
 import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
@@ -85,7 +84,6 @@ export const ResourcePropertiesComponents = [
   ...switchComponents,
   ...valueComponents,
   ...viewerComponents,
-  TextTypesSelectorComponent,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
   PropertyValueActionBubbleComponent,

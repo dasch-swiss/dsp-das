@@ -20,7 +20,6 @@ export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/switch-components/rich-text-switch.component';
 export * from './lib/switch-components/text-html-switch.component';
 export * from './lib/switch-components/text-switch.component';
-export * from './lib/switch-components/text-types-selector.component';
 export * from './lib/switch-components/time-switch.component';
 export * from './lib/switch-components/toggle-switch.component';
 export * from './lib/switch-components/uri-switch.component';
