@@ -90,6 +90,9 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-geoname-value [control]="item" />
     </ng-template>
 
+    <ng-template #linkEditorTpl let-item="item">
+      <app-link-value [control]="item" [displayMode]="true" />
+    </ng-template>
     <!-- VIEWERS -->
     <ng-template #basicDisplayTpl let-item="item">
       <span>{{ item.value }}</span>
