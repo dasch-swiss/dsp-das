@@ -114,6 +114,21 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-list-viewer [control]="item" [propertyDef]="propertyDefinition" />
     </ng-template>
 
+    <ng-template #richTextDisplayTpl let-item="item">
+      <app-rich-text-viewer [control]="item" />
+    </ng-template>
+
+    <ng-template #textHtmlDisplayTpl let-item="item">
+      <div data-cy="text-html-switch" [innerHTML]="item.value | internalLinkReplacer | addTargetBlank" appMathjax></div>
+    </ng-template>
+
+    <ng-template #colorDisplayTpl let-item="item">
+      <div
+        style="width: 100px; border-radius: 4px; height: 15px; margin: 4px 0; border: 1px solid;"
+        data-cy="color-box"
+        [style.background-color]="item.value"></div>
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })
@@ -139,12 +154,9 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   @ViewChild('linkEditorTpl') linkEditorTpl!: TemplateRef<any>;
   @ViewChild('uriEditorTpl') uriEditorTpl!: TemplateRef<any>;
 
-  @ViewChild('decimalDisplayTpl') decimalDisplayTpl!: TemplateRef<any>;
   @ViewChild('booleanDisplayTpl') booleanDisplayTpl!: TemplateRef<any>;
   @ViewChild('colorDisplayTpl') colorDisplayTpl!: TemplateRef<any>;
-  @ViewChild('textDisplayTpl') textDisplayTpl!: TemplateRef<any>;
   @ViewChild('textHtmlDisplayTpl') textHtmlDisplayTpl!: TemplateRef<any>;
-  @ViewChild('paragraphDisplayTpl') paragraphDisplayTpl!: TemplateRef<any>;
   @ViewChild('richTextDisplayTpl') richTextDisplayTpl!: TemplateRef<any>;
   @ViewChild('dateDisplayTpl') dateDisplayTpl!: TemplateRef<any>;
   @ViewChild('timeDisplayTpl') timeDisplayTpl!: TemplateRef<any>;
@@ -153,8 +165,8 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   @ViewChild('geoNameDisplayTpl') geoNameDisplayTpl!: TemplateRef<any>;
   @ViewChild('linkDisplayTpl') linkDisplayTpl!: TemplateRef<any>;
   @ViewChild('uriDisplayTpl') uriDisplayTpl!: TemplateRef<any>;
-
   @ViewChild('basicDisplayTpl') basicDisplayTpl!: TemplateRef<any>;
+
   @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
   get propertyDefinition() {
@@ -200,9 +212,8 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   private _getDisplayTemplate(): TemplateRef<any> {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
-        return this.basicDisplayTpl;
       case Constants.DecimalValue:
-        return this.decimalDisplayTpl;
+        return this.basicDisplayTpl;
       case Constants.BooleanValue:
         return this.booleanDisplayTpl;
       case Constants.ColorValue:
@@ -290,9 +301,8 @@ export class TemplateSwitcherComponent implements AfterViewInit {
       case Constants.GuiRichText:
         return this.richTextDisplayTpl;
       case Constants.GuiTextarea:
-        return this.paragraphDisplayTpl;
       default:
-        return this.textEditorTpl;
+        return this.basicDisplayTpl;
     }
   }
 }
