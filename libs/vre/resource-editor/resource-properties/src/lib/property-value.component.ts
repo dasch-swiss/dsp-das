@@ -31,11 +31,15 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
   }
 
   private _setupDisplayMode() {
-    this.subscription = this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
+    this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
       if (this.propertyValueService.currentlyAdding && !this.displayMode) {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
         this.propertyValueService.currentlyAdding = false;
         return;
+      }
+
+      if (value === null && this.propertyValueService.formArray.length > 0) {
+        this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
       }
 
       this.displayMode = this.index !== value;
