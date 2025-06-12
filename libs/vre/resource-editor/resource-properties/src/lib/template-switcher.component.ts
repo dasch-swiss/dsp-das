@@ -32,7 +32,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">
-      <!-- TODO -->
+      <app-list-value [control]="item" [propertyDef]="myPropertyDefinition" />
     </ng-template>
 
     <ng-template #colorEditorTpl let-control="item">
@@ -65,7 +65,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-common-input [control]="item" style="width: 100%" data-cy="text-input" label="Text value" />
     </ng-template>
 
-    <ng-template #textHtmlEditorTpl> This value cannot be edited.</ng-template>
+    <ng-template #textHtmlEditorTpl>This value cannot be edited.</ng-template>
 
     <ng-template #paragraphEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
@@ -91,7 +91,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #linkEditorTpl let-item="item">
-      <app-link-value [control]="item" [displayMode]="true" />
+      <app-link-value [control]="item" [defaultValue]="''" [propIri]="''" [resourceClassIri]="''" />
     </ng-template>
     <!-- VIEWERS -->
     <ng-template #basicDisplayTpl let-item="item">
