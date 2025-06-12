@@ -158,6 +158,7 @@ Under the **Copyright Holders** section:
 The **Licenses** section lists all predefined license types available for media assets.
 
 Each license includes:
+
 - A human-readable name.
 - A link to the full legal text (where applicable).
 
@@ -180,7 +181,7 @@ Under the **Authorship** section:
 - These settings support compliance with legal, ethical, and reuse standards.
 - The list of available options may be extended over time to reflect changes in policy or usage needs.
 
-**This section will be updated as legal guidelines evolve.** 🛠️ 
+**This section will be updated as legal guidelines evolve.** 🛠️
 
 ### Project Members
 
