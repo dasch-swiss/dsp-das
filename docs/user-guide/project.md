@@ -160,6 +160,7 @@ The **Licenses** section lists all predefined license types available for media 
 Each license includes:
 
 - A human-readable name.
+
 - A link to the full legal text (where applicable).
 
 These licenses are not editable but are periodically updated by the system administrators to reflect best practices.
@@ -178,7 +179,9 @@ Under the **Authorship** section:
 ### Notes
 
 - All three legal fields (copyright holder, license, authorship) are **required**.
+
 - These settings support compliance with legal, ethical, and reuse standards.
+
 - The list of available options may be extended over time to reflect changes in policy or usage needs.
 
 **This section will be updated as legal guidelines evolve.** 🛠️
