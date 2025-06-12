@@ -32,7 +32,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">
-      <app-list-value [control]="item" [propertyDef]="myPropertyDefinition" />
+      <app-list-value [control]="item" [propertyDef]="propertyDefinition" />
     </ng-template>
 
     <ng-template #colorEditorTpl let-control="item">
@@ -108,6 +108,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 
     <ng-template #timeDisplayTpl let-item="item">
       <app-time-viewer [control]="item" />
+    </ng-template>
+
+    <ng-template #listDisplayTpl let-item="item">
+      <app-list-viewer [control]="item" [propertyDef]="propertyDefinition" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
