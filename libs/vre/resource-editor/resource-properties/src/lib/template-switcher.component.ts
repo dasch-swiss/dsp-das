@@ -230,6 +230,7 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _manageTextEditorValue() {
+    console.log('a', this);
     if (this.value === undefined) {
       return this._defaultTextEditorBehavior();
     }
@@ -263,7 +264,35 @@ export class TemplateSwitcherComponent implements AfterViewInit {
   }
 
   private _manageTextDisplayValue() {
-    // TODO !!
-    return this.defaultDisplayTpl;
+    if (this.value === undefined) {
+      return this._defaultTextDisplayBehavior();
+    }
+
+    const value = this.value as ReadTextValueAsString | ReadTextValueAsXml | ReadTextValueAsHtml;
+
+    if (value instanceof ReadTextValueAsString) {
+      return this._defaultTextDisplayBehavior();
+    }
+
+    if (value instanceof ReadTextValueAsXml && value.mapping === Constants.StandardMapping) {
+      return this.richTextDisplayTpl;
+    }
+
+    if (value instanceof ReadTextValueAsHtml) {
+      return this.textHtmlDisplayTpl;
+    }
+
+    throw new Error('The text value is not supported');
+  }
+
+  private _defaultTextDisplayBehavior() {
+    switch (this.propertyDefinition.guiElement) {
+      case Constants.GuiRichText:
+        return this.richTextDisplayTpl;
+      case Constants.GuiTextarea:
+        return this.paragraphDisplayTpl;
+      default:
+        return this.textEditorTpl;
+    }
   }
 }

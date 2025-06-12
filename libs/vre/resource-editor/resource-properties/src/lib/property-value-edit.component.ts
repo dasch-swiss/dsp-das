@@ -21,7 +21,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-template-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
-      [value]="group.controls.item.value"
+      [value]="propertyValueService.editModeData.values[index]"
       [editMode]="true"
       (templateFound)="foundTemplate($event)" />
 
