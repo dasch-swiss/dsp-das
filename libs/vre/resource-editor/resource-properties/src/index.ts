@@ -1,5 +1,4 @@
 export * from './lib/switch-components/color-switch.component';
-export * from './lib/switch-components/interval-switch.component';
 export * from './lib/value-components/geoname-value.component';
 export * from './lib/value-components/link-value.component';
 export * from './lib/value-components/list-value.component';

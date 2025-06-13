@@ -27,7 +27,6 @@ import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
 import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
-import { IntervalSwitchComponent } from './lib/switch-components/interval-switch.component';
 import { ListSwitchComponent } from './lib/switch-components/list-switch.component';
 import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
@@ -63,7 +62,6 @@ const viewerComponents = [RichTextViewerComponent, ListViewerComponent, Interval
 
 const switchComponents = [
   ColorSwitchComponent,
-  IntervalSwitchComponent,
   LinkViewerComponent,
   GeonameViewerComponent,
   ListSwitchComponent,
