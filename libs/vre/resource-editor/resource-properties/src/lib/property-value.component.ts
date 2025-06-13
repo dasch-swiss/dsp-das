@@ -20,14 +20,21 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   readonly Cardinality = Cardinality;
 
+  initialFormValue!: { item: any; comment: string | null };
+
   constructor(public propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
     this._setupDisplayMode();
+    this._setInitialValue();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  private _setInitialValue() {
+    this.initialFormValue = this.group.getRawValue();
   }
 
   private _setupDisplayMode() {
