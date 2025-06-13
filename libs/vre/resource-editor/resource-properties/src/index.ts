@@ -1,4 +1,4 @@
-export * from './lib/switch-components/color-switch.component';
+export * from './lib/value-components/color-value.component';
 export * from './lib/value-components/geoname-value.component';
 export * from './lib/value-components/link-value.component';
 export * from './lib/value-components/list-value.component';
@@ -16,7 +16,6 @@ export * from './lib/viewer-components/geoname-viewer.component';
 export * from './lib/viewer-components/link-viewer.component';
 export * from './lib/switch-components/list-switch.component';
 export * from './lib/viewer-components/list-viewer.component';
-export * from './lib/switch-components/rich-text-switch.component';
 export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/create-resource-dialog.component';

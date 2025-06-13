@@ -26,14 +26,13 @@ import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
-import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
 import { ListSwitchComponent } from './lib/switch-components/list-switch.component';
-import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
+import { ColorValueComponent } from './lib/value-components/color-value.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { IntervalValueComponent } from './lib/value-components/interval-value.component';
 import { LinkValueComponent } from './lib/value-components/link-value.component';
@@ -61,13 +60,12 @@ const valueComponents = [
 const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
 const switchComponents = [
-  ColorSwitchComponent,
+  ColorValueComponent,
   LinkViewerComponent,
   GeonameViewerComponent,
   ListSwitchComponent,
   DateViewerComponent,
   BaseSwitchComponent,
-  RichTextSwitchComponent,
   ToggleValueComponent,
 ];
 
