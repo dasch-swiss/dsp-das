@@ -129,6 +129,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
         [style.background-color]="item.value"></div>
     </ng-template>
 
+    <ng-template #dateDisplayTpl let-item="item">
+      <app-date-switch [control]="item" />
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
 })
