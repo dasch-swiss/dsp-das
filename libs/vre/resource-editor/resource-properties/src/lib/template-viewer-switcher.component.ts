@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   Constants,
   PropertyDefinition,
@@ -51,8 +60,13 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-date-viewer [control]="item" />
     </ng-template>
 
+    <ng-template #geoNameDisplayTpl let-item="item">
+      <app-geoname-viewer [control]="item" />
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateViewerSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) value!: ReadValue | undefined;
