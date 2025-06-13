@@ -93,6 +93,13 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     <ng-template #linkEditorTpl let-item="item">
       <app-link-value [control]="item" [defaultValue]="''" [propIri]="''" [resourceClassIri]="''" />
     </ng-template>
+
+    <ng-template #uriEditorTpl let-item="item">
+      <app-common-input
+        [control]="item"
+        label="External link"
+        [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
+    </ng-template>
   `,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
