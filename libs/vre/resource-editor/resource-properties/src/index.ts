@@ -21,8 +21,7 @@ export * from './lib/switch-components/rich-text-switch.component';
 export * from './lib/switch-components/text-html-switch.component';
 export * from './lib/switch-components/text-switch.component';
 export * from './lib/switch-components/time-switch.component';
-export * from './lib/switch-components/toggle-switch.component';
-export * from './lib/switch-components/uri-switch.component';
+export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/create-resource-dialog.component';
 export * from './lib/create-resource-form.component';

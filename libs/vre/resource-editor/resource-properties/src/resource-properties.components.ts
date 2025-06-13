@@ -33,8 +33,6 @@ import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switc
 import { TextHtmlSwitchComponent } from './lib/switch-components/text-html-switch.component';
 import { TextSwitchComponent } from './lib/switch-components/text-switch.component';
 import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
-import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
-import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
@@ -46,6 +44,7 @@ import { LinkValueComponent } from './lib/value-components/link-value.component'
 import { ListValueComponent } from './lib/value-components/list-value.component';
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
+import { ToggleValueComponent } from './lib/value-components/toggle-value.component';
 import { DateViewerComponent } from './lib/viewer-components/date-viewer.component';
 import { GeonameViewerComponent } from './lib/viewer-components/geoname-viewer.component';
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
@@ -70,13 +69,12 @@ const switchComponents = [
   ColorSwitchComponent,
   IntervalSwitchComponent,
   LinkViewerComponent,
-  UriSwitchComponent,
   GeonameViewerComponent,
   ListSwitchComponent,
   DateViewerComponent,
   BaseSwitchComponent,
   RichTextSwitchComponent,
-  ToggleSwitchComponent,
+  ToggleValueComponent,
   TextSwitchComponent,
   TextHtmlSwitchComponent,
 ];

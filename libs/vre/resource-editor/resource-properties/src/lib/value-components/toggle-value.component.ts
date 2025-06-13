@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
-  selector: 'app-toggle-switch',
+  selector: 'app-toggle-value',
   template: `
     <button mat-icon-button (click)="add()" data-cy="add-bool-toggle" *ngIf="control.value === null">
       <mat-icon class="add-icon">add_box</mat-icon>
@@ -29,9 +28,8 @@ import { IsSwitchComponent } from './is-switch-component.interface';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToggleSwitchComponent implements IsSwitchComponent {
-  @Input() control!: FormControl<boolean | null>;
-  @Input() displayMode = true;
+export class ToggleValueComponent {
+  @Input({ required: true }) control!: FormControl<boolean | null>;
 
   add() {
     this.control.patchValue(false);

@@ -37,7 +37,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #booleanEditorTpl let-item="item">
-      <app-toggle-switch [control]="item" [displayMode]="false" />
+      <app-toggle-value [control]="item" />
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">
