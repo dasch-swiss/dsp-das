@@ -8,8 +8,7 @@ import { FormValueArray } from './form-value-array.type';
     <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
       [value]="myProperty.values[0]"
-      (templateFound)="template = $event"
-      [editMode]="true" />
+      (templateFound)="template = $event" />
 
     <ng-container *ngIf="template">
       <ng-container *ngTemplateOutlet="template; context: { item: formArray.at(0).controls.item }"></ng-container>

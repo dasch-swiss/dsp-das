@@ -15,10 +15,9 @@ import { PropertyValueService } from './property-value.service';
 
 @Component({
   selector: 'app-property-value-display',
-  template: ` <app-template-editor-switcher
+  template: ` <app-template-viewer-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
-      [editMode]="false"
       (templateFound)="templateFound($event)" />
     <div
       data-cy="property-value"

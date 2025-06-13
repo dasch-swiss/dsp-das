@@ -22,7 +22,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
-      [editMode]="true"
       (templateFound)="foundTemplate($event)" />
 
     <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
