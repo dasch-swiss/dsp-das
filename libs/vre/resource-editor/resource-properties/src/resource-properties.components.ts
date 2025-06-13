@@ -27,9 +27,7 @@ import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
 import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
-import { GeonameViewerComponent } from './lib/switch-components/geoname-viewer.component';
 import { IntervalSwitchComponent } from './lib/switch-components/interval-switch.component';
-import { LinkSwitchComponent } from './lib/switch-components/link-switch.component';
 import { ListSwitchComponent } from './lib/switch-components/list-switch.component';
 import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
 import { TextHtmlSwitchComponent } from './lib/switch-components/text-html-switch.component';
@@ -49,7 +47,9 @@ import { ListValueComponent } from './lib/value-components/list-value.component'
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
 import { DateViewerComponent } from './lib/viewer-components/date-viewer.component';
+import { GeonameViewerComponent } from './lib/viewer-components/geoname-viewer.component';
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
+import { LinkViewerComponent } from './lib/viewer-components/link-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
@@ -69,7 +69,7 @@ const switchComponents = [
   TimeSwitchComponent,
   ColorSwitchComponent,
   IntervalSwitchComponent,
-  LinkSwitchComponent,
+  LinkViewerComponent,
   UriSwitchComponent,
   GeonameViewerComponent,
   ListSwitchComponent,

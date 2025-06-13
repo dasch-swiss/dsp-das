@@ -64,6 +64,10 @@ import { JsLibPotentialError } from './JsLibPotentialError';
       <app-geoname-viewer [control]="item" />
     </ng-template>
 
+    <ng-template #linkDisplayTpl let-item="item">
+      <app-link-viewer [control]="item" />
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
