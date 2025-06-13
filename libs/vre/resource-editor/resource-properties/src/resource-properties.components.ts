@@ -30,7 +30,6 @@ import { ColorSwitchComponent } from './lib/switch-components/color-switch.compo
 import { IntervalSwitchComponent } from './lib/switch-components/interval-switch.component';
 import { ListSwitchComponent } from './lib/switch-components/list-switch.component';
 import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
-import { TextHtmlSwitchComponent } from './lib/switch-components/text-html-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
@@ -72,7 +71,6 @@ const switchComponents = [
   BaseSwitchComponent,
   RichTextSwitchComponent,
   ToggleValueComponent,
-  TextHtmlSwitchComponent,
 ];
 
 export const ResourcePropertiesComponents = [

@@ -18,7 +18,6 @@ export * from './lib/viewer-components/link-viewer.component';
 export * from './lib/switch-components/list-switch.component';
 export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/switch-components/rich-text-switch.component';
-export * from './lib/switch-components/text-html-switch.component';
 export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/create-resource-dialog.component';
