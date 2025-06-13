@@ -37,7 +37,7 @@ import { TextSwitchComponent } from './lib/switch-components/text-switch.compone
 import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
 import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
-import { TemplateSwitcherComponent } from './lib/template-switcher.component';
+import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
@@ -115,7 +115,7 @@ export const ResourcePropertiesComponents = [
   AuthorshipFormFieldComponent,
   MathJaxDirective,
 
-  TemplateSwitcherComponent,
+  TemplateEditorSwitcherComponent,
   TemplateViewerSwitcherComponent,
   PropertyValueCreatorComponent,
 ];

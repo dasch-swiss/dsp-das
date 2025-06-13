@@ -19,7 +19,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-property-value-edit',
   template: `
-    <app-template-switcher
+    <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
       [editMode]="true"

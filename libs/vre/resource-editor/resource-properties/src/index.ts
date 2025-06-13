@@ -63,5 +63,5 @@ export * from './lib/authorship-form-field.component';
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/mathjax/math-jax.service';
 
-export * from './lib/template-switcher.component';
+export * from './lib/template-editor-switcher.component';
 export * from './lib/property-value-creator.component';

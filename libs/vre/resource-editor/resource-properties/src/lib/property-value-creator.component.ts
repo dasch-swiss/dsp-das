@@ -5,7 +5,7 @@ import { FormValueArray } from './form-value-array.type';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <app-template-switcher
+    <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
       [value]="myProperty.values[0]"
       (templateFound)="template = $event"
