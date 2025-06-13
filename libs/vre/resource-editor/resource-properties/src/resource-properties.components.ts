@@ -32,7 +32,6 @@ import { ListSwitchComponent } from './lib/switch-components/list-switch.compone
 import { RichTextSwitchComponent } from './lib/switch-components/rich-text-switch.component';
 import { TextHtmlSwitchComponent } from './lib/switch-components/text-html-switch.component';
 import { TextSwitchComponent } from './lib/switch-components/text-switch.component';
-import { TimeSwitchComponent } from './lib/switch-components/time-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
@@ -65,7 +64,6 @@ const valueComponents = [
 const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
 const switchComponents = [
-  TimeSwitchComponent,
   ColorSwitchComponent,
   IntervalSwitchComponent,
   LinkViewerComponent,
