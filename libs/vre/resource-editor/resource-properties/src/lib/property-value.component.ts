@@ -1,6 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
-import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
@@ -12,12 +11,11 @@ import { PropertyValueService } from './property-value.service';
     <app-property-value-edit [index]="index" [group]="group" *ngIf="!displayMode" />
   `,
 })
-export class PropertyValueComponent implements OnInit, OnDestroy {
+export class PropertyValueComponent implements OnInit {
   @Input({ required: true }) index!: number;
   @Input({ required: true }) group!: FormValueGroup;
 
   displayMode!: boolean;
-  subscription!: Subscription;
   readonly Cardinality = Cardinality;
 
   initialFormValue!: { item: any; comment: string | null };
@@ -27,10 +25,6 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._setupDisplayMode();
     this._setInitialValue();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   private _setInitialValue() {
