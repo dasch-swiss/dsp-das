@@ -12,7 +12,7 @@ export * from './lib/viewer-components/interval-viewer.component';
 export * from './lib/viewer-components/time-viewer.component';
 
 export * from './lib/switch-components/base-switch.component';
-export * from './lib/switch-components/date-viewer.component';
+export * from './lib/viewer-components/date-viewer.component';
 export * from './lib/switch-components/geoname-switch.component';
 export * from './lib/switch-components/link-switch.component';
 export * from './lib/switch-components/list-switch.component';
