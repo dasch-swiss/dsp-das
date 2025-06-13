@@ -38,6 +38,7 @@ import { TimeSwitchComponent } from './lib/switch-components/time-switch.compone
 import { ToggleSwitchComponent } from './lib/switch-components/toggle-switch.component';
 import { UriSwitchComponent } from './lib/switch-components/uri-switch.component';
 import { TemplateSwitcherComponent } from './lib/template-switcher.component';
+import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
@@ -115,5 +116,6 @@ export const ResourcePropertiesComponents = [
   MathJaxDirective,
 
   TemplateSwitcherComponent,
+  TemplateViewerSwitcherComponent,
   PropertyValueCreatorComponent,
 ];
