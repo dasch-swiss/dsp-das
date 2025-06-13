@@ -1,28 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
-import { IsSwitchComponent } from './is-switch-component.interface';
 
 @Component({
-  selector: 'app-date-switch',
+  selector: 'app-date-viewer',
   template: `
-    <ng-container *ngIf="displayMode; else editMode">
-      <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl">
-        <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
-        <span>{{ start | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
-        -
-        <span>{{ end | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
-      </ng-container>
+    <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl">
+      <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
+      <span>{{ start | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
+      -
+      <span>{{ end | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
     </ng-container>
 
     <ng-template #knoraDateTpl>
       <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
       <span>{{ knoraDate | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
-    </ng-template>
-
-    <ng-template #editMode>
-      <app-date-value-handler [formControl]="control" />
-      <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </ng-template>
 
     <ng-template #calendarType let-date="date">
@@ -32,7 +24,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
     </ng-template>
   `,
 })
-export class DateSwitchComponent implements IsSwitchComponent, OnInit {
+export class DateViewerComponent implements OnInit {
   get start() {
     return (this.control.value as KnoraPeriod).start;
   }
@@ -46,7 +38,6 @@ export class DateSwitchComponent implements IsSwitchComponent, OnInit {
   }
 
   @Input() control!: FormControl<KnoraDate | KnoraPeriod>;
-  @Input() displayMode = true;
 
   isKnoraPeriod!: boolean;
 

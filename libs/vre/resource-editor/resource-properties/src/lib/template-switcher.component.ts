@@ -130,7 +130,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #dateDisplayTpl let-item="item">
-      <app-date-switch [control]="item" />
+      <app-date-viewer [control]="item" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>

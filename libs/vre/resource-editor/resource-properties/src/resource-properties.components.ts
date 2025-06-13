@@ -27,7 +27,7 @@ import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
 import { ColorSwitchComponent } from './lib/switch-components/color-switch.component';
-import { DateSwitchComponent } from './lib/switch-components/date-switch.component';
+import { DateViewerComponent } from './lib/switch-components/date-viewer.component';
 import { GeonameSwitchComponent } from './lib/switch-components/geoname-switch.component';
 import { IntervalSwitchComponent } from './lib/switch-components/interval-switch.component';
 import { LinkSwitchComponent } from './lib/switch-components/link-switch.component';
@@ -72,7 +72,7 @@ const switchComponents = [
   UriSwitchComponent,
   GeonameSwitchComponent,
   ListSwitchComponent,
-  DateSwitchComponent,
+  DateViewerComponent,
   BaseSwitchComponent,
   RichTextSwitchComponent,
   ToggleSwitchComponent,
