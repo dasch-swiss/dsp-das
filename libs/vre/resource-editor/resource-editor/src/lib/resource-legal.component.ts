@@ -48,7 +48,7 @@ import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-ma
         [href]="license.id"
         target="_blank">
         <span style="color: white">{{ license.labelEn }} </span>
-        <mat-icon>open_in_new</mat-icon>
+        <mat-icon style="font-size: 18px">open_in_new</mat-icon>
       </a></ng-template
     >
   `,
@@ -71,6 +71,8 @@ export class ResourceLegalComponent implements OnChanges {
 
   ngOnChanges() {
     this.fileValue = getFileValue(this.resource);
+    this.licenseLogo = undefined;
+
     if (this.fileValue.license) {
       if (LicensesLogoMapping.has(this.fileValue.license.id)) {
         this.licenseLogo = LicensesLogoMapping.get(this.fileValue.license.id);
