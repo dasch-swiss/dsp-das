@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 
-type HideReason = 'NotFound' | 'Deleted' | null;
+type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
 @Component({
   selector: 'app-resource-fetcher',
@@ -24,6 +24,8 @@ type HideReason = 'NotFound' | 'Deleted' | null;
     <ng-template #hideTpl>
       <div style="display: flex; justify-content: center; padding: 16px">
         <h3 *ngIf="hideStatus === 'NotFound'">{{ 'resourceEditor.notFound' | translate }}</h3>
+
+        <h3 *ngIf="hideStatus === 'Unauthorized'">{{ 'resourceEditor.unauthorized' | translate }}</h3>
 
         <div *ngIf="hideStatus === 'Deleted'" style="text-align: center">
           <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
@@ -65,7 +67,9 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         !ResourceUtil.versionIsValid(changes['resourceVersion'].currentValue)
       ) {
         this.resourceVersion = undefined;
-        this._notification.openSnackBar(this._translateService.instant('resourceEditor.versionNotValid'));
+        this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
+          this._notification.openSnackBar(v);
+        });
       }
 
       this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
@@ -86,7 +90,15 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
         err => {
           if (err instanceof ApiResponseError && err.status === 404) {
             this.hideStatus = 'NotFound';
+            return;
           }
+
+          if (err instanceof ApiResponseError && err.status === 403) {
+            this.hideStatus = 'Unauthorized';
+            return;
+          }
+
+          throw err;
         }
       );
     }

@@ -17,7 +17,8 @@ import { map, switchMap } from 'rxjs/operators';
         ><span [ngStyle]="{ 'font-weight': last && index > 0 ? 'bold' : 'normal' }">{{ label }}</span>
         <mat-icon *ngIf="!last">chevron_right</mat-icon>
       </ng-container>
-      <a *ngIf="linkToSearchList" [href]="linkToSearchList" target="_blank">
+      <a *ngIf="false && linkToSearchList" [href]="linkToSearchList" target="_blank">
+        <!-- TODO : enable this feature when the State Management is removed -->
         <mat-icon style="font-size: 16px; height: 14px; margin-left: 4px">open_in_new</mat-icon>
       </a>
     </div>
@@ -56,9 +57,12 @@ export class ListViewerComponent implements OnInit {
   }
 
   private _fetchSearchLink() {
-    combineLatest([this._resourceFetcher.resource$, this._nodeIdSubject.asObservable()]).subscribe(
-      ([resource, nodeId]) => {
-        const searchClassesQuery = `
+    combineLatest([
+      this._resourceFetcher.resource$,
+      this._resourceFetcher.projectShortcode$,
+      this._nodeIdSubject.asObservable(),
+    ]).subscribe(([resource, projectShortcode, nodeId]) => {
+      const searchClassesQuery = `
    PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
 CONSTRUCT {
 ?mainRes knora-api:isMainResource true .
@@ -71,9 +75,8 @@ CONSTRUCT {
 }
 OFFSET 0`;
 
-        this.linkToSearchList = `/project/${resource.res.attachedToProject}/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
-      }
-    );
+      this.linkToSearchList = `/project/${projectShortcode}/advanced-search/gravsearch/${encodeURIComponent(searchClassesQuery)}`;
+    });
   }
 
   static lookFor(tree: ListNodeV2[], id: string): ListNodeV2[] | null {

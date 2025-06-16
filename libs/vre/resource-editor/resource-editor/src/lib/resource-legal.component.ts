@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService, LicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable, Subscription } from 'rxjs';
+import { ReadFileValue } from '@dasch-swiss/dsp-js';
+import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { LicensesLogoMapping } from './licenses-logo-mapping';
+import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-mapping';
 
 @Component({
   selector: 'app-resource-legal',
@@ -32,36 +32,34 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
         </div>
         <div>
           <div style="display: flex; justify-content: flex-end">
-            <img *ngIf="licenseLogo; else licenseWithLinkTpl" [src]="licenseLogo" alt="license" style="width: 110px" />
+            <a *ngIf="licenseLogo; else licenseWithLinkTpl" [href]="licenseLogo.link" target="_blank"
+              ><img [src]="licenseLogo.imageLink" alt="license" style="width: 110px"
+            /></a>
           </div>
 
           <div>Licensed on {{ fileValue.valueCreationDate | humanReadableDate }}</div>
         </div>
       </div>
     </div>
+
     <ng-template #licenseWithLinkTpl>
-      <span style="display: flex; align-items: center" *ngIf="license$ && license$ | async as license">
-        <a
-          [href]="license.uri"
-          style="color: white; text-decoration: underline; display: flex; align-items: center"
-          target="_blank"
-          >{{ license.labelEn }}
-          <mat-icon style="font-size: 15px; height: 15px; width: 15px;">open_in_new</mat-icon>
-        </a>
-      </span></ng-template
+      <a
+        style="display: flex; align-items: center; color: white"
+        *ngIf="license$ && license$ | async as license"
+        [href]="license.id"
+        target="_blank">
+        <span style="color: white">{{ license.labelEn }} </span>
+        <mat-icon style="font-size: 18px">open_in_new</mat-icon>
+      </a></ng-template
     >
   `,
   styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
 })
 export class ResourceLegalComponent implements OnChanges {
-  @Input({ required: true }) resource!: ReadResource;
+  @Input({ required: true }) fileValue!: ReadFileValue;
 
-  fileValue!: ReadFileValue;
-
-  licenseLogo?: string;
-
-  subscription?: Subscription;
-  license$?: Observable<LicenseDto | undefined>;
+  licenseLogo?: LicenseLogoMappingValue;
+  license$?: Observable<ProjectLicenseDto | undefined>;
 
   constructor(
     private _resourceFetcher: ResourceFetcherService,
@@ -69,8 +67,8 @@ export class ResourceLegalComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    console.log(this.resource);
-    this.fileValue = getFileValue(this.resource);
+    this.licenseLogo = undefined;
+
     if (this.fileValue.license) {
       if (LicensesLogoMapping.has(this.fileValue.license.id)) {
         this.licenseLogo = LicensesLogoMapping.get(this.fileValue.license.id);

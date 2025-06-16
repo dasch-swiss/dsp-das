@@ -106,7 +106,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   selectedResourceClass$: Observable<ApiData | undefined> = this.select(state => state.selectedResourceClass);
   propertyFormList$: Observable<PropertyFormItem[]> = this.select(state => state.propertyFormList);
   propertiesOrderByList$: Observable<OrderByItem[]> = this.select(state => state.propertiesOrderByList);
-  properties$: Observable<PropertyData[]> = this.select(state => state.properties);
   propertiesLoading$: Observable<boolean> = this.select(state => state.propertiesLoading);
   filteredProperties$: Observable<PropertyData[]> = this.select(state => state.filteredProperties);
   matchResourceClassesLoading$: Observable<boolean> = this.select(state => state.matchResourceClassesLoading);
@@ -881,7 +880,13 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
       filteredProperties,
     };
 
-    localStorage.setItem('advanced-search-previous-search', JSON.stringify(snapshot));
+    const searchStored = localStorage.getItem('advanced-search-previous-search');
+    const projectPreviousSearch: Record<string, typeof snapshot> = searchStored ? JSON.parse(searchStored) : {};
+    if (snapshot.selectedProject) {
+      projectPreviousSearch[snapshot.selectedProject] = snapshot;
+    }
+
+    localStorage.setItem('advanced-search-previous-search', JSON.stringify(projectPreviousSearch));
   }
 
   private getPropertiesOrderByList(property: PropertyFormItem): OrderByItem[] {
