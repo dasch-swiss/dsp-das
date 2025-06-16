@@ -4,7 +4,7 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
 import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { LicensesLogoMapping } from './licenses-logo-mapping';
+import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-mapping';
 
 @Component({
   selector: 'app-resource-legal',
@@ -32,7 +32,9 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
         </div>
         <div>
           <div style="display: flex; justify-content: flex-end">
-            <img *ngIf="licenseLogo; else licenseWithLinkTpl" [src]="licenseLogo" alt="license" style="width: 110px" />
+            <a *ngIf="licenseLogo; else licenseWithLinkTpl" [href]="licenseLogo.link" target="_blank"
+              ><img [src]="licenseLogo.imageLink" alt="license" style="width: 110px"
+            /></a>
           </div>
 
           <div>Licensed on {{ fileValue.valueCreationDate | humanReadableDate }}</div>
@@ -57,7 +59,7 @@ export class ResourceLegalComponent implements OnChanges {
 
   fileValue!: ReadFileValue;
 
-  licenseLogo?: string;
+  licenseLogo?: LicenseLogoMappingValue;
 
   subscription?: Subscription;
   license$?: Observable<ProjectLicenseDto | undefined>;
