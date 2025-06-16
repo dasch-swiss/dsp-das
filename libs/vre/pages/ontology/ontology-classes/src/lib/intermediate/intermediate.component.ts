@@ -35,7 +35,7 @@ import {
               mat-mini-fab
               color="primary"
               class="link"
-              *ngIf="(isMember$ | async) && (mayHaveMultipleProjects$ | async) === false"
+              *ngIf="canBelinked$ | async"
               matTooltip="Create a link object from this selection"
               [matTooltipPosition]="'above'"
               [disabled]="resources.count < 2"
@@ -88,7 +88,7 @@ export class IntermediateComponent {
     shareReplay(1)
   );
 
-  readonly isMember$: Observable<boolean> = combineLatest([
+  readonly canBelinked$: Observable<boolean> = combineLatest([
     this._store.select(UserSelectors.user),
     this._store.select(UserSelectors.userProjectAdminGroups),
     this.uniqueSelectedProjectIris$,
@@ -104,8 +104,6 @@ export class IntermediateComponent {
       );
     })
   );
-
-  readonly mayHaveMultipleProjects$ = this.uniqueSelectedProjectIris$.pipe(map(set => set.size > 1));
 
   @Input({ required: true })
   set resources(value: FilteredResources) {
