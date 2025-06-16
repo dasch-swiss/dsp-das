@@ -48,7 +48,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, concat, Observable, of } from 'rxjs';
+import { BehaviorSubject, concat, defer, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
@@ -70,6 +70,11 @@ export class OntologyEditService {
   currentOntology$ = this._currentOntology.asObservable();
 
   latestChangedItem = new BehaviorSubject<string | null>(null);
+
+  latestChangedItem$ = this.latestChangedItem.asObservable().pipe(
+    filter(item => item !== null),
+    distinctUntilChanged()
+  );
 
   currentOntologyClasses$ = this.currentOntology$.pipe(
     map(ontology => {
@@ -295,7 +300,7 @@ export class OntologyEditService {
       .pipe(
         take(1),
         filter((result): result is PropertyData => !!result),
-        switchMap(propertyData => this._updateProperty$(propDef.id, propertyData))
+        switchMap(propertyData => this._updateProperty$(propDef.id, propertyData).pipe(take(1)))
       )
       .subscribe();
   }
@@ -403,7 +408,7 @@ export class OntologyEditService {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
     if (propertyData.labels !== undefined) {
-      updates.push(this._updatePropertyLabels(id, propertyData.labels));
+      updates.push(this._updatePropertyLabels$(id, propertyData.labels));
     }
 
     if (propertyData.comments !== undefined) {
@@ -423,31 +428,30 @@ export class OntologyEditService {
     return concat(...updates).pipe(
       last(),
       tap(() => {
+        console.log('Property updated successfully');
         this._afterTransaction(id);
       })
     );
   }
 
-  private _updatePropertyLabels(
-    id: string,
-    labels: StringLiteralV2[]
-  ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
-    const updateLabel = new UpdateResourcePropertyLabel();
-    updateLabel.id = id;
-    updateLabel.labels = labels;
-    const onto = this._getUpdateOntology<UpdateResourcePropertyLabel>(updateLabel);
-    return this._updateResourceProperty$(onto);
+  private _updatePropertyLabels$(id: string, labels: StringLiteralV2[]) {
+    return defer(() => {
+      const upd = new UpdateResourcePropertyLabel();
+      upd.id = id;
+      upd.labels = labels;
+      return this._updateResourceProperty$(
+        this._getUpdateOntology(upd) // <- picks up the **current** date
+      );
+    });
   }
 
-  private _updatePropertyComments$(
-    id: string,
-    comments: StringLiteralV2[]
-  ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
-    const updateComment = new UpdateResourcePropertyComment();
-    updateComment.id = id;
-    updateComment.comments = comments;
-    const onto = this._getUpdateOntology<UpdateResourcePropertyComment>(updateComment);
-    return this._updateResourceProperty$(onto);
+  private _updatePropertyComments$(id: string, comments: StringLiteralV2[]) {
+    return defer(() => {
+      const upd = new UpdateResourcePropertyComment();
+      upd.id = id;
+      upd.comments = comments;
+      return this._updateResourceProperty$(this._getUpdateOntology(upd));
+    });
   }
 
   private _updatePropertyGuiElement(
@@ -468,8 +472,8 @@ export class OntologyEditService {
     >
   ): Observable<ResourcePropertyDefinitionWithAllLanguages> {
     return this._dspApiConnection.v2.onto.updateResourceProperty(updateOntology).pipe(
-      tap(res => {
-        this.lastModificationDate = res?.lastModificationDate;
+      tap(prop => {
+        this.lastModificationDate = prop?.lastModificationDate;
       })
     );
   }

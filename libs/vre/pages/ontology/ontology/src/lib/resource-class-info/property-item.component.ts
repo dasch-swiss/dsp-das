@@ -1,9 +1,20 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Cardinality, ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -123,7 +134,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyItemComponent implements AfterViewInit {
+export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input({ required: true }) resourceClass: ClassDefinition;
   @Input({ required: true }) prop!: PropToDisplay;
   @Input() props: PropToDisplay[] = [];
@@ -137,6 +148,8 @@ export class PropertyItemComponent implements AfterViewInit {
 
   propCanBeRemovedFromClass = false;
 
+  private _destroy = new Subject<void>();
+
   get propType(): DefaultProperty {
     return this._ontoService.getDefaultPropertyType(this.prop!.propDef as ResourcePropertyDefinitionWithAllLanguages);
   }
@@ -147,6 +160,17 @@ export class PropertyItemComponent implements AfterViewInit {
     private _ontoService: OntologyService,
     private _store: Store
   ) {}
+
+  ngOnInit() {
+    this._oes.latestChangedItem.pipe(takeUntil(this._destroy)).subscribe(item => {
+      if (item && item === this.prop.propDef?.id) {
+        this.propertyCardRipple.launch({
+          persistent: false,
+        });
+        this._oes.latestChangedItem.next(null);
+      }
+    });
+  }
 
   ngAfterViewInit() {
     if (this._oes.latestChangedItem.value === this.prop.propDef?.id) {
@@ -179,5 +203,10 @@ export class PropertyItemComponent implements AfterViewInit {
 
   openEditProperty() {
     this._oes.openEditProperty(this.prop.propDef, this.propType);
+  }
+
+  ngOnDestroy() {
+    this._destroy.next();
+    this._destroy.complete();
   }
 }

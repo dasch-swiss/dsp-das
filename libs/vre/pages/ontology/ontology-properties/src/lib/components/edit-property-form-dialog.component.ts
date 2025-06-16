@@ -46,7 +46,6 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
-    console.log(this.data);
   }
 
     get name(): string {
