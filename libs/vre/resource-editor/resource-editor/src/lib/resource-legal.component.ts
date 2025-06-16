@@ -67,6 +67,8 @@ export class ResourceLegalComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    this.licenseLogo = undefined;
+
     if (this.fileValue.license) {
       if (LicensesLogoMapping.has(this.fileValue.license.id)) {
         this.licenseLogo = LicensesLogoMapping.get(this.fileValue.license.id);
