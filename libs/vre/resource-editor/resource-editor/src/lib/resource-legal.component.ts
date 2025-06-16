@@ -40,9 +40,14 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
       </div>
     </div>
     <ng-template #licenseWithLinkTpl>
-      <span style="display: flex; align-items: center" *ngIf="license$ && license$ | async as license">
+      <a
+        style="display: flex; align-items: center; color: white"
+        *ngIf="license$ && license$ | async as license"
+        [href]="license.id"
+        target="_blank">
         <span style="color: white">{{ license.labelEn }} </span>
-      </span></ng-template
+        <mat-icon>open_in_new</mat-icon>
+      </a></ng-template
     >
   `,
   styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
