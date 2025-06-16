@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ListsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { PropertyForm } from '../property-form.type';
 
 @Component({
   selector: 'app-gui-attr-list',
@@ -22,7 +22,7 @@ import { PropertyForm } from '../property-form.type';
   styles: ['.large-field {width: 100%}'],
 })
 export class GuiAttrListComponent {
-  @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
+  @Input({ required: true }) control!: FormControl<string | null>;
   lists$ = this._store.select(ListsSelectors.listsInProject);
 
   constructor(private _store: Store) {}
