@@ -14,7 +14,7 @@ Cypress.Commands.add(
       label: [{ value: faker.lorem.word() }],
     }
   ) => {
-    // cy.createOntology(projectPage).then(ontology => {
+    // cy.createOntology$(projectPage).then(ontology => {
     //   resourceClass.id = ontology.ontologyMetadata['@id'];
     //   const request = new JsonConvert().serializeObject(resourceClass, CreateResourceClassPayload);
     //   cy.request<ResourceClassDefinitionWithAllLanguages>(

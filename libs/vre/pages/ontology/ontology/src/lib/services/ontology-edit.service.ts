@@ -48,7 +48,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, concat, Observable, of } from 'rxjs';
+import { BehaviorSubject, concat, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
   CreateResourceClassDialogComponent,
@@ -207,7 +207,7 @@ export class OntologyEditService {
     return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
   }
 
-  createOntology(ontologyData: OntologyData) {
+  createOntology$(ontologyData: OntologyData) {
     this._isTransacting.next(true);
     const createOntology = new CreateOntology();
     createOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
@@ -222,7 +222,7 @@ export class OntologyEditService {
     );
   }
 
-  updateOntology(ontologyData: OntologyData) {
+  updateOntology$(ontologyData: OntologyData) {
     this._isTransacting.next(true);
     const updateOntology = new UpdateOntologyMetadata();
     updateOntology.id = this.ontologyId;
@@ -269,7 +269,7 @@ export class OntologyEditService {
       .pipe(
         take(1),
         filter((result): result is CreatePropertyData => !!result),
-        switchMap(propertyData => this._createResourceProperty(propertyData))
+        switchMap(propertyData => this._createResourceProperty$(propertyData))
       )
       .subscribe(propDef => {
         if (assignToClass) {
@@ -295,11 +295,9 @@ export class OntologyEditService {
       .pipe(
         take(1),
         filter((result): result is PropertyData => !!result),
-        switchMap(propertyData => this._updateProperty(propDef.id, propertyData))
+        switchMap(propertyData => this._updateProperty$(propDef.id, propertyData))
       )
-      .subscribe(() => {
-        this._afterTransaction(propDef.id, `Successfully updated ${propDef.label}.`);
-      });
+      .subscribe();
   }
 
   openEditResourceClass(resClass: ResourceClassDefinitionWithAllLanguages): void {
@@ -331,18 +329,16 @@ export class OntologyEditService {
 
     if (
       data.classDef &&
-      data.guiAttribute &&
-      [Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf)
+      [Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) &&
+      data.objectType
     ) {
-      createResProp.objectType = data.guiAttribute;
-      // createResProp.subjectType = data.classDef.id;
+      createResProp.objectType = data.objectType;
     } else {
       createResProp.objectType = data.propType.objectType;
     }
 
     if ([Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) && data.guiAttribute) {
       createResProp.objectType = data.guiAttribute;
-      // createResProp.subjectType = data.classDef?.id || '';
     } else {
       createResProp.objectType = data.propType.objectType || '';
     }
@@ -373,7 +369,7 @@ export class OntologyEditService {
     return undefined;
   }
 
-  private _createResourceProperty(propertyData: CreatePropertyData) {
+  private _createResourceProperty$(propertyData: CreatePropertyData) {
     this._isTransacting.next(true);
     const createProperty = this._getCreateResourceProperty(propertyData);
     const onto = this._getUpdateOntology<CreateResourceProperty>(createProperty);
@@ -403,7 +399,7 @@ export class OntologyEditService {
       });
   }
 
-  private _updateProperty(id: string, propertyData: PropertyData) {
+  private _updateProperty$(id: string, propertyData: PropertyData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
     if (propertyData.labels !== undefined) {
@@ -411,7 +407,7 @@ export class OntologyEditService {
     }
 
     if (propertyData.comments !== undefined) {
-      updates.push(this._updatePropertyComments(id, propertyData.comments));
+      updates.push(this._updatePropertyComments$(id, propertyData.comments));
     }
 
     // Todo: FIX!
@@ -440,10 +436,10 @@ export class OntologyEditService {
     updateLabel.id = id;
     updateLabel.labels = labels;
     const onto = this._getUpdateOntology<UpdateResourcePropertyLabel>(updateLabel);
-    return this._updateResourceProperty(onto);
+    return this._updateResourceProperty$(onto);
   }
 
-  private _updatePropertyComments(
+  private _updatePropertyComments$(
     id: string,
     comments: StringLiteralV2[]
   ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
@@ -451,7 +447,7 @@ export class OntologyEditService {
     updateComment.id = id;
     updateComment.comments = comments;
     const onto = this._getUpdateOntology<UpdateResourcePropertyComment>(updateComment);
-    return this._updateResourceProperty(onto);
+    return this._updateResourceProperty$(onto);
   }
 
   private _updatePropertyGuiElement(
@@ -463,10 +459,10 @@ export class OntologyEditService {
     updateGuiElement.guiElement = guiElement;
 
     const onto = this._getUpdateOntology<UpdateResourcePropertyGuiElement>(updateGuiElement);
-    return this._updateResourceProperty(onto);
+    return this._updateResourceProperty$(onto);
   }
 
-  private _updateResourceProperty(
+  private _updateResourceProperty$(
     updateOntology: UpdateOntology<
       UpdateResourcePropertyGuiElement | UpdateResourcePropertyLabel | UpdateResourcePropertyComment
     >
@@ -560,7 +556,7 @@ export class OntologyEditService {
       });
   }
 
-  propertyCanBeRemovedFromClass(propCard: IHasProperty, classIri: string): Observable<CanDoResponse> {
+  propertyCanBeRemovedFromClass$(propCard: IHasProperty, classIri: string): Observable<CanDoResponse> {
     if (propCard.isInherited) {
       const canDoRes = new CanDoResponse();
       canDoRes.canDo = false;

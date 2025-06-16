@@ -5,8 +5,8 @@ import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-servi
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
-import { map, startWith, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -59,12 +59,12 @@ export class PropertyInfoComponent implements OnInit {
 
   showActionBubble = false;
 
-  readonly canBeDeletedTrigger$ = new Subject<void>();
+  readonly canBeDeletedTrigger$ = new BehaviorSubject<void>(undefined);
 
-  readonly canBeDeleted$ = this.canBeDeletedTrigger$.pipe(
+  readonly canBeDeleted$ = this.canBeDeletedTrigger$.asObservable().pipe(
     switchMap(() => this._oes.canDeleteResourceProperty$(this.propDef.id)),
     map(res => res.canDo),
-    startWith(undefined)
+    startWith(false)
   );
 
   isLockHovered = false;
@@ -158,8 +158,8 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   mouseEnter() {
-    this.canBeDeletedTrigger$.next();
     this.showActionBubble = true;
+    this.canBeDeletedTrigger$.next();
   }
 
   mouseLeave() {

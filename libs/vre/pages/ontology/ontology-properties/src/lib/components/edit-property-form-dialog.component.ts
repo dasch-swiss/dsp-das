@@ -20,6 +20,7 @@ import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services'
         labels: data.propDef.labels,
         comments: data.propDef.comments,
         guiAttribute: data.propDef.guiAttributes[0],
+        objectType: data.propDef.objectType
       }" />
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -45,6 +46,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
+    console.log(this.data);
   }
 
     get name(): string {

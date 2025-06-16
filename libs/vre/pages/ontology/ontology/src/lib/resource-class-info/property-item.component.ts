@@ -167,7 +167,7 @@ export class PropertyItemComponent implements AfterViewInit {
   }
 
   canBeRemovedFromClass(): void {
-    this._oes.propertyCanBeRemovedFromClass(this.prop, this.resourceClass.id).subscribe(canDoRes => {
+    this._oes.propertyCanBeRemovedFromClass$(this.prop, this.resourceClass.id).subscribe(canDoRes => {
       this.propCanBeRemovedFromClass = canDoRes.canDo;
       this._cd.markForCheck();
     });

@@ -48,7 +48,7 @@ import { PropertyForm, PropertyData } from '../property-form.type';
 
     <app-gui-attr-link
       *ngIf="propertyData.propType.objectType === Constants.LinkValue"
-      [control]="form.controls.guiAttr" />
+      [control]="form.controls.objectType" />
 
     <app-multi-language-textarea
       [formArray]="form.controls.comments"
@@ -67,6 +67,20 @@ export class PropertyFormComponent implements OnInit {
   form!: PropertyForm;
 
   filteredProperties!: PropertyCategory[];
+
+  get disableGuiAttributeField(): boolean {
+    return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.ListValue;
+  }
+
+  get disableObjectTypeField(): boolean {
+        // only link and ispartof properties already existing property can not change guiAttr
+        return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.LinkValue;
+    }
+
+  get disableGuiElementField(): boolean {
+        // if it is an already existing property which is not of type TextValue
+        return !!this.propertyData.name && this.propertyData.propType.objectType !== 'http://api.knora.org/ontology/knora-api/v2#TextValue'
+    }
 
   constructor(
     private _fb: FormBuilder,
@@ -88,7 +102,7 @@ export class PropertyFormComponent implements OnInit {
         guiElement: this._fb.control(
         {
           value: this.propertyData.propType.guiEle!,
-          disabled: this.filteredProperties[0].elements.length === 1,
+          disabled: this.disableGuiElementField
         },
         { nonNullable: true }
       ),
@@ -107,10 +121,17 @@ export class PropertyFormComponent implements OnInit {
       guiAttr: this._fb.control<string>(
         {
           value: this.propertyData.guiAttribute!,
-          disabled: ![Constants.LinkValue, Constants.ListValue].includes(this.propertyData.propType.objectType!),
+          disabled: this.disableGuiAttributeField,
         },
         { nonNullable: true, validators: [Validators.required] }
       ),
+        objectType: this._fb.control<string>(
+            {
+                value: this.propertyData.objectType!,
+                disabled: this.disableObjectTypeField,
+            },
+            { nonNullable: true, validators: [Validators.required] }
+        )
     });
 
     this.afterFormInit.emit(this.form);

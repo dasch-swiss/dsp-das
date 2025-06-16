@@ -103,8 +103,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       id: this.data?.id,
     };
     const transaction$ = this.data?.id
-      ? this._oes.updateOntology(ontologyData)
-      : this._oes.createOntology(ontologyData);
+      ? this._oes.updateOntology$(ontologyData)
+      : this._oes.createOntology$(ontologyData);
     transaction$.pipe(take(1)).subscribe(o => {
       this.dialogRef.close(o);
     });

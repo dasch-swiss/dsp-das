@@ -58,12 +58,8 @@ export class GuiAttrLinkComponent {
         })
     );
 
-    getClassLabel(classDef: ResourceClassDefinitionWithAllLanguages) {
-        return OntologyClassHelper.getClassLabelByLanguage(classDef, this._localizationService.getCurrentLanguage());
-    }
-
   constructor(
-      private _localizationService: LocalizationService,
+    private _localizationService: LocalizationService,
     private _store: Store,
     private _sortingService: SortingService
   ) {}

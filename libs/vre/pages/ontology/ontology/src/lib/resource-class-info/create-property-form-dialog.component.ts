@@ -140,6 +140,7 @@ export class CreatePropertyFormDialogComponent implements OnInit {
   }
 
   private setGuiAttribute(guiAttr: string): string[] | undefined {
+    console.log('guiAttr', guiAttr);
     switch (this.data.propertyInfo.propType.guiEle) {
       case Constants.GuiColorPicker:
         return [`ncolors=${guiAttr}`];

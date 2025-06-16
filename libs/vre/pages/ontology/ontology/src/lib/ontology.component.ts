@@ -37,11 +37,12 @@ export class OntologyComponent implements OnInit, OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
-    public router: Router,
     private _store: Store,
     private _titleService: Title,
     private _oes: OntologyEditService
   ) {}
+
+  expandClasses = true;
 
   @HostListener('window:resize', ['$event']) onWindowResize() {
     this.disableContent = window.innerWidth <= 768;

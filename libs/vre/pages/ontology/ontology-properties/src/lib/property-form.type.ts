@@ -10,6 +10,7 @@ export type PropertyForm = FormGroup<{
   labels: MultiLanguageForm;
   comments: MultiLanguageForm;
   guiAttr: FormControl<string>;
+  objectType: FormControl<string>;
 }>;
 
 export interface CreatePropertyFormDialogProps {
@@ -24,6 +25,7 @@ export interface PropertyData {
     comments?: StringLiteralV2[];
     guiElement?: string;
     guiAttribute?: string;
+    objectType?: string;
 }
 
 export interface CreatePropertyData extends PropertyData {
