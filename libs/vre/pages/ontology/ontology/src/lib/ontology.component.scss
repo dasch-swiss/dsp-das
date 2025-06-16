@@ -44,9 +44,7 @@
   }
 
   .ontology-editor-canvas {
-    min-height: calc(
-      100vh - #{$sub-header-height} - #{$header-height} - #{$tab-bar-margin} - 100px
-    );
+    height: 100%;
     border-right: 1px solid rgba(0, 0, 0, 0.12);
   }
 }

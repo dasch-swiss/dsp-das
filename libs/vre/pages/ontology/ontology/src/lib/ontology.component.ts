@@ -2,12 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  LoadListsInProjectAction,
-  LoadProjectOntologiesAction,
-  OntologiesSelectors,
-  ProjectsSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
   DefaultProperties,

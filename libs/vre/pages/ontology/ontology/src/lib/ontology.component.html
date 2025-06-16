@@ -2,6 +2,7 @@
   <div class="overlay-blocker" *ngIf="(isTransacting$ | async)">
     <app-progress-indicator class="floating-center" />
   </div>
+
   <mat-sidenav-container class="ontology-editor-container">
     <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
       <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>

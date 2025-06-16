@@ -65,6 +65,11 @@ export class ListPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  navigateToDataModels() {
+    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
+    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
+  }
+
   editList(list: ListNodeInfo) {
     this._matDialog.open<ListInfoFormComponent, ListNodeInfo>(
       ListInfoFormComponent,

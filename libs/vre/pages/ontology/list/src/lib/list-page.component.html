@@ -7,6 +7,9 @@
         <div class="list-editor">
           <mat-toolbar class="more-space-bottom">
             <mat-toolbar-row>
+              <button class="back-button" mat-button (click)="navigateToDataModels()" matTooltip="Back to data models">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
               <h3
                 class="mat-headline-6"
                 [matTooltip]="list.labels |appStringifyStringLiteral:'all'"

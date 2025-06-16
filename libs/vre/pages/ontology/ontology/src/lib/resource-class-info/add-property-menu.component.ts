@@ -10,7 +10,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({

@@ -66,11 +66,10 @@ import { OntologyEditService } from '../services/ontology-edit.service';
         color: black;
         display: flex;
         align-items: center;
-        height: 100%;
       }
 
       .property-item {
-        min-height: 4rem;
+        height: 3rem;
         align-items: center;
         border-radius: 8px;
         margin: 0;
@@ -83,7 +82,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 
       .drag-n-drop-handle {
         cursor: move;
-        color: black;
+        color: var(--primary);
       }
 
       .property-item-content-container {
