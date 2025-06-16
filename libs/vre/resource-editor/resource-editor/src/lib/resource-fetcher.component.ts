@@ -124,13 +124,13 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
       });
   }
 
+  ngOnDestroy() {
+    this._store.dispatch(new SetCurrentResourceAction(null));
+  }
+
   private _reloadIfCurrentVersion(resourceVersion: string, lastModificationDate?: string) {
     if (lastModificationDate === undefined || resourceVersion === lastModificationDate) {
       this.navigateToCurrentVersion();
     }
-  }
-
-  ngOnDestroy() {
-    this._store.dispatch(new SetCurrentResourceAction(null));
   }
 }
