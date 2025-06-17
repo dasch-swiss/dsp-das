@@ -1,4 +1,4 @@
-import { Directive, OnChanges, Input, Renderer2, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
 import { Md5 } from 'ts-md5';
 import { AdminImageConfig } from './admin-image.config';
 

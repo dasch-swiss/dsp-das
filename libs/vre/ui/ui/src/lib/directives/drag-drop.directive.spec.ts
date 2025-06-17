@@ -1,5 +1,5 @@
 import { Component, DebugElement } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +15,7 @@ import { DragDropDirective } from './drag-drop.directive';
   template: ` <div appDragDrop class="dd-container" (fileDropped)="filesDropped($event)"></div>`,
 })
 class TestHostComponent {
-  files: FileList;
+  files!: FileList;
 
   filesDropped(files: FileList) {
     this.files = files;
