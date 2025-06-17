@@ -15,7 +15,6 @@ export type PropertyForm = FormGroup<{
 
 export interface CreatePropertyFormDialogProps {
     propType: DefaultProperty;
-    resClass?: ClassDefinition;
 }
 
 export interface PropertyData {

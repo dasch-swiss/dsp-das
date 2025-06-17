@@ -1,4 +1,3 @@
-import { CreatePropertyFormDialogComponent } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { CreateResourceClassDialogComponent } from './lib/create-resource-class-dialog/create-resource-class-dialog.component';
 import { DataModelsComponent } from './lib/data-models/data-models.component';
 import { EditResourceClassDialogComponent } from './lib/edit-resource-class-dialog/edit-resource-class-dialog.component';
@@ -33,5 +32,4 @@ export const OntologyComponents = [
   ResourceClassPropertyInfoComponent,
   CardinalityComponent,
   CardinalityChangeDialogComponent,
-  CreatePropertyFormDialogComponent,
 ];

@@ -77,11 +77,6 @@ export class PropertyFormComponent implements OnInit {
         return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.LinkValue;
     }
 
-  get disableGuiElementField(): boolean {
-        // if it is an already existing property which is not of type TextValue
-        return !!this.propertyData.name && this.propertyData.propType.objectType !== 'http://api.knora.org/ontology/knora-api/v2#TextValue'
-    }
-
   constructor(
     private _fb: FormBuilder,
     private _localizationService: LocalizationService
@@ -102,7 +97,7 @@ export class PropertyFormComponent implements OnInit {
         guiElement: this._fb.control(
         {
           value: this.propertyData.propType.guiEle!,
-          disabled: this.disableGuiElementField
+          disabled: true,
         },
         { nonNullable: true }
       ),

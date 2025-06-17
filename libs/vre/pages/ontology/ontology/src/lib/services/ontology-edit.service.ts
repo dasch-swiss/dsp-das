@@ -32,8 +32,6 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import {
   CreatePropertyData,
-  CreatePropertyFormDialogComponent,
-  CreatePropertyFormDialogProps,
   EditPropertyFormDialogComponent,
   PropertyData,
 } from '@dasch-swiss/vre/ontology/ontology-properties';
@@ -70,11 +68,6 @@ export class OntologyEditService {
   currentOntology$ = this._currentOntology.asObservable();
 
   latestChangedItem = new BehaviorSubject<string | null>(null);
-
-  latestChangedItem$ = this.latestChangedItem.asObservable().pipe(
-    filter(item => item !== null),
-    distinctUntilChanged()
-  );
 
   currentOntologyClasses$ = this.currentOntology$.pipe(
     map(ontology => {
@@ -262,13 +255,12 @@ export class OntologyEditService {
   }
 
   openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    const dialogRef = this._dialog.open<
-      CreatePropertyFormDialogComponent,
-      CreatePropertyFormDialogProps,
-      CreatePropertyData
-    >(CreatePropertyFormDialogComponent, {
-      data: { propType, resClass: assignToClass },
-    });
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, CreatePropertyData>(
+      EditPropertyFormDialogComponent,
+      {
+        data: { propType },
+      }
+    );
 
     dialogRef
       .afterClosed()
