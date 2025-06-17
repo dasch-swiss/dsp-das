@@ -62,7 +62,6 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._buildForm(this.data);
-    console.log(this.data);
 
     if (!this.data?.id) {
       this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {

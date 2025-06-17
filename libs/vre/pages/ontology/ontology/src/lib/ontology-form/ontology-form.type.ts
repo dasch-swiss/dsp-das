@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
 export interface OntologyData {
-  name: string;
+  name?: string;
   label: string;
   comment: string;
   id?: string;
