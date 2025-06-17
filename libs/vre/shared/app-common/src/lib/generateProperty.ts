@@ -59,7 +59,7 @@ export class GenerateProperty {
     // sort properties by guiOrder
     props = props
       .filter(prop => prop.propDef.objectType !== Constants.GeomValue)
-      .sort((a, b) => (a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
+      .sort((a, b) => (a.guiDef.guiOrder && b.guiDef.guiOrder && a.guiDef.guiOrder > b.guiDef.guiOrder ? 1 : -1))
       // to get equal results on all browser engines which implements sorting in different way
       // properties list has to be sorted again, pushing all "has..." properties to the bottom
       // TODO FOLLOWING LINE IS A BUG ARRAY-CALLBACK-RETURN SHOULDNT BE DISABLED
