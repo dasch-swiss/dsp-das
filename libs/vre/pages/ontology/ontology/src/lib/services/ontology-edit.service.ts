@@ -253,6 +253,7 @@ export class OntologyEditService {
           .pipe(
             tap(() => {
               this._store.dispatch(new RemoveProjectOntologyAction(ontologyId, this.projectId));
+              this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
               this._currentOntology.next(null);
             })
           );
