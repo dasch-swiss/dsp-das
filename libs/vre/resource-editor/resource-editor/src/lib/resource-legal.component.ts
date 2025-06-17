@@ -4,7 +4,7 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-mapping';
+import { LicensesLogoMapping } from './licenses-logo-mapping';
 
 @Component({
   selector: 'app-resource-legal',
@@ -32,8 +32,8 @@ import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-ma
         </div>
         <div>
           <div style="display: flex; justify-content: flex-end">
-            <a *ngIf="licenseLogo; else licenseWithLinkTpl" [href]="licenseLogo.link" target="_blank"
-              ><img [src]="licenseLogo.imageLink" alt="license" style="width: 110px"
+            <a *ngIf="licenseLogo; else licenseWithLinkTpl" [href]="fileValue.license!.id" target="_blank"
+              ><img [src]="licenseLogo" alt="license" style="width: 110px"
             /></a>
           </div>
 
@@ -58,7 +58,7 @@ import { LicenseLogoMappingValue, LicensesLogoMapping } from './licenses-logo-ma
 export class ResourceLegalComponent implements OnChanges {
   @Input({ required: true }) fileValue!: ReadFileValue;
 
-  licenseLogo?: LicenseLogoMappingValue;
+  licenseLogo?: string;
   license$?: Observable<ProjectLicenseDto | undefined>;
 
   constructor(
@@ -67,6 +67,7 @@ export class ResourceLegalComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    console.log('aaa', this.fileValue);
     this.licenseLogo = undefined;
 
     if (this.fileValue.license) {
