@@ -30,11 +30,7 @@ import {
   SetCurrentOntologyAction,
   SetOntologyAction,
 } from '@dasch-swiss/vre/core/state';
-import {
-  CreatePropertyData,
-  EditPropertyFormDialogComponent,
-  PropertyData,
-} from '@dasch-swiss/vre/ontology/ontology-properties';
+import { EditPropertyFormDialogComponent, PropertyData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import {
   DefaultClass,
   DefaultProperty,
@@ -209,7 +205,7 @@ export class OntologyEditService {
     this._isTransacting.next(true);
     const createOntology = new CreateOntology();
     createOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
-    createOntology.name = ontologyData.name;
+    createOntology.name = ontologyData.name!;
     createOntology.comment = ontologyData.comment;
     createOntology.attachedToProject = this.projectId;
 
@@ -255,7 +251,7 @@ export class OntologyEditService {
   }
 
   openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, CreatePropertyData>(
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyData>(
       EditPropertyFormDialogComponent,
       {
         data: { propType },
@@ -266,7 +262,7 @@ export class OntologyEditService {
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is CreatePropertyData => !!result),
+        filter((result): result is PropertyData => !!result),
         switchMap(propertyData => this._createResourceProperty$(propertyData))
       )
       .subscribe(propDef => {
@@ -313,10 +309,10 @@ export class OntologyEditService {
     );
   }
 
-  private _getCreateResourceProperty(data: CreatePropertyData): CreateResourceProperty {
+  private _getCreateResourceProperty(data: PropertyData): CreateResourceProperty {
     const createResProp = new CreateResourceProperty();
-    createResProp.name = data.name;
-    createResProp.label = data.labels;
+    createResProp.name = data.name!;
+    createResProp.label = data.labels!;
     createResProp.comment = data.comments;
     createResProp.guiElement = data.propType.guiEle;
     createResProp.subPropertyOf = [data.propType.subPropOf];
@@ -325,11 +321,7 @@ export class OntologyEditService {
       createResProp.guiAttributes = this._getGuiAttribute(data.guiAttribute, data.propType);
     }
 
-    if (
-      data.classDef &&
-      [Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) &&
-      data.objectType
-    ) {
+    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) && data.objectType) {
       createResProp.objectType = data.objectType;
     } else {
       createResProp.objectType = data.propType.objectType;
@@ -367,7 +359,7 @@ export class OntologyEditService {
     return undefined;
   }
 
-  private _createResourceProperty$(propertyData: CreatePropertyData) {
+  private _createResourceProperty$(propertyData: PropertyData) {
     this._isTransacting.next(true);
     const createProperty = this._getCreateResourceProperty(propertyData);
     const onto = this._getUpdateOntology<CreateResourceProperty>(createProperty);

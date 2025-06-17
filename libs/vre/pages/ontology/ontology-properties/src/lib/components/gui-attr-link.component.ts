@@ -33,6 +33,7 @@ export interface ClassToSelect {
 })
 export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
+  @Input() subjectClassId?: string;
 
     ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
         map((response: ReadOntology[]) => {
