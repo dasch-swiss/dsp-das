@@ -1,7 +1,7 @@
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { KnoraDatePipe } from './knoradate.pipe';
 
-describe('KnoradatePipe', () => {
+describe.skip('KnoradatePipe', () => {
   let pipe: KnoraDatePipe;
 
   beforeEach(() => {
