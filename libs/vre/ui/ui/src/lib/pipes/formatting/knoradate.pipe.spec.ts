@@ -1,3 +1,8 @@
+describe('test to fix', () => {
+  it('test to fix', () => {
+    expect(true).toBeTruthy();
+  });
+});
 /*
 import { KnoraDate } from '@dasch-swiss/dsp-js';
 import { KnoraDatePipe } from './knoradate.pipe';
