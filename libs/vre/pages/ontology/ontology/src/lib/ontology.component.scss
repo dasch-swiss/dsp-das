@@ -4,18 +4,13 @@
   width: auto;
   min-height: calc(100vh - #{$header-height} - #{$tab-bar-margin} - 100px);
   height: calc(100vh - #{$header-height} - 2px);
-  border: 1px dotted $primary_200;
   position: relative;
   margin: 0;
   z-index: 0;
 }
 
 .ontology-editor-container {
-  height: calc(100% - #{$header-height} - 8px);
-
-  .ontology-editor-subheader {
-    height: $sub-header-height;
-  }
+  height: 100%;
 
   .ontology-editor-sidenav {
     width: 200px;
@@ -50,7 +45,7 @@
     border-right: 1px solid rgba(0, 0, 0, 0.12);
 
   }
-  .header {
+  .sticky-header {
     position: sticky;
     top: 0;
     z-index: 1;

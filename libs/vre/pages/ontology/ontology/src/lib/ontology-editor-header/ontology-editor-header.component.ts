@@ -18,10 +18,21 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       margin-top: 0.5em;
 
       .back-button {
-        max-width: 1rem;
+        height: 90%;
+        max-width: 0.5rem;
         margin-right: 1em;
         display: flex;
         align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        .centered-icon {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-self: center;
+          text-align: center;
+        }
       }
 
       .ontology-info {

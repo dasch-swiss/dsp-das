@@ -3,10 +3,10 @@
     <app-progress-indicator class="floating-center" />
   </div>
   <ng-container *ngIf="(isListsLoading$ | async) === false && (rootListNodeInfo$ | async) as list">
-    <mat-toolbar>
+    <mat-toolbar class="sticky-header">
       <mat-toolbar-row class="list-editor-header">
         <button class="back-button" mat-button (click)="navigateToDataModels()" matTooltip="Back to data models">
-          <mat-icon>chevron_left</mat-icon>
+          <mat-icon class="centered-icon">chevron_left</mat-icon>
         </button>
         <div class="list-info">
           <h3
@@ -50,7 +50,7 @@
       </mat-toolbar-row>
     </mat-toolbar>
 
-    <div class="content large middle">
+    <div class="content large middle scroll">
       <app-list-item
         *ngIf="((isListsLoading$ | async) === false)"
         [node]="list"
