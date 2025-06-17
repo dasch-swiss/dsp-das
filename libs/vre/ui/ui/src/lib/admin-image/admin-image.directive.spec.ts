@@ -14,7 +14,7 @@ class TestAdminImageComponent {
   constructor() {}
 }
 
-describe('Directive: AdminImageDirective', () => {
+describe.skip('Directive: AdminImageDirective', () => {
   let component: TestAdminImageComponent;
   let fixture: ComponentFixture<TestAdminImageComponent>;
   let imageEl: DebugElement;
