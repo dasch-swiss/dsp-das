@@ -17,9 +17,24 @@
   }
 }
 
-.back-button {
-  max-width: 1rem;
-  margin-right: 1em;
-  display: flex;
-  align-items: center;
+.list-editor-header {
+  margin-top: 0.5em;
+
+  .back-button {
+    max-width: 1rem;
+    margin-right: 1em;
+    display: flex;
+    align-items: center;
+  }
+
+  .list-info {
+    h3,
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }

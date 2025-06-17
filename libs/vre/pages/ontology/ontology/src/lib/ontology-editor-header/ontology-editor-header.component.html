@@ -16,24 +16,26 @@
       </p>
     </div>
     <span class="fill-remaining-space"></span>
-    <button
-      color="primary"
-      data-cy="edit-ontology-button"
-      mat-button
-      [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''"
-      [disabled]="(isAdmin$ | async) !== true|| (project$ | async)?.status !== true"
-      (click)="$event.stopPropagation(); editOntology(ontology)">
-      <mat-icon>edit</mat-icon>
-      Edit
-    </button>
-    <button
-      color="warn"
-      mat-button
-      [matTooltip]="(isAdmin$ | async) ? ((currentOntologyCanBeDeleted$ | async) ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!'): ''"
-      [disabled]="(isAdmin$ | async) === false || (currentOntologyCanBeDeleted$ | async) !== true"
-      (click)="deleteOntology(ontology.id)">
-      <mat-icon>delete</mat-icon>
-      Delete
-    </button>
+    <div *ngIf="(isAdmin$ | async) === true">
+      <button
+        color="primary"
+        data-cy="edit-ontology-button"
+        mat-button
+        [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''"
+        [disabled]="(project$ | async)?.status !== true"
+        (click)="$event.stopPropagation(); editOntology(ontology)">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button
+        color="warn"
+        mat-button
+        [matTooltip]="((currentOntologyCanBeDeleted$ | async) ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!')"
+        [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
+        (click)="deleteOntology(ontology.id)">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>

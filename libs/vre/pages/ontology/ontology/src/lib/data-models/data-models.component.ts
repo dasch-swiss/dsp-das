@@ -3,7 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse, OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import {
+  ListsSelectors,
+  LoadListsInProjectAction,
+  OntologiesSelectors,
+  ProjectsSelectors,
+  UserSelectors,
+} from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -72,6 +78,8 @@ export class DataModelsComponent {
       .afterClosed()
       .pipe(take(1))
       .subscribe((response: ListResponse) => {
+        const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+        this._store.dispatch(new LoadListsInProjectAction(projectIri!));
         this.navigateToList(response.list.listinfo.id);
       });
   }

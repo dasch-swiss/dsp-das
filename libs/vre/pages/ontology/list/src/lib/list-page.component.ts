@@ -9,7 +9,6 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
@@ -37,6 +36,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
   );
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  project$ = this._store.select(ProjectsSelectors.currentProject);
 
   isListsLoading$ = this._store.select(ListsSelectors.isListsLoading);
 
@@ -84,11 +84,14 @@ export class ListPageComponent implements OnInit, OnDestroy {
         take(1),
         switchMap(() => this._store.dispatch(new DeleteListNodeAction(list.id)))
       )
-      .pipe(switchMap(() => this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction), take(1))))
+      .pipe(
+        switchMap(() => this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction))),
+        take(1)
+      )
       .subscribe(() => {
-        this._store.dispatch(new LoadListsInProjectAction(list.projectIri!));
-        const projectUuid = ProjectService.IriToUuid(list.projectIri!);
-        this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
+        const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+        this._store.dispatch(new LoadListsInProjectAction(projectIri!));
+        this.navigateToDataModels();
       });
   }
 
