@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { GuiAttrListComponent } from './gui-attr-list.component';
 
@@ -41,6 +42,7 @@ describe('GuiAttrListComponent', () => {
         ReactiveFormsModule,
         BrowserAnimationsModule,
       ],
+      providers: [{ provide: Store, useValue: storeMock }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
