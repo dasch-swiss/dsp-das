@@ -33,9 +33,9 @@ import { finalize } from 'rxjs/operators';
           {{ option }}
         </mat-option>
 
-        <mat-option>AI-Generated Content – Not Protected by Copyright</mat-option>
+        <mat-option *ngIf="AIContentMissing">AI-Generated Content – Not Protected by Copyright</mat-option>
 
-        <mat-option>Public Domain – Not Protected by Copyright</mat-option>
+        <mat-option *ngIf="publicDomainMissing">Public Domain – Not Protected by Copyright</mat-option>
       </mat-autocomplete>
       <mat-hint>Press Enter or Tab to add an item.</mat-hint>
 
@@ -54,6 +54,14 @@ export class AuthorshipFormFieldComponent implements OnInit {
   selectedItems: string[] = [];
   availableAuthorship: string[] = [];
   loading = true;
+
+  get AIContentMissing() {
+    return !this.availableAuthorship.includes('AI-Generated Content – Not Protected by Copyright');
+  }
+
+  get publicDomainMissing() {
+    return !this.availableAuthorship.includes('Public Domain – Not Protected by Copyright');
+  }
 
   constructor(
     private _adminApi: AdminProjectsLegalInfoApiService,
