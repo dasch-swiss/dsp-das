@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
     private _localStorageWatcher: LocalStorageWatcherService,
     private _localizationService: LocalizationService
   ) {
+    // test
     this._pendo.setup();
     this._autoLoginService.setup();
     this._localStorageWatcher.watchAccessToken();
