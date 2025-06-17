@@ -1,6 +1,6 @@
 name: CI
 
-on: [push, fork]
+on: [ push, fork ]
 
 env:
   # use the read-write access token so that build cache in nx-cloud can be updated
@@ -38,8 +38,7 @@ jobs:
           node-version: 20.9.0
       - uses: browser-actions/setup-chrome@v1
       - run: npm install
-      - run: npx nx run dsp-app:lint
-        # - run: npx nx run dsp-app:test:ci
+      - run: npx nx run dsp-app:test:ci
         env:
           TZ: Europe/Zurich
 
