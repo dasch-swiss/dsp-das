@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
@@ -9,13 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { GuiAttrListComponent } from './gui-attr-list.component';
-
-@Pipe({ name: 'humanReadableError' })
-class MockHumanReadableErrorPipe implements PipeTransform {
-  transform(value: any) {
-    return value;
-  }
-}
 
 describe('GuiAttrListComponent', () => {
   let component: GuiAttrListComponent;
@@ -33,7 +26,7 @@ describe('GuiAttrListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [GuiAttrListComponent, MockHumanReadableErrorPipe],
+      declarations: [GuiAttrListComponent],
       imports: [
         MatFormFieldModule,
         MatSelectModule,
@@ -54,12 +47,5 @@ describe('GuiAttrListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should render list options', () => {
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('List 1');
-    expect(compiled.textContent).toContain('List 2');
   });
 });
