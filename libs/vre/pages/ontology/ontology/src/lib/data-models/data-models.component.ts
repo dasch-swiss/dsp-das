@@ -21,7 +21,6 @@ export class DataModelsComponent {
 
   ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
   isAdmin$ = this._store.select(UserSelectors.isMemberOfSystemAdminGroup);
-  isLoggedIn$ = this._store.select(UserSelectors.isLoggedIn);
   isLoading$ = this._store.select(OntologiesSelectors.isLoading);
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
@@ -44,10 +43,6 @@ export class DataModelsComponent {
   }
 
   navigateToOntology(id: string) {
-    if (!this._store.selectSnapshot(UserSelectors.isLoggedIn)) {
-      return;
-    }
-
     const ontoName = OntologyService.getOntologyName(id);
     this._router.navigate(
       [RouteConstants.ontology, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes],

@@ -30,9 +30,6 @@
         class="list-item ontos"
         *ngFor="let onto of ontologiesMetadata$ | async; trackBy: trackByOntologyMetaFn"
         data-cy="ontology-button"
-        matTooltip="You must be logged in to view data models"
-        matTooltipPositionAtOrigin="true"
-        [matTooltipDisabled]="(isLoggedIn$ | async)"
         (click)="navigateToOntology(onto.id)">
         <mat-icon class="icon-prefix">bubble_chart</mat-icon>
         <p class="label">{{onto.label}}</p>

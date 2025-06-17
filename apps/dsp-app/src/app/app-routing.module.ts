@@ -70,7 +70,6 @@ const routes: Routes = [
       {
         path: RouteConstants.ontologyEditorRelative,
         component: OntologyComponent,
-        canActivate: [AuthGuard],
         children: [
           {
             path: '',
@@ -80,12 +79,10 @@ const routes: Routes = [
           {
             path: RouteConstants.classes,
             component: OntologyEditorClassesComponent,
-            canActivate: [AuthGuard],
           },
           {
             path: RouteConstants.properties,
             component: OntologyPropertiesComponent,
-            canActivate: [AuthGuard],
           },
         ],
       },
@@ -106,7 +103,6 @@ const routes: Routes = [
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
         component: ListPageComponent,
-        canActivate: [AuthGuard],
       },
       {
         path: RouteConstants.settings,

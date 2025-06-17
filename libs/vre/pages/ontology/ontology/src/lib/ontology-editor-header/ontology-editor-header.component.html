@@ -30,7 +30,7 @@
       color="warn"
       mat-button
       [matTooltip]="(isAdmin$ | async) ? ((currentOntologyCanBeDeleted$ | async) ? 'Delete data model' : 'This data model can\'t be deleted because it is in use!'): ''"
-      [disabled]="(currentOntologyCanBeDeleted$ | async) !== true || (isAdmin$ | async) === false"
+      [disabled]="(isAdmin$ | async) === false || (currentOntologyCanBeDeleted$ | async) !== true"
       (click)="deleteOntology(ontology.id)">
       <mat-icon>delete</mat-icon>
       Delete
