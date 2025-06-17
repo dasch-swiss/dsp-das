@@ -169,7 +169,7 @@ export class DateValueHandlerComponent
     this.stateChanges.next();
   }
 
-  private _placeholder: string;
+  private _placeholder!: string;
 
   @Input()
   get required() {

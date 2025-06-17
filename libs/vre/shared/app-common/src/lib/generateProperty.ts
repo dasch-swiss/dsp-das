@@ -8,10 +8,13 @@ import { PropertyInfoValues } from './property-info-values.interface';
  */
 export class GenerateProperty {
   public static commonProperty(resource: ReadResource) {
-    return this._initProps(resource)
-      .filter(prop => !prop.propDef['isLinkProperty'])
-      .filter(prop => !prop.propDef.subPropertyOf.includes(`${ApiConstants.apiKnoraOntologyUrl}#hasFileValue`))
-      .map(this._displayExistingLinkedValues);
+    return (
+      this._initProps(resource)
+        // @ts-ignore
+        .filter(prop => !prop.propDef['isLinkProperty'])
+        .filter(prop => !prop.propDef.subPropertyOf.includes(`${ApiConstants.apiKnoraOntologyUrl}#hasFileValue`))
+        .map(this._displayExistingLinkedValues)
+    );
   }
 
   public static incomingRessourceProperty(resource: ReadResource) {
@@ -68,6 +71,7 @@ export class GenerateProperty {
         if (a.guiDef.guiOrder === undefined) {
           return 1;
         }
+        return -1;
       });
 
     return props;
