@@ -5,7 +5,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { Store } from '@ngxs/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { GuiAttrListComponent } from './gui-attr-list.component';
 
@@ -23,7 +23,7 @@ describe('GuiAttrListComponent', () => {
 
   beforeEach(async () => {
     storeMock = {
-      select: jasmine.createSpy().and.returnValue(
+      select: jest.fn().mockReturnValue(
         of([
           { id: '1', labels: [{ value: 'List 1' }] },
           { id: '2', labels: [{ value: 'List 2' }] },
@@ -33,8 +33,14 @@ describe('GuiAttrListComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [GuiAttrListComponent, MockHumanReadableErrorPipe],
-      imports: [MatFormFieldModule, MatSelectModule, MatIconModule, MatOptionModule, ReactiveFormsModule],
-      providers: [{ provide: Store, useValue: storeMock }],
+      imports: [
+        MatFormFieldModule,
+        MatSelectModule,
+        MatIconModule,
+        MatOptionModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
