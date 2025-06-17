@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'vre-shared-resource-properties',
-  preset: '../../jest.preset.js',
+  preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/vre-shared-resource-properties',
   transform: {
@@ -18,5 +18,5 @@ export default {
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
-  ]
+  ],
 };
