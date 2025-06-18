@@ -14,7 +14,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { ResourceClassForm } from '../resource-class-form/resource-class-form.type';
 
 export interface EditResourceClassDialogProps {
-  id: string;
+  id?: string;
   title: string;
   ontologyId: string;
   lastModificationDate: string;
@@ -97,10 +97,10 @@ export class EditResourceClassDialogComponent implements OnInit {
       .updateResourceClass(onto4Label)
       .pipe(
         switchMap(classLabelResponse => {
-          this.lastModificationDate = classLabelResponse.lastModificationDate;
+          this.lastModificationDate = classLabelResponse.lastModificationDate!;
           onto4Comment.lastModificationDate = this.lastModificationDate;
 
-          if (updateComment.comments.length) {
+          if (updateComment.comments!.length) {
             return this._updateComment$(onto4Comment);
           } else {
             return this._deleteResourceComment$();

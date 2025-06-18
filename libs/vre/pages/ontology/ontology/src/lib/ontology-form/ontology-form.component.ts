@@ -10,7 +10,7 @@ import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../services/ontology-edit.service';
-import { OntologyForm, OntologyData } from './ontology-form.type';
+import { OntologyForm, OntologyData, UpdateOntologyData, CreateOntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-ontology-form',
@@ -102,8 +102,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       id: this.data?.id,
     };
     const transaction$ = this.data?.id
-      ? this._oes.updateOntology$(ontologyData)
-      : this._oes.createOntology$(ontologyData);
+      ? this._oes.updateOntology$(ontologyData as UpdateOntologyData)
+      : this._oes.createOntology$(ontologyData as CreateOntologyData);
     transaction$.pipe(take(1)).subscribe(o => {
       this.dialogRef.close(o);
     });

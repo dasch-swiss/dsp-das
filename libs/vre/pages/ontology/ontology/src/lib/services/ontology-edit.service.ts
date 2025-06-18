@@ -4,21 +4,21 @@ import {
   ApiResponseError,
   CanDoResponse,
   ClassDefinition,
-  CreateResourceProperty,
   IHasProperty,
   KnoraApiConnection,
   ReadOntology,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
   UpdateOntology,
-  UpdateResourceClassCardinality,
   UpdateResourcePropertyLabel,
   UpdateResourcePropertyComment,
   UpdateResourcePropertyGuiElement,
   Constants,
   CreateOntology,
-  UpdateOntologyMetadata,
   OntologyMetadata,
+  StringLiteral,
+  UpdateResourceClassLabel,
+  UpdateResourceClassComment,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -30,7 +30,7 @@ import {
   SetCurrentOntologyAction,
   SetOntologyAction,
 } from '@dasch-swiss/vre/core/state';
-import { EditPropertyFormDialogComponent, PropertyData } from '@dasch-swiss/vre/ontology/ontology-properties';
+import { EditPropertyFormDialogComponent, PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import {
   DefaultClass,
   DefaultProperty,
@@ -52,8 +52,9 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../edit-resource-class-dialog/edit-resource-class-dialog.component';
-import { OntologyData } from '../ontology-form/ontology-form.type';
+import { CreateOntologyData, OntologyData, UpdateOntologyData } from '../ontology-form/ontology-form.type';
 import { UpdateOntologyT } from '../ontology.types';
+import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })
 export class OntologyEditService {
@@ -103,7 +104,11 @@ export class OntologyEditService {
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
   get projectId(): string {
-    return this._store.selectSnapshot(ProjectsSelectors.currentProject)?.id || '';
+    return this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+  }
+
+  get projectShort(): string {
+    return this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname;
   }
 
   get ontologyId(): string {
@@ -122,6 +127,13 @@ export class OntologyEditService {
     currentOntology.lastModificationDate = date;
     this._currentOntology.next(currentOntology);
     this._updateCurrentOntologyInStoreIfNeeded(currentOntology);
+  }
+
+  get ctx(): OntologyContext {
+    return {
+      ontologyId: this.ontologyId,
+      lastModificationDate: this.lastModificationDate,
+    };
   }
 
   constructor(
@@ -201,13 +213,14 @@ export class OntologyEditService {
     return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
   }
 
-  createOntology$(ontologyData: OntologyData) {
+  createOntology$({ name, label, comment }: CreateOntologyData) {
     this._isTransacting.next(true);
-    const createOntology = new CreateOntology();
-    createOntology.label = `${this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname}:${ontologyData.label}`;
-    createOntology.name = ontologyData.name!;
-    createOntology.comment = ontologyData.comment;
-    createOntology.attachedToProject = this.projectId;
+    const createOntology = {
+      attachedToProject: this.projectId,
+      label: `${this.projectShort}:${label}`,
+      name,
+      comment,
+    } as CreateOntology;
 
     return this._dspApiConnection.v2.onto.createOntology(createOntology).pipe(
       tap(onto => {
@@ -216,13 +229,14 @@ export class OntologyEditService {
     );
   }
 
-  updateOntology$(ontologyData: OntologyData) {
+  updateOntology$({ id, label, comment }: UpdateOntologyData) {
     this._isTransacting.next(true);
-    const updateOntology = new UpdateOntologyMetadata();
-    updateOntology.id = this.ontologyId;
-    updateOntology.lastModificationDate = this.lastModificationDate;
-    updateOntology.label = ontologyData.label;
-    updateOntology.comment = ontologyData.comment;
+    const updateOntology = {
+      id,
+      lastModificationDate: this.lastModificationDate,
+      label,
+      comment,
+    };
 
     return this._dspApiConnection.v2.onto.updateOntology(updateOntology).pipe(
       tap(onto => {
@@ -231,17 +245,17 @@ export class OntologyEditService {
     );
   }
 
-  deleteOntology$(ontologyId: string) {
+  deleteOntology$(id: string) {
     return this._dialogService.afterConfirmation('Do you want to delete this data model ?').pipe(
-      switchMap(del => {
+      switchMap(_del => {
         return this._dspApiConnection.v2.onto
           .deleteOntology({
-            id: ontologyId,
+            id,
             lastModificationDate: this.lastModificationDate,
           })
           .pipe(
             tap(() => {
-              this._store.dispatch(new RemoveProjectOntologyAction(ontologyId, this.projectId));
+              this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
               this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
               this._currentOntology.next(null);
             })
@@ -250,8 +264,39 @@ export class OntologyEditService {
     );
   }
 
+  private updateResourceClassLabels$(id: string, labels: StringLiteral[]) {
+    return defer(() => {
+      const upd = new UpdateResourceClassLabel();
+      upd.id = id;
+      upd.labels = labels;
+      return this._updateResourceClass$(this._getUpdateOntology(upd));
+    });
+  }
+
+  private updateResourceClassComments$(id: string, comments: StringLiteral[]) {
+    return defer(() => {
+      const upd = new UpdateResourceClassComment();
+      upd.id = id;
+      upd.comments = comments;
+      return this._updateResourceClass$(this._getUpdateOntology(upd));
+    });
+  }
+
+  private _deleteResourceComment$(id: string) {
+    return this._dspApiConnection.v2.onto
+      .deleteResourceClassComment({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(deleteCommentResponse => {
+          this.lastModificationDate = deleteCommentResponse.lastModificationDate;
+        })
+      );
+  }
+
   openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyData>(
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyEditData>(
       EditPropertyFormDialogComponent,
       {
         data: { propType },
@@ -262,7 +307,7 @@ export class OntologyEditService {
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is PropertyData => !!result),
+        filter((result): result is PropertyEditData => !!result),
         switchMap(propertyData => this._createResourceProperty$(propertyData))
       )
       .subscribe(propDef => {
@@ -276,20 +321,29 @@ export class OntologyEditService {
   }
 
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyData>(
+    const propertyData = {
+      id: propDef.id,
+      propType,
+      name: propDef.id?.split('#').pop() || '',
+      label: propDef.labels,
+      comment: propDef.comments,
+      guiElement: propDef.guiElement,
+      guiAttribute: propDef.guiAttributes[0],
+      objectType: propDef.objectType,
+    };
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData, PropertyEditData>(
       EditPropertyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig({
-        propDef,
-        propType,
-      })
+      DspDialogConfig.dialogDrawerConfig(propertyData)
     );
 
     dialogRef
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is PropertyData => !!result),
-        switchMap(propertyData => this._updateProperty$(propDef.id, propertyData).pipe(take(1)))
+        filter((result): result is PropertyEditData => !!result),
+        switchMap(pData => {
+          return this._updateProperty$(propDef.id, pData).pipe(take(1));
+        })
       )
       .subscribe();
   }
@@ -309,68 +363,28 @@ export class OntologyEditService {
     );
   }
 
-  private _getCreateResourceProperty(data: PropertyData): CreateResourceProperty {
-    const createResProp = new CreateResourceProperty();
-    createResProp.name = data.name!;
-    createResProp.label = data.labels!;
-    createResProp.comment = data.comments;
-    createResProp.guiElement = data.propType.guiEle;
-    createResProp.subPropertyOf = [data.propType.subPropOf];
-
-    if (data.guiAttribute) {
-      createResProp.guiAttributes = this._getGuiAttribute(data.guiAttribute, data.propType);
-    }
-
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) && data.objectType) {
-      createResProp.objectType = data.objectType;
-    } else {
-      createResProp.objectType = data.propType.objectType;
-    }
-
-    if ([Constants.HasLinkTo, Constants.IsPartOf].includes(data.propType.subPropOf) && data.guiAttribute) {
-      createResProp.objectType = data.guiAttribute;
-    } else {
-      createResProp.objectType = data.propType.objectType || '';
-    }
-    return createResProp;
-  }
-
-  private _getGuiAttribute(guiAttr: string, propType: DefaultProperty): string[] | undefined {
-    switch (propType.guiEle) {
-      case Constants.GuiColorPicker:
-        return [`ncolors=${guiAttr}`];
-      case Constants.GuiList:
-      case Constants.GuiPulldown:
-      case Constants.GuiRadio:
-        return [`hlist=<${guiAttr}>`];
-      case Constants.GuiSimpleText:
-        // --> TODO could have two guiAttr fields: size and maxlength
-        // we suggest to use default value for size; we do not support this guiAttr in DSP-App
-        return [`maxlength=${guiAttr}`];
-      case Constants.GuiSpinbox:
-        // --> TODO could have two guiAttr fields: min and max
-        return [`min=${guiAttr}`, `max=${guiAttr}`];
-      case Constants.GuiTextarea:
-        // --> TODO could have four guiAttr fields: width, cols, rows, wrap
-        // we suggest to use default values; we do not support this guiAttr in DSP-App
-        return ['width=100%'];
-    }
-
-    return undefined;
-  }
-
-  private _createResourceProperty$(propertyData: PropertyData) {
+  private _createResourceProperty$(propertyData: PropertyEditData) {
     this._isTransacting.next(true);
-    const createProperty = this._getCreateResourceProperty(propertyData);
-    const onto = this._getUpdateOntology<CreateResourceProperty>(createProperty);
+    const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
     return this._dspApiConnection.v2.onto.createResourceProperty(onto).pipe(take(1));
   }
 
   assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition, position?: number) {
     this._isTransacting.next(true);
-    const updateOnto = this._getUpdateOntologyForPropertyAssignment(propertyId, classDefinition, position);
+
+    const guiOrder =
+      position ||
+      classDefinition.propertiesList.reduce((prev, current) => Math.max(prev, current.guiOrder ?? 0), 0) + 1;
+
+    const propCard: IHasProperty = {
+      propertyIndex: propertyId,
+      cardinality: 1, // default: not required, not multiple
+      guiOrder,
+    };
+
+    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classDefinition.id, [propCard]);
     this._dspApiConnection.v2.onto
-      .addCardinalityToResourceClass(updateOnto)
+      .addCardinalityToResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
         this._afterTransaction(propertyId);
@@ -378,32 +392,26 @@ export class OntologyEditService {
   }
 
   removePropertyFromClass(property: IHasProperty, classId: string) {
-    const delCard = this._getUpdateResourceClassCardinality(classId, [property]);
-    const onto = this._getUpdateOntology<UpdateResourceClassCardinality>(delCard);
     this._isTransacting.next(true);
+    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, [property]);
     this._dspApiConnection.v2.onto
-      .deleteCardinalityFromResourceClass(onto)
+      .deleteCardinalityFromResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(() => {
         this._afterTransaction(classId);
       });
   }
 
-  private _updateProperty$(id: string, propertyData: PropertyData) {
+  private _updateProperty$(id: string, propertyData: PropertyEditData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
-    if (propertyData.labels !== undefined) {
-      updates.push(this._updatePropertyLabels$(id, propertyData.labels));
+    if (propertyData.label !== undefined) {
+      updates.push(this._updatePropertyLabels$(id, propertyData.label));
     }
 
-    if (propertyData.comments !== undefined) {
-      updates.push(this._updatePropertyComments$(id, propertyData.comments));
+    if (propertyData.comment !== undefined) {
+      updates.push(this._updatePropertyComments$(id, propertyData.comment));
     }
-
-    // Todo: FIX!
-    // if (propertyData.guiElement !== undefined) {
-    //  updates.push(this._updatePropertyGuiElement(id, propertyData.guiElement));
-    // }
 
     if (updates.length === 0) {
       return of();
@@ -413,7 +421,6 @@ export class OntologyEditService {
     return concat(...updates).pipe(
       last(),
       tap(() => {
-        console.log('Property updated successfully');
         this._afterTransaction(id);
       })
     );
@@ -424,9 +431,7 @@ export class OntologyEditService {
       const upd = new UpdateResourcePropertyLabel();
       upd.id = id;
       upd.labels = labels;
-      return this._updateResourceProperty$(
-        this._getUpdateOntology(upd) // <- picks up the **current** date
-      );
+      return this._updateResourceProperty$(this._getUpdateOntology(upd));
     });
   }
 
@@ -437,18 +442,6 @@ export class OntologyEditService {
       upd.comments = comments;
       return this._updateResourceProperty$(this._getUpdateOntology(upd));
     });
-  }
-
-  private _updatePropertyGuiElement(
-    id: string,
-    guiElement: string
-  ): Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError> {
-    const updateGuiElement = new UpdateResourcePropertyGuiElement();
-    updateGuiElement.id = id;
-    updateGuiElement.guiElement = guiElement;
-
-    const onto = this._getUpdateOntology<UpdateResourcePropertyGuiElement>(updateGuiElement);
-    return this._updateResourceProperty$(onto);
   }
 
   private _updateResourceProperty$(
@@ -463,12 +456,12 @@ export class OntologyEditService {
     );
   }
 
-  private _getUpdateOntology<T extends UpdateOntologyT>(entity: T): UpdateOntology<T> {
-    const onto = new UpdateOntology<T>();
-    onto.id = this.ontologyId;
-    onto.lastModificationDate = this.lastModificationDate;
-    onto.entity = entity;
-    return onto;
+  private _updateResourceClass$(updateOntology: UpdateOntology<UpdateResourceClassLabel | UpdateResourceClassComment>) {
+    return this._dspApiConnection.v2.onto.updateResourceClass(updateOntology).pipe(
+      tap(resClass => {
+        this.lastModificationDate = resClass.lastModificationDate;
+      })
+    );
   }
 
   createResourceClass(resClassInfo: DefaultClass): void {
@@ -491,6 +484,10 @@ export class OntologyEditService {
       });
   }
 
+  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
+    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
+  }
+
   deleteResourceClass(resClassIri: string) {
     this._dialogService
       .afterConfirmation('Do you want to delete this resource class?')
@@ -511,10 +508,6 @@ export class OntologyEditService {
       });
   }
 
-  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
-    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
-  }
-
   canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
     const canDo = this._canDeletePropertyMap.get(propertyId);
     if (canDo) {
@@ -528,39 +521,35 @@ export class OntologyEditService {
     );
   }
 
-  deleteProperty(iri: string) {
+  deleteProperty(id: string) {
     this._dialogService
       .afterConfirmation('Do you want to delete this property?')
       .pipe(
         take(1),
         switchMap(() =>
           this._dspApiConnection.v2.onto.deleteResourceProperty({
-            id: iri,
+            id,
             lastModificationDate: this.lastModificationDate,
           })
         )
       )
       .subscribe(() => {
-        this._afterTransaction(iri, `Successfully deleted ${iri}.`);
+        this._afterTransaction(id, `Successfully deleted ${id}.`);
       });
   }
 
-  propertyCanBeRemovedFromClass$(propCard: IHasProperty, classIri: string): Observable<CanDoResponse> {
+  propertyCanBeRemovedFromClass$(propCard: IHasProperty, classId: string): Observable<CanDoResponse> {
     if (propCard.isInherited) {
-      const canDoRes = new CanDoResponse();
-      canDoRes.canDo = false;
-      canDoRes.cannotDoReason = 'The property is inherited from another class';
-      return of(canDoRes);
+      // no need to send a request to the server
+      return of({ canDo: false, cannotDoReason: 'The property is inherited from another class' } as CanDoResponse);
     }
-    const updateCard = this._getUpdateResourceClassCardinality(classIri, [propCard]);
-    const onto = this._getUpdateOntology<UpdateResourceClassCardinality>(updateCard);
-    return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(onto);
+    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, [propCard]);
+    return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(updateOntology);
   }
 
   updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
     this._isTransacting.next(true);
-    const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, properties);
-    const updateOntology = this._getUpdateOntology<UpdateResourceClassCardinality>(updateResourceClassCard);
+    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, properties);
     this._dspApiConnection.v2.onto
       .replaceGuiOrderOfCardinalities(updateOntology)
       .pipe(take(1))
@@ -569,48 +558,23 @@ export class OntologyEditService {
       });
   }
 
-  updateCardinalitiesOfResourceClass(classId: string, cardinalities: IHasProperty[] = []) {
+  updateCardinalitiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
     this._isTransacting.next(true);
-    const updateResourceClassCard = this._getUpdateResourceClassCardinality(classId, cardinalities);
-    this._updateCardinalityOfResourceClass(updateResourceClassCard);
-  }
-
-  private _updateCardinalityOfResourceClass(classCardinality: UpdateResourceClassCardinality) {
-    const updateOntology = this._getUpdateOntology<UpdateResourceClassCardinality>(classCardinality);
+    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, properties);
     this._dspApiConnection.v2.onto
       .replaceCardinalityOfResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(response => {
-        this._afterTransaction(classCardinality.id);
+        this._afterTransaction(classId);
       });
   }
 
-  private _getUpdateResourceClassCardinality(
-    id: string,
-    cardinalities: IHasProperty[]
-  ): UpdateResourceClassCardinality {
-    const updateCard = new UpdateResourceClassCardinality();
-    updateCard.id = id;
-    updateCard.cardinalities = cardinalities;
-    return updateCard;
-  }
-
-  private _getUpdateOntologyForPropertyAssignment(
-    propertyId: string,
-    classDefinition: ClassDefinition,
-    position?: number
-  ): UpdateOntology<UpdateResourceClassCardinality> {
-    const guiOrder =
-      position ||
-      classDefinition.propertiesList.reduce((prev, current) => Math.max(prev, current.guiOrder ?? 0), 0) + 1;
-
-    const propCard: IHasProperty = {
-      propertyIndex: propertyId,
-      cardinality: 1, // default: not required, not multiple
-      guiOrder,
-    };
-    const updateCard = this._getUpdateResourceClassCardinality(classDefinition.id, [propCard]);
-    return this._getUpdateOntology<UpdateResourceClassCardinality>(updateCard);
+  private _getUpdateOntology<T extends UpdateOntologyT>(entity: T): UpdateOntology<T> {
+    const onto = new UpdateOntology<T>();
+    onto.id = this.ontologyId;
+    onto.lastModificationDate = this.lastModificationDate;
+    onto.entity = entity;
+    return onto;
   }
 
   private _afterOntologyChange(ontology: OntologyMetadata) {

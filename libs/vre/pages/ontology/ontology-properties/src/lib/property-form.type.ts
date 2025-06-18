@@ -12,11 +12,12 @@ export type PropertyForm = FormGroup<{
   objectType: FormControl<string>;
 }>;
 
-export interface PropertyData {
+export interface PropertyEditData {
+    id: string | null;
     propType: DefaultProperty;
     name?: string;
-    labels?: StringLiteralV2[];
-    comments?: StringLiteralV2[];
+    label?: StringLiteralV2[];
+    comment?: StringLiteralV2[];
     guiElement?: string;
     guiAttribute?: string;
     objectType?: string;

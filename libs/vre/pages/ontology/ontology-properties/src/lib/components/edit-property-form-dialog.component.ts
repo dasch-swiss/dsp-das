@@ -2,9 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyForm } from '../property-form.type';
-import { PropertyData } from '../property-form.type';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-
+import { PropertyEditData } from '../property-form.type';
 
 @Component({
   selector: 'app-edit-property-form-dialog',
@@ -14,7 +12,7 @@ import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services'
     <app-property-form
       mat-dialog-content
       (afterFormInit)="form = $event"
-      [propertyData]="propertyData" />
+      [propertyData]="data" />
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button
@@ -32,45 +30,26 @@ export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;
   form!: PropertyForm;
 
-  propertyData!: PropertyData;
-
-    get name(): string {
-        return this.data.propDef?.id.split('#').pop() || '';
-    }
-
     get title(): string {
-        return this.data.propDef ? 'Edit property': 'Create new property';
+        return this.data.id ? 'Edit property': 'Create new property';
     }
 
   constructor(
-    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, PropertyData>,
-    @Inject(MAT_DIALOG_DATA) public data: PropertyInfoObject
+    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, PropertyEditData>,
+    @Inject(MAT_DIALOG_DATA) public data: PropertyEditData
   ) {}
 
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
-    if (!this.data.propDef) {
-        // when creating a new property, the data will not have a propDef
-      this.propertyData = this.data;
-    } else {
-        this.propertyData = {
-            propType: this.data.propType,
-            name: this.name,
-            labels: this.data.propDef.labels,
-            comments: this.data.propDef.comments,
-            guiElement: this.data.propDef.guiAttributes[0],
-            guiAttribute: this.data.propDef.guiAttributes[0],
-            objectType: this.data.propDef.objectType,
-        };
-    }
   }
 
     onSubmit() {
-        const propertyData: PropertyData = {
+        const propertyData: PropertyEditData = {
+            id: this.data.id,
             propType: this.data.propType,
             name: this.form.controls.name.value,
-            labels: this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
-            comments: this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
+            label: this.form.controls.labels.touched ? this.form.controls.labels.value as StringLiteralV2[] : undefined,
+            comment: this.form.controls.comments.touched ? this.form.controls.comments.value as StringLiteralV2[] : undefined,
             guiElement: this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
         };
         this.dialogRef.close(propertyData);

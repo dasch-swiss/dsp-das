@@ -7,7 +7,7 @@ import {
     PropertyCategory
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { PropertyForm, PropertyData } from '../property-form.type';
+import { PropertyForm, PropertyEditData } from '../property-form.type';
 
 @Component({
   selector: 'app-property-form',
@@ -58,7 +58,7 @@ import { PropertyForm, PropertyData } from '../property-form.type';
   </form>`,
 })
 export class PropertyFormComponent implements OnInit {
-  @Input() propertyData!: PropertyData;
+  @Input() propertyData!: PropertyEditData;
   @Output() afterFormInit = new EventEmitter<PropertyForm>();
 
   readonly Constants = Constants;
@@ -73,7 +73,7 @@ export class PropertyFormComponent implements OnInit {
   }
 
   get disableObjectTypeField(): boolean {
-        // only link and ispartof properties already existing property can not change guiAttr
+        // only link and ispartof properties already existing property can not change the objectClass
         return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.LinkValue;
     }
 
@@ -111,8 +111,8 @@ export class PropertyFormComponent implements OnInit {
                 validators: [Validators.required],
             }
         ),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.labels ?? defaultData, [Validators.required]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comments ?? defaultData, [Validators.required]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.label ?? defaultData, [Validators.required]),
+      comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comment ?? defaultData, [Validators.required]),
       guiAttr: this._fb.control<string>(
         {
           value: this.propertyData.guiAttribute!,
