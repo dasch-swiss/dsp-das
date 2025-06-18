@@ -70,6 +70,8 @@ export class GenerateProperty {
       .sort(a => {
         if (a.guiDef.guiOrder === undefined) {
           return 1;
+        } else {
+          return 0;
         }
       });
 
