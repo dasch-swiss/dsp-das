@@ -22,7 +22,7 @@ jobs:
         run: |
           npm install
           npx nx run-many --all --target=lint --skip-nx-cache
-        # npx nx run-many --all --target=test --configuration=ci
+          npx nx run-many --all --target=test --configuration=ci --skip-nx-cache
         env:
           TZ: Europe/Zurich
 
