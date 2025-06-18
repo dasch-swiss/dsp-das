@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
+import { Directive, OnChanges, Input, Renderer2, ElementRef } from '@angular/core';
 import { Md5 } from 'ts-md5';
 import { AdminImageConfig } from './admin-image.config';
 
@@ -13,7 +13,7 @@ export class AdminImageDirective implements OnChanges {
    * - in the case of user (gr)avatar it's the e-mail address,
    * - in the case of project logo it's the image url
    */
-  @Input({ required: true }) image!: string;
+  @Input() image: string;
 
   /**
    * @param {string} type
@@ -22,12 +22,12 @@ export class AdminImageDirective implements OnChanges {
    * - project
    * - user
    */
-  @Input({ required: true }) type!: string;
+  @Input() type: string;
 
   /**
    * image source
    */
-  source!: string;
+  source: string;
 
   /**
    * in case of an error
