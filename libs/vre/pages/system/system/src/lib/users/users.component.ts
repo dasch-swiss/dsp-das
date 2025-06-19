@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ReadUser } from '@dasch-swiss/dsp-js';
 import { LoadUsersAction, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,13 +10,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-  @Select(UserSelectors.usersLoading) isLoading$: Observable<boolean>;
-  @Select(UserSelectors.activeUsers) active$: Observable<ReadUser[]>;
-  @Select(UserSelectors.inactiveUsers) inactive$: Observable<ReadUser[]>;
+  isLoading$ = this._store.select(UserSelectors.usersLoading);
+  activeUsers$ = this._store.select(UserSelectors.activeUsers);
+  inactiveUsers$ = this._store.select(UserSelectors.inactiveUsers);
 
   constructor(
-    private _titleService: Title,
-    private _store: Store
+    private _store: Store,
+    private _titleService: Title
   ) {
     this._titleService.setTitle('All users in DSP');
   }
