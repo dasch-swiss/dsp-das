@@ -34,8 +34,8 @@ export class DescriptionComponent implements OnDestroy {
 
   sortedDescriptions$ = this.readProject$.pipe(
     takeUntil(this.destroyed$),
-    takeWhile(readProject => readProject !== undefined),
-    map(({ description }) => this._sortDescriptionsByLanguage(description))
+    takeWhile(readProject => readProject !== undefined && readProject !== null),
+    map(readproject => this._sortDescriptionsByLanguage(readproject?.description || []))
   );
 
   userHasPermission$ = combineLatest([
@@ -54,7 +54,7 @@ export class DescriptionComponent implements OnDestroy {
 
   RouteConstants = RouteConstants;
 
-  @Select(ProjectsSelectors.isProjectsLoading) isLoading$: Observable<boolean>;
+  isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
 
   constructor(
     private _route: ActivatedRoute,
