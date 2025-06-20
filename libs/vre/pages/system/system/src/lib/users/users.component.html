@@ -3,5 +3,5 @@
   *ngIf="(isLoading$ | async) === false"
   [list]="activeUsers$ | async"
   [status]="true"
-  [createNew]="true" />
+  [isButtonEnabledToCreateNewUser]="true" />
 <app-users-list *ngIf="(isLoading$ | async) === false" [list]="inactiveUsers$ | async" [status]="false" />
