@@ -28,7 +28,9 @@
         >
       </h2>
       <span class="fill-remaining-space"></span>
-      <span class="app-toolbar-action button right" *ngIf="status && createNew && (isSysAdmin$ | async)">
+      <span
+        class="app-toolbar-action button right"
+        *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)">
         <button mat-flat-button [color]="'primary'" (click)="createUser()">Create new</button>
       </span>
     </div>
@@ -71,9 +73,7 @@
           *ngIf="(isCurrentProjectAdminOrSysAdmin$ | async) === true && projectUuid"
           [projectCode]="(project$ | async)?.shortcode"
           [projectid]="(project$ | async)?.id"
-          [permissions]="
-                        user.permissions.groupsPerProject[(project$ | async)?.id]
-                    "
+          [permissions]="user.permissions.groupsPerProject[(project$ | async)?.id]"
           [disabled]="!status"
           (groupChange)="updateGroupsMembership(user.id, $event)" />
       </td>
@@ -92,12 +92,7 @@
           <button
             mat-menu-item
             *ngIf="projectUuid && user.status"
-            (click)="
-                            updateProjectAdminMembership(
-                                user.id,
-                                user.permissions
-                            )
-                        ">
+            (click)="updateProjectAdminMembership(user.id,user.permissions)">
             <span *ngIf="!userIsProjectAdmin(user.permissions)">Add</span>
             <span *ngIf="userIsProjectAdmin(user.permissions)">Remove</span>
             <span>as project admin</span>
@@ -105,17 +100,8 @@
           <!-- update user's system admin group membership; only in system admin view -->
           <button
             mat-menu-item
-            *ngIf="
-                            !projectUuid &&
-                            (isSysAdmin$ | async) &&
-                            user.username !== (username$ | async)
-                        "
-            (click)="
-                            updateSystemAdminMembership(
-                                user,
-                                !userIsSystemAdmin(user.permissions)
-                            )
-                        ">
+            *ngIf="!projectUuid && (isSysAdmin$ | async) && user.username !== (username$ | async)"
+            (click)="updateSystemAdminMembership(user,!userIsSystemAdmin(user.permissions))">
             <span *ngIf="!userIsSystemAdmin(user.permissions)">Add</span>
             <span *ngIf="userIsSystemAdmin(user.permissions)">Remove</span>
             <span>as system admin</span>
@@ -132,9 +118,7 @@
             mat-menu-item
             data-cy="remove-member-button"
             *ngIf="projectUuid"
-            (click)="
-                            askToRemoveFromProject(user)
-                        ">
+            (click)="askToRemoveFromProject(user)">
             Remove member from project
           </button>
           <!-- manage project membership; only in system view -->
@@ -148,7 +132,7 @@
           <button
             mat-menu-item
             *ngIf="user.status && (isSysAdmin$ | async) && !projectUuid"
-            (click)="askToDeleteUser(user.username, user.id)">
+            (click)="askToDeactivateUser(user.username, user.id)">
             Suspend user
           </button>
           <button

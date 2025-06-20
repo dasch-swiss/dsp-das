@@ -32,10 +32,8 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
   styleUrls: ['./users-list.component.scss'],
 })
 export class UsersListComponent {
-  // list of users: status active or inactive (deleted)
   @Input() status: boolean;
 
-  // list of users: depending on the parent
   _list: ReadUser[];
   get list(): ReadUser[] {
     return this._list;
@@ -45,13 +43,8 @@ export class UsersListComponent {
     this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }
 
-  // enable the button to create new user
-  @Input() createNew = false;
-
-  // proje0ct data
+  @Input() isButtonEnabledToCreateNewUser = false;
   @Input() project: ReadProject;
-
-  // in case of modification
   @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
 
   // i18n plural mapping
@@ -68,11 +61,8 @@ export class UsersListComponent {
     },
   };
 
-  // project uuid; as identifier in project application state service
-  projectUuid: string;
+  projectUuid!: string;
 
-  //
-  // sort properties
   sortProps: any = [
     {
       key: 'familyName',
@@ -92,7 +82,6 @@ export class UsersListComponent {
     },
   ];
 
-  // ... and sort by 'username'
   sortBy = localStorage.getItem('sortUsersBy') || 'username';
 
   disableMenu$: Observable<boolean> = combineLatest([
@@ -109,11 +98,11 @@ export class UsersListComponent {
     })
   );
 
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.username) username$: Observable<string>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
-  @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
+  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  username$ = this._store.select(UserSelectors.username);
+  isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  project$ = this._store.select(ProjectsSelectors.currentProject);
+  isUsersLoading$ = this._store.select(UserSelectors.isLoading);
 
   constructor(
     private _actions$: Actions,
@@ -135,27 +124,15 @@ export class UsersListComponent {
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
 
   /**
-   * returns true, when the user is project admin;
-   * when the parameter permissions is not set,
-   * it returns the value for the logged-in user
-   *
-   *
-   * @param  [permissions] user's permissions
-   * @returns boolean
+   * Returns true if the user is project admin.
+   * If the parameter permissions is not set, it returns the value for the logged-in user
    */
   userIsProjectAdmin(permissions?: PermissionsData): boolean {
-    if (!this.project) {
-      return false;
-    }
+    if (!this.project) return false;
 
     return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
   }
 
-  /**
-   * returns true, when the user is system admin
-   *
-   * @param permissions PermissionData from user profile
-   */
   userIsSystemAdmin(permissions: PermissionsData): boolean {
     let admin = false;
     const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
@@ -169,9 +146,6 @@ export class UsersListComponent {
     return admin;
   }
 
-  /**
-   * update user's group memebership
-   */
   updateGroupsMembership(userIri: string, groups: string[]): void {
     if (!groups) {
       return;
@@ -209,9 +183,6 @@ export class UsersListComponent {
     });
   }
 
-  /**
-   * update user's admin-group membership
-   */
   updateProjectAdminMembership(id: string, permissions: PermissionsData): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     const userIsProjectAdmin = this.userIsProjectAdmin(permissions);
@@ -289,9 +260,9 @@ export class UsersListComponent {
     });
   }
 
-  askToDeleteUser(username: string, id: string) {
+  askToDeactivateUser(username: string, id: string) {
     this._dialog.afterConfirmation(`Do you want to suspend user ${username}?`).subscribe(() => {
-      this.deleteUser(id);
+      this.deactivateUser(id);
     });
   }
 
@@ -324,15 +295,7 @@ export class UsersListComponent {
 
   openEditPasswordDialog(user: ReadUser) {
     this._matDialog
-      .open(
-        EditPasswordDialogComponent,
-        DspDialogConfig.dialogDrawerConfig(
-          {
-            user,
-          },
-          true
-        )
-      )
+      .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
       .afterClosed()
       .subscribe(response => {
         if (response === true) {
@@ -345,39 +308,29 @@ export class UsersListComponent {
     this._matDialog.open(ManageProjectMembershipDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
-  /**
-   * delete resp. deactivate user
-   *
-   * @param id user's IRI
-   */
-  deleteUser(id: string) {
-    this._userApiService
-      .delete(id)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
-  }
-
-  /**
-   * reactivate user
-   *
-   * @param id user's IRI
-   */
-  activateUser(id: string) {
-    this._userApiService
-      .updateStatus(id, true)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
-  }
-
   sortList(key: any) {
     this.sortBy = key;
     this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy as any);
     localStorage.setItem('sortUsersBy', key);
+  }
+
+  private deactivateUser(userIri: string) {
+    this._userApiService
+      .delete(userIri)
+      .pipe(take(1))
+      .subscribe(response => {
+        this._store.dispatch(new SetUserAction(response.user));
+        this.refreshParent.emit();
+      });
+  }
+
+  private activateUser(userIri: string) {
+    this._userApiService
+      .updateStatus(userIri, true)
+      .pipe(take(1))
+      .subscribe(response => {
+        this._store.dispatch(new SetUserAction(response.user));
+        this.refreshParent.emit();
+      });
   }
 }
