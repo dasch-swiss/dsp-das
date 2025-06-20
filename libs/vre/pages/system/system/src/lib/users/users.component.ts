@@ -7,7 +7,6 @@ import { Store } from '@ngxs/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
   isLoading$ = this._store.select(UserSelectors.usersLoading);
