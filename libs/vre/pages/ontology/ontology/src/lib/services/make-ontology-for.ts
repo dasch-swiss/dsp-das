@@ -3,7 +3,6 @@ import {
   CreateOntology,
   CreateResourceClass,
   CreateResourceProperty,
-  DeleteResourceClassComment,
   IHasProperty,
   StringLiteral,
   UpdateOntology,
@@ -23,7 +22,7 @@ import { UpdateOntologyT } from '../ontology.types';
 
 /** shared context every update needs */
 export interface OntologyContext {
-  ontologyId: string;
+  id: string;
   lastModificationDate: string;
 }
 
@@ -34,7 +33,11 @@ export interface ProjectContext {
 
 export class MakeOntologyFor {
   private static wrapInUpdateOntology<T extends UpdateOntologyT>(ctx: OntologyContext, entity: T): UpdateOntology<T> {
-    return { ...ctx, entity } as unknown as UpdateOntology<T>;
+    const o = new UpdateOntology<T>();
+    o.id = ctx.id;
+    o.lastModificationDate = ctx.lastModificationDate;
+    o.entity = entity as T;
+    return o;
   }
 
   // properties
@@ -46,8 +49,8 @@ export class MakeOntologyFor {
 
   private static _buildCreateResourceProperty(d: PropertyEditData): CreateResourceProperty {
     const c = new CreateResourceProperty();
-    c.name = d.name!;
-    c.label = d.label!;
+    c.name = d.name;
+    c.label = d.label;
     c.comment = d.comment;
     c.guiElement = d.propType.guiEle;
     c.subPropertyOf = [d.propType.subPropOf];
@@ -94,7 +97,6 @@ export class MakeOntologyFor {
     return this.wrapInUpdateOntology(ctx, this.buildResourceClassCardinality(classId, cardinalities));
   }
 
-  // TODO: NOT YET IMPLEMENTED
   static updatePropertyLabel(ctx: OntologyContext, id: string, labels: StringLiteral[] | StringLiteralV2[]) {
     const upd: UpdateResourcePropertyLabel = { id, labels } as UpdateResourcePropertyLabel;
     return this.wrapInUpdateOntology(ctx, upd);
@@ -120,7 +122,7 @@ export class MakeOntologyFor {
       name,
       label: labels,
       comment: comments,
-      subClassOf: [ctx.ontologyId],
+      subClassOf: [ctx.id],
     } as CreateResourceClass;
 
     return this.wrapInUpdateOntology(ctx, create);
@@ -149,7 +151,7 @@ export class MakeOntologyFor {
 
   static updateOntologyMetadata(ctx: OntologyContext, label: string, comment: string): UpdateOntologyMetadata {
     return {
-      id: ctx.ontologyId,
+      id: ctx.id,
       label,
       comment,
       lastModificationDate: ctx.lastModificationDate,

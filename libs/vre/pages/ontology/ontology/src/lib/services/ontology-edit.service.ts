@@ -120,7 +120,7 @@ export class OntologyEditService {
 
   get ctx(): OntologyContext {
     return {
-      ontologyId: this.ontologyId,
+      id: this.ontologyId,
       lastModificationDate: this.lastModificationDate,
     };
   }

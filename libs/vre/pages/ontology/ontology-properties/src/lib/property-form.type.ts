@@ -16,8 +16,8 @@ export interface PropertyEditData {
     id: string | null;
     propType: DefaultProperty;
     name?: string;
-    label?: StringLiteralV2[];
-    comment?: StringLiteralV2[];
+    label: StringLiteralV2[];
+    comment: StringLiteralV2[];
     guiElement?: string;
     guiAttribute?: string;
     objectType?: string;
