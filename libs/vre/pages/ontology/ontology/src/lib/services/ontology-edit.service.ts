@@ -145,11 +145,11 @@ export class OntologyEditService {
       this._currentOntologyInfo.next(ontologyFromStore);
       this._isTransacting.next(false);
     } else {
-      this.loadOntologyByLabel(label);
+      this._loadOntologyByLabel(label);
     }
   }
 
-  private loadOntologyByLabel(label: string) {
+  private _loadOntologyByLabel(label: string) {
     const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
     const iriBase = this._ontologyService.getIriBaseUrl();
     const iri = `${iriBase}/${RouteConstants.ontology}/${project?.shortcode}/${label}/v2`;
@@ -218,7 +218,7 @@ export class OntologyEditService {
       .pipe(
         tap(() => {
           this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
-          this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+          // this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
           this._currentOntology.next(null);
         })
       );
@@ -231,7 +231,7 @@ export class OntologyEditService {
     return this._dspApiConnection.v2.onto.createResourceClass(createOntology).pipe(
       tap(resClass => {
         this.lastModificationDate = resClass.lastModificationDate;
-        this._afterOntologyItemTransaction(resClass.id, `Successfully created ${resClass.id}.`);
+        this._afterOntologyItemChange(resClass.id, `Successfully created ${resClass.id}.`);
       })
     );
   }
@@ -255,7 +255,7 @@ export class OntologyEditService {
     return concat(...updates).pipe(
       last(),
       tap(() => {
-        this._afterOntologyItemTransaction(classData.id);
+        this._afterOntologyItemChange(classData.id);
       })
     );
   }
@@ -289,7 +289,7 @@ export class OntologyEditService {
           this.lastModificationDate = propDef.lastModificationDate;
           this.assignPropertyToClass(propDef.id, assignToClass);
         } else {
-          this._afterOntologyItemTransaction(propDef.id);
+          this._afterOntologyItemChange(propDef.id);
         }
       });
   }
@@ -312,7 +312,7 @@ export class OntologyEditService {
       .addCardinalityToResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
-        this._afterOntologyItemTransaction(propertyId);
+        this._afterOntologyItemChange(propertyId);
       });
   }
 
@@ -323,7 +323,7 @@ export class OntologyEditService {
       .deleteCardinalityFromResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(() => {
-        this._afterOntologyItemTransaction(classId);
+        this._afterOntologyItemChange(classId);
       });
   }
 
@@ -346,7 +346,7 @@ export class OntologyEditService {
     return concat(...updates).pipe(
       last(),
       tap(() => {
-        this._afterOntologyItemTransaction(propertyId);
+        this._afterOntologyItemChange(propertyId);
       })
     );
   }
@@ -397,7 +397,7 @@ export class OntologyEditService {
       .pipe(
         tap(deleteResponse => {
           this.lastModificationDate = deleteResponse.lastModificationDate;
-          this._afterOntologyItemTransaction();
+          this._afterOntologyItemChange();
         })
       );
   }
@@ -425,7 +425,7 @@ export class OntologyEditService {
       .pipe(
         tap(deleteResponse => {
           this.lastModificationDate = deleteResponse.lastModificationDate;
-          this._afterOntologyItemTransaction();
+          this._afterOntologyItemChange();
         })
       );
   }
@@ -446,7 +446,7 @@ export class OntologyEditService {
       .replaceGuiOrderOfCardinalities(updateOntology)
       .pipe(take(1))
       .subscribe(() => {
-        this._afterOntologyItemTransaction(classId);
+        this._afterOntologyItemChange(classId);
       });
   }
 
@@ -457,7 +457,7 @@ export class OntologyEditService {
       .replaceCardinalityOfResourceClass(updateOntology)
       .pipe(take(1))
       .subscribe(response => {
-        this._afterOntologyItemTransaction(classId);
+        this._afterOntologyItemChange(classId);
       });
   }
 
@@ -465,11 +465,11 @@ export class OntologyEditService {
     this.lastModificationDate = ontology.lastModificationDate;
     this._currentOntologyInfo.next(ontology);
     this._isTransacting.next(false);
-    this.latestChangedItem.next(ontology.id);
-    this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+    // this.latestChangedItem.next(ontology.id);
+    this._loadOntology(ontology.id);
   }
 
-  private _afterOntologyItemTransaction(id?: string, notification?: string) {
+  private _afterOntologyItemChange(id?: string, notification?: string) {
     this._loadOntology(this.ontologyId);
     this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);

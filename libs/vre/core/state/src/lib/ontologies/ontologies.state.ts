@@ -154,7 +154,6 @@ export class OntologiesState {
   ) {
     ctx.patchState({ isOntologiesLoading: true, isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
-    console.log(projectIri);
 
     // get all project ontologies
     return this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
