@@ -1,36 +1,16 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  DeleteResourceClassComment,
-  KnoraApiConnection,
-  StringLiteral,
-  UpdateOntology,
-  UpdateResourceClassComment,
-  UpdateResourceClassLabel,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DefaultClass, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { switchMap, tap } from 'rxjs/operators';
-import { ResourceClassForm } from '../resource-class-form/resource-class-form.type';
-
-export interface EditResourceClassDialogProps {
-  id?: string;
-  title: string;
-  ontologyId: string;
-  lastModificationDate: string;
-  name: string;
-  labels: MultiLanguages;
-  comments: MultiLanguages;
-}
+import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
+import { ResourceClassForm, ResourceClassFormData } from '../resource-class-form/resource-class-form.type';
 
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.title" subtitle="Customize resource class" />
+    <app-dialog-header [title]="''" subtitle="Customize resource class" />
     <div mat-dialog-content>
-      <app-resource-class-form
-        [formData]="{ name: data.name, labels: data.labels, comments: data.comments }"
-        (afterFormInit)="afterFormInit($event)" />
+      <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -40,7 +20,7 @@ export interface EditResourceClassDialogProps {
         color="primary"
         appLoadingButton
         [isLoading]="loading"
-        [disabled]="form.invalid"
+        [disabled]="form?.invalid"
         (click)="onSubmit()">
         Update
       </button>
@@ -51,19 +31,32 @@ export interface EditResourceClassDialogProps {
 export class EditResourceClassDialogComponent implements OnInit {
   loading = false;
   form: ResourceClassForm | undefined;
+  formData!: ResourceClassFormData;
   lastModificationDate!: string;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA)
-    public data: EditResourceClassDialogProps,
-    public dialogRef: MatDialogRef<EditResourceClassDialogComponent, boolean>
+    public data: UpdateResourceClassData | DefaultClass,
+    public dialogRef: MatDialogRef<EditResourceClassDialogComponent, CreateResourceClassData | UpdateResourceClassData>,
+    private _ontologyService: OntologyService
   ) {}
 
   ngOnInit() {
-    this.dialogRef.updateSize('800px', ''); // Set your desired width
-    this.lastModificationDate = this.data.lastModificationDate;
+    this.dialogRef.updateSize('800px', '');
+    if ('id' in this.data) {
+      // UpdateResourceClassData
+      this.formData = {
+        name: this._ontologyService.getNameFromIri(this.data.id),
+        labels: this.data.labels ? (this.data.labels as MultiLanguages) : [],
+        comments: this.data.comments ? (this.data.comments as MultiLanguages) : [],
+      };
+    } else {
+      this.formData = {
+        name: '',
+        labels: [],
+        comments: [],
+      };
+    }
   }
 
   afterFormInit(form: ResourceClassForm) {
@@ -72,66 +65,19 @@ export class EditResourceClassDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loading = true;
+    const labels = this.form?.controls.labels.value as MultiLanguages;
+    const comments = this.form?.controls.comments.value as MultiLanguages;
 
-    // label
-    const onto4Label = new UpdateOntology<UpdateResourceClassLabel>();
-    onto4Label.id = this.data.ontologyId;
-    onto4Label.lastModificationDate = this.lastModificationDate;
+    const resourceClassData =
+      'id' in this.data
+        ? ({ id: this.data.id, labels, comments } as UpdateResourceClassData)
+        : ({
+            name: this.form?.controls.name.value,
+            subclassOf: this.data.iri,
+            labels,
+            comments,
+          } as CreateResourceClassData);
 
-    const updateLabel = new UpdateResourceClassLabel();
-    updateLabel.id = this.data.id;
-    updateLabel.labels = this.form.value.labels as StringLiteral[];
-    onto4Label.entity = updateLabel;
-
-    // comment
-    const onto4Comment = new UpdateOntology<UpdateResourceClassComment>();
-    onto4Comment.id = this.data.ontologyId;
-
-    const updateComment = new UpdateResourceClassComment();
-    updateComment.id = this.data.id;
-    updateComment.comments = this.form.value.comments as StringLiteral[];
-    onto4Comment.entity = updateComment;
-
-    this._dspApiConnection.v2.onto
-      .updateResourceClass(onto4Label)
-      .pipe(
-        switchMap(classLabelResponse => {
-          this.lastModificationDate = classLabelResponse.lastModificationDate!;
-          onto4Comment.lastModificationDate = this.lastModificationDate;
-
-          if (updateComment.comments!.length) {
-            return this._updateComment$(onto4Comment);
-          } else {
-            return this._deleteResourceComment$();
-          }
-        }),
-        tap(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(() => {
-        this.dialogRef.close(true);
-      });
-  }
-
-  private _deleteResourceComment$() {
-    const deleteResourceClassComment = new DeleteResourceClassComment();
-    deleteResourceClassComment.id = this.data.id;
-    deleteResourceClassComment.lastModificationDate = this.lastModificationDate;
-
-    return this._dspApiConnection.v2.onto.deleteResourceClassComment(deleteResourceClassComment).pipe(
-      tap(deleteCommentResponse => {
-        this.lastModificationDate = deleteCommentResponse.lastModificationDate;
-      })
-    );
-  }
-
-  private _updateComment$(onto4Comment) {
-    return this._dspApiConnection.v2.onto.updateResourceClass(onto4Comment).pipe(
-      tap(classCommentResponse => {
-        this.lastModificationDate = classCommentResponse.lastModificationDate;
-      })
-    );
+    this.dialogRef.close(resourceClassData);
   }
 }

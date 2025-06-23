@@ -3,7 +3,6 @@ export * from './lib/ontology.component';
 export * from './lib/ontology-properties.component';
 export * from './lib/ontology-editor-header/ontology-editor-header.component';
 export * from './lib/ontology-editor-classes.component';
-export * from './lib/create-resource-class-dialog/create-resource-class-dialog.component';
 export * from './lib/data-models/data-models.component';
 export * from './lib/edit-resource-class-dialog/edit-resource-class-dialog.component';
 export * from './lib/ontology-form/ontology-form.component';

@@ -10,8 +10,6 @@ import { OntologyEditService } from './services/ontology-edit.service';
       [resourceClass]="resClass" />
   </div>`,
   styles: `
-    @use 'config' as *;
-
     .ontology-editor-grid {
       display: grid;
       grid-template-rows: auto;

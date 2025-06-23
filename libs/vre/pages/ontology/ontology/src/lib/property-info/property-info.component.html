@@ -74,7 +74,7 @@
           mat-button
           [disabled]="!propDef.isEditable"
           class="edit"
-          (click)="editResourceProperty(propDef, propType)">
+          (click)="oeds.openEditProperty(propDef, propType)">
           <mat-icon>edit</mat-icon>
         </button>
       </span>
@@ -85,7 +85,7 @@
           mat-button
           [disabled]="(canBeDeleted$ | async) !== true"
           class="delete"
-          (click)="deleteResourceProperty(propDef.id)">
+          (click)="oeds.openDeleteProperty(propDef.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

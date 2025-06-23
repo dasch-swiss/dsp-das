@@ -13,6 +13,7 @@ import {
 import { Store } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { OntologyEditDialogService } from './services/ontology-edit-dialog.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
@@ -39,6 +40,7 @@ export class OntologyComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _store: Store,
     private _titleService: Title,
+    public oeds: OntologyEditDialogService,
     private _oes: OntologyEditService
   ) {}
 
@@ -68,14 +70,6 @@ export class OntologyComponent implements OnInit, OnDestroy {
       .subscribe(([project, currentOntology]) => {
         this._titleService.setTitle(`Project ${project?.shortname} | Data model${currentOntology ? '' : 's'}`);
       });
-  }
-
-  createResourceClass(resClassInfo: DefaultClass): void {
-    this._oes.createResourceClass(resClassInfo);
-  }
-
-  addNewProperty(propType: DefaultProperty) {
-    this._oes.openAddNewProperty(propType);
   }
 
   trackByPropCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;

@@ -15,6 +15,7 @@ import {
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -55,6 +56,7 @@ export class ResourceClassInfoComponent implements OnChanges {
 
   constructor(
     private _localizationService: LocalizationService,
+    private _oeds: OntologyEditDialogService,
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
@@ -99,11 +101,11 @@ export class ResourceClassInfoComponent implements OnChanges {
   }
 
   editResourceClassInfo() {
-    this._oes.openEditResourceClass(this.resourceClass);
+    this._oeds.openEditResourceClass(this.resourceClass);
   }
 
   deleteResourceClass() {
-    this._oes.deleteResourceClass(this.resourceClass.id);
+    this._oeds.openDeleteResourceClass(this.resourceClass.id);
   }
 
   onPropertyDropped(event: CdkDragDrop<string[]>, properties: PropToDisplay[]) {

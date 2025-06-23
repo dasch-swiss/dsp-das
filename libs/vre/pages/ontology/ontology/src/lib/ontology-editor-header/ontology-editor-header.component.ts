@@ -8,6 +8,7 @@ import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
 import { OntologyData } from '../ontology-form/ontology-form.type';
+import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -57,6 +58,7 @@ export class OntologyEditorHeaderComponent {
 
   constructor(
     private _dialog: MatDialog,
+    private _oeds: OntologyEditDialogService,
     private _oes: OntologyEditService,
     private _router: Router,
     private _store: Store
@@ -75,8 +77,8 @@ export class OntologyEditorHeaderComponent {
   }
 
   deleteOntology(ontologyId: string) {
-    this._oes
-      .deleteOntology$(ontologyId)
+    this._oeds
+      .openDeleteOntology$(ontologyId)
       .pipe(take(1))
       .subscribe(delResponse => {
         this.navigateToDataModels();

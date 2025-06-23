@@ -15,6 +15,7 @@ import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-he
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -38,7 +39,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
           </mat-icon>
         </div>
         <div class="property-item-content-container">
-          <app-resource-class-property-info [propDef]="prop?.propDef" />
+          <app-resource-class-property-info [propDef]="prop.propDef" />
           <app-cardinality
             [disabled]="(isAdmin$ | async) !== true"
             [cardinality]="prop.cardinality"
@@ -135,7 +136,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input({ required: true }) resourceClass: ClassDefinition;
+  @Input({ required: true }) resourceClass!: ClassDefinition;
   @Input({ required: true }) prop!: PropToDisplay;
   @Input() props: PropToDisplay[] = [];
 
@@ -157,6 +158,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _cd: ChangeDetectorRef,
     private _oes: OntologyEditService,
+    private _oeds: OntologyEditDialogService,
     private _ontoService: OntologyService,
     private _store: Store
   ) {}
@@ -202,7 +204,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openEditProperty() {
-    this._oes.openEditProperty(this.prop.propDef, this.propType);
+    this._oeds.openEditProperty(this.prop.propDef, this.propType);
   }
 
   ngOnDestroy() {

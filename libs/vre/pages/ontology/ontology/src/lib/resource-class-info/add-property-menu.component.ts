@@ -11,6 +11,7 @@ import {
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -121,6 +122,7 @@ export class AddPropertyMenuComponent {
 
   constructor(
     private _ontoService: OntologyService,
+    private _oeds: OntologyEditDialogService,
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
@@ -138,6 +140,6 @@ export class AddPropertyMenuComponent {
   }
 
   addNewProperty(propType: DefaultProperty) {
-    this._oes.openAddNewProperty(propType, this.resourceClass);
+    this._oeds.openCreateNewProperty(propType, this.resourceClass);
   }
 }

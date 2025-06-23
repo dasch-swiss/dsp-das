@@ -7,6 +7,7 @@ import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/v
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
+import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -80,6 +81,7 @@ export class PropertyInfoComponent implements OnInit {
   constructor(
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
+    public oeds: OntologyEditDialogService,
     private _projectService: ProjectService,
     private _store: Store
   ) {
@@ -148,14 +150,6 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   trackByFn = (index: number, item: ShortInfo) => item.id;
-
-  editResourceProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
-    this._oes.openEditProperty(propDef, propType);
-  }
-
-  deleteResourceProperty(iri: string) {
-    this._oes.deleteProperty(iri);
-  }
 
   mouseEnter() {
     this.showActionBubble = true;

@@ -1,10 +1,10 @@
 import {
   Constants,
   CreateOntology,
+  CreateResourceClass,
   CreateResourceProperty,
   DeleteResourceClassComment,
   IHasProperty,
-  OntologyMetadata,
   StringLiteral,
   UpdateOntology,
   UpdateOntologyMetadata,
@@ -18,6 +18,7 @@ import {
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
 import { UpdateOntologyT } from '../ontology.types';
 
 /** shared context every update needs */
@@ -111,6 +112,20 @@ export class MakeOntologyFor {
 
   // classes
 
+  static createResourceClass(
+    ctx: OntologyContext,
+    { name, labels, comments }: CreateResourceClassData
+  ): UpdateOntology<CreateResourceClass> {
+    const create = {
+      name,
+      label: labels,
+      comment: comments,
+      subClassOf: [ctx.ontologyId],
+    } as CreateResourceClass;
+
+    return this.wrapInUpdateOntology(ctx, create);
+  }
+
   static updateClassLabel(ctx: OntologyContext, id: string, labels: StringLiteral[] | StringLiteralV2[]) {
     const upd: UpdateResourceClassLabel = { id, labels } as UpdateResourceClassLabel;
     return this.wrapInUpdateOntology(ctx, upd);
@@ -119,13 +134,6 @@ export class MakeOntologyFor {
   static updateClassComment(ctx: OntologyContext, id: string, comments: StringLiteral[] | StringLiteralV2[]) {
     const upd: UpdateResourceClassComment = { id, comments } as UpdateResourceClassComment;
     return this.wrapInUpdateOntology(ctx, upd);
-  }
-
-  static deleteResourceComment(ctx: OntologyContext): DeleteResourceClassComment {
-    return {
-      id: ctx.ontologyId,
-      lastModificationDate: ctx.lastModificationDate,
-    } as DeleteResourceClassComment;
   }
 
   // ontologies

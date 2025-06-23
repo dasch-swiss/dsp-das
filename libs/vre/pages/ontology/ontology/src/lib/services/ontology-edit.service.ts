@@ -30,30 +30,19 @@ import {
   SetCurrentOntologyAction,
   SetOntologyAction,
 } from '@dasch-swiss/vre/core/state';
-import { EditPropertyFormDialogComponent, PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
-import {
-  DefaultClass,
-  DefaultProperty,
-  OntologyService,
-  PropertyInfoObject,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
+import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, concat, defer, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import {
-  CreateResourceClassDialogComponent,
-  CreateResourceClassDialogProps,
-} from '../create-resource-class-dialog/create-resource-class-dialog.component';
-import {
-  EditResourceClassDialogComponent,
-  EditResourceClassDialogProps,
-} from '../edit-resource-class-dialog/edit-resource-class-dialog.component';
-import { CreateOntologyData, OntologyData, UpdateOntologyData } from '../ontology-form/ontology-form.type';
-import { UpdateOntologyT } from '../ontology.types';
+  CreateOntologyData,
+  CreateResourceClassData,
+  UpdateOntologyData,
+  UpdateResourceClassData,
+} from '../ontology-form/ontology-form.type';
 import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })
@@ -69,7 +58,7 @@ export class OntologyEditService {
   currentOntologyClasses$ = this.currentOntology$.pipe(
     map(ontology => {
       if (ontology) {
-        return this._initOntoClasses(
+        return this.filterAndSortOntoClasses(
           ontology.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
             ResourceClassDefinitionWithAllLanguages
           )
@@ -198,7 +187,7 @@ export class OntologyEditService {
     }
   }
 
-  private _initOntoClasses(allOntoClasses: ResourceClassDefinitionWithAllLanguages[]) {
+  private filterAndSortOntoClasses(allOntoClasses: ResourceClassDefinitionWithAllLanguages[]) {
     const ontoClasses: ResourceClassDefinitionWithAllLanguages[] = [];
 
     // classes which are not a subClass of Standoff
@@ -246,40 +235,74 @@ export class OntologyEditService {
   }
 
   deleteOntology$(id: string) {
-    return this._dialogService.afterConfirmation('Do you want to delete this data model ?').pipe(
-      switchMap(_del => {
-        return this._dspApiConnection.v2.onto
-          .deleteOntology({
-            id,
-            lastModificationDate: this.lastModificationDate,
-          })
-          .pipe(
-            tap(() => {
-              this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
-              this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
-              this._currentOntology.next(null);
-            })
-          );
+    return this._dspApiConnection.v2.onto
+      .deleteOntology({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(() => {
+          this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
+          this._store.dispatch(new LoadProjectOntologiesAction(this.projectId));
+          this._currentOntology.next(null);
+        })
+      );
+  }
+
+  createResourceClass$(classData: CreateResourceClassData) {
+    const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData);
+    this._isTransacting.next(true);
+
+    return this._dspApiConnection.v2.onto.createResourceClass(createOntology).pipe(
+      tap(resClass => {
+        this.lastModificationDate = resClass.lastModificationDate;
+        this._afterTransaction(resClass.id, `Successfully created ${resClass.id}.`);
       })
     );
   }
 
-  private updateResourceClassLabels$(id: string, labels: StringLiteral[]) {
+  updateResourceClass$(classData: UpdateResourceClassData) {
+    const updates: Observable<ResourceClassDefinitionWithAllLanguages | ApiResponseError>[] = [];
+
+    if (classData.labels !== undefined) {
+      updates.push(this._updateResourceClassLabels$(classData.id, classData.labels));
+    }
+
+    if (classData.comments !== undefined) {
+      updates.push(this._updateResourceClassComments$(classData.id, classData.comments));
+    }
+
+    if (updates.length === 0) {
+      return of();
+    }
+
+    this._isTransacting.next(true);
+    return concat(...updates).pipe(
+      last(),
+      tap(() => {
+        this._afterTransaction(classData.id);
+      })
+    );
+  }
+
+  private _updateResourceClassLabels$(id: string, labels: StringLiteral[]) {
     return defer(() => {
-      const upd = new UpdateResourceClassLabel();
-      upd.id = id;
-      upd.labels = labels;
-      return this._updateResourceClass$(this._getUpdateOntology(upd));
+      return this._updateResourceClass$(MakeOntologyFor.updateClassLabel(this.ctx, id, labels));
     });
   }
 
-  private updateResourceClassComments$(id: string, comments: StringLiteral[]) {
+  private _updateResourceClassComments$(id: string, comments: StringLiteral[]) {
     return defer(() => {
-      const upd = new UpdateResourceClassComment();
-      upd.id = id;
-      upd.comments = comments;
-      return this._updateResourceClass$(this._getUpdateOntology(upd));
+      return this._updateResourceClass$(MakeOntologyFor.updateClassComment(this.ctx, id, comments));
     });
+  }
+
+  private _updateResourceClass$(updateOntology: UpdateOntology<UpdateResourceClassLabel | UpdateResourceClassComment>) {
+    return this._dspApiConnection.v2.onto.updateResourceClass(updateOntology).pipe(
+      tap(resClass => {
+        this.lastModificationDate = resClass.lastModificationDate;
+      })
+    );
   }
 
   private _deleteResourceComment$(id: string) {
@@ -295,21 +318,10 @@ export class OntologyEditService {
       );
   }
 
-  openAddNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyEditData>(
-      EditPropertyFormDialogComponent,
-      {
-        data: { propType },
-      }
-    );
-
-    dialogRef
-      .afterClosed()
-      .pipe(
-        take(1),
-        filter((result): result is PropertyEditData => !!result),
-        switchMap(propertyData => this._createResourceProperty$(propertyData))
-      )
+  createResourceProperty(propertyData: PropertyEditData, assignToClass?: ClassDefinition) {
+    this._isTransacting.next(true);
+    this._createResourceProperty$(propertyData)
+      .pipe(take(1))
       .subscribe(propDef => {
         if (assignToClass) {
           this.lastModificationDate = propDef.lastModificationDate;
@@ -318,55 +330,6 @@ export class OntologyEditService {
           this._afterTransaction(propDef.id);
         }
       });
-  }
-
-  openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
-    const propertyData = {
-      id: propDef.id,
-      propType,
-      name: propDef.id?.split('#').pop() || '',
-      label: propDef.labels,
-      comment: propDef.comments,
-      guiElement: propDef.guiElement,
-      guiAttribute: propDef.guiAttributes[0],
-      objectType: propDef.objectType,
-    };
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData, PropertyEditData>(
-      EditPropertyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(propertyData)
-    );
-
-    dialogRef
-      .afterClosed()
-      .pipe(
-        take(1),
-        filter((result): result is PropertyEditData => !!result),
-        switchMap(pData => {
-          return this._updateProperty$(propDef.id, pData).pipe(take(1));
-        })
-      )
-      .subscribe();
-  }
-
-  openEditResourceClass(resClass: ResourceClassDefinitionWithAllLanguages): void {
-    this._dialog.open<EditResourceClassDialogComponent, EditResourceClassDialogProps, boolean>(
-      EditResourceClassDialogComponent,
-      DspDialogConfig.dialogDrawerConfig({
-        id: resClass.id,
-        title: resClass.label || '',
-        ontologyId: this.ontologyId,
-        lastModificationDate: this.lastModificationDate,
-        name: this._ontologyService.getNameFromIri(resClass.id),
-        comments: resClass.comments as MultiLanguages,
-        labels: resClass.labels as MultiLanguages,
-      })
-    );
-  }
-
-  private _createResourceProperty$(propertyData: PropertyEditData) {
-    this._isTransacting.next(true);
-    const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
-    return this._dspApiConnection.v2.onto.createResourceProperty(onto).pipe(take(1));
   }
 
   assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition, position?: number) {
@@ -392,8 +355,8 @@ export class OntologyEditService {
   }
 
   removePropertyFromClass(property: IHasProperty, classId: string) {
-    this._isTransacting.next(true);
     const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, [property]);
+    this._isTransacting.next(true);
     this._dspApiConnection.v2.onto
       .deleteCardinalityFromResourceClass(updateOntology)
       .pipe(take(1))
@@ -402,7 +365,7 @@ export class OntologyEditService {
       });
   }
 
-  private _updateProperty$(id: string, propertyData: PropertyEditData) {
+  updateProperty$(id: string, propertyData: PropertyEditData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
     if (propertyData.label !== undefined) {
@@ -428,19 +391,15 @@ export class OntologyEditService {
 
   private _updatePropertyLabels$(id: string, labels: StringLiteralV2[]) {
     return defer(() => {
-      const upd = new UpdateResourcePropertyLabel();
-      upd.id = id;
-      upd.labels = labels;
-      return this._updateResourceProperty$(this._getUpdateOntology(upd));
+      const upd = MakeOntologyFor.updatePropertyLabel(this.ctx, id, labels);
+      return this._updateResourceProperty$(upd);
     });
   }
 
   private _updatePropertyComments$(id: string, comments: StringLiteralV2[]) {
     return defer(() => {
-      const upd = new UpdateResourcePropertyComment();
-      upd.id = id;
-      upd.comments = comments;
-      return this._updateResourceProperty$(this._getUpdateOntology(upd));
+      const upd = MakeOntologyFor.updatePropertyComment(this.ctx, id, comments);
+      return this._updateResourceProperty$(upd);
     });
   }
 
@@ -456,56 +415,29 @@ export class OntologyEditService {
     );
   }
 
-  private _updateResourceClass$(updateOntology: UpdateOntology<UpdateResourceClassLabel | UpdateResourceClassComment>) {
-    return this._dspApiConnection.v2.onto.updateResourceClass(updateOntology).pipe(
-      tap(resClass => {
-        this.lastModificationDate = resClass.lastModificationDate;
-      })
-    );
-  }
-
-  createResourceClass(resClassInfo: DefaultClass): void {
-    this._dialog
-      .open<CreateResourceClassDialogComponent, CreateResourceClassDialogProps, boolean>(
-        CreateResourceClassDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({
-          id: resClassInfo.iri,
-          title: resClassInfo.label,
-          ontologyId: this.ontologyId,
-          lastModificationDate: this.lastModificationDate,
-        })
-      )
-      .afterClosed()
-      .pipe(map(result => result ?? false))
-      .subscribe((created: boolean) => {
-        if (created) {
-          this._afterTransaction(resClassInfo.iri);
-        }
-      });
+  private _createResourceProperty$(propertyData: PropertyEditData) {
+    this._isTransacting.next(true);
+    const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
+    return this._dspApiConnection.v2.onto.createResourceProperty(onto).pipe(take(1));
   }
 
   canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
     return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
   }
 
-  deleteResourceClass(resClassIri: string) {
-    this._dialogService
-      .afterConfirmation('Do you want to delete this resource class?')
+  deleteResourceClass$(id: string) {
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto
+      .deleteResourceClass({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
       .pipe(
-        take(1),
-        tap(() => this._isTransacting.next(true)),
-        switchMap(() =>
-          this._dspApiConnection.v2.onto.deleteResourceClass({
-            id: resClassIri,
-            lastModificationDate: this.lastModificationDate,
-          })
-        )
-      )
-      .subscribe({
-        next: () => {
-          this._afterTransaction(resClassIri, `Successfully deleted ${resClassIri}.`);
-        },
-      });
+        tap(deleteResponse => {
+          this.lastModificationDate = deleteResponse.lastModificationDate;
+          this._afterTransaction(id, `Successfully deleted the class  ${this._ontologyService.getNameFromIri(id)}.`);
+        })
+      );
   }
 
   canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
@@ -522,20 +454,18 @@ export class OntologyEditService {
   }
 
   deleteProperty(id: string) {
-    this._dialogService
-      .afterConfirmation('Do you want to delete this property?')
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto
+      .deleteResourceProperty({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
       .pipe(
-        take(1),
-        switchMap(() =>
-          this._dspApiConnection.v2.onto.deleteResourceProperty({
-            id,
-            lastModificationDate: this.lastModificationDate,
-          })
-        )
-      )
-      .subscribe(() => {
-        this._afterTransaction(id, `Successfully deleted ${id}.`);
-      });
+        tap(deleteResponse => {
+          this.lastModificationDate = deleteResponse.lastModificationDate;
+          this._afterTransaction(id, `Successfully deleted the property ${this._ontologyService.getNameFromIri(id)}.`);
+        })
+      );
   }
 
   propertyCanBeRemovedFromClass$(propCard: IHasProperty, classId: string): Observable<CanDoResponse> {
@@ -567,14 +497,6 @@ export class OntologyEditService {
       .subscribe(response => {
         this._afterTransaction(classId);
       });
-  }
-
-  private _getUpdateOntology<T extends UpdateOntologyT>(entity: T): UpdateOntology<T> {
-    const onto = new UpdateOntology<T>();
-    onto.id = this.ontologyId;
-    onto.lastModificationDate = this.lastModificationDate;
-    onto.entity = entity;
-    return onto;
   }
 
   private _afterOntologyChange(ontology: OntologyMetadata) {
