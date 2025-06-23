@@ -7,7 +7,6 @@ import {
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-
 import { DefaultClass, DefaultProperty, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Observable } from 'rxjs';

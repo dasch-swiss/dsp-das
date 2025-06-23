@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService, OntologyClassHelper, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { PropertyForm } from './property-form.type';

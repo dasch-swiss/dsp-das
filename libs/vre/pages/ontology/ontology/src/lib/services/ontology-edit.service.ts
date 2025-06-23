@@ -21,7 +21,7 @@ import {
   UpdateResourceClassComment,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   LoadProjectOntologiesAction,
   OntologiesSelectors,

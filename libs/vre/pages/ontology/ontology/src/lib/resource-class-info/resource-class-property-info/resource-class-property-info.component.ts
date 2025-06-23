@@ -1,12 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import {
-  ClassDefinition,
-  Constants,
-  IHasProperty,
-  ListNodeInfo,
-  ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { Constants, ListNodeInfo, ReadOntology, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';

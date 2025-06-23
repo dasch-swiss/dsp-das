@@ -1,11 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Constants, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select } from '@ngxs/store';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({

@@ -14,11 +14,18 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
+import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { CreateResourceClassData } from '../ontology-form/ontology-form.type';
-import { UpdateOntologyT } from '../ontology.types';
 import { PropertyEditData } from '../property-form/property-form.type';
+
+type UpdateOntologyT =
+  | CreateResourceProperty
+  | UpdateResourceClassCardinality
+  | UpdateEntityCommentOrLabel
+  | UpdateResourcePropertyLabel
+  | CreateResourceClass;
 
 /** shared context every update needs */
 export interface OntologyContext {
