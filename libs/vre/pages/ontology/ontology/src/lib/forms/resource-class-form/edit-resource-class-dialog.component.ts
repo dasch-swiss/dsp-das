@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DefaultClass, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
-import { ResourceClassForm, ResourceClassFormData } from '../resource-class-form/resource-class-form.type';
+import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
   selector: 'app-edit-resource-class-dialog',

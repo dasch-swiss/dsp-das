@@ -6,8 +6,8 @@ import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
-import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
-import { OntologyData } from '../ontology-form/ontology-form.type';
+import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
+import { OntologyData } from '../forms/ontology-form/ontology-form.type';
 import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 

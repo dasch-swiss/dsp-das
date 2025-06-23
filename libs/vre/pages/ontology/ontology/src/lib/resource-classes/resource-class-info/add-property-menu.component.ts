@@ -11,8 +11,8 @@ import {
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-add-property-menu',

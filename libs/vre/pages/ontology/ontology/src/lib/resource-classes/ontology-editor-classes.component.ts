@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ClassDefinition } from '@dasch-swiss/dsp-js';
-import { OntologyEditService } from './services/ontology-edit.service';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology-editor-classes',

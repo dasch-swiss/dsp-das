@@ -15,8 +15,8 @@ import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-he
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-property-item',

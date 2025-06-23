@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
-import { OntologyEditService } from './services/ontology-edit.service';
+import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology-properties',

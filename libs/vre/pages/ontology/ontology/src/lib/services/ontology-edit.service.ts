@@ -41,8 +41,8 @@ import {
   CreateResourceClassData,
   UpdateOntologyData,
   UpdateResourceClassData,
-} from '../ontology-form/ontology-form.type';
-import { PropertyEditData } from '../property-form/property-form.type';
+} from '../forms/ontology-form/ontology-form.type';
+import { PropertyEditData } from '../forms/property-form/property-form.type';
 import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })

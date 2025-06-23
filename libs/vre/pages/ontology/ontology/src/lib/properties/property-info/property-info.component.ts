@@ -7,8 +7,8 @@ import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/v
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 export interface ShortInfo {
   id: string;

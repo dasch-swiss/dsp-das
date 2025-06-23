@@ -15,8 +15,8 @@ import {
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
   selector: 'app-resource-class-info',

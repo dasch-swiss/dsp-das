@@ -7,7 +7,7 @@ import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/a
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { take } from 'rxjs/operators';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm } from './resource-class-form.type';
 
 @Component({

@@ -9,7 +9,7 @@ import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { OntologyEditService } from '../services/ontology-edit.service';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 import { OntologyForm, OntologyData, UpdateOntologyData, CreateOntologyData } from './ontology-form.type';
 
 @Component({

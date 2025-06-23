@@ -17,8 +17,8 @@ import {
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CreateResourceClassData } from '../ontology-form/ontology-form.type';
-import { PropertyEditData } from '../property-form/property-form.type';
+import { CreateResourceClassData } from '../forms/ontology-form/ontology-form.type';
+import { PropertyEditData } from '../forms/property-form/property-form.type';
 
 type UpdateOntologyT =
   | CreateResourceProperty
