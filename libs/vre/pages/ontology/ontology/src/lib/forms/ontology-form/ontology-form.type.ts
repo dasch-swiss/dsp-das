@@ -1,5 +1,4 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { StringLiteral } from '@dasch-swiss/dsp-js';
 
 export interface CreateOntologyData {
   name: string;

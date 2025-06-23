@@ -30,6 +30,14 @@ export class LoadOntologyAction {
   ) {}
 }
 
+export class ResetCurrentOntologyIfNeededAction {
+  static readonly type = '[Ontologies] Update current ontology if needed';
+  constructor(
+    public ontology: ReadOntology,
+    public projectIri: string
+  ) {}
+}
+
 export class UpdateOntologyAction {
   static readonly type = '[Ontologies] Update Ontology';
   constructor(

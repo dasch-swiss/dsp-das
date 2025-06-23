@@ -1,16 +1,11 @@
-@use 'material/index' as mat;
-@use "config" as *;
-@use "mixins" as *;
 
 .resource-class {
   min-height: 60px;
   height: auto;
   position: relative;
-  @include mat.elevation-transition;
-  @include mat.elevation(2);
   padding: 12px;
   margin: 6px;
-  background-color: $white;
+  background-color: white;
 
   .resource-class-header {
     cursor: move;
@@ -29,18 +24,4 @@
   .resource-class-content {
     padding: 0;
   }
-
-  .resource-class-footer {
-    text-align: left;
-    padding-left: 32px;
-    margin-top: 16px;
-  }
-
-  &:active {
-    @include mat.elevation(8);
-  }
-}
-
-.link {
-  color: $primary;
 }

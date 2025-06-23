@@ -35,16 +35,16 @@ export interface OntologyContext {
 
 export interface ProjectContext {
   projectId: string;
-  projectName: string;
+  projectShort: string;
 }
 
 export class MakeOntologyFor {
   private static wrapInUpdateOntology<T extends UpdateOntologyT>(ctx: OntologyContext, entity: T): UpdateOntology<T> {
-    const o = new UpdateOntology<T>();
-    o.id = ctx.id;
-    o.lastModificationDate = ctx.lastModificationDate;
-    o.entity = entity as T;
-    return o;
+    const upd = new UpdateOntology<T>();
+    upd.id = ctx.id;
+    upd.lastModificationDate = ctx.lastModificationDate;
+    upd.entity = entity as T;
+    return upd;
   }
 
   static createProperty(ctx: OntologyContext, data: PropertyEditData): UpdateOntology<CreateResourceProperty> {
@@ -103,17 +103,23 @@ export class MakeOntologyFor {
   }
 
   static updatePropertyLabel(ctx: OntologyContext, id: string, labels: StringLiteral[] | StringLiteralV2[]) {
-    const upd: UpdateResourcePropertyLabel = { id, labels } as UpdateResourcePropertyLabel;
+    const upd = new UpdateResourcePropertyLabel();
+    upd.id = id;
+    upd.labels = labels;
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
   static updatePropertyComment(ctx: OntologyContext, id: string, comments: StringLiteral[] | StringLiteralV2[]) {
-    const upd: UpdateResourcePropertyComment = { id, comments } as UpdateResourcePropertyComment;
+    const upd = new UpdateResourcePropertyComment();
+    upd.id = id;
+    upd.comments = comments;
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
   static updatePropertyGuiElement(ctx: OntologyContext, id: string, guiElement: string) {
-    const upd: UpdateResourcePropertyGuiElement = { id, guiElement } as UpdateResourcePropertyGuiElement;
+    const upd = new UpdateResourcePropertyGuiElement();
+    upd.id = id;
+    upd.guiElement = guiElement;
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
@@ -121,41 +127,44 @@ export class MakeOntologyFor {
     ctx: OntologyContext,
     { name, labels, comments }: CreateResourceClassData
   ): UpdateOntology<CreateResourceClass> {
-    const create = {
-      name,
-      label: labels,
-      comment: comments,
-      subClassOf: [ctx.id],
-    } as CreateResourceClass;
+    const create = new CreateResourceClass();
+    create.name = name;
+    create.label = labels;
+    create.comment = comments;
+    create.subClassOf = [Constants.Resource];
 
     return this.wrapInUpdateOntology(ctx, create);
   }
 
   static updateClassLabel(ctx: OntologyContext, id: string, labels: StringLiteral[] | StringLiteralV2[]) {
-    const upd: UpdateResourceClassLabel = { id, labels } as UpdateResourceClassLabel;
+    const upd = new UpdateResourceClassLabel();
+    upd.id = id;
+    upd.labels = labels;
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
   static updateClassComment(ctx: OntologyContext, id: string, comments: StringLiteral[] | StringLiteralV2[]) {
-    const upd: UpdateResourceClassComment = { id, comments } as UpdateResourceClassComment;
+    const upd = new UpdateResourceClassComment();
+    upd.id = id;
+    upd.comments = comments;
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
-  static createOntology(name: string, label: string, comment: string, attachedToProject: string): CreateOntology {
-    return {
-      name,
-      label,
-      comment,
-      attachedToProject,
-    } as CreateOntology;
+  static createOntology(ctx: ProjectContext, name: string, label: string, comment: string): CreateOntology {
+    const create = new CreateOntology();
+    create.name = name;
+    create.label = label;
+    create.comment = comment;
+    create.attachedToProject = ctx.projectId;
+    return create;
   }
 
   static updateOntologyMetadata(ctx: OntologyContext, label: string, comment: string): UpdateOntologyMetadata {
-    return {
-      id: ctx.id,
-      label,
-      comment,
-      lastModificationDate: ctx.lastModificationDate,
-    } as UpdateOntologyMetadata;
+    const upd = new UpdateOntologyMetadata();
+    upd.id = ctx.id;
+    upd.label = label;
+    upd.comment = comment;
+    upd.lastModificationDate = ctx.lastModificationDate;
+    return upd;
   }
 }

@@ -32,6 +32,7 @@ import {
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
+  ResetCurrentOntologyIfNeededAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologiesLoadingAction,
@@ -65,8 +66,7 @@ export class OntologiesState {
     private _dspApiConnection: KnoraApiConnection,
     private _sortingService: SortingService,
     private _projectService: ProjectService,
-    private _actions$: Actions,
-    private _notification: NotificationService
+    private _actions$: Actions
   ) {}
 
   // TODO Remove this action when all actions containing this usage is implemented
@@ -78,6 +78,24 @@ export class OntologiesState {
   @Action(SetCurrentOntologyAction)
   setCurrentOntologyAction(ctx: StateContext<OntologiesStateModel>, { readOntology }: SetCurrentOntologyAction) {
     ctx.patchState({ currentOntology: readOntology });
+  }
+
+  @Action(ResetCurrentOntologyIfNeededAction)
+  resetCurrentOntologyIfNeededAction(
+    ctx: StateContext<OntologiesStateModel>,
+    { ontology, projectIri }: ResetCurrentOntologyIfNeededAction
+  ) {
+    const state = ctx.getState();
+    const currentOntology = state.currentOntology;
+
+    if (
+      !currentOntology ||
+      currentOntology.id !== ontology.id ||
+      currentOntology.lastModificationDate !== ontology.lastModificationDate
+    ) {
+      ctx.dispatch(new SetOntologyAction(ontology, projectIri));
+      ctx.dispatch(new SetCurrentOntologyAction(ontology));
+    }
   }
 
   @Action(UpdateProjectOntologyAction)

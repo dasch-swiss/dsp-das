@@ -63,7 +63,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._buildForm(this.data);
 
-    if (!this.data?.id) {
+    if (!this.data) {
       this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
         if (this.ontologyForm.controls.label.pristine) {
           this.ontologyForm.controls.label.patchValue(this._proposeLabel(this.ontologyForm.controls.name.value));
@@ -79,7 +79,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   private _buildForm(ontology?: UpdateOntologyData): void {
     this.ontologyForm = this._fb.group({
       name: [
-        { value: this.ontologyName, disabled: !!ontology },
+        { value: this.ontologyName, disabled: ontology === undefined },
         [
           Validators.required,
           Validators.minLength(3),

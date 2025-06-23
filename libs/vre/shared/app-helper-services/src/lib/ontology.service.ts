@@ -1,11 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  Constants,
-  KnoraApiConfig,
-  ReadOntology,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { Constants, KnoraApiConfig, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 
@@ -45,32 +40,7 @@ export class OntologyService {
    */
   getNameFromIri(iri: string): string {
     const array = iri.split(Constants.HashDelimiter);
-
     return array[1];
-  }
-
-  getSuperProperty(
-    property: ResourcePropertyDefinitionWithAllLanguages,
-    currentProjectOntologies: ReadOntology[]
-  ): string | undefined {
-    let superPropIri: string | undefined;
-
-    for (const subProp of property.subPropertyOf) {
-      const baseOntoIri = subProp.split(Constants.HashDelimiter)[0];
-      // compare with knora base ontology
-      if (baseOntoIri !== Constants.KnoraApiV2) {
-        // the property is not a subproperty of knora base ontology
-        // get property iri from another ontology
-        const onto = currentProjectOntologies.find(i => i?.id === baseOntoIri);
-        superPropIri = onto?.properties[subProp].subPropertyOf[0];
-      }
-
-      if (superPropIri) {
-        break;
-      }
-    }
-
-    return superPropIri || undefined;
   }
 
   /**

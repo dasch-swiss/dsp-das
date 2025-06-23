@@ -38,6 +38,10 @@ export class EditResourceClassDialogComponent implements OnInit {
   formData!: ResourceClassFormData;
   lastModificationDate!: string;
 
+  get editExistingClass(): boolean {
+    return 'id' in this.data;
+  }
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: UpdateResourceClassData | DefaultClass,
@@ -64,7 +68,9 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   afterFormInit(form: ResourceClassForm) {
     this.form = form;
-    this.form.controls.name.disable();
+    if ('id' in this.data) {
+      this.form.controls.name.disable();
+    }
   }
 
   onSubmit() {
