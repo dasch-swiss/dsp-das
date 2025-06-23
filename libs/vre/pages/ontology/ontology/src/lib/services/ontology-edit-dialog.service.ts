@@ -8,13 +8,14 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 
-import { EditPropertyFormDialogComponent, PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { DefaultClass, DefaultProperty, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Observable } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { EditResourceClassDialogComponent } from '../edit-resource-class-dialog/edit-resource-class-dialog.component';
 import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
+import { EditPropertyFormDialogComponent } from '../property-form/edit-property-form-dialog.component';
+import { PropertyEditData } from '../property-form/property-form.type';
 import { OntologyEditService } from './ontology-edit.service';
 
 @Injectable({ providedIn: 'root' })

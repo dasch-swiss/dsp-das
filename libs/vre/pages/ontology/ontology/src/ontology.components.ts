@@ -5,6 +5,10 @@ import { OntologyEditorHeaderComponent } from './lib/ontology-editor-header/onto
 import { OntologyFormComponent } from './lib/ontology-form/ontology-form.component';
 import { OntologyPropertiesComponent } from './lib/ontology-properties.component';
 import { OntologyComponent } from './lib/ontology.component';
+import { EditPropertyFormDialogComponent } from './lib/property-form/edit-property-form-dialog.component';
+import { GuiAttrLinkComponent } from './lib/property-form/gui-attr-link.component';
+import { GuiAttrListComponent } from './lib/property-form/gui-attr-list.component';
+import { PropertyFormComponent } from './lib/property-form/property-form.component';
 import { PropertyInfoComponent } from './lib/property-info/property-info.component';
 import { ResourceClassFormComponent } from './lib/resource-class-form/resource-class-form.component';
 import { AddPropertyMenuComponent } from './lib/resource-class-info/add-property-menu.component';
@@ -30,4 +34,8 @@ export const OntologyComponents = [
   ResourceClassPropertyInfoComponent,
   CardinalityComponent,
   CardinalityChangeDialogComponent,
+  EditPropertyFormDialogComponent,
+  GuiAttrLinkComponent,
+  GuiAttrListComponent,
+  PropertyFormComponent,
 ];

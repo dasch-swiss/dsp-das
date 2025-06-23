@@ -30,7 +30,6 @@ import {
   SetCurrentOntologyAction,
   SetOntologyAction,
 } from '@dasch-swiss/vre/core/state';
-import { PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
@@ -43,6 +42,7 @@ import {
   UpdateOntologyData,
   UpdateResourceClassData,
 } from '../ontology-form/ontology-form.type';
+import { PropertyEditData } from '../property-form/property-form.type';
 import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })

@@ -1,13 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import {
-    DefaultProperties,
-    LocalizationService,
-    PropertyCategory
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { PropertyForm, PropertyEditData } from '../property-form.type';
+import { PropertyForm, PropertyEditData } from './property-form.type';
 
 @Component({
   selector: 'app-property-form',
@@ -73,9 +69,9 @@ export class PropertyFormComponent implements OnInit {
   }
 
   get disableObjectTypeField(): boolean {
-        // only link and ispartof properties already existing property can not change the objectClass
-        return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.LinkValue;
-    }
+    // only link and ispartof properties already existing property can not change the objectClass
+    return !!this.propertyData.name || this.propertyData.propType.objectType !== Constants.LinkValue;
+  }
 
   constructor(
     private _fb: FormBuilder,
@@ -94,23 +90,23 @@ export class PropertyFormComponent implements OnInit {
       },
     ];
     this.form = this._fb.group({
-        guiElement: this._fb.control(
+      guiElement: this._fb.control(
         {
           value: this.propertyData.propType.guiEle!,
           disabled: true,
         },
         { nonNullable: true }
       ),
-        name: this._fb.control(
-            {
-                value: this.propertyData.name ?? '',
-                disabled: !!this.propertyData.name,
-            },
-            {
-                nonNullable: true,
-                validators: [Validators.required],
-            }
-        ),
+      name: this._fb.control(
+        {
+          value: this.propertyData.name ?? '',
+          disabled: !!this.propertyData.name,
+        },
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.label ?? defaultData, [Validators.required]),
       comments: DEFAULT_MULTILANGUAGE_FORM(this.propertyData.comment ?? defaultData, [Validators.required]),
       guiAttr: this._fb.control<string>(
@@ -120,13 +116,13 @@ export class PropertyFormComponent implements OnInit {
         },
         { nonNullable: true, validators: [Validators.required] }
       ),
-        objectType: this._fb.control<string>(
-            {
-                value: this.propertyData.objectType!,
-                disabled: this.disableObjectTypeField,
-            },
-            { nonNullable: true, validators: [Validators.required] }
-        )
+      objectType: this._fb.control<string>(
+        {
+          value: this.propertyData.objectType!,
+          disabled: this.disableObjectTypeField,
+        },
+        { nonNullable: true, validators: [Validators.required] }
+      ),
     });
 
     this.afterFormInit.emit(this.form);

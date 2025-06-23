@@ -15,10 +15,10 @@ import {
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { PropertyEditData } from '@dasch-swiss/vre/ontology/ontology-properties';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
+import { CreateResourceClassData } from '../ontology-form/ontology-form.type';
 import { UpdateOntologyT } from '../ontology.types';
+import { PropertyEditData } from '../property-form/property-form.type';
 
 /** shared context every update needs */
 export interface OntologyContext {

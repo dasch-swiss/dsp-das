@@ -15,3 +15,8 @@ export * from './lib/resource-class-info/add-property-menu.component';
 export * from './lib/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 export * from './lib/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';
 export * from './lib/resource-class-info/resource-class-property-info/cardinality-component/cardinality-change-dialog.component';
+export * from './lib/property-form/property-form.component';
+export * from './lib/property-form/edit-property-form-dialog.component';
+export * from './lib/property-form/gui-attr-link.component';
+export * from './lib/property-form/gui-attr-list.component';
+export * from './lib/property-form/property-form.type';

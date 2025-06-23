@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ListsSelectors } from 'libs/vre/core/state/src';
+import { ListsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { PropertyForm } from '../property-form.type';
+import { PropertyForm } from './property-form.type';
 
 @Component({
   selector: 'app-gui-attr-list',
