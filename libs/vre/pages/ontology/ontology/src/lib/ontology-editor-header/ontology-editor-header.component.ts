@@ -7,7 +7,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
-import { OntologyData } from '../forms/ontology-form/ontology-form.type';
+import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -65,12 +65,12 @@ export class OntologyEditorHeaderComponent {
   ) {}
 
   editOntology(ontology: ReadOntology | OntologyMetadata) {
-    const data: OntologyData = {
+    const data: UpdateOntologyData = {
       id: ontology.id,
       label: ontology.label,
       comment: ontology.comment || '',
     };
-    this._dialog.open<OntologyFormComponent, OntologyData>(
+    this._dialog.open<OntologyFormComponent, UpdateOntologyData>(
       OntologyFormComponent,
       DspDialogConfig.dialogDrawerConfig(data, true)
     );

@@ -11,10 +11,13 @@ import { DefaultClass, DefaultProperty, PropertyInfoObject } from '@dasch-swiss/
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Observable } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { CreateResourceClassData, UpdateResourceClassData } from '../forms/ontology-form/ontology-form.type';
 import { EditPropertyFormDialogComponent } from '../forms/property-form/edit-property-form-dialog.component';
 import { PropertyEditData } from '../forms/property-form/property-form.type';
 import { EditResourceClassDialogComponent } from '../forms/resource-class-form/edit-resource-class-dialog.component';
+import {
+  CreateResourceClassData,
+  UpdateResourceClassData,
+} from '../forms/resource-class-form/resource-class-form.type';
 import { OntologyEditService } from './ontology-edit.service';
 
 @Injectable({ providedIn: 'root' })

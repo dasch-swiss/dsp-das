@@ -10,7 +10,7 @@ import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { OntologyEditService } from '../../services/ontology-edit.service';
-import { OntologyForm, OntologyData, UpdateOntologyData, CreateOntologyData } from './ontology-form.type';
+import { OntologyForm, UpdateOntologyData, CreateOntologyData } from './ontology-form.type';
 
 @Component({
   selector: 'app-ontology-form',
@@ -56,7 +56,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _oes: OntologyEditService,
     private _store: Store,
-    @Inject(MAT_DIALOG_DATA) public data: OntologyData,
+    @Inject(MAT_DIALOG_DATA) public data: UpdateOntologyData | undefined,
     public dialogRef: MatDialogRef<OntologyFormComponent, OntologyMetadata>
   ) {}
 
@@ -76,7 +76,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return ontoName ? `${ontoName.charAt(0).toUpperCase()}${ontoName.slice(1)}` : '';
   }
 
-  private _buildForm(ontology?: OntologyData): void {
+  private _buildForm(ontology?: UpdateOntologyData): void {
     this.ontologyForm = this._fb.group({
       name: [
         { value: this.ontologyName, disabled: !!ontology },
@@ -89,21 +89,25 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
         ],
       ],
       label: [ontology?.label || '', [Validators.required, Validators.minLength(3)]],
-      comment: [ontology ? ontology.comment : '', Validators.required],
+      comment: [ontology?.comment || '', Validators.required],
     });
   }
 
   submitData() {
     this.loading = true;
-    const ontologyData: OntologyData = {
-      name: this.ontologyForm.controls.name.value,
-      label: this.ontologyForm.controls.label.value,
-      comment: this.ontologyForm.controls.comment.value,
-      id: this.data?.id,
-    };
+
     const transaction$ = this.data?.id
-      ? this._oes.updateOntology$(ontologyData as UpdateOntologyData)
-      : this._oes.createOntology$(ontologyData as CreateOntologyData);
+      ? this._oes.updateOntology$({
+          id: this.data.id,
+          label: this.ontologyForm.controls.label.value,
+          comment: this.ontologyForm.controls.comment.value,
+        })
+      : this._oes.createOntology$({
+          name: this.ontologyForm.controls.name.value,
+          label: this.ontologyForm.controls.label.value,
+          comment: this.ontologyForm.controls.comment.value,
+        });
+
     transaction$.pipe(take(1)).subscribe(o => {
       this.dialogRef.close(o);
     });

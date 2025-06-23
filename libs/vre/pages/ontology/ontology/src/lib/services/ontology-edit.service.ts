@@ -36,13 +36,12 @@ import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, concat, defer, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
-import {
-  CreateOntologyData,
-  CreateResourceClassData,
-  UpdateOntologyData,
-  UpdateResourceClassData,
-} from '../forms/ontology-form/ontology-form.type';
+import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { PropertyEditData } from '../forms/property-form/property-form.type';
+import {
+  CreateResourceClassData,
+  UpdateResourceClassData,
+} from '../forms/resource-class-form/resource-class-form.type';
 import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })

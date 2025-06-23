@@ -2,8 +2,12 @@ import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/cor
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DefaultClass, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { CreateResourceClassData, UpdateResourceClassData } from '../ontology-form/ontology-form.type';
-import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
+import {
+  CreateResourceClassData,
+  UpdateResourceClassData,
+  ResourceClassForm,
+  ResourceClassFormData,
+} from './resource-class-form.type';
 
 @Component({
   selector: 'app-edit-resource-class-dialog',
@@ -44,7 +48,6 @@ export class EditResourceClassDialogComponent implements OnInit {
   ngOnInit() {
     this.dialogRef.updateSize('800px', '');
     if ('id' in this.data) {
-      // UpdateResourceClassData
       this.formData = {
         name: this._ontologyService.getNameFromIri(this.data.id),
         labels: this.data.labels ? (this.data.labels as MultiLanguages) : [],

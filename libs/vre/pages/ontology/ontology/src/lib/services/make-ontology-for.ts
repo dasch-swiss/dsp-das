@@ -17,8 +17,8 @@ import {
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
-import { CreateResourceClassData } from '../forms/ontology-form/ontology-form.type';
 import { PropertyEditData } from '../forms/property-form/property-form.type';
+import { CreateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 
 type UpdateOntologyT =
   | CreateResourceProperty
@@ -46,8 +46,6 @@ export class MakeOntologyFor {
     o.entity = entity as T;
     return o;
   }
-
-  // properties
 
   static createProperty(ctx: OntologyContext, data: PropertyEditData): UpdateOntology<CreateResourceProperty> {
     const create = this._buildCreateResourceProperty(data);
@@ -119,8 +117,6 @@ export class MakeOntologyFor {
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
-  // classes
-
   static createResourceClass(
     ctx: OntologyContext,
     { name, labels, comments }: CreateResourceClassData
@@ -145,14 +141,12 @@ export class MakeOntologyFor {
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
-  // ontologies
-
   static createOntology(name: string, label: string, comment: string, attachedToProject: string): CreateOntology {
     return {
       name,
       label,
       comment,
-      attachedToProject: '',
+      attachedToProject,
     } as CreateOntology;
   }
 
