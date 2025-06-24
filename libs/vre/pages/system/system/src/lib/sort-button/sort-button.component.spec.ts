@@ -122,7 +122,7 @@ describe('SortButtonComponent', () => {
 
     const matIconEl: DebugElement = sortSelectionBtnEl.query(By.css('mat-icon'));
 
-    // expect that the button label is 'sort'
+    // expect that the button labels is 'sort'
     expect(matIconEl.nativeElement.innerText).toEqual('sort');
 
     // click on the sort button to trigger the sort selection menu

@@ -7,7 +7,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { finalize, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit-resource-label-dialog',
+  selector: 'app-edit-resource-labels-dialog',
   template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label" />
 
     <div mat-dialog-content>

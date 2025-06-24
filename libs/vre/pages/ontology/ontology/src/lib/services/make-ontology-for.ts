@@ -17,8 +17,8 @@ import {
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
-import { PropertyEditData } from '../forms/property-form/property-form.type';
-import { CreateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
+import { CreatePropertyData } from '../forms/property-form/property-form.type';
+import { ResourceClassFormData } from '../forms/resource-class-form/resource-class-form.type';
 
 type UpdateOntologyT =
   | CreateResourceProperty
@@ -27,7 +27,6 @@ type UpdateOntologyT =
   | UpdateResourcePropertyLabel
   | CreateResourceClass;
 
-/** shared context every update needs */
 export interface OntologyContext {
   id: string;
   lastModificationDate: string;
@@ -47,15 +46,15 @@ export class MakeOntologyFor {
     return upd;
   }
 
-  static createProperty(ctx: OntologyContext, data: PropertyEditData): UpdateOntology<CreateResourceProperty> {
+  static createProperty(ctx: OntologyContext, data: CreatePropertyData): UpdateOntology<CreateResourceProperty> {
     const create = this._buildCreateResourceProperty(data);
     return this.wrapInUpdateOntology(ctx, create);
   }
 
-  private static _buildCreateResourceProperty(d: PropertyEditData): CreateResourceProperty {
+  private static _buildCreateResourceProperty(d: CreatePropertyData): CreateResourceProperty {
     const c = new CreateResourceProperty();
     c.name = d.name;
-    c.label = d.label;
+    c.label = d.labels;
     c.comment = d.comment;
     c.guiElement = d.propType.guiEle;
     c.subPropertyOf = [d.propType.subPropOf];
@@ -91,15 +90,23 @@ export class MakeOntologyFor {
     }
   }
 
-  static buildResourceClassCardinality(classId: string, cardinalities: IHasProperty[]): UpdateResourceClassCardinality {
+  /**
+   * Yes, someone named properties of a resource class "cardinality" in the backends data model and the class to
+   * update the properties or one property is an UpdateResourceClassCardinality ...
+   */
+  static updateResourceClassCardinality(classId: string, properties: IHasProperty[]): UpdateResourceClassCardinality {
     const upd = new UpdateResourceClassCardinality();
     upd.id = classId;
-    upd.cardinalities = cardinalities;
+    upd.cardinalities = properties;
     return upd;
   }
 
-  static updateResourceClassCardinality(ctx: OntologyContext, classId: string, cardinalities: IHasProperty[]) {
-    return this.wrapInUpdateOntology(ctx, this.buildResourceClassCardinality(classId, cardinalities));
+  /**
+   * Yes, someone named the properties of a class "cardinality" in the data model and the class to
+   * update them is a UpdateResourceClassCardinality ...
+   */
+  static updateCardinalityOfResourceClass(ctx: OntologyContext, classId: string, properties: IHasProperty[]) {
+    return this.wrapInUpdateOntology(ctx, this.updateResourceClassCardinality(classId, properties));
   }
 
   static updatePropertyLabel(ctx: OntologyContext, id: string, labels: StringLiteral[] | StringLiteralV2[]) {
@@ -116,16 +123,9 @@ export class MakeOntologyFor {
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
-  static updatePropertyGuiElement(ctx: OntologyContext, id: string, guiElement: string) {
-    const upd = new UpdateResourcePropertyGuiElement();
-    upd.id = id;
-    upd.guiElement = guiElement;
-    return this.wrapInUpdateOntology(ctx, upd);
-  }
-
   static createResourceClass(
     ctx: OntologyContext,
-    { name, labels, comments }: CreateResourceClassData
+    { name, labels, comments }: ResourceClassFormData
   ): UpdateOntology<CreateResourceClass> {
     const create = new CreateResourceClass();
     create.name = name;
@@ -143,7 +143,7 @@ export class MakeOntologyFor {
     return this.wrapInUpdateOntology(ctx, upd);
   }
 
-  static updateClassComment(ctx: OntologyContext, id: string, comments: StringLiteral[] | StringLiteralV2[]) {
+  static updateClassComments(ctx: OntologyContext, id: string, comments: StringLiteral[] | StringLiteralV2[]) {
     const upd = new UpdateResourceClassComment();
     upd.id = id;
     upd.comments = comments;

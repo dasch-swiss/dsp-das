@@ -35,11 +35,8 @@ import { Store } from '@ngxs/store';
 import { BehaviorSubject, concat, defer, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
-import { PropertyEditData } from '../forms/property-form/property-form.type';
-import {
-  CreateResourceClassData,
-  UpdateResourceClassData,
-} from '../forms/resource-class-form/resource-class-form.type';
+import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
+import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 import { MakeOntologyFor, OntologyContext, ProjectContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })
@@ -224,7 +221,7 @@ export class OntologyEditService {
       );
   }
 
-  createResourceClass$(classData: CreateResourceClassData) {
+  createResourceClass$(classData: ResourceClassFormData) {
     const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData);
     this._isTransacting.next(true);
 
@@ -236,6 +233,9 @@ export class OntologyEditService {
     );
   }
 
+  /**
+   * Yes, there is not a route to update a class at once ...
+   */
   updateResourceClass$(classData: UpdateResourceClassData) {
     const updates: Observable<ResourceClassDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
@@ -268,7 +268,7 @@ export class OntologyEditService {
 
   private _updateResourceClassComments$(id: string, comments: StringLiteral[]) {
     return defer(() => {
-      return this._updateResourceClass$(MakeOntologyFor.updateClassComment(this.ctx, id, comments));
+      return this._updateResourceClass$(MakeOntologyFor.updateClassComments(this.ctx, id, comments));
     });
   }
 
@@ -280,7 +280,7 @@ export class OntologyEditService {
     );
   }
 
-  createResourceProperty(propertyData: PropertyEditData, assignToClass?: ClassDefinition) {
+  createResourceProperty(propertyData: CreatePropertyData, assignToClass?: ClassDefinition) {
     this._isTransacting.next(true);
     this._createResourceProperty$(propertyData)
       .pipe(take(1))
@@ -307,7 +307,7 @@ export class OntologyEditService {
       guiOrder,
     };
 
-    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classDefinition.id, [propCard]);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classDefinition.id, [propCard]);
     this._dspApiConnection.v2.onto
       .addCardinalityToResourceClass(updateOntology)
       .pipe(take(1))
@@ -316,8 +316,12 @@ export class OntologyEditService {
       });
   }
 
+  /**
+   * Yes, we need to pass an UpdateOntology<UpdateResourceClassCardinality> containing one property to
+   * deleteCardinalityFromResourceClass in order to remove a property ...
+   */
   removePropertyFromClass(property: IHasProperty, classId: string) {
-    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, [property]);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [property]);
     this._isTransacting.next(true);
     this._dspApiConnection.v2.onto
       .deleteCardinalityFromResourceClass(updateOntology)
@@ -327,19 +331,18 @@ export class OntologyEditService {
       });
   }
 
-  updateProperty$(propertyId: string, propertyData: PropertyEditData) {
+  /**
+   * Yes, there is not a route to update a whole property at once ...
+   */
+  updateProperty$(propertyId: string, propertyData: UpdatePropertyData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
-    if (propertyData.label !== undefined) {
-      updates.push(this._updatePropertyLabels$(propertyId, propertyData.label));
+    if (propertyData.labels !== undefined) {
+      updates.push(this._updatePropertyLabels$(propertyId, propertyData.labels));
     }
 
     if (propertyData.comment !== undefined) {
       updates.push(this._updatePropertyComments$(propertyId, propertyData.comment));
-    }
-
-    if (updates.length === 0) {
-      return of();
     }
 
     this._isTransacting.next(true);
@@ -377,7 +380,7 @@ export class OntologyEditService {
     );
   }
 
-  private _createResourceProperty$(propertyData: PropertyEditData) {
+  private _createResourceProperty$(propertyData: CreatePropertyData) {
     this._isTransacting.next(true);
     const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
     return this._dspApiConnection.v2.onto.createResourceProperty(onto).pipe(take(1));
@@ -435,13 +438,13 @@ export class OntologyEditService {
       // no need to send a request to the server
       return of({ canDo: false, cannotDoReason: 'The property is inherited from another class' } as CanDoResponse);
     }
-    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, [propCard]);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [propCard]);
     return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(updateOntology);
   }
 
   updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
     this._isTransacting.next(true);
-    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, properties);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
     this._dspApiConnection.v2.onto
       .replaceGuiOrderOfCardinalities(updateOntology)
       .pipe(take(1))
@@ -450,11 +453,11 @@ export class OntologyEditService {
       });
   }
 
-  updateCardinalitiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
+  updatePropertiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
     this._isTransacting.next(true);
-    const updateOntology = MakeOntologyFor.updateResourceClassCardinality(this.ctx, classId, properties);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
     this._dspApiConnection.v2.onto
-      .replaceCardinalityOfResourceClass(updateOntology)
+      .replaceCardinalityOfResourceClass(updateOntology) // yes, someone called the properties "cardinalities" in the API
       .pipe(take(1))
       .subscribe(response => {
         this._afterOntologyItemChange(classId);

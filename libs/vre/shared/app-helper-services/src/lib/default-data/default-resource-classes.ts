@@ -146,7 +146,7 @@ export class DefaultResourceClasses {
     the following object can be added again to the default classes as soon as a RTI viewer is implemented
     {
         iri: Constants.DDDRepresentation,
-        label: 'RTI Image',
+        labels: 'RTI Image',
         icons: [
             'view_in_ar',
             'layers'

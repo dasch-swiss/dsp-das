@@ -188,7 +188,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
     if (propertyIdx !== -1) {
       this.props[propertyIdx] = this.prop;
       this.props[propertyIdx].cardinality = newValue;
-      this._oes.updateCardinalitiesOfResourceClass(this.resourceClass.id, this.props);
+      this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, this.props);
     }
   }
 

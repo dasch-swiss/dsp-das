@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { PropertyForm, PropertyEditData } from './property-form.type';
+import { PropertyForm, PropertyEditData, UpdatePropertyData, CreatePropertyData } from './property-form.type';
 
 @Component({
   selector: 'app-edit-property-form-dialog',
@@ -29,7 +29,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   }
 
   constructor(
-    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, PropertyEditData>,
+    private dialogRef: MatDialogRef<EditPropertyFormDialogComponent, CreatePropertyData | UpdatePropertyData>,
     @Inject(MAT_DIALOG_DATA) public data: PropertyEditData
   ) {}
 
@@ -38,16 +38,26 @@ export class EditPropertyFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    const propertyData: PropertyEditData = {
-      id: this.data.id,
-      propType: this.data.propType,
-      name: this.form.controls.name.value,
-      label: this.form.controls.labels.touched ? (this.form.controls.labels.value as StringLiteralV2[]) : undefined,
-      comment: this.form.controls.comments.touched
-        ? (this.form.controls.comments.value as StringLiteralV2[])
-        : undefined,
-      guiElement: this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
-    };
+    let propertyData: CreatePropertyData | UpdatePropertyData;
+    if (this.data.id) {
+      propertyData = {
+        id: this.data.id,
+        labels: this.form.controls.labels.touched ? (this.form.controls.labels.value as StringLiteralV2[]) : undefined,
+        comment: this.form.controls.comments.touched
+          ? (this.form.controls.comments.value as StringLiteralV2[])
+          : undefined,
+      } as UpdatePropertyData;
+    } else {
+      propertyData = {
+        name: this.form.controls.name.value,
+        labels: this.form.controls.labels.value as StringLiteralV2[],
+        comment: this.form.controls.comments.value as StringLiteralV2[],
+        propType: this.data.propType,
+        guiAttribute: this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
+        objectType: this.form.controls.objectType.touched ? this.form.controls.objectType.value : undefined,
+      } as CreatePropertyData;
+    }
+
     this.dialogRef.close(propertyData);
   }
 }

@@ -4,18 +4,18 @@
   <form
     [formGroup]="form"
     *ngIf="
-      ((isSysAdmin$ | async) === true) || 
+      ((isSysAdmin$ | async) === true) ||
       (
-        (usersProjects$ | async)?.length && 
+        (usersProjects$ | async)?.length &&
         (
-          ((isCurrentProjectAdminOrSysAdmin$ | async) === true) || 
+          ((isCurrentProjectAdminOrSysAdmin$ | async) === true) ||
           ((isCurrentProjectMember$ | async) === true) ||
           (isProjectMember === true)
         )
-      ); 
+      );
       else notProjectMember
     ">
-    <app-common-input [control]="form.controls.label" label="Collection label" />
+    <app-common-input [control]="form.controls.label" label="Collection labels" />
 
     <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
 

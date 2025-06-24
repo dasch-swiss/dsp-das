@@ -122,11 +122,11 @@ describe('Check project admin existing resource functionality', () => {
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
-    // cy.get('[data-cy=edit-label-button]').should('be.visible').click();
+    // cy.get('[data-cy=edit-labels-button]').should('be.visible').click();
     // const newLabel = faker.lorem.word();
     // cy.get('[data-cy=common-input-text]', { timeout: 500 }).should('be.visible').clear().type(newLabel);
-    // cy.get('[data-cy=edit-resource-label-submit]').click();
-    // cy.get('[data-cy=resource-header-label').contains(newLabel);
+    // cy.get('[data-cy=edit-resource-labels-submit]').click();
+    // cy.get('[data-cy=resource-header-labels').contains(newLabel);
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy="more-vert-image-button"]').click({ force: true });

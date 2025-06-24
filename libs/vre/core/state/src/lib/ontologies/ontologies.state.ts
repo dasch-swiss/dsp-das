@@ -240,7 +240,7 @@ export class OntologiesState {
           }
 
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
-          // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'label');
+          // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'labels');
           projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
 
           if (ontology.id === ctx.getState().currentOntology?.id) {
@@ -396,7 +396,7 @@ export class OntologiesState {
       }
     });
 
-    // sort properties by label
+    // sort properties by labels
     // --> TODO: add sort functionallity to the gui
     return this._sortingService.keySortByAlphabetical(listOfProperties, 'label');
   }

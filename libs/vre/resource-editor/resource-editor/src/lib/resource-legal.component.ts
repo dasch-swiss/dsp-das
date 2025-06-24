@@ -45,7 +45,7 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
       </span></ng-template
     >
   `,
-  styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
+  styles: ['.labels { display: inline-block; width: 120px; font-weight: bold}'],
 })
 export class ResourceLegalComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

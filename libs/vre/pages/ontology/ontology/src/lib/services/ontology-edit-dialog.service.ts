@@ -12,12 +12,9 @@ import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Observable } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../forms/property-form/edit-property-form-dialog.component';
-import { PropertyEditData } from '../forms/property-form/property-form.type';
+import { CreatePropertyData, PropertyEditData, UpdatePropertyData } from '../forms/property-form/property-form.type';
 import { EditResourceClassDialogComponent } from '../forms/resource-class-form/edit-resource-class-dialog.component';
-import {
-  CreateResourceClassData,
-  UpdateResourceClassData,
-} from '../forms/resource-class-form/resource-class-form.type';
+import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 import { OntologyEditService } from './ontology-edit.service';
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +26,7 @@ export class OntologyEditDialogService {
   ) {}
 
   openCreateNewProperty(propType: DefaultProperty, assignToClass?: ClassDefinition) {
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, PropertyEditData>(
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, CreatePropertyData>(
       EditPropertyFormDialogComponent,
       {
         data: { propType },
@@ -40,7 +37,7 @@ export class OntologyEditDialogService {
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is PropertyEditData => !!result)
+        filter((result): result is CreatePropertyData => !!result)
       )
       .subscribe(propertyData => {
         this._oes.createResourceProperty(propertyData, assignToClass);
@@ -58,7 +55,7 @@ export class OntologyEditDialogService {
       guiAttribute: propDef.guiAttributes[0],
       objectType: propDef.objectType,
     };
-    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData, PropertyEditData>(
+    const dialogRef = this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData, UpdatePropertyData>(
       EditPropertyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(propertyData)
     );
@@ -67,7 +64,7 @@ export class OntologyEditDialogService {
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is PropertyEditData => !!result),
+        filter((result): result is UpdatePropertyData => !!result),
         switchMap(pData => {
           return this._oes.updateProperty$(propDef.id, pData).pipe(take(1));
         })
@@ -99,14 +96,14 @@ export class OntologyEditDialogService {
 
   openCreateResourceClass(defaultClass: DefaultClass): void {
     this._dialog
-      .open<EditResourceClassDialogComponent, DefaultClass, CreateResourceClassData>(
+      .open<EditResourceClassDialogComponent, DefaultClass, ResourceClassFormData>(
         EditResourceClassDialogComponent,
         DspDialogConfig.dialogDrawerConfig(defaultClass)
       )
       .afterClosed()
       .pipe(
         take(1),
-        filter((result): result is CreateResourceClassData => !!result),
+        filter((result): result is ResourceClassFormData => !!result),
         switchMap(resourceClassData => {
           return this._oes.createResourceClass$(resourceClassData).pipe(take(1));
         })

@@ -339,7 +339,7 @@ describe('FulltextSearchComponent', () => {
 
       expect(projButtonNe).toBeDefined();
 
-      const projBtnLabelDe = projButtonDe.query(By.css('button > p.label'));
+      const projBtnLabelDe = projButtonDe.query(By.css('button > p.labels'));
       const projBtnLabelNe = projBtnLabelDe.nativeElement;
 
       expect(projBtnLabelNe.innerHTML).toEqual('All projects');
@@ -357,7 +357,7 @@ describe('FulltextSearchComponent', () => {
       const projButtonDe = fulltextSearchComponentDe.query(By.css('button.app-project-filter-button'));
       const projButtonNe = projButtonDe.nativeElement;
 
-      const projBtnLabelDe = projButtonDe.query(By.css('button > p.label'));
+      const projBtnLabelDe = projButtonDe.query(By.css('button > p.labels'));
       const projBtnLabelNe = projBtnLabelDe.nativeElement;
 
       projButtonNe.click();
