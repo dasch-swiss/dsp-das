@@ -8,7 +8,6 @@ import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/r
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-resource-toolbar',
@@ -110,7 +109,7 @@ import { Observable } from 'rxjs';
 export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
 
-  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   get userCanDelete() {
     return !this._resourceFetcherService.resourceVersion && ResourceUtil.userCanDelete(this.resource);

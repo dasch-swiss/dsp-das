@@ -11,7 +11,6 @@ import {
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DeleteResourceDialogComponent } from './delete-resource-dialog.component';
 
@@ -126,7 +125,7 @@ export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) parentResourceId!: string;
 
-  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   constructor(
     protected notification: NotificationService,
