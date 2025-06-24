@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
 import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
-import { OntologyEditDialogService } from '../services/ontology-edit-dialog.service';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -58,7 +58,7 @@ export class OntologyEditorHeaderComponent {
 
   constructor(
     private _dialog: MatDialog,
-    private _oeds: OntologyEditDialogService,
+    private _dialogService: DialogService,
     private _oes: OntologyEditService,
     private _router: Router,
     private _store: Store
@@ -77,10 +77,15 @@ export class OntologyEditorHeaderComponent {
   }
 
   deleteOntology(ontologyId: string) {
-    this._oeds
-      .openDeleteOntology$(ontologyId)
-      .pipe(take(1))
-      .subscribe(delResponse => {
+    this._dialogService
+      .afterConfirmation('Do you want to delete this data model ?')
+      .pipe(
+        switchMap(_del => {
+          return this._oes.deleteOntology$(ontologyId);
+        }),
+        take(1)
+      )
+      .subscribe(_delResponse => {
         this.navigateToDataModels();
       });
   }

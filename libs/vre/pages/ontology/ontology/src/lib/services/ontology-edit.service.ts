@@ -334,22 +334,22 @@ export class OntologyEditService {
   /**
    * Yes, there is not a route to update a whole property at once ...
    */
-  updateProperty$(propertyId: string, propertyData: UpdatePropertyData) {
+  updateProperty$(propertyData: UpdatePropertyData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
 
     if (propertyData.labels !== undefined) {
-      updates.push(this._updatePropertyLabels$(propertyId, propertyData.labels));
+      updates.push(this._updatePropertyLabels$(propertyData.id, propertyData.labels));
     }
 
     if (propertyData.comment !== undefined) {
-      updates.push(this._updatePropertyComments$(propertyId, propertyData.comment));
+      updates.push(this._updatePropertyComments$(propertyData.id, propertyData.comment));
     }
 
     this._isTransacting.next(true);
     return concat(...updates).pipe(
       last(),
       tap(() => {
-        this._afterOntologyItemChange(propertyId);
+        this._afterOntologyItemChange(propertyData.id);
       })
     );
   }
@@ -418,7 +418,7 @@ export class OntologyEditService {
     );
   }
 
-  deleteProperty(id: string) {
+  deleteProperty$(id: string) {
     this._isTransacting.next(true);
     return this._dspApiConnection.v2.onto
       .deleteResourceProperty({

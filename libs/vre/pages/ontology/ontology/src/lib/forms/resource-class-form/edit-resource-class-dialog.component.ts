@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultClass, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { take } from 'rxjs/operators';
+import { OntologyEditService } from '../../services/ontology-edit.service';
 import { UpdateResourceClassData, ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
@@ -42,7 +44,8 @@ export class EditResourceClassDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: UpdateResourceClassData | DefaultClass,
     public dialogRef: MatDialogRef<EditResourceClassDialogComponent, ResourceClassFormData | UpdateResourceClassData>,
-    private _ontologyService: OntologyService
+    private _ontologyService: OntologyService,
+    private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
@@ -70,23 +73,36 @@ export class EditResourceClassDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    const labels = this.form?.controls.labels.dirty
+    this.loading = true;
+    const labels = this.form?.controls.labels.touched
       ? (this.form?.controls.labels.value as StringLiteralV2[])
-      : undefined; // by leaving the labels undefined, they are not updated unnecessarily by the ontology service
-    const comments = this.form?.controls.comments.dirty
+      : undefined; // by leaving the labels undefined if not touched, they are not updated unnecessarily by the ontology service
+    const comments = this.form?.controls.comments.touched
       ? (this.form?.controls.comments.value as StringLiteralV2[])
-      : undefined; // by leaving the comments undefined, they are not updated unnecessarily by the ontology service
+      : undefined; // by leaving the comments undefined if not touched, they are not updated unnecessarily by the ontology service
 
-    const resourceClassData =
-      'id' in this.data
-        ? ({ id: this.data.id, labels, comments } as UpdateResourceClassData)
-        : ({
-            name: this.form?.controls.name.value,
-            subclassOf: this.data.iri,
-            labels,
-            comments,
-          } as unknown as ResourceClassFormData);
-
-    this.dialogRef.close(resourceClassData);
+    if (this.isUpdateResourceClassData(this.data)) {
+      const upd = { id: this.data.id, labels, comments } as UpdateResourceClassData;
+      this._oes
+        .updateResourceClass$(upd)
+        .pipe(take(1))
+        .subscribe(res => {
+          this.loading = false;
+          this.dialogRef.close();
+        });
+    } else {
+      const createData = {
+        name: this.form?.controls.name.value,
+        labels,
+        comments,
+      } as unknown as ResourceClassFormData;
+      this._oes
+        .createResourceClass$(createData)
+        .pipe(take(1))
+        .subscribe(res => {
+          this.loading = false;
+          this.dialogRef.close();
+        });
+    }
   }
 }

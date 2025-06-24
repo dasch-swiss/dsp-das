@@ -57,7 +57,7 @@ export class OntologyService {
           // otherwise we get the necessary property info from the objectType
           if (superProp === Constants.HasLinkTo || superProp === Constants.IsPartOf) {
             propType = defaultProperty.elements.find(
-              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === superProp
+              (i: DefaultProperty) => i.guiElement === property.guiElement && i.subPropOf === superProp
             );
           } else if (property.objectType === Constants.IntValue && superProp === Constants.SeqNum) {
             // if the property is of type number, but sub property of SeqNum,
@@ -69,7 +69,7 @@ export class OntologyService {
             // if the property is of type text value, we have to check the gui element
             // to get the correct default prop params
             propType = defaultProperty.elements.find(
-              (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
+              (i: DefaultProperty) => i.guiElement === property.guiElement && i.objectType === property.objectType
             );
           } else {
             // in all other cases the gui-element resp. the subProp is not relevant
@@ -112,7 +112,7 @@ export class OntologyService {
           // otherwise we get the necessary property info from the objectType
           if (subProp === Constants.HasLinkTo || subProp === Constants.IsPartOf) {
             propType = defaultProperty.elements.find(
-              (i: DefaultProperty) => i.guiEle === property.guiElement && i.subPropOf === subProp
+              (i: DefaultProperty) => i.guiElement === property.guiElement && i.subPropOf === subProp
             );
           } else if (property.objectType === Constants.IntValue && subProp === Constants.SeqNum) {
             // if the property is of type number, but sub property of SeqNum,
@@ -124,7 +124,7 @@ export class OntologyService {
             // if the property is of type text value, we have to check the gui element
             // to get the correct default prop params
             propType = defaultProperty.elements.find(
-              (i: DefaultProperty) => i.guiEle === property.guiElement && i.objectType === property.objectType
+              (i: DefaultProperty) => i.guiElement === property.guiElement && i.objectType === property.objectType
             );
           } else {
             // in all other cases the gui-element resp. the subProp is not relevant

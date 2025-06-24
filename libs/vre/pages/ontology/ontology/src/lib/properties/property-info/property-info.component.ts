@@ -1,13 +1,17 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
+import { PropertyEditData } from '../../forms/property-form/property-form.type';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 export interface ShortInfo {
@@ -79,9 +83,10 @@ export class PropertyInfoComponent implements OnInit {
   }
 
   constructor(
+    private _dialog: MatDialog,
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
-    public oeds: OntologyEditDialogService,
+    private _dialogService: DialogService,
     private _projectService: ProjectService,
     private _store: Store
   ) {
@@ -147,6 +152,30 @@ export class PropertyInfoComponent implements OnInit {
       this.propAttribute = `<a href="${listUrl}">${list?.labels[0].value}</a>`;
       this.propAttributeComment = list?.comments.length ? list.comments[0].value : '';
     }
+  }
+
+  openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
+    const propertyData: PropertyEditData = {
+      id: propDef.id,
+      propType,
+      name: propDef.id?.split('#').pop() || '',
+      label: propDef.labels,
+      comment: propDef.comments,
+      guiElement: propDef.guiElement || propType.guiElement,
+      guiAttribute: propDef.guiAttributes[0],
+      objectType: propDef.objectType,
+    };
+    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(
+      EditPropertyFormDialogComponent,
+      DspDialogConfig.dialogDrawerConfig(propertyData)
+    );
+  }
+
+  openDeleteProperty(id: string) {
+    this._dialogService
+      .afterConfirmation('Do you want to delete this resource class ?')
+      .pipe(switchMap(_del => this._oes.deleteProperty$(id)))
+      .subscribe();
   }
 
   trackByFn = (index: number, item: ShortInfo) => item.id;

@@ -11,7 +11,6 @@ import {
   UpdateResourceClassComment,
   UpdateResourceClassLabel,
   UpdateResourcePropertyComment,
-  UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { UpdateEntityCommentOrLabel } from '@dasch-swiss/dsp-js/src/models/v2/ontologies/update/update-entity-comment-or-label';
@@ -56,7 +55,7 @@ export class MakeOntologyFor {
     c.name = d.name;
     c.label = d.labels;
     c.comment = d.comment;
-    c.guiElement = d.propType.guiEle;
+    c.guiElement = d.propType.guiElement;
     c.subPropertyOf = [d.propType.subPropOf];
 
     if (d.guiAttribute) {
@@ -72,7 +71,7 @@ export class MakeOntologyFor {
   }
 
   private static _guiAttrFor(attr: string, p: DefaultProperty): string[] | undefined {
-    switch (p.guiEle) {
+    switch (p.guiElement) {
       case Constants.GuiColorPicker:
         return [`ncolors=${attr}`];
       case Constants.GuiList:

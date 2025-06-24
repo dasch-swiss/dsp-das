@@ -1,21 +1,24 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ApiResponseError,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import {
   DefaultResourceClasses,
   LocalizationService,
   OntologyService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { map, switchMap, take } from 'rxjs/operators';
+import { EditResourceClassDialogComponent } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
+import { UpdateResourceClassData } from '../../forms/resource-class-form/resource-class-form.type';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -55,8 +58,9 @@ export class ResourceClassInfoComponent implements OnChanges {
   trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
 
   constructor(
+    private _dialog: MatDialog,
     private _localizationService: LocalizationService,
-    private _oeds: OntologyEditDialogService,
+    private _dialogService: DialogService,
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
@@ -101,11 +105,17 @@ export class ResourceClassInfoComponent implements OnChanges {
   }
 
   editResourceClassInfo() {
-    this._oeds.openEditResourceClass(this.resourceClass);
+    this._dialog.open<EditResourceClassDialogComponent, UpdateResourceClassData>(
+      EditResourceClassDialogComponent,
+      DspDialogConfig.dialogDrawerConfig(this.resourceClass as UpdateResourceClassData)
+    );
   }
 
   deleteResourceClass() {
-    this._oeds.openDeleteResourceClass(this.resourceClass.id);
+    this._dialogService
+      .afterConfirmation('Do you want to delete this resource class ?')
+      .pipe(switchMap(_del => this._oes.deleteResourceClass$(this.resourceClass.id)))
+      .subscribe();
   }
 
   onPropertyDropped(event: CdkDragDrop<string[]>, properties: PropToDisplay[]) {

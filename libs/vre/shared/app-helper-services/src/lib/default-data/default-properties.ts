@@ -34,7 +34,7 @@ export interface DefaultProperty {
   description: string;
   subPropOf: string;
   objectType: string;
-  guiEle: string;
+  guiElement: string;
   group: string;
 }
 
@@ -45,7 +45,7 @@ export class DefaultProperties {
     description: 'This property type is not supported in the ontology editor',
     subPropOf: '',
     objectType: '',
-    guiEle: '',
+    guiElement: '',
     group: 'Warning',
   };
 
@@ -59,7 +59,7 @@ export class DefaultProperties {
           description: 'Short text such as title or name',
           subPropOf: Constants.HasValue,
           objectType: Constants.TextValue,
-          guiEle: Constants.GuiSimpleText, // better element would be: 'Input',
+          guiElement: Constants.GuiSimpleText, // better element would be: 'Input',
           group: 'Text', // redundant information, but otherwise we don't get the main group name after selecting type
         },
         {
@@ -68,7 +68,7 @@ export class DefaultProperties {
           description: 'Long text such as description; could have line breaks',
           subPropOf: Constants.HasValue,
           objectType: Constants.TextValue,
-          guiEle: Constants.GuiTextarea,
+          guiElement: Constants.GuiTextarea,
           group: 'Text',
         },
         {
@@ -77,7 +77,7 @@ export class DefaultProperties {
           description: 'A rich text editor with formatting options',
           subPropOf: Constants.HasValue,
           objectType: Constants.TextValue,
-          guiEle: Constants.GuiRichText,
+          guiElement: Constants.GuiRichText,
           group: 'Text',
         },
       ],
@@ -91,7 +91,7 @@ export class DefaultProperties {
           description: 'Dropdown menu with values from predefined list',
           subPropOf: Constants.HasValue,
           objectType: Constants.ListValue,
-          guiEle: Constants.GuiPulldown, // better element would be: 'Pulldown' or 'Select'
+          guiElement: Constants.GuiPulldown, // better element would be: 'Pulldown' or 'Select'
           group: 'List',
         },
       ],
@@ -105,7 +105,7 @@ export class DefaultProperties {
           description: 'Yes or no, 1 or 0, true or false',
           subPropOf: Constants.HasValue,
           objectType: Constants.BooleanValue,
-          guiEle: Constants.GuiCheckbox, // should be 'Toggle' but it's not supported in DSP-Tangoh,
+          guiElement: Constants.GuiCheckbox, // should be 'Toggle' but it's not supported in DSP-Tangoh,
           group: 'Boolean',
         },
       ],
@@ -119,7 +119,7 @@ export class DefaultProperties {
           description: 'A date field with day, month and year',
           subPropOf: Constants.HasValue,
           objectType: Constants.DateValue,
-          guiEle: Constants.GuiDatePicker,
+          guiElement: Constants.GuiDatePicker,
           group: 'Date / Time',
         },
         {
@@ -128,7 +128,7 @@ export class DefaultProperties {
           description: 'A single timestamp (date and time) on a timeline',
           subPropOf: Constants.HasValue,
           objectType: Constants.TimeValue,
-          guiEle: Constants.GuiTimeStamp,
+          guiElement: Constants.GuiTimeStamp,
           group: 'Date / Time',
         },
         {
@@ -137,7 +137,7 @@ export class DefaultProperties {
           description: 'A time sequence with start and end point on a timeline',
           subPropOf: Constants.HasValue,
           objectType: Constants.IntervalValue,
-          guiEle: Constants.GuiInterval,
+          guiElement: Constants.GuiInterval,
           group: 'Date / Time',
         },
       ],
@@ -151,7 +151,7 @@ export class DefaultProperties {
           description: 'Integer value',
           subPropOf: Constants.HasValue,
           objectType: Constants.IntValue,
-          guiEle: Constants.GuiSpinbox, // 'Number',
+          guiElement: Constants.GuiSpinbox, // 'Number',
           group: 'Number',
         },
         {
@@ -160,7 +160,7 @@ export class DefaultProperties {
           description: 'Decimal value',
           subPropOf: Constants.HasValue,
           objectType: Constants.DecimalValue,
-          guiEle: Constants.GuiSpinbox, // 'Number',
+          guiElement: Constants.GuiSpinbox, // 'Number',
           group: 'Number',
         },
         {
@@ -169,7 +169,7 @@ export class DefaultProperties {
           description: 'The page number is needed for page classes in case of part of properties',
           subPropOf: Constants.SeqNum,
           objectType: Constants.IntValue,
-          guiEle: Constants.GuiSpinbox, // 'Number',
+          guiElement: Constants.GuiSpinbox, // 'Number',
           group: 'Number',
         },
       ],
@@ -183,7 +183,7 @@ export class DefaultProperties {
           description: 'Refers to a resource class',
           subPropOf: Constants.HasLinkTo,
           objectType: Constants.LinkValue,
-          guiEle: Constants.GuiSearchbox, // 'Autocomplete',
+          guiElement: Constants.GuiSearchbox, // 'Autocomplete',
           group: 'Link / Relation',
         },
         {
@@ -192,7 +192,7 @@ export class DefaultProperties {
           description: 'Is part of a resource class',
           subPropOf: Constants.IsPartOf,
           objectType: Constants.LinkValue,
-          guiEle: Constants.GuiSearchbox, // 'Autocomplete',
+          guiElement: Constants.GuiSearchbox, // 'Autocomplete',
           group: 'Link / Relation',
         },
         {
@@ -201,7 +201,7 @@ export class DefaultProperties {
           description: 'Link to an external website',
           subPropOf: Constants.HasValue,
           objectType: Constants.UriValue,
-          guiEle: Constants.GuiSimpleText,
+          guiElement: Constants.GuiSimpleText,
           group: 'Link / Relation',
         },
       ],
@@ -215,7 +215,7 @@ export class DefaultProperties {
           description: 'Geographical location',
           subPropOf: Constants.HasValue,
           objectType: Constants.GeonameValue,
-          guiEle: Constants.GuiGeonames,
+          guiElement: Constants.GuiGeonames,
           group: 'Location',
         },
       ],
@@ -229,7 +229,7 @@ export class DefaultProperties {
           description: 'A simple color value',
           subPropOf: Constants.HasValue,
           objectType: Constants.ColorValue,
-          guiEle: Constants.GuiColorPicker,
+          guiElement: Constants.GuiColorPicker,
           group: 'Shape',
         },
       ],

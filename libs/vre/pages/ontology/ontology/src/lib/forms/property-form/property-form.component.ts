@@ -20,7 +20,7 @@ import { PropertyForm, PropertyEditData } from './property-form.type';
         </mat-select-trigger>
 
         <mat-optgroup *ngFor="let type of filteredProperties" [label]="type.group">
-          <mat-option *ngFor="let ele of type.elements" [value]="ele.guiEle">
+          <mat-option *ngFor="let ele of type.elements" [value]="ele.guiElement">
             <mat-icon>{{ ele.icon }}</mat-icon>
             {{ ele.label }}
           </mat-option>
@@ -92,7 +92,7 @@ export class PropertyFormComponent implements OnInit {
     this.form = this._fb.group({
       guiElement: this._fb.control(
         {
-          value: this.propertyData.propType.guiEle!,
+          value: this.propertyData.propType.guiElement!,
           disabled: true,
         },
         { nonNullable: true }

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, PropToAdd } from '@dasch-swiss/vre/core/state';
 import {
@@ -11,7 +12,8 @@ import {
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
+import { PropertyEditData } from '../../forms/property-form/property-form.type';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -122,7 +124,7 @@ export class AddPropertyMenuComponent {
 
   constructor(
     private _ontoService: OntologyService,
-    private _oeds: OntologyEditDialogService,
+    private _dialog: MatDialog,
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
@@ -140,6 +142,14 @@ export class AddPropertyMenuComponent {
   }
 
   addNewProperty(propType: DefaultProperty) {
-    this._oeds.openCreateNewProperty(propType, this.resourceClass);
+    const createData: PropertyEditData = {
+      propType,
+      guiElement: propType.guiElement,
+      objectType: propType.objectType,
+      assignToClass: this.resourceClass,
+    };
+    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(EditPropertyFormDialogComponent, {
+      data: createData,
+    });
   }
 }

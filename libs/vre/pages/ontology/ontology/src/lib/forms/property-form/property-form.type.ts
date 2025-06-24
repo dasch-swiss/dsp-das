@@ -1,4 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
+import { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { MultiLanguageForm } from '@dasch-swiss/vre/ui/string-literal';
@@ -13,7 +14,7 @@ export type PropertyForm = FormGroup<{
 }>;
 
 export interface PropertyEditData {
-  id: string | null;
+  id?: string;
   propType: DefaultProperty;
   name?: string;
   label?: StringLiteralV2[];
@@ -21,6 +22,12 @@ export interface PropertyEditData {
   guiElement: string;
   guiAttribute?: string;
   objectType?: string;
+  assignToClass?: ClassDefinition; // class ID to which the property should be assigned
+}
+
+export interface CreatePropertyDialogData {
+  propType: DefaultProperty;
+  assignToClass?: string; // class ID to which the property should be assigned
 }
 
 export interface UpdatePropertyData {

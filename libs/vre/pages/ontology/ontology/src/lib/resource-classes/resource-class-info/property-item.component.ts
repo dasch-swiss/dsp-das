@@ -9,13 +9,16 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Cardinality, ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { OntologyEditDialogService } from '../../services/ontology-edit-dialog.service';
+import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
+import { PropertyEditData } from '../../forms/property-form/property-form.type';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -158,7 +161,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _cd: ChangeDetectorRef,
     private _oes: OntologyEditService,
-    private _oeds: OntologyEditDialogService,
+    private _dialog: MatDialog,
     private _ontoService: OntologyService,
     private _store: Store
   ) {}
@@ -204,7 +207,20 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openEditProperty() {
-    this._oeds.openEditProperty(this.prop.propDef, this.propType);
+    const propertyData: PropertyEditData = {
+      id: this.prop.propDef.id,
+      propType: this.propType,
+      name: this.prop.propDef.id?.split('#').pop() || '',
+      label: this.prop.propDef.labels,
+      comment: this.prop.propDef.comments,
+      guiElement: this.prop.propDef.guiElement || this.propType.guiElement,
+      guiAttribute: this.prop.propDef.guiAttributes[0],
+      objectType: this.prop.propDef.objectType,
+    };
+    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(
+      EditPropertyFormDialogComponent,
+      DspDialogConfig.dialogDrawerConfig(propertyData)
+    );
   }
 
   ngOnDestroy() {

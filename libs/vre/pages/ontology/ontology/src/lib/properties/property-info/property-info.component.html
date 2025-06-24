@@ -70,11 +70,7 @@
       <span
         matTooltipPosition="above"
         [matTooltip]="propDef.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'">
-        <button
-          mat-button
-          [disabled]="!propDef.isEditable"
-          class="edit"
-          (click)="oeds.openEditProperty(propDef, propType)">
+        <button mat-button [disabled]="!propDef.isEditable" class="edit" (click)="openEditProperty(propDef, propType)">
           <mat-icon>edit</mat-icon>
         </button>
       </span>
@@ -85,7 +81,7 @@
           mat-button
           [disabled]="(canBeDeleted$ | async) !== true"
           class="delete"
-          (click)="oeds.openDeleteProperty(propDef.id)">
+          (click)="openDeleteProperty(propDef.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </span>
