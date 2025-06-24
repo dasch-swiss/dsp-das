@@ -2,6 +2,7 @@ import { Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { RegionService, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   EditResourceLabelDialogComponent,
@@ -9,6 +10,8 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DeleteResourceDialogComponent } from './delete-resource-dialog.component';
 
@@ -96,7 +99,7 @@ import { DeleteResourceDialogComponent } from './delete-resource-dialog.componen
         {{ 'resourceEditor.propertiesDisplay.annotationToolbar.delete' | translate }}
       </button>
       <button
-        *ngIf="resourceFetcher.userCanDelete$ | async"
+        *ngIf="isAdmin$ | async"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
         matTooltip="Erase resource forever. This cannot be undone."
@@ -123,12 +126,15 @@ export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) parentResourceId!: string;
 
+  isAdmin$: Observable<boolean | undefined> = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+
   constructor(
     protected notification: NotificationService,
     private _regionService: RegionService,
     private _dialog: MatDialog,
     private _resourceService: ResourceService,
     public resourceFetcher: ResourceFetcherService,
+    private _store: Store,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
