@@ -8,6 +8,7 @@ import { ListsStateModel } from './lists.state-model';
 
 const defaults: ListsStateModel = {
   isLoading: false,
+  isLoaded: false, // indicates if the lists in a project have been loaded
   listsInProject: [], // lists in a project
 };
 
