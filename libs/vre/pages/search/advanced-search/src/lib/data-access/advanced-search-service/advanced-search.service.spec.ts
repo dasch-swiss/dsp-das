@@ -1,39 +1,108 @@
-describe('test to fix', () => {
-  it('test to fix', () => {
-    expect(true).toBeTruthy();
-  });
-});
-/*
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Inject, Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
 import {
   Constants,
-  KnoraApiConfig,
   KnoraApiConnection,
+  ListNodeV2,
   ReadOntology,
   ReadResource,
   ResourceClassAndPropertyDefinitions,
   ResourceClassDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { of } from 'rxjs';
-import { AdvancedSearchService } from './advanced-search.service';
+import { OntologyV2ApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { Observable, of } from 'rxjs';
+import { AdvancedSearchStoreService } from '../advanced-search-store/advanced-search-store.service';
+import { MockGravsearchService } from '../advanced-search-store/advanced-search-store.service.spec';
+import { GravsearchService } from '../gravsearch-service/gravsearch.service';
+import { AdvancedSearchService, ApiData, PropertyData } from './advanced-search.service';
+
+export class MockKnoraApiConnection {}
+
+@Injectable()
+export class MockAdvancedSearchService {
+  constructor(
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _ontologyV2Api: OntologyV2ApiService
+  ) {}
+
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  getList(listIri: string): Observable<ListNodeV2> {
+    return of(new ListNodeV2());
+  }
+
+  resourceClassesList(ontologyIri: string, restrictToClass?: string): Observable<ApiData[]> {
+    return of([
+      {
+        iri: 'testIri',
+        label: 'testLabel',
+      },
+    ]);
+  }
+
+  filteredPropertiesList(iri: string): Observable<PropertyData[]> {
+    return of([
+      {
+        iri: 'filteredPropIri',
+        label: 'test',
+        objectType: '',
+        isLinkedResourceProperty: false,
+      },
+    ]);
+  }
+
+  getResourcesListCount(searchTerm: string, objectType: string): Observable<number> {
+    return of(1);
+  }
+
+  getResourcesList(searchTerm: string, objectType: string, offset?: number): Observable<ApiData[]> {
+    return of([
+      {
+        iri: 'testIri',
+        label: 'testLabel',
+      },
+    ]);
+  }
+
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+}
 
 describe('AdvancedSearchService', () => {
   let service: AdvancedSearchService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         {
-          provide: DspApiConfigToken,
-          useValue: new KnoraApiConfig('http', '0.0.0.0', 3333),
+          provide: OntologyV2ApiService,
+          useValue: {
+            getMetadata: jest.fn().mockReturnValue(
+              of({
+                '@graph': [
+                  { id: 'ontology1', label: 'Ontology 1' },
+                  { id: 'ontology2', label: 'Ontology 2' },
+                ],
+              })
+            ),
+          },
         },
         {
           provide: DspApiConnectionToken,
-          useValue: new KnoraApiConnection(new KnoraApiConfig('http', '0.0.0.0', 3333)),
+          useValue: {},
         },
+        {
+          provide: AdvancedSearchService,
+          useClass: AdvancedSearchService,
+        },
+        {
+          provide: GravsearchService,
+          useClass: MockGravsearchService,
+        },
+        AdvancedSearchStoreService,
       ],
     });
     service = TestBed.inject(AdvancedSearchService);
@@ -44,43 +113,6 @@ describe('AdvancedSearchService', () => {
   });
 
   describe('ontologies', () => {
-    it('should return a list of all ontologies', done => {
-      const mockOntologiesResponse = {
-        ontologies: [
-          {
-            id: 'ontology1',
-            label: 'Ontology 1',
-            attachedToProject: 'project1',
-          },
-          {
-            id: 'ontology2',
-            label: 'Ontology 2',
-            attachedToProject: 'project2',
-          },
-        ],
-      };
-
-      // Mock the API call using a mock value
-      const mockDspApiConnection = {
-        v2: {
-          onto: {
-            getOntologiesMetadata: jest.fn().mockReturnValue(of(mockOntologiesResponse)),
-          },
-        },
-      };
-
-      // Use type assertion to bypass type checking for the mock connection
-      service['_dspApiConnection'] = mockDspApiConnection as unknown as KnoraApiConnection;
-
-      service.allOntologiesList().subscribe(ontologies => {
-        expect(ontologies).toEqual([
-          { iri: 'ontology1', label: 'Ontology 1' },
-          { iri: 'ontology2', label: 'Ontology 2' },
-        ]);
-        done();
-      });
-    });
-
     it('should return a list of ontologies limited to a project', done => {
       const mockOntologiesResponse = {
         ontologies: [
@@ -456,4 +488,3 @@ describe('AdvancedSearchService', () => {
     });
   });
 });
-*/
