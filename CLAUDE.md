@@ -116,9 +116,132 @@ Application handles various file types and representations:
 - IIIF integration for image viewing
 - Media segment annotations for time-based resources
 
+## DSP-JS Client Library (Most Crucial Dependency)
+
+**@dasch-swiss/dsp-js v10.8.0** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations.
+
+### Configuration and Setup
+
+**Core Configuration Services:**
+- `AppConfigService` creates `KnoraApiConfig` with environment-specific API settings
+- `DspApiConnectionToken` provides dependency injection for `KnoraApiConnection`
+- Configuration includes: `apiProtocol`, `apiHost`, `apiPort`, `apiPath`, `jsonWebToken`, `logErrors`
+
+**Dependency Injection Pattern:**
+```typescript
+constructor(
+  @Inject(DspApiConnectionToken)
+  private _dspApiConnection: KnoraApiConnection
+) {}
+```
+
+### Key DSP-JS Classes and Types
+
+**Core API Classes:**
+- `KnoraApiConnection` - Main API connection instance
+- `KnoraApiConfig` - Configuration class
+- `ApiResponseError` - Error handling
+
+**Resource Types:**
+- `ReadResource` - Main resource representation
+- `ReadLinkValue`, `ReadStillImageFileValue` - Value types
+- `ResourcePropertyDefinition`, `ResourceClassDefinition` - Schema definitions
+
+**Ontology Types:**
+- `ReadOntology`, `UpdateOntology` - Ontology operations
+- `PropertyDefinition` - Property schema definitions
+
+### Common API Patterns
+
+**Resource Operations:**
+```typescript
+// Get resource
+this._dspApiConnection.v2.res.getResource(resourceIri, resourceVersion)
+
+// Search operations
+this._dspApiConnection.v2.search.doSearchByLabel(searchValue, offset, options)
+```
+
+**Authentication:**
+```typescript
+// Login/logout
+this._dspApiConnection.v2.auth.login(identifierType, identifier, password)
+this._dspApiConnection.v2.auth.logout()
+```
+
+**Ontology Operations:**
+```typescript
+// Get ontology (with caching)
+this._dspApiConnection.v2.ontologyCache.getOntology(ontologyIri)
+this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri)
+```
+
+**Admin Operations:**
+```typescript
+// Project management
+this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(projectIri)
+this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, projectIri)
+```
+
+### Constants Usage
+
+DSP-JS `Constants` are extensively used throughout the codebase:
+- `Constants.KnoraApiV2` - API version constants
+- `Constants.TextValue`, `Constants.IntValue`, `Constants.LinkValue` - Value types
+- `Constants.HasLinkTo`, `Constants.IsPartOf` - Property types
+- `Constants.SystemProjectIRI` - System identifiers
+
+### Error Handling Patterns
+
+**Standard Error Handling:**
+```typescript
+.pipe(
+  catchError(error => {
+    if (error instanceof ApiResponseError && error.status === 400) {
+      return throwError(new UserFeedbackError('Custom message'));
+    }
+    return throwError(error);
+  })
+)
+```
+
+### State Management Integration
+
+DSP-JS is integrated with NGXS state management:
+- **ProjectsState** - Project data, members, groups
+- **OntologiesState** - Ontology loading with caching
+- **UserState** - Authentication and profile management  
+- **ResourceState** - Current resource data
+
+### Key Features
+
+**Caching Strategy:**
+- Ontology caching via `_dspApiConnection.v2.ontologyCache`
+- Resource caching in NGXS state
+- Cache invalidation and reload mechanisms
+
+**JWT Token Management:**
+- Automatic token injection from localStorage
+- Session management and token refresh
+- Authentication state tracking
+
+**Multi-language Support:**
+- `StringLiteral` type for internationalized content
+- Language-specific resource labels and descriptions
+
+**File Handling:**
+- Specialized support for images, videos, audio, PDFs
+- IIIF integration for image viewing
+- Media annotation capabilities
+
+### Development Commands for DSP-JS
+
+- `npm run yalc-add-lib` - Add local DSP-JS development version
+- Check `package.json` for current version: `@dasch-swiss/dsp-js: 10.8.0`
+
 ## Working with APIs
 
-- **DSP-API** backend integration via DSP-JS client library
+- **DSP-API** backend integration via DSP-JS client library (see detailed section above)
 - **OpenAPI** generated client in `libs/vre/3rd-party-services/open-api`
 - Authentication via JWT tokens managed by session services
 - Error handling centralized in core error-handler library
@@ -126,7 +249,7 @@ Application handles various file types and representations:
 ## External Dependencies
 
 Key external libraries:
-- **@dasch-swiss/dsp-js** - DSP API client library
+- **@dasch-swiss/dsp-js** - DSP API client library (see detailed section above)
 - **@angular/material** - UI components
 - **@ngxs/store** - State management
 - **openseadragon** - Image viewer
