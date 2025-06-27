@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { LoadUsersAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadUsersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
 @Component({
@@ -9,9 +9,10 @@ import { Store } from '@ngxs/store';
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
-  isLoading$ = this._store.select(UserSelectors.usersLoading);
   activeUsers$ = this._store.select(UserSelectors.activeUsers);
   inactiveUsers$ = this._store.select(UserSelectors.inactiveUsers);
+  isLoading$ = this._store.select(UserSelectors.usersLoading);
+  project$ = this._store.select(ProjectsSelectors.currentProject);
 
   constructor(
     private _store: Store,
