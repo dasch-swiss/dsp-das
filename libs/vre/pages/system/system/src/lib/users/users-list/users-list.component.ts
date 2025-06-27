@@ -26,6 +26,13 @@ import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { UserPermissionService } from '../user-permission.service';
 
+interface SortProperty {
+  key: keyof ReadUser;
+  label: string;
+}
+
+type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
@@ -46,7 +53,7 @@ export class UsersListComponent {
 
   @Input() isButtonEnabledToCreateNewUser = false;
   @Input() project: ReadProject;
-  @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+  @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
 
   // i18n plural mapping
   itemPluralMapping = {
@@ -64,7 +71,7 @@ export class UsersListComponent {
 
   projectUuid!: string;
 
-  sortProps: any = [
+  sortProps: SortProperty[] = [
     {
       key: 'familyName',
       label: this._ts.instant('pages.system.usersList.sortFamilyName'),
@@ -83,7 +90,7 @@ export class UsersListComponent {
     },
   ];
 
-  sortBy = localStorage.getItem('sortUsersBy') || 'username';
+  sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
 
   isProjectOrSystemAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
@@ -279,9 +286,9 @@ export class UsersListComponent {
     this._matDialog.open(ManageProjectMembershipDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
-  sortList(key: any) {
+  sortList(key: UserSortKey) {
     this.sortBy = key;
-    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy as any);
+    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy);
     localStorage.setItem('sortUsersBy', key);
   }
 
