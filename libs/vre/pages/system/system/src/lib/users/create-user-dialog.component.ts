@@ -36,10 +36,10 @@ export class CreateUserDialogComponent {
 
   constructor(
     private _actions$: Actions,
+    private _dialogRef: MatDialogRef<CreateUserDialogComponent>,
     private _notification: NotificationService,
     private _projectService: ProjectService,
     private _store: Store,
-    private _dialogRef: MatDialogRef<CreateUserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public projectUuId: string
   ) {
     this.isLoading$ = this._store.select(state => state.user.isLoading);

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -18,12 +18,20 @@ import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/us
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, from, merge, Observable } from 'rxjs';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { combineLatest, from, merge } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
+import { UserPermissionService } from '../user-permission.service';
+
+interface SortProperty {
+  key: keyof ReadUser;
+  label: string;
+}
+
+type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,11 +40,9 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
   styleUrls: ['./users-list.component.scss'],
 })
 export class UsersListComponent {
-  // list of users: status active or inactive (deleted)
-  @Input() status: boolean;
+  @Input({ required: true }) status!: boolean;
 
-  // list of users: depending on the parent
-  _list: ReadUser[];
+  _list!: ReadUser[];
   get list(): ReadUser[] {
     return this._list;
   }
@@ -45,14 +51,9 @@ export class UsersListComponent {
     this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }
 
-  // enable the button to create new user
-  @Input() createNew = false;
-
-  // proje0ct data
-  @Input() project: ReadProject;
-
-  // in case of modification
-  @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
+  @Input() isButtonEnabledToCreateNewUser = false;
+  @Input({ required: true }) project!: ReadProject;
+  @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
 
   // i18n plural mapping
   itemPluralMapping = {
@@ -68,12 +69,9 @@ export class UsersListComponent {
     },
   };
 
-  // project uuid; as identifier in project application state service
-  projectUuid: string;
+  projectUuid!: string;
 
-  //
-  // sort properties
-  sortProps: any = [
+  sortProps: SortProperty[] = [
     {
       key: 'familyName',
       label: this._ts.instant('pages.system.usersList.sortFamilyName'),
@@ -92,86 +90,40 @@ export class UsersListComponent {
     },
   ];
 
-  // ... and sort by 'username'
-  sortBy = localStorage.getItem('sortUsersBy') || 'username';
+  sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
 
-  disableMenu$: Observable<boolean> = combineLatest([
-    this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin),
-    this._store.select(UserSelectors.isSysAdmin),
-  ]).pipe(
-    map(([isCurrentProjectAdminOrSysAdmin, isSysAdmin]) => {
-      if (this.project && this.project.status === false) {
-        return true;
-      } else {
-        const isProjectAdmin = this.projectUuid ? isCurrentProjectAdminOrSysAdmin : false;
-        return !isProjectAdmin && !isSysAdmin;
-      }
-    })
+  isProjectOrSystemAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  project$ = this._store.select(ProjectsSelectors.currentProject);
+  username$ = this._store.select(UserSelectors.username);
+
+  disableMenu$ = combineLatest([this.isProjectOrSystemAdmin$, this.isSysAdmin$]).pipe(
+    map(
+      ([isProjectAdmin, isSysAdmin]) =>
+        this.project?.status === false || (!isProjectAdmin && !isSysAdmin && !!this.projectUuid)
+    )
   );
 
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.username) username$: Observable<string>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
-  @Select(UserSelectors.isLoading) isUsersLoading$: Observable<boolean>;
-
   constructor(
-    private _actions$: Actions,
-    private _dialog: DialogService,
-    private _matDialog: MatDialog,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _sortingService: SortingService,
-    private _store: Store,
-    private _ts: TranslateService,
-    private _userApiService: UserApiService
+    private readonly _actions$: Actions,
+    private readonly _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _sortingService: SortingService,
+    private readonly _store: Store,
+    private readonly _ts: TranslateService,
+    private readonly _userApiService: UserApiService,
+    public _ups: UserPermissionService
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe(params => {
-      this.projectUuid = params.get(RouteConstants.uuidParameter);
+      this.projectUuid = params.get(RouteConstants.uuidParameter) || '';
     });
   }
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
 
-  /**
-   * returns true, when the user is project admin;
-   * when the parameter permissions is not set,
-   * it returns the value for the logged-in user
-   *
-   *
-   * @param  [permissions] user's permissions
-   * @returns boolean
-   */
-  userIsProjectAdmin(permissions?: PermissionsData): boolean {
-    if (!this.project) {
-      return false;
-    }
-
-    return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
-  }
-
-  /**
-   * returns true, when the user is system admin
-   *
-   * @param permissions PermissionData from user profile
-   */
-  userIsSystemAdmin(permissions: PermissionsData): boolean {
-    let admin = false;
-    const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
-
-    for (const key of groupsPerProjectKeys) {
-      if (key === Constants.SystemProjectIRI) {
-        admin = permissions.groupsPerProject[key].indexOf(Constants.SystemAdminGroupIRI) > -1;
-      }
-    }
-
-    return admin;
-  }
-
-  /**
-   * update user's group memebership
-   */
   updateGroupsMembership(userIri: string, groups: string[]): void {
     if (!groups) {
       return;
@@ -209,13 +161,11 @@ export class UsersListComponent {
     });
   }
 
-  /**
-   * update user's admin-group membership
-   */
   updateProjectAdminMembership(id: string, permissions: PermissionsData): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
-    const userIsProjectAdmin = this.userIsProjectAdmin(permissions);
-    if (userIsProjectAdmin) {
+    if (!currentUser) return;
+
+    if (this._ups.isProjectAdmin(permissions)) {
       // true = user is already project admin --> remove from admin rights
       this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
         // if this user is not the logged-in user
@@ -234,7 +184,7 @@ export class UsersListComponent {
             .pipe(take(1))
             .subscribe(() => {
               const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup(
-                (currentUser as ReadUser).permissions.groupsPerProject
+                currentUser.permissions?.groupsPerProject || {}
               );
               if (isSysAdmin) {
                 this.refreshParent.emit();
@@ -289,9 +239,9 @@ export class UsersListComponent {
     });
   }
 
-  askToDeleteUser(username: string, id: string) {
+  askToDeactivateUser(username: string, id: string) {
     this._dialog.afterConfirmation(`Do you want to suspend user ${username}?`).subscribe(() => {
-      this.deleteUser(id);
+      this.deactivateUser(id);
     });
   }
 
@@ -324,15 +274,7 @@ export class UsersListComponent {
 
   openEditPasswordDialog(user: ReadUser) {
     this._matDialog
-      .open(
-        EditPasswordDialogComponent,
-        DspDialogConfig.dialogDrawerConfig(
-          {
-            user,
-          },
-          true
-        )
-      )
+      .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
       .afterClosed()
       .subscribe(response => {
         if (response === true) {
@@ -345,39 +287,29 @@ export class UsersListComponent {
     this._matDialog.open(ManageProjectMembershipDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
-  /**
-   * delete resp. deactivate user
-   *
-   * @param id user's IRI
-   */
-  deleteUser(id: string) {
-    this._userApiService
-      .delete(id)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
-  }
-
-  /**
-   * reactivate user
-   *
-   * @param id user's IRI
-   */
-  activateUser(id: string) {
-    this._userApiService
-      .updateStatus(id, true)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
-  }
-
-  sortList(key: any) {
+  sortList(key: UserSortKey) {
     this.sortBy = key;
-    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy as any);
+    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy);
     localStorage.setItem('sortUsersBy', key);
+  }
+
+  private deactivateUser(userIri: string) {
+    this._userApiService
+      .delete(userIri)
+      .pipe(take(1))
+      .subscribe(response => {
+        this._store.dispatch(new SetUserAction(response.user));
+        this.refreshParent.emit();
+      });
+  }
+
+  private activateUser(userIri: string) {
+    this._userApiService
+      .updateStatus(userIri, true)
+      .pipe(take(1))
+      .subscribe(response => {
+        this._store.dispatch(new SetUserAction(response.user));
+        this.refreshParent.emit();
+      });
   }
 }
