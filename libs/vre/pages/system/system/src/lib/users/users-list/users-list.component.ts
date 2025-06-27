@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -18,8 +18,8 @@ import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/us
 import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
-import { combineLatest, from, merge, Observable } from 'rxjs';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { combineLatest, from, merge } from 'rxjs';
 import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
@@ -40,9 +40,9 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   styleUrls: ['./users-list.component.scss'],
 })
 export class UsersListComponent {
-  @Input() status: boolean;
+  @Input({ required: true }) status!: boolean;
 
-  _list: ReadUser[];
+  _list!: ReadUser[];
   get list(): ReadUser[] {
     return this._list;
   }
@@ -52,7 +52,7 @@ export class UsersListComponent {
   }
 
   @Input() isButtonEnabledToCreateNewUser = false;
-  @Input() project: ReadProject;
+  @Input({ required: true }) project!: ReadProject;
   @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
 
   // i18n plural mapping
@@ -118,7 +118,7 @@ export class UsersListComponent {
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe(params => {
-      this.projectUuid = params.get(RouteConstants.uuidParameter);
+      this.projectUuid = params.get(RouteConstants.uuidParameter) || '';
     });
   }
 
@@ -163,6 +163,7 @@ export class UsersListComponent {
 
   updateProjectAdminMembership(id: string, permissions: PermissionsData): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
+    if (!currentUser) return;
 
     if (this._ups.isProjectAdmin(permissions)) {
       // true = user is already project admin --> remove from admin rights
@@ -183,7 +184,7 @@ export class UsersListComponent {
             .pipe(take(1))
             .subscribe(() => {
               const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup(
-                (currentUser as ReadUser).permissions.groupsPerProject
+                currentUser.permissions?.groupsPerProject || {}
               );
               if (isSysAdmin) {
                 this.refreshParent.emit();

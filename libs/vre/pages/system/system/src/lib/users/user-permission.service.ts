@@ -8,7 +8,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 })
 export class UserPermissionService {
   isProjectAdmin(permissions?: PermissionsData, project?: ReadProject): boolean {
-    if (!project || !permissions) {
+    if (!project || !permissions || !permissions.groupsPerProject) {
       return false;
     }
 
@@ -16,11 +16,15 @@ export class UserPermissionService {
   }
 
   isSystemAdmin(permissions: PermissionsData): boolean {
+    if (!permissions.groupsPerProject) {
+      return false;
+    }
+
     const groupsPerProjectKeys = Object.keys(permissions.groupsPerProject);
 
     return groupsPerProjectKeys.some(key => {
       if (key === Constants.SystemProjectIRI) {
-        return permissions.groupsPerProject[key].includes(Constants.SystemAdminGroupIRI);
+        return permissions.groupsPerProject?.[key]?.includes(Constants.SystemAdminGroupIRI) ?? false;
       }
       return false;
     });
