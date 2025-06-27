@@ -24,6 +24,7 @@ import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
+import { UserPermissionService } from '../user-permission.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,36 +85,29 @@ export class UsersListComponent {
 
   sortBy = localStorage.getItem('sortUsersBy') || 'username';
 
-  disableMenu$: Observable<boolean> = combineLatest([
-    this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin),
-    this._store.select(UserSelectors.isSysAdmin),
-  ]).pipe(
-    map(([isCurrentProjectAdminOrSysAdmin, isSysAdmin]) => {
-      if (this.project && this.project.status === false) {
-        return true;
-      } else {
-        const isProjectAdmin = this.projectUuid ? isCurrentProjectAdminOrSysAdmin : false;
-        return !isProjectAdmin && !isSysAdmin;
-      }
-    })
+  isProjectOrSystemAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  project$ = this._store.select(ProjectsSelectors.currentProject);
+  username$ = this._store.select(UserSelectors.username);
+
+  disableMenu$ = combineLatest([this.isProjectOrSystemAdmin$, this.isSysAdmin$]).pipe(
+    map(
+      ([isProjectAdmin, isSysAdmin]) =>
+        this.project?.status === false || (!isProjectAdmin && !isSysAdmin && !!this.projectUuid)
+    )
   );
 
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  username$ = this._store.select(UserSelectors.username);
-  isCurrentProjectAdminOrSysAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-  project$ = this._store.select(ProjectsSelectors.currentProject);
-  isUsersLoading$ = this._store.select(UserSelectors.isLoading);
-
   constructor(
-    private _actions$: Actions,
-    private _dialog: DialogService,
-    private _matDialog: MatDialog,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _sortingService: SortingService,
-    private _store: Store,
-    private _ts: TranslateService,
-    private _userApiService: UserApiService
+    private readonly _actions$: Actions,
+    private readonly _dialog: DialogService,
+    private readonly _matDialog: MatDialog,
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _sortingService: SortingService,
+    private readonly _store: Store,
+    private readonly _ts: TranslateService,
+    private readonly _userApiService: UserApiService,
+    public _ups: UserPermissionService
   ) {
     // get the uuid of the current project
     this._route.parent?.parent?.paramMap.subscribe(params => {
@@ -122,29 +116,6 @@ export class UsersListComponent {
   }
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
-
-  /**
-   * Returns true if the user is project admin.
-   * If the parameter permissions is not set, it returns the value for the logged-in user
-   */
-  userIsProjectAdmin(permissions?: PermissionsData): boolean {
-    if (!this.project) return false;
-
-    return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
-  }
-
-  userIsSystemAdmin(permissions: PermissionsData): boolean {
-    let admin = false;
-    const groupsPerProjectKeys: string[] = Object.keys(permissions.groupsPerProject);
-
-    for (const key of groupsPerProjectKeys) {
-      if (key === Constants.SystemProjectIRI) {
-        admin = permissions.groupsPerProject[key].indexOf(Constants.SystemAdminGroupIRI) > -1;
-      }
-    }
-
-    return admin;
-  }
 
   updateGroupsMembership(userIri: string, groups: string[]): void {
     if (!groups) {
@@ -185,8 +156,8 @@ export class UsersListComponent {
 
   updateProjectAdminMembership(id: string, permissions: PermissionsData): void {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
-    const userIsProjectAdmin = this.userIsProjectAdmin(permissions);
-    if (userIsProjectAdmin) {
+
+    if (this._ups.isProjectAdmin(permissions)) {
       // true = user is already project admin --> remove from admin rights
       this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
         // if this user is not the logged-in user
