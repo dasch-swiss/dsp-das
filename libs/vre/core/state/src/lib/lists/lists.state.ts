@@ -26,19 +26,19 @@ export class ListsState {
 
   @Action(LoadListsInProjectAction)
   loadListsInProject(ctx: StateContext<ListsStateModel>, { projectIri }: LoadListsInProjectAction) {
-    ctx.patchState({ isLoading: true });
+    ctx.patchState({ isLoading: true, isLoaded: false });
     return this._listApiService.listInProject(projectIri).pipe(
       take(1),
       tap(response => {
         ctx.patchState({ listsInProject: response.lists });
       }),
-      finalize(() => ctx.patchState({ isLoading: false }))
+      finalize(() => ctx.patchState({ isLoading: false, isLoaded: true }))
     );
   }
 
   @Action(DeleteListNodeAction)
   deleteListNode(ctx: StateContext<ListsStateModel>, { listIri }: DeleteListNodeAction) {
-    ctx.patchState({ isLoading: true });
+    ctx.patchState({ isLoading: true, isLoaded: false });
     return this._listApiService.deleteListNode(listIri).pipe(
       take(1),
       tap({
@@ -48,7 +48,7 @@ export class ListsState {
             state.listsInProject.findIndex(u => u.id === listIri),
             1
           );
-          ctx.setState({ ...state, isLoading: false });
+          ctx.setState({ ...state, isLoading: false, isLoaded: true });
         },
       })
     );
