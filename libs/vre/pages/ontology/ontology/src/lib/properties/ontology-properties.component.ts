@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
+import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Observable } from 'rxjs';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -12,7 +13,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
           class="property"
           *ngFor="let prop of properties$ | async; trackBy: trackByPropertyDefinitionFn; let odd = odd"
           [class.odd]="odd">
-          <app-property-info [propDef]="prop" />
+          <app-property-info [property]="prop" />
         </mat-list-item>
       </mat-list>
     </div>
@@ -46,7 +47,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPropertiesComponent {
-  properties$: Observable<PropertyDefinition[]> = this._oes.currentOntologyProperties$;
+  properties$: Observable<PropertyInfoObject[]> = this._oes.currentOntologyProperties$;
 
   trackByPropertyDefinitionFn = (index: number, item: PropertyDefinition) => `${index}-${item.id}`;
 

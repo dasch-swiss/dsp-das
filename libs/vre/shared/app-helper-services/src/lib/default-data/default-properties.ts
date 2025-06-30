@@ -12,6 +12,8 @@ export interface DefaultClass {
 export interface PropertyInfoObject {
   propDef?: ResourcePropertyDefinitionWithAllLanguages;
   propType: DefaultProperty;
+  propObjectLabel?: string; // label of the property object, e.g. class or resource
+  propObjectComment?: string; // comment of the property object, e.g. class or resource
 }
 
 /**

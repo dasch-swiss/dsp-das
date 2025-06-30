@@ -10,9 +10,14 @@ import {
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Cardinality, ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import {
+  Cardinality,
+  ClassDefinition,
+  IHasProperty,
+  ResourcePropertyDefinitionWithAllLanguages,
+} from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import { ClassPropToDisplay, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
@@ -42,10 +47,10 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           </mat-icon>
         </div>
         <div class="property-item-content-container">
-          <app-resource-class-property-info [propDef]="prop.propDef" />
+          <app-resource-class-property-info [property]="prop" />
           <app-cardinality
             [disabled]="(isAdmin$ | async) !== true"
-            [cardinality]="prop.cardinality"
+            [cardinality]="prop.iHasProperty.cardinality"
             [classIri]="resourceClass.id"
             [propertyInfo]="{ propDef: this.prop.propDef, propType: this.propType }"
             (cardinalityChange)="updateCardinality($event)" />
@@ -140,8 +145,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ClassDefinition;
-  @Input({ required: true }) prop!: PropToDisplay;
-  @Input() props: PropToDisplay[] = [];
+  @Input({ required: true }) prop!: ClassPropToDisplay;
+  @Input() props: IHasProperty[] = [];
 
   @ViewChild('propertyCardRipple') propertyCardRipple!: MatRipple;
 
@@ -172,7 +177,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.propertyCardRipple.launch({
           persistent: false,
         });
-        this._oes.latestChangedItem.next(null);
+        this._oes.latestChangedItem.next(undefined);
       }
     });
   }
@@ -182,28 +187,28 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
       this.propertyCardRipple.launch({
         persistent: false,
       });
-      this._oes.latestChangedItem.next(null);
+      this._oes.latestChangedItem.next(undefined);
     }
   }
 
   updateCardinality(newValue: Cardinality) {
-    const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.prop.propertyIndex);
+    const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.prop.iHasProperty.propertyIndex);
     if (propertyIdx !== -1) {
-      this.props[propertyIdx] = this.prop;
+      this.props[propertyIdx] = this.prop.iHasProperty;
       this.props[propertyIdx].cardinality = newValue;
       this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, this.props);
     }
   }
 
   canBeRemovedFromClass(): void {
-    this._oes.propertyCanBeRemovedFromClass$(this.prop, this.resourceClass.id).subscribe(canDoRes => {
+    this._oes.propertyCanBeRemovedFromClass$(this.prop.iHasProperty, this.resourceClass.id).subscribe(canDoRes => {
       this.propCanBeRemovedFromClass = canDoRes.canDo;
       this._cd.markForCheck();
     });
   }
 
   removePropertyFromClass(): void {
-    this._oes.removePropertyFromClass(this.prop, this.resourceClass.id);
+    this._oes.removePropertyFromClass(this.prop.iHasProperty, this.resourceClass.id);
   }
 
   openEditProperty() {

@@ -17,20 +17,21 @@ import {
   StringLiteral,
   UpdateResourceClassLabel,
   UpdateResourceClassComment,
+  ListNodeInfo,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
-  LoadProjectOntologiesAction,
+  ListsFacade,
   OntologiesSelectors,
   ProjectsSelectors,
   RemoveProjectOntologyAction,
   ResetCurrentOntologyIfNeededAction,
 } from '@dasch-swiss/vre/core/state';
-import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService, PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, concat, defer, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, defer, Observable, of } from 'rxjs';
 import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'rxjs/operators';
 import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
@@ -44,6 +45,9 @@ export class OntologyEditService {
 
   private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
   currentOntology$ = this._currentOntology.asObservable();
+
+  private _projectsOntologies$ = this._store.select(OntologiesSelectors.currentProjectOntologies);
+  private _projectsLists$ = this._lists.getListsInProject$();
 
   latestChangedItem = new BehaviorSubject<string | undefined>(undefined);
 
@@ -60,15 +64,46 @@ export class OntologyEditService {
     })
   );
 
-  currentOntologyProperties$ = this.currentOntology$.pipe(
-    map(ontology => {
-      if (ontology) {
-        const props = ontology.getAllPropertyDefinitions() as ResourcePropertyDefinitionWithAllLanguages[];
-        return this._sortingService
-          .keySortByAlphabetical(props, 'label')
-          .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'));
-      }
-      return [];
+  currentOntologyProperties$: Observable<PropertyInfoObject[]> = combineLatest([
+    this.currentOntology$,
+    this._projectsOntologies$,
+    this._projectsLists$,
+  ]).pipe(
+    map(([currentOntology, allOntologies, allLists]) => {
+      if (!currentOntology) return [];
+
+      const props = currentOntology.getAllPropertyDefinitions() as ResourcePropertyDefinitionWithAllLanguages[];
+
+      return this._sortingService
+        .keySortByAlphabetical(props, 'label')
+        .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
+        .map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
+          const propertyInfo: PropertyInfoObject = {
+            propDef: prop,
+            propType: this._ontologyService.getDefaultProperty(prop),
+          };
+
+          if (prop.objectType === Constants.Region) {
+            propertyInfo.propObjectLabel = 'Region';
+            return propertyInfo;
+          }
+
+          if (prop.objectType === Constants.ListValue) {
+            const listIri = prop.guiAttributes?.[0]?.split('<')[1]?.replace(/>/g, '');
+            const { label, comment } = this._getListLabelAndComment(listIri, allLists);
+            propertyInfo.propObjectLabel = label;
+            propertyInfo.propObjectComment = comment;
+            return propertyInfo;
+          }
+
+          if (prop.isLinkProperty && prop.objectType && prop.objectType !== Constants.Region) {
+            const { label, comment } = this._getLinkLabelAndComment(prop.objectType, currentOntology, allOntologies);
+            propertyInfo.propObjectLabel = label ?? '';
+            propertyInfo.propObjectComment = comment ?? '';
+          }
+
+          return propertyInfo;
+        });
     })
   );
 
@@ -127,6 +162,7 @@ export class OntologyEditService {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
+    private _lists: ListsFacade,
     private _notification: NotificationService,
     private _ontologyService: OntologyService,
     private _sortingService: SortingService,
@@ -185,6 +221,29 @@ export class OntologyEditService {
       }
     });
     return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
+  }
+
+  private _getListLabelAndComment(listId: string, allLists: ListNodeInfo[]): { label?: string; comment?: string } {
+    const list = allLists.find(l => l.id === listId);
+    return {
+      label: list?.labels?.[0]?.value,
+      comment: list?.comments?.[0]?.value,
+    };
+  }
+
+  private _getLinkLabelAndComment(
+    objectType: string,
+    current: ReadOntology,
+    allOntologies: ReadOntology[]
+  ): { label?: string; comment?: string } {
+    const baseOntologyId = objectType.split('#')[0];
+    const onto = current.id === baseOntologyId ? current : allOntologies.find(o => o.id === baseOntologyId);
+
+    const classDef = onto?.classes?.[objectType];
+    return {
+      label: classDef?.label,
+      comment: classDef?.comment,
+    };
   }
 
   createOntology$({ name, label, comment }: CreateOntologyData) {

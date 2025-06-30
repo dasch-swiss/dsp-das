@@ -1,17 +1,14 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  ApiResponseError,
-  ResourceClassDefinitionWithAllLanguages,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors, PropToDisplay } from '@dasch-swiss/vre/core/state';
+import { ClassPropToDisplay, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultResourceClasses,
   LocalizationService,
   OntologyService,
+  PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
@@ -32,9 +29,7 @@ export class ResourceClassInfoComponent implements OnChanges {
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
 
-  classProperties$!: Observable<ResourcePropertyDefinitionWithAllLanguages[]>;
-
-  classPropertiesToDisplay$!: Observable<PropToDisplay[]>;
+  classPropertiesToDisplay$!: Observable<ClassPropToDisplay[]>;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
@@ -55,7 +50,7 @@ export class ResourceClassInfoComponent implements OnChanges {
     return this.resourceClass.subClassOf.map(superIri => DefaultResourceClasses.getLabel(superIri)).join(', ');
   }
 
-  trackByPropToDisplayFn = (index: number, item: PropToDisplay) => `${index}-${item.propertyIndex}`;
+  trackByPropToDisplayFn = (index: number, item: ClassPropToDisplay) => `${index}-${item.iHasProperty!.propertyIndex}`;
 
   constructor(
     private _dialog: MatDialog,
@@ -66,28 +61,20 @@ export class ResourceClassInfoComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.classProperties$ = this._oes.currentOntologyProperties$.pipe(
-      map((properties: ResourcePropertyDefinitionWithAllLanguages[]) => {
+    this.classPropertiesToDisplay$ = this._oes.currentOntologyProperties$.pipe(
+      map((properties: PropertyInfoObject[]) => {
         const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
-        return properties.filter((property: ResourcePropertyDefinitionWithAllLanguages) =>
-          propertyIdsOfClass.includes(property.id)
-        );
-      })
-    );
 
-    this.classPropertiesToDisplay$ = this.classProperties$.pipe(
-      map((properties: ResourcePropertyDefinitionWithAllLanguages[]) => {
         return properties
-          .map((property: ResourcePropertyDefinitionWithAllLanguages) => {
-            const propToDisplay: PropToDisplay = this.resourceClass.propertiesList.find(
-              p => p.propertyIndex === property.id
-            ) as PropToDisplay;
-            propToDisplay.propDef = property;
-            return propToDisplay;
-          })
-          .sort((a, b) => {
-            return (a.guiOrder || 0) - (b.guiOrder || 0);
-          });
+          .filter(prop => propertyIdsOfClass.includes(prop.propDef!.id))
+          .map(
+            prop =>
+              ({
+                ...prop,
+                iHasProperty: this.resourceClass.propertiesList.find(p => p.propertyIndex === prop.propDef!.id),
+              }) as ClassPropToDisplay
+          )
+          .sort((a, b) => (a.iHasProperty?.guiOrder ?? 0) - (b.iHasProperty?.guiOrder ?? 0));
       })
     );
   }
@@ -118,17 +105,19 @@ export class ResourceClassInfoComponent implements OnChanges {
       .subscribe();
   }
 
-  onPropertyDropped(event: CdkDragDrop<string[]>, properties: PropToDisplay[]) {
+  onPropertyDropped(event: CdkDragDrop<string[]>, properties: ClassPropToDisplay[]) {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
     moveItemInArray(properties, event.previousIndex, event.currentIndex);
 
-    properties.forEach((prop, index) => {
+    const iHasProperties = properties.map(prop => prop.iHasProperty!);
+
+    iHasProperties.forEach((prop, index) => {
       prop.guiOrder = index + 1;
     });
 
-    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, properties);
+    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, iHasProperties);
   }
 
   openInDatabrowser() {

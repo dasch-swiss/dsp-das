@@ -1,11 +1,16 @@
 <div class="upper-prop-container">
   <div mat-line>
     <div>
-      <span class="label" data-cy="property-labels">{{ propDef.label ? propDef.label : propDef.id }} </span>
-      <span class="additional-info" *ngIf="propAttribute" [innerHTML]="'&rarr;&nbsp;' + propAttribute"></span>
+      <span class="label" data-cy="property-labels"
+        >{{ property.propDef!.label ? property.propDef!.label : property.propDef!.id }}
+      </span>
+      <span
+        class="additional-info"
+        *ngIf="property.propObjectLabel"
+        [innerHTML]="'&rarr;&nbsp;' + property.propObjectLabel"></span>
     </div>
   </div>
 </div>
 <div mat-line class="lower-prop-container">
-  <span class="mat-caption"> {{ propDef.id | split: '#':1 }} </span>
+  <span class="mat-caption"> {{ property.propDef.id | split: '#':1 }} </span>
 </div>

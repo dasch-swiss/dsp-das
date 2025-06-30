@@ -3,18 +3,19 @@
     <div mat-line class="title" [class.with-line-break]="true">
       <span
         class="icon"
-        *ngIf="propType"
-        [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + propDef.id.split('#')[1] + ')'"
+        *ngIf="property.propType"
+        [matTooltip]="property.propType?.group + ': ' + property.propType?.label + ' (' + property.propDef!.id.split('#')[1] + ')'"
         matTooltipPosition="above">
-        <mat-icon class="type">{{propType?.icon}}</mat-icon>
+        <mat-icon class="type">{{property.propType?.icon}}</mat-icon>
       </span>
       <span
         class="label"
-        [matTooltip]="propDef.comment"
+        [matTooltip]="property.propDef!.comment"
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip"
         data-cy="property-labels">
-        {{!propDef.labels.length ? propDef?.label : propDef.labels | appStringifyStringLiteral:'all'}}
+        {{!property.propDef!.labels.length ? property.propDef?.label : property.propDef!.labels |
+        appStringifyStringLiteral:'all'}}
       </span>
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
@@ -29,12 +30,12 @@
 
   <div mat-line class="info additional-info" [class.with-line-break]="true">
     <span
-      [matTooltip]="'id: ' + propDef.id"
+      [matTooltip]="'id: ' + property.propDef!.id"
       matTooltipPosition="above"
       matTooltipClass="wide-tooltip"
       class="mat-caption"
       [matTooltipDisabled]="isLockHovered">
-      {{propDef.id | split: '#':1}}
+      {{property.propDef!.id | split: '#':1}}
     </span>
     <span class="fill-remaining-space center"></span>
     <!-- in case of ontology property: display corresponding resource classes -->
@@ -69,8 +70,12 @@
     <div class="button-container">
       <span
         matTooltipPosition="above"
-        [matTooltip]="propDef.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'">
-        <button mat-button [disabled]="!propDef.isEditable" class="edit" (click)="openEditProperty(propDef, propType)">
+        [matTooltip]="property.propDef!.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'">
+        <button
+          mat-button
+          [disabled]="!property.propDef!.isEditable"
+          class="edit"
+          (click)="openEditProperty(property.propDef!, property.propType)">
           <mat-icon>edit</mat-icon>
         </button>
       </span>
@@ -81,7 +86,7 @@
           mat-button
           [disabled]="(canBeDeleted$ | async) !== true"
           class="delete"
-          (click)="openDeleteProperty(propDef.id)">
+          (click)="openDeleteProperty(property.propDef!.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </span>

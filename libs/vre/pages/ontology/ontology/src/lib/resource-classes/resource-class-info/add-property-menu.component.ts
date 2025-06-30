@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ClassDefinition, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ClassDefinition } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, PropToAdd } from '@dasch-swiss/vre/core/state';
 import {
   DefaultProperties,
   DefaultProperty,
-  OntologyService,
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -48,11 +47,11 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           <button
             mat-menu-item
             *ngFor="let prop of onto.properties; trackBy: trackByPropFn"
-            [matTooltip]="prop.propDef.comment"
+            [matTooltip]="prop.propDef!.comment || ''"
             matTooltipPosition="after"
-            (click)="assignExistingProperty(prop.propDef?.id)">
+            (click)="assignExistingProperty(prop.propDef!.id)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>
-            {{ prop.propDef.label }}
+            {{ prop.propDef!.label }}
           </button>
         </mat-menu>
       </ng-container>
@@ -97,7 +96,7 @@ export class AddPropertyMenuComponent {
   unusedProperties$ = this._oes.currentOntologyProperties$.pipe(
     map(props => {
       const usedIds = (this.resourceClass?.propertiesList || []).map(c => c.propertyIndex);
-      return props.filter(p => !usedIds.includes(p.id));
+      return props.filter(p => !usedIds.includes(p.propDef!.id));
     })
   );
 
@@ -111,19 +110,13 @@ export class AddPropertyMenuComponent {
         return {
           ontologyId: onto.id,
           ontologyLabel: onto.label,
-          properties: properties.map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
-            return {
-              propType: this._ontoService.getDefaultPropertyType(prop),
-              propDef: prop,
-            };
-          }),
+          properties,
         };
       });
     })
   );
 
   constructor(
-    private _ontoService: OntologyService,
     private _dialog: MatDialog,
     private _oes: OntologyEditService,
     private _store: Store

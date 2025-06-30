@@ -8,7 +8,7 @@ import {
   ReadUser,
   ResourcePropertyDefinitionWithAllLanguages,
 } from '@dasch-swiss/dsp-js';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperty, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 
 export interface IKeyValuePairs<T> {
   [key: string]: { value: T[] };
@@ -25,21 +25,20 @@ export interface IProjectOntologiesKeyValuePairs {
   };
 }
 
-/**
- * contains the information about the assignment of a property to a class
- * */
-export interface PropertyAssignment {
-  resClass: ClassDefinition;
-  property: PropertyInfoObject;
-}
-
 export interface OntologyProperties {
   ontology: string;
   properties: PropertyDefinition[];
 }
 
-export interface PropToDisplay extends IHasProperty {
+export interface PropToDisplay {
   propDef: ResourcePropertyDefinitionWithAllLanguages;
+  propType?: DefaultProperty;
+  propObjectLabel?: string;
+  propObjectComment?: string;
+}
+
+export interface ClassPropToDisplay extends PropToDisplay {
+  iHasProperty: IHasProperty;
 }
 
 export interface PropToAdd {
@@ -52,12 +51,5 @@ export interface IClassItemsKeyValuePairs {
   [key: string]: {
     ontologyIri: string;
     classItemsCount: number;
-  };
-}
-
-export interface IResourceKeyValuePairs {
-  [key: string]: {
-    attachedUsers: ReadUser[];
-    attachedProjects: ReadProject[];
   };
 }
