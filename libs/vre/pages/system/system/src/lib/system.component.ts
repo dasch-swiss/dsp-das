@@ -20,8 +20,8 @@ export class SystemComponent {
   activeLink = '';
 
   constructor(
-    private _store: Store,
-    private _titleService: Title
+    private readonly _store: Store,
+    private readonly _titleService: Title
   ) {
     this._titleService.setTitle('System administration');
   }
