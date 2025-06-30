@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -39,7 +39,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
 })
-export class UsersListComponent {
+export class UsersListComponent implements OnInit {
   @Input({ required: true }) status!: boolean;
 
   _list!: ReadUser[];
@@ -108,18 +108,16 @@ export class UsersListComponent {
     private readonly _actions$: Actions,
     private readonly _dialog: DialogService,
     private readonly _matDialog: MatDialog,
-    private readonly _route: ActivatedRoute,
     private readonly _router: Router,
     private readonly _sortingService: SortingService,
     private readonly _store: Store,
     private readonly _ts: TranslateService,
     private readonly _userApiService: UserApiService,
     public _ups: UserPermissionService
-  ) {
-    // get the uuid of the current project
-    this._route.parent?.parent?.paramMap.subscribe(params => {
-      this.projectUuid = params.get(RouteConstants.uuidParameter) || '';
-    });
+  ) {}
+
+  ngOnInit(): void {
+    this.projectUuid = this.project ? ProjectService.IriToUuid(this.project.id) : '';
   }
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
