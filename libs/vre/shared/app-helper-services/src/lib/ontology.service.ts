@@ -48,7 +48,6 @@ export class OntologyService {
    */
   getDefaultProperty(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
     let propType: DefaultProperty | undefined;
-
     for (const defaultProperty of this.defaultProperties) {
       // TODO: WHUT IS THIS?
       if (property?.subPropertyOf.length) {
@@ -104,6 +103,9 @@ export class OntologyService {
   getDefaultPropertyType(property: ResourcePropertyDefinitionWithAllLanguages): DefaultProperty {
     let propType: DefaultProperty | undefined;
 
+    if (property?.label?.includes('Repräsentation')) {
+      console.log('getDefaultProperty', property.label);
+    }
     for (const defaultProperty of this.defaultProperties) {
       // TODO: WHUT IS THIS?
       if (property?.subPropertyOf.length) {
@@ -126,6 +128,8 @@ export class OntologyService {
             propType = defaultProperty.elements.find(
               (i: DefaultProperty) => i.guiElement === property.guiElement && i.objectType === property.objectType
             );
+          } else if (subProp === Constants.HasRepresentation) {
+            propType = defaultProperty.elements.find((i: DefaultProperty) => i.subPropOf === Constants.HasLinkTo);
           } else {
             // in all other cases the gui-element resp. the subProp is not relevant
             // because the object type is unique

@@ -181,6 +181,9 @@ export class PropertyInfoComponent implements OnInit {
   trackByFn = (index: number, item: ShortInfo) => item.id;
 
   mouseEnter() {
+    if (this._oes.isTransacting) {
+      return;
+    }
     this.showActionBubble = true;
     this.canBeDeletedTrigger$.next();
   }

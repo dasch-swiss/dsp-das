@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
@@ -13,7 +12,6 @@ import {
   PropertyCategory,
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';

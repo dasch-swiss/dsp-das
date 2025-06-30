@@ -26,8 +26,6 @@ import {
   ProjectsSelectors,
   RemoveProjectOntologyAction,
   ResetCurrentOntologyIfNeededAction,
-  SetCurrentOntologyAction,
-  SetOntologyAction,
 } from '@dasch-swiss/vre/core/state';
 import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -83,6 +81,10 @@ export class OntologyEditService {
 
   private _isTransacting = new BehaviorSubject<boolean>(false);
   isTransacting$ = this._isTransacting.asObservable();
+
+  get isTransacting(): boolean {
+    return this._isTransacting.value;
+  }
 
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
