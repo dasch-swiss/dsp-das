@@ -7,7 +7,11 @@ import { unescapeHtml } from './unescape-html';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ck-editor',
-  template: ` <ckeditor [formControl]="footnoteControl" [config]="ckEditor.config" [editor]="editor" />
+  template: ` <ckeditor
+      [formControl]="footnoteControl"
+      [config]="ckEditor.config"
+      [editor]="editor"
+      style="margin-bottom: 22px; display: block;" />
     <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>`,
 })
 export class CkEditorComponent implements OnInit {

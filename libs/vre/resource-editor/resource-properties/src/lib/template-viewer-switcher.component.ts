@@ -65,7 +65,7 @@ import { JsLibPotentialError } from './JsLibPotentialError';
     </ng-template>
 
     <ng-template #linkDisplayTpl let-item="item">
-      <app-link-viewer [control]="item" />
+      <app-link-viewer *ngIf="value" [control]="item" [value]="value" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
