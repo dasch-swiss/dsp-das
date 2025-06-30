@@ -53,7 +53,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   @Input() isButtonEnabledToCreateNewUser = false;
   @Input({ required: true }) project!: ReadProject;
-  @Output() refreshParent: EventEmitter<void> = new EventEmitter<void>();
+  @Output() refreshParent = new EventEmitter<void>();
 
   // i18n plural mapping
   itemPluralMapping = {
@@ -100,7 +100,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   disableMenu$ = combineLatest([this.isProjectOrSystemAdmin$, this.isSysAdmin$]).pipe(
     map(
       ([isProjectAdmin, isSysAdmin]) =>
-        this.project?.status === false || (!isProjectAdmin && !isSysAdmin && !!this.projectUuid)
+        this.project.status === false || (!isProjectAdmin && !isSysAdmin && !!this.projectUuid)
     )
   );
 
@@ -116,7 +116,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.projectUuid = this.project ? ProjectService.IriToUuid(this.project.id) : '';
+    this.projectUuid = ProjectService.IriToUuid(this.project.id);
   }
 
   ngOnDestroy(): void {
@@ -172,26 +172,20 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
         const removeOldGroup$ = from(currentUserGroups).pipe(
           filter(oldGroup => groups.indexOf(oldGroup) === -1), // Filter out groups that are no longer in 'groups'
-          mergeMap(oldGroup => {
-            return this._userApiService.removeFromGroupMembership(userIri, oldGroup).pipe(take(1));
-          })
+          mergeMap(oldGroup => this._userApiService.removeFromGroupMembership(userIri, oldGroup).pipe(take(1)))
         );
 
         const addNewGroup$ = from(groups).pipe(
           filter(newGroup => currentUserGroups.indexOf(newGroup) === -1), // Filter out groups that are already in 'currentUserGroups'
-          mergeMap(newGroup => {
-            return this._userApiService.addToGroupMembership(userIri, newGroup).pipe(take(1));
-          })
+          mergeMap(newGroup => this._userApiService.addToGroupMembership(userIri, newGroup).pipe(take(1)))
         );
 
         merge(removeOldGroup$, addNewGroup$)
           .pipe(takeLast(1), takeUntil(this._destroy$))
-          .subscribe({
-            next: () => {
-              if (this.projectUuid) {
-                this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
-              }
-            },
+          .subscribe(() => {
+            if (this.projectUuid) {
+              this._store.dispatch(new LoadProjectMembershipAction(this.projectUuid));
+            }
           });
       });
   }
