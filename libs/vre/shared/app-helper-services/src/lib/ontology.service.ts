@@ -70,8 +70,8 @@ export class OntologyService {
             propType = defaultProperty.elements.find(
               (i: DefaultProperty) => i.guiElement === property.guiElement && i.objectType === property.objectType
             );
-          } else if (subProp === Constants.HasRepresentation) {
-            propType = group.elements.find((i: DefaultProperty) => i.subPropOf === Constants.HasLinkTo);
+          } else if (superProp === Constants.HasRepresentation) {
+            propType = defaultProperty.elements.find((i: DefaultProperty) => i.subPropOf === Constants.HasLinkTo);
           } else {
             // in all other cases the gui-element resp. the subProp is not relevant
             // because the object type is unique
