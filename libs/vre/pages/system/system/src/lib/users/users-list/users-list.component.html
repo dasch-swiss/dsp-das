@@ -60,9 +60,9 @@
       <!-- admin: only in project view -->
       <td class="table-admin-chip">
         <mat-chip-listbox *ngIf="projectUuid">
-          <mat-chip class="admin-chip" *ngIf="this._ups.isProjectAdmin(user.permissions)">Admin</mat-chip>
+          <mat-chip class="admin-chip" *ngIf="this.isProjectAdmin(user.permissions)">Admin</mat-chip>
         </mat-chip-listbox>
-        <mat-chip-listbox *ngIf="!projectUuid && this._ups.isSystemAdmin(user.permissions)">
+        <mat-chip-listbox *ngIf="!projectUuid && this.isSystemAdmin(user.permissions)">
           <mat-chip class="sys-admin-chip">System Admin</mat-chip>
         </mat-chip-listbox>
       </td>
@@ -93,17 +93,17 @@
             mat-menu-item
             *ngIf="projectUuid && user.status"
             (click)="updateProjectAdminMembership(user.id,user.permissions)">
-            <span *ngIf="!this._ups.isProjectAdmin(user.permissions)">Add</span>
-            <span *ngIf="this._ups.isProjectAdmin(user.permissions)">Remove</span>
+            <span *ngIf="!this.isProjectAdmin(user.permissions)">Add</span>
+            <span *ngIf="this.isProjectAdmin(user.permissions)">Remove</span>
             <span>as project admin</span>
           </button>
           <!-- update user's system admin group membership; only in system admin view -->
           <button
             mat-menu-item
             *ngIf="!projectUuid && (isSysAdmin$ | async) && user.username !== (username$ | async)"
-            (click)="updateSystemAdminMembership(user,!this._ups.isSystemAdmin(user.permissions))">
-            <span *ngIf="!this._ups.isSystemAdmin(user.permissions)">Add</span>
-            <span *ngIf="this._ups.isSystemAdmin(user.permissions)">Remove</span>
+            (click)="updateSystemAdminMembership(user,!this.isSystemAdmin(user.permissions))">
+            <span *ngIf="!this.isSystemAdmin(user.permissions)">Add</span>
+            <span *ngIf="this.isSystemAdmin(user.permissions)">Remove</span>
             <span>as system admin</span>
           </button>
           <!-- update user's profile data; only for system admin -->

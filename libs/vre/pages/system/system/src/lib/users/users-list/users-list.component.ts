@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -24,7 +24,6 @@ import { filter, map, mergeMap, switchMap, take, takeLast } from 'rxjs/operators
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
-import { UserPermissionService } from '../user-permission.service';
 
 interface SortProperty {
   key: keyof ReadUser;
@@ -112,8 +111,7 @@ export class UsersListComponent implements OnInit {
     private readonly _sortingService: SortingService,
     private readonly _store: Store,
     private readonly _ts: TranslateService,
-    private readonly _userApiService: UserApiService,
-    public _ups: UserPermissionService
+    private readonly _userApiService: UserApiService
   ) {}
 
   ngOnInit(): void {
@@ -121,6 +119,36 @@ export class UsersListComponent implements OnInit {
   }
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
+
+  /**
+   * Returns true, when the user is project admin.
+   * If the parameter permissions is not set, it returns the value for the logged-in user
+   */
+  isProjectAdmin(permissions: PermissionsData): boolean {
+    if (!permissions.groupsPerProject) {
+      return false;
+    }
+
+    return ProjectService.IsMemberOfProjectAdminGroup(permissions.groupsPerProject, this.project.id);
+  }
+
+  /**
+   * Returns true, if the user is system admin.
+   */
+  isSystemAdmin(permissions: PermissionsData): boolean {
+    if (!permissions.groupsPerProject) {
+      return false;
+    }
+
+    const groupsPerProjectKeys = Object.keys(permissions.groupsPerProject);
+
+    return groupsPerProjectKeys.some(key => {
+      if (key === Constants.SystemProjectIRI) {
+        return permissions.groupsPerProject?.[key]?.includes(Constants.SystemAdminGroupIRI) ?? false;
+      }
+      return false;
+    });
+  }
 
   updateGroupsMembership(userIri: string, groups: string[]): void {
     if (!groups) {
@@ -163,7 +191,7 @@ export class UsersListComponent implements OnInit {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     if (!currentUser) return;
 
-    if (this._ups.isProjectAdmin(permissions)) {
+    if (this.isProjectAdmin(permissions)) {
       // true = user is already project admin --> remove from admin rights
       this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
         // if this user is not the logged-in user
