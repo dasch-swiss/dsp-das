@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+import { expand, filter, map, reduce, shareReplay, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-legal-settings-licenses',
@@ -31,6 +31,7 @@ import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
+  readonly PAGE_SIZE = 2;
 
   readonly project$ = this._reloadSubject.asObservable().pipe(
     switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
@@ -40,9 +41,24 @@ export class LegalSettingsLicensesComponent {
 
   licenses$ = this.project$.pipe(
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode)
+      this._copyrightApi
+        .getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(project.shortcode, 1, this.PAGE_SIZE)
+        .pipe(
+          expand(response => {
+            if (response.pagination.currentPage < response.pagination.totalPages) {
+              return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(
+                project.shortcode,
+                response.pagination.currentPage + 1,
+                this.PAGE_SIZE
+              );
+            } else {
+              return EMPTY;
+            }
+          }),
+          map(data => data.data),
+          reduce((acc, data) => acc.concat(data), [] as ProjectLicenseDto[])
+        )
     ),
-    map(data => data.data),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
