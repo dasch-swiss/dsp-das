@@ -1,10 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { Component, Input, OnInit } from '@angular/core';
+import { ReadFileValue } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { getFileValue, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { LicensesLogoMapping } from './licenses-logo-mapping';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-legal',
@@ -32,53 +30,44 @@ import { LicensesLogoMapping } from './licenses-logo-mapping';
         </div>
         <div>
           <div style="display: flex; justify-content: flex-end">
-            <img *ngIf="licenseLogo; else licenseWithLinkTpl" [src]="licenseLogo" alt="license" style="width: 110px" />
+            <app-resource-legal-license *ngIf="license" [license]="license" />
           </div>
 
           <div>Licensed on {{ fileValue.valueCreationDate | humanReadableDate }}</div>
         </div>
       </div>
     </div>
-    <ng-template #licenseWithLinkTpl>
-      <span style="display: flex; align-items: center" *ngIf="license$ && license$ | async as license">
-        <span style="color: white">{{ license.labelEn }} </span>
-      </span></ng-template
-    >
   `,
   styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
 })
-export class ResourceLegalComponent implements OnChanges {
-  @Input({ required: true }) resource!: ReadResource;
+export class ResourceLegalComponent implements OnInit {
+  @Input({ required: true }) fileValue!: ReadFileValue;
 
-  fileValue!: ReadFileValue;
+  licenses: ProjectLicenseDto[] = [];
 
-  licenseLogo?: string;
-
-  subscription?: Subscription;
-  license$?: Observable<ProjectLicenseDto | undefined>;
+  get license() {
+    return this.licenses.find(license => license.id === this.fileValue.license?.id);
+  }
 
   constructor(
     private _resourceFetcher: ResourceFetcherService,
     private _copyrightApi: AdminProjectsLegalInfoApiService
   ) {}
 
-  ngOnChanges() {
-    this.fileValue = getFileValue(this.resource);
-    if (this.fileValue.license) {
-      if (LicensesLogoMapping.has(this.fileValue.license.id)) {
-        this.licenseLogo = LicensesLogoMapping.get(this.fileValue.license.id);
-      } else {
-        this._fetchLicense();
-      }
-    }
+  ngOnInit() {
+    this._fetchLicense();
   }
 
   private _fetchLicense() {
-    this.license$ = this._resourceFetcher.projectShortcode$.pipe(
-      switchMap(projectShortcode =>
-        this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
-      ),
-      map(data => data.data.find(license => license.id === this.fileValue.license?.id))
-    );
+    this._resourceFetcher.projectShortcode$
+      .pipe(
+        switchMap(projectShortcode =>
+          this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
+        ),
+        take(1)
+      )
+      .subscribe(data => {
+        this.licenses = data.data;
+      });
   }
 }
