@@ -5,8 +5,8 @@ import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-ser
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+import { expand, filter, map, reduce, switchMap } from 'rxjs/operators';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
@@ -64,6 +64,7 @@ import {
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
 
+  readonly PAGE_SIZE = 2;
   readonly project$ = this._reloadSubject.asObservable().pipe(
     switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
     filter(project => project !== undefined),
@@ -72,16 +73,53 @@ export class LegalSettingsComponent {
 
   copyrightHolders$ = this.project$.pipe(
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(project.shortcode)
-    ),
-    map(data => data.data)
+      this._copyrightApi
+        .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(
+          project.shortcode,
+          undefined,
+          1,
+          this.PAGE_SIZE
+        )
+        .pipe(
+          expand(response => {
+            if (response.pagination.currentPage < response.pagination.totalPages) {
+              return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(
+                project.shortcode,
+                undefined,
+                response.pagination.currentPage + 1,
+                this.PAGE_SIZE
+              );
+            } else {
+              return EMPTY;
+            }
+          }),
+          map(data => data.data),
+          reduce((acc, data) => acc.concat(data), [] as string[])
+        )
+    )
   );
 
   authorships$ = this.project$.pipe(
     switchMap(project =>
-      this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project.shortcode)
-    ),
-    map(data => data.data)
+      this._copyrightApi
+        .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project.shortcode, undefined, 1, this.PAGE_SIZE)
+        .pipe(
+          expand(response => {
+            if (response.pagination.currentPage < response.pagination.totalPages) {
+              return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(
+                project.shortcode,
+                undefined,
+                response.pagination.currentPage + 1,
+                this.PAGE_SIZE
+              );
+            } else {
+              return EMPTY;
+            }
+          }),
+          map(data => data.data),
+          reduce((acc, data) => acc.concat(data), [] as string[])
+        )
+    )
   );
 
   constructor(
