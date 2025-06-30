@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Constants, ListNodeInfo, ReadOntology, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ListsFacade, ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, first, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-class-property-info',
@@ -33,6 +33,7 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, On
   }
 
   constructor(
+    private _lists: ListsFacade,
     private _ontoService: OntologyService,
     private _store: Store
   ) {}
@@ -55,14 +56,14 @@ export class ResourceClassPropertyInfoComponent implements OnChanges, OnInit, On
     }
 
     if (this.propDef.objectType === Constants.ListValue) {
-      this._store
-        .select(ListsSelectors.listsInProject)
+      this._lists
+        .getListsInProject$()
         .pipe(
-          takeUntil(this._destroy),
-          filter(lists => !!lists && lists.length > 0)
+          filter(lists => !!lists.length),
+          first()
         )
-        .subscribe(lists => {
-          this._setAttributesForListProperty(lists);
+        .subscribe(currentProjectsLists => {
+          this._setAttributesForListProperty(currentProjectsLists);
         });
     }
   }

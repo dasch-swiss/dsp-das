@@ -4,12 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ListsFacade, ListsSelectors, OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DefaultProperty, OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { filter, first, map, startWith, switchMap } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { PropertyEditData } from '../../forms/property-form/property-form.type';
 import { OntologyEditService } from '../../services/ontology-edit.service';
@@ -84,6 +84,7 @@ export class PropertyInfoComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
+    private _lists: ListsFacade,
     private _ontoService: OntologyService,
     private _oes: OntologyEditService,
     private _dialogService: DialogService,
@@ -143,14 +144,21 @@ export class PropertyInfoComponent implements OnInit {
     }
 
     if (this.propDef.objectType === Constants.ListValue) {
-      const currentProjectsLists = this._store.selectSnapshot(ListsSelectors.listsInProject);
-      const projectUuid = this._projectService.uuidToIri(this.project.id);
+      this._lists
+        .getListsInProject$()
+        .pipe(
+          filter(lists => !!lists.length),
+          first()
+        )
+        .subscribe(currentProjectsLists => {
+          const projectUuid = this._projectService.uuidToIri(this.project.id);
 
-      const listIri = this.propDef.guiAttributes[0].split('<')[1].replace(/>/g, '');
-      const listUrl = `/project/${projectUuid}/lists/${encodeURIComponent(listIri)}`;
-      const list = currentProjectsLists.find(i => i.id === listIri);
-      this.propAttribute = `<a href="${listUrl}">${list?.labels[0].value}</a>`;
-      this.propAttributeComment = list?.comments.length ? list.comments[0].value : '';
+          const listIri = this.propDef.guiAttributes[0].split('<')[1].replace(/>/g, '');
+          const listUrl = `/project/${projectUuid}/lists/${encodeURIComponent(listIri)}`;
+          const list = currentProjectsLists.find(i => i.id === listIri);
+          this.propAttribute = `<a href='${listUrl}'>${list?.labels[0].value}</a>`;
+          this.propAttributeComment = list?.comments.length ? list.comments[0].value : '';
+        });
     }
   }
 
