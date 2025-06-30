@@ -4,15 +4,14 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-toggle-value',
   template: `
-    <button mat-icon-button (click)="add()" data-cy="add-bool-toggle" *ngIf="control.value === null">
-      <mat-icon class="add-icon">add_box</mat-icon>
-    </button>
-    <div class="nullable-boolean">
-      <mat-slide-toggle [formControl]="control" data-cy="bool-toggle" *ngIf="control.value !== null" />
-      <button mat-icon-button (click)="cancel()" title="Cancel" *ngIf="control.value !== null">
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </div>
+    <app-nullable-editor [control]="control" [defaultValue]="false">
+      <div class="nullable-boolean">
+        <mat-slide-toggle [formControl]="control" data-cy="bool-toggle" *ngIf="control.value !== null" />
+        <button mat-icon-button (click)="cancel()" title="Cancel" *ngIf="control.value !== null">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+    </app-nullable-editor>
   `,
   styles: [
     `

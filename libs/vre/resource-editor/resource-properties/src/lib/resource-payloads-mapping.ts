@@ -45,7 +45,6 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
-import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
@@ -248,7 +247,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.ColorValue,
     {
-      control: (value?: ReadColorValue) => new FormControl(value?.color ?? '#000000'),
+      control: (value?: ReadColorValue) => new FormControl(value?.color ?? null),
       createValue: (value: string) => {
         const newColorValue = new CreateColorValue();
         newColorValue.color = value;

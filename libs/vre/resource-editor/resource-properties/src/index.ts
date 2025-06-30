@@ -60,3 +60,4 @@ export * from './lib/mathjax/math-jax.service';
 export * from './lib/template-editor-switcher.component';
 export * from './lib/template-viewer-switcher.component';
 export * from './lib/property-value-creator.component';
+export * from './lib/nullable-editor.component';
