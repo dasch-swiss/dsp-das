@@ -35,6 +35,7 @@ import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/reso
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { TemplateSwitcherComponents } from '@dasch-swiss/vre/resource-editor/template-switcher';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -73,6 +74,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...ResourceCreatorComponents,
+    ...TemplateSwitcherComponents,
     ...SegmentSupportComponents,
     ...ResourcePageComponents,
     ...RepresentationsComponents,

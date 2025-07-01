@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
-import { DateTime } from '../date-time';
+import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
   selector: 'app-time-value',

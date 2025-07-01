@@ -24,9 +24,6 @@ import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
 
 export const ResourcePropertiesComponents = [
-  ...switchComponents,
-  ...valueComponents,
-  ...viewerComponents,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
   PropertyValueActionBubbleComponent,

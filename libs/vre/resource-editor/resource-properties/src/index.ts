@@ -1,21 +1,3 @@
-export * from './lib/value-components/color-value.component';
-export * from './lib/value-components/geoname-value.component';
-export * from './lib/value-components/link-value.component';
-export * from './lib/value-components/list-value.component';
-export * from './lib/value-components/nested-menu.component';
-export * from './lib/value-components/time-value.component';
-export * from './lib/value-components/interval-value.component';
-
-export * from './lib/viewer-components/rich-text-viewer.component';
-export * from './lib/viewer-components/interval-viewer.component';
-export * from './lib/viewer-components/time-viewer.component';
-
-export * from './lib/viewer-components/date-viewer.component';
-export * from './lib/viewer-components/geoname-viewer.component';
-export * from './lib/viewer-components/link-viewer.component';
-export * from './lib/viewer-components/list-viewer.component';
-export * from './lib/value-components/toggle-value.component';
-
 export * from './lib/create-resource-dialog.component';
 
 export * from './lib/date-time';
@@ -43,7 +25,6 @@ export * from './lib/footnotes.component';
 export * from './lib/footnote-tooltip.component';
 export * from './lib/footnote.directive';
 export * from './lib/footnote-parser.pipe';
-export * from './lib/paginated-api.service';
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/mathjax/math-jax.service';
 
@@ -52,3 +33,4 @@ export * from './lib/template-viewer-switcher.component';
 export * from './lib/nullable-editor.component';
 export * from './lib/property-value-basic-comment.component';
 export * from './lib/paginated-api.service';
+export * from './lib/date-time-timestamp';
