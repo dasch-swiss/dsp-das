@@ -18,8 +18,6 @@ import { PropertyValueEditComponent } from './lib/property-value-edit.component'
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
-import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
-import { ListSwitchComponent } from './lib/switch-components/list-switch.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
@@ -56,9 +54,7 @@ const switchComponents = [
   ColorValueComponent,
   LinkViewerComponent,
   GeonameViewerComponent,
-  ListSwitchComponent,
   DateViewerComponent,
-  BaseSwitchComponent,
   ToggleValueComponent,
 ];
 
