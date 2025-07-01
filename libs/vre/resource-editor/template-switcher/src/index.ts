@@ -20,3 +20,5 @@ export * from './lib/viewer-components/time-viewer.component';
 
 export * from './lib/template-editor-switcher.component';
 export * from './lib/template-viewer-switcher.component';
+export * from './lib/create-resource-dialog.component';
+export * from './lib/nullable-editor.component';

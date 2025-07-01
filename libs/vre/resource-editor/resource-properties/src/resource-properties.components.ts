@@ -1,4 +1,3 @@
-import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
 import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
 import { EraseResourceDialogComponent } from './lib/erase-resource-dialog.component';
@@ -7,7 +6,6 @@ import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
 import { FootnoteDirective } from './lib/footnote.directive';
 import { FootnotesComponent } from './lib/footnotes.component';
 import { MathJaxDirective } from './lib/mathjax/math-jax.directive';
-import { NullableEditorComponent } from './lib/nullable-editor.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
@@ -29,7 +27,6 @@ export const ResourcePropertiesComponents = [
   PropertyValueEditComponent,
   PropertyValueDisplayComponent,
   PropertyValueToFormComponent,
-  CreateResourceDialogComponent,
   UploadControlComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
@@ -42,7 +39,5 @@ export const ResourcePropertiesComponents = [
   FootnoteDirective,
   FootnoteParserPipe,
   MathJaxDirective,
-
-  NullableEditorComponent,
   PropertyValueBasicCommentComponent,
 ];
