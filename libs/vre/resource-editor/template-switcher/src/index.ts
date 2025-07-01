@@ -17,3 +17,6 @@ export * from './lib/viewer-components/link-viewer.component';
 export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/viewer-components/rich-text-viewer.component';
 export * from './lib/viewer-components/time-viewer.component';
+
+export * from './lib/template-editor-switcher.component';
+export * from './lib/template-viewer-switcher.component';

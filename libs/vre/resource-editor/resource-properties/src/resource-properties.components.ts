@@ -17,8 +17,6 @@ import { PropertyValueEditComponent } from './lib/property-value-edit.component'
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
-import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
-import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
@@ -45,8 +43,6 @@ export const ResourcePropertiesComponents = [
   FootnoteParserPipe,
   MathJaxDirective,
 
-  TemplateEditorSwitcherComponent,
-  TemplateViewerSwitcherComponent,
   NullableEditorComponent,
   PropertyValueBasicCommentComponent,
 ];

@@ -1,3 +1,5 @@
+import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
+import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { ColorValueComponent } from './lib/value-components/color-value.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { IntervalValueComponent } from './lib/value-components/interval-value.component';
@@ -21,11 +23,6 @@ const valueComponents = [
   NestedMenuComponent,
   TimeValueComponent,
   IntervalValueComponent,
-];
-
-const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
-
-const switchComponents = [
   ColorValueComponent,
   LinkViewerComponent,
   GeonameViewerComponent,
@@ -33,4 +30,11 @@ const switchComponents = [
   ToggleValueComponent,
 ];
 
-export const TemplateSwitcherComponents = [...switchComponents, ...valueComponents, ...viewerComponents];
+const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
+
+export const TemplateSwitcherComponents = [
+  ...valueComponents,
+  ...viewerComponents,
+  TemplateEditorSwitcherComponent,
+  TemplateViewerSwitcherComponent,
+];
