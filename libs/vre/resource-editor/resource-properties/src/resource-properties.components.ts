@@ -1,4 +1,3 @@
-import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
 import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
@@ -81,7 +80,6 @@ export const ResourcePropertiesComponents = [
   FootnoteTooltipComponent,
   FootnoteDirective,
   FootnoteParserPipe,
-  AuthorshipFormFieldComponent,
   MathJaxDirective,
 
   TemplateEditorSwitcherComponent,

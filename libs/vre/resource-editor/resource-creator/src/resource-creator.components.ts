@@ -1,3 +1,4 @@
+import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceFormFileComponent } from './lib/create-resource-form-file.component';
 import { CreateResourceFormImageComponent } from './lib/create-resource-form-image.component';
 import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
@@ -20,4 +21,5 @@ export const ResourceCreatorComponents = [
   CreateResourceFormRepresentationComponent,
   CreateResourceFormRowComponent,
   CreateResourceFormLegalComponent,
+  AuthorshipFormFieldComponent,
 ];

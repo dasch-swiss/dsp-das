@@ -10,3 +10,4 @@ export * from './lib/create-resource-form-image.component';
 export * from './lib/create-resource-form-file.component';
 export * from './lib/create-resource-form-properties.component';
 export * from './lib/create-resource-form-legal.component';
+export * from './lib/authorship-form-field.component';
