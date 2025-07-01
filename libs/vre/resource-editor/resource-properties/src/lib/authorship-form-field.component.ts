@@ -1,5 +1,5 @@
 import { ENTER, TAB } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
@@ -26,6 +26,7 @@ import { PaginatedApiService } from './paginated-api.service';
         data-cy="authorship-chips"
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
+        [matAutocompleteDisabled]="filteredAuthorship.length === 0"
         [formControl]="autocompleteFormControl"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
@@ -33,13 +34,20 @@ import { PaginatedApiService } from './paginated-api.service';
         <mat-option *ngFor="let option of filteredAuthorship" [value]="option">
           {{ option }}
         </mat-option>
+
+        <mat-option
+          *ngIf="
+            filteredAuthorship.length === 0 && autocompleteFormControl.value && autocompleteFormControl.value.length > 0
+          "
+          >Press Enter or Tab to add an item.
+        </mat-option>
       </mat-autocomplete>
-      <mat-hint>Press Enter or Tab to add an item.</mat-hint>
 
       <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
         {{ error | humanReadableError }}
       </mat-error>
     </mat-form-field>
+    A{{ autocompleteFormControl.value }}B
   `,
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
@@ -77,6 +85,7 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
       });
 
     this.subscription = this.autocompleteFormControl.valueChanges.subscribe(value => {
+      console.log('a', value);
       if (value) {
         this.filteredAuthorship = this.availableAuthorship.filter(authorship =>
           authorship.toLowerCase().includes(value.toLowerCase())
@@ -110,6 +119,7 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   }
 
   private _addItem(authorship: string) {
+    this.autocompleteFormControl.setValue(null);
     this.chipInput.clear();
 
     if (authorship === '' || this.selectedItems.includes(authorship)) {
@@ -121,6 +131,7 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
     }
 
     this.selectedItems.push(authorship);
+
     this._updateFormControl();
     this._cdr.detectChanges();
   }
