@@ -19,6 +19,7 @@ import {
   UpdateResourceClassComment,
   ListNodeInfo,
 } from '@dasch-swiss/dsp-js';
+import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
@@ -28,7 +29,7 @@ import {
   RemoveProjectOntologyAction,
   ResetCurrentOntologyIfNeededAction,
 } from '@dasch-swiss/vre/core/state';
-import { OntologyService, PropertyInfoObject, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, concat, defer, Observable, of } from 'rxjs';
@@ -36,6 +37,7 @@ import { filter, map, switchMap, take, tap, last, distinctUntilChanged } from 'r
 import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
 import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
+import { ClassPropertyInfo, ResourceClassInfo, PropertyInfo, ClassShortInfo } from '../ontology.types';
 import { MakeOntologyFor, OntologyContext, ProjectContext } from './make-ontology-for';
 
 @Injectable({ providedIn: 'root' })
@@ -46,64 +48,70 @@ export class OntologyEditService {
   private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
   currentOntology$ = this._currentOntology.asObservable();
 
-  private _projectsOntologies$ = this._store.select(OntologiesSelectors.currentProjectOntologies);
   private _projectsLists$ = this._lists.getListsInProject$();
 
   latestChangedItem = new BehaviorSubject<string | undefined>(undefined);
 
-  currentOntologyClasses$ = this.currentOntology$.pipe(
-    map(ontology => {
-      if (ontology) {
-        return this._filterAndSortOntoClasses(
-          ontology.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
-            ResourceClassDefinitionWithAllLanguages
-          )
-        );
-      }
-      return [];
-    })
-  );
-
-  currentOntologyProperties$: Observable<PropertyInfoObject[]> = combineLatest([
+  currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
-    this._projectsOntologies$,
+    this._store.select(OntologiesSelectors.currentProjectOntologies),
     this._projectsLists$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
       if (!currentOntology) return [];
-
       const props = currentOntology.getAllPropertyDefinitions() as ResourcePropertyDefinitionWithAllLanguages[];
+      return this._buildPropertyInfoList(allOntologies, allLists, props);
+    })
+  );
 
-      return this._sortingService
-        .keySortByAlphabetical(props, 'label')
-        .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
-        .map((prop: ResourcePropertyDefinitionWithAllLanguages) => {
-          const propertyInfo: PropertyInfoObject = {
-            propDef: prop,
-            propType: this._ontologyService.getDefaultProperty(prop),
-          };
+  currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
+    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this.currentOntology$, // still needed for resolving current ontology match
+    this._projectsLists$,
+  ]).pipe(
+    map(([ontologies, currentOntology, allLists]) => {
+      const allProps = ontologies.flatMap(
+        o => o.getAllPropertyDefinitions() as ResourcePropertyDefinitionWithAllLanguages[]
+      );
+      return this._buildPropertyInfoList(ontologies, allLists, allProps);
+    })
+  );
 
-          if (prop.objectType === Constants.Region) {
-            propertyInfo.propObjectLabel = 'Region';
-            return propertyInfo;
-          }
+  currentOntologyClasses$: Observable<ResourceClassInfo[]> = combineLatest([
+    this.currentOntology$,
+    this.currentOntologyProperties$,
+  ]).pipe(
+    map(([ontology, allProperties]) => {
+      if (!ontology) return [];
 
-          if (prop.objectType === Constants.ListValue) {
-            const listIri = prop.guiAttributes?.[0]?.split('<')[1]?.replace(/>/g, '');
-            const { label, comment } = this._getListLabelAndComment(listIri, allLists);
-            propertyInfo.propObjectLabel = label;
-            propertyInfo.propObjectComment = comment;
-            return propertyInfo;
-          }
+      const classes = this._filterAndSortOntoClasses(
+        ontology.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
+          ResourceClassDefinitionWithAllLanguages
+        )
+      );
 
-          if (prop.isLinkProperty && prop.objectType && prop.objectType !== Constants.Region) {
-            const { label, comment } = this._getLinkLabelAndComment(prop.objectType, currentOntology, allOntologies);
-            propertyInfo.propObjectLabel = label ?? '';
-            propertyInfo.propObjectComment = comment ?? '';
-          }
+      return classes.map(resClass => {
+        const propertyIds = resClass.propertiesList.map(p => p.propertyIndex);
 
-          return propertyInfo;
-        });
+        const matchingProps: ClassPropertyInfo[] = allProperties
+          .filter(prop => propertyIds.includes(prop.propDef.id))
+          .map(prop => {
+            const iHasProperty = resClass.propertiesList.find(p => p.propertyIndex === prop.propDef.id)!;
+
+            return {
+              ...prop,
+              iHasProperty,
+              classDefinition: resClass,
+            } satisfies ClassPropertyInfo;
+          })
+          .sort((a, b) => {
+            const aOrder = resClass.propertiesList.find(p => p.propertyIndex === a.propDef.id)?.guiOrder ?? 0;
+            const bOrder = resClass.propertiesList.find(p => p.propertyIndex === b.propDef.id)?.guiOrder ?? 0;
+            return aOrder - bOrder;
+          });
+
+        return new ResourceClassInfo(resClass, matchingProps);
+      });
     })
   );
 
@@ -208,6 +216,69 @@ export class OntologyEditService {
       });
   }
 
+  private _buildPropertyInfoList(
+    ontologies: ReadOntology[],
+    allLists: ListNodeInfo[],
+    props: ResourcePropertyDefinitionWithAllLanguages[]
+  ): PropertyInfo[] {
+    return this._sortingService
+      .keySortByAlphabetical(props, 'label')
+      .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
+      .map((prop): PropertyInfo => {
+        const propId = prop.id;
+        const baseOntologyId = propId.split('#')[0];
+        const baseOntologyLabel = ontologies.find(o => o.id === baseOntologyId)?.label || '';
+
+        const usedByClasses: ClassShortInfo[] = [];
+        ontologies.forEach(onto => {
+          getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
+            const usedByClass = resClass.propertiesList.some(p => p.propertyIndex === propId);
+            const alreadyAdded = usedByClasses.some(c => c.id === resClass.id);
+
+            if (usedByClass && !alreadyAdded) {
+              usedByClasses.push({
+                id: resClass.id,
+                label: resClass.label!,
+                comment: `${onto.label}: ${resClass.comment ?? ''}`,
+                restrictedToClass: prop.isLinkProperty ? prop.subjectType : undefined,
+              });
+            }
+          });
+        });
+
+        usedByClasses.sort((a, b) => a?.label?.localeCompare(b?.label));
+
+        const propertyInfo: PropertyInfo = {
+          propDef: prop,
+          propType: this._ontologyService.getDefaultProperty(prop),
+          baseOntologyId,
+          baseOntologyLabel,
+          usedByClasses,
+        };
+
+        if (prop.objectType === Constants.Region) {
+          propertyInfo.objectLabel = 'Region';
+          return propertyInfo;
+        }
+
+        if (prop.objectType === Constants.ListValue) {
+          const listIri = prop.guiAttributes?.[0]?.split('<')[1]?.replace(/>/g, '');
+          const { label, comment } = this._getListLabelAndComment(listIri, allLists);
+          propertyInfo.objectLabel = label;
+          propertyInfo.objectComment = comment;
+          return propertyInfo;
+        }
+
+        if (prop.isLinkProperty && prop.objectType) {
+          const { label, comment } = this._getObjectLabelAndComment(prop.objectType, ontologies);
+          propertyInfo.objectLabel = label ?? '';
+          propertyInfo.objectComment = comment ?? '';
+        }
+
+        return propertyInfo;
+      });
+  }
+
   private _filterAndSortOntoClasses(allOntoClasses: ResourceClassDefinitionWithAllLanguages[]) {
     const ontoClasses: ResourceClassDefinitionWithAllLanguages[] = [];
 
@@ -231,13 +302,12 @@ export class OntologyEditService {
     };
   }
 
-  private _getLinkLabelAndComment(
+  private _getObjectLabelAndComment(
     objectType: string,
-    current: ReadOntology,
     allOntologies: ReadOntology[]
   ): { label?: string; comment?: string } {
     const baseOntologyId = objectType.split('#')[0];
-    const onto = current.id === baseOntologyId ? current : allOntologies.find(o => o.id === baseOntologyId);
+    const onto = allOntologies.find(o => o.id === baseOntologyId);
 
     const classDef = onto?.classes?.[objectType];
     return {

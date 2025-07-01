@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Cardinality } from '@dasch-swiss/dsp-js';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ClassPropertyInfo } from '../../../../ontology.types';
 import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality-change-dialog.component';
 
 @Component({
@@ -44,9 +44,8 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardinalityComponent implements OnInit {
-  @Input() propertyInfo!: PropertyInfoObject;
-  @Input() classIri!: string;
-  @Input() cardinality!: Cardinality;
+  @Input({ required: true }) propertyInfo!: ClassPropertyInfo;
+  @Input({ required: true }) classId!: string;
   @Input() disabled = false;
   @Output() cardinalityChange = new EventEmitter<Cardinality>();
 
@@ -65,8 +64,12 @@ export class CardinalityComponent implements OnInit {
   }
 
   private _initToggleStates() {
-    this.multipleToggleState = this.cardinality === Cardinality._0_n || this.cardinality === Cardinality._1_n;
-    this.requiredToggleState = this.cardinality === Cardinality._1 || this.cardinality === Cardinality._1_n;
+    this.multipleToggleState =
+      this.propertyInfo.iHasProperty.cardinality === Cardinality._0_n ||
+      this.propertyInfo.iHasProperty.cardinality === Cardinality._1_n;
+    this.requiredToggleState =
+      this.propertyInfo.iHasProperty.cardinality === Cardinality._1 ||
+      this.propertyInfo.iHasProperty.cardinality === Cardinality._1_n;
     this._cdr.detectChanges();
   }
 
@@ -81,9 +84,9 @@ export class CardinalityComponent implements OnInit {
   onToggleChange() {
     const targetCardinality: Cardinality = this._determineTargetCardinality();
     const cardinalityInfo: CardinalityInfo = {
-      classIri: this.classIri,
+      classIri: this.classId,
       propertyInfo: this.propertyInfo,
-      currentCardinality: this.cardinality,
+      currentCardinality: this.propertyInfo.iHasProperty.cardinality,
       targetCardinality,
     };
     const dialogConfig: MatDialogConfig = {
@@ -97,7 +100,7 @@ export class CardinalityComponent implements OnInit {
 
     this._dialogRef.afterClosed().subscribe((performChange: boolean) => {
       if (performChange) {
-        this.cardinality = targetCardinality;
+        this.propertyInfo.iHasProperty.cardinality = targetCardinality;
         this.cardinalityChange.emit(targetCardinality);
       } else {
         this._initToggleStates();

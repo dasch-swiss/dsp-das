@@ -10,7 +10,7 @@
       </span>
       <span
         class="label"
-        [matTooltip]="property.propDef!.comment"
+        [matTooltip]="property.propDef.comment || ''"
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip"
         data-cy="property-labels">
@@ -20,10 +20,10 @@
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
         class="attribute additional-info"
-        *ngIf="propAttribute"
-        [matTooltip]="propAttributeComment"
+        *ngIf="property.objectLabel"
+        [matTooltip]="property.objectComment || ''"
         matTooltipPosition="above"
-        [innerHTML]="'&rarr;&nbsp;' + propAttribute">
+        [innerHTML]="'&rarr;&nbsp;' + property.objectLabel">
       </span>
     </div>
   </div>
@@ -40,9 +40,9 @@
     <span class="fill-remaining-space center"></span>
     <!-- in case of ontology property: display corresponding resource classes -->
     <span class="white-space">
-      <span *ngIf="usedByClasses.length; else notUsed">
+      <span *ngIf="property.usedByClasses.length; else notUsed">
         <span class="mat-caption">&gt; Property is used in:</span>
-        <span *ngFor="let c of usedByClasses; trackBy: trackByFn; let last = last">
+        <span *ngFor="let c of property.usedByClasses; trackBy: trackByFn; let last = last">
           <span [matTooltip]="c.comment" matTooltipPosition="above" [matTooltipDisabled]="isLockHovered"
             >{{c.label}}
             <span

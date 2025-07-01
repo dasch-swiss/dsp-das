@@ -1,18 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ClassDefinition } from '@dasch-swiss/dsp-js';
-import { OntologiesSelectors, PropToAdd } from '@dasch-swiss/vre/core/state';
-import {
-  DefaultProperties,
-  DefaultProperty,
-  PropertyCategory,
-  PropertyInfoObject,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
-import { PropertyEditData } from '../../forms/property-form/property-form.type';
+import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
+import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -87,39 +80,38 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPropertyMenuComponent {
-  @Input() resourceClass: ClassDefinition | undefined = undefined;
+  @Input({ required: true }) resourceClass!: ResourceClassInfo;
   @Output() updatePropertyAssignment = new EventEmitter<string>();
 
   private ngUnsubscribe = new Subject<void>();
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  unusedProperties$ = this._oes.currentOntologyProperties$.pipe(
-    map(props => {
-      const usedIds = (this.resourceClass?.propertiesList || []).map(c => c.propertyIndex);
-      return props.filter(p => !usedIds.includes(p.propDef!.id));
-    })
-  );
-
-  availableProperties$: Observable<PropToAdd[]> = combineLatest([
-    this._store.select(OntologiesSelectors.currentProjectOntologies),
-    this.unusedProperties$,
-  ]).pipe(
+  availableProperties$: Observable<PropToAdd[]> = this._oes.currentProjectsProperties$.pipe(
     takeUntil(this.ngUnsubscribe),
-    map(([ontologies, properties]) => {
-      return ontologies.map(onto => {
-        return {
-          ontologyId: onto.id,
-          ontologyLabel: onto.label,
-          properties,
+    map(allProps => {
+      const usedByClass = new Set(this.resourceClass?.iHasProperties.map(p => p.propertyIndex));
+      const groupedUnused = new Map<string, PropToAdd>();
+
+      allProps.forEach(prop => {
+        if (usedByClass.has(prop.propDef.id)) return;
+
+        const group = groupedUnused.get(prop.baseOntologyId) ?? {
+          ontologyId: prop.baseOntologyId,
+          ontologyLabel: prop.baseOntologyLabel,
+          properties: [],
         };
+
+        group.properties.push(prop);
+        groupedUnused.set(prop.baseOntologyId, group);
       });
+
+      return Array.from(groupedUnused.values());
     })
   );
 
   constructor(
     private _dialog: MatDialog,
-    private _oes: OntologyEditService,
-    private _store: Store
+    private _oes: OntologyEditService
   ) {}
 
   trackByPropToAddFn = (index: number, item: PropToAdd) => `${index}-${item.ontologyId}`;
@@ -128,20 +120,20 @@ export class AddPropertyMenuComponent {
 
   trackByDefaultPropertyFn = (index: number, item: DefaultProperty) => `${index}-${item.label}`;
 
-  trackByPropFn = (index: number, item: PropertyInfoObject) => `${index}-${item.propDef?.id}`;
+  trackByPropFn = (index: number, item: PropertyInfo) => `${index}-${item.propDef?.id}`;
 
   assignExistingProperty(propertyId: string) {
-    this._oes.assignPropertyToClass(propertyId, this.resourceClass!);
+    this._oes.assignPropertyToClass(propertyId, this.resourceClass.resourceClassDefinition);
   }
 
   addNewProperty(propType: DefaultProperty) {
-    const createData: PropertyEditData = {
+    const createData: EditPropertyDialogData = {
       propType,
       guiElement: propType.guiElement,
       objectType: propType.objectType,
-      assignToClass: this.resourceClass,
+      assignToClass: this.resourceClass.resourceClassDefinition,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(EditPropertyFormDialogComponent, {
+    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(EditPropertyFormDialogComponent, {
       data: createData,
     });
   }

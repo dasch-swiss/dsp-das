@@ -7,7 +7,7 @@
   cdkDrag
   cdkDragBoundary=".drag-drop-stop">
   <mat-card-header class="resource-class-header" cdkDragHandle>
-    <mat-card-title [matTooltip]="resourceClass?.comment || ''" matTooltipPosition="above">
+    <mat-card-title [matTooltip]="classComment || ''" matTooltipPosition="above">
       {{ classLabel | appTruncate: 24 }}
     </mat-card-title>
     <mat-card-subtitle>
@@ -15,7 +15,7 @@
         {{ resourceClass.id | split: '#':1 }}
       </span>
       <span>&nbsp;&middot;&nbsp;</span>
-      <span matTooltip="subclass of" matTooltipPosition="above"> {{ defaultClassLabel }} </span>
+      <span matTooltip="subclass of" matTooltipPosition="above"> {{ resourceClass.defaultClassLabel }} </span>
     </mat-card-subtitle>
     <span class="resource-class-header-action">
       <span class="resource-class-more" *ngIf="(project$ | async)?.status">
@@ -39,18 +39,15 @@
     </span>
   </mat-card-header>
   <!-- resource class card content with list of properties -->
-  <mat-card-content
-    *ngIf="expanded && (classPropertiesToDisplay$ | async) as currentPropertiesToDisplay"
-    class="resource-class-content">
+  <mat-card-content *ngIf="expanded" class="resource-class-content">
     <mat-list
       cdkDropList
       class="resource-class-properties"
-      (cdkDropListDropped)="onPropertyDropped($event, currentPropertiesToDisplay)"
-      *ngIf="currentPropertiesToDisplay?.length; else noProperties">
+      (cdkDropListDropped)="onPropertyDropped($event)"
+      *ngIf="resourceClass.properties?.length; else noProperties">
       <app-property-item
-        *ngFor="let prop of (classPropertiesToDisplay$ | async); let i = index; trackBy: trackByPropToDisplayFn"
-        [prop]="prop"
-        [props]="currentPropertiesToDisplay"
+        *ngFor="let prop of resourceClass.properties; let i = index; trackBy: trackByPropToDisplayFn"
+        [classProp]="prop"
         [resourceClass]="resourceClass" />
     </mat-list>
 

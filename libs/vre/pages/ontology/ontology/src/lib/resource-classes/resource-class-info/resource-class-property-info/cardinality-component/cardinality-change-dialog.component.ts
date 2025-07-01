@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit }
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { take } from 'rxjs/operators';
+import { PropertyInfo } from '../../../../ontology.types';
 
 export interface CardinalityInfo {
   classIri: string;
   currentCardinality: Cardinality;
-  propertyInfo: PropertyInfoObject;
+  propertyInfo: PropertyInfo;
   targetCardinality: Cardinality;
 }
 

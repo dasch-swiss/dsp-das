@@ -10,13 +10,12 @@ import {
   DefaultProperty,
   DefaultResourceClasses,
   PropertyCategory,
-  PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from './forms/property-form/edit-property-form-dialog.component';
-import { CreatePropertyData } from './forms/property-form/property-form.type';
+import { CreatePropertyDialogData } from './forms/property-form/property-form.type';
 import { EditResourceClassDialogComponent } from './forms/resource-class-form/edit-resource-class-dialog.component';
 import { OntologyEditService } from './services/ontology-edit.service';
 
@@ -84,12 +83,9 @@ export class OntologyComponent implements OnInit, OnDestroy {
   }
 
   openCreateNewProperty(propType: DefaultProperty) {
-    this._dialog.open<EditPropertyFormDialogComponent, PropertyInfoObject, CreatePropertyData>(
-      EditPropertyFormDialogComponent,
-      {
-        data: { propType },
-      }
-    );
+    this._dialog.open<EditPropertyFormDialogComponent, CreatePropertyDialogData>(EditPropertyFormDialogComponent, {
+      data: { propType },
+    });
   }
 
   trackByPropCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;

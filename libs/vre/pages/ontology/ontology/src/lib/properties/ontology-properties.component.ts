@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PropertyDefinition } from '@dasch-swiss/dsp-js';
-import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Observable } from 'rxjs';
+import { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
@@ -47,7 +47,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPropertiesComponent {
-  properties$: Observable<PropertyInfoObject[]> = this._oes.currentOntologyProperties$;
+  properties$: Observable<PropertyInfo[]> = this._oes.currentOntologyProperties$;
 
   trackByPropertyDefinitionFn = (index: number, item: PropertyDefinition) => `${index}-${item.id}`;
 

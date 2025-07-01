@@ -1,25 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Constants, ReadOntology, ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { DefaultProperty, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
-import { PropertyEditData } from '../../forms/property-form/property-form.type';
+import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
+import { PropertyInfo, ClassShortInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
-
-export interface ShortInfo {
-  id: string;
-  label: string;
-  comment: string;
-  restrictedToClass?: string;
-}
 
 @Component({
   selector: 'app-property-info',
@@ -50,17 +43,12 @@ export interface ShortInfo {
     ]),
   ],
 })
-export class PropertyInfoComponent implements OnInit {
-  @Input({ required: true }) property!: PropertyInfoObject;
+export class PropertyInfoComponent {
+  @Input({ required: true }) property!: PropertyInfo;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   project!: ReadProject | undefined;
-
-  propAttribute: string | undefined;
-  propAttributeComment: string | undefined;
-
-  usedByClasses: ShortInfo[] = [];
 
   showActionBubble = false;
 
@@ -83,35 +71,8 @@ export class PropertyInfoComponent implements OnInit {
     this.project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
   }
 
-  ngOnInit() {
-    this._store.select(OntologiesSelectors.currentProjectOntologies).subscribe(ontologies => {
-      if (ontologies.length) {
-        this._collectUsedByClasses(ontologies);
-      }
-    });
-  }
-
-  private _collectUsedByClasses(projectsOntologies: ReadOntology[]) {
-    projectsOntologies.forEach(onto => {
-      getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
-        const usedByClass = resClass.propertiesList.some(prop => prop.propertyIndex === this.property.propDef!.id);
-        const isAlreadyAdded = this.usedByClasses.some(c => c.id === resClass.id);
-
-        if (usedByClass && !isAlreadyAdded) {
-          this.usedByClasses.push({
-            id: resClass.id,
-            label: resClass.label!,
-            comment: `${onto.label}: ${resClass.comment}`,
-            restrictedToClass: this.property.propDef!.isLinkProperty ? this.property.propDef!.subjectType : undefined,
-          });
-        }
-      });
-    });
-    this.usedByClasses.sort((a, b) => (a.label > b.label ? 1 : -1));
-  }
-
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
-    const propertyData: PropertyEditData = {
+    const propertyData: EditPropertyDialogData = {
       id: propDef.id,
       propType,
       name: propDef.id?.split('#').pop() || '',
@@ -121,7 +82,7 @@ export class PropertyInfoComponent implements OnInit {
       guiAttribute: propDef.guiAttributes[0],
       objectType: propDef.objectType,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(
+    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(
       EditPropertyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(propertyData)
     );
@@ -134,7 +95,7 @@ export class PropertyInfoComponent implements OnInit {
       .subscribe();
   }
 
-  trackByFn = (index: number, item: ShortInfo) => item.id;
+  trackByFn = (index: number, item: ClassShortInfo) => item.id;
 
   mouseEnter() {
     if (this._oes.isTransacting) {

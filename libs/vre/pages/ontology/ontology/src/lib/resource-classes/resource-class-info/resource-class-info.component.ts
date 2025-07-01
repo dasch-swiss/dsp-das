@@ -1,21 +1,17 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiResponseError, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ClassPropToDisplay, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import {
-  DefaultResourceClasses,
-  LocalizationService,
-  OntologyService,
-  PropertyInfoObject,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { comment } from 'postcss';
+import { switchMap, take } from 'rxjs/operators';
 import { EditResourceClassDialogComponent } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
 import { UpdateResourceClassData } from '../../forms/resource-class-form/resource-class-form.type';
+import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -24,12 +20,10 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   styleUrls: ['./resource-class-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceClassInfoComponent implements OnChanges {
-  @Input({ required: true }) resourceClass!: ResourceClassDefinitionWithAllLanguages;
+export class ResourceClassInfoComponent {
+  @Input({ required: true }) resourceClass!: ResourceClassInfo;
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
-
-  classPropertiesToDisplay$!: Observable<ClassPropToDisplay[]>;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
@@ -46,11 +40,13 @@ export class ResourceClassInfoComponent implements OnChanges {
     return preferedLangLabel?.value || this.resourceClass.label || '';
   }
 
-  get defaultClassLabel() {
-    return this.resourceClass.subClassOf.map(superIri => DefaultResourceClasses.getLabel(superIri)).join(', ');
+  get classComment() {
+    const lang = this._localizationService.getCurrentLanguage();
+    const preferedLangComment = this.resourceClass.comments.find(c => c.language === lang);
+    return preferedLangComment?.value || this.resourceClass.comment || '';
   }
 
-  trackByPropToDisplayFn = (index: number, item: ClassPropToDisplay) => `${index}-${item.iHasProperty!.propertyIndex}`;
+  trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
     private _dialog: MatDialog,
@@ -59,25 +55,6 @@ export class ResourceClassInfoComponent implements OnChanges {
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
-
-  ngOnChanges() {
-    this.classPropertiesToDisplay$ = this._oes.currentOntologyProperties$.pipe(
-      map((properties: PropertyInfoObject[]) => {
-        const propertyIdsOfClass = this.resourceClass.propertiesList.map(p => p.propertyIndex);
-
-        return properties
-          .filter(prop => propertyIdsOfClass.includes(prop.propDef!.id))
-          .map(
-            prop =>
-              ({
-                ...prop,
-                iHasProperty: this.resourceClass.propertiesList.find(p => p.propertyIndex === prop.propDef!.id),
-              }) as ClassPropToDisplay
-          )
-          .sort((a, b) => (a.iHasProperty?.guiOrder ?? 0) - (b.iHasProperty?.guiOrder ?? 0));
-      })
-    );
-  }
 
   canBeDeleted() {
     this._oes
@@ -94,7 +71,7 @@ export class ResourceClassInfoComponent implements OnChanges {
   editResourceClassInfo() {
     this._dialog.open<EditResourceClassDialogComponent, UpdateResourceClassData>(
       EditResourceClassDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(this.resourceClass as UpdateResourceClassData)
+      DspDialogConfig.dialogDrawerConfig(this.resourceClass.updateResourceClassData)
     );
   }
 
@@ -105,25 +82,24 @@ export class ResourceClassInfoComponent implements OnChanges {
       .subscribe();
   }
 
-  onPropertyDropped(event: CdkDragDrop<string[]>, properties: ClassPropToDisplay[]) {
-    if (event.previousIndex === event.currentIndex) {
-      return;
-    }
-    moveItemInArray(properties, event.previousIndex, event.currentIndex);
+  onPropertyDropped(event: CdkDragDrop<ClassPropertyInfo[]>) {
+    if (event.previousIndex === event.currentIndex) return;
 
-    const iHasProperties = properties.map(prop => prop.iHasProperty!);
+    moveItemInArray(this.resourceClass.properties, event.previousIndex, event.currentIndex);
+    const updated = this.resourceClass.properties.map((p, index) => ({
+      ...p.iHasProperty,
+      guiOrder: index + 1,
+    }));
 
-    iHasProperties.forEach((prop, index) => {
-      prop.guiOrder = index + 1;
-    });
-
-    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, iHasProperties);
+    this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
   }
 
   openInDatabrowser() {
     const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
     const ontologyName = OntologyService.getOntologyName(this._oes.ontologyId || '');
-    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.id.split('#')[1]}`;
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.shortName}`;
     window.open(dataBrowserRoute, '_blank');
   }
+
+  protected readonly comment = comment;
 }

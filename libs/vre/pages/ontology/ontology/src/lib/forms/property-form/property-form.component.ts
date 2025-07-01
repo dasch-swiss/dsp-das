@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
-import { PropertyForm, PropertyEditData } from './property-form.type';
+import { PropertyForm, EditPropertyDialogData } from './property-form.type';
 
 @Component({
   selector: 'app-property-form',
@@ -54,7 +54,7 @@ import { PropertyForm, PropertyEditData } from './property-form.type';
   </form>`,
 })
 export class PropertyFormComponent implements OnInit {
-  @Input() propertyData!: PropertyEditData;
+  @Input() propertyData!: EditPropertyDialogData;
   @Output() afterFormInit = new EventEmitter<PropertyForm>();
 
   readonly Constants = Constants;

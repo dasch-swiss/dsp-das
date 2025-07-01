@@ -3,7 +3,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { take } from 'rxjs/operators';
 import { OntologyEditService } from '../../services/ontology-edit.service';
-import { PropertyForm, PropertyEditData, UpdatePropertyData, CreatePropertyData } from './property-form.type';
+import {
+  PropertyForm,
+  EditPropertyDialogData,
+  UpdatePropertyData,
+  CreatePropertyData,
+  CreatePropertyDialogData,
+} from './property-form.type';
 
 @Component({
   selector: 'app-edit-property-form-dialog',
@@ -26,17 +32,17 @@ export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;
   form!: PropertyForm;
 
-  get isEditingExistingProperty(): boolean {
-    return !!this.data.id;
+  isPropertyEditData(data: EditPropertyDialogData | CreatePropertyDialogData): data is EditPropertyDialogData {
+    return 'id' in data;
   }
 
   get title(): string {
-    return this.isEditingExistingProperty ? 'Edit property' : 'Create new property';
+    return this.isPropertyEditData(this.data) ? 'Edit property' : 'Create new property';
   }
 
   constructor(
     private dialogRef: MatDialogRef<EditPropertyFormDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PropertyEditData,
+    @Inject(MAT_DIALOG_DATA) public data: CreatePropertyDialogData | EditPropertyDialogData,
     private _oes: OntologyEditService
   ) {}
 
@@ -46,7 +52,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
 
   onSubmit() {
     let propertyData: CreatePropertyData | UpdatePropertyData;
-    if (this.isEditingExistingProperty) {
+    if (this.isPropertyEditData(this.data)) {
       propertyData = {
         id: this.data.id,
         labels: this.form.controls.labels.touched ? (this.form.controls.labels.value as StringLiteralV2[]) : undefined,

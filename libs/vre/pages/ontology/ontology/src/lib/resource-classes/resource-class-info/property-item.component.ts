@@ -10,20 +10,15 @@ import {
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  Cardinality,
-  ClassDefinition,
-  IHasProperty,
-  ResourcePropertyDefinitionWithAllLanguages,
-} from '@dasch-swiss/dsp-js';
+import { Cardinality } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ClassPropToDisplay, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
-import { PropertyEditData } from '../../forms/property-form/property-form.type';
+import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
+import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -41,18 +36,24 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           </mat-icon>
           <mat-icon
             *ngIf="!isHovered || (isAdmin$ | async) !== true"
-            [matTooltip]="propType?.group + ': ' + propType?.label + ' (' + prop.propDef?.id?.split('#')[1] + ')'"
+            [matTooltip]="
+              classProp.propType?.group +
+              ': ' +
+              classProp.propType?.label +
+              ' (' +
+              classProp.propDef?.id?.split('#')[1] +
+              ')'
+            "
             matTooltipPosition="above"
-            >{{ propType?.icon }}
+            >{{ classProp.propType?.icon }}
           </mat-icon>
         </div>
         <div class="property-item-content-container">
-          <app-resource-class-property-info [property]="prop" />
+          <app-resource-class-property-info [property]="classProp" />
           <app-cardinality
             [disabled]="(isAdmin$ | async) !== true"
-            [cardinality]="prop.iHasProperty.cardinality"
-            [classIri]="resourceClass.id"
-            [propertyInfo]="{ propDef: this.prop.propDef, propType: this.propType }"
+            [propertyInfo]="classProp"
+            [classId]="resourceClass.id"
             (cardinalityChange)="updateCardinality($event)" />
         </div>
         <div class="edit-menu">
@@ -144,9 +145,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input({ required: true }) resourceClass!: ClassDefinition;
-  @Input({ required: true }) prop!: ClassPropToDisplay;
-  @Input() props: IHasProperty[] = [];
+  @Input({ required: true }) resourceClass!: ResourceClassInfo;
+  @Input({ required: true }) classProp!: ClassPropertyInfo;
 
   @ViewChild('propertyCardRipple') propertyCardRipple!: MatRipple;
 
@@ -159,21 +159,16 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _destroy = new Subject<void>();
 
-  get propType(): DefaultProperty {
-    return this._ontoService.getDefaultPropertyType(this.prop!.propDef as ResourcePropertyDefinitionWithAllLanguages);
-  }
-
   constructor(
     private _cd: ChangeDetectorRef,
     private _oes: OntologyEditService,
     private _dialog: MatDialog,
-    private _ontoService: OntologyService,
     private _store: Store
   ) {}
 
   ngOnInit() {
     this._oes.latestChangedItem.pipe(takeUntil(this._destroy)).subscribe(item => {
-      if (item && item === this.prop.propDef?.id) {
+      if (item && item === this.classProp.propDef.id) {
         this.propertyCardRipple.launch({
           persistent: false,
         });
@@ -183,7 +178,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (this._oes.latestChangedItem.value === this.prop.propDef?.id) {
+    if (this._oes.latestChangedItem.value === this.classProp.propDef.id) {
       this.propertyCardRipple.launch({
         persistent: false,
       });
@@ -192,37 +187,38 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateCardinality(newValue: Cardinality) {
-    const propertyIdx = this.props.findIndex(p => p.propertyIndex === this.prop.iHasProperty.propertyIndex);
+    const propertyIdx = this.resourceClass.properties.findIndex(
+      p => p.iHasProperty.propertyIndex === this.classProp.iHasProperty.propertyIndex
+    );
     if (propertyIdx !== -1) {
-      this.props[propertyIdx] = this.prop.iHasProperty;
-      this.props[propertyIdx].cardinality = newValue;
-      this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, this.props);
+      this.resourceClass.iHasProperties[propertyIdx].cardinality = newValue;
+      this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, this.resourceClass.iHasProperties);
     }
   }
 
   canBeRemovedFromClass(): void {
-    this._oes.propertyCanBeRemovedFromClass$(this.prop.iHasProperty, this.resourceClass.id).subscribe(canDoRes => {
+    this._oes.propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.resourceClass.id).subscribe(canDoRes => {
       this.propCanBeRemovedFromClass = canDoRes.canDo;
       this._cd.markForCheck();
     });
   }
 
   removePropertyFromClass(): void {
-    this._oes.removePropertyFromClass(this.prop.iHasProperty, this.resourceClass.id);
+    this._oes.removePropertyFromClass(this.classProp.iHasProperty, this.resourceClass.id);
   }
 
   openEditProperty() {
-    const propertyData: PropertyEditData = {
-      id: this.prop.propDef.id,
-      propType: this.propType,
-      name: this.prop.propDef.id?.split('#').pop() || '',
-      label: this.prop.propDef.labels,
-      comment: this.prop.propDef.comments,
-      guiElement: this.prop.propDef.guiElement || this.propType.guiElement,
-      guiAttribute: this.prop.propDef.guiAttributes[0],
-      objectType: this.prop.propDef.objectType,
+    const propertyData: EditPropertyDialogData = {
+      id: this.classProp.propDef.id,
+      propType: this.classProp.propType,
+      name: this.classProp.propDef.id?.split('#').pop() || '',
+      label: this.classProp.propDef.labels,
+      comment: this.classProp.propDef.comments,
+      guiElement: this.classProp.propDef.guiElement || this.classProp.propType.guiElement,
+      guiAttribute: this.classProp.propDef.guiAttributes[0],
+      objectType: this.classProp.propDef.objectType,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, PropertyEditData>(
+    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(
       EditPropertyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(propertyData)
     );

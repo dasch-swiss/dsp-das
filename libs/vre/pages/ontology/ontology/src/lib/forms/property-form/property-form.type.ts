@@ -13,7 +13,7 @@ export type PropertyForm = FormGroup<{
   objectType: FormControl<string>;
 }>;
 
-export interface PropertyEditData {
+export interface EditPropertyDialogData {
   id?: string;
   propType: DefaultProperty;
   name?: string;
@@ -27,7 +27,7 @@ export interface PropertyEditData {
 
 export interface CreatePropertyDialogData {
   propType: DefaultProperty;
-  assignToClass?: string; // class ID to which the property should be assigned
+  assignToClass?: ClassDefinition; // class ID to which the property should be assigned
 }
 
 export interface UpdatePropertyData {
