@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as Editor from 'ckeditor5-custom-build';
+import { Subscription } from 'rxjs';
 import { ckEditor } from './ck-editor';
 import { unescapeHtml } from './unescape-html';
 
@@ -14,19 +15,24 @@ import { unescapeHtml } from './unescape-html';
       style="margin-bottom: 22px; display: block;" />
     <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>`,
 })
-export class CkEditorComponent implements OnInit {
+export class CkEditorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string>;
   footnoteControl = new FormControl<string>('');
 
+  subscription!: Subscription;
   readonly editor = Editor;
   protected readonly ckEditor = ckEditor;
 
   ngOnInit() {
     this.footnoteControl.setValue(this.control.value ? this._parseToFootnote(this.control.value) : null);
 
-    this.footnoteControl.valueChanges.subscribe(value => {
+    this.subscription = this.footnoteControl.valueChanges.subscribe(value => {
       this.control.setValue(value ? this._parseFromFootnote(value) : '');
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   private _parseToFootnote(rawHtml: string) {
