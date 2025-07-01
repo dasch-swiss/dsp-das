@@ -31,6 +31,7 @@ import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pag
 import { PropertiesDisplayComponents } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { PropertyFormComponents } from '@dasch-swiss/vre/resource-editor/property-form';
 import { RepresentationsComponents } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/resource-creator';
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
@@ -71,6 +72,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AppComponent,
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
+    ...ResourceCreatorComponents,
     ...SegmentSupportComponents,
     ...ResourcePageComponents,
     ...RepresentationsComponents,

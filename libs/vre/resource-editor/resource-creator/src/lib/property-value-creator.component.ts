@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { FormValueGroup } from './form-value-array.type';
+import { FormValueGroup } from '../../../resource-properties/src/lib/form-value-array.type';
 
 @Component({
   selector: 'app-property-value-creator',

@@ -20,7 +20,6 @@ import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
-import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
@@ -108,7 +107,6 @@ export const ResourcePropertiesComponents = [
 
   TemplateEditorSwitcherComponent,
   TemplateViewerSwitcherComponent,
-  PropertyValueCreatorComponent,
   NullableEditorComponent,
   PropertyValueBasicCommentComponent,
   PropertyValuesCreatorComponent,

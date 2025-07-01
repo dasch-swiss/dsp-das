@@ -59,7 +59,6 @@ export * from './lib/mathjax/math-jax.service';
 
 export * from './lib/template-editor-switcher.component';
 export * from './lib/template-viewer-switcher.component';
-export * from './lib/property-value-creator.component';
 export * from './lib/nullable-editor.component';
 export * from './lib/property-value-basic-comment.component';
 export * from './lib/property-values-creator.component';
