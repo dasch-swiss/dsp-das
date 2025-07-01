@@ -33,7 +33,10 @@ export class TimeFormatDirective implements ControlValueAccessor {
     }
   }
 
-  writeValue(value: number): void {
+  writeValue(value: number | null): void {
+    if (!value) {
+      return;
+    }
     const formattedValue = secondsToTimeString(value);
     this.el.nativeElement.value = formattedValue;
   }
