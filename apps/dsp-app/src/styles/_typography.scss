@@ -6,7 +6,7 @@
 @use '@angular/material' as mat;
 
 // define the primary button typography level
-$dsp-primary-button-typography-level: mat.define-typography-level(
+$dsp-primary-button-typography-level: mat.m2-define-typography-level(
         $font-size: 16px,
         $line-height: 36px,
         $font-weight: 400,
@@ -15,4 +15,4 @@ $dsp-primary-button-typography-level: mat.define-typography-level(
 );
 
 // combine everything in a typography config
-$dsp-typography-config: mat.define-typography-config($button: $dsp-primary-button-typography-level);
+$dsp-typography-config: mat.m2-define-typography-config($button: $dsp-primary-button-typography-level);

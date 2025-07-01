@@ -17,14 +17,14 @@
 @include mat.all-component-typographies(t.$dsp-typography-config);
 
 // Define the color palettes for the theme.
-$primary: mat.define-palette(config.$blue_palette, 700, 500, 900);
-$accent: mat.define-palette(config.$light_blue_palette, 900, 600, 900);
+$primary: mat.m2-define-palette(config.$blue_palette, 700, 500, 900);
+$accent: mat.m2-define-palette(config.$light_blue_palette, 900, 600, 900);
 
 // The warn palette is optional (defaults to red).
-$warn: mat.define-palette(config.$velvet_red_palette, 700, 500, 900);
+$warn: mat.m2-define-palette(config.$velvet_red_palette, 700, 500, 900);
 
 // Define a theme.
-$theme: mat.define-light-theme((
+$theme: mat.m2-define-light-theme((
   color: (primary: $primary, accent: $accent, warn: $warn),
   density: 0
 ));
