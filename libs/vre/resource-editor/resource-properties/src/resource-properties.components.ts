@@ -1,11 +1,5 @@
 import { AuthorshipFormFieldComponent } from './lib/authorship-form-field.component';
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
-import { CreateResourceFormFileComponent } from './lib/create-resource-form-file.component';
-import { CreateResourceFormImageComponent } from './lib/create-resource-form-image.component';
-import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
-import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
-import { CreateResourceFormRowComponent } from './lib/create-resource-form-row.component';
-import { CreateResourceFormComponent } from './lib/create-resource-form.component';
 import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
 import { EraseResourceDialogComponent } from './lib/erase-resource-dialog.component';
@@ -81,13 +75,7 @@ export const ResourcePropertiesComponents = [
   PropertyValueDisplayComponent,
   PropertyValueToFormComponent,
   CreateResourceDialogComponent,
-  CreateResourceFormComponent,
   ResourceFormLegalComponent,
-  CreateResourceFormRepresentationComponent,
-  CreateResourceFormPropertiesComponent,
-  CreateResourceFormRowComponent,
-  CreateResourceFormImageComponent,
-  CreateResourceFormFileComponent,
   UploadControlComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,

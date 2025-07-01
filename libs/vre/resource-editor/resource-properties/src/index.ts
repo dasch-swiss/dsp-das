@@ -19,13 +19,8 @@ export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/create-resource-dialog.component';
-export * from './lib/create-resource-form.component';
-export * from './lib/create-resource-form-row.component';
-export * from './lib/create-resource-form-representation.component';
-export * from './lib/create-resource-form-image.component';
-export * from './lib/create-resource-form-file.component';
+
 export * from './lib/resource-form-legal.component';
-export * from './lib/create-resource-form-properties.component';
 export * from './lib/date-time';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
