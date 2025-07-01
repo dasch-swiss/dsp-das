@@ -3,8 +3,8 @@ import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
-import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { finalize } from 'rxjs/operators';
+import { PaginatedApiService } from './paginated-api.service';
 
 @Component({
   selector: 'app-authorship-form-field',
@@ -29,7 +29,7 @@ import { finalize } from 'rxjs/operators';
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
-        <mat-option *ngFor="let option of availableAuthorship" [value]="option">
+        <mat-option *ngFor="let option of filteredAuthorship" [value]="option">
           {{ option }}
         </mat-option>
 
@@ -53,6 +53,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, TAB];
   selectedItems: string[] = [];
   availableAuthorship: string[] = [];
+  filteredAuthorship: string[] = [];
   loading = true;
 
   readonly AIAuthorship = 'AI-Generated Content – Not Protected by Copyright';
@@ -67,20 +68,20 @@ export class AuthorshipFormFieldComponent implements OnInit {
   }
 
   constructor(
-    private _adminApi: AdminProjectsLegalInfoApiService,
+    private _paginatedApi: PaginatedApiService,
     private _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this._adminApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
+    this._paginatedApi
+      .getAuthorships(this.projectShortcode)
       .pipe(
         finalize(() => {
           this.loading = false;
         })
       )
       .subscribe(response => {
-        this.availableAuthorship = response.data;
+        this.availableAuthorship = response;
       });
   }
 
