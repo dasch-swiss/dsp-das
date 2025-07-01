@@ -23,19 +23,15 @@ import { PaginatedApiService } from './paginated-api.service';
       <input
         placeholder="New authorship..."
         data-cy="authorship-chips"
-        #test
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
+        [formControl]="autocompleteFormControl"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
         <mat-option *ngFor="let option of filteredAuthorship" [value]="option">
           {{ option }}
         </mat-option>
-
-        <mat-option *ngIf="AIContentMissing">{{ AIAuthorship }}</mat-option>
-
-        <mat-option *ngIf="publicDomainMissing">{{ publicDomainAuthorship }}</mat-option>
       </mat-autocomplete>
       <mat-hint>Press Enter or Tab to add an item.</mat-hint>
 
@@ -56,16 +52,10 @@ export class AuthorshipFormFieldComponent implements OnInit {
   filteredAuthorship: string[] = [];
   loading = true;
 
+  autocompleteFormControl = new FormControl('');
+
   readonly AIAuthorship = 'AI-Generated Content – Not Protected by Copyright';
   readonly publicDomainAuthorship = 'Public Domain – Not Protected by Copyright';
-
-  get AIContentMissing() {
-    return !this.availableAuthorship.includes(this.AIAuthorship);
-  }
-
-  get publicDomainMissing() {
-    return !this.availableAuthorship.includes(this.publicDomainAuthorship);
-  }
 
   constructor(
     private _paginatedApi: PaginatedApiService,
@@ -81,8 +71,19 @@ export class AuthorshipFormFieldComponent implements OnInit {
         })
       )
       .subscribe(response => {
-        this.availableAuthorship = response;
+        this.availableAuthorship = this._addMissingDefaultValues(response);
+        this.filteredAuthorship = this.availableAuthorship;
       });
+
+    this.autocompleteFormControl.valueChanges.subscribe(value => {
+      if (value) {
+        this.filteredAuthorship = this.availableAuthorship.filter(authorship =>
+          authorship.toLowerCase().includes(value.toLowerCase())
+        );
+      } else {
+        this.filteredAuthorship = this.availableAuthorship;
+      }
+    });
   }
 
   addItemFromMaterial(event: MatChipInputEvent) {
@@ -121,5 +122,15 @@ export class AuthorshipFormFieldComponent implements OnInit {
 
   private _updateFormControl() {
     this.control.setValue(this.selectedItems);
+  }
+
+  private _addMissingDefaultValues(authorship: string[]) {
+    if (!authorship.includes(this.AIAuthorship)) {
+      authorship.push(this.AIAuthorship);
+    }
+    if (!authorship.includes(this.publicDomainAuthorship)) {
+      authorship.push(this.publicDomainAuthorship);
+    }
+    return authorship;
   }
 }
