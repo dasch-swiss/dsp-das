@@ -47,7 +47,6 @@ import { PaginatedApiService } from './paginated-api.service';
         {{ error | humanReadableError }}
       </mat-error>
     </mat-form-field>
-    A{{ autocompleteFormControl.value }}B
   `,
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
@@ -85,7 +84,6 @@ export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
       });
 
     this.subscription = this.autocompleteFormControl.valueChanges.subscribe(value => {
-      console.log('a', value);
       if (value) {
         this.filteredAuthorship = this.availableAuthorship.filter(authorship =>
           authorship.toLowerCase().includes(value.toLowerCase())
