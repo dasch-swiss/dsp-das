@@ -49,7 +49,18 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           </mat-icon>
         </div>
         <div class="property-item-content-container">
-          <app-resource-class-property-info [property]="classProp" />
+          <div>
+            <div class="upper-prop-container">
+              <span class="label" data-cy="property-labels">{{ classProp.propDef.label }} </span>
+              <span
+                class="additional-info"
+                *ngIf="classProp.objectLabel"
+                [innerHTML]="'&rarr;&nbsp;' + classProp.objectLabel"></span>
+            </div>
+            <div mat-line class="lower-prop-container">
+              <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
+            </div>
+          </div>
           <app-cardinality
             [disabled]="(isAdmin$ | async) !== true"
             [propertyInfo]="classProp"
@@ -83,6 +94,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
     </mat-menu>`,
   styles: [
     `
+      @use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
+
       .list-icon {
         color: black;
         display: flex;
@@ -112,6 +125,24 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         justify-content: space-between;
         align-items: center;
         margin-right: 0.5rem;
+      }
+
+      .upper-prop-container {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+      }
+
+      .lower-prop-container {
+        color: $primary_700;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
       }
 
       .drag-n-drop-placeholder {

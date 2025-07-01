@@ -12,11 +12,10 @@ import { OntologyPropertiesComponent } from './lib/properties/ontology-propertie
 import { PropertyInfoComponent } from './lib/properties/property-info/property-info.component';
 import { OntologyEditorClassesComponent } from './lib/resource-classes/ontology-editor-classes.component';
 import { AddPropertyMenuComponent } from './lib/resource-classes/resource-class-info/add-property-menu.component';
+import { CardinalityChangeDialogComponent } from './lib/resource-classes/resource-class-info/cardinality-component/cardinality-change-dialog.component';
+import { CardinalityComponent } from './lib/resource-classes/resource-class-info/cardinality-component/cardinality.component';
 import { PropertyItemComponent } from './lib/resource-classes/resource-class-info/property-item.component';
 import { ResourceClassInfoComponent } from './lib/resource-classes/resource-class-info/resource-class-info.component';
-import { CardinalityChangeDialogComponent } from './lib/resource-classes/resource-class-info/resource-class-property-info/cardinality-component/cardinality-change-dialog.component';
-import { CardinalityComponent } from './lib/resource-classes/resource-class-info/resource-class-property-info/cardinality-component/cardinality.component';
-import { ResourceClassPropertyInfoComponent } from './lib/resource-classes/resource-class-info/resource-class-property-info/resource-class-property-info.component';
 
 export const OntologyComponents = [
   DataModelsComponent,
@@ -31,7 +30,6 @@ export const OntologyComponents = [
   AddPropertyMenuComponent,
   ResourceClassInfoComponent,
   PropertyItemComponent,
-  ResourceClassPropertyInfoComponent,
   CardinalityComponent,
   CardinalityChangeDialogComponent,
   EditPropertyFormDialogComponent,

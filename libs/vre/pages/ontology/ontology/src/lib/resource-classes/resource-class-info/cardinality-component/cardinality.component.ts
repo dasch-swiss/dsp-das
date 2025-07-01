@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Cardinality } from '@dasch-swiss/dsp-js';
-import { ClassPropertyInfo } from '../../../../ontology.types';
+import { ClassPropertyInfo } from '../../../ontology.types';
 import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality-change-dialog.component';
 
 @Component({
