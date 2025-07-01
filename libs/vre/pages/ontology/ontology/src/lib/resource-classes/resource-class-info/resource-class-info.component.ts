@@ -1,13 +1,13 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
+import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { comment } from 'postcss';
 import { switchMap, take } from 'rxjs/operators';
 import { EditResourceClassDialogComponent } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
 import { UpdateResourceClassData } from '../../forms/resource-class-form/resource-class-form.type';
@@ -49,6 +49,7 @@ export class ResourceClassInfoComponent {
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
+    public clipboard: Clipboard,
     private _dialog: MatDialog,
     private _localizationService: LocalizationService,
     private _dialogService: DialogService,
@@ -56,7 +57,7 @@ export class ResourceClassInfoComponent {
     private _store: Store
   ) {}
 
-  canBeDeleted() {
+  setCanBeDeleted() {
     this._oes
       .canDeleteResourceClass$(this.resourceClass.id)
       .pipe(take(1))
@@ -100,6 +101,4 @@ export class ResourceClassInfoComponent {
     const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.shortName}`;
     window.open(dataBrowserRoute, '_blank');
   }
-
-  protected readonly comment = comment;
 }

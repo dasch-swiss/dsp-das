@@ -11,9 +11,7 @@
       {{ classLabel | appTruncate: 24 }}
     </mat-card-title>
     <mat-card-subtitle>
-      <span [matTooltip]="'id: ' + resourceClass.id" matTooltipPosition="above" matTooltipClass="wide-tooltip">
-        {{ resourceClass.id | split: '#':1 }}
-      </span>
+      <span> {{ resourceClass.shortName }} </span>
       <span>&nbsp;&middot;&nbsp;</span>
       <span matTooltip="subclass of" matTooltipPosition="above"> {{ resourceClass.defaultClassLabel }} </span>
     </mat-card-subtitle>
@@ -27,7 +25,7 @@
           data-cy="more-button"
           (menuOpened)="menuOpen = true"
           (menuClosed)="menuOpen = false"
-          (click)="canBeDeleted()">
+          (click)="setCanBeDeleted()">
           <mat-icon>more_vert</mat-icon>
         </button>
       </span>
@@ -59,25 +57,35 @@
 </ng-template>
 
 <mat-menu #resClassMenu="matMenu" xPosition="before">
-  <span *ngIf="(isAdmin$ | async) === true">
-    <button mat-menu-item class="res-class-edit" (click)="editResourceClassInfo()">Edit resource class info</button>
-  </span>
-  <span
-    [matTooltip]="classCanBeDeleted ? 'This class doesn\'t have any instances yet' : ''"
+  <button
+    mat-menu-item
+    [disabled]="(isAdmin$ | async) !== true"
+    class="res-class-edit"
+    (click)="editResourceClassInfo()">
+    <mat-icon>edit</mat-icon>
+    Edit resource class info
+  </button>
+  <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">
+    <mat-icon>open_in_new</mat-icon> Open resource instances
+  </button>
+  <button
+    mat-menu-item
+    (click)="clipboard.copy(resourceClass.id)"
+    matTooltip="Copy resource class ID"
     matTooltipPosition="before">
-    <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">Open resource instances</button>
-  </span>
-  <span
+    <mat-icon>content_copy</mat-icon>
+    Copy resource class ID
+  </button>
+  <button
     *ngIf="(isAdmin$ | async) === true && (project$ | async)?.status === true"
     [matTooltip]="classCanBeDeleted ? '' : 'This class can\'t be deleted because it is in use'"
-    matTooltipPosition="before">
-    <button
-      mat-menu-item
-      [disabled]="!classCanBeDeleted"
-      class="res-class-delete"
-      data-cy="delete-button"
-      (click)="deleteResourceClass()">
-      Delete resource class
-    </button>
-  </span>
+    matTooltipPosition="before"
+    [disabled]="!classCanBeDeleted"
+    (click)="deleteResourceClass()"
+    mat-menu-item
+    class="res-class-delete"
+    data-cy="delete-button">
+    <mat-icon>delete</mat-icon>
+    Delete resource class
+  </button>
 </mat-menu>
