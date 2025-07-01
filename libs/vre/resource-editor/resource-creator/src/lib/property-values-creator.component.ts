@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
+import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
-import { FormValueArray } from '../../../resource-properties/src/lib/form-value-array.type';
-import { propertiesTypeMapping } from '../../../resource-properties/src/lib/resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values-creator',
