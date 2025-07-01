@@ -38,8 +38,9 @@ import { finalize } from 'rxjs/operators';
         <mat-option
           *ngIf="
             filteredAuthorship.length === 0 && autocompleteFormControl.value && autocompleteFormControl.value.length > 0
-          "
-          >Press Enter or Tab to add an item.
+          ">
+          Press Enter or Tab to add <span style="font-weight: bold">"{{ autocompleteFormControl.value }}"</span> as an
+          item.
         </mat-option>
       </mat-autocomplete>
 
