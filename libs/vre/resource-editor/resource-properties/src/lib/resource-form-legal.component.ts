@@ -62,14 +62,11 @@ export class ResourceFormLegalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.copyrightHolders$ = this._copyrightApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(this.projectShortcode)
-      .pipe(
-        map(data => data.data),
-        finalize(() => {
-          this.copyrightHoldersLoading = false;
-        })
-      );
+    this.copyrightHolders$ = this._paginatedApi.getCopyrightHolders(this.projectShortcode).pipe(
+      finalize(() => {
+        this.copyrightHoldersLoading = false;
+      })
+    );
 
     this.licenses$ = this._paginatedApi.getLicenses(this.projectShortcode).pipe(
       map(data => data.filter(license => license.isEnabled)),
