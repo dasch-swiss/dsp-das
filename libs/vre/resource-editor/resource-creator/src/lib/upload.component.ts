@@ -12,7 +12,7 @@ import { finalize } from 'rxjs/operators';
   selector: 'app-upload',
   template: `
     <ng-container *ngIf="!loading; else loadingTpl">
-      <div appDragDrop (click)="fileInput.click()" (fileDropped)="addFile($event.item(0))" class="zone">
+      <div appDragDrop (click)="fileInput.click()" (fileDropped)="addFile($event.item(0)!)" class="zone">
         <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
         <mat-icon style="transform: scale(1.6); margin: 8px 0; color: gray">cloud_upload</mat-icon>
         <div class="mat-subtitle-1">Drag and drop or click to upload.</div>

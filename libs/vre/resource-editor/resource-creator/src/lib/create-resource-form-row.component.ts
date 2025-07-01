@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
         class="mat-subtitle-2 grid-h3"
         [ngClass]="{ 'with-tooltip': tooltip !== undefined }"
         [matTooltipDisabled]="tooltip === undefined"
-        [matTooltip]="tooltip"
+        [matTooltip]="tooltip || ''"
         matTooltipPosition="above">
         {{ label }}
       </h3>
