@@ -17,7 +17,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
           mat-icon-button
           [matTooltip]="'Delete this value'"
           [hidden]="formArray.controls.item.value === null"
-          (click)="formArray.controls.item.setValue(null)">
+          (click)="reset()">
           <mat-icon>cancel</mat-icon>
         </button>
 
@@ -35,4 +35,6 @@ export class PropertyValueCreatorComponent {
   @Input({ required: true }) template!: TemplateRef<any>;
 
   displayComment = false;
+
+  reset() {}
 }
