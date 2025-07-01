@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { CreateResourceFormLegal } from '@dasch-swiss/vre/resource-editor/representations';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -56,10 +56,7 @@ export class ResourceFormLegalComponent implements OnInit {
   licenses$!: Observable<ProjectLicenseDto[]>;
   authorship$!: Observable<string[]>;
 
-  constructor(
-    private _copyrightApi: AdminProjectsLegalInfoApiService,
-    private _paginatedApi: PaginatedApiService
-  ) {}
+  constructor(private _paginatedApi: PaginatedApiService) {}
 
   ngOnInit() {
     this.copyrightHolders$ = this._paginatedApi.getCopyrightHolders(this.projectShortcode).pipe(
