@@ -11,7 +11,7 @@ import { FileForm } from '@dasch-swiss/vre/resource-editor/representations';
       [projectShortcode]="projectShortcode"
       (externalImageSelected)="externalImageSelected.emit($event)" />
 
-    <app-resource-form-legal [formGroup]="form.controls.legal" [projectShortcode]="projectShortcode" />`,
+    <app-create-resource-form-legal [formGroup]="form.controls.legal" [projectShortcode]="projectShortcode" />`,
 })
 export class CreateResourceFormFileComponent implements OnInit {
   @Input({ required: true }) projectShortcode!: string;

@@ -1,5 +1,6 @@
 import { CreateResourceFormFileComponent } from './lib/create-resource-form-file.component';
 import { CreateResourceFormImageComponent } from './lib/create-resource-form-image.component';
+import { CreateResourceFormLegalComponent } from './lib/create-resource-form-legal.component';
 import { CreateResourceFormPropertiesComponent } from './lib/create-resource-form-properties.component';
 import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
 import { CreateResourceFormRowComponent } from './lib/create-resource-form-row.component';
@@ -18,4 +19,5 @@ export const ResourceCreatorComponents = [
   CreateResourceFormPropertiesComponent,
   CreateResourceFormRepresentationComponent,
   CreateResourceFormRowComponent,
+  CreateResourceFormLegalComponent,
 ];

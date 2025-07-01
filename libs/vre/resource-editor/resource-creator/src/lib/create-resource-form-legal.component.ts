@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-resource-form-legal',
+  selector: 'app-create-resource-form-legal',
   template: `
     <app-create-resource-form-row [label]="'Copyright holder'">
       <mat-form-field>
@@ -44,7 +44,7 @@ import { finalize, map } from 'rxjs/operators';
     `,
   ],
 })
-export class ResourceFormLegalComponent implements OnInit {
+export class CreateResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
   @Input({ required: true }) projectShortcode!: string;
 

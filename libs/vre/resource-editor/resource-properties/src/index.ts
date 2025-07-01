@@ -20,7 +20,6 @@ export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/create-resource-dialog.component';
 
-export * from './lib/resource-form-legal.component';
 export * from './lib/date-time';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
