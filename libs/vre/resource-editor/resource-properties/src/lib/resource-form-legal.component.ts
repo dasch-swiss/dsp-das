@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { CreateResourceFormLegal } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { expand, finalize, map, reduce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-resource-form-legal',
@@ -48,6 +48,7 @@ export class ResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
   @Input({ required: true }) projectShortcode!: string;
 
+  readonly PAGE_SIZE = 100;
   copyrightHoldersLoading = true;
   licensesLoading = true;
 
@@ -70,7 +71,21 @@ export class ResourceFormLegalComponent implements OnInit {
     this.licenses$ = this._copyrightApi
       .getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(this.projectShortcode)
       .pipe(
+        expand(response => {
+          if (response.pagination.currentPage < response.pagination.totalPages) {
+            return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(
+              this.projectShortcode,
+              response.pagination.currentPage + 1,
+              this.PAGE_SIZE
+            );
+          } else {
+            return EMPTY;
+          }
+        }),
         map(data => data.data),
+        reduce((acc, data) => acc.concat(data), [] as ProjectLicenseDto[])
+      )
+      .pipe(
         map(data => data.filter(license => license.isEnabled)),
         finalize(() => {
           this.licensesLoading = false;
@@ -79,6 +94,21 @@ export class ResourceFormLegalComponent implements OnInit {
 
     this.authorship$ = this._copyrightApi
       .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
-      .pipe(map(data => data.data));
+      .pipe(
+        expand(response => {
+          if (response.pagination.currentPage < response.pagination.totalPages) {
+            return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(
+              this.projectShortcode,
+              undefined,
+              response.pagination.currentPage + 1,
+              this.PAGE_SIZE
+            );
+          } else {
+            return EMPTY;
+          }
+        }),
+        map(data => data.data),
+        reduce((acc, data) => acc.concat(data), [] as string[])
+      );
   }
 }

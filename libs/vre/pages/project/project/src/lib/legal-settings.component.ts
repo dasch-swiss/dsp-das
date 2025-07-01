@@ -64,7 +64,7 @@ import {
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
 
-  readonly PAGE_SIZE = 2;
+  readonly PAGE_SIZE = 100;
   readonly project$ = this._reloadSubject.asObservable().pipe(
     switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
     filter(project => project !== undefined),
