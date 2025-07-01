@@ -18,6 +18,7 @@ import { MathJaxDirective } from './lib/mathjax/math-jax.directive';
 import { NullableEditorComponent } from './lib/nullable-editor.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
+import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
 import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
@@ -108,4 +109,5 @@ export const ResourcePropertiesComponents = [
   TemplateViewerSwitcherComponent,
   PropertyValueCreatorComponent,
   NullableEditorComponent,
+  PropertyValueBasicCommentComponent,
 ];
