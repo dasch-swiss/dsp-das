@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -26,6 +26,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <mat-icon>add_box</mat-icon>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
