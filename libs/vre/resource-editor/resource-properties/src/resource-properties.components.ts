@@ -6,7 +6,6 @@ import { CreateResourceFormPropertiesComponent } from './lib/create-resource-for
 import { CreateResourceFormRepresentationComponent } from './lib/create-resource-form-representation.component';
 import { CreateResourceFormRowComponent } from './lib/create-resource-form-row.component';
 import { CreateResourceFormComponent } from './lib/create-resource-form.component';
-import { CreateResourcePageComponent } from './lib/create-resource-page.component';
 import { DeleteValueDialogComponent } from './lib/delete-value-dialog.component';
 import { EditResourceLabelDialogComponent } from './lib/edit-resource-label-dialog.component';
 import { EraseResourceDialogComponent } from './lib/erase-resource-dialog.component';
@@ -24,7 +23,6 @@ import { PropertyValueDisplayComponent } from './lib/property-value-display.comp
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
 import { PropertyValueComponent } from './lib/property-value.component';
-import { PropertyValuesCreatorComponent } from './lib/property-values-creator.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 import { ResourceFormLegalComponent } from './lib/resource-form-legal.component';
 import { BaseSwitchComponent } from './lib/switch-components/base-switch.component';
@@ -83,7 +81,6 @@ export const ResourcePropertiesComponents = [
   PropertyValueDisplayComponent,
   PropertyValueToFormComponent,
   CreateResourceDialogComponent,
-  CreateResourcePageComponent,
   CreateResourceFormComponent,
   ResourceFormLegalComponent,
   CreateResourceFormRepresentationComponent,
@@ -109,5 +106,4 @@ export const ResourcePropertiesComponents = [
   TemplateViewerSwitcherComponent,
   NullableEditorComponent,
   PropertyValueBasicCommentComponent,
-  PropertyValuesCreatorComponent,
 ];
