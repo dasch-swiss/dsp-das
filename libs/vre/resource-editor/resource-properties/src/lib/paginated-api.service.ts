@@ -24,4 +24,46 @@ export class PaginatedApiService {
       reduce((acc, data) => acc.concat(data), [] as ProjectLicenseDto[])
     );
   }
+
+  getCopyrightHolders(projectShortcode: string, pageSize = 100) {
+    return this._copyrightApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(projectShortcode, undefined, 1, pageSize)
+      .pipe(
+        expand(response => {
+          if (response.pagination.currentPage < response.pagination.totalPages) {
+            return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(
+              projectShortcode,
+              undefined,
+              response.pagination.currentPage + 1,
+              pageSize
+            );
+          } else {
+            return EMPTY;
+          }
+        }),
+        map(data => data.data),
+        reduce((acc, data) => acc.concat(data), [] as string[])
+      );
+  }
+
+  getAuthorships(projectShortcode: string, pageSize = 100) {
+    return this._copyrightApi
+      .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(projectShortcode, undefined, 1, pageSize)
+      .pipe(
+        expand(response => {
+          if (response.pagination.currentPage < response.pagination.totalPages) {
+            return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(
+              projectShortcode,
+              undefined,
+              response.pagination.currentPage + 1,
+              pageSize
+            );
+          } else {
+            return EMPTY;
+          }
+        }),
+        map(data => data.data),
+        reduce((acc, data) => acc.concat(data), [] as string[])
+      );
+  }
 }

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, EMPTY } from 'rxjs';
-import { expand, filter, map, reduce, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
@@ -72,59 +72,14 @@ export class LegalSettingsComponent {
   );
 
   copyrightHolders$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi
-        .getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(
-          project.shortcode,
-          undefined,
-          1,
-          this.PAGE_SIZE
-        )
-        .pipe(
-          expand(response => {
-            if (response.pagination.currentPage < response.pagination.totalPages) {
-              return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoCopyrightHolders(
-                project.shortcode,
-                undefined,
-                response.pagination.currentPage + 1,
-                this.PAGE_SIZE
-              );
-            } else {
-              return EMPTY;
-            }
-          }),
-          map(data => data.data),
-          reduce((acc, data) => acc.concat(data), [] as string[])
-        )
-    )
+    switchMap(project => this._paginatedApi.getCopyrightHolders(project.shortcode))
   );
 
-  authorships$ = this.project$.pipe(
-    switchMap(project =>
-      this._copyrightApi
-        .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(project.shortcode, undefined, 1, this.PAGE_SIZE)
-        .pipe(
-          expand(response => {
-            if (response.pagination.currentPage < response.pagination.totalPages) {
-              return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(
-                project.shortcode,
-                undefined,
-                response.pagination.currentPage + 1,
-                this.PAGE_SIZE
-              );
-            } else {
-              return EMPTY;
-            }
-          }),
-          map(data => data.data),
-          reduce((acc, data) => acc.concat(data), [] as string[])
-        )
-    )
-  );
+  authorships$ = this.project$.pipe(switchMap(project => this._paginatedApi.getAuthorships(project.shortcode)));
 
   constructor(
     private _dialog: MatDialog,
-    private _copyrightApi: AdminProjectsLegalInfoApiService,
+    private _paginatedApi: PaginatedApiService,
     private _store: Store
   ) {}
 
