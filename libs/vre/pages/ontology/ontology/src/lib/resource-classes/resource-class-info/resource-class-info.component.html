@@ -47,8 +47,7 @@
       *ngIf="resourceClass.properties?.length; else noProperties">
       <app-property-item
         *ngFor="let prop of resourceClass.properties; let i = index; trackBy: trackByPropToDisplayFn"
-        [classProp]="prop"
-        [resourceClass]="resourceClass" />
+        [classProp]="prop" />
     </mat-list>
 
     <app-add-property-menu *ngIf="(isAdmin$ | async)" [resourceClass]="resourceClass" />

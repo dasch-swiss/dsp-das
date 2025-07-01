@@ -44,8 +44,7 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardinalityComponent implements OnInit {
-  @Input({ required: true }) propertyInfo!: ClassPropertyInfo;
-  @Input({ required: true }) classId!: string;
+  @Input({ required: true }) classProp!: ClassPropertyInfo;
   @Input() disabled = false;
   @Output() cardinalityChange = new EventEmitter<Cardinality>();
 
@@ -65,11 +64,11 @@ export class CardinalityComponent implements OnInit {
 
   private _initToggleStates() {
     this.multipleToggleState =
-      this.propertyInfo.iHasProperty.cardinality === Cardinality._0_n ||
-      this.propertyInfo.iHasProperty.cardinality === Cardinality._1_n;
+      this.classProp.iHasProperty.cardinality === Cardinality._0_n ||
+      this.classProp.iHasProperty.cardinality === Cardinality._1_n;
     this.requiredToggleState =
-      this.propertyInfo.iHasProperty.cardinality === Cardinality._1 ||
-      this.propertyInfo.iHasProperty.cardinality === Cardinality._1_n;
+      this.classProp.iHasProperty.cardinality === Cardinality._1 ||
+      this.classProp.iHasProperty.cardinality === Cardinality._1_n;
     this._cdr.detectChanges();
   }
 
@@ -84,9 +83,9 @@ export class CardinalityComponent implements OnInit {
   onToggleChange() {
     const targetCardinality: Cardinality = this._determineTargetCardinality();
     const cardinalityInfo: CardinalityInfo = {
-      classIri: this.classId,
-      propertyInfo: this.propertyInfo,
-      currentCardinality: this.propertyInfo.iHasProperty.cardinality,
+      classIri: this.classProp.classDefinition.id,
+      propertyInfo: this.classProp,
+      currentCardinality: this.classProp.iHasProperty.cardinality,
       targetCardinality,
     };
     const dialogConfig: MatDialogConfig = {
@@ -100,7 +99,7 @@ export class CardinalityComponent implements OnInit {
 
     this._dialogRef.afterClosed().subscribe((performChange: boolean) => {
       if (performChange) {
-        this.propertyInfo.iHasProperty.cardinality = targetCardinality;
+        this.classProp.iHasProperty.cardinality = targetCardinality;
         this.cardinalityChange.emit(targetCardinality);
       } else {
         this._initToggleStates();

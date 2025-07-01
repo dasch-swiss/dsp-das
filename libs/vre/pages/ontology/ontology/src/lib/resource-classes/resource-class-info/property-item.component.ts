@@ -63,8 +63,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           </div>
           <app-cardinality
             [disabled]="(isAdmin$ | async) !== true"
-            [propertyInfo]="classProp"
-            [classId]="resourceClass.id"
+            [classProp]="classProp"
             (cardinalityChange)="updateCardinality($event)" />
         </div>
         <div class="edit-menu">
@@ -176,7 +175,6 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input({ required: true }) resourceClass!: ResourceClassInfo;
   @Input({ required: true }) classProp!: ClassPropertyInfo;
 
   @ViewChild('propertyCardRipple') propertyCardRipple!: MatRipple;
@@ -218,24 +216,29 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateCardinality(newValue: Cardinality) {
-    const propertyIdx = this.resourceClass.properties.findIndex(
-      p => p.iHasProperty.propertyIndex === this.classProp.iHasProperty.propertyIndex
+    const propertyIdx = this.classProp.classDefinition.propertiesList.findIndex(
+      p => p.propertyIndex === this.classProp.iHasProperty.propertyIndex
     );
     if (propertyIdx !== -1) {
-      this.resourceClass.iHasProperties[propertyIdx].cardinality = newValue;
-      this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, this.resourceClass.iHasProperties);
+      this.classProp.classDefinition.propertiesList[propertyIdx].cardinality = newValue;
+      this._oes.updatePropertiesOfResourceClass(
+        this.classProp.classDefinition.id,
+        this.classProp.classDefinition.propertiesList
+      );
     }
   }
 
   canBeRemovedFromClass(): void {
-    this._oes.propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.resourceClass.id).subscribe(canDoRes => {
-      this.propCanBeRemovedFromClass = canDoRes.canDo;
-      this._cd.markForCheck();
-    });
+    this._oes
+      .propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.classProp.classDefinition.id)
+      .subscribe(canDoRes => {
+        this.propCanBeRemovedFromClass = canDoRes.canDo;
+        this._cd.markForCheck();
+      });
   }
 
   removePropertyFromClass(): void {
-    this._oes.removePropertyFromClass(this.classProp.iHasProperty, this.resourceClass.id);
+    this._oes.removePropertyFromClass(this.classProp.iHasProperty, this.classProp.classDefinition.id);
   }
 
   openEditProperty() {
