@@ -3,6 +3,7 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
 import { CreateResourceFormLegal } from '@dasch-swiss/vre/resource-editor/representations';
 import { EMPTY, Observable } from 'rxjs';
 import { expand, finalize, map, reduce } from 'rxjs/operators';
+import { PaginatedApiService } from './paginated-api.service';
 
 @Component({
   selector: 'app-resource-form-legal',
@@ -56,7 +57,10 @@ export class ResourceFormLegalComponent implements OnInit {
   licenses$!: Observable<ProjectLicenseDto[]>;
   authorship$!: Observable<string[]>;
 
-  constructor(private _copyrightApi: AdminProjectsLegalInfoApiService) {}
+  constructor(
+    private _copyrightApi: AdminProjectsLegalInfoApiService,
+    private _paginatedApi: PaginatedApiService
+  ) {}
 
   ngOnInit() {
     this.copyrightHolders$ = this._copyrightApi
@@ -68,29 +72,12 @@ export class ResourceFormLegalComponent implements OnInit {
         })
       );
 
-    this.licenses$ = this._copyrightApi
-      .getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(this.projectShortcode)
-      .pipe(
-        expand(response => {
-          if (response.pagination.currentPage < response.pagination.totalPages) {
-            return this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(
-              this.projectShortcode,
-              response.pagination.currentPage + 1,
-              this.PAGE_SIZE
-            );
-          } else {
-            return EMPTY;
-          }
-        }),
-        map(data => data.data),
-        reduce((acc, data) => acc.concat(data), [] as ProjectLicenseDto[])
-      )
-      .pipe(
-        map(data => data.filter(license => license.isEnabled)),
-        finalize(() => {
-          this.licensesLoading = false;
-        })
-      );
+    this.licenses$ = this._paginatedApi.getLicenses(this.projectShortcode).pipe(
+      map(data => data.filter(license => license.isEnabled)),
+      finalize(() => {
+        this.licensesLoading = false;
+      })
+    );
 
     this.authorship$ = this._copyrightApi
       .getAdminProjectsShortcodeProjectshortcodeLegalInfoAuthorships(this.projectShortcode)
