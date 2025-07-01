@@ -1,8 +1,9 @@
 import { ENTER, TAB } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
+import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { PaginatedApiService } from './paginated-api.service';
 
@@ -41,7 +42,7 @@ import { PaginatedApiService } from './paginated-api.service';
     </mat-form-field>
   `,
 })
-export class AuthorshipFormFieldComponent implements OnInit {
+export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   @Input() control!: FormControl<string[] | null>;
   @Input({ required: true }) projectShortcode!: string;
   @ViewChild(MatChipInput, { static: true }) chipInput!: MatChipInput;
@@ -51,7 +52,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
   availableAuthorship: string[] = [];
   filteredAuthorship: string[] = [];
   loading = true;
-
+  subscription!: Subscription;
   autocompleteFormControl = new FormControl('');
 
   readonly AIAuthorship = 'AI-Generated Content – Not Protected by Copyright';
@@ -75,7 +76,7 @@ export class AuthorshipFormFieldComponent implements OnInit {
         this.filteredAuthorship = this.availableAuthorship;
       });
 
-    this.autocompleteFormControl.valueChanges.subscribe(value => {
+    this.subscription = this.autocompleteFormControl.valueChanges.subscribe(value => {
       if (value) {
         this.filteredAuthorship = this.availableAuthorship.filter(authorship =>
           authorship.toLowerCase().includes(value.toLowerCase())
@@ -84,6 +85,10 @@ export class AuthorshipFormFieldComponent implements OnInit {
         this.filteredAuthorship = this.availableAuthorship;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   addItemFromMaterial(event: MatChipInputEvent) {
