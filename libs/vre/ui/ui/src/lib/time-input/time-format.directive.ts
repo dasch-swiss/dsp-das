@@ -22,7 +22,6 @@ export class TimeFormatDirective implements ControlValueAccessor {
   @HostListener('input', ['$event.target.value'])
   onInput(value: string): void {
     if (this.onChange) {
-      console.log('oninput called with', value, timeStringToSeconds(value));
       this.onChange(value === '' ? null : timeStringToSeconds(value));
     }
   }
@@ -35,8 +34,7 @@ export class TimeFormatDirective implements ControlValueAccessor {
   }
 
   writeValue(value: number | null): void {
-    console.log('writevalue called with', value);
-    const formattedValue = secondsToTimeString(value ?? 0);
+    const formattedValue = value ? secondsToTimeString(value) : '';
     this.el.nativeElement.value = formattedValue;
   }
 
