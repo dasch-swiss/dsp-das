@@ -68,20 +68,18 @@
     *ngIf="(isAdmin$ | async) && project?.status && showActionBubble"
     [@simpleFadeAnimation]="'in'">
     <div class="button-container">
-      <span
+      <button
+        [disabled]="!property.propDef!.isEditable"
+        [matTooltip]="property.propDef!.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'"
         matTooltipPosition="above"
-        [matTooltip]="property.propDef!.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'">
-        <button
-          mat-button
-          [disabled]="!property.propDef!.isEditable"
-          class="edit"
-          (click)="openEditProperty(property.propDef!, property.propType)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </span>
+        mat-button
+        class="edit"
+        (click)="openEditProperty(property.propDef!, property.propType)">
+        <mat-icon>edit</mat-icon>
+      </button>
       <span
-        matTooltipPosition="above"
-        [matTooltip]="((canBeDeleted$ | async) === false ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')">
+        [matTooltip]="((canBeDeleted$ | async) === false ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')"
+        matTooltipPosition="above">
         <button
           mat-button
           [disabled]="(canBeDeleted$ | async) !== true"

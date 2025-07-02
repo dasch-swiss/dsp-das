@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -80,16 +81,18 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       </mat-list-item>
     </div>
     <mat-menu #classInfoMenu="matMenu">
-      <div class="remove-menu-wrapper">
-        <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
-          <mat-icon>link_off</mat-icon>
-          <span>remove property from class</span>
-        </button>
-        <button mat-menu-item (click)="openEditProperty()">
-          <mat-icon>edit</mat-icon>
-          <span>Edit property</span>
-        </button>
-      </div>
+      <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
+        <mat-icon>link_off</mat-icon>
+        <span>remove property from class</span>
+      </button>
+      <button mat-menu-item (click)="openEditProperty()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit property</span>
+      </button>
+      <button mat-menu-item (click)="clipboard.copy(classProp.propDef.id || '')">
+        <mat-icon>content_copy</mat-icon>
+        Copy property id
+      </button>
     </mat-menu>`,
   styles: [
     `
@@ -165,11 +168,6 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         font-size: medium;
         cursor: pointer;
       }
-
-      .remove-menu-wrapper {
-        min-width: 18em;
-        width: 18em;
-      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -190,6 +188,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _cd: ChangeDetectorRef,
+    public clipboard: Clipboard,
     private _oes: OntologyEditService,
     private _dialog: MatDialog,
     private _store: Store

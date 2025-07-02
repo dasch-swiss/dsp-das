@@ -68,13 +68,9 @@
   <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">
     <mat-icon>open_in_new</mat-icon> Open resource instances
   </button>
-  <button
-    mat-menu-item
-    (click)="clipboard.copy(resourceClass.id)"
-    matTooltip="Copy resource class ID"
-    matTooltipPosition="before">
+  <button mat-menu-item (click)="clipboard.copy(resourceClass.id)">
     <mat-icon>content_copy</mat-icon>
-    Copy resource class ID
+    Copy resource class id
   </button>
   <button
     *ngIf="(isAdmin$ | async) === true && (project$ | async)?.status === true"
