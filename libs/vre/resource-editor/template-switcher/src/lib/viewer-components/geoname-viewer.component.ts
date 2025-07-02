@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { DisplayPlace, GeonameService } from '../geoname.service';
+import { DisplayPlace, GeonameService } from '../../../../resource-properties/src/lib/geoname.service';
 
 @Component({
   selector: 'app-geoname-viewer',

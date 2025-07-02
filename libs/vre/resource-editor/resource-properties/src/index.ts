@@ -10,8 +10,6 @@ export * from './lib/viewer-components/rich-text-viewer.component';
 export * from './lib/viewer-components/interval-viewer.component';
 export * from './lib/viewer-components/time-viewer.component';
 
-export * from './lib/viewer-components/date-viewer.component';
-export * from './lib/viewer-components/geoname-viewer.component';
 export * from './lib/viewer-components/link-viewer.component';
 export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/value-components/toggle-value.component';
@@ -43,7 +41,6 @@ export * from './lib/footnotes.component';
 export * from './lib/footnote-tooltip.component';
 export * from './lib/footnote.directive';
 export * from './lib/footnote-parser.pipe';
-export * from './lib/paginated-api.service';
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/mathjax/math-jax.service';
 

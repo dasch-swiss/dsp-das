@@ -30,8 +30,6 @@ import { ListValueComponent } from './lib/value-components/list-value.component'
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
 import { ToggleValueComponent } from './lib/value-components/toggle-value.component';
-import { DateViewerComponent } from './lib/viewer-components/date-viewer.component';
-import { GeonameViewerComponent } from './lib/viewer-components/geoname-viewer.component';
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
 import { LinkViewerComponent } from './lib/viewer-components/link-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
@@ -49,13 +47,7 @@ const valueComponents = [
 
 const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
-const switchComponents = [
-  ColorValueComponent,
-  LinkViewerComponent,
-  GeonameViewerComponent,
-  DateViewerComponent,
-  ToggleValueComponent,
-];
+const switchComponents = [ColorValueComponent, LinkViewerComponent, ToggleValueComponent];
 
 export const ResourcePropertiesComponents = [
   ...switchComponents,
