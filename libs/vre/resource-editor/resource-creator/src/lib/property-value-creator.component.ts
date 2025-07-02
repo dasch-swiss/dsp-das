@@ -8,7 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <div style="display: flex" [ngClass]="{ works: isCorrect$ | async }" *ngIf="template">
+    <div style="display: flex" [ngClass]="{ works: isValid$ | async }" *ngIf="template">
       <div style="flex: 1">
         <ng-container *ngTemplateOutlet="template; context: { item: formArray.controls.item }"></ng-container>
         <app-property-value-basic-comment
@@ -19,12 +19,12 @@ import { map, startWith } from 'rxjs/operators';
         <button
           mat-icon-button
           [matTooltip]="'Delete this value'"
-          [hidden]="isDefaultValue$ | async"
+          [hidden]="isHidden$ | async"
           (click)="formArray.controls.item.patchValue(null)">
           <mat-icon>cancel</mat-icon>
         </button>
 
-        <button mat-icon-button [hidden]="isDefaultValue$ | async" (click)="displayComment = true">
+        <button mat-icon-button [hidden]="isHidden$ | async" (click)="displayComment = true">
           <mat-icon>add_comment</mat-icon>
         </button>
       </div>
@@ -47,11 +47,11 @@ export class PropertyValueCreatorComponent implements OnInit {
 
   displayComment = false;
 
-  isDefaultValue$!: Observable<boolean>;
-  isCorrect$!: Observable<boolean>;
+  isValid$!: Observable<boolean>;
+  isHidden$!: Observable<boolean>;
 
   ngOnInit() {
-    this.isDefaultValue$ = this.formArray.controls.item.valueChanges.pipe(
+    this.isValid$ = this.formArray.controls.item.valueChanges.pipe(
       startWith(this.formArray.controls.item.getRawValue()),
       map(change => {
         const mapping = propertiesTypeMapping.get(this.myProperty.propDef.objectType!);
@@ -60,10 +60,10 @@ export class PropertyValueCreatorComponent implements OnInit {
             `PropertyValueCreatorComponent: No mapping found for object type: ${this.myProperty.propDef.objectType}`
           );
         }
-        return mapping.isNullValue(change);
+        return !mapping.isNullValue(change) && this.formArray.controls.item.valid;
       })
     );
 
-    this.isCorrect$ = this.isDefaultValue$.pipe(map(value => !value));
+    this.isHidden$ = this.isValid$.pipe(map(value => !value));
   }
 }
