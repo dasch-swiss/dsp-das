@@ -41,13 +41,12 @@ export class IntervalValueComponent implements OnInit {
       }
       updating = true;
 
-      if (start === null) {
-        this.control.patchValue(null);
-      } else if (this.control.value === null) {
-        this.control.patchValue({ start, end: 0 });
+      if (start !== null && this.endControl.value !== null) {
+        this.control.patchValue({ start, end: this.endControl.value });
       } else {
-        this.control.patchValue({ start, end: this.control.value.end });
+        this.control.patchValue(null);
       }
+
       updating = false;
     });
 
@@ -57,14 +56,12 @@ export class IntervalValueComponent implements OnInit {
       }
       updating = true;
 
-      console.log('got it ', end);
-      if (end === null) {
-        this.control.patchValue(null);
-      } else if (this.control.value === null) {
-        this.control.patchValue({ start: 0, end });
+      if (end !== null && this.startControl.value !== null) {
+        this.control.patchValue({ start: this.startControl.value, end });
       } else {
-        this.control.patchValue({ start: this.control.value.start, end });
+        this.control.patchValue(null);
       }
+
       updating = false;
     });
   }
