@@ -9,6 +9,9 @@ import { CreateResourceFormComponent } from './lib/create-resource-form.componen
 import { CreateResourcePageComponent } from './lib/create-resource-page.component';
 import { PropertyValueCreatorComponent } from './lib/property-value-creator.component';
 import { PropertyValuesCreatorComponent } from './lib/property-values-creator.component';
+import { UploadControlComponent } from './lib/upload-control.component';
+import { UploadComponent } from './lib/upload.component';
+import { UploadedFileComponent } from './lib/uploaded-file.component';
 
 export const ResourceCreatorComponents = [
   PropertyValueCreatorComponent,
@@ -22,4 +25,7 @@ export const ResourceCreatorComponents = [
   CreateResourceFormRowComponent,
   CreateResourceFormLegalComponent,
   AuthorshipFormFieldComponent,
+  UploadComponent,
+  UploadedFileComponent,
+  UploadControlComponent,
 ];
