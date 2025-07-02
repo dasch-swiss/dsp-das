@@ -22,24 +22,18 @@ import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
-import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
-import { TimeValueComponent } from './lib/value-components/time-value.component';
-import { ToggleValueComponent } from './lib/value-components/toggle-value.component';
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
 import { LinkViewerComponent } from './lib/viewer-components/link-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
-const valueComponents = [NestedMenuComponent, TimeValueComponent];
-
 const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
-const switchComponents = [LinkViewerComponent, ToggleValueComponent];
+const switchComponents = [LinkViewerComponent];
 
 export const ResourcePropertiesComponents = [
   ...switchComponents,
-  ...valueComponents,
   ...viewerComponents,
   DeleteValueDialogComponent,
   PropertyValuesComponent,

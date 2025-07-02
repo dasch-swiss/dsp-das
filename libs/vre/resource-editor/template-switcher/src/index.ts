@@ -6,3 +6,6 @@ export * from './lib/value-components/color-value.component';
 export * from './lib/value-components/link-value.component';
 export * from './lib/value-components/interval-value.component';
 export * from './lib/value-components/list-value.component';
+export * from './lib/value-components/nested-menu.component';
+export * from './lib/value-components/time-value.component';
+export * from './lib/value-components/toggle-value.component';
