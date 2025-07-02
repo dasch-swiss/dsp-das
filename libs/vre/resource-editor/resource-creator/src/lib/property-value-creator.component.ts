@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
-import { FormValueGroup } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { FormValueGroup, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-property-value-creator',
@@ -16,8 +19,8 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
         <button
           mat-icon-button
           [matTooltip]="'Delete this value'"
-          [hidden]="formArray.controls.item.value === null"
-          (click)="formArray.controls.item.setValue(null)">
+          [hidden]="isDefaultValue$ | async"
+          (click)="formArray.controls.item.patchValue(null)">
           <mat-icon>cancel</mat-icon>
         </button>
 
@@ -27,12 +30,28 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValueCreatorComponent {
+export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueGroup;
   @Input({ required: true }) template!: TemplateRef<any>;
 
   displayComment = false;
+
+  isDefaultValue$!: Observable<boolean>;
+
+  ngOnInit() {
+    this.isDefaultValue$ = this.formArray.controls.item.valueChanges.pipe(
+      startWith(this.formArray.controls.item.getRawValue()),
+      map(change => {
+        const mapping = propertiesTypeMapping.get(this.myProperty.propDef.objectType!);
+        if (!mapping) {
+          throw new AppError(
+            `PropertyValueCreatorComponent: No mapping found for object type: ${this.myProperty.propDef.objectType}`
+          );
+        }
+        return mapping.isNullValue(change);
+      })
+    );
+  }
 }
