@@ -83,13 +83,13 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       </mat-list-item>
     </div>
     <mat-menu #classInfoMenu="matMenu">
-      <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
-        <mat-icon>link_off</mat-icon>
-        <span>remove property from class</span>
-      </button>
       <button mat-menu-item (click)="openEditProperty()">
         <mat-icon>edit</mat-icon>
         <span>Edit property</span>
+      </button>
+      <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
+        <mat-icon>link_off</mat-icon>
+        <span>remove property from class</span>
       </button>
       <button mat-menu-item (click)="clipboard.copy(classProp.propDef.id || '')">
         <mat-icon>content_copy</mat-icon>
