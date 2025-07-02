@@ -8,10 +8,12 @@ import {
   OnInit,
   ViewChild,
   OnDestroy,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Cardinality } from '@dasch-swiss/dsp-js';
+import { Cardinality, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
@@ -174,6 +176,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input({ required: true }) classProp!: ClassPropertyInfo;
+  @Output() cardinalityChange = new EventEmitter<IHasProperty>();
 
   @ViewChild('propertyCardRipple') propertyCardRipple!: MatRipple;
 
@@ -215,21 +218,13 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateCardinality(newValue: Cardinality) {
-    const propertyIdx = this.classProp.classDefinition.propertiesList.findIndex(
-      p => p.propertyIndex === this.classProp.iHasProperty.propertyIndex
-    );
-    if (propertyIdx !== -1) {
-      this.classProp.classDefinition.propertiesList[propertyIdx].cardinality = newValue;
-      this._oes.updatePropertiesOfResourceClass(
-        this.classProp.classDefinition.id,
-        this.classProp.classDefinition.propertiesList
-      );
-    }
+    this.classProp.iHasProperty.cardinality = newValue;
+    this.cardinalityChange.emit(this.classProp.iHasProperty);
   }
 
   canBeRemovedFromClass(): void {
     this._oes
-      .propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.classProp.classDefinition.id)
+      .propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.classProp.classId)
       .subscribe(canDoRes => {
         this.propCanBeRemovedFromClass = canDoRes.canDo;
         this._cd.markForCheck();
@@ -237,7 +232,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   removePropertyFromClass(): void {
-    this._oes.removePropertyFromClass(this.classProp.iHasProperty, this.classProp.classDefinition.id);
+    this._oes.removePropertyFromClass(this.classProp.iHasProperty, this.classProp.classId);
   }
 
   openEditProperty() {

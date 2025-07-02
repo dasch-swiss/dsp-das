@@ -2,7 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiResponseError } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -93,6 +93,12 @@ export class ResourceClassInfoComponent {
     }));
 
     this._oes.updateGuiOrderOfClassProperties(this.resourceClass.id, updated);
+  }
+
+  onCardinalityChange(updatedIHasProperty: IHasProperty) {
+    const properties: IHasProperty[] = this.resourceClass.properties.map(p => p.iHasProperty);
+    properties.map(p => (p.propertyIndex === updatedIHasProperty.propertyIndex ? { ...p, ...updatedIHasProperty } : p));
+    this._oes.updatePropertiesOfResourceClass(this.resourceClass.id, properties);
   }
 
   openInDatabrowser() {

@@ -101,7 +101,7 @@ export class OntologyEditService {
             return {
               ...prop,
               iHasProperty,
-              classDefinition: resClass,
+              classId: resClass.id,
             } satisfies ClassPropertyInfo;
           })
           .sort((a, b) => {

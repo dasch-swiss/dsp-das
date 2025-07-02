@@ -18,7 +18,7 @@ export interface PropertyInfo {
 
 export interface ClassPropertyInfo extends PropertyInfo {
   iHasProperty: IHasProperty;
-  classDefinition: ResourceClassDefinitionWithAllLanguages;
+  classId: string;
 }
 
 export class ResourceClassInfo {
