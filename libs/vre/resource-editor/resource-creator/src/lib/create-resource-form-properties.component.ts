@@ -9,7 +9,6 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
   template: `
     <app-create-resource-form-row
       *ngFor="let prop of myProperties; let last = last"
-      [style.border-bottom]="last ? '0' : '1px solid rgba(33,33,33,.1)'"
       [label]="
         prop.propDef.label +
         (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
@@ -18,6 +17,14 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       <app-property-values-creator [myProperty]="prop" [formArray]="formGroup.controls[prop.propDef.id]" />
     </app-create-resource-form-row>
   `,
+  styles: [
+    `
+      app-create-resource-form-row {
+        display: block;
+        margin-bottom: 8px;
+      }
+    `,
+  ],
 })
 export class CreateResourceFormPropertiesComponent {
   @Input({ required: true }) resourceClassIri!: string;

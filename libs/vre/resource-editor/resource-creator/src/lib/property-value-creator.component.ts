@@ -8,7 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <div style="display: flex" *ngIf="template">
+    <div style="display: flex; padding: 8px" [ngClass]="{ works: isCorrect$ | async }" *ngIf="template">
       <div style="flex: 1">
         <ng-container *ngTemplateOutlet="template; context: { item: formArray.controls.item }"></ng-container>
         <app-property-value-basic-comment
@@ -30,6 +30,15 @@ import { map, startWith } from 'rxjs/operators';
       </div>
     </div>
   `,
+  styles: [
+    `
+      .works {
+        border-right-color: #6aea6666;
+        border-right-style: solid;
+        border-right-width: 4px;
+      }
+    `,
+  ],
 })
 export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
@@ -39,6 +48,7 @@ export class PropertyValueCreatorComponent implements OnInit {
   displayComment = false;
 
   isDefaultValue$!: Observable<boolean>;
+  isCorrect$!: Observable<boolean>;
 
   ngOnInit() {
     this.isDefaultValue$ = this.formArray.controls.item.valueChanges.pipe(
@@ -53,5 +63,7 @@ export class PropertyValueCreatorComponent implements OnInit {
         return mapping.isNullValue(change);
       })
     );
+
+    this.isCorrect$ = this.isDefaultValue$.pipe(map(value => !value));
   }
 }
