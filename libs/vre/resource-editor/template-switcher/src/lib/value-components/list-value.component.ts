@@ -16,8 +16,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
   `,
 })
 export class ListValueComponent implements OnInit {
-  @Input() propertyDef!: ResourcePropertyDefinition;
-  @Input() control!: FormControl<string>;
+  @Input({ required: true }) propertyDef!: ResourcePropertyDefinition;
+  @Input({ required: true }) control!: FormControl<string | null>;
 
   listRootNode: ListNodeV2 | undefined;
   mySelectedNode: ListNodeV2 | undefined;

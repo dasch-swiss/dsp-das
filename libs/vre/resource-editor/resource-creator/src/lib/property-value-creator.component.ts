@@ -8,7 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <div style="display: flex; padding: 8px" [ngClass]="{ works: isCorrect$ | async }" *ngIf="template">
+    <div style="display: flex" [ngClass]="{ works: isCorrect$ | async }" *ngIf="template">
       <div style="flex: 1">
         <ng-container *ngTemplateOutlet="template; context: { item: formArray.controls.item }"></ng-container>
         <app-property-value-basic-comment
