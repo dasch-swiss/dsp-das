@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ValidatorError } from '../validator-error.interface';
 import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 
+// TODO this changes segment-dialog
 @Component({
   selector: 'app-time-input',
   template: `
