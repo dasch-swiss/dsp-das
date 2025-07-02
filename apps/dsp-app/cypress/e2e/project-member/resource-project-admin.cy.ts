@@ -73,12 +73,12 @@ describe('Check project admin existing resource functionality', () => {
     cy.intercept('GET', `**/resources/**`).as('initialImageRequest');
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
-    // cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
-    // cy.get('[data-cy=edit-label-button]').should('be.visible').click();
+    // cy.get('[data-cy=resource-header-labels]').contains(thingPictureData.labels);
+    // cy.get('[data-cy=edit-labels-button]').should('be.visible').click();
     // const newLabel = faker.lorem.word();
     // cy.get('[data-cy=common-input-text]', { timeout: 500 }).should('be.visible').clear().type(newLabel);
-    // cy.get('[data-cy=edit-resource-label-submit]').click();
-    // cy.get('[data-cy=resource-header-label').contains(newLabel);
+    // cy.get('[data-cy=edit-resource-labels-submit]').click();
+    // cy.get('[data-cy=resource-header-labels').contains(newLabel);
 
     cy.intercept('GET', `**/default.jpg`).as('stillImageRequest');
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');

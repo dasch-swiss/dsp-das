@@ -2,8 +2,10 @@ import { ClassDefinition, Constants, ResourceClassDefinitionWithAllLanguages } f
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 
 export class OntologyClassHelper {
-  static GetClassesToDisplay(resClasses: ClassDefinition[]): ClassDefinition[] {
-    const classesToDisplay: ClassDefinition[] = [];
+  static GetClassesToDisplay(
+    resClasses: ResourceClassDefinitionWithAllLanguages[]
+  ): ResourceClassDefinitionWithAllLanguages[] {
+    const classesToDisplay: ResourceClassDefinitionWithAllLanguages[] = [];
     resClasses.forEach(resClass => {
       if (resClass.subClassOf.length) {
         const splittedSubClass = resClass.subClassOf[0].split('#');
@@ -16,7 +18,9 @@ export class OntologyClassHelper {
     return classesToDisplay;
   }
 
-  static GetReadOntologyClassesToDisplay(readOntologyClasses: { [index: string]: ClassDefinition }): ClassDefinition[] {
+  static GetReadOntologyClassesToDisplay(readOntologyClasses: {
+    [index: string]: ResourceClassDefinitionWithAllLanguages;
+  }): ResourceClassDefinitionWithAllLanguages[] {
     return OntologyClassHelper.GetClassesToDisplay(getAllEntityDefinitionsAsArray(readOntologyClasses));
   }
 

@@ -10,10 +10,10 @@ export class ResourcePage {
   }
 
   async resourceLabel() {
-    return await this.page.locator('.resource-header > .resource-label > h4').textContent();
+    return await this.page.locator('.resource-header > .resource-labels > h4').textContent();
   }
 
   async resourceLabel() {
-    return await this.page.locator('.resource-header > .resource-label > h4').textContent();
+    return await this.page.locator('.resource-header > .resource-labels > h4').textContent();
   }
 }

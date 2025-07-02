@@ -38,7 +38,7 @@ import { switchMap, take } from 'rxjs/operators';
       </div>
     </div>
   `,
-  styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
+  styles: ['.labels { display: inline-block; width: 120px; font-weight: bold}'],
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) fileValue!: ReadFileValue;
