@@ -79,7 +79,7 @@ export class OntologyEditService {
 
   currentOntologyClasses$: Observable<ResourceClassInfo[]> = combineLatest([
     this.currentOntology$,
-    this.currentOntologyProperties$,
+    this.currentProjectsProperties$,
   ]).pipe(
     map(([ontology, allProperties]) => {
       if (!ontology) return [];
