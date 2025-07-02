@@ -11,9 +11,11 @@
       {{ classLabel | appTruncate: 24 }}
     </mat-card-title>
     <mat-card-subtitle>
-      <span> {{ resourceClass.shortName }} </span>
-      <span>&nbsp;&middot;&nbsp;</span>
-      <span matTooltip="subclass of" matTooltipPosition="above"> {{ resourceClass.defaultClassLabel }} </span>
+      <span class="mat-caption class-name"> {{ resourceClass.name }} </span>
+      <span class="mat-caption">&nbsp;&middot;&nbsp;</span>
+      <span class="mat-caption"
+        ><mat-icon>{{resourceClass.defaultClassIcon}}</mat-icon> {{ resourceClass.defaultClassLabel }}
+      </span>
     </mat-card-subtitle>
     <span class="resource-class-header-action">
       <span class="resource-class-more" *ngIf="(project$ | async)?.status">

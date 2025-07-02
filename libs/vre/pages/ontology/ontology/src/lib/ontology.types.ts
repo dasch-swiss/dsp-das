@@ -51,12 +51,19 @@ export class ResourceClassInfo {
     return this._resClass as UpdateResourceClassData;
   }
 
-  get shortName(): string {
+  get name(): string {
     return this._resClass.id.split('#')[1];
   }
 
   get defaultClassLabel() {
-    return this._resClass.subClassOf.map(superIri => DefaultResourceClasses.getLabel(superIri)).join(', ');
+    return this._resClass.subClassOf
+      .map(superIri => DefaultResourceClasses.getLabel(superIri))
+      .filter(Boolean)
+      .join(', ');
+  }
+
+  get defaultClassIcon() {
+    return this._resClass.subClassOf.map(superIri => DefaultResourceClasses.getIcon(superIri)).filter(Boolean)[0];
   }
 
   get iHasProperties(): IHasProperty[] {

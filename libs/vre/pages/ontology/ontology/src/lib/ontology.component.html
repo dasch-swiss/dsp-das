@@ -2,7 +2,6 @@
   <div class="overlay-blocker" *ngIf="(isTransacting$ | async)">
     <app-progress-indicator class="floating-center" />
   </div>
-
   <mat-sidenav-container class="ontology-editor-container">
     <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
       <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>
@@ -25,7 +24,7 @@
           mat-menu-item
           *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
           (click)="openCreateResourceClass(type)">
-          <mat-icon>{{ type.icons[0] }}</mat-icon>
+          <mat-icon>{{ type.icon }}</mat-icon>
           {{ type.label }}
         </button>
       </mat-menu>

@@ -98,7 +98,7 @@ export class ResourceClassInfoComponent {
   openInDatabrowser() {
     const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
     const ontologyName = OntologyService.getOntologyName(this._oes.ontologyId || '');
-    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.shortName}`;
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.name}`;
     window.open(dataBrowserRoute, '_blank');
   }
 }

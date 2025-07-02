@@ -1,3 +1,4 @@
+@use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
 
 .resource-class {
   min-height: 60px;
@@ -23,5 +24,25 @@
 
   .resource-class-content {
     padding: 0;
+  }
+
+  mat-card-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    .mat-caption {
+      display: flex;
+      align-items: center;
+    }
+
+    mat-icon {
+      font-size: 0.75rem; // match mat-caption
+      vertical-align: middle;
+      height: 1em;
+      width: 1em;
+      line-height: 1;
+      margin-right: 0.25rem;
+    }
   }
 }
