@@ -22,7 +22,7 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimeInputComponent implements OnInit {
-  @Input({ required: true }) control!: FormControl;
+  @Input({ required: true }) control!: FormControl<number | null>;
   @Input({ required: true }) label!: string;
 
   possibleErrors!: ValidatorError[];

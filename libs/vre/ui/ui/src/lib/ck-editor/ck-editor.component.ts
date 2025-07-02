@@ -30,7 +30,7 @@ export class CkEditorComponent implements OnInit {
         return;
       }
       updating = true;
-      this.footnoteControl.setValue(change === null ? null : this._parseToFootnote(change));
+      this.footnoteControl.patchValue(change === null ? null : this._parseToFootnote(change));
       updating = false;
     });
 
@@ -39,7 +39,7 @@ export class CkEditorComponent implements OnInit {
         return;
       }
       updating = true;
-      this.control.setValue(value ? this._parseFromFootnote(value) : '');
+      this.control.patchValue(value ? this._parseFromFootnote(value) : '');
       updating = false;
     });
   }
