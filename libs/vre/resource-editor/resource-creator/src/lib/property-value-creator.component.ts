@@ -24,7 +24,7 @@ import { map, startWith } from 'rxjs/operators';
           <mat-icon>cancel</mat-icon>
         </button>
 
-        <button mat-icon-button [hidden]="formArray.controls.item.value === null" (click)="displayComment = true">
+        <button mat-icon-button [hidden]="isDefaultValue$ | async" (click)="displayComment = true">
           <mat-icon>add_comment</mat-icon>
         </button>
       </div>
