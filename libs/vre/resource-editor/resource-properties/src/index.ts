@@ -1,5 +1,3 @@
-export * from './lib/create-resource-dialog.component';
-
 export * from './lib/date-time';
 export * from './lib/delete-value-dialog.component';
 export * from './lib/edit-resource-label-dialog.component';
