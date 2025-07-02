@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import {
   Constants,
   CreateBooleanValue,
@@ -224,11 +224,10 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.IntervalValue,
     {
-      control: (value?: ReadIntervalValue) =>
-        new FormGroup({
-          start: new FormControl(value?.start, [Validators.required]),
-          end: new FormControl(value?.end, [Validators.required]),
-        }),
+      control: (value?: ReadIntervalValue) => {
+        const myValue = value?.start && value.end ? { start: value.start, end: value.end } : null;
+        return new FormControl(myValue);
+      },
       createValue: (value: { start: number; end: number }) => {
         const newIntervalValue = new CreateIntervalValue();
         newIntervalValue.start = value.start;
