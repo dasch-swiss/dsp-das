@@ -15,10 +15,13 @@ import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autoc
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import {
+  CreateResourceDialogComponent,
+  CreateResourceDialogProps,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({

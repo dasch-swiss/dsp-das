@@ -22,9 +22,7 @@ import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
-import { ColorValueComponent } from './lib/value-components/color-value.component';
 import { IntervalValueComponent } from './lib/value-components/interval-value.component';
-import { LinkValueComponent } from './lib/value-components/link-value.component';
 import { ListValueComponent } from './lib/value-components/list-value.component';
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
@@ -35,17 +33,11 @@ import { ListViewerComponent } from './lib/viewer-components/list-viewer.compone
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
-const valueComponents = [
-  LinkValueComponent,
-  ListValueComponent,
-  NestedMenuComponent,
-  TimeValueComponent,
-  IntervalValueComponent,
-];
+const valueComponents = [ListValueComponent, NestedMenuComponent, TimeValueComponent, IntervalValueComponent];
 
 const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
 
-const switchComponents = [ColorValueComponent, LinkViewerComponent, ToggleValueComponent];
+const switchComponents = [LinkViewerComponent, ToggleValueComponent];
 
 export const ResourcePropertiesComponents = [
   ...switchComponents,
