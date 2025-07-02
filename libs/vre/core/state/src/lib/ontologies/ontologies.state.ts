@@ -32,7 +32,7 @@ import {
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
-  ResetCurrentOntologyIfNeededAction,
+  ResetCurrentOntologyAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologiesLoadingAction,
@@ -80,22 +80,13 @@ export class OntologiesState {
     ctx.patchState({ currentOntology: readOntology });
   }
 
-  @Action(ResetCurrentOntologyIfNeededAction)
-  resetCurrentOntologyIfNeededAction(
+  @Action(ResetCurrentOntologyAction)
+  resetCurrentOntologyAction(
     ctx: StateContext<OntologiesStateModel>,
-    { ontology, projectIri }: ResetCurrentOntologyIfNeededAction
+    { ontology, projectIri }: ResetCurrentOntologyAction
   ) {
-    const state = ctx.getState();
-    const currentOntology = state.currentOntology;
-
-    if (
-      !currentOntology ||
-      currentOntology.id !== ontology.id ||
-      currentOntology.lastModificationDate !== ontology.lastModificationDate
-    ) {
-      ctx.dispatch(new SetOntologyAction(ontology, projectIri));
-      ctx.dispatch(new SetCurrentOntologyAction(ontology));
-    }
+    ctx.dispatch(new SetOntologyAction(ontology, projectIri));
+    ctx.dispatch(new SetCurrentOntologyAction(ontology));
   }
 
   @Action(UpdateProjectOntologyAction)
@@ -127,13 +118,10 @@ export class OntologiesState {
     const state = ctx.getState();
     const existing = state.projectOntologies[projectIri]?.readOntologies || [];
 
-    const updatedOntologies = [...existing];
-    const idx = updatedOntologies.findIndex(onto => onto.id === ontology.id);
-    if (idx > -1) {
-      updatedOntologies[idx] = ontology;
-    } else {
-      updatedOntologies.push(ontology);
-    }
+    const updatedOntologies = existing.map(o => (o.id === ontology.id ? ontology : o));
+    const isNew = !existing.some(o => o.id === ontology.id);
+
+    const newReadOntologies = isNew ? [...existing, ontology] : updatedOntologies;
 
     ctx.setState({
       ...state,
@@ -141,7 +129,7 @@ export class OntologiesState {
         ...state.projectOntologies,
         [projectIri]: {
           ...state.projectOntologies[projectIri],
-          readOntologies: updatedOntologies,
+          readOntologies: newReadOntologies,
         },
       },
     });

@@ -51,6 +51,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     let propertyData: CreatePropertyData | UpdatePropertyData;
     if (this.isPropertyEditData(this.data)) {
       propertyData = {
@@ -75,8 +76,12 @@ export class EditPropertyFormDialogComponent implements OnInit {
         guiAttribute: this.form.controls.guiElement.touched ? this.form.controls.guiElement.value : undefined,
         objectType: this.form.controls.objectType.touched ? this.form.controls.objectType.value : undefined,
       } as CreatePropertyData;
-      this._oes.createResourceProperty(propertyData, this.data.assignToClass);
-      this.dialogRef.close();
+      this._oes
+        .createProperty$(propertyData, this.data.assignToClass)
+        .pipe(take(1))
+        .subscribe(_ => {
+          this.dialogRef.close();
+        });
     }
   }
 }

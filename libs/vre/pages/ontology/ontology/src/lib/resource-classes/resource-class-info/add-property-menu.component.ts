@@ -4,7 +4,7 @@ import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swi
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
-import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
+import { CreatePropertyDialogData, EditPropertyDialogData } from '../../forms/property-form/property-form.type';
 import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
@@ -127,13 +127,11 @@ export class AddPropertyMenuComponent {
   }
 
   addNewProperty(propType: DefaultProperty) {
-    const createData: EditPropertyDialogData = {
+    const createData: CreatePropertyDialogData = {
       propType,
-      guiElement: propType.guiElement,
-      objectType: propType.objectType,
       assignToClass: this.resourceClass.resourceClassDefinition,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(EditPropertyFormDialogComponent, {
+    this._dialog.open<EditPropertyFormDialogComponent, CreatePropertyDialogData>(EditPropertyFormDialogComponent, {
       data: createData,
     });
   }

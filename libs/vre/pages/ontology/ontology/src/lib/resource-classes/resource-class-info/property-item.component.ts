@@ -190,7 +190,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private _destroy = new Subject<void>();
 
   constructor(
-    private _cd: ChangeDetectorRef,
+    private _cdr: ChangeDetectorRef,
     public clipboard: Clipboard,
     private _oes: OntologyEditService,
     private _dialog: MatDialog,
@@ -200,7 +200,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this._oes.latestChangedItem.pipe(takeUntil(this._destroy)).subscribe(item => {
       if (item && item === this.classProp.propDef.id) {
-        this.propertyCardRipple.launch({
+        this.propertyCardRipple?.launch({
           persistent: false,
         });
         this._oes.latestChangedItem.next(undefined);
@@ -227,7 +227,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
       .propertyCanBeRemovedFromClass$(this.classProp.iHasProperty, this.classProp.classId)
       .subscribe(canDoRes => {
         this.propCanBeRemovedFromClass = canDoRes.canDo;
-        this._cd.markForCheck();
+        this._cdr.markForCheck();
       });
   }
 

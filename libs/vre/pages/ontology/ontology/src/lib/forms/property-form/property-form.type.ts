@@ -22,7 +22,6 @@ export interface EditPropertyDialogData {
   guiElement: string;
   guiAttribute?: string;
   objectType?: string;
-  assignToClass?: ClassDefinition; // class ID to which the property should be assigned
 }
 
 export interface CreatePropertyDialogData {

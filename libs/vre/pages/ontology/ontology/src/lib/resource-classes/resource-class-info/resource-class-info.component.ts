@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -56,7 +56,6 @@ export class ResourceClassInfoComponent {
     private _oes: OntologyEditService,
     private _store: Store
   ) {}
-
   setCanBeDeleted() {
     this._oes
       .canDeleteResourceClass$(this.resourceClass.id)
