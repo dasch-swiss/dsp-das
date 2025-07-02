@@ -35,6 +35,7 @@ export class IntervalValueComponent implements OnInit {
       }
       updating = false;
     });
+
     this.startControl.valueChanges.subscribe(start => {
       if (updating) {
         return;
