@@ -116,8 +116,8 @@ export class OntologyEditService {
   );
 
   currentOntologyCanBeDeleted$ = this.currentOntologyInfo$.pipe(
-    filter(onto => onto !== null),
-    map(onto => onto!.id),
+    filter((onto): onto is OntologyMetadata | ReadOntology => onto !== null),
+    map(onto => onto.id),
     distinctUntilChanged(),
     switchMap(ontoId => this._dspApiConnection.v2.onto.canDeleteOntology(ontoId).pipe(map(canDo => canDo.canDo)))
   );
