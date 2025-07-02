@@ -22,18 +22,12 @@ import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.
 import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
-import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
-import { LinkViewerComponent } from './lib/viewer-components/link-viewer.component';
-import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
-const viewerComponents = [RichTextViewerComponent, ListViewerComponent, IntervalViewerComponent, TimeViewerComponent];
-
-const switchComponents = [LinkViewerComponent];
+const viewerComponents = [RichTextViewerComponent, TimeViewerComponent];
 
 export const ResourcePropertiesComponents = [
-  ...switchComponents,
   ...viewerComponents,
   DeleteValueDialogComponent,
   PropertyValuesComponent,
