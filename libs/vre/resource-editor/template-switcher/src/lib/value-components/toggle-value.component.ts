@@ -7,9 +7,6 @@ import { FormControl } from '@angular/forms';
     <app-nullable-editor [control]="control" [defaultValue]="false">
       <div class="nullable-boolean">
         <mat-slide-toggle [formControl]="control" data-cy="bool-toggle" *ngIf="control.value !== null" />
-        <button mat-icon-button (click)="cancel()" title="Cancel" *ngIf="control.value !== null">
-          <mat-icon>cancel</mat-icon>
-        </button>
       </div>
     </app-nullable-editor>
   `,
@@ -18,10 +15,6 @@ import { FormControl } from '@angular/forms';
       .nullable-boolean {
         display: flex;
         align-items: center;
-
-        button {
-          margin-left: 20px;
-        }
       }
     `,
   ],
@@ -32,9 +25,5 @@ export class ToggleValueComponent {
 
   add() {
     this.control.patchValue(false);
-  }
-
-  cancel() {
-    this.control.patchValue(null);
   }
 }
