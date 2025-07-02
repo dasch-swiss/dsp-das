@@ -56,6 +56,7 @@ import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { TemplateSwitcherComponents } from 'template-switcher';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
@@ -70,6 +71,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    ...TemplateSwitcherComponents,
     ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...ResourceCreatorComponents,
