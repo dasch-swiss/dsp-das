@@ -4,3 +4,5 @@ export * from './lib/viewer-components/geoname-viewer.component';
 export * from './lib/value-components/geoname-value.component';
 export * from './lib/value-components/color-value.component';
 export * from './lib/value-components/link-value.component';
+export * from './lib/value-components/interval-value.component';
+export * from './lib/value-components/list-value.component';

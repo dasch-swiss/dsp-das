@@ -1,8 +1,5 @@
-export * from './lib/value-components/list-value.component';
 export * from './lib/value-components/nested-menu.component';
 export * from './lib/value-components/time-value.component';
-export * from './lib/value-components/interval-value.component';
-
 export * from './lib/viewer-components/rich-text-viewer.component';
 export * from './lib/viewer-components/interval-viewer.component';
 export * from './lib/viewer-components/time-viewer.component';
