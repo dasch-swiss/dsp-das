@@ -1,5 +1,6 @@
 import { CreateResourceDialogComponent } from './lib/create-resource-dialog.component';
 import { MathJaxDirective } from './lib/mathjax/math-jax.directive';
+import { NullableEditorComponent } from './lib/nullable-editor.component';
 import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
 import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { ColorValueComponent } from './lib/value-components/color-value.component';
@@ -41,4 +42,5 @@ export const TemplateSwitcherComponents = [
   TemplateEditorSwitcherComponent,
   MathJaxDirective,
   CreateResourceDialogComponent,
+  NullableEditorComponent,
 ];

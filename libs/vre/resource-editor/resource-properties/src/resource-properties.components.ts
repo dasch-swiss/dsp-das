@@ -5,7 +5,6 @@ import { FootnoteParserPipe } from './lib/footnote-parser.pipe';
 import { FootnoteTooltipComponent } from './lib/footnote-tooltip.component';
 import { FootnoteDirective } from './lib/footnote.directive';
 import { FootnotesComponent } from './lib/footnotes.component';
-import { NullableEditorComponent } from './lib/nullable-editor.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
@@ -33,6 +32,5 @@ export const ResourcePropertiesComponents = [
   FootnoteDirective,
   FootnoteParserPipe,
 
-  NullableEditorComponent,
   PropertyValueBasicCommentComponent,
 ];

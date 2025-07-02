@@ -21,3 +21,4 @@ export * from './lib/template-editor-switcher.component';
 
 export * from './lib/mathjax/math-jax.directive';
 export * from './lib/create-resource-dialog.component';
+export * from './lib/nullable-editor.component';
