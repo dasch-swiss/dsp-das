@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DateTime } from '../date-time';
-import { dateTimeTimestamp } from '../date-time-timestamp';
+import { DateTime, dateTimeTimestamp } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
   selector: 'app-time-viewer',

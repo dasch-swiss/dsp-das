@@ -1,3 +1,5 @@
+import { TemplateEditorSwitcherComponent } from './lib/template-editor-switcher.component';
+import { TemplateViewerSwitcherComponent } from './lib/template-viewer-switcher.component';
 import { ColorValueComponent } from './lib/value-components/color-value.component';
 import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { IntervalValueComponent } from './lib/value-components/interval-value.component';
@@ -11,10 +13,11 @@ import { GeonameViewerComponent } from './lib/viewer-components/geoname-viewer.c
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
 import { LinkViewerComponent } from './lib/viewer-components/link-viewer.component';
 import { ListViewerComponent } from './lib/viewer-components/list-viewer.component';
+import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
+import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
 export const TemplateSwitcherComponents = [
-  DateViewerComponent,
-  GeonameViewerComponent,
+  // Value components
   GeonameValueComponent,
   ColorValueComponent,
   LinkValueComponent,
@@ -23,7 +26,15 @@ export const TemplateSwitcherComponents = [
   NestedMenuComponent,
   TimeValueComponent,
   ToggleValueComponent,
+  // Viewer components
+  DateViewerComponent,
+  GeonameViewerComponent,
   IntervalViewerComponent,
   LinkViewerComponent,
   ListViewerComponent,
+  RichTextViewerComponent,
+  TimeViewerComponent,
+  // Other components
+  TemplateViewerSwitcherComponent,
+  TemplateEditorSwitcherComponent,
 ];
