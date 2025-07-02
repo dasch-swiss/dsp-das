@@ -18,3 +18,5 @@ export * from './lib/value-components/toggle-value.component';
 
 export * from './lib/template-viewer-switcher.component';
 export * from './lib/template-editor-switcher.component';
+
+export * from './lib/mathjax/math-jax.directive';
