@@ -414,9 +414,28 @@ export class OntologyEditService {
     );
   }
 
+  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
+    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
+  }
+
+  deleteResourceClass$(id: string) {
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto
+      .deleteResourceClass({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(deleteResponse => {
+          this.lastModificationDate = deleteResponse.lastModificationDate;
+          this._loadOntology(this.ontologyId);
+        })
+      );
+  }
+
   createProperty$(propertyData: CreatePropertyData, assignToClass?: ClassDefinition) {
     this._isTransacting.next(true);
-    return this._createResourceProperty$(propertyData).pipe(
+    return this._createProperty$(propertyData).pipe(
       tap(propDef => {
         this.lastModificationDate = propDef.lastModificationDate;
         if (!assignToClass) {
@@ -491,18 +510,18 @@ export class OntologyEditService {
   private _updatePropertyLabels$(id: string, labels: StringLiteralV2[]) {
     return defer(() => {
       const upd = MakeOntologyFor.updatePropertyLabel(this.ctx, id, labels);
-      return this._updateResourceProperty$(upd);
+      return this._updateProperty$(upd);
     });
   }
 
   private _updatePropertyComments$(id: string, comments: StringLiteralV2[]) {
     return defer(() => {
       const upd = MakeOntologyFor.updatePropertyComment(this.ctx, id, comments);
-      return this._updateResourceProperty$(upd);
+      return this._updateProperty$(upd);
     });
   }
 
-  private _updateResourceProperty$(
+  private _updateProperty$(
     updateOntology: UpdateOntology<
       UpdateResourcePropertyGuiElement | UpdateResourcePropertyLabel | UpdateResourcePropertyComment
     >
@@ -514,29 +533,10 @@ export class OntologyEditService {
     );
   }
 
-  private _createResourceProperty$(propertyData: CreatePropertyData) {
+  private _createProperty$(propertyData: CreatePropertyData) {
     this._isTransacting.next(true);
     const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
     return this._dspApiConnection.v2.onto.createResourceProperty(onto);
-  }
-
-  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
-    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
-  }
-
-  deleteResourceClass$(id: string) {
-    this._isTransacting.next(true);
-    return this._dspApiConnection.v2.onto
-      .deleteResourceClass({
-        id,
-        lastModificationDate: this.lastModificationDate,
-      })
-      .pipe(
-        tap(deleteResponse => {
-          this.lastModificationDate = deleteResponse.lastModificationDate;
-          this._loadOntology(this.ontologyId);
-        })
-      );
   }
 
   canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
