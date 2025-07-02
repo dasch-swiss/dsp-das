@@ -7,7 +7,6 @@ import { startWith } from 'rxjs/operators';
   template: `
     <app-time-input label="Start" [control]="startControl" data-cy="start-input" />
     <app-time-input label="End" [control]="endControl" data-cy="end-input" />
-    {{ control.value | json }}
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
