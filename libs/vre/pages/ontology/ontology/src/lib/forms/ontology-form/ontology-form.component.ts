@@ -61,7 +61,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this._buildForm(this.data);
+    this._buildForm();
 
     if (!this.data) {
       this.ontologyForm.controls.name.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(() => {
@@ -76,10 +76,10 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return ontoName ? `${ontoName.charAt(0).toUpperCase()}${ontoName.slice(1)}` : '';
   }
 
-  private _buildForm(ontology?: UpdateOntologyData): void {
+  private _buildForm(): void {
     this.ontologyForm = this._fb.group({
       name: [
-        { value: this.ontologyName, disabled: ontology === undefined },
+        { value: this.ontologyName, disabled: !!this.data?.id },
         [
           Validators.required,
           Validators.minLength(3),
@@ -88,8 +88,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
           existingNamesValidator(this.blackListedNames),
         ],
       ],
-      label: [ontology?.label || '', [Validators.required, Validators.minLength(3)]],
-      comment: [ontology?.comment || '', Validators.required],
+      label: [this.data?.label || '', [Validators.required, Validators.minLength(3)]],
+      comment: [this.data?.comment || '', Validators.required],
     });
   }
 
