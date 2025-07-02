@@ -8,7 +8,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
   selector: 'app-create-resource-form-properties',
   template: `
     <app-create-resource-form-row
-      *ngFor="let prop of myProperties; let last = last"
+      *ngFor="let prop of myProperties"
       [label]="
         prop.propDef.label +
         (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
