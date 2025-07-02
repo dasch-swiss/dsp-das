@@ -23,7 +23,6 @@ import { UploadControlComponent } from './lib/upload-control.component';
 import { UploadComponent } from './lib/upload.component';
 import { UploadedFileComponent } from './lib/uploaded-file.component';
 import { ColorValueComponent } from './lib/value-components/color-value.component';
-import { GeonameValueComponent } from './lib/value-components/geoname-value.component';
 import { IntervalValueComponent } from './lib/value-components/interval-value.component';
 import { LinkValueComponent } from './lib/value-components/link-value.component';
 import { ListValueComponent } from './lib/value-components/list-value.component';
@@ -37,7 +36,6 @@ import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewe
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
 
 const valueComponents = [
-  GeonameValueComponent,
   LinkValueComponent,
   ListValueComponent,
   NestedMenuComponent,
