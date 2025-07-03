@@ -7,15 +7,15 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-value',
   template: `
-    <app-property-value-display [index]="index" *ngIf="displayMode" />
-    <app-property-value-edit [index]="index" [group]="group" *ngIf="!displayMode" />
+    <app-property-value-display [index]="index" *ngIf="displayMode === true" />
+    <app-property-value-edit [index]="index" [group]="group" *ngIf="displayMode === false" />
   `,
 })
 export class PropertyValueComponent implements OnInit {
   @Input({ required: true }) index!: number;
   @Input({ required: true }) group!: FormValueGroup;
 
-  displayMode!: boolean;
+  displayMode?: boolean;
   readonly Cardinality = Cardinality;
 
   initialFormValue!: { item: any; comment: string | null };
@@ -33,7 +33,7 @@ export class PropertyValueComponent implements OnInit {
 
   private _setupDisplayMode() {
     this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
-      if (this.propertyValueService.currentlyAdding && !this.displayMode) {
+      if (this.propertyValueService.currentlyAdding && this.displayMode === false) {
         this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
         this.propertyValueService.currentlyAdding = false;
         return;
