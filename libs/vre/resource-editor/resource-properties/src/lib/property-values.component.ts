@@ -3,7 +3,6 @@ import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
-import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -28,7 +27,6 @@ import { PropertyValueService } from './property-value.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyValuesComponent implements OnInit {
-  @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 

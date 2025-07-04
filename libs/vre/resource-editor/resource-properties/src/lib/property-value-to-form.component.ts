@@ -9,11 +9,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-property-value-to-form',
   template: `
-    <app-property-values
-      *ngIf="resource.type"
-      [myProperty]="prop"
-      [formArray]="formArray"
-      [editModeData]="{ resource, values: prop.values }" />
+    <app-property-values *ngIf="resource.type" [myProperty]="prop" [editModeData]="{ resource, values: prop.values }" />
 
     <app-footnotes *ngIf="footnoteService.footnotes.length > 0" />
   `,
