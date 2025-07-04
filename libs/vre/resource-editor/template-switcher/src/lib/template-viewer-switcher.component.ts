@@ -46,7 +46,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #textHtmlDisplayTpl let-item="item">
-      <div data-cy="text-html-switch" [innerHTML]="item.value | internalLinkReplacer | addTargetBlank" appMathjax></div>
+      <app-text-html-viewer [value]="item" />
     </ng-template>
 
     <ng-template #colorDisplayTpl let-item="item">
