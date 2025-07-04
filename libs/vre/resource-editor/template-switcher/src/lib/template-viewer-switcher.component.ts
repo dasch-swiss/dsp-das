@@ -42,7 +42,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #richTextDisplayTpl let-item="item">
-      <app-rich-text-viewer [control]="item" />
+      <app-rich-text-viewer [value]="item" />
     </ng-template>
 
     <ng-template #textHtmlDisplayTpl let-item="item">

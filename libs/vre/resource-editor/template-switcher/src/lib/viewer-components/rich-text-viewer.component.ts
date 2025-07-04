@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-rich-text-viewer',
@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
     <div
       data-cy="rich-text-switch"
       class="rich-text-viewer"
-      [innerHTML]="control.value | footnoteParser | internalLinkReplacer | addTargetBlank"
+      [innerHTML]="value.strval || '' | footnoteParser | internalLinkReplacer | addTargetBlank"
       appFootnote></div>
   `,
   styles: [
@@ -30,5 +30,5 @@ import { FormControl } from '@angular/forms';
   ],
 })
 export class RichTextViewerComponent {
-  @Input({ required: true }) control!: FormControl<string | null>;
+  @Input({ required: true }) value!: ReadTextValueAsXml;
 }
