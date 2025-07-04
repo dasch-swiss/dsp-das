@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { DateTime, dateTimeTimestamp } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ReadTimeValue } from '@dasch-swiss/dsp-js';
+import {
+  convertTimestampToDateTime,
+  DateTime,
+  dateTimeTimestamp,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
   selector: 'app-time-viewer',
@@ -10,10 +15,15 @@ import { DateTime, dateTimeTimestamp } from '@dasch-swiss/vre/resource-editor/re
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimeViewerComponent {
-  @Input({ required: true }) control!: FormControl<DateTime>;
+export class TimeViewerComponent implements OnChanges {
+  @Input({ required: true }) value!: ReadTimeValue;
+  myDate!: DateTime;
+
+  ngOnChanges() {
+    this.myDate = convertTimestampToDateTime(this.value.time, new DatePipe('en-US'));
+  }
 
   get dateTime() {
-    return dateTimeTimestamp(this.control.value.date, this.control.value.time);
+    return dateTimeTimestamp(this.myDate.date, this.value.time);
   }
 }

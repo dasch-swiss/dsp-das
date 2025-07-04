@@ -22,19 +22,19 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
   selector: 'app-template-viewer-switcher',
   template: `
     <ng-template #basicDisplayTpl let-item="item">
-      <span>{{ item.value }}</span>
+      <span>{{ item }}</span>
     </ng-template>
 
     <ng-template #booleanDisplayTpl let-item="item">
-      <mat-slide-toggle *ngIf="item.value !== null" [checked]="item.value" [disabled]="true" />
+      <mat-slide-toggle [checked]="item" [disabled]="true" />
     </ng-template>
 
     <ng-template #intervalDisplayTpl let-item="item">
-      <app-interval-viewer [control]="item" />
+      <app-interval-viewer [value]="item" />
     </ng-template>
 
     <ng-template #timeDisplayTpl let-item="item">
-      <app-time-viewer [control]="item" />
+      <app-time-viewer [value]="item" />
     </ng-template>
 
     <ng-template #listDisplayTpl let-item="item">
