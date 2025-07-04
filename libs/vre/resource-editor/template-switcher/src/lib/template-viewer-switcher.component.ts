@@ -38,7 +38,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #listDisplayTpl let-item="item">
-      <app-list-viewer [control]="item" [propertyDef]="propertyDefinition" />
+      <app-list-viewer [value]="item" [propertyDef]="propertyDefinition" />
     </ng-template>
 
     <ng-template #richTextDisplayTpl let-item="item">

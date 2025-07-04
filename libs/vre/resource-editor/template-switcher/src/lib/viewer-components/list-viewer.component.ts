@@ -1,6 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -25,7 +24,7 @@ import { map, switchMap } from 'rxjs/operators';
   `,
 })
 export class ListViewerComponent implements OnInit {
-  @Input() control!: FormControl<string>;
+  @Input() value!: ReadListValue;
   @Input() propertyDef!: ResourcePropertyDefinition;
   labels$!: Observable<string[]>;
 
@@ -41,14 +40,10 @@ export class ListViewerComponent implements OnInit {
   ngOnInit() {
     this._fetchSearchLink();
 
-    if (!this.control.value) {
-      return;
-    }
-
-    this.labels$ = (this._dspApiConnection.v2.list.getNode(this.control.value) as Observable<ListNodeV2>).pipe(
+    this.labels$ = (this._dspApiConnection.v2.list.getNode(this.value.listNode) as Observable<ListNodeV2>).pipe(
       switchMap(v => this._dspApiConnection.v2.list.getList(v.hasRootNode!)),
       map(v => {
-        const tree = ListViewerComponent.lookFor([v as ListNodeV2], this.control.value) as ListNodeV2[];
+        const tree = ListViewerComponent.lookFor([v as ListNodeV2], this.value.listNode) as ListNodeV2[];
         const nodeId = tree[tree.length - 1].id;
         this._nodeIdSubject.next(nodeId);
         return tree.slice(1).map(node => node.label);
