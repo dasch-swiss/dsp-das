@@ -62,7 +62,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #linkDisplayTpl let-item="item">
-      <app-link-viewer *ngIf="value" [control]="item" [value]="value" />
+      <app-link-viewer [value]="item" />
     </ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
