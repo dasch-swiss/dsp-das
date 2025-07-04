@@ -6,8 +6,8 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-value',
   template: `
-    <app-property-value-display [index]="index" *ngIf="displayMode === true" />
-    <app-property-value-update [index]="index" *ngIf="displayMode === false" />
+    <app-property-value-display [index]="index" *ngIf="displayMode" />
+    <app-property-value-update [index]="index" *ngIf="!displayMode" />
 
     <!--<app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />-->
   `,
@@ -15,16 +15,12 @@ import { PropertyValueService } from './property-value.service';
 export class PropertyValueComponent implements OnInit {
   @Input({ required: true }) index!: number;
 
-  displayMode?: boolean;
+  displayMode = false;
   readonly Cardinality = Cardinality;
 
   constructor(public propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
-    this._setupDisplayMode();
-  }
-
-  private _setupDisplayMode() {
     this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
       this.displayMode = this.index !== value;
     });
