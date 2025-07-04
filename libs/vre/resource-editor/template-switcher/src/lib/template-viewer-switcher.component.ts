@@ -22,28 +22,28 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
   selector: 'app-template-viewer-switcher',
   template: `
     <ng-template #basicDisplayTpl let-item="item">
-      <span>{{ value }}</span>
+      <span>{{ item }}</span>
     </ng-template>
 
-    <ng-template #booleanDisplayTpl let-item="item"> </ng-template>
+    <ng-template #booleanDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #intervalDisplayTpl let-item="item"> </ng-template>
+    <ng-template #intervalDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #timeDisplayTpl let-item="item"> </ng-template>
+    <ng-template #timeDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #listDisplayTpl let-item="item"> </ng-template>
+    <ng-template #listDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #richTextDisplayTpl let-item="item"> </ng-template>
+    <ng-template #richTextDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #textHtmlDisplayTpl let-item="item"> </ng-template>
+    <ng-template #textHtmlDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #colorDisplayTpl let-item="item"> </ng-template>
+    <ng-template #colorDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #dateDisplayTpl let-item="item"> </ng-template>
+    <ng-template #dateDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #geoNameDisplayTpl let-item="item"> </ng-template>
+    <ng-template #geoNameDisplayTpl let-item="item"></ng-template>
 
-    <ng-template #linkDisplayTpl let-item="item"> </ng-template>
+    <ng-template #linkDisplayTpl let-item="item"></ng-template>
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,

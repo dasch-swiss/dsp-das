@@ -34,7 +34,10 @@ import { PropertyValueService } from './property-value.service';
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
         <ng-container *ngIf="template">
           <ng-container
-            *ngTemplateOutlet="template; context: { item: group.controls.item, displayMode: true }"></ng-container>
+            *ngTemplateOutlet="
+              template;
+              context: { item: propertyValueService.editModeData.values[index].strval }
+            "></ng-container>
         </ng-container>
       </div>
     </div>`,
@@ -43,10 +46,6 @@ import { PropertyValueService } from './property-value.service';
 })
 export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;
-
-  get group() {
-    return this.propertyValueService.formArray.at(this.index);
-  }
 
   template?: TemplateRef<any>;
   isHighlighted!: boolean;
