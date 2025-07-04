@@ -54,7 +54,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #dateDisplayTpl let-item="item">
-      <app-date-viewer [control]="item" />
+      <app-date-viewer [value]="item" />
     </ng-template>
 
     <ng-template #geoNameDisplayTpl let-item="item">

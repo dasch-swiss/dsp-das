@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
+import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-date-viewer',
@@ -25,23 +24,23 @@ import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
   `,
 })
 export class DateViewerComponent implements OnInit {
+  @Input({ required: true }) value!: ReadDateValue;
+
   get start() {
-    return (this.control.value as KnoraPeriod).start;
+    return (this.value.date as KnoraPeriod).start;
   }
 
   get end() {
-    return (this.control.value as KnoraPeriod).end;
+    return (this.value.date as KnoraPeriod).end;
   }
 
   get knoraDate() {
-    return this.control.value as KnoraDate;
+    return this.value.date as KnoraDate;
   }
-
-  @Input() control!: FormControl<KnoraDate | KnoraPeriod>;
 
   isKnoraPeriod!: boolean;
 
   ngOnInit() {
-    this.isKnoraPeriod = this.control.value instanceof KnoraPeriod;
+    this.isKnoraPeriod = this.value.date instanceof KnoraPeriod;
   }
 }
