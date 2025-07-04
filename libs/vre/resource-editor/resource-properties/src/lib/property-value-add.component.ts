@@ -11,7 +11,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-property-value-add',
   template: ` <app-property-value-edit
-    [readValue]="null"
+    [readValue]="undefined"
     (afterEdit)="addItem($event)"
     (afterUndo)="stopAdding.emit()" />`,
 })

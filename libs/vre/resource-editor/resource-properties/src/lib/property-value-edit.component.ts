@@ -48,7 +48,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   `,
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) readValue!: ReadValue;
+  @Input({ required: true }) readValue!: ReadValue | undefined;
   @Output() afterEdit = new EventEmitter<FormValueGroup>();
   @Output() afterUndo = new EventEmitter();
   template?: TemplateRef<any>;
