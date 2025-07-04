@@ -36,8 +36,6 @@ import { PropertyValueService } from './property-value.service';
           <ng-container
             *ngTemplateOutlet="template; context: { item: group.controls.item, displayMode: true }"></ng-container>
         </ng-container>
-
-        <app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />
       </div>
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
