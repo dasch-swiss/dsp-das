@@ -11,9 +11,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 @Component({
   selector: 'app-property-values',
   template: ` <app-property-value
-      *ngFor="let group of propertyValueService.formArray.controls; let index = index"
+      *ngFor="let group of propertyValueService.editModeData.values; let index = index"
       [index]="index"
-      [group]="group"
       style="width: 100%" />
 
     <button

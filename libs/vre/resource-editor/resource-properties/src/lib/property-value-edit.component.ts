@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   ApiResponseError,
   Cardinality,
@@ -49,11 +50,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
-  @Input({ required: true }) group!: FormValueGroup;
   template?: TemplateRef<any>;
 
   loading = false;
   private _subscription!: Subscription;
+
+  group!: FormValueGroup;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -67,6 +69,12 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   protected readonly Cardinality = Cardinality;
 
   ngOnInit() {
+    this.group = new FormGroup({
+      item: propertiesTypeMapping
+        .get(this.propertyValueService.propertyDefinition.objectType!)!
+        .control(this.propertyValueService.editModeData.values[this.index]),
+      comment: new FormControl(''),
+    });
     this._watchAndSetupCommentStatus();
   }
 
@@ -166,7 +174,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private _getUpdatedValue(index: number) {
-    const group = this.propertyValueService.formArray.at(index);
+    const group = this.group;
     const values = this.propertyValueService.editModeData.values;
     const id = values[index].id;
     const entity = propertiesTypeMapping
