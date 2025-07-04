@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
@@ -26,12 +26,9 @@ import { PropertyValueService } from './property-value.service';
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValuesComponent implements OnInit {
+export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) myProperty!: PropertyInfoValues;
-
-  currentlyAdding = false;
-  protected readonly Cardinality = Cardinality;
 
   get userCanAdd() {
     return ResourceUtil.userCanEdit(this.editModeData.resource);
@@ -45,9 +42,11 @@ export class PropertyValuesComponent implements OnInit {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
   }
 
+  currentlyAdding = false;
+
   constructor(public propertyValueService: PropertyValueService) {}
 
-  ngOnInit() {
+  ngOnChanges() {
     this._setupData();
   }
 
