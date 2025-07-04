@@ -50,10 +50,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #colorDisplayTpl let-item="item">
-      <div
-        style="width: 100px; border-radius: 4px; height: 15px; margin: 4px 0; border: 1px solid;"
-        data-cy="color-box"
-        [style.background-color]="item.value"></div>
+      <app-color-viewer [value]="item" />
     </ng-template>
 
     <ng-template #dateDisplayTpl let-item="item">

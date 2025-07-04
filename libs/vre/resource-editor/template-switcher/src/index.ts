@@ -7,7 +7,7 @@ export * from './lib/viewer-components/list-viewer.component';
 export * from './lib/viewer-components/rich-text-viewer.component';
 export * from './lib/viewer-components/time-viewer.component';
 export * from './lib/viewer-components/text-html-viewer.component';
-
+export * from './lib/viewer-components/color-viewer.component';
 export * from './lib/value-components/geoname-value.component';
 export * from './lib/value-components/color-value.component';
 export * from './lib/value-components/link-value.component';

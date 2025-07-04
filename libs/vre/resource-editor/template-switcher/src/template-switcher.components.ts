@@ -11,6 +11,7 @@ import { ListValueComponent } from './lib/value-components/list-value.component'
 import { NestedMenuComponent } from './lib/value-components/nested-menu.component';
 import { TimeValueComponent } from './lib/value-components/time-value.component';
 import { ToggleValueComponent } from './lib/value-components/toggle-value.component';
+import { ColorViewerComponent } from './lib/viewer-components/color-viewer.component';
 import { DateViewerComponent } from './lib/viewer-components/date-viewer.component';
 import { GeonameViewerComponent } from './lib/viewer-components/geoname-viewer.component';
 import { IntervalViewerComponent } from './lib/viewer-components/interval-viewer.component';
@@ -39,6 +40,7 @@ export const TemplateSwitcherComponents = [
   RichTextViewerComponent,
   TextHtmlViewerComponent,
   TimeViewerComponent,
+  ColorViewerComponent,
   // Other components
   TemplateViewerSwitcherComponent,
   TemplateEditorSwitcherComponent,
