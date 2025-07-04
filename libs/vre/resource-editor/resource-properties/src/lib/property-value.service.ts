@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Cardinality, ReadResource, ReadValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { BehaviorSubject } from 'rxjs';
-import { FormValueArray } from './form-value-array.type';
 
 @Injectable()
 export class PropertyValueService {
   private _editModeData!: { resource: ReadResource; values: ReadValue[] };
   propertyDefinition!: ResourcePropertyDefinition;
-  formArray!: FormValueArray;
   cardinality!: Cardinality;
   lastOpenedItem$ = new BehaviorSubject<number | null>(null);
 

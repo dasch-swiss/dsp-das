@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
 import { FormValueArray } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
-import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values',
@@ -18,7 +16,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
     <button
       mat-icon-button
-      (click)="addItem()"
+      (click)="currentlyAdding = true"
       data-cy="add-property-value-button"
       *ngIf="userCanAdd && !currentlyAdding && matchesCardinality">
       <mat-icon class="add-icon">add_box</mat-icon>
@@ -42,42 +40,22 @@ export class PropertyValuesComponent implements OnInit {
   }
 
   get matchesCardinality() {
-    return (
-      this.propertyValueService.formArray.controls.length === 0 ||
-      [Cardinality._0_n, Cardinality._1_n].includes(this.propertyValueService.cardinality)
-    );
+    return [Cardinality._0_n, Cardinality._1_n].includes(this.propertyValueService.cardinality);
   }
 
   get propertyDefinition() {
     return JsLibPotentialError.setAs(this.myProperty.propDef);
   }
 
-  constructor(
-    public propertyValueService: PropertyValueService,
-    private _fb: FormBuilder
-  ) {}
+  constructor(public propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
     this._setupData();
   }
 
-  addItem() {
-    const formGroup = this._fb.group({
-      item: propertiesTypeMapping
-        .get(this.propertyValueService.propertyDefinition.objectType!)!
-        .control() as AbstractControl,
-      comment: this._fb.control(''),
-    });
-
-    this.propertyValueService.formArray.push(formGroup);
-    this.propertyValueService.toggleOpenedValue(this.propertyValueService.formArray.length - 1);
-    this.currentlyAdding = true;
-  }
-
   private _setupData() {
     this.propertyValueService.editModeData = this.editModeData;
     this.propertyValueService.propertyDefinition = this.propertyDefinition;
-    this.propertyValueService.formArray = this.formArray;
     this.propertyValueService.cardinality = this.myProperty.guiDef.cardinality;
   }
 }
