@@ -58,7 +58,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #geoNameDisplayTpl let-item="item">
-      <app-geoname-viewer [control]="item" />
+      <app-geoname-viewer [value]="item" />
     </ng-template>
 
     <ng-template #linkDisplayTpl let-item="item">
