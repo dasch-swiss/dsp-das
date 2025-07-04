@@ -10,7 +10,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value-add',
-  template: ` <app-property-value-edit [index]="0" (afterEdit)="addItem($event)" (afterUndo)="stopAdding.emit()" />`,
+  template: ` <app-property-value-edit
+    [readValue]="null"
+    (afterEdit)="addItem($event)"
+    (afterUndo)="stopAdding.emit()" />`,
 })
 export class PropertyValueAddComponent {
   @Output() stopAdding = new EventEmitter<void>();

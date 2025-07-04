@@ -2,18 +2,14 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   TemplateRef,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Cardinality, KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
@@ -25,7 +21,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
-      [value]="propertyValueService.editModeData.values[index]"
+      [value]="readValue"
       (templateFound)="foundTemplate($event)" />
 
     <div *ngIf="!loading; else loadingTpl" style="display: flex; padding: 16px 0">
@@ -52,7 +48,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   `,
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) index!: number;
+  @Input({ required: true }) readValue!: ReadValue;
   @Output() afterEdit = new EventEmitter<FormValueGroup>();
   @Output() afterUndo = new EventEmitter();
   template?: TemplateRef<any>;
@@ -63,9 +59,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   group!: FormValueGroup;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    @Optional() private _resourceFetcherService: ResourceFetcherService,
     public propertyValueService: PropertyValueService,
     private _cd: ChangeDetectorRef
   ) {}
@@ -76,7 +69,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
     this.group = new FormGroup({
       item: propertiesTypeMapping
         .get(this.propertyValueService.propertyDefinition.objectType!)!
-        .control(this.propertyValueService.editModeData.values[this.index]),
+        .control(this.readValue),
       comment: new FormControl(''),
     });
 
