@@ -18,8 +18,6 @@ export class PropertyValueComponent implements OnInit {
   displayMode?: boolean;
   readonly Cardinality = Cardinality;
 
-  initialFormValue!: { item: any; comment: string | null };
-
   constructor(public propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
@@ -28,16 +26,6 @@ export class PropertyValueComponent implements OnInit {
 
   private _setupDisplayMode() {
     this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
-      if (this.propertyValueService.currentlyAdding && this.displayMode === false) {
-        this.propertyValueService.formArray.removeAt(this.propertyValueService.formArray.length - 1);
-        this.propertyValueService.currentlyAdding = false;
-        return;
-      }
-
-      if (value === null && this.propertyValueService.formArray.length > 0) {
-        this.propertyValueService.formArray.at(this.index).patchValue(this.initialFormValue);
-      }
-
       this.displayMode = this.index !== value;
     });
   }
