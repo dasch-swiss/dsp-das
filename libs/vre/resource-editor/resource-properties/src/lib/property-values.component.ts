@@ -10,7 +10,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values',
-  template: ` <app-property-value
+  template: `
+    <app-property-value
       *ngFor="let group of propertyValueService.editModeData.values; let index = index"
       [index]="index"
       style="width: 100%" />
@@ -21,7 +22,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       data-cy="add-property-value-button"
       *ngIf="userCanAdd && !propertyValueService.currentlyAdding && matchesCardinality">
       <mat-icon class="add-icon">add_box</mat-icon>
-    </button>`,
+    </button>
+
+    <app-property-value-add *ngIf="propertyValueService.currentlyAdding" />
+  `,
   styles: [
     `
       .add-icon {

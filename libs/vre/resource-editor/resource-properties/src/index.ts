@@ -10,6 +10,8 @@ export * from './lib/property-value-action-bubble.component';
 export * from './lib/property-value-comment.component';
 export * from './lib/property-value.component';
 export * from './lib/property-value-edit.component';
+export * from './lib/property-value-update.component';
+export * from './lib/property-value-add.component';
 export * from './lib/property-value-display.component';
 export * from './lib/property-values.component';
 export * from './lib/resource-payloads-mapping';

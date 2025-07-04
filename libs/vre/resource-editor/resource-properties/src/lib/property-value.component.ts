@@ -7,7 +7,7 @@ import { PropertyValueService } from './property-value.service';
   selector: 'app-property-value',
   template: `
     <app-property-value-display [index]="index" *ngIf="displayMode === true" />
-    <app-property-value-edit [index]="index" *ngIf="displayMode === false" />
+    <app-property-value-update [index]="index" *ngIf="displayMode === false" />
 
     <!--<app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />-->
   `,

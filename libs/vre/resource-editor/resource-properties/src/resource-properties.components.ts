@@ -7,11 +7,13 @@ import { FootnoteDirective } from './lib/footnote.directive';
 import { FootnotesComponent } from './lib/footnotes.component';
 import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
+import { PropertyValueAddComponent } from './lib/property-value-add.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
+import { PropertyValueUpdateComponent } from './lib/property-value-update.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 
@@ -22,6 +24,8 @@ export const ResourcePropertiesComponents = [
   PropertyValueComponent,
   PropertyValueEditComponent,
   PropertyValueDisplayComponent,
+  PropertyValueUpdateComponent,
+  PropertyValueAddComponent,
   PropertyValueToFormComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,

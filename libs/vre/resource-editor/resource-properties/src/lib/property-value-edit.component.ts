@@ -1,18 +1,21 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import {
-  ApiResponseError,
-  Cardinality,
-  CreateValue,
-  KnoraApiConnection,
-  UpdateResource,
-  UpdateValue,
-} from '@dasch-swiss/dsp-js';
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  TemplateRef,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Cardinality, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
-import { finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
+import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -33,7 +36,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       </div>
 
       <div style="display: flex; flex-direction: column; padding-top: 16px">
-        <button (click)="goToDisplayMode()" mat-icon-button color="primary">
+        <button (click)="afterUndo.emit()" mat-icon-button color="primary">
           <mat-icon>undo</mat-icon>
         </button>
 
@@ -50,6 +53,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
+  @Output() afterEdit = new EventEmitter<FormValueGroup>();
+  @Output() afterUndo = new EventEmitter();
   template?: TemplateRef<any>;
 
   loading = false;
@@ -60,7 +65,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _notification: NotificationService,
     @Optional() private _resourceFetcherService: ResourceFetcherService,
     public propertyValueService: PropertyValueService,
     private _cd: ChangeDetectorRef
@@ -75,6 +79,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
         .control(this.propertyValueService.editModeData.values[this.index]),
       comment: new FormControl(''),
     });
+
     this._watchAndSetupCommentStatus();
   }
 
@@ -88,102 +93,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    if (this.propertyValueService.currentlyAdding && this.index === this.propertyValueService.formArray.length - 1) {
-      this._addItem();
-    } else {
-      this._update();
-    }
-  }
-
-  goToDisplayMode() {
-    this.propertyValueService.toggleOpenedValue(this.index);
-  }
-
-  private _addItem() {
     if (this.group.invalid) return;
-
-    this.loading = true;
-
-    const createVal = propertiesTypeMapping
-      .get(this.propertyValueService.propertyDefinition.objectType!)!
-      .createValue(this.group.controls.item.value, this.propertyValueService.propertyDefinition);
-
-    if (this.group.controls.comment.value) {
-      createVal.valueHasComment = this.group.controls.comment.value;
-    }
-
-    const resource = this.propertyValueService.editModeData.resource;
-    const updateRes = new UpdateResource();
-    updateRes.id = resource.id;
-    updateRes.type = resource.type;
-    updateRes.property = this.propertyValueService.propertyDefinition.id;
-    updateRes.value = createVal;
-
-    this._dspApiConnection.v2.values
-      .createValue(updateRes as UpdateResource<CreateValue>)
-      .pipe(
-        take(1),
-        tap(() => this._resourceFetcherService.reload()),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(
-        () => {
-          this.propertyValueService.currentlyAdding = false;
-          this.propertyValueService.toggleOpenedValue(this.index);
-        },
-        e => {
-          if (e instanceof ApiResponseError && e.status === 400) {
-            this._notification.openSnackBar('The value entered already exists.');
-            return;
-          }
-          // eslint-disable-next-line @typescript-eslint/no-throw-literal
-          throw e;
-        }
-      );
-  }
-
-  private _update() {
-    if (this.group.invalid) return;
-
-    this.loading = true;
-
-    this._dspApiConnection.v2.values
-      .updateValue(this._getPayload(this.index))
-      .pipe(
-        take(1),
-        tap(() => this._resourceFetcherService.reload()),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(() => {
-        this.propertyValueService.toggleOpenedValue(this.index);
-      });
-  }
-
-  private _getPayload(index: number) {
-    const updateResource = new UpdateResource<UpdateValue>();
-    const { resource, values } = this.propertyValueService.editModeData;
-    updateResource.id = resource.id;
-    updateResource.property = values[index].property;
-    updateResource.type = resource.type;
-    updateResource.value = this._getUpdatedValue(index);
-    return updateResource;
-  }
-
-  private _getUpdatedValue(index: number) {
-    const group = this.group;
-    const values = this.propertyValueService.editModeData.values;
-    const id = values[index].id;
-    const entity = propertiesTypeMapping
-      .get(this.propertyValueService.propertyDefinition.objectType!)!
-      .updateValue(id, group.controls.item.value, this.propertyValueService.propertyDefinition);
-    if (group.controls.comment.value) {
-      entity.valueHasComment = group.controls.comment.value;
-    }
-    return entity;
+    this.afterEdit.emit(this.group);
   }
 
   private _watchAndSetupCommentStatus() {
