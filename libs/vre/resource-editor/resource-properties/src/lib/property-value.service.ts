@@ -9,7 +9,6 @@ export class PropertyValueService {
   propertyDefinition!: ResourcePropertyDefinition;
   formArray!: FormValueArray;
   cardinality!: Cardinality;
-  currentlyAdding = false;
   lastOpenedItem$ = new BehaviorSubject<number | null>(null);
 
   get editModeData(): { resource: ReadResource; values: ReadValue[] } {
@@ -17,7 +16,6 @@ export class PropertyValueService {
   }
 
   set editModeData(data: { resource: ReadResource; values: ReadValue[] }) {
-    this.currentlyAdding = false;
     this.lastOpenedItem$.next(null);
     this._editModeData = data;
   }

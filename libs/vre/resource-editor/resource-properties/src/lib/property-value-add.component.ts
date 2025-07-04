@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ApiResponseError, CreateValue, KnoraApiConnection, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
@@ -10,12 +10,10 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-value-add',
-  template: ` <app-property-value-edit
-    [index]="0"
-    (afterEdit)="addItem($event)"
-    (afterUndo)="propertyValueService.currentlyAdding = false" />`,
+  template: ` <app-property-value-edit [index]="0" (afterEdit)="addItem($event)" (afterUndo)="stopAdding.emit()" />`,
 })
 export class PropertyValueAddComponent {
+  @Output() stopAdding = new EventEmitter<void>();
   loading = false;
 
   constructor(
@@ -54,7 +52,7 @@ export class PropertyValueAddComponent {
       .subscribe(
         () => {
           this._resourceFetcherService.reload();
-          this.propertyValueService.currentlyAdding = false;
+          this.stopAdding.emit();
         },
         e => {
           if (e instanceof ApiResponseError && e.status === 400) {

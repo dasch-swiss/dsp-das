@@ -20,21 +20,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       mat-icon-button
       (click)="addItem()"
       data-cy="add-property-value-button"
-      *ngIf="userCanAdd && !propertyValueService.currentlyAdding && matchesCardinality">
+      *ngIf="userCanAdd && !currentlyAdding && matchesCardinality">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>
 
-    <app-property-value-add *ngIf="propertyValueService.currentlyAdding" />
+    <app-property-value-add *ngIf="currentlyAdding" (stopAdding)="currentlyAdding = false" />
   `,
-  styles: [
-    `
-      .add-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-      }
-    `,
-  ],
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,6 +34,7 @@ export class PropertyValuesComponent implements OnInit {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
   @Input({ required: true }) myProperty!: PropertyInfoValues;
 
+  currentlyAdding = false;
   protected readonly Cardinality = Cardinality;
 
   get userCanAdd() {
@@ -79,7 +71,7 @@ export class PropertyValuesComponent implements OnInit {
 
     this.propertyValueService.formArray.push(formGroup);
     this.propertyValueService.toggleOpenedValue(this.propertyValueService.formArray.length - 1);
-    this.propertyValueService.currentlyAdding = true;
+    this.currentlyAdding = true;
   }
 
   private _setupData() {
