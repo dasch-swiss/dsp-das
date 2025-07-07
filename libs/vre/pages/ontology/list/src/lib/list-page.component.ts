@@ -12,7 +12,7 @@ import {
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
-import { map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
 import { ListItemService } from './list-item/list-item.service';
 
@@ -63,6 +63,15 @@ export class ListPageComponent implements OnInit, OnDestroy {
         this._listItemService.setProjectInfos(list.projectIri, list.id);
       }
     });
+
+    this._actions$
+      .pipe(ofActionSuccessful(DeleteListNodeAction))
+      .pipe(takeUntil(this._destroy))
+      .subscribe(() => {
+        this.navigateToDataModels();
+        const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+        this._store.dispatch(new LoadListsInProjectAction(projectIri!));
+      });
   }
 
   navigateToDataModels() {
@@ -84,15 +93,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
         take(1),
         switchMap(() => this._store.dispatch(new DeleteListNodeAction(list.id)))
       )
-      .pipe(
-        switchMap(() => this._actions$.pipe(ofActionSuccessful(DeleteListNodeAction))),
-        take(1)
-      )
-      .subscribe(() => {
-        const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
-        this._store.dispatch(new LoadListsInProjectAction(projectIri!));
-        this.navigateToDataModels();
-      });
+      .subscribe();
   }
 
   ngOnDestroy() {
