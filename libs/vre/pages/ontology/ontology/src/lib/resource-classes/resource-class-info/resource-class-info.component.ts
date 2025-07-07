@@ -6,6 +6,7 @@ import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
@@ -58,6 +59,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _dialogService: DialogService,
     private _oes: OntologyEditService,
     private _store: Store,
+    private _notification: NotificationService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -121,5 +123,10 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     const ontologyName = OntologyService.getOntologyName(this._oes.ontologyId || '');
     const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.name}`;
     window.open(dataBrowserRoute, '_blank');
+  }
+
+  copyResourceClassId() {
+    this.clipboard.copy(this.resourceClass.id);
+    this._notification.openSnackBar('Resource class ID copied to clipboard.');
   }
 }
