@@ -29,8 +29,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
         <ng-container *ngIf="template">
           <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
         </ng-container>
-
-        <app-property-value-basic-comment [control]="group.controls.comment" />
       </div>
 
       <div style="display: flex; flex-direction: column; padding-top: 16px">

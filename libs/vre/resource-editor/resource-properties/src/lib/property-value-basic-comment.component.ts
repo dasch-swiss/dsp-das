@@ -10,5 +10,5 @@ import { FormControl } from '@angular/forms';
   </mat-form-field>`,
 })
 export class PropertyValueBasicCommentComponent {
-  @Input() control!: FormControl<string | null>;
+  @Input({ required: true }) control!: FormControl<string | null>;
 }
