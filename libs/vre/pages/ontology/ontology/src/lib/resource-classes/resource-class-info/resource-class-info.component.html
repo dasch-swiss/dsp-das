@@ -14,7 +14,8 @@
       <span class="mat-caption class-name"> {{ resourceClass.name }} </span>
       <span class="mat-caption">&nbsp;&middot;&nbsp;</span>
       <span class="mat-caption"
-        ><mat-icon>{{resourceClass.defaultClassIcon}}</mat-icon> {{ resourceClass.defaultClassLabel }}
+        ><mat-icon>{{ resourceClass.defaultClassIcon }}</mat-icon>
+        {{ resourceClass.defaultClassLabel }}
       </span>
     </mat-card-subtitle>
     <span class="resource-class-header-action">
@@ -31,15 +32,15 @@
           <mat-icon>more_vert</mat-icon>
         </button>
       </span>
-      <span class="resource-class-size" [matTooltip]="(expanded ? 'Collapse class' : 'Expand class')">
-        <button mat-icon-button (click)="expanded = !expanded">
-          <mat-icon>{{ expanded ? "expand_less" : "expand_more" }}</mat-icon>
+      <span class="resource-class-size" [matTooltip]="(expandClasses ? 'Collapse class' : 'Expand class')">
+        <button mat-icon-button (click)="expandClasses = !expandClasses">
+          <mat-icon>{{ expandClasses ? "expand_less" : "expand_more" }}</mat-icon>
         </button>
       </span>
     </span>
   </mat-card-header>
   <!-- resource class card content with list of properties -->
-  <mat-card-content *ngIf="expanded" class="resource-class-content">
+  <mat-card-content *ngIf="expandClasses" class="resource-class-content">
     <mat-list
       cdkDropList
       class="resource-class-properties"
@@ -69,7 +70,8 @@
     Edit resource class info
   </button>
   <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">
-    <mat-icon>open_in_new</mat-icon> Open resource instances
+    <mat-icon>open_in_new</mat-icon>
+    Open resource instances
   </button>
   <button mat-menu-item (click)="clipboard.copy(resourceClass.id)">
     <mat-icon>content_copy</mat-icon>

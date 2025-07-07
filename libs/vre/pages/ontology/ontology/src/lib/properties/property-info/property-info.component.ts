@@ -1,5 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
@@ -12,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
-import { PropertyInfo, ClassShortInfo } from '../../ontology.types';
+import { ClassShortInfo, PropertyInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -20,29 +18,6 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   templateUrl: './property-info.component.html',
   styleUrls: ['./property-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    // the fade-in/fade-out animation.
-    // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
-    trigger('simpleFadeAnimation', [
-      // the "in" style determines the "resting" state of the element when it is visible.
-      state('in', style({ opacity: 1 })),
-
-      // fade in when created.
-      transition(':enter', [
-        // the styles start from this point when the element appears
-        style({ opacity: 0 }),
-        // and animate toward the "in" state above
-        animate(150),
-      ]),
-
-      // fade out when destroyed.
-      transition(
-        ':leave',
-        // fading out uses a different syntax, with the "style" being passed into animate()
-        animate(150, style({ opacity: 0 }))
-      ),
-    ]),
-  ],
 })
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;

@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -8,9 +8,11 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { EditResourceClassDialogComponent } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
 import { UpdateResourceClassData } from '../../forms/resource-class-form/resource-class-form.type';
+import { OntologyPageService } from '../../ontology-page.service';
 import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
@@ -20,7 +22,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   styleUrls: ['./resource-class-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceClassInfoComponent {
+export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
 
   project$ = this._store.select(ProjectsSelectors.currentProject);
@@ -30,9 +32,9 @@ export class ResourceClassInfoComponent {
   classHovered = false;
   menuOpen = false;
 
-  expanded = true;
-
   classCanBeDeleted = false;
+  subscription!: Subscription;
+  expandClasses = true;
 
   get classLabel() {
     const lang = this._localizationService.getCurrentLanguage();
@@ -50,12 +52,26 @@ export class ResourceClassInfoComponent {
 
   constructor(
     public clipboard: Clipboard,
+    public ops: OntologyPageService,
     private _dialog: MatDialog,
     private _localizationService: LocalizationService,
     private _dialogService: DialogService,
     private _oes: OntologyEditService,
-    private _store: Store
+    private _store: Store,
+    private _cd: ChangeDetectorRef
   ) {}
+
+  ngOnInit() {
+    this.subscription = this.ops.expandClasses$.subscribe(expandClasses => {
+      this.expandClasses = expandClasses;
+      this._cd.detectChanges();
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   setCanBeDeleted() {
     this._oes
       .canDeleteResourceClass$(this.resourceClass.id)

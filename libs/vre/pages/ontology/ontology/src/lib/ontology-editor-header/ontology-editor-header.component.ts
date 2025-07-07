@@ -13,7 +13,53 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology-editor-header',
-  templateUrl: './ontology-editor-header.component.html',
+  template: `
+    <mat-toolbar class="ontology-editor-header" *ngIf="ontology$ | async as ontology">
+      <mat-toolbar-row>
+        <button class="back-button" mat-button (click)="navigateToDataModels()" matTooltip="Back to data models">
+          <mat-icon class="centered-icon">chevron_left</mat-icon>
+        </button>
+        <div class="ontology-info">
+          <h3
+            data-cy="ontology-labels"
+            class="mat-headline-6"
+            [matTooltip]="ontology?.comment ? ontology.label + ' &mdash; ' + ontology?.comment : ''"
+            matTooltipPosition="above">
+            {{ ontology.label }}
+          </h3>
+          <p class="mat-caption">
+            <span> Updated on: {{ ontology.lastModificationDate | date: 'medium' }} </span>
+          </p>
+        </div>
+        <span class="fill-remaining-space"></span>
+        <div *ngIf="(isAdmin$ | async) === true">
+          <button
+            color="primary"
+            data-cy="edit-ontology-button"
+            mat-button
+            [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''"
+            [disabled]="(project$ | async)?.status !== true"
+            (click)="$event.stopPropagation(); editOntology(ontology)">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button
+            color="warn"
+            mat-button
+            [matTooltip]="
+              (currentOntologyCanBeDeleted$ | async)
+                ? 'Delete data model'
+                : 'This data model cant be deleted because it is in use!'
+            "
+            [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
+            (click)="deleteOntology(ontology.id)">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  `,
   styles: `
     .ontology-editor-header {
       margin-top: 0.5em;
@@ -80,15 +126,14 @@ export class OntologyEditorHeaderComponent {
     this._dialogService
       .afterConfirmation('Do you want to delete this data model ?')
       .pipe(
-        switchMap(_del => {
-          return this._oes.deleteOntology$(ontologyId);
-        }),
+        switchMap(_del => this._oes.deleteOntology$(ontologyId)),
         take(1)
       )
-      .subscribe(_delResponse => {
+      .subscribe(() => {
         this.navigateToDataModels();
       });
   }
+
   navigateToDataModels() {
     const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
     this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
