@@ -1,15 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
-import { AppConfigService, RouteConstants } from 'libs/vre/core/config/src';
+import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   IProjectOntologiesKeyValuePairs,
   OntologiesSelectors,
   ProjectsSelectors,
   UserSelectors,
-} from 'libs/vre/core/state/src';
-import { SearchParams } from 'libs/vre/shared/app-common-to-move/src';
-import { OntologyService, ProjectService } from 'libs/vre/shared/app-helper-services/src';
+} from '@dasch-swiss/vre/core/state';
+import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
 import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -108,9 +108,7 @@ export class ResourceClassBrowserComponent implements OnDestroy {
     protected _router: Router,
     protected _store: Store,
     protected _actions$: Actions
-  ) {
-    console.log('ResourceClassBrowserComponent constructor');
-  }
+  ) {}
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

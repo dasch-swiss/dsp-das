@@ -11,19 +11,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from 'libs/vre/core/config/src';
-import {
-  LoadClassItemsCountAction,
-  OntologyClassSelectors,
-  ProjectsSelectors,
-} from 'libs/vre/core/state/src';
-import {
-  LocalizationService,
-  OntologyService,
-} from 'libs/vre/shared/app-helper-services/src';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { LoadClassItemsCountAction, OntologyClassSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -58,12 +51,12 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
 
   ontologiesLabel: string;
 
-    get results$(): Observable<number> {
-        return combineLatest([
-            this._store.select(OntologyClassSelectors.classItems),
-            this._store.select(OntologyClassSelectors.isLoading),
-        ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
-    }
+  get results$(): Observable<number> {
+    return combineLatest([
+      this._store.select(OntologyClassSelectors.classItems),
+      this._store.select(OntologyClassSelectors.isLoading),
+    ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
+  }
 
   constructor(
     private _actions$: Actions,
@@ -103,7 +96,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
   }
 
   isTextOverflowing(element: HTMLElement): boolean {
-      return element.scrollHeight > element.clientHeight;
+    return element.scrollHeight > element.clientHeight;
   }
 
   private getOntologiesLabelsInPreferredLanguage(): void {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { FilteredResources } from 'libs/vre/shared/app-common-to-move/src';
+import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { CheckboxUpdate, ShortResInfo } from './list-view.component';
 
 @Injectable({
