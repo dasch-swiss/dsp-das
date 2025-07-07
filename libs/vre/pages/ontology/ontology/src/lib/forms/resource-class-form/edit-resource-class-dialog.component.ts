@@ -15,7 +15,7 @@ import { UpdateResourceClassData, ResourceClassForm, ResourceClassFormData } fro
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button data-cy="cancel-button" mat-button mat-dialog-close>Cancel</button>
       <button
         data-cy="submit-button"
         mat-raised-button
