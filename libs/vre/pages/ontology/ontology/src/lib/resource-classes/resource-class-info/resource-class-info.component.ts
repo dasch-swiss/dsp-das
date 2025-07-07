@@ -64,7 +64,7 @@ export class ResourceClassInfoComponent {
         if (response instanceof ApiResponseError) {
           return;
         }
-        this.classCanBeDeleted = response.canDo;
+        this.classCanBeDeleted = response?.canDo;
       });
   }
 
