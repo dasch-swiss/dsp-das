@@ -34,6 +34,7 @@
     mat-raised-button
     color="primary"
     appLoadingButton
+    data-cy="submit-button"
     [isLoading]="isLoading$ | async"
     [disabled]="form.invalid"
     (click)="submitData()">
