@@ -58,7 +58,7 @@ export class MakeOntologyFor {
     c.guiElement = d.propType.guiElement;
     c.subPropertyOf = [d.propType.subPropOf];
 
-    if (d.guiAttribute && d.propType.guiElement !== Constants.GuiColorPicker) {
+    if (d.guiAttribute) {
       c.guiAttributes = this._guiAttrFor(d.guiAttribute, d.propType);
     }
 
@@ -72,8 +72,6 @@ export class MakeOntologyFor {
 
   private static _guiAttrFor(attr: string, p: DefaultProperty): string[] | undefined {
     switch (p.guiElement) {
-      case Constants.GuiColorPicker:
-        return [`ncolors=${attr}`];
       case Constants.GuiList:
       case Constants.GuiPulldown:
       case Constants.GuiRadio:
