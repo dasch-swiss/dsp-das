@@ -8,6 +8,7 @@ import { EditResourceClassDialogComponent } from './lib/forms/resource-class-for
 import { ResourceClassFormComponent } from './lib/forms/resource-class-form/resource-class-form.component';
 import { OntologyEditorHeaderComponent } from './lib/ontology-editor-header/ontology-editor-header.component';
 import { OntologyPageComponent } from './lib/ontology-page.component';
+import { OntologySidenavComponent } from './lib/ontology-sidenav.component';
 import { OntologyPropertiesComponent } from './lib/properties/ontology-properties.component';
 import { PropertyInfoComponent } from './lib/properties/property-info/property-info.component';
 import { OntologyEditorClassesComponent } from './lib/resource-classes/ontology-editor-classes.component';
@@ -36,4 +37,5 @@ export const OntologyComponents = [
   GuiAttrLinkComponent,
   GuiAttrListComponent,
   PropertyFormComponent,
+  OntologySidenavComponent,
 ];
