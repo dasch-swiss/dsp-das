@@ -50,6 +50,7 @@ export class OntologyEditService {
 
   latestChangedItem = new BehaviorSubject<string | undefined>(undefined);
 
+  // Todo: Belongs to the store or to a facade
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
     this._store.select(OntologiesSelectors.currentProjectOntologies),
@@ -62,6 +63,7 @@ export class OntologyEditService {
     })
   );
 
+  // Todo: Belongs to the store or to a facade
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
     this._store.select(OntologiesSelectors.currentProjectOntologies),
     this._lists.getListsInProject$(),
@@ -74,6 +76,7 @@ export class OntologyEditService {
     })
   );
 
+  // Todo: Belongs to the store or to a facade
   currentOntologyClasses$: Observable<ResourceClassInfo[]> = combineLatest([
     this.currentOntology$,
     this.currentProjectsProperties$,
@@ -368,7 +371,8 @@ export class OntologyEditService {
   }
 
   /**
-   * Yes, there is not a route to update a class at once ...
+   * Yes, there is not a route to update a class at once. We need to send two separate requests for the labels and
+   * comments.
    */
   updateResourceClass$(classData: UpdateResourceClassData) {
     const updates: Observable<ResourceClassDefinitionWithAllLanguages | ApiResponseError>[] = [];
@@ -447,13 +451,10 @@ export class OntologyEditService {
     );
   }
 
-  assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition, position?: number) {
+  assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition) {
     this._isTransacting.next(true);
 
-    const guiOrder =
-      position ||
-      classDefinition.propertiesList.reduce((prev, current) => Math.max(prev, current.guiOrder ?? 0), 0) + 1;
-
+    const guiOrder = Math.max(0, ...classDefinition.propertiesList.map(p => p.guiOrder ?? 0)) + 1;
     const propCard: IHasProperty = {
       propertyIndex: propertyId,
       cardinality: 1, // default: not required, not multiple
@@ -470,8 +471,8 @@ export class OntologyEditService {
   }
 
   /**
-   * Yes, we need to pass an UpdateOntology<UpdateResourceClassCardinality> containing one property to
-   * deleteCardinalityFromResourceClass in order to remove a property ...
+   * Yes, we need to pass an UpdateOntology<UpdateResourceClassCardinality> containing an array of the one property
+   * we like to remove to deleteCardinalityFromResourceClass in order to remove that property ...
    */
   removePropertyFromClass(property: IHasProperty, classId: string) {
     const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [property]);
@@ -485,7 +486,8 @@ export class OntologyEditService {
   }
 
   /**
-   * Yes, there is not a route to update a whole property at once ...
+   * No, there is no way to update a whole property at once. We have to send two separate requests to one
+   * and the same endpoint
    */
   updateProperty$(propertyData: UpdatePropertyData) {
     const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
@@ -567,6 +569,10 @@ export class OntologyEditService {
       );
   }
 
+  /**
+   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, updateCardinalityOfResourceClass,
+   * but to another endpoint.
+   */
   propertyCanBeRemovedFromClass$(propCard: IHasProperty, classId: string): Observable<CanDoResponse> {
     if (propCard.isInherited) {
       // no need to send a request to the server
@@ -576,6 +582,10 @@ export class OntologyEditService {
     return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(updateOntology);
   }
 
+  /**
+   * Yes, we are sending the same body as for canDeleteCardinalityFromResourceClass, updateCardinalityOfResourceClass,
+   * but to another endpoint.
+   */
   updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
     this._isTransacting.next(true);
     const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
@@ -587,6 +597,10 @@ export class OntologyEditService {
       });
   }
 
+  /**
+   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, canDeleteCardinalityFromResourceClass,
+   * but to another endpoint.
+   */
   updatePropertiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
     this._isTransacting.next(true);
     const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
