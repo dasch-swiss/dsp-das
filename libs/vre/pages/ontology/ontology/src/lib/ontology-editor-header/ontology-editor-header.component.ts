@@ -21,7 +21,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
         </button>
         <div class="ontology-info">
           <h3
-            data-cy="ontology-labels"
+            data-cy="ontology-label"
             class="mat-headline-6"
             [matTooltip]="ontology?.comment ? ontology.label + ' &mdash; ' + ontology?.comment : ''"
             matTooltipPosition="above">
