@@ -21,11 +21,11 @@ import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
   selector: 'app-ontology',
-  templateUrl: './ontology.component.html',
-  styleUrls: ['./ontology.component.scss'],
+  templateUrl: './ontology-page.component.html',
+  styleUrls: ['./ontology-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyComponent implements OnInit, OnDestroy {
+export class OntologyPageComponent implements OnInit, OnDestroy {
   project$ = this._store.select(ProjectsSelectors.currentProject);
   ontology$ = this._oes.currentOntology$;
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);

@@ -1,5 +1,5 @@
 export * from './ontology.components';
-export * from './lib/ontology.component';
+export * from './lib/ontology-page.component';
 export * from './lib/properties/ontology-properties.component';
 export * from './lib/ontology-editor-header/ontology-editor-header.component';
 export * from './lib/resource-classes/ontology-editor-classes.component';
