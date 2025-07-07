@@ -20,3 +20,4 @@ export * from './lib/forms/property-form/gui-attr-link.component';
 export * from './lib/forms/property-form/gui-attr-list.component';
 export * from './lib/forms/property-form/property-form.type';
 export * from './lib/ontology-sidenav.component';
+export * from './lib/ontology-page.service';

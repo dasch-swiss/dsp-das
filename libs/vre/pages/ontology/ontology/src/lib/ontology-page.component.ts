@@ -6,6 +6,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
@@ -33,6 +34,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     <app-status *ngIf="disableContent" [status]="204" />
   `,
   styleUrls: ['./ontology-page.component.scss'],
+  providers: [OntologyPageService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPageComponent implements OnInit, OnDestroy {

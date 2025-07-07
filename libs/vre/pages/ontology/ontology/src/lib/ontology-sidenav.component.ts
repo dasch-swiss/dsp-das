@@ -13,14 +13,15 @@ import { Store } from '@ngxs/store';
 import { EditPropertyFormDialogComponent } from './forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from './forms/property-form/property-form.type';
 import { EditResourceClassDialogComponent } from './forms/resource-class-form/edit-resource-class-dialog.component';
+import { OntologyPageService } from './ontology-page.service';
 
 @Component({
   selector: 'app-ontology-sidenav',
   template: `
     <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>
-    <button mat-button (click)="expandClasses = !expandClasses">
-      <mat-icon>{{ expandClasses ? 'compress' : 'expand' }}</mat-icon>
-      {{ expandClasses ? 'Collapse all' : 'Expand all' }}
+    <button mat-button (click)="ops.toggleExpandClasses()">
+      <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
+      {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
     </button>
     <button
       [disabled]="!(project$ | async)?.status || (isAdmin$ | async) !== true"
@@ -93,12 +94,11 @@ export class OntologySidenavComponent {
   project$ = this._store.select(ProjectsSelectors.currentProject);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
-  expandClasses = true;
-
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
   constructor(
+    public ops: OntologyPageService,
     private _dialog: MatDialog,
     private _store: Store
   ) {}
