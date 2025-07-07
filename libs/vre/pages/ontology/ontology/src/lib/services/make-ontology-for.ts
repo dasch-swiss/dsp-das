@@ -58,7 +58,7 @@ export class MakeOntologyFor {
     c.guiElement = d.propType.guiElement;
     c.subPropertyOf = [d.propType.subPropOf];
 
-    if (d.guiAttribute) {
+    if (d.guiAttribute && d.propType.guiElement !== Constants.GuiColorPicker) {
       c.guiAttributes = this._guiAttrFor(d.guiAttribute, d.propType);
     }
 
