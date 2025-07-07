@@ -269,7 +269,7 @@ Now you have to set a unique name (*please consider the NOTE*) and you can add a
 >     - standoff
 > - the unique name can't be changed afterward!
 
-*The labels is a combination of the project's short name and the unique name. You can replace it with any other string.*
+*The label is a combination of the project's short name and the unique name. You can replace it with any other string.*
 ![Define the name of your data model.](../assets/images/Fig4.png)
 
 After the creation of your data model, your page should look like this:
@@ -298,8 +298,8 @@ Which type you choose depends on the data type which you need to describe. You c
 Let's assume you have pdf-documents of books and they have a number of pages. To describe this in an ontology, you create a class as `Document` by clicking on `Document`. A dialog box pops up which looks like this:
 ![Create a class with type *Document*.](../assets/images/Fig8.png)
 
-For the labels you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
-![Give a labels and a description.](../assets/images/Fig9.png)
+For the label you could write *Book*, and you should add a preferably meaningful comment in at least one of the predefined languages English (en), German (de), French (fr) or Italian (it). Then click the `Submit` button:
+![Give a label and a description.](../assets/images/Fig9.png)
 
 Now you have created your first class *Book*, as seen below:
 ![Layout after the creation of the resource class.](../assets/images/Fig10.png)
@@ -351,7 +351,7 @@ Since in our example you want to add a property for the number of pages of your 
 Page numbers have no decimal places, thus you will select `Integer` (or `Page number` which is a special case (s. [next section](#correct-property-selection-in-case-of-special-classes))) as the type for your property. The following window pops up:
 ![Property of integer type.](../assets/images/Fig15.png)
 
-In the field *Property labels* add for example *Number of pages*, in the comment section you should add a meaningful explanation. It might also make sense to toggle `Required field?` since every PDF Document consists of a number of pages. If you toggle it, the number of pages MUST be given if you add data to the class *Book* - it would then be a required field, not an optional one and data could only be saved if you add the number of pages.
+In the field *Property label* add for example *Number of pages*, in the comment section you should add a meaningful explanation. It might also make sense to toggle `Required field?` since every PDF Document consists of a number of pages. If you toggle it, the number of pages MUST be given if you add data to the class *Book* - it would then be a required field, not an optional one and data could only be saved if you add the number of pages.
 ![Label and description of property.](../assets/images/Fig16.png)
 
 If you want to define a property which can have more than one value, you should tick `Multiple values?`. For the number of pages of a book this does not make sense, but in the case you want to define a property describing which people are mentioned in your *Book*, the option multiple values is likely to be needed.
@@ -405,13 +405,13 @@ This is how a book and the page class could look like:
 One of the possible property types to choose from is *List* (= Controlled Vocabulary). Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields. Typical examples are keywords. In your book example, it may be useful to define a property that describes to which category of literature your pdf of a book belongs. **Before** you can add a property of type *List* to your data model, you have to define this controlled vocabulary. For its definition, you go to the data model overview page from your project workspace (Step 1):
 ![List tab.](../assets/images/controlled-voca-create.png)
 
-Click `Create New` (Step 2). A creation form appears where you enter a labels and a short description, then click `Create`.
+Click `Create New` (Step 2). A creation form appears where you enter a label and a short description, then click `Create`.
 ![Create new controlled vocabulary.](../assets/images/controlled-voca-create-form.png)
 
 As soon as the controlled vocabulary is created, you can continue with the definition of your data model. You can define the individually controlled vocabulary items later. How to do this will be explained below. We first focus on the definition of a property of type `List` in the data model. Currently, there is only one option for displaying a property of this type, namely *Dropdown*. It is capable of displaying flat as well as hierarchical lists.
 ![Define a property of type *List*.](../assets/images/Fig40.png)
 
-A new window opens up and as in the case of other properties you have to add a labels, and a description and choose whether multiple values are allowed and/or whether this property is a required field. But in addition, you have to select the list which contains your controlled vocabulary.
+A new window opens up and as in the case of other properties you have to add a label, and a description and choose whether multiple values are allowed and/or whether this property is a required field. But in addition, you have to select the list which contains your controlled vocabulary.
 ![Select list for list property.](../assets/images/Fig41.png)
 
 #### How to define items in a controlled vocabulary
@@ -513,7 +513,7 @@ In the window that appears we hover over `Create new from type`, in the appearin
 By clicking on `Resource class`, the following window pops up:
 ![Add details for property.](../assets/images/Fig29.png)
 
-We can now fill in `Property labels` *Audio*, and in `Select resource class` we choose from the list `Audio-Interview`. We should add a comment in at least one language to describe the property. It might also make sense to toggle `Required field?` since a transcript has to be extracted from the audio-interview:
+We can now fill in `Property label` *Audio*, and in `Select resource class` we choose from the list `Audio-Interview`. We should add a comment in at least one language to describe the property. It might also make sense to toggle `Required field?` since a transcript has to be extracted from the audio-interview:
 ![Choose requirements for property.](../assets/images/Fig30.png)
 
 Finally, we click the `Add to class` button as seen below:

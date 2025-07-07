@@ -571,7 +571,7 @@ describe('AdvancedSearchStoreService', () => {
 
       const newSelectedProp = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: Constants.TextValue,
         isLinkedResourceProperty: false,
       };
@@ -610,7 +610,7 @@ describe('AdvancedSearchStoreService', () => {
 
       const newSelectedProp = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: Constants.TextValue,
         isLinkedResourceProperty: false,
         listIri: 'testListIri',
@@ -659,7 +659,7 @@ describe('AdvancedSearchStoreService', () => {
 
       const updatedSelectedProp = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: Constants.TextValue,
         isLinkedResourceProperty: false,
       };
@@ -706,7 +706,7 @@ describe('AdvancedSearchStoreService', () => {
 
       childPropFormItem.selectedProperty = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: Constants.TextValue,
         isLinkedResourceProperty: false,
         listIri: 'testListIri',
@@ -792,7 +792,7 @@ describe('AdvancedSearchStoreService', () => {
 
       propFormItem.selectedProperty = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: Constants.TextValue,
         isLinkedResourceProperty: false,
       };
@@ -827,7 +827,7 @@ describe('AdvancedSearchStoreService', () => {
 
       propFormItem.selectedProperty = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: 'linkedResourceIri',
         isLinkedResourceProperty: true,
       };
@@ -870,7 +870,7 @@ describe('AdvancedSearchStoreService', () => {
 
       propFormItem.selectedProperty = {
         iri: 'testIri',
-        label: 'test labels',
+        label: 'test label',
         objectType: 'linkedResourceIri',
         isLinkedResourceProperty: true,
       };
@@ -881,7 +881,7 @@ describe('AdvancedSearchStoreService', () => {
 
       propFormItem.selectedMatchPropertyResourceClass = {
         iri: 'matchPropResClassIri',
-        label: 'test labels',
+        label: 'test label',
       };
 
       // spy on the filteredPropertiesList method

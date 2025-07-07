@@ -15,7 +15,7 @@ To create a new resource instance, you go to your project workspace and find the
 
 ![Create a new resource instance e.g. a new book](../../assets/images/create-new-resource-instance.png)*Your resource classes are listed in the side panel of your project workspace.*
 
-Fill in the form and upload the file if requested (depending on the type of resource). Please, note that the required fields are marked with an asterisk `*` after the property labels. Click on `Save` to create the new resource instance. If you cannot click on `Save`, it means that a required field has not been filled in.
+Fill in the form and upload the file if requested (depending on the type of resource). Please, note that the required fields are marked with an asterisk `*` after the property label. Click on `Save` to create the new resource instance. If you cannot click on `Save`, it means that a required field has not been filled in.
 
 ![Create a new resource instance e.g. a new book](../../assets/images/new-resource-form.png)*Create a new resource instance e.g. a book*
 

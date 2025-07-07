@@ -39,7 +39,7 @@ describe.skip('View Existing Resource', () => {
 
   function createVideoThingClass(label: string): VideoThingClassResource {
     return {
-      label,
+      label: label,
       file: '',
       title: faker.lorem.sentence(),
       titleComment: faker.lorem.sentence(),
@@ -146,7 +146,7 @@ describe.skip('View Existing Resource', () => {
     cy.url().should('match', regex);
   });
 
-  it('object without representation with labels, color, comment properties should be present', () => {
+  it('object without representation with label, color, comment properties should be present', () => {
     project0803Page.visitClass('misc');
     cy.get('[data-cy=resource-list-item]').should('have.length.greaterThan', 0);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(miscData.label).click();
@@ -241,7 +241,7 @@ describe.skip('View Existing Resource', () => {
     cy.get('[data-cy=play-pause-button]').contains('play_arrow');
     cy.get('[data-cy=play-pause-button]').click();
     cy.get('[data-cy=play-pause-button]').contains('pause');
-    cy.wait(1000); // allow to play for 1 second
+    cy.wait(1000); //allow to play for 1 second
     cy.get('[data-cy=play-pause-button]').click();
     cy.get('[data-cy=player-time]')
       .invoke('text')
@@ -285,7 +285,7 @@ describe.skip('View Existing Resource', () => {
       expect(xhr.response.statusCode).to.eq(206);
     });
     cy.get('[data-cy=play-pause-button]').contains('pause');
-    cy.wait(1000); // allow to play for 1 second
+    cy.wait(1000); //allow to play for 1 second
     cy.get('[data-cy=play-pause-button]').click();
     cy.get('[data-cy=player-time]')
       .invoke('text')

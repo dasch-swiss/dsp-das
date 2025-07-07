@@ -21,7 +21,7 @@ Each media viewer offers different tools and functionalities, either displayed i
 
 ![Single resource view. The resource type in this example is "Slides and Posters".](../../assets/images/resource-view-with-image.png)*Single resource view. The resource type in this example is "Slides and Posters" and an image viewer displays the PDF of a presentation.*
 
-Everything about the resource is displayed on the page. All the information about the resource itself (e.g. type, labels, permissions, creator, date of creation, etc.) are displayed at the top of the page, the data (properties and values), and different functionalities such as editing, deleting, sharing the resource are in the "Properties" section - below the media player when it exists. You can find more information about the functionalities in the following sections.
+Everything about the resource is displayed on the page. All the information about the resource itself (e.g. type, label, permissions, creator, date of creation, etc.) are displayed at the top of the page, the data (properties and values), and different functionalities such as editing, deleting, sharing the resource are in the "Properties" section - below the media player when it exists. You can find more information about the functionalities in the following sections.
 
 ![Resource toolbar description.](../../assets/images/resource-toolbar.png)
 
@@ -116,13 +116,13 @@ See section [Create new resource instances](./start.md#create-new-resource-insta
 ### Add a property value
 
 You can create a new property value **if your data model allows it**. The value should have a cardinality of 0-1, 0-N or, 1-N.
-A "plus" button is displayed to the right of the labels or after the first value field. You fill in the form field and save the changes by clicking on the floppy disk button. You can undo (back arrow button) or cancel the changes (x button).
+A "plus" button is displayed to the right of the label or after the first value field. You fill in the form field and save the changes by clicking on the floppy disk button. You can undo (back arrow button) or cancel the changes (x button).
 
 ![Add a new property value.](../../assets/images/add-value.png)*Add a new property value.*
 
 ![Save or undo the changes.](../../assets/images/add-new-text-value.png)*Save or undo the changes you made.*
 
-If your property is linked to another resource, you can search for an existing value by typing the first three letters of the resource labels you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
+If your property is linked to another resource, you can search for an existing value by typing the first three letters of the resource label you are looking for. You can also create a new resource instance by clicking on the first option in the drop-down menu, `Create new: xxx`.
 
 ![Add a new linked resource value.](../../assets/images/add-new-resource-value.png)
 
@@ -136,7 +136,7 @@ To create a new region on an image, you click on the icon `Create Annotation` in
 
 ![Select a region.](../../assets/images/region_draw.png)*Select a region on the image with the drawing tool.*
 
-Enter the information about the region and an informative labels. You may also add a description as a comment (optional). You can change the color.
+Enter the information about the region and an informative label. You may also add a description as a comment (optional). You can change the color.
 
 
 ![Fill in the form.](../../assets/images/region_fillin_form.png)*Fill in the form about the selected region.*
@@ -151,7 +151,7 @@ To create a video segment, you click on the icon `Create Annotation` in the vide
 
 ![Create a video segment.](../../assets/images/video-create-a-segment.png)*Create a new video segment.*
 
-Fill in the form `Create Annotation` by indicating at least the required fields: labels, start (time), end (time), and submit to create your new video segment.
+Fill in the form `Create Annotation` by indicating at least the required fields: label, start (time), end (time), and submit to create your new video segment.
 
 ![Form Create Annotation.](../../assets/images/video-form-new-segment.png)*Form to create a video segment.*
 
@@ -169,7 +169,7 @@ To create an audio segment, you click on the icon `Create Annotation` in the aud
 
 ![Create Annotation.](../../assets/images/audio-create-a-segment.png)*Create a new audio segment.*
 
-Fill in the form `Create Annotation` by indicating at least the required fields: labels, start (time), end (time), and submit to create your new audio segment.
+Fill in the form `Create Annotation` by indicating at least the required fields: label, start (time), end (time), and submit to create your new audio segment.
 
 New segments are displayed within the `Annotations` tab, where you can view all the details for each segment.
 
@@ -201,7 +201,7 @@ Simple formatting and links can also be added to the footnote.
 
 ### Edit a resource
 
-To edit the resource labels, click on the pencil icon `Edit labels` on the right-side of the resource labels.
+To edit the resource label, click on the pencil icon `Edit label` on the right-side of the resource label.
 
 ![Add a new linked resource value.](../../assets/images/edit-resource-label.png)
 
@@ -211,7 +211,7 @@ You can edit a property value from the resource viewer. Hover over the value and
 
 ![Add a new linked resource value.](../../assets/images/edit-value.png)*Edit button when mousing over the value.*
 
-You edit your value by changing the text content, searching for another resource labels, or creating a new resource instance. Don't forget to save your changes (floppy disk button) or undo them (back arrow button) to leave the edit mode.
+You edit your value by changing the text content, searching for another resource label, or creating a new resource instance. Don't forget to save your changes (floppy disk button) or undo them (back arrow button) to leave the edit mode.
 
 ![Add a new linked resource value.](../../assets/images/edit-value-steps.png)
 
@@ -219,9 +219,9 @@ It is the same process to add, edit or delete a comment to the value.
 
 ### Edit an annotation
 
-For any type of annotation (image, video segment, audio segment), you can edit the annotation labels and the property values.
+For any type of annotation (image, video segment, audio segment), you can edit the annotation label and the property values.
 
-![Edit an annotation labels](../../assets/images/edit-annotation.png)*Edit an annotation labels, here it is an audio segment labels.*
+![Edit an annotation label](../../assets/images/edit-annotation.png)*Edit an annotation label, here it is an audio segment label.*
 
 ### Edit an image file
 
@@ -268,7 +268,7 @@ It is possible to link resources of the same project or from 2 different project
 
 DSP-APP offers two ways to link data:
 
-1. Internal linkage: it allows you to create a direct link between 2 resources. The labels of the linking resource (source) will appear in the „incoming links“ section of the targeted resource. You will choose this option when you want to embed the link in a text.
+1. Internal linkage: it allows you to create a direct link between 2 resources. The label of the linking resource (source) will appear in the „incoming links“ section of the targeted resource. You will choose this option when you want to embed the link in a text.
 
 2. Link object:  it allows you to create an annotation (the description of the link object) that can point to one or more resources. You will prefer this option if you want the link to exist and describe it.
 
@@ -296,11 +296,11 @@ To create a link object, the process starts from the search result list. You sel
 
 ![Select resources to link](../../assets/images/link-object-select.png)*Select the resources to link.*
 
-You fill out the form indicating the project in which you want to register the link object, as well as a labels to identify it. Optionally, you can add a comment (annotation) to describe this collection of resources. Then, click on Create.
+You fill out the form indicating the project in which you want to register the link object, as well as a label to identify it. Optionally, you can add a comment (annotation) to describe this collection of resources. Then, click on Create.
 
 ![Link object form](../../assets/images/link-object-form.png)*Fill in the form about the new link object.*
 
-The linked resources are listed in the `has Link to` property of the link object resource viewer. The labels of your link object is searchable through a [full-text search](./search.md#full-text-search).
+The linked resources are listed in the `has Link to` property of the link object resource viewer. The label of your link object is searchable through a [full-text search](./search.md#full-text-search).
 
 ![Link object resource](../../assets/images/link-object-resource-view.png)
 

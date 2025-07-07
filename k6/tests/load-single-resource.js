@@ -11,7 +11,7 @@ export default async function () {
 
   try {
     await resourcePage.goto();
-    expect(await resourcePage.resourceLabel(), 'resource labels').to.equal('transcription of M219-06-T');
+    expect(await resourcePage.resourceLabel(), 'resource label').to.equal('transcription of M219-06-T');
     await page.screenshot({ path: 'screenshots/single-resource-page.png' });
   } finally {
     await page.close();

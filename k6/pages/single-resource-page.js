@@ -10,6 +10,6 @@ export class SingleResourcePage {
   }
 
   async resourceLabel() {
-    return await this.page.locator('div.resource-labels > h4').textContent();
+    return await this.page.locator('div.resource-label > h4').textContent();
   }
 }

@@ -109,7 +109,7 @@ export class AdvancedSearchService {
             (a.label || '').localeCompare(b.label || '')
           )
           .map((resClassDef: ResourceClassDefinition) => {
-            // labels can be undefined
+            // label can be undefined
             const label = resClassDef.label || '';
             return { iri: resClassDef.id, label };
           });
@@ -137,7 +137,7 @@ export class AdvancedSearchService {
             (a.label || '').localeCompare(b.label || '')
           )
           .map((propDef: ResourcePropertyDefinition) => {
-            // labels can be undefined
+            // label can be undefined
             const label = propDef.label || '';
 
             // objectType can be undefined but it really never should be
@@ -191,7 +191,7 @@ export class AdvancedSearchService {
             (a.label || '').localeCompare(b.label || '')
           )
           .map(propDef => {
-            // labels can be undefined
+            // label can be undefined
             const label = propDef.label || '';
 
             // objectType can be undefined

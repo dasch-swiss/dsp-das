@@ -27,11 +27,11 @@ describe('Ontology', () => {
       .click();
 
     cy.get('[data-cy=name-input]').type(data.name);
-    // ensure that the labels input is visible
+    // ensure that the label input is visible
     cy.get('[data-cy=label-input]').scrollIntoView().should('be.visible');
 
     cy.get('[data-cy=label-input]').clear();
-    // no labels, submit button should be disabled
+    // no label, submit button should be disabled
     cy.get('[data-cy=submit-button]').should('be.disabled');
     cy.get('[data-cy=label-input]').type(data.label);
     cy.get('[data-cy=submit-button]').should('be.enabled');
