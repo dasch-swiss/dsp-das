@@ -1,5 +1,5 @@
 {
   "extends": [
-    "../../../../../.eslintrc-angular.json"
+    "../../../../.eslintrc-angular.json"
   ]
 }
