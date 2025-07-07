@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { IKeyValuePairs, LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ReadUser } from '@dasch-swiss/dsp-js';
+import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -14,9 +14,9 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./collaboration.component.scss'],
 })
 export class CollaborationComponent implements OnInit, OnDestroy {
-  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
-  @Select(ProjectsSelectors.projectMembers) projectMembers$!: Observable<IKeyValuePairs<ReadUser>>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isAdmin$!: Observable<boolean>;
+  project$ = this._store.select(ProjectsSelectors.currentProject);
+  projectMembers$ = this._store.select(ProjectsSelectors.projectMembers);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   projectUuid$!: Observable<string>;
 
