@@ -6,7 +6,7 @@
         *ngIf="property.propType"
         [matTooltip]="property.propType?.group + ': ' + property.propType?.label + ' (' + property.propDef!.id.split('#')[1] + ')'"
         matTooltipPosition="above">
-        <mat-icon class="type">{{property.propType?.icon}}</mat-icon>
+        <mat-icon class="type">{{ property.propType?.icon }}</mat-icon>
       </span>
       <span
         class="label"
@@ -14,8 +14,8 @@
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip"
         data-cy="property-labels">
-        {{!property.propDef!.labels.length ? property.propDef?.label : property.propDef!.labels |
-        appStringifyStringLiteral:'all'}}
+        {{ !property.propDef!.labels.length ? property.propDef?.label : property.propDef!.labels |
+        appStringifyStringLiteral:'all' }}
       </span>
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
@@ -35,7 +35,7 @@
       matTooltipClass="wide-tooltip"
       class="mat-caption"
       [matTooltipDisabled]="isLockHovered">
-      {{property.propDef!.id | split: '#':1}}
+      {{ property.propDef!.id | split: '#':1 }}
     </span>
     <span class="fill-remaining-space center"></span>
     <!-- in case of ontology property: display corresponding resource classes -->
@@ -44,7 +44,7 @@
         <span class="mat-caption">&gt; Property is used in:</span>
         <span *ngFor="let c of property.usedByClasses; trackBy: trackByFn; let last = last">
           <span [matTooltip]="c.comment" matTooltipPosition="above" [matTooltipDisabled]="isLockHovered"
-            >{{c.label}}
+            >{{ c.label }}
             <span
               *ngIf="c.id && c.id === c.restrictedToClass"
               [matTooltip]="'This property can only be used by the class ' + c.label"
@@ -63,10 +63,7 @@
       </ng-template>
     </span>
   </div>
-  <div
-    class="action-bubble"
-    *ngIf="(isAdmin$ | async) && project?.status && showActionBubble"
-    [@simpleFadeAnimation]="'in'">
+  <div class="action-bubble" *ngIf="(isAdmin$ | async) && project?.status && showActionBubble">
     <div class="button-container">
       <button
         [disabled]="!property.propDef!.isEditable"
