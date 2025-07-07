@@ -41,7 +41,7 @@ export class GravsearchService {
         const index = properties.findIndex(prop => prop.id === orderByItem.id);
         if (index > -1) {
           if (properties[index].selectedProperty?.objectType === ResourceLabel) {
-            // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource labels
+            // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
             // it's sliced because gravsearch doesn't allow minus signs in variable names
             orderByProps.push(`?label${properties[index].id.slice(0, 8)}`);
           } else {
@@ -73,7 +73,7 @@ export class GravsearchService {
     let constructString = '';
     let whereString = '';
 
-    // not a linked resource, not a resource labels
+    // not a linked resource, not a resource label
     if (
       property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
       property.selectedProperty?.objectType !== ResourceLabel
@@ -146,7 +146,7 @@ export class GravsearchService {
    * @param property the PropertyFormItem to create the value string for
    * @param index index of the property in the properties list
    * @param identifier indentifier for the property, either ?prop or ?linkProp + index
-   * @param labelRes variable name for which resource the labels is searched on, either ?mainRes or ?prop + index
+   * @param labelRes variable name for which resource the label is searched on, either ?mainRes or ?prop + index
    * @returns a gravsearch value string
    */
   private _valueStringHelper(property: PropertyFormItem, index: number, identifier: string, labelRes: string): string {
@@ -158,7 +158,7 @@ export class GravsearchService {
     )
       return '';
 
-    // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource labels
+    // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
     // it's sliced because gravsearch doesn't allow minus signs in variable names
     const labelVariableName = `?label${property.id.slice(0, 8)}`;
 
@@ -206,7 +206,7 @@ export class GravsearchService {
                 `FILTER knora-api:matchLabel(${labelRes}, "${property.searchValue}") .`
               );
             default:
-              throw new Error('Invalid operator for resource labels');
+              throw new Error('Invalid operator for resource label');
           }
         case Constants.TextValue:
           switch (property.selectedOperator) {
