@@ -76,8 +76,6 @@ export class MakeOntologyFor {
       case Constants.GuiPulldown:
       case Constants.GuiRadio:
         return [`hlist=<${attr}>`];
-      case Constants.GuiSimpleText:
-        return [`maxlength=${attr}`];
       case Constants.GuiSpinbox:
         return [`min=${attr}`, `max=${attr}`];
       case Constants.GuiTextarea:

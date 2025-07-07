@@ -21,6 +21,7 @@ import {
         mat-raised-button
         color="primary"
         appLoadingButton
+        data-cy="submit-button"
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
