@@ -7,7 +7,7 @@ import { PropertyFormComponent } from './lib/forms/property-form/property-form.c
 import { EditResourceClassDialogComponent } from './lib/forms/resource-class-form/edit-resource-class-dialog.component';
 import { ResourceClassFormComponent } from './lib/forms/resource-class-form/resource-class-form.component';
 import { OntologyEditorHeaderComponent } from './lib/ontology-editor-header/ontology-editor-header.component';
-import { OntologyComponent } from './lib/ontology.component';
+import { OntologyPageComponent } from './lib/ontology-page.component';
 import { OntologyPropertiesComponent } from './lib/properties/ontology-properties.component';
 import { PropertyInfoComponent } from './lib/properties/property-info/property-info.component';
 import { OntologyEditorClassesComponent } from './lib/resource-classes/ontology-editor-classes.component';
@@ -21,7 +21,7 @@ export const OntologyComponents = [
   DataModelsComponent,
   EditResourceClassDialogComponent,
   OntologyFormComponent,
-  OntologyComponent,
+  OntologyPageComponent,
   OntologyEditorHeaderComponent,
   OntologyEditorClassesComponent,
   OntologyPropertiesComponent,

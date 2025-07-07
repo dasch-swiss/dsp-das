@@ -5,8 +5,8 @@ import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/data-brows
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
   DataModelsComponent,
-  OntologyComponent,
   OntologyEditorClassesComponent,
+  OntologyPageComponent,
   OntologyPropertiesComponent,
 } from '@dasch-swiss/vre/pages/ontology/ontology';
 import {
@@ -17,8 +17,8 @@ import {
   ImageSettingsComponent,
   LegalSettingsComponent,
   ProjectComponent,
-  SettingsPageComponent,
   ResourceMetadataComponent,
+  SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
 import {
@@ -69,7 +69,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.ontologyEditorRelative,
-        component: OntologyComponent,
+        component: OntologyPageComponent,
         children: [
           {
             path: '',
