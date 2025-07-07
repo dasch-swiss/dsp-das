@@ -85,7 +85,6 @@ describe('Data Model Class', () => {
   it('should delete a data model class', () => {
     cy.createDataModelClass(projectPage);
     const classCard = cy.get('[data-cy=class-card] mat-card-header');
-
     classCard.should('be.visible');
     classCard.trigger('mouseenter').wait(100);
     cy.get('[data-cy=more-button]').should('be.visible').click();

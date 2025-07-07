@@ -4,7 +4,7 @@ import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swi
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
-import { CreatePropertyDialogData, EditPropertyDialogData } from '../../forms/property-form/property-form.type';
+import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
 import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 

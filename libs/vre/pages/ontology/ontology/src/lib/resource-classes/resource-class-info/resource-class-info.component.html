@@ -51,7 +51,6 @@
         [classProp]="prop"
         (cardinalityChange)="onCardinalityChange($event)" />
     </mat-list>
-
     <app-add-property-menu *ngIf="(isAdmin$ | async)" [resourceClass]="resourceClass" />
   </mat-card-content>
 </mat-card>
@@ -63,17 +62,22 @@
 <mat-menu #resClassMenu="matMenu" xPosition="before">
   <button
     mat-menu-item
-    [disabled]="(isAdmin$ | async) !== true"
+    *ngIf="(isAdmin$ | async) === true && (project$ | async)?.status === true"
     class="res-class-edit"
+    data-cy="edit-button"
     (click)="editResourceClassInfo()">
     <mat-icon>edit</mat-icon>
     Edit resource class info
   </button>
-  <button mat-menu-item (click)="openInDatabrowser()" [disabled]="classCanBeDeleted">
+  <button
+    mat-menu-item
+    (click)="openInDatabrowser()"
+    [disabled]="classCanBeDeleted"
+    data-cy="open-in-databrowser-button">
     <mat-icon>open_in_new</mat-icon>
     Open resource instances
   </button>
-  <button mat-menu-item (click)="copyResourceClassId()">
+  <button mat-menu-item (click)="copyResourceClassId()" data-cy="copy-id-button">
     <mat-icon>content_copy</mat-icon>
     Copy resource class id
   </button>

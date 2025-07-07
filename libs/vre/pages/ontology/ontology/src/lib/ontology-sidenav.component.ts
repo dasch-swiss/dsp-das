@@ -46,6 +46,7 @@ import { OntologyPageService } from './ontology-page.service';
     <a class="sidenav-link" mat-list-item [routerLink]="['properties']" routerLinkActive="active">Properties</a>
     <button
       mat-button
+      data-cy="create-property-button"
       [disabled]="!(project$ | async)?.status || (isAdmin$ | async) !== true"
       [matMenuTriggerFor]="newFromPropType">
       <mat-icon>add</mat-icon>
