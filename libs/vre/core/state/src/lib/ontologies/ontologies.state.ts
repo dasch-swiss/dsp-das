@@ -1,29 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-  ApiResponseError,
-  Constants,
-  IHasProperty,
-  KnoraApiConnection,
-  PropertyDefinition,
-  ReadOntology,
-  UpdateOntology,
-  UpdateResourceClassCardinality,
-} from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, KnoraApiConnection, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import {
-  OntologyClassHelper,
-  OntologyService,
-  ProjectService,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { OntologyService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
-import { LoadClassItemsCountAction } from '../ontology-class/ontology-class.actions';
 import {
   ClearCurrentOntologyAction,
   ClearOntologiesAction,
@@ -113,6 +97,7 @@ export class OntologiesState {
     }
     ctx.patchState(state);
   }
+
   @Action(SetOntologyAction)
   setOntologyAction(ctx: StateContext<OntologiesStateModel>, { ontology, projectIri }: SetOntologyAction) {
     const state = ctx.getState();
