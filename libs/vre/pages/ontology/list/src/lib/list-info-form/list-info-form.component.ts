@@ -24,7 +24,7 @@ import { ListInfoForm } from './list-info-form.type';
         [formArray]="form.controls.labels"
         placeholder="Controlled vocabulary label"
         [isRequired]="true"
-        data-cy="labels-input" />
+        data-cy="label-input" />
 
       <app-multi-language-textarea
         [formArray]="form.controls.comments"
