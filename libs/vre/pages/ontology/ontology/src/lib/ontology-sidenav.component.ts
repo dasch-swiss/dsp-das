@@ -69,6 +69,25 @@ import { EditResourceClassDialogComponent } from './forms/resource-class-form/ed
       </ng-container>
     </mat-menu>
   `,
+  styles: [
+    `
+      button {
+        width: 100%;
+        text-align: left;
+        display: inline-block;
+      }
+
+      .sidenav-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+    `,
+  ],
 })
 export class OntologySidenavComponent {
   project$ = this._store.select(ProjectsSelectors.currentProject);
