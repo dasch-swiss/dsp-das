@@ -87,6 +87,7 @@ describe('Data Model Class', () => {
     const classCard = cy.get('[data-cy=class-card]');
 
     classCard.should('be.visible');
+    classCard.focus();
     cy.get('[data-cy=more-button]').click();
     cy.get('[data-cy=delete-button]').click();
     cy.get('[data-cy=confirmation-button]').click();

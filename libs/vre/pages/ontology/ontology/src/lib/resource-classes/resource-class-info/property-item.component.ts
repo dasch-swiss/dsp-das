@@ -21,7 +21,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
-import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
+import { ClassPropertyInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
@@ -54,7 +54,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         <div class="property-item-content-container">
           <div>
             <div class="upper-prop-container">
-              <span class="label" data-cy="property-labels">{{ classProp.propDef.label }} </span>
+              <span class="label" data-cy="property-label">{{ classProp.propDef.label }} </span>
               <span
                 class="additional-info"
                 *ngIf="classProp.objectLabel"
