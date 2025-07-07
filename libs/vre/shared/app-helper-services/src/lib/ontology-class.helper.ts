@@ -1,5 +1,4 @@
-import { ClassDefinition, Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
+import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 
 export class OntologyClassHelper {
   static GetClassesToDisplay(
@@ -16,12 +15,6 @@ export class OntologyClassHelper {
     });
 
     return classesToDisplay;
-  }
-
-  static GetReadOntologyClassesToDisplay(readOntologyClasses: {
-    [index: string]: ResourceClassDefinitionWithAllLanguages;
-  }): ResourceClassDefinitionWithAllLanguages[] {
-    return OntologyClassHelper.GetClassesToDisplay(getAllEntityDefinitionsAsArray(readOntologyClasses));
   }
 
   static getClassLabelByLanguage(resourceClass: ResourceClassDefinitionWithAllLanguages, language: string) {
