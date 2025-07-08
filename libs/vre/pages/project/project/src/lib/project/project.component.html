@@ -27,7 +27,7 @@
           </p>
         </div>
         <mat-list class="main-list">
-          <mat-divider></mat-divider>
+          <mat-divider />
           <mat-list-item
             [ngClass]="{ 'active': listItemSelected === routeConstants.advancedSearch}"
             class="section-title"
@@ -38,7 +38,7 @@
             </span>
           </mat-list-item>
 
-          <mat-divider></mat-divider>
+          <mat-divider />
           <mat-list-item
             [ngClass]="{ 'active': listItemSelected === routeConstants.project }"
             class="section-title"
@@ -50,7 +50,7 @@
           </mat-list-item>
 
           <ng-container *ngIf="isAdmin$ | async">
-            <mat-divider></mat-divider>
+            <mat-divider />
             <mat-list-item
               [ngClass]="{ 'active': listItemSelected === settingsRoute}"
               class="section-title footer"
@@ -62,7 +62,7 @@
             </mat-list-item>
           </ng-container>
 
-          <mat-divider></mat-divider>
+          <mat-divider />
           <mat-list-item
             [ngClass]="{ 'active': listItemSelected === dataModelsRoute}"
             class="section-title"
@@ -72,14 +72,14 @@
               <p>Data Model</p>
             </span>
           </mat-list-item>
-          <mat-divider></mat-divider>
+          <mat-divider />
 
           <!-- Project Ontologies -->
           <mat-accordion
             *ngFor="let onto of projectOntologies$ | async; trackBy: trackByFn; let first = first"
             multi
             [displayMode]="'flat'">
-            <mat-expansion-panel [expanded]="first">
+            <mat-expansion-panel [expanded]="(expandedOntologyId$ | async) === onto.id">
               <mat-expansion-panel-header>
                 <div class="sidenav-panel-header">
                   <mat-panel-title class="mat-subtitle-1">
@@ -95,11 +95,9 @@
                 </div>
               </mat-expansion-panel-header>
               <!-- list of ontology classes -->
-              <app-ontology-classes
-                [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)"
-                [projectMember]="(isAdmin$ | async) || (isMember$ | async)" />
+              <app-resource-class-sidenav [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)" />
             </mat-expansion-panel>
-            <mat-divider></mat-divider>
+            <mat-divider />
           </mat-accordion>
         </mat-list>
       </div>
@@ -118,7 +116,7 @@
         </button>
       </div>
       <div class="main-content">
-        <router-outlet></router-outlet>
+        <router-outlet />
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
