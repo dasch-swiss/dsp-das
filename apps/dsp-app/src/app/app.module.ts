@@ -72,7 +72,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     AppComponent,
     ...TemplateSwitcherComponents,
-    ...PropertyFormComponents,
     ...ResourcePropertiesComponents,
     ...ResourceCreatorComponents,
     ...SegmentSupportComponents,
