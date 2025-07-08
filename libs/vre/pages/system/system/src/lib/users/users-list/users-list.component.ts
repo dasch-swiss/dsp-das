@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -52,7 +52,6 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
 })
 export class UsersListComponent {
   @Input({ required: true }) status!: boolean;
-  @Input({ required: true }) project!: ReadProject;
 
   _list!: ReadUser[];
   get list(): ReadUser[] {
