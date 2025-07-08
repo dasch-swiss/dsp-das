@@ -8,8 +8,6 @@ import { PropertyValueService } from './property-value.service';
   template: `
     <app-property-value-display [index]="index" *ngIf="displayMode" />
     <app-property-value-update [index]="index" *ngIf="!displayMode" />
-
-    <!--<app-property-value-comment [displayMode]="true" [control]="group.controls.comment" />-->
   `,
 })
 export class PropertyValueComponent implements OnInit {
