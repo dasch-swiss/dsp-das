@@ -30,15 +30,7 @@ import { map, startWith } from 'rxjs/operators';
       </div>
     </div>
   `,
-  styles: [
-    `
-      .works {
-        border-right-color: #6aea6666;
-        border-right-style: solid;
-        border-right-width: 4px;
-      }
-    `,
-  ],
+  styles: [``],
 })
 export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
