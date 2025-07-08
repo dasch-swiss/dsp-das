@@ -1,32 +1,22 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
+import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import {
-  LoadProjectMembersAction,
-  RemoveUserFromProjectAction,
-  SetUserAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { Actions, Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { switchMap, take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 
 @Component({
   selector: 'app-users-list-row-menu',
   template: `
-    <button
-      mat-icon-button
-      *ngIf="isSysAdmin$ | async"
-      [matMenuTriggerFor]="projectUserMenu"
-      data-cy="user-menu"
-      [disabled]="disableMenu$ | async">
+    <button mat-icon-button *ngIf="isSysAdmin$ | async" [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
       <mat-icon>more_horiz</mat-icon>
     </button>
 
@@ -58,14 +48,18 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
 })
 export class UsersListRowMenuComponent implements OnDestroy {
   @Input({ required: true }) user!: ReadUser;
+  @Output() refreshParent = new EventEmitter<void>();
+
   private readonly _destroy$ = new Subject<void>();
+
+  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  username$ = this._store.select(UserSelectors.username);
 
   constructor(
     private _matDialog: MatDialog,
     private _actions$: Actions,
     private _store: Store,
     private _dialog: DialogService,
-    private _router: Router,
     private readonly _userApiService: UserApiService
   ) {}
 
@@ -74,10 +68,25 @@ export class UsersListRowMenuComponent implements OnDestroy {
     this._destroy$.complete();
   }
 
+  isSystemAdmin(permissions: PermissionsData): boolean {
+    if (!permissions.groupsPerProject) {
+      return false;
+    }
+
+    const groupsPerProjectKeys = Object.keys(permissions.groupsPerProject);
+
+    return groupsPerProjectKeys.some(key => {
+      if (key === Constants.SystemProjectIRI) {
+        return permissions.groupsPerProject?.[key]?.includes(Constants.SystemAdminGroupIRI) ?? false;
+      }
+      return false;
+    });
+  }
+
   updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
     this._userApiService
       .updateSystemAdminMembership(user.id, systemAdmin)
-      .pipe(take(1), takeUntil(this._destroy$))
+      .pipe(take(1))
       .subscribe(response => {
         this._store.dispatch(new SetUserAction(response.user));
         if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
@@ -104,35 +113,18 @@ export class UsersListRowMenuComponent implements OnDestroy {
       });
   }
 
-  askToRemoveFromProject(user: ReadUser) {
-    this._dialog
-      .afterConfirmation('Do you want to remove this user from the project?')
-      .pipe(
-        switchMap(() => {
-          this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
-          return this._actions$.pipe(ofActionSuccessful(LoadProjectMembersAction));
-        }),
-        takeUntil(this._destroy$)
-      )
-      .subscribe();
-  }
-
   editUser(user: ReadUser) {
     const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true);
     const dialogRef = this._matDialog.open(EditUserDialogComponent, dialogConfig);
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(() => {
-        this.refreshParent.emit();
-      });
+    dialogRef.afterClosed().subscribe(() => {
+      this.refreshParent.emit();
+    });
   }
 
   openEditPasswordDialog(user: ReadUser) {
     this._matDialog
       .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
       .afterClosed()
-      .pipe(takeUntil(this._destroy$))
       .subscribe(response => {
         if (response === true) {
           this.refreshParent.emit();
@@ -145,22 +137,16 @@ export class UsersListRowMenuComponent implements OnDestroy {
   }
 
   private deactivateUser(userIri: string) {
-    this._userApiService
-      .delete(userIri)
-      .pipe(take(1), takeUntil(this._destroy$))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
+    this._userApiService.delete(userIri).subscribe(response => {
+      this._store.dispatch(new SetUserAction(response.user));
+      this.refreshParent.emit();
+    });
   }
 
   private activateUser(userIri: string) {
-    this._userApiService
-      .updateStatus(userIri, true)
-      .pipe(take(1), takeUntil(this._destroy$))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
-      });
+    this._userApiService.updateStatus(userIri, true).subscribe(response => {
+      this._store.dispatch(new SetUserAction(response.user));
+      this.refreshParent.emit();
+    });
   }
 }

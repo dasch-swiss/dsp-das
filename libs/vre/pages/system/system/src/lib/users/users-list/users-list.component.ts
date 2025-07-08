@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { combineLatest, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 
 interface SortProperty {
@@ -20,11 +18,50 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
-  templateUrl: './users-list.component.html',
+  template: `
+    <div *ngIf="list">
+      <!-- header toolbar -->
+      <div class="app-toolbar" *ngIf="list.length > 0">
+        <div class="app-toolbar-row">
+          <h3 class="mat-body subtitle">
+            <span *ngIf="status">Active</span>
+            <span *ngIf="!status">Suspended</span>
+          </h3>
+          <span class="fill-remaining-space"></span>
+          <span class="app-toolbar-action"> </span>
+        </div>
+        <div class="app-toolbar-row">
+          <span class="app-toolbar-action button left">
+            <!-- sort button if more than one item in the list -->
+            <app-sort-button
+              *ngIf="list.length > 1"
+              [icon]="'sort_by_alpha'"
+              [sortProps]="sortProps"
+              [activeKey]="sortBy"
+              (sortKeyChange)="sortList($event)" />
+          </span>
+          <h2 class="mat-headline-6">
+            <span data-cy="user-count">{{ list.length | i18nPlural: itemPluralMapping['user'] }}</span>
+          </h2>
+          <span class="fill-remaining-space"></span>
+          <span
+            class="app-toolbar-action button right"
+            *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)">
+            <button mat-flat-button [color]="'primary'" (click)="createUser()">Create new</button>
+          </span>
+        </div>
+      </div>
+      <!-- content: list -->
+      <table class="table more-space-bottom" [class.deactivated]="!status">
+        <tr class="table-entry" *ngFor="let user of list; trackBy: trackByFn; let last = last" [class.no-border]="last">
+          <app-users-list-row [user]="user" />
+        </tr>
+      </table>
+    </div>
+  `,
   styleUrls: ['./users-list.component.scss'],
 })
-export class UsersListComponent implements OnInit, OnDestroy {
-  private readonly _destroy$ = new Subject<void>();
+export class UsersListComponent {
   @Input({ required: true }) status!: boolean;
 
   _list!: ReadUser[];
@@ -54,9 +91,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
     },
   };
 
-  projectUuid!: string;
-
-  sortProps: SortProperty[] = [
+  readonly sortProps: SortProperty[] = [
     {
       key: 'familyName',
       label: this._ts.instant('pages.system.usersList.sortFamilyName'),
@@ -77,17 +112,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
 
-  isProjectOrSystemAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   project$ = this._store.select(ProjectsSelectors.currentProject);
-  username$ = this._store.select(UserSelectors.username);
-
-  disableMenu$ = combineLatest([this.isProjectOrSystemAdmin$, this.isSysAdmin$]).pipe(
-    map(
-      ([isProjectAdmin, isSysAdmin]) =>
-        this.project.status === false || (!isProjectAdmin && !isSysAdmin && !!this.projectUuid)
-    )
-  );
 
   constructor(
     private readonly _matDialog: MatDialog,
@@ -96,23 +122,12 @@ export class UsersListComponent implements OnInit, OnDestroy {
     private readonly _ts: TranslateService
   ) {}
 
-  ngOnInit(): void {
-    console.log('julien', this);
-    this.projectUuid = ProjectService.IriToUuid(this.project.id);
-  }
-
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
-  }
-
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
 
   createUser() {
-    const dialogRef = this._matDialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig({}, true));
-    dialogRef
+    this._matDialog
+      .open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig({}, true))
       .afterClosed()
-      .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
         this.refreshParent.emit();
       });
