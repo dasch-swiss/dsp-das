@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
   displayName: 'vre-pages-ontology-ontology-classes',
-  preset: '../../../../../jest.preset.js',
+  preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../../coverage/libs/vre/pages/ontology/ontology-classes',
+  coverageDirectory: '../../../../../coverage/libs/vre/pages/data-browser',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
