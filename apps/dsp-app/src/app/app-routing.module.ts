@@ -19,7 +19,7 @@ import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss
 import {
   CookiePolicyComponent,
   ProjectsComponent,
-  SystemComponent,
+  SystemPageComponent,
   UsersComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
@@ -149,7 +149,7 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.system,
-    component: SystemComponent,
+    component: SystemPageComponent,
     canActivate: [AuthGuard],
     children: [
       {

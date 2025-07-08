@@ -6,10 +6,10 @@ import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-system',
-  templateUrl: './system.component.html',
-  styleUrls: ['./system.component.scss'],
+  templateUrl: './system-page.component.html',
+  styleUrls: ['./system-page.component.scss'],
 })
-export class SystemComponent {
+export class SystemPageComponent {
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
 
   links = [
