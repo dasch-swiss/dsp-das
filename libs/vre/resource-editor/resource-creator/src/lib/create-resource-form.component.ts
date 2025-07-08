@@ -178,7 +178,7 @@ export class CreateResourceFormComponent implements OnInit {
           this._fb.array([
             this._fb.group({
               item: control,
-              comment: '',
+              comment: null,
             }) as unknown as FormValueGroup,
           ])
         );

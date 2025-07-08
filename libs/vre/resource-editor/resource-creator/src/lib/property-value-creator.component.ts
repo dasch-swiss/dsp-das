@@ -11,9 +11,7 @@ import { map, startWith } from 'rxjs/operators';
     <div style="display: flex" [ngClass]="{ works: isValid$ | async }" *ngIf="template">
       <div style="flex: 1">
         <ng-container *ngTemplateOutlet="template; context: { item: formArray.controls.item }"></ng-container>
-        <app-property-value-basic-comment
-          *ngIf="displayComment || !!formArray.controls.comment.value"
-          [control]="formArray.controls.comment" />
+        <app-property-value-basic-comment *ngIf="commentIsNotNull" [control]="formArray.controls.comment" />
       </div>
       <div style="width: 140px">
         <button mat-icon-button [matTooltip]="'Delete this value'" [hidden]="isHidden$ | async" (click)="removeValue()">
@@ -23,9 +21,9 @@ import { map, startWith } from 'rxjs/operators';
         <button
           mat-icon-button
           [hidden]="isHidden$ | async"
-          (click)="updateCommentValue()"
-          [matTooltip]="displayComment ? 'Remove comment' : 'Add comment'">
-          <mat-icon>{{ displayComment ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
+          (click)="toggleCommentValue()"
+          [matTooltip]="commentIsNotNull ? 'Remove comment' : 'Add comment'">
+          <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
         </button>
       </div>
     </div>
@@ -37,12 +35,15 @@ export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) formArray!: FormValueGroup;
   @Input({ required: true }) template!: TemplateRef<any>;
 
-  displayComment = false;
-
   isValid$!: Observable<boolean>;
   isHidden$!: Observable<boolean>;
 
+  get commentIsNotNull() {
+    return this.formArray.controls.comment.value !== null;
+  }
+
   ngOnInit() {
+    console.log('t', this);
     this.isValid$ = this.formArray.controls.item.valueChanges.pipe(
       startWith(this.formArray.controls.item.getRawValue()),
       map(change => {
@@ -59,15 +60,12 @@ export class PropertyValueCreatorComponent implements OnInit {
     this.isHidden$ = this.isValid$.pipe(map(value => !value));
   }
 
-  updateCommentValue() {
-    this.displayComment = !this.displayComment;
-    if (!this.displayComment) {
-      this.formArray.controls.comment.setValue(null);
-    }
+  toggleCommentValue() {
+    this.formArray.controls.comment.setValue(this.commentIsNotNull ? null : '');
   }
 
   removeValue() {
     this.formArray.controls.item.setValue(null);
-    this.updateCommentValue();
+    this.toggleCommentValue();
   }
 }
