@@ -11,7 +11,7 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, of, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil } from 'rxjs';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
 import { RegionService } from '../region.service';
 import { OpenSeaDragonService } from './open-sea-dragon.service';

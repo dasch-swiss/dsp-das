@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 
 export interface CardinalityInfo {
   classIri: string;

@@ -25,7 +25,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';

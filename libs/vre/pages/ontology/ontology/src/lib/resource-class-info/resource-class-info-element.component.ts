@@ -4,7 +4,7 @@ import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-s
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-info-element',

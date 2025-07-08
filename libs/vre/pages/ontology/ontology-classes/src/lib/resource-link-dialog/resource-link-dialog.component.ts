@@ -17,7 +17,7 @@ import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-com
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs';
 
 export interface ResourceLinkDialogProps {
   resources: FilteredResources;

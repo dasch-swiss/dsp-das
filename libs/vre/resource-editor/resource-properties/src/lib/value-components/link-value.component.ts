@@ -17,7 +17,7 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDe
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, filter, finalize, map, switchMap, take, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 

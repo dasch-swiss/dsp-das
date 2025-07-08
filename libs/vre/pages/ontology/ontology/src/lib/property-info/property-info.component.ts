@@ -16,7 +16,7 @@ import {
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { filter, first } from 'rxjs/operators';
+import { filter, first } from 'rxjs';
 
 export interface ShortInfo {
   id: string;

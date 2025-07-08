@@ -8,7 +8,7 @@ import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, finalize, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-metadata',

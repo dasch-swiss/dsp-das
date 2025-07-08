@@ -18,7 +18,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { of, throwError } from 'rxjs';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 
 @Injectable({ providedIn: 'root' })

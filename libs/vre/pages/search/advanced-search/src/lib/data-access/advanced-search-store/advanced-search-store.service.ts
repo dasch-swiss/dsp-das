@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, switchMap, take, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,

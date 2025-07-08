@@ -6,7 +6,7 @@ import { AutoLoginService } from '@dasch-swiss/vre/core/session';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

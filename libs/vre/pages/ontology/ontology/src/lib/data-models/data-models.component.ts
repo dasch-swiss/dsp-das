@@ -9,7 +9,7 @@ import { ProjectBase } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
 import { OntologyFormProps } from '../ontology-form/ontology-form.type';
 

@@ -15,7 +15,7 @@ import { OntologyClassHelper, ProjectService, SortingService } from '@dasch-swis
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import { LoadClassItemsCountAction } from '../ontology-class/ontology-class.actions';

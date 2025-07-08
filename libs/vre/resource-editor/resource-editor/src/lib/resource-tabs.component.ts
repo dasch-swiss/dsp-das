@@ -4,7 +4,7 @@ import { RegionService } from '@dasch-swiss/vre/resource-editor/representations'
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
 
 @Component({

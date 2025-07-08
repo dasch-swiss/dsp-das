@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { Subject } from 'rxjs';
-import { tap, takeUntil } from 'rxjs/operators';
+import { tap, takeUntil } from 'rxjs';
 
 export interface IAutoCompleteScrollEvent {
   autoComplete: MatAutocomplete;

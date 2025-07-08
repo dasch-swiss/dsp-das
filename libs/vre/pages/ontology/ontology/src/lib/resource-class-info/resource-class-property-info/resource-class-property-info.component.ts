@@ -24,7 +24,7 @@ import { ListsSelectors, LoadOntologyAction, OntologiesSelectors, PropToDisplay 
 import { DefaultClass, DefaultProperty, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { take, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-property-info',

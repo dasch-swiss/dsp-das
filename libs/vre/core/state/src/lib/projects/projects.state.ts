@@ -7,7 +7,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
 import { EMPTY, of } from 'rxjs';
-import { concatMap, finalize, map, take, tap } from 'rxjs/operators';
+import { concatMap, finalize, map, take, tap } from 'rxjs';
 import { IKeyValuePairs } from '../model-interfaces';
 import { SetUserAction } from '../user/user.actions';
 import { UserSelectors } from '../user/user.selectors';

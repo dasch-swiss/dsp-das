@@ -7,7 +7,7 @@ import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, takeUntil, takeWhile } from 'rxjs';
 import { LicenseCaptionsMapping } from './license-captions-mapping';
 
 @Component({

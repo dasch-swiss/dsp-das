@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { IMask } from 'angular-imask';
 import { Observable } from 'rxjs';
-import { switchMap, take, takeWhile } from 'rxjs/operators';
+import { switchMap, take, takeWhile } from 'rxjs';
 
 enum ImageSettingsEnum {
   Off = 'Off',

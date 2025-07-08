@@ -18,7 +18,7 @@ import { SetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
 import { DefaultProperties, PropertyInfoObject } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs';
 import { PropertyForm } from '../property-form.type';
 
 export interface EditPropertyFormDialogProps {

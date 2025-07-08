@@ -5,7 +5,7 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { LoadProjectsAction, LoadUserAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs';
 
 /**
  * ProjectsComponent handles the list of projects.

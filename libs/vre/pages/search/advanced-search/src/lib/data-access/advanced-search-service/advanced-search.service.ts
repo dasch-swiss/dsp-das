@@ -11,7 +11,7 @@ import {
 import { OntologyV2ApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs';
 
 export interface ApiData {
   iri: string;

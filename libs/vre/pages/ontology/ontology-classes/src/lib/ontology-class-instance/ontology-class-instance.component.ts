@@ -13,7 +13,7 @@ import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-hel
 import { Actions, Select, Store } from '@ngxs/store';
 import { search } from 'effect/String';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'app-ontology-class-instance',

@@ -14,7 +14,7 @@ import {
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
 import { Observable, Subject, combineLatest } from 'rxjs';
-import { filter, map, take, takeUntil, takeWhile } from 'rxjs/operators';
+import { filter, map, take, takeUntil, takeWhile } from 'rxjs';
 
 @Injectable()
 export class ProjectBaseService {

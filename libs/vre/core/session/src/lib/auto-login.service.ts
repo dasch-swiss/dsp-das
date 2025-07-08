@@ -5,7 +5,7 @@ import { LoadUserAction } from '@dasch-swiss/vre/core/state';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import { BehaviorSubject, throwError } from 'rxjs';
-import { finalize, switchMap, take } from 'rxjs/operators';
+import { finalize, switchMap, take } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
