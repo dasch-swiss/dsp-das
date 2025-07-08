@@ -23,21 +23,37 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
         align-items: center;
       }
       input[type='checkbox'] {
-        cursor: pointer;
         accent-color: var(--primary);
       }
       label {
         font-size: 0.75rem;
       }
+      .card-disabled {
+        cursor: not-allowed;
+      }
+
+      .card-enabled {
+        cursor: pointer;
+      }
     `,
   ],
   template: `
     <div class="cardinality-checkbox">
-      <input type="checkbox" [disabled]="disabled" [(ngModel)]="multipleCheckboxState" (change)="onCheckboxChange()" />
+      <input
+        type="checkbox"
+        [disabled]="disabled"
+        [ngClass]="disabled ? 'card-disabled' : 'card-enabled'"
+        [(ngModel)]="multipleCheckboxState"
+        (change)="onCheckboxChange()" />
       <label>Multiple values</label>
     </div>
     <div class="cardinality-checkbox">
-      <input type="checkbox" [disabled]="disabled" [(ngModel)]="requiredCheckboxState" (change)="onCheckboxChange()" />
+      <input
+        type="checkbox"
+        [disabled]="disabled"
+        [ngClass]="disabled ? 'card-disabled' : 'card-enabled'"
+        [(ngModel)]="requiredCheckboxState"
+        (change)="onCheckboxChange()" />
       <label>Required</label>
     </div>
   `,
