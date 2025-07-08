@@ -21,8 +21,6 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   template: `
     <div *ngIf="list">
       <div *ngIf="list.length > 0">
-        <h3>{{ status ? 'Active' : 'Suspended' }}</h3>
-
         <div>
           <app-sort-button
             *ngIf="list.length > 1"
@@ -42,11 +40,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
         </div>
       </div>
 
-      <table>
-        <tr *ngFor="let user of list; trackBy: trackByFn">
-          <app-users-list-row [user]="user" />
-        </tr>
-      </table>
+      <app-users-list-row [user]="user" *ngFor="let user of list; trackBy: trackByFn" />
     </div>
   `,
 })
