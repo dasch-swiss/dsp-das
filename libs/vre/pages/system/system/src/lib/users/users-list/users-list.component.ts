@@ -20,49 +20,39 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   selector: 'app-users-list',
   template: `
     <div *ngIf="list">
-      <!-- header toolbar -->
-      <div class="app-toolbar" *ngIf="list.length > 0">
-        <div class="app-toolbar-row">
-          <h3 class="mat-body subtitle">
-            <span *ngIf="status">Active</span>
-            <span *ngIf="!status">Suspended</span>
-          </h3>
-          <span class="fill-remaining-space"></span>
-          <span class="app-toolbar-action"> </span>
-        </div>
-        <div class="app-toolbar-row">
-          <span class="app-toolbar-action button left">
-            <!-- sort button if more than one item in the list -->
-            <app-sort-button
-              *ngIf="list.length > 1"
-              [icon]="'sort_by_alpha'"
-              [sortProps]="sortProps"
-              [activeKey]="sortBy"
-              (sortKeyChange)="sortList($event)" />
-          </span>
-          <h2 class="mat-headline-6">
-            <span data-cy="user-count">{{ list.length | i18nPlural: itemPluralMapping['user'] }}</span>
-          </h2>
-          <span class="fill-remaining-space"></span>
-          <span
-            class="app-toolbar-action button right"
+      <div *ngIf="list.length > 0">
+        <h3>{{ status ? 'Active' : 'Suspended' }}</h3>
+
+        <div>
+          <app-sort-button
+            *ngIf="list.length > 1"
+            [icon]="'sort_by_alpha'"
+            [sortProps]="sortProps"
+            [activeKey]="sortBy"
+            (sortKeyChange)="sortList($event)" />
+
+          <h2 class="mat-headline-6" data-cy="user-count">{{ list.length | i18nPlural: itemPluralMapping['user'] }}</h2>
+          <button
+            mat-flat-button
+            [color]="'primary'"
+            (click)="createUser()"
             *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)">
-            <button mat-flat-button [color]="'primary'" (click)="createUser()">Create new</button>
-          </span>
+            Create new
+          </button>
         </div>
       </div>
-      <!-- content: list -->
-      <table class="table more-space-bottom" [class.deactivated]="!status">
-        <tr class="table-entry" *ngFor="let user of list; trackBy: trackByFn; let last = last" [class.no-border]="last">
+
+      <table>
+        <tr *ngFor="let user of list; trackBy: trackByFn">
           <app-users-list-row [user]="user" />
         </tr>
       </table>
     </div>
   `,
-  styleUrls: ['./users-list.component.scss'],
 })
 export class UsersListComponent {
   @Input({ required: true }) status!: boolean;
+  @Input({ required: true }) project!: ReadProject;
 
   _list!: ReadUser[];
   get list(): ReadUser[] {
@@ -74,10 +64,8 @@ export class UsersListComponent {
   }
 
   @Input() isButtonEnabledToCreateNewUser = false;
-  @Input({ required: true }) project!: ReadProject;
   @Output() refreshParent = new EventEmitter<void>();
 
-  // i18n plural mapping
   itemPluralMapping = {
     user: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -111,7 +99,6 @@ export class UsersListComponent {
   ];
 
   sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
-
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   project$ = this._store.select(ProjectsSelectors.currentProject);
 

@@ -20,7 +20,7 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
       <mat-icon>more_horiz</mat-icon>
     </button>
 
-    <mat-menu #projectUserMenu="matMenu" xPosition="before" class="menu">
+    <mat-menu #projectUserMenu="matMenu" xPosition="before">
       <!-- update user's system admin group membership; only in system admin view -->
       <button
         mat-menu-item
@@ -29,9 +29,9 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
         <span> {{ isSystemAdmin(user.permissions) ? 'Add' : 'Remove' }}</span>
         <span>as system admin</span>
       </button>
-      <!-- update user's profile data; only for system admin -->
+
       <ng-container *ngIf="user.status">
-        <button mat-menu-item (click)="editUser(user)">'Edit user'</button>
+        <button mat-menu-item (click)="editUser(user)">Edit user</button>
 
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
 

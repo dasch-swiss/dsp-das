@@ -4,22 +4,15 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 
 @Component({
   selector: 'app-users-list-row',
-  template: ` <!-- avatar -->
-    <td class="avatar-cell">
-      <img appAdminImage [image]="user.email" [type]="'user'" alt="avatar" class="avatar-image" />
+  template: ` <td>
+      <img appAdminImage [image]="user.email" [type]="'user'" alt="avatar" />
     </td>
 
-    <!-- name and e-mail address -->
-    <td class="table-info">
-      <h5 class="mat-subtitle-1 info-names">
-        <!-- Names hidden on phone devices -->
-        {{ user.givenName }} {{ user.familyName }}
-      </h5>
+    <td>
+      <h5>{{ user.givenName }} {{ user.familyName }}</h5>
       <p class="mat-subtitle-2">
-        <span class="info-username">{{ user.username }} </span>
-        <!-- Email hidden on phone devices -->
-        <span class="info-email">| {{ user.email }}</span>
-        <!-- TODO: question: how public should the email address be? -->
+        <span>{{ user.username }} </span>
+        <span>| {{ user.email }}</span>
       </p>
     </td>
 
@@ -28,6 +21,7 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
         <mat-chip class="sys-admin-chip">System Admin</mat-chip>
       </mat-chip-listbox>
     </td>
+
     <td class="table-action">
       <app-users-list-row-menu [user]="user" (refreshParent)="refreshParent.emit()" />
     </td>`,

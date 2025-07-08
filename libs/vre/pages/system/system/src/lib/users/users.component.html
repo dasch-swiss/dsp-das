@@ -1,12 +1,20 @@
-<app-progress-indicator *ngIf="(isLoading$ | async)" />
-<app-users-list
-  *ngIf="(isLoading$ | async) === false"
-  [list]="activeUsers$ | async"
-  [project]="project$ | async"
-  [status]="true"
-  [isButtonEnabledToCreateNewUser]="true" />
-<app-users-list
-  *ngIf="(isLoading$ | async) === false"
-  [list]="inactiveUsers$ | async"
-  [project]="project$ | async"
-  [status]="false" />
+<ng-container *ngIf="(isLoading$ | async) === false; else loadingTpl">
+  <ng-container *ngIf="project$ | async as project">
+    <app-users-list
+      *ngIf="activeUsers$ | async as activeUsers"
+      [list]="activeUsers"
+      [project]="project"
+      [status]="true"
+      [isButtonEnabledToCreateNewUser]="true" />
+
+    <app-users-list
+      *ngIf="inactiveUsers$ | async as inactiveUsers"
+      [list]="inactiveUsers"
+      [project]="project"
+      [status]="false" />
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <app-progress-indicator />
+</ng-template>
