@@ -5,10 +5,31 @@ import { Store } from '@ngxs/store';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-users',
-  templateUrl: './users.component.html',
+  selector: 'app-users-tab',
+  template: `
+    <ng-container *ngIf="(isLoading$ | async) === false; else loadingTpl">
+      <ng-container *ngIf="project$ | async as project">
+        <app-users-list
+          *ngIf="activeUsers$ | async as activeUsers"
+          [list]="activeUsers"
+          [project]="project"
+          [status]="true"
+          [isButtonEnabledToCreateNewUser]="true" />
+
+        <app-users-list
+          *ngIf="inactiveUsers$ | async as inactiveUsers"
+          [list]="inactiveUsers"
+          [project]="project"
+          [status]="false" />
+      </ng-container>
+    </ng-container>
+
+    <ng-template #loadingTpl>
+      <app-progress-indicator />
+    </ng-template>
+  `,
 })
-export class UsersComponent implements OnInit {
+export class UsersTabComponent implements OnInit {
   activeUsers$ = this._store.select(UserSelectors.activeUsers);
   inactiveUsers$ = this._store.select(UserSelectors.inactiveUsers);
   isLoading$ = this._store.select(UserSelectors.usersLoading);

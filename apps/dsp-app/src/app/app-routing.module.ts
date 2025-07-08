@@ -12,15 +12,15 @@ import {
   ImageSettingsComponent,
   LegalSettingsComponent,
   ProjectComponent,
-  SettingsPageComponent,
   ResourceMetadataComponent,
+  SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
 import {
   CookiePolicyComponent,
   ProjectsComponent,
   SystemPageComponent,
-  UsersComponent,
+  UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
@@ -163,7 +163,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.systemUsers,
-        component: UsersComponent,
+        component: UsersTabComponent,
       },
     ],
   },

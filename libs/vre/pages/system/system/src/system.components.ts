@@ -11,14 +11,14 @@ import { ManageProjectMembershipDialogComponent } from './lib/users/manage-proje
 import { UsersListRowMenuComponent } from './lib/users/users-list/users-list-row-menu.component';
 import { UsersListRowComponent } from './lib/users/users-list/users-list-row.component';
 import { UsersListComponent } from './lib/users/users-list/users-list.component';
-import { UsersComponent } from './lib/users/users.component';
+import { UsersTabComponent } from './lib/users/users-tab.component';
 
 export const SystemComponents = [
   SystemPageComponent,
   ProjectsComponent,
   ProjectsListComponent,
   EraseProjectDialogComponent,
-  UsersComponent,
+  UsersTabComponent,
   UsersListComponent,
   SortButtonComponent,
   CookiePolicyComponent,
