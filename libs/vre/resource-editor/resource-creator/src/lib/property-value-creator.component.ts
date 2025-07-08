@@ -16,16 +16,16 @@ import { map, startWith } from 'rxjs/operators';
           [control]="formArray.controls.comment" />
       </div>
       <div style="width: 140px">
-        <button
-          mat-icon-button
-          [matTooltip]="'Delete this value'"
-          [hidden]="isHidden$ | async"
-          (click)="formArray.controls.item.patchValue(null)">
+        <button mat-icon-button [matTooltip]="'Delete this value'" [hidden]="isHidden$ | async" (click)="removeValue()">
           <mat-icon>cancel</mat-icon>
         </button>
 
-        <button mat-icon-button [hidden]="isHidden$ | async" (click)="displayComment = true">
-          <mat-icon>add_comment</mat-icon>
+        <button
+          mat-icon-button
+          [hidden]="isHidden$ | async"
+          (click)="updateCommentValue()"
+          [matTooltip]="displayComment ? 'Remove comment' : 'Add comment'">
+          <mat-icon>{{ displayComment ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
         </button>
       </div>
     </div>
@@ -57,5 +57,17 @@ export class PropertyValueCreatorComponent implements OnInit {
     );
 
     this.isHidden$ = this.isValid$.pipe(map(value => !value));
+  }
+
+  updateCommentValue() {
+    this.displayComment = !this.displayComment;
+    if (!this.displayComment) {
+      this.formArray.controls.comment.setValue(null);
+    }
+  }
+
+  removeValue() {
+    this.formArray.controls.item.setValue(null);
+    this.updateCommentValue();
   }
 }
