@@ -74,7 +74,7 @@ export class EditPropertyFormDialogComponent implements OnInit {
         labels: this.form.controls.labels.value as StringLiteralV2[],
         comment: this.form.controls.comments.value as StringLiteralV2[],
         propType: this.data.propType,
-        guiAttribute: this.form.controls.guiElement.value,
+        guiAttribute: this.form.controls.guiAttr.value,
         objectType: this.form.controls.objectType.value,
       } as CreatePropertyData;
       this._oes
