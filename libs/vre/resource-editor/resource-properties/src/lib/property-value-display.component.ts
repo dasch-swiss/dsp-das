@@ -41,15 +41,16 @@ import { PropertyValueService } from './property-value.service';
             "></ng-container>
         </ng-container>
       </div>
-
-      <div
-        *ngIf="
-          (propertiesDisplayService.showComments$ | async) &&
-          propertyValueService.editModeData.values[index].valueHasComment as comment
-        "
-        data-cy="property-value-comment"
-        style="border-top: 1px solid #ebebeb; margin-top: 8px; margin-bottom: 16px; padding-top: 4px; font-size: small">
-        {{ comment }}
+      <div class="test">
+        <div
+          *ngIf="
+            (propertiesDisplayService.showComments$ | async) &&
+            propertyValueService.editModeData.values[index].valueHasComment as comment
+          "
+          data-cy="property-value-comment"
+          style=" font-size: small">
+          {{ comment }}
+        </div>
       </div>
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
