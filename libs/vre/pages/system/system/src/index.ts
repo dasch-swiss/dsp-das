@@ -11,3 +11,5 @@ export * from './lib/users/edit-password-dialog.component';
 export * from './lib/users/manage-project-membership-dialog.component';
 export * from './lib/users/create-user-dialog.component';
 export * from './lib/membership/membership.component';
+export * from './lib/users/users-list/users-list-row.component';
+export * from './lib/users/users-list/users-list-row-menu.component';
