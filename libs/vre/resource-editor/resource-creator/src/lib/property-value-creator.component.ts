@@ -66,6 +66,6 @@ export class PropertyValueCreatorComponent implements OnInit {
 
   removeValue() {
     this.formArray.controls.item.setValue(null);
-    this.toggleCommentValue();
+    this.formArray.controls.comment.setValue(null);
   }
 }
