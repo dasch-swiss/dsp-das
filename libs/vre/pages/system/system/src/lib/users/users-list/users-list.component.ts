@@ -21,22 +21,25 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   template: `
     <div *ngIf="list">
       <div *ngIf="list.length > 0">
-        <div>
+        <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
+          <span class="mat-headline-6" style="margin-bottom: 0; flex: 1" data-cy="user-count">
+            {{ list.length | i18nPlural: itemPluralMapping['user'] }}
+          </span>
+          <button
+            mat-flat-button
+            [color]="'primary'"
+            (click)="createUser()"
+            *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)"
+            style="margin-right: 16px">
+            Create new
+          </button>
+
           <app-sort-button
             *ngIf="list.length > 1"
             [icon]="'sort_by_alpha'"
             [sortProps]="sortProps"
             [activeKey]="sortBy"
             (sortKeyChange)="sortList($event)" />
-
-          <h2 class="mat-headline-6" data-cy="user-count">{{ list.length | i18nPlural: itemPluralMapping['user'] }}</h2>
-          <button
-            mat-flat-button
-            [color]="'primary'"
-            (click)="createUser()"
-            *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)">
-            Create new
-          </button>
         </div>
       </div>
 
