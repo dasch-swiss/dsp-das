@@ -55,13 +55,17 @@ const routes: Routes = [
     children: [
       {
         path: RouteConstants.home,
+        pathMatch: 'full',
+        redirectTo: RouteConstants.projectDescription,
+      },
+      {
+        path: RouteConstants.projectDescription,
         component: DescriptionComponent,
       },
       {
         path: RouteConstants.dataModels,
         component: DataModelsComponent,
       },
-      // Redirect from ontology root to editor
       {
         path: RouteConstants.ontologyRelative,
         redirectTo: RouteConstants.ontologyEditorRelative,

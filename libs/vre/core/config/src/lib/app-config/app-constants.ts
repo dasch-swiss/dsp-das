@@ -51,6 +51,7 @@ export class RouteConstants {
 
   static readonly resource = 'resource';
 
+  static readonly projectDescription = 'description';
   static readonly advancedSearch = 'advanced-search';
   static readonly gravSearch = 'gravsearch';
   static readonly search = 'search';
