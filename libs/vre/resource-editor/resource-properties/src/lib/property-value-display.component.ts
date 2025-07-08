@@ -41,7 +41,7 @@ import { PropertyValueService } from './property-value.service';
             "></ng-container>
         </ng-container>
       </div>
-      <div class="test">
+      <div class="comment">
         <div
           *ngIf="
             (propertiesDisplayService.showComments$ | async) &&
