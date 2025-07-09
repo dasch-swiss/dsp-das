@@ -223,7 +223,7 @@ export class ProjectsState {
       tap({
         next: response => {
           const groups: IKeyValuePairs<ReadGroup> = {};
-          response.body.groups.forEach(group => {
+          response.body.groups.forEach((group: ReadGroup) => {
             const projectId = group.project?.id as string;
             if (!groups[projectId]) {
               groups[projectId] = { value: [] };
