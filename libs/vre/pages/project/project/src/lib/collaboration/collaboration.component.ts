@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 
@@ -52,19 +51,9 @@ export class CollaborationComponent implements OnInit {
     );
   }
 
-  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$!: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$!: Observable<boolean>;
-  @Select(UserSelectors.user) user$!: Observable<ReadUser>;
-
   constructor(
-    protected _route: ActivatedRoute,
-    protected _projectService: ProjectService,
-    protected _titleService: Title,
-    protected _store: Store,
-    protected _cd: ChangeDetectorRef,
-    protected _actions$: Actions,
-    protected _router: Router
+    private _store: Store,
+    protected _titleService: Title
   ) {}
 
   ngOnInit() {

@@ -59,7 +59,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     protected _store: Store,
     protected _route: ActivatedRoute,
     private _titleService: Title,
-    private projectService: ProjectService
+    protected projectService: ProjectService
   ) {}
 
   @HostListener('window:keyup', ['$event'])
