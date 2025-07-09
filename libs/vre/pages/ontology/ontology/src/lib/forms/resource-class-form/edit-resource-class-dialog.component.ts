@@ -7,10 +7,15 @@ import { take } from 'rxjs/operators';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm, ResourceClassFormData, UpdateResourceClassData } from './resource-class-form.type';
 
+export interface EditResourceClassDialogProps {
+  title: string;
+  data: UpdateResourceClassData;
+}
+
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="''" subtitle="Customize resource class" />
+    <app-dialog-header [title]="data.title" subtitle="Customize resource class" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
@@ -38,7 +43,7 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: UpdateResourceClassData,
+    public data: EditResourceClassDialogProps,
     public dialogRef: MatDialogRef<EditResourceClassDialogComponent, UpdateResourceClassData>,
     private _ontologyService: OntologyService,
     private _oes: OntologyEditService
@@ -46,9 +51,9 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   ngOnInit() {
     this.formData = {
-      name: this._ontologyService.getNameFromIri(this.data.id),
-      labels: this.data.labels as MultiLanguages,
-      comments: this.data.comments as MultiLanguages,
+      name: this._ontologyService.getNameFromIri(this.data.data.id),
+      labels: this.data.data.labels as MultiLanguages,
+      comments: this.data.data.comments as MultiLanguages,
     };
   }
 
@@ -67,7 +72,7 @@ export class EditResourceClassDialogComponent implements OnInit {
       : undefined; // by leaving the comments undefined if not touched, they are not updated unnecessarily by the ontology service
 
     this._oes
-      .updateResourceClass$({ id: this.data.id, labels, comments } as UpdateResourceClassData)
+      .updateResourceClass$({ id: this.data.data.id, labels, comments } as UpdateResourceClassData)
       .pipe(take(1))
       .subscribe(res => {
         this.loading = false;
