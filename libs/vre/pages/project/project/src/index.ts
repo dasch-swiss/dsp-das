@@ -20,3 +20,4 @@ export * from './lib/licenses-enabled-table.component';
 
 export * from './lib/collaboration/project-members.component';
 export * from './lib/collaboration/project-members-row.component';
+export * from './lib/collaboration/project-members-row-menu.component';
