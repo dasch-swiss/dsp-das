@@ -54,7 +54,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   // event emitter when the lastModificationDate changed; bidirectional binding with lastModificationDate parameter
   @Output() ontoPropertiesChange = new EventEmitter<PropertyDefinition[]>();
 
-  @Input() updatePropertyAssignment$: Subject<any>;
+  @Input() updatePropertyAssignment$: Subject<void>;
 
   // to update the resource class itself (edit or delete)
   @Output() editResourceClass = new EventEmitter<DefaultClass>();
