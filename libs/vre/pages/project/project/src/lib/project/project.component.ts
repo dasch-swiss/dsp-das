@@ -3,7 +3,6 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReadOntology } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   LoadProjectOntologiesAction,
@@ -28,13 +27,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
   isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
   hasLoadingErrors$ = this._store.select(OntologiesSelectors.hasLoadingErrors);
   currentProject$ = this._store.select(ProjectsSelectors.currentProject);
-  currentOntologyId$ = this._store.select(OntologiesSelectors.currentOntology).pipe(map(ontology => ontology?.id));
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   routeConstants = RouteConstants;
 
-  getAllEntityDefinitionsAsArray = getAllEntityDefinitionsAsArray;
   sideNavOpened = true;
+  currentOntologyName: undefined | string;
 
   projectOntologies$: Observable<ReadOntology[]> = this._store.select(OntologiesSelectors.currentProjectOntologies);
 
@@ -73,6 +71,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this._router.events
+      .pipe(
+        takeUntil(this.destroyed),
+        filter(e => e instanceof NavigationEnd),
+        startWith(null)
+      )
+      .subscribe(() => {
+        this.currentOntologyName = this.getParamFromRouteTree('onto');
+      });
+
     this.projectUuid$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(uuid => {
       this._loadProject(uuid);
     });
@@ -85,6 +93,17 @@ export class ProjectComponent implements OnInit, OnDestroy {
           this._titleService.setTitle(project.shortname);
         }
       });
+  }
+
+  private getParamFromRouteTree(param: string): string | undefined {
+    let route = this._router.routerState.root;
+    while (route) {
+      if (route.snapshot.paramMap.has(param)) {
+        return route.snapshot.paramMap.get(param) || undefined;
+      }
+      route = route.firstChild!;
+    }
+    return undefined;
   }
 
   private _loadProject(projectUuid: string): void {
@@ -117,7 +136,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     }
 
     this._titleService.setTitle(project.shortname);
-    this._store.dispatch(new LoadProjectOntologiesAction(project.id));
+    this._store.dispatch(new LoadProjectOntologiesAction(project.id, this.currentOntologyName));
   }
 
   ngOnDestroy() {

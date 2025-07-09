@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
@@ -12,7 +13,7 @@ import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app
   `,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
-  @Input() resClasses: ResourceClassDefinitionWithAllLanguages[] = [];
+  @Input({ required: true }) ontology!: ReadOntology;
 
   classesToDisplay: ResourceClassDefinitionWithAllLanguages[] = [];
 
@@ -22,7 +23,8 @@ export class ResourceClassSidenavComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    const filtered = this.resClasses.filter(resClass => {
+    const classes = getAllEntityDefinitionsAsArray(this.ontology.classes) as ResourceClassDefinitionWithAllLanguages[];
+    const filtered = classes.filter(resClass => {
       if (!resClass.subClassOf.length) return false;
       const [prefix, suffix] = resClass.subClassOf[0].split('#');
       return !prefix.includes(Constants.StandoffOntology) && !suffix.includes('Standoff');
