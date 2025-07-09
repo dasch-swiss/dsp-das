@@ -32,7 +32,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
 
   @ViewChild('resClassLabel') resClassLabel: ElementRef;
 
-  isMember$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember);
+  isMember$ = this._store.select(ProjectsSelectors.isCurrentProjectMember);
 
   classLink: string;
 
