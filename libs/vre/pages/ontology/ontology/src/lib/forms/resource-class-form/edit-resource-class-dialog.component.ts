@@ -64,12 +64,8 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    const labels = this.form.controls.labels.touched
-      ? (this.form.controls.labels.value as StringLiteralV2[])
-      : undefined; // by leaving the labels undefined if not touched, they are not updated unnecessarily by the ontology service
-    const comments = this.form.controls.comments.touched
-      ? (this.form.controls.comments.value as StringLiteralV2[])
-      : undefined; // by leaving the comments undefined if not touched, they are not updated unnecessarily by the ontology service
+    const labels = this.form.controls.labels.value as StringLiteralV2[];
+    const comments = this.form.controls.comments.value as StringLiteralV2[];
 
     this._oes
       .updateResourceClass$({ id: this.data.data.id, labels, comments } as UpdateResourceClassData)
