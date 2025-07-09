@@ -49,7 +49,6 @@ export class EditResourceClassDialogComponent implements OnInit {
       name: this._ontologyService.getNameFromIri(this.data.id),
       labels: this.data.labels as MultiLanguages,
       comments: this.data.comments as MultiLanguages,
-      type: '', // TODO
     };
   }
 
@@ -60,16 +59,15 @@ export class EditResourceClassDialogComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    const labels = this.form?.controls.labels.touched
-      ? (this.form?.controls.labels.value as StringLiteralV2[])
+    const labels = this.form.controls.labels.touched
+      ? (this.form.controls.labels.value as StringLiteralV2[])
       : undefined; // by leaving the labels undefined if not touched, they are not updated unnecessarily by the ontology service
-    const comments = this.form?.controls.comments.touched
-      ? (this.form?.controls.comments.value as StringLiteralV2[])
+    const comments = this.form.controls.comments.touched
+      ? (this.form.controls.comments.value as StringLiteralV2[])
       : undefined; // by leaving the comments undefined if not touched, they are not updated unnecessarily by the ontology service
 
-    const upd = { id: this.data.id, labels, comments } as UpdateResourceClassData;
     this._oes
-      .updateResourceClass$(upd)
+      .updateResourceClass$({ id: this.data.id, labels, comments } as UpdateResourceClassData)
       .pipe(take(1))
       .subscribe(res => {
         this.loading = false;

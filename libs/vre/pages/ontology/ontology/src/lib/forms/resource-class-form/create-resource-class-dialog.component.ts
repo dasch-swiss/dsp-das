@@ -53,12 +53,14 @@ export class CreateResourceClassDialogComponent {
     this.loading = true;
 
     this._oes
-      .createResourceClass$({
-        name: this.form.controls.name.value,
-        labels: this.form.controls.labels.value as StringLiteralV2[],
-        type: this.data.iri,
-        comments: this.form.controls.comments.value as StringLiteralV2[],
-      })
+      .createResourceClass$(
+        {
+          name: this.form.controls.name.value,
+          labels: this.form.controls.labels.value as StringLiteralV2[],
+          comments: this.form.controls.comments.value as StringLiteralV2[],
+        },
+        this.data.iri
+      )
       .subscribe(() => {
         this.loading = false;
         this.dialogRef.close();

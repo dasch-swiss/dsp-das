@@ -357,8 +357,8 @@ export class OntologyEditService {
       );
   }
 
-  createResourceClass$(classData: ResourceClassFormData) {
-    const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData);
+  createResourceClass$(classData: ResourceClassFormData, subClassOf: string) {
+    const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData, subClassOf);
     this._isTransacting.next(true);
 
     return this._dspApiConnection.v2.onto.createResourceClass(createOntology).pipe(
