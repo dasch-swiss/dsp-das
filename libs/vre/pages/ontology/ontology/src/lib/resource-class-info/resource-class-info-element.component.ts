@@ -3,8 +3,7 @@ import { ClassDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { OntologiesSelectors, OntologyProperties, PropToDisplay } from '@dasch-swiss/vre/core/state';
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-info-element',

@@ -10,8 +10,7 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { ProjectBase } from '../project-base';
 import { AddUserComponent } from './add-user/add-user.component';
 

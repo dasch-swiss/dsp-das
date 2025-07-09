@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
-import { map } from 'rxjs';
+import { fromEvent, map, Observable } from 'rxjs';
 
 @Injectable()
 export class MediaPlayerService {

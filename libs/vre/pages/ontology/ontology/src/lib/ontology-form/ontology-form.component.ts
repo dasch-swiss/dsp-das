@@ -15,8 +15,7 @@ import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/use
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, take, takeUntil, tap } from 'rxjs';
 import { OntologyForm, OntologyFormProps } from './ontology-form.type';
 
 export interface NewOntology {

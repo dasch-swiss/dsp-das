@@ -18,8 +18,7 @@ import {
   PropertyInfoObject,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs';
+import { filter, map, Subject, take, takeUntil } from 'rxjs';
 import {
   CreatePropertyFormDialogComponent,
   CreatePropertyFormDialogProps,

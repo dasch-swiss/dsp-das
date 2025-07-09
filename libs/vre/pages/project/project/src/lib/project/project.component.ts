@@ -12,8 +12,7 @@ import {
   ProjectService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, Select, Store } from '@ngxs/store';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs';
+import { combineLatest, filter, map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { ProjectBase } from '../project-base';
 
 type AvailableRoute =

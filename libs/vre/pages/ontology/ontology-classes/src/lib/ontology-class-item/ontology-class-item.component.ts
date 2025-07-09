@@ -26,8 +26,7 @@ import {
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, Select, Store, ofActionSuccessful } from '@ngxs/store';
-import { Observable, Subject, Subscription, combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, combineLatest, map, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
