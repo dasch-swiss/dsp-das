@@ -8,7 +8,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { OntologiesSelectors, ListsFacade } from '@dasch-swiss/vre/core/state';
+import { ListsFacade, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
   DefaultProperty,
