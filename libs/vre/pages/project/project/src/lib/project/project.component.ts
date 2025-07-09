@@ -58,11 +58,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
     private _router: Router,
     protected _store: Store,
     protected _route: ActivatedRoute,
-    _titleService: Title,
-    _projectService: ProjectService
-  ) {
-    super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
-  }
+    private _titleService: Title,
+    private projectService: ProjectService
+  ) {}
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -73,7 +71,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    super.ngOnInit();
     this._router.events
       .pipe(
         takeUntil(this.destroyed),

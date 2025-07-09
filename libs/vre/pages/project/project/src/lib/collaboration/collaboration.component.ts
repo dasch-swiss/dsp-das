@@ -1,15 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import {
-  IKeyValuePairs,
-  LoadProjectMembersAction,
-  ProjectsSelectors,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ReadUser } from '@dasch-swiss/dsp-js';
+import { LoadProjectMembersAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 
@@ -57,12 +52,10 @@ export class CollaborationComponent implements OnInit {
     );
   }
 
-  @Select(ProjectsSelectors.projectMembers) projectMembers$: Observable<IKeyValuePairs<ReadUser>>;
-  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
-  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  @Select(ProjectsSelectors.currentProject) project$: Observable<ReadProject>;
+  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$!: Observable<boolean>;
+  @Select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin) isCurrentProjectAdminOrSysAdmin$!: Observable<boolean>;
+  @Select(UserSelectors.isSysAdmin) isSysAdmin$!: Observable<boolean>;
+  @Select(UserSelectors.user) user$!: Observable<ReadUser>;
 
   constructor(
     protected _route: ActivatedRoute,
@@ -72,9 +65,7 @@ export class CollaborationComponent implements OnInit {
     protected _cd: ChangeDetectorRef,
     protected _actions$: Actions,
     protected _router: Router
-  ) {
-    super(_store, _route, _projectService, _titleService, _router, _cd, _actions$);
-  }
+  ) {}
 
   ngOnInit() {
     this.projectUuid$.subscribe(projectUuid => {

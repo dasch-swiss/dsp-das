@@ -3,18 +3,20 @@
 <div *ngIf="(isProjectsLoading$ | async) === false">
   <div *ngIf="isCurrentProjectAdminOrSysAdmin$ | async" class="content large middle">
     <!-- add user to the project -->
-    <app-add-user
-      *ngIf="(project$ | async)?.status && ((isCurrentProjectAdminOrSysAdmin$ | async) === true)"
-      [projectUuid]="projectUuid"
-      #addUserComponent />
+    <ng-container *ngIf="projectUuid$ | async as projectUuid">
+      <app-add-user
+        *ngIf="(project$ | async)?.status && ((isCurrentProjectAdminOrSysAdmin$ | async) === true)"
+        [projectUuid]="projectUuid"
+        #addUserComponent />
+    </ng-container>
 
     <!-- main content: list of project members -->
 
-  <div class="users-list" *ngIf="project$|async">
-    <app-users-list [project]="project$ | async" [list]="activeProjectMembers$ | async" [status]="true" />
-    <app-users-list [project]="project$ | async" [list]="inactiveProjectMembers$ | async" [status]="false" />
+    <div class="users-list" *ngIf="project$|async">
+      <app-users-list [project]="project$ | async" [list]="activeProjectMembers$ | async" [status]="true" />
+      <app-users-list [project]="project$ | async" [list]="inactiveProjectMembers$ | async" [status]="false" />
+    </div>
   </div>
-</div>
 
   <div *ngIf="(isCurrentProjectAdminOrSysAdmin$ | async) === false" class="content large middle">
     <app-status [status]="403" />
