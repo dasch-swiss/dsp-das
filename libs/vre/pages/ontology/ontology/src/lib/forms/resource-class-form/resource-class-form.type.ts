@@ -10,6 +10,7 @@ export type ResourceClassForm = FormGroup<{
 
 export interface ResourceClassFormData {
   name: string;
+  type: string;
   labels: StringLiteral[];
   comments: StringLiteral[];
 }

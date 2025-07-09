@@ -120,11 +120,12 @@ export class MakeOntologyFor {
 
   static createResourceClass(
     ctx: OntologyContext,
-    { name, labels, comments }: ResourceClassFormData
+    { name, labels, comments, type }: ResourceClassFormData
   ): UpdateOntology<CreateResourceClass> {
     const create = new CreateResourceClass();
     create.name = name;
     create.label = labels;
+    create.type = type;
     create.comment = comments;
     create.subClassOf = [Constants.Resource];
 
