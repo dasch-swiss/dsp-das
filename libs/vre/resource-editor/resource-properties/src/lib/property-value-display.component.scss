@@ -28,39 +28,3 @@
 .icon {
   color: $secondary;
 }
-
-.comment {
-  $comment-color: #ededed;
-
-  div {
-    position: relative;
-    border: 2px solid $comment-color;
-    border-radius: 4px;
-    padding: 8px;
-  }
-
-  /* White (inner) triangle */
-  div:after,
-  div:before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-  }
-
-  div:after {
-    top: -9px;
-    left: 8px; /* moved to right */
-    border-bottom: 10px solid white;
-    border-left: 2px solid white;
-    border-right: 10px solid transparent;
-  }
-
-  div:before {
-    top: -15px;
-    left: 5px; /* moved to right */
-    border-bottom: 15px solid $comment-color;
-    border-left: 2px solid $comment-color;
-    border-right: 15px solid transparent;
-  }
-}

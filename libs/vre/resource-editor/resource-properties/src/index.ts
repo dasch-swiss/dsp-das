@@ -22,6 +22,7 @@ export * from './lib/footnotes.component';
 export * from './lib/footnote-tooltip.component';
 export * from './lib/footnote.directive';
 export * from './lib/footnote-parser.pipe';
+export * from './lib/property-value-display-comment.component';
 
 export * from './lib/property-value-basic-comment.component';
 export * from './lib/paginated-api.service';

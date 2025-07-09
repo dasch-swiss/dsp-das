@@ -10,6 +10,7 @@ import { PropertyValueActionBubbleComponent } from './lib/property-value-action-
 import { PropertyValueAddComponent } from './lib/property-value-add.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
 import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
+import { PropertyValueDisplayCommentComponent } from './lib/property-value-display-comment.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
 import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
@@ -24,6 +25,7 @@ export const ResourcePropertiesComponents = [
   PropertyValueComponent,
   PropertyValueEditComponent,
   PropertyValueDisplayComponent,
+  PropertyValueDisplayCommentComponent,
   PropertyValueUpdateComponent,
   PropertyValueAddComponent,
   PropertyValueToFormComponent,

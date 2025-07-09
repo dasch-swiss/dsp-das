@@ -1,0 +1,35 @@
+`
+.comment {
+  $comment-color: #ededed;
+
+  div {
+    position: relative;
+    border: 2px solid $comment-color;
+    border-radius: 4px;
+    padding: 8px;
+  }
+
+  div:after,
+  div:before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  div:after {
+    top: -9px;
+    left: 8px;
+    border-bottom: 10px solid white;
+    border-left: 2px solid white;
+    border-right: 10px solid transparent;
+  }
+
+  div:before {
+    top: -15px;
+    left: 5px;
+    border-bottom: 15px solid $comment-color;
+    border-left: 2px solid $comment-color;
+    border-right: 15px solid transparent;
+  }
+}
