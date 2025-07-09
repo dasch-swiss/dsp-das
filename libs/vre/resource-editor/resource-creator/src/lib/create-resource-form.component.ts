@@ -18,7 +18,7 @@ import { FileForm, FileRepresentationType, fileValueMapping } from '@dasch-swiss
 import { FormValueGroup, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { finalize, switchMap, take } from 'rxjs/operators';
+import { finalize, switchMap, take } from 'rxjs';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
