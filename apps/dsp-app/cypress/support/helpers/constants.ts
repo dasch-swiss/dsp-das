@@ -1,12 +1,13 @@
-export enum ClassType {
-  Resource = 'Resource',
-  StillImageRepresentation = 'StillImageRepresentation',
-  MovingImageRepresentation = 'MovingImageRepresentation',
-  AudioRepresentation = 'AudioRepresentation',
-  TextRepresentation = 'TextRepresentation',
-  DocumentRepresentation = 'DocumentRepresentation',
-  ArchiveRepresentation = 'ArchiveRepresentation',
-}
+export const CLASS_TYPES = {
+  stillImageRepresentation: {
+    type: 'StillImageRepresentation',
+    label: 'Still image',
+  },
+  textRepresentation: {
+    type: 'TextRepresentation',
+    label: 'Text',
+  },
+} as const;
 
 export enum PropertyType {
   Text = 'Text',

@@ -1,7 +1,7 @@
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { faker } from '@faker-js/faker';
 import { DataModelClassProperty } from '../../models/data-model-class';
-import { ClassType, PropertyType } from '../../support/helpers/constants';
+import { CLASS_TYPES, PropertyType } from '../../support/helpers/constants';
 import ProjectPage from '../../support/pages/project-page';
 
 describe('Data Model Class', () => {
@@ -11,7 +11,9 @@ describe('Data Model Class', () => {
     projectPage.requestProject();
   });
 
-  it('should create new data model class', () => {
+  it('should create new data model class of a certain type', () => {
+    const classType = CLASS_TYPES.textRepresentation;
+
     const textClass: ResourceClassDefinitionWithAllLanguages = {
       id: faker.lorem.word(),
       subClassOf: [],
@@ -39,7 +41,8 @@ describe('Data Model Class', () => {
     cy.createOntology(projectPage);
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
-    cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().should('be.visible').click({ force: true });
+    cy.get(`[data-cy=${classType.type}]`).scrollIntoView().should('be.visible').click({ force: true });
+
     cy.get('[data-cy=name-input]').clear().type(textClass.id);
     cy.get('[data-cy=label-input]').clear().type(textClass.label);
     cy.get('[data-cy=comment-textarea]').type(textClass.comment);
@@ -53,7 +56,7 @@ describe('Data Model Class', () => {
       });
     // The within function is used to scope the search for mat-card-title within the visible class-card. This ensures that Cypress waits for mat-card-title to be available within the class-card.
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
-    cy.get(`[data-cy=${ClassType.Resource}]`).scrollIntoView().should('be.visible').click({ force: true });
+    cy.get(`[data-cy=Resource]`).scrollIntoView().should('be.visible').click({ force: true });
     cy.get('[data-cy=name-input]').clear().type(resourceClass.id);
     cy.get('[data-cy=label-input]').clear().type(resourceClass.label);
     cy.get('[data-cy=comment-textarea]').type(resourceClass.comment);
@@ -64,19 +67,21 @@ describe('Data Model Class', () => {
       .should('be.visible')
       .get('mat-card-title')
       .contains(resourceClass.label.split(' ')[0]);
+    cy.get('[data-cy=class-type-label]').should('be.visible').should('include.text', classType.label);
   });
 
   it('should cancel to create data model class', () => {
+    const classType = CLASS_TYPES.stillImageRepresentation;
     cy.createOntology(projectPage);
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
-    cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().should('be.visible').click({ force: true });
+    cy.get(`[data-cy=${classType.type}]`).scrollIntoView().should('be.visible').click({ force: true });
     cy.get('.mat-mdc-dialog-container').should('be.visible');
     cy.get('[data-cy=cancel-button]').scrollIntoView().should('be.visible').click();
     cy.get('.mat-mdc-dialog-container').should('not.exist');
 
     cy.get('[data-cy=create-class-button]').scrollIntoView().should('be.visible').click();
-    cy.get(`[data-cy=${ClassType.TextRepresentation}]`).scrollIntoView().click({ force: true });
+    cy.get(`[data-cy=${classType.type}]`).scrollIntoView().click({ force: true });
     cy.get('.mat-mdc-dialog-container').should('be.visible');
     cy.get('.cdk-overlay-backdrop-showing').click(-50, -50, { force: true });
     cy.get('.mat-mdc-dialog-container').should('not.exist');
