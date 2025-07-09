@@ -5,7 +5,11 @@ import { FormControl } from '@angular/forms';
   selector: 'app-toggle-value',
   template: `
     <app-nullable-editor [control]="control" [defaultValue]="false">
-      <mat-slide-toggle [formControl]="control" data-cy="bool-toggle" *ngIf="control.value !== null" />
+      <mat-slide-toggle
+        [formControl]="control"
+        data-cy="bool-toggle"
+        *ngIf="control.value !== null"
+        style="padding: 16px" />
     </app-nullable-editor>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

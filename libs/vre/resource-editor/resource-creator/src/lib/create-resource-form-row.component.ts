@@ -21,8 +21,9 @@ import { Component, Input } from '@angular/core';
     `
       .grid-h3 {
         width: 140px;
-        margin-right: 10px;
-        margin-top: 16px;
+        text-align: end;
+        padding: 16px;
+        margin: 0;
         color: rgb(107, 114, 128);
 
         &.with-tooltip {
