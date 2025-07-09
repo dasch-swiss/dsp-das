@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ClassDefinition, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { getClassesToDisplayHelper } from './get-classes-to-display.helper';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,19 +12,26 @@ import { getClassesToDisplayHelper } from './get-classes-to-display.helper';
     </div>
   `,
 })
-export class ResourceClassSidenavComponent {
-  @Input({ required: true }) resClasses!: ResourceClassDefinitionWithAllLanguages[];
+export class ResourceClassSidenavComponent implements OnChanges {
+  @Input({ required: true }) ontology!: ReadOntology;
 
-  get classesToDisplay(): ResourceClassDefinitionWithAllLanguages[] {
-    const classesToDisplay = getClassesToDisplayHelper(this.resClasses);
-    const language = this._localizationService.getCurrentLanguage();
-    return this._sortingService.sortLabelsAlphabetically(classesToDisplay, 'label', language);
-  }
+  classesToDisplay: ResourceClassDefinitionWithAllLanguages[] = [];
 
   constructor(
     private _localizationService: LocalizationService,
     private _sortingService: SortingService
   ) {}
 
-  trackByFn = (index: number, item: ClassDefinition) => `${index}-${item.id}`;
+  ngOnChanges() {
+    const classes = getAllEntityDefinitionsAsArray(this.ontology.classes) as ResourceClassDefinitionWithAllLanguages[];
+    const filtered = classes.filter(resClass => {
+      if (!resClass.subClassOf.length) return false;
+      const [prefix, suffix] = resClass.subClassOf[0].split('#');
+      return !prefix.includes(Constants.StandoffOntology) && !suffix.includes('Standoff');
+    });
+    const lang = this._localizationService.getCurrentLanguage();
+    this.classesToDisplay = this._sortingService.sortLabelsAlphabetically(filtered, 'label', lang);
+  }
+
+  trackByFn = (index: number, item: ResourceClassDefinitionWithAllLanguages) => `${index}-${item.id}`;
 }

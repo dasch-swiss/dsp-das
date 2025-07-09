@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Cardinality, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -91,7 +92,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         <mat-icon>link_off</mat-icon>
         <span>remove property from class</span>
       </button>
-      <button mat-menu-item (click)="clipboard.copy(classProp.propDef.id || '')">
+      <button mat-menu-item (click)="copyPropertyId()">
         <mat-icon>content_copy</mat-icon>
         Copy property id
       </button>
@@ -191,9 +192,10 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
-    public clipboard: Clipboard,
-    private _oes: OntologyEditService,
+    private _clipboard: Clipboard,
     private _dialog: MatDialog,
+    private _notification: NotificationService,
+    private _oes: OntologyEditService,
     private _store: Store
   ) {}
 
@@ -250,6 +252,11 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
       EditPropertyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(propertyData)
     );
+  }
+
+  copyPropertyId() {
+    this._clipboard.copy(this.classProp.propDef.id);
+    this._notification.openSnackBar('Property ID copied to clipboard.');
   }
 
   ngOnDestroy() {

@@ -18,7 +18,7 @@ import { OntologyPageService } from './ontology-page.service';
 @Component({
   selector: 'app-ontology-sidenav',
   template: `
-    <a class="sidenav-link" [routerLink]="['classes']" routerLinkActive="active">Classes</a>
+    <a class="sidenav-link" mat-list-item [routerLink]="['classes']" routerLinkActive="active">Classes</a>
     <button mat-button (click)="ops.toggleExpandClasses()">
       <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
       {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}

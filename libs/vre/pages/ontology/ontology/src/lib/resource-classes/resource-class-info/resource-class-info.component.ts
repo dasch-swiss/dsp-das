@@ -52,8 +52,8 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
-    public clipboard: Clipboard,
     public ops: OntologyPageService,
+    private _clipboard: Clipboard,
     private _dialog: MatDialog,
     private _localizationService: LocalizationService,
     private _dialogService: DialogService,
@@ -126,7 +126,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   }
 
   copyResourceClassId() {
-    this.clipboard.copy(this.resourceClass.id);
+    this._clipboard.copy(this.resourceClass.id);
     this._notification.openSnackBar('Resource class ID copied to clipboard.');
   }
 }

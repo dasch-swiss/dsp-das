@@ -55,6 +55,11 @@ const routes: Routes = [
     children: [
       {
         path: RouteConstants.home,
+        pathMatch: 'full',
+        redirectTo: RouteConstants.projectDescription,
+      },
+      {
+        path: RouteConstants.projectDescription,
         component: DescriptionComponent,
       },
       {
