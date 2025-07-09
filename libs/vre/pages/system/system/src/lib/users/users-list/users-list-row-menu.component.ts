@@ -21,7 +21,6 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
     </button>
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
-      <!-- update user's system admin group membership; only in system admin view -->
       <button
         mat-menu-item
         *ngIf="user.username !== (username$ | async)"
@@ -32,11 +31,8 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
 
       <ng-container *ngIf="user.status">
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
-
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
-
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
-
         <button mat-menu-item (click)="askToDeactivateUser(user.username, user.id)">Suspend user</button>
       </ng-container>
 
