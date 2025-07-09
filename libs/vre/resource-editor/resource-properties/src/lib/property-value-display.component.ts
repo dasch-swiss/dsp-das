@@ -41,7 +41,7 @@ import { PropertyValueService } from './property-value.service';
         </ng-container>
       </div>
 
-      <app-property-value-display-comment />
+      <app-property-value-display-comment [index]="index" />
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
