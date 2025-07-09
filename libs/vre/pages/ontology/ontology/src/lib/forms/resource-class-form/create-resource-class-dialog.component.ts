@@ -22,7 +22,7 @@ import { ResourceClassForm } from './resource-class-form.type';
         [isLoading]="loading"
         [disabled]="form?.invalid"
         (click)="onSubmit()">
-        Update
+        Create
       </button>
     </div>
   `,
