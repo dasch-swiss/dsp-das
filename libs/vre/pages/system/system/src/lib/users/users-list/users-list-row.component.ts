@@ -4,7 +4,7 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 
 @Component({
   selector: 'app-users-list-row',
-  template: ` <span style="display: flex; ">
+  template: `<span style="display: flex">
     <span style="flex: 1; display: flex; align-items: center">
       <span style="width: 50px; margin-right: 16px">
         <img appAdminImage [image]="user.email" [type]="'user'" alt="avatar" style="width: 50px;border-radius: 50px;" />

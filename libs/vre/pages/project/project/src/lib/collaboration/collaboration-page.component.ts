@@ -9,11 +9,11 @@ import { filter, first, map, tap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-collaboration',
-  templateUrl: './collaboration.component.html',
-  styleUrls: ['./collaboration.component.scss'],
+  selector: 'app-collaboration-page',
+  templateUrl: './collaboration-page.component.html',
+  styleUrls: ['./collaboration-page.component.scss'],
 })
-export class CollaborationComponent implements OnInit {
+export class CollaborationPageComponent implements OnInit {
   project$ = this._store.select(ProjectsSelectors.currentProject);
   projectMembers$ = this._store.select(ProjectsSelectors.projectMembers);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);

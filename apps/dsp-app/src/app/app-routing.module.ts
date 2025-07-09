@@ -10,7 +10,7 @@ import {
   OntologyPropertiesComponent,
 } from '@dasch-swiss/vre/pages/ontology/ontology';
 import {
-  CollaborationComponent,
+  CollaborationPageComponent,
   CreateProjectFormPageComponent,
   DescriptionComponent,
   EditProjectFormPageComponent,
@@ -136,7 +136,7 @@ const routes: Routes = [
           },
           {
             path: RouteConstants.collaboration,
-            component: CollaborationComponent,
+            component: CollaborationPageComponent,
           },
         ],
       },
