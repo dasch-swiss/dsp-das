@@ -8,6 +8,7 @@ import { SystemPageComponent } from './lib/system-page.component';
 import { CreateUserDialogComponent } from './lib/users/create-user-dialog.component';
 import { EditPasswordDialogComponent } from './lib/users/edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from './lib/users/manage-project-membership-dialog.component';
+import { UserDescriptionComponent } from './lib/users/users-list/user-description.component';
 import { UsersListRowMenuComponent } from './lib/users/users-list/users-list-row-menu.component';
 import { UsersListRowComponent } from './lib/users/users-list/users-list-row.component';
 import { UsersListComponent } from './lib/users/users-list/users-list.component';
@@ -28,4 +29,5 @@ export const SystemComponents = [
   MembershipComponent,
   UsersListRowComponent,
   UsersListRowMenuComponent,
+  UserDescriptionComponent,
 ];

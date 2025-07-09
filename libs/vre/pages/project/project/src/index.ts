@@ -17,3 +17,6 @@ export * from './lib/legal-settings-licenses.component';
 export * from './lib/create-copyright-holder-dialog.component';
 export * from './lib/resource-metadata/resource-metadata.component';
 export * from './lib/licenses-enabled-table.component';
+
+export * from './lib/collaboration/project-members.component';
+export * from './lib/collaboration/project-members-row.component';

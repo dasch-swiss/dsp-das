@@ -3,22 +3,23 @@
     *ngIf="(project$ | async)?.status && ((isAdmin$ | async) === true)"
     [projectUuid]="(projectUuid$ | async)" />
 
-    <div class="users-list">
-      <!--
-          <app-users-list
-            [project]="project$ | async"
-            [list]="activeProjectMembers$ | async"
-            [status]="true"
-            (refreshParent)="refresh()" />
+  <app-project-members *ngIf="activeProjectMembers$ | async as users" [users]="users" />
+  <div class="users-list">
+    <!--
+                <app-users-list
+                  [project]="project$ | async"
+                  [list]="activeProjectMembers$ | async"
+                  [status]="true"
+                  (refreshParent)="refresh()" />
 
-          <app-users-list
-            [project]="project$ | async"
-            [list]="inactiveProjectMembers$ | async"
-            [status]="false"
-            (refreshParent)="refresh()" />
-            -->
-    </div>
+                <app-users-list
+                  [project]="project$ | async"
+                  [list]="inactiveProjectMembers$ | async"
+                  [status]="false"
+                  (refreshParent)="refresh()" />
+                  -->
   </div>
+</div>
 
 <div *ngIf="(isAdmin$ | async) === false" class="content large middle">
   <app-status [status]="403" />

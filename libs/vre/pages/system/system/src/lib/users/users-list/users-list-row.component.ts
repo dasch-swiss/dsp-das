@@ -5,17 +5,7 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 @Component({
   selector: 'app-users-list-row',
   template: `<span style="display: flex">
-    <span style="flex: 1; display: flex; align-items: center">
-      <span style="width: 50px; margin-right: 16px">
-        <img appAdminImage [image]="user.email" [type]="'user'" alt="avatar" style="width: 50px;border-radius: 50px;" />
-      </span>
-
-      <span>
-        <h5 class="mat-subtitle-1" style="margin-bottom: 0">{{ user.givenName }} {{ user.familyName }}</h5>
-        <span class="mat-subtitle-2">{{ user.username }} | {{ user.email }}</span>
-      </span>
-    </span>
-
+    <app-user-description [user]="user" />
     <mat-chip-listbox *ngIf="isSystemAdmin(user.permissions)" style="padding: 0 16px">
       <mat-chip class="sys-admin-chip">System Admin</mat-chip>
     </mat-chip-listbox>
