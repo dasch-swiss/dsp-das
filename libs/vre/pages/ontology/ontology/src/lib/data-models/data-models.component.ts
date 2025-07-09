@@ -13,8 +13,8 @@ import {
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { take } from 'rxjs/operators';
-import { OntologyFormComponent } from '../ontology-form/ontology-form.component';
+import { take } from 'rxjs';
+import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
 
 @Component({
   selector: 'app-data-models',
