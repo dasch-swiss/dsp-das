@@ -4,9 +4,9 @@
       *ngFor="let group of (projectGroups$ | async); trackBy: trackByFn"
       [value]="group.iri"
       [disabled]="disabled">
-      {{ group.name }}</mat-option
-    >
+      {{ group.name }}
+    </mat-option>
   </mat-select>
 </mat-form-field>
 
-<div *ngIf="(projectGroups$ | async)?.length === 0" class="center">No group defined yet.</div>
+<div *ngIf="(projectGroups$ | async)?.length === 0" class="center">No group</div>
