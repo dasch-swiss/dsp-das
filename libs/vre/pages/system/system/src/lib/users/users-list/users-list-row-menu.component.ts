@@ -25,8 +25,7 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
         mat-menu-item
         *ngIf="user.username !== (username$ | async)"
         (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
-        <span> {{ isSystemAdmin(user.permissions) ? 'Add' : 'Remove' }}</span>
-        <span>as system admin</span>
+        {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
       </button>
 
       <ng-container *ngIf="user.status">

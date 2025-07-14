@@ -5,7 +5,7 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 @Component({
   selector: 'app-users-list-row',
   template: `<span style="display: flex">
-    <app-user-description [user]="user" />
+    <app-user-description [user]="user" style="flex: 1" />
     <mat-chip-listbox *ngIf="isSystemAdmin(user.permissions)" style="padding: 0 16px">
       <mat-chip class="sys-admin-chip">System Admin</mat-chip>
     </mat-chip-listbox>
