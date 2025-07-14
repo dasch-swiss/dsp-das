@@ -10,7 +10,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 @Component({
   selector: 'app-project-members-row',
   template: `
-    <div style="display: flex; align-items: center; gap: 8px;">
+    <div style="display: flex; align-items: center; gap: 16px;">
       <app-user-description [user]="user" style="flex: 1" />
 
       <mat-chip-listbox>
