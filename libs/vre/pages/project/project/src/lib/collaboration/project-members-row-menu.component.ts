@@ -5,10 +5,11 @@ import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadUserAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 
 @Component({
@@ -27,7 +28,7 @@ import { Store } from '@ngxs/store';
       </button>
       <button mat-menu-item (click)="editUser(user)">Edit member</button>
       <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
-      <button mat-menu-item (click)="removeMemberFromProject(user)">Remove member from project</button>
+      <button mat-menu-item (click)="askToRemoveFromProject(user)">Remove member from project</button>
     </mat-menu>
   `,
 })
@@ -40,7 +41,8 @@ export class ProjectMembersRowMenuComponent {
     private _store: Store,
     private _userApiService: UserApiService,
     private _router: Router,
-    private _matDialog: MatDialog
+    private _matDialog: MatDialog,
+    private _dialog: DialogService
   ) {}
 
   isProjectAdmin(permissions: PermissionsData): boolean {
@@ -115,5 +117,11 @@ export class ProjectMembersRowMenuComponent {
           this.refreshParent.emit();
         }
       });
+  }
+
+  askToRemoveFromProject(user: ReadUser) {
+    this._dialog.afterConfirmation('Do you want to remove this user from the project?').subscribe(() => {
+      this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
+    });
   }
 }
