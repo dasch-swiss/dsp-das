@@ -61,12 +61,12 @@ export class ProjectMembersRowMenuComponent {
     this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
       if (currentUser.username !== response.user.username) {
         this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
+        this.refresh();
       } else {
         this._store.dispatch(new LoadUserAction(currentUser.username)).subscribe(() => {
           const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup(currentUser.permissions?.groupsPerProject || {});
           if (isSysAdmin) {
-            this.refreshParent.emit();
+            this.refresh();
           } else {
             this._router
               .navigateByUrl(RouteConstants.refreshRelative, {
@@ -88,12 +88,12 @@ export class ProjectMembersRowMenuComponent {
     this._userApiService.addToProjectMembership(id, this.project.id, true).subscribe(response => {
       if (currentUser.username !== response.user.username) {
         this._store.dispatch(new SetUserAction(response.user));
-        this.refreshParent.emit();
+        this.refresh();
       } else {
         // the logged-in user (system admin) added himself as project admin
         // update the application state of logged-in user and the session
         this._store.dispatch(new LoadUserAction(currentUser.username)).subscribe(() => {
-          this.refreshParent.emit();
+          this.refresh();
         });
       }
     });
@@ -104,7 +104,7 @@ export class ProjectMembersRowMenuComponent {
       .open(EditUserDialogComponent, DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true))
       .afterClosed()
       .subscribe(() => {
-        this.refreshParent.emit();
+        this.refresh();
       });
   }
 
@@ -114,7 +114,7 @@ export class ProjectMembersRowMenuComponent {
       .afterClosed()
       .subscribe(response => {
         if (response === true) {
-          this.refreshParent.emit();
+          this.refresh();
         }
       });
   }
@@ -123,5 +123,9 @@ export class ProjectMembersRowMenuComponent {
     this._dialog.afterConfirmation('Do you want to remove this user from the project?').subscribe(() => {
       this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
     });
+  }
+
+  refresh() {
+    (window as any).location.reload(); // TODO change later on with a service reloading users.
   }
 }
