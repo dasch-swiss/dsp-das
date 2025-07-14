@@ -15,12 +15,21 @@ import { combineLatest, filter, first, map, Observable, tap } from 'rxjs';
         *ngIf="(project$ | async)?.status && (isAdmin$ | async) === true"
         [projectUuid]="projectUuid$ | async" />
 
-      <div style="display: flex; justify-content: center; margin: 16px 0">
-        <app-double-chip-selector [options]="['Active users', 'Inactive users']" [(value)]="showActiveUsers" />
-      </div>
+      <ng-container *ngIf="activeProjectMembers$ | async as activeProjectMembers">
+        <ng-container *ngIf="inactiveProjectMembers$ | async as inactiveProjectMembers">
+          <div style="display: flex; justify-content: center; margin: 16px 0">
+            <app-double-chip-selector
+              [options]="[
+                'Active users (' + activeProjectMembers.length + ')',
+                'Inactive users (' + inactiveProjectMembers.length + ')',
+              ]"
+              [(value)]="showActiveUsers" />
+          </div>
 
-      <app-project-members *ngIf="showActiveUsers && (activeProjectMembers$ | async) as users" [users]="users" />
-      <app-project-members *ngIf="!showActiveUsers && (inactiveProjectMembers$ | async) as users" [users]="users" />
+          <app-project-members *ngIf="showActiveUsers" [users]="activeProjectMembers" />
+          <app-project-members *ngIf="!showActiveUsers" [users]="inactiveProjectMembers" />
+        </ng-container>
+      </ng-container>
     </div>
 
     <div *ngIf="(isAdmin$ | async) === false" class="content large middle">
