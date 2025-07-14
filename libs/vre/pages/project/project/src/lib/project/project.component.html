@@ -27,52 +27,52 @@
           </p>
         </div>
         <mat-list class="main-list">
-          <mat-divider></mat-divider>
-          <mat-list-item
-            [ngClass]="{ 'active': listItemSelected === routeConstants.advancedSearch}"
+          <mat-divider />
+          <a
+            mat-list-item
             class="section-title"
-            (click)="open(routeConstants.advancedSearch)">
+            [routerLink]="[routeConstants.advancedSearch]"
+            routerLinkActive="active">
             <span matListItemTitle class="section-label">
               <mat-icon class="sidenav-prefix-icon">search</mat-icon>
               <p>Advanced Search</p>
             </span>
-          </mat-list-item>
+          </a>
 
-          <mat-divider></mat-divider>
-          <mat-list-item
-            [ngClass]="{ 'active': listItemSelected === routeConstants.project }"
+          <a
+            mat-list-item
             class="section-title"
-            (click)="open(routeConstants.project, projectUuid)">
+            [routerLink]="[routeConstants.projectDescription]"
+            routerLinkActive="active">
             <span matListItemTitle class="section-label">
               <mat-icon class="sidenav-prefix-icon">description</mat-icon>
               <p>Project Description</p>
             </span>
-          </mat-list-item>
+          </a>
 
-          <ng-container *ngIf="isAdmin$ | async">
-            <mat-divider></mat-divider>
-            <mat-list-item
-              [ngClass]="{ 'active': listItemSelected === settingsRoute}"
-              class="section-title footer"
-              (click)="open(settingsRoute)">
-              <span matListItemTitle class="section-label">
-                <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
-                <div>Project Settings</div>
-              </span>
-            </mat-list-item>
-          </ng-container>
-
-          <mat-divider></mat-divider>
-          <mat-list-item
-            [ngClass]="{ 'active': listItemSelected === dataModelsRoute}"
+          <a
+            *ngIf="isAdmin$ | async"
+            mat-list-item
             class="section-title"
-            (click)="open(dataModelsRoute)">
+            [routerLink]="[routeConstants.settings]"
+            routerLinkActive="active">
+            <span matListItemTitle class="section-label">
+              <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
+              <p>Project Settings</p>
+            </span>
+          </a>
+
+          <a
+            mat-list-item
+            class="section-title"
+            [routerLink]="[routeConstants.dataModels]"
+            [class.active]="activeForDataModels$ | async">
             <span matListItemTitle class="section-label">
               <mat-icon class="sidenav-prefix-icon">bubble_chart</mat-icon>
               <p>Data Model</p>
             </span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
+          </a>
+          <mat-divider />
 
           <!-- Project Ontologies -->
           <mat-accordion
@@ -95,11 +95,9 @@
                 </div>
               </mat-expansion-panel-header>
               <!-- list of ontology classes -->
-              <app-ontology-classes
-                [resClasses]="getAllEntityDefinitionsAsArray(onto.classes)"
-                [projectMember]="(isAdmin$ | async) || (isMember$ | async)" />
+              <app-resource-class-sidenav [ontology]="onto" />
             </mat-expansion-panel>
-            <mat-divider></mat-divider>
+            <mat-divider />
           </mat-accordion>
         </mat-list>
       </div>
@@ -118,7 +116,7 @@
         </button>
       </div>
       <div class="main-content">
-        <router-outlet></router-outlet>
+        <router-outlet />
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

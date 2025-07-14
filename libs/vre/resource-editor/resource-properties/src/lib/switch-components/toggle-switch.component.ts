@@ -2,8 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { last, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, last, Subject, takeUntil } from 'rxjs';
 import { PropertyValueService } from '../property-value.service';
 import { IsSwitchComponent } from './is-switch-component.interface';
 
@@ -36,7 +35,7 @@ import { IsSwitchComponent } from './is-switch-component.interface';
         [formControl]="formControl"
         [disabled]="displayMode"
         data-cy="bool-toggle"
-        *ngIf="isVisible"></mat-slide-toggle>
+        *ngIf="isVisible" />
       <button mat-icon-button (click)="cancel()" title="Cancel" *ngIf="isCreatingBoolean">
         <mat-icon>cancel</mat-icon>
       </button>

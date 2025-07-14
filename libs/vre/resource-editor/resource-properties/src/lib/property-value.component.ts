@@ -24,8 +24,7 @@ import {
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Subscription } from 'rxjs';
-import { distinctUntilChanged, finalize, startWith, take, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, startWith, Subscription, take, takeWhile, tap } from 'rxjs';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -48,8 +47,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 
     <div style="display: flex">
       <div class="value" [ngClass]="{ display: displayMode, highlighted: isHighlighted && displayMode }">
-        <ng-container
-          *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }"></ng-container>
+        <ng-container *ngTemplateOutlet="itemTpl; context: { item: group?.controls.item, displayMode: displayMode }" />
 
         <app-property-value-comment [displayMode]="displayMode" [control]="group?.controls.comment" />
       </div>

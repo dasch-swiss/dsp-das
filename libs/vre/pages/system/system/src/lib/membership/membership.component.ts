@@ -18,8 +18,7 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
-import { combineLatest, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +52,7 @@ import { map, takeUntil } from 'rxjs/operators';
         </button>
       </div>
 
-      <mat-divider class="my-2"></mat-divider>
+      <mat-divider class="my-2" />
 
       <div class="d-flex">
         <mat-form-field class="flex-1 mr-2">
