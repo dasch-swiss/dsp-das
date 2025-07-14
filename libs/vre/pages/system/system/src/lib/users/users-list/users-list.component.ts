@@ -28,7 +28,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
           mat-flat-button
           [color]="'primary'"
           (click)="createUser()"
-          *ngIf="status && isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)"
+          *ngIf="isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)"
           style="margin-right: 16px">
           Create new
         </button>
@@ -46,8 +46,6 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   `,
 })
 export class UsersListComponent {
-  @Input({ required: true }) status!: boolean;
-
   _list!: ReadUser[];
   get list(): ReadUser[] {
     return this._list;

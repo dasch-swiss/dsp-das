@@ -15,13 +15,9 @@ import { Store } from '@ngxs/store';
       <app-users-list
         *ngIf="showActiveUsers && (activeUsers$ | async) as activeUsers"
         [list]="activeUsers"
-        [status]="true"
         [isButtonEnabledToCreateNewUser]="true" />
 
-      <app-users-list
-        *ngIf="!showActiveUsers && (inactiveUsers$ | async) as inactiveUsers"
-        [list]="inactiveUsers"
-        [status]="false" />
+      <app-users-list *ngIf="!showActiveUsers && (inactiveUsers$ | async) as inactiveUsers" [list]="inactiveUsers" />
     </ng-container>
 
     <ng-template #loadingTpl>
