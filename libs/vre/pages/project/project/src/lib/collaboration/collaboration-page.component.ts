@@ -9,7 +9,24 @@ import { combineLatest, filter, first, map, Observable, tap } from 'rxjs';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration-page',
-  templateUrl: './collaboration-page.component.html',
+  template: `
+    <div *ngIf="isAdmin$ | async" class="content large middle">
+      <app-add-user
+        *ngIf="(project$ | async)?.status && (isAdmin$ | async) === true"
+        [projectUuid]="projectUuid$ | async" />
+
+      <div style="display: flex; justify-content: center; margin: 16px 0">
+        <app-double-chip-selector [options]="['Active users', 'Inactive users']" [(value)]="showActiveUsers" />
+      </div>
+
+      <app-project-members *ngIf="showActiveUsers && (activeProjectMembers$ | async) as users" [users]="users" />
+      <app-project-members *ngIf="!showActiveUsers && (inactiveProjectMembers$ | async) as users" [users]="users" />
+    </div>
+
+    <div *ngIf="(isAdmin$ | async) === false" class="content large middle">
+      <app-status [status]="403" />
+    </div>
+  `,
   styleUrls: ['./collaboration-page.component.scss'],
 })
 export class CollaborationPageComponent implements OnInit {
@@ -27,6 +44,8 @@ export class CollaborationPageComponent implements OnInit {
     filter(uuid => !!uuid),
     first()
   );
+
+  showActiveUsers = true;
 
   get activeProjectMembers$(): Observable<ReadUser[]> {
     return combineLatest([this.project$, this.projectMembers$]).pipe(
