@@ -25,9 +25,9 @@ import { Store } from '@ngxs/store';
       <button mat-menu-item *ngIf="isProjectAdmin(user.permissions)" (click)="removeProjectAdminMembership()">
         Remove as project admin
       </button>
-
       <button mat-menu-item (click)="editUser(user)">Edit member</button>
       <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
+      <button mat-menu-item (click)="removeMemberFromProject(user)">Remove member from project</button>
     </mat-menu>
   `,
 })
