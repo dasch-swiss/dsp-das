@@ -28,7 +28,9 @@ import { Store } from '@ngxs/store';
       </button>
       <button mat-menu-item (click)="editUser(user)">Edit member</button>
       <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
-      <button mat-menu-item (click)="askToRemoveFromProject(user)">Remove member from project</button>
+      <button mat-menu-item (click)="askToRemoveFromProject(user)" data-cy="remove-member-button">
+        Remove member from project
+      </button>
     </mat-menu>
   `,
 })
