@@ -10,7 +10,7 @@ import { PropertyValueService } from './property-value.service';
       propertyValueService.editModeData.values[index].valueHasComment as comment
     "
     data-cy="property-value-comment"
-    style=" font-size: small">
+    style=" font-size: small; margin-bottom: 16px">
     {{ comment }}
   </div>`,
   styleUrls: [`./property-value-display-comment.component.scss`],

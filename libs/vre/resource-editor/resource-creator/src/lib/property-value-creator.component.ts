@@ -8,18 +8,24 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <div style="display: flex" [ngClass]="{ works: isValid$ | async }" *ngIf="template">
+    <div style="display: flex; position: relative" [ngClass]="{ works: isValid$ | async }" *ngIf="template">
       <div style="flex: 1">
         <ng-container *ngTemplateOutlet="template; context: { item: formArray.controls.item }"></ng-container>
         <app-property-value-basic-comment *ngIf="commentIsNotNull" [control]="formArray.controls.comment" />
       </div>
-      <div style="width: 140px">
-        <button mat-icon-button [matTooltip]="'Delete this value'" [hidden]="isHidden$ | async" (click)="removeValue()">
+      <div style="width: 140px; position: absolute; right: -160px">
+        <button
+          mat-icon-button
+          [matTooltip]="'Delete this value'"
+          [hidden]="isHidden$ | async"
+          (click)="removeValue()"
+          style="color: #acacac">
           <mat-icon>cancel</mat-icon>
         </button>
 
         <button
           mat-icon-button
+          style="color: #acacac"
           [hidden]="isHidden$ | async"
           (click)="toggleCommentValue()"
           [matTooltip]="commentIsNotNull ? 'Remove comment' : 'Add comment'">
