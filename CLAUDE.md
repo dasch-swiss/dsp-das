@@ -39,6 +39,12 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 - `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
 - `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
 
+### OpenAPI Code Generation
+- `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
+- Uses local spec file `libs/vre/3rd-party-services/open-api/api-spec.yaml`
+- To update API spec: `curl -o libs/vre/3rd-party-services/open-api/api-spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml`
+- CI automatically checks for API spec changes and will fail if outdated
+
 ### Library Development
 - `nx run [library-name]:test` - Test specific library
 - `nx run [library-name]:lint` - Lint specific library
