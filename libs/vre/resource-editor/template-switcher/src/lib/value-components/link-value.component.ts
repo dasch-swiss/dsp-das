@@ -26,13 +26,12 @@ import { LinkValueDataService } from './link-value-data.service';
         requireSelection
         [displayWith]="displayResource.bind(this)"
         (closed)="handleNonSelectedValues()">
-        <mat-option *ngIf="searchResultCount === 0" [disabled]="true"> No results were found.</mat-option>
+        <mat-option *ngIf="resources.length === 0 && !loading" [disabled]="true"> No results were found.</mat-option>
         <mat-option
           *ngFor="let rc of _linkValueDataService.resourceClasses; trackBy: trackByResourceClassFn"
           (click)="openCreateResourceDialog($event, rc.id, rc.label)">
           Create New: {{ rc?.label }}
         </mat-option>
-        <mat-option *ngIf="searchResultCount > 0" [disabled]="true"> {{ searchResultCount }} results found</mat-option>
         <mat-option *ngFor="let res of resources; trackBy: trackByResourcesFn" [value]="res.id">
           {{ res.label }}
         </mat-option>
@@ -60,9 +59,7 @@ export class LinkValueComponent implements OnInit {
   loading = false;
   useDefaultValue = true;
   resources: ReadResource[] = [];
-  readResource: ReadResource | undefined;
-
-  searchResultCount = 0;
+  readResource?: ReadResource;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -77,16 +74,15 @@ export class LinkValueComponent implements OnInit {
   }
 
   handleNonSelectedValues() {
-    const text = this._getTextInput();
-    if (text !== this.displayResource(this.control.value)) {
+    if (this.input.nativeElement.value !== this.displayResource(this.control.value)) {
       this.input.nativeElement.value = '';
     }
   }
 
   onInputValueChange() {
-    this.searchResultCount = 0;
     this.resources = [];
-    const searchTerm = this._getTextInput();
+    const searchTerm = this.input.nativeElement.value;
+    console.log('test', this, searchTerm, this.readResource);
     if (!this.readResource || searchTerm?.length < 3) {
       return;
     }
@@ -121,7 +117,6 @@ export class LinkValueComponent implements OnInit {
       )
       .subscribe(res => {
         this.resources = [];
-        this.searchResultCount = 1;
         this.resources.push(res as ReadResource);
         this.control.setValue(myResourceId);
         this.autoComplete.closePanel();
@@ -178,6 +173,7 @@ export class LinkValueComponent implements OnInit {
   private _getResourceProperties() {
     const ontologyIri = this.resourceClassIri.split('#')[0];
     this.loading = true;
+    console.log(ontologyIri, this, 'aa');
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
@@ -186,6 +182,7 @@ export class LinkValueComponent implements OnInit {
         readResource.entityInfo = onto;
         this.readResource = readResource;
 
+        console.log('onto', onto, this);
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.useDefaultValue = false;
         this.loading = false;
