@@ -13,6 +13,7 @@ import {
   template: ` <app-create-resource-form-row [label]="'Image'" style="display: block; margin-bottom: 16px">
     <div style="margin-bottom: 8px; margin-top: 8px">
       <app-double-chip-selector
+        data-cy="image-source-selector"
         [options]="['Upload file', 'Link external IIIF image']"
         [(value)]="isUploadFileTab"
         (valueChange)="onChange($event)" />
