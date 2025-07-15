@@ -2,7 +2,13 @@ import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnInit, ViewCh
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
+import {
+  KnoraApiConnection,
+  ReadLinkValue,
+  ReadResource,
+  ReadValue,
+  ResourceClassDefinition,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
@@ -51,7 +57,7 @@ export class LinkValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string>;
   @Input({ required: true }) propIri!: string;
   @Input({ required: true }) resourceClassIri!: string;
-  @Input({ required: true }) defaultValue!: string;
+  @Input() defaultValue?: ReadValue;
   @ViewChild(MatAutocompleteTrigger) autoComplete!: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) auto!: MatAutocomplete;
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
@@ -128,7 +134,10 @@ export class LinkValueComponent implements OnInit {
   trackByResourceClassFn = (index: number, item: ResourceClassDefinition) => `${index}-${item.id}`;
 
   displayResource(resId: string | null): string {
-    if (this.useDefaultValue) return this.defaultValue;
+    if (this.useDefaultValue) {
+      return (this.defaultValue as unknown as ReadLinkValue | undefined)?.strval ?? '';
+    }
+
     if (resId === null) return '';
     return this.resources.find(res => res.id === resId)?.label ?? '';
   }

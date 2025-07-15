@@ -9,7 +9,6 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
   template: `
     <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
-      [value]="myProperty.values[0]"
       [resourceClassIri]="resourceClassIri"
       (templateFound)="templateFound($event)" />
 

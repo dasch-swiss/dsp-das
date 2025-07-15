@@ -84,7 +84,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     <ng-template #linkEditorTpl let-item="item">
       <app-link-value
         [control]="item"
-        [defaultValue]="''"
+        [defaultValue]="value"
         [propIri]="myPropertyDefinition.id"
         [resourceClassIri]="resourceClassIri" />
     </ng-template>
@@ -99,9 +99,9 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
-  @Input({ required: true }) value!: ReadValue | undefined;
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
   @Input({ required: true }) resourceClassIri!: string;
+  @Input() value?: ReadValue;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
   @ViewChild('intEditorTpl') intEditorTpl!: TemplateRef<any>;
