@@ -27,6 +27,7 @@ export class LinkValueDataService {
   ) {}
 
   onInit(currentOntoIri: string, parentResource: ReadResource, propIri: any) {
+    console.log('test', propIri);
     const linkType = parentResource.getLinkPropertyIriFromLinkValuePropertyIri(propIri);
     this.restrictToResourceClass = parentResource.entityInfo.properties[linkType].objectType || '';
 
