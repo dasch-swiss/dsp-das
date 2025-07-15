@@ -37,7 +37,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #booleanEditorTpl let-item="item">
-      <app-toggle-value [control]="item" />
+      <app-boolean-value [control]="item" />
     </ng-template>
 
     <ng-template #listEditorTpl let-item="item">

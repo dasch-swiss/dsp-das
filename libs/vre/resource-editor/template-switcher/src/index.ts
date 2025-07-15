@@ -15,7 +15,7 @@ export * from './lib/value-components/interval-value.component';
 export * from './lib/value-components/list-value.component';
 export * from './lib/value-components/nested-menu.component';
 export * from './lib/value-components/time-value.component';
-export * from './lib/value-components/toggle-value.component';
+export * from './lib/value-components/boolean-value.component';
 
 export * from './lib/template-viewer-switcher.component';
 export * from './lib/template-editor-switcher.component';

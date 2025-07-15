@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-toggle-value',
+  selector: 'app-boolean-value',
   template: `
     <app-nullable-editor [control]="control" [defaultValue]="false">
       <mat-slide-toggle
@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToggleValueComponent {
+export class BooleanValueComponent {
   @Input({ required: true }) control!: FormControl<boolean | null>;
 
   add() {
