@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
   selector: 'app-nullable-editor',
   template: ` <ng-content *ngIf="control.value !== null; else addTpl" />
     <ng-template #addTpl>
-      <button mat-icon-button (click)="control.setValue(defaultValue)" title="Add">
+      <button mat-icon-button (click)="control.setValue(defaultValue)" title="Add" data-cy="add-value-button">
         <mat-icon>add_box</mat-icon>
       </button>
     </ng-template>`,

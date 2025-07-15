@@ -148,7 +148,7 @@ describe('Resource', () => {
     });
 
     it('boolean', () => {
-      const addBoolToggle = () => cy.get('[data-cy=add-bool-toggle]');
+      const addBoolToggle = () => cy.get('[data-cy=add-value-button]');
       const boolToggle = () => cy.get('[data-cy=bool-toggle]');
       ResourceRequests.resourceRequest(ClassPropertyPayloads.boolean(finalLastModificationDate));
       po.visitAddPage();
@@ -171,6 +171,7 @@ describe('Resource', () => {
     it('color', () => {
       const color = { hex: '#02A2A2', rgb: 'rgb(2, 162, 162)' };
       const editedColor = { hex: '#A3B3F3', rgb: 'rgb(163, 179, 243)' };
+      const addValueButton = () => cy.get('[data-cy=add-value-button]');
 
       const enterNewValue = (value: string) => {
         cy.get('[data-cy=color-picker-input]').click({ force: true });
@@ -186,6 +187,7 @@ describe('Resource', () => {
 
       // create
       po.addInitialLabel();
+      addValueButton().click();
       enterNewValue(color.hex);
       po.clickOnSubmit();
       checkColor(color.rgb);
