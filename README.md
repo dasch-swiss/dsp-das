@@ -88,7 +88,7 @@ The most common commands are defined in `package.json`.
 ### OpenAPI Client Generation
 
 For API client generation and maintenance:
-- [OpenAPI Client Generation](libs/vre/3rd-party-services/open-api/README.md) - Auto-generated TypeScript client for DSP-API
+- [OpenAPI Client Generation](https://github.com/dasch-swiss/dsp-app/blob/main/libs/vre/3rd-party-services/open-api/README.md) - Auto-generated TypeScript client for DSP-API
 
 ### IDE plugins
 
