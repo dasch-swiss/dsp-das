@@ -11,7 +11,7 @@ import { map } from 'rxjs';
   styleUrls: ['./select-group.component.scss'],
 })
 export class SelectGroupComponent implements AfterViewInit {
-  @Input({ required: true }) projectid!: string;
+  @Input({ required: true }) projectId!: string;
   @Input({ required: true }) disabled!: boolean;
   @Input({ required: true }) permissions: any;
   @Output() groupChange = new EventEmitter<any>();
@@ -19,9 +19,8 @@ export class SelectGroupComponent implements AfterViewInit {
   projectGroups$ = this._adminGroupsApi.getAdminGroups().pipe(
     map(response => {
       const projectGroups = response.groups ?? [];
-      const groups = projectGroups.filter(group => group.id === this.projectid);
+      const groups = projectGroups.filter(group => (group.project!.id as unknown as string) === this.projectId);
 
-      console.log('got it', groups);
       return groups.map(
         group =>
           <AutocompleteItem>{

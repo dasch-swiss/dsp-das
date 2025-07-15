@@ -19,7 +19,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 
       <app-select-group
         *ngIf="project"
-        [projectid]="project.id"
+        [projectId]="project.id"
         [permissions]="user.permissions.groupsPerProject[project.id]"
         [disabled]="!user.status"
         (groupChange)="updateGroupsMembership(user.id, $event)" />
