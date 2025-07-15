@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { LoadProjectMembershipAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -22,6 +23,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
         [projectId]="project.id"
         [permissions]="user.permissions.groupsPerProject[project.id]"
         [disabled]="!user.status"
+        [groups]="groups"
         (groupChange)="updateGroupsMembership(user.id, $event)" />
 
       <app-project-members-row-menu [user]="user" *ngIf="project" [project]="project" />
@@ -30,6 +32,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 })
 export class ProjectMembersRowComponent implements OnInit {
   @Input({ required: true }) user!: ReadUser;
+  @Input({ required: true }) groups!: Group[];
 
   project?: ReadProject;
 

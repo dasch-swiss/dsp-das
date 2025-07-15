@@ -1,39 +1,31 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { AdminGroupsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
-import { map } from 'rxjs';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-select-group',
-  templateUrl: './select-group.component.html',
-  styleUrls: ['./select-group.component.scss'],
+  template: `
+    <mat-form-field *ngIf="groups.length > 0">
+      <mat-select placeholder="Permission group" [formControl]="groupCtrl" multiple (selectionChange)="onGroupChange()">
+        <mat-option *ngFor="let group of groups; trackBy: trackByFn" [value]="group.id" [disabled]="disabled">
+          {{ group.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="groups.length === 0" class="center">No group defined yet.</div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectGroupComponent implements AfterViewInit {
   @Input({ required: true }) projectId!: string;
   @Input({ required: true }) disabled!: boolean;
   @Input({ required: true }) permissions: any;
+  @Input({ required: true }) groups!: Group[];
   @Output() groupChange = new EventEmitter<any>();
 
-  projectGroups$ = this._adminGroupsApi.getAdminGroups().pipe(
-    map(response => {
-      const projectGroups = response.groups ?? [];
-      const groups = projectGroups.filter(group => (group.project!.id as unknown as string) === this.projectId);
-
-      return groups.map(
-        group =>
-          <AutocompleteItem>{
-            iri: group.id,
-            name: group.name,
-          }
-      );
-    })
-  );
-
   groupCtrl = new UntypedFormControl();
-
-  constructor(private _adminGroupsApi: AdminGroupsApiService) {}
 
   ngAfterViewInit() {
     setTimeout(() => {
