@@ -17,6 +17,13 @@ This library contains auto-generated TypeScript client code for the DSP-API base
 When the DSP-API changes, the spec file and client files need to be updated in a SEPARATE BRANCH:
 
 ```bash
+# Quick check if update is needed
+npm run check-openapi-sync
+
+# One-command update (recommended)
+npm run update-openapi
+
+# Or manual steps:
 # 1. Update the spec file
 curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml
 
@@ -27,6 +34,12 @@ npm run generate-openapi-module
 git add libs/vre/3rd-party-services/open-api/
 git commit -m "update OpenAPI client for DSP-API changes"
 ```
+
+### Available Scripts
+
+- `npm run check-openapi-sync` - Check if local spec matches remote API
+- `npm run update-openapi` - Update spec file and regenerate client (one command)
+- `npm run generate-openapi-module` - Generate client from existing spec file
 
 ### CI Integration
 

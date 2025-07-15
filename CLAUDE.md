@@ -41,8 +41,9 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### OpenAPI Code Generation
 - `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
+- `npm run check-openapi-sync` - Check if local spec matches remote API
+- `npm run update-openapi` - Update spec file and regenerate client (one command)
 - Uses local spec file `libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml`
-- To update API spec: `curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml`
 - CI automatically checks for API spec changes and will fail if outdated
 
 ### Library Development
