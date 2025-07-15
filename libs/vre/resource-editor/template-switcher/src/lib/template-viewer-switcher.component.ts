@@ -21,8 +21,12 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
 @Component({
   selector: 'app-template-viewer-switcher',
   template: `
-    <ng-template #basicDisplayTpl let-item="item">
-      <span>{{ item }}</span>
+    <ng-template #textDisplayTpl let-item="item">
+      <span>{{ item.text }}</span>
+    </ng-template>
+
+    <ng-template #intDisplayTpl let-item="item">
+      <span>{{ item.int }}</span>
     </ng-template>
 
     <ng-template #booleanDisplayTpl let-item="item">
@@ -74,6 +78,7 @@ export class TemplateViewerSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
   @Output() templateFound = new EventEmitter<TemplateRef<any>>();
 
+  @ViewChild('intDisplayTpl') intDisplayTpl!: TemplateRef<any>;
   @ViewChild('booleanDisplayTpl') booleanDisplayTpl!: TemplateRef<any>;
   @ViewChild('colorDisplayTpl') colorDisplayTpl!: TemplateRef<any>;
   @ViewChild('textHtmlDisplayTpl') textHtmlDisplayTpl!: TemplateRef<any>;
@@ -85,7 +90,7 @@ export class TemplateViewerSwitcherComponent implements AfterViewInit {
   @ViewChild('geoNameDisplayTpl') geoNameDisplayTpl!: TemplateRef<any>;
   @ViewChild('linkDisplayTpl') linkDisplayTpl!: TemplateRef<any>;
   @ViewChild('uriDisplayTpl') uriDisplayTpl!: TemplateRef<any>;
-  @ViewChild('basicDisplayTpl') basicDisplayTpl!: TemplateRef<any>;
+  @ViewChild('textDisplayTpl') textDisplayTpl!: TemplateRef<any>;
 
   @ViewChild('defaultDisplayTpl') defaultDisplayTpl!: TemplateRef<any>;
 
@@ -101,7 +106,7 @@ export class TemplateViewerSwitcherComponent implements AfterViewInit {
     switch (this.propertyDefinition.objectType) {
       case Constants.IntValue:
       case Constants.DecimalValue:
-        return this.basicDisplayTpl;
+        return this.intDisplayTpl;
       case Constants.BooleanValue:
         return this.booleanDisplayTpl;
       case Constants.ColorValue:
@@ -156,7 +161,7 @@ export class TemplateViewerSwitcherComponent implements AfterViewInit {
         return this.richTextDisplayTpl;
       case Constants.GuiTextarea:
       default:
-        return this.basicDisplayTpl;
+        return this.textDisplayTpl;
     }
   }
 }

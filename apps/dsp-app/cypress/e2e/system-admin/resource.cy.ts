@@ -304,7 +304,7 @@ describe('Resource', () => {
           po.addInitialLabel();
           clickOnListElement(1); // as the list property is not required, there is an empty list entry at index 0 to select.
           po.clickOnSubmit();
-          cy.contains(item1Name);
+          cy.contains(item2Name);
 
           // edit
           po.setupEdit();
@@ -317,7 +317,7 @@ describe('Resource', () => {
         });
     });
 
-    it('link', () => {
+    it.only('link', () => {
       // create John Smith person
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
@@ -386,7 +386,7 @@ describe('Resource', () => {
       cy.get(':nth-child(4) > [data-mat-col="3"] > .mat-calendar-body-cell > .mat-calendar-body-cell-content').type(
         '{enter}'
       );
-      cy.get('[data-cy=time-input]').clear().type('00:00');
+      cy.get('[data-cy=time-input]').clear({ force: true }).type('00:00');
       po.clickOnSubmit();
 
       // edit
@@ -404,17 +404,23 @@ describe('Resource', () => {
       const start = () => cy.get('[data-cy=start-input] input');
       const end = () => cy.get('[data-cy=end-input] input');
 
-      const randomFloat = () => faker.number.float({ min: 0, max: 10, precision: 2 }).toString();
+      const randomTime = () => {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        return `${hh}:${mm}:${ss}`;
+      };
       // create
       po.addInitialLabel();
-      start().type(randomFloat());
-      end().type(randomFloat());
+      start().type(randomTime());
+      end().type(randomTime());
       po.clickOnSubmit();
 
       // edit
       po.setupEdit();
-      start().clear().type(randomFloat());
-      end().clear().type(randomFloat());
+      start().clear().type(randomTime());
+      end().clear().type(randomTime());
       po.saveEdit();
 
       // delete

@@ -44,7 +44,7 @@ import { LinkValueDataService } from './link-value-data.service';
           (click)="openCreateResourceDialog($event, rc.id, rc.label)">
           Create New: {{ rc?.label }}
         </mat-option>
-        <mat-option *ngIf="searchResultCount > 0" [disabled]="true"> {{ searchResultCount }} results found </mat-option>
+        <mat-option *ngIf="searchResultCount > 0" [disabled]="true"> {{ searchResultCount }} results found</mat-option>
         <mat-option *ngFor="let res of resources; trackBy: trackByResourcesFn" [value]="res.id">
           {{ res.label }}
         </mat-option>
@@ -190,6 +190,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   private _search(searchTerm: string, offset = 0) {
     this.cancelPreviousSearchRequest$.next();
     const resourceClassIri = this._getRestrictToResourceClass(this.readResource as ReadResource)!;
+    console.log('ss', searchTerm);
     this._dspApiConnection.v2.search
       .doSearchByLabel(searchTerm, offset, {
         limitToResourceClass: resourceClassIri,
