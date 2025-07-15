@@ -87,6 +87,7 @@ export class LinkValueComponent implements OnInit {
     }
 
     this.loading = true;
+    console.log('loading', this.loading);
     this._search(searchTerm);
   }
 
@@ -142,7 +143,6 @@ export class LinkValueComponent implements OnInit {
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$),
         expand(response => {
-          console.log('more results', response.mayHaveMoreResults);
           if (response.mayHaveMoreResults) {
             offset += 1;
             return this._searchApi(searchTerm, offset, resourceClassIri);
@@ -152,12 +152,12 @@ export class LinkValueComponent implements OnInit {
         }),
         finalize(() => {
           this.loading = false;
-          console.log('finalize', this.loading);
+          this._cd.detectChanges();
         })
       )
       .subscribe(response => {
         this.resources = response.resources;
-        console.log('loading', this.loading);
+        console.log('test loading', this.loading);
         this._cd.detectChanges();
       });
   }
@@ -174,15 +174,9 @@ export class LinkValueComponent implements OnInit {
 
   private _getResourceProperties() {
     const ontologyIri = this.resourceClassIri.split('#')[0];
-    this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(ontologyIri)
-      .pipe(
-        switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
+      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
       .subscribe(onto => {
         const readResource = new ReadResource();
         readResource.entityInfo = onto;
