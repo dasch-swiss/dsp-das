@@ -142,6 +142,7 @@ export class LinkValueComponent implements OnInit {
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$),
         expand(response => {
+          console.log('more results', response.mayHaveMoreResults);
           if (response.mayHaveMoreResults) {
             offset += 1;
             return this._searchApi(searchTerm, offset, resourceClassIri);
@@ -151,10 +152,12 @@ export class LinkValueComponent implements OnInit {
         }),
         finalize(() => {
           this.loading = false;
+          console.log('finalize', this.loading);
         })
       )
       .subscribe(response => {
         this.resources = response.resources;
+        console.log('loading', this.loading);
         this._cd.detectChanges();
       });
   }
@@ -174,7 +177,12 @@ export class LinkValueComponent implements OnInit {
     this.loading = true;
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(ontologyIri)
-      .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
+      .pipe(
+        switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
       .subscribe(onto => {
         const readResource = new ReadResource();
         readResource.entityInfo = onto;
@@ -182,8 +190,7 @@ export class LinkValueComponent implements OnInit {
 
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.useDefaultValue = false;
-        this.loading = false;
-        this._cd.markForCheck();
+        this._cd.detectChanges();
       });
   }
 }
