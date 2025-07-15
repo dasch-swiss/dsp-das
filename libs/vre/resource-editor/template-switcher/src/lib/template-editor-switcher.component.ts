@@ -82,7 +82,11 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #linkEditorTpl let-item="item">
-      <app-link-value [control]="item" [defaultValue]="''" [propIri]="''" [resourceClassIri]="resourceClassIri" />
+      <app-link-value
+        [control]="item"
+        [defaultValue]="''"
+        [propIri]="myPropertyDefinition.id"
+        [resourceClassIri]="resourceClassIri" />
     </ng-template>
 
     <ng-template #uriEditorTpl let-item="item">
