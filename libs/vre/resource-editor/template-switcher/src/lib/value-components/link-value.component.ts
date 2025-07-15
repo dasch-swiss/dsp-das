@@ -82,7 +82,6 @@ export class LinkValueComponent implements OnInit {
   onInputValueChange() {
     this.resources = [];
     const searchTerm = this.input.nativeElement.value;
-    console.log('test', this, searchTerm, this.readResource);
     if (!this.readResource || searchTerm?.length < 3) {
       return;
     }
@@ -173,7 +172,6 @@ export class LinkValueComponent implements OnInit {
   private _getResourceProperties() {
     const ontologyIri = this.resourceClassIri.split('#')[0];
     this.loading = true;
-    console.log(ontologyIri, this, 'aa');
     this._dspApiConnection.v2.ontologyCache
       .reloadCachedItem(ontologyIri)
       .pipe(switchMap(() => this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(this.resourceClassIri)))
@@ -182,15 +180,10 @@ export class LinkValueComponent implements OnInit {
         readResource.entityInfo = onto;
         this.readResource = readResource;
 
-        console.log('onto', onto, this);
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
         this.useDefaultValue = false;
         this.loading = false;
         this._cd.markForCheck();
       });
-  }
-
-  private _getTextInput() {
-    return this.input.nativeElement.value;
   }
 }
