@@ -21,6 +21,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   template: `
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
+      [resourceClassIri]="resourceClassIri"
       [value]="readValue"
       (templateFound)="foundTemplate($event)" />
 
@@ -51,6 +52,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;
+  @Input({ required: true }) resourceClassIri!: string;
+
   @Output() afterEdit = new EventEmitter<FormValueGroup>();
   @Output() afterUndo = new EventEmitter();
   template?: TemplateRef<any>;

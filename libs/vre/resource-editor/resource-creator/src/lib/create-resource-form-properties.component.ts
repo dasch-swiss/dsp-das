@@ -14,7 +14,10 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
           (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
         "
         [tooltip]="prop.propDef.comment">
-        <app-property-values-creator [myProperty]="prop" [formArray]="formGroup.controls[prop.propDef.id]" />
+        <app-property-values-creator
+          [myProperty]="prop"
+          [formArray]="formGroup.controls[prop.propDef.id]"
+          [resourceClassIri]="resourceClassIri" />
       </app-create-resource-form-row>
     </div>
   `,

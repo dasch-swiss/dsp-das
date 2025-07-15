@@ -10,6 +10,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
       [value]="myProperty.values[0]"
+      [resourceClassIri]="resourceClassIri"
       (templateFound)="templateFound($event)" />
 
     <app-property-value-creator
@@ -30,6 +31,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueArray;
+  @Input({ required: true }) resourceClassIri!: string;
 
   template!: TemplateRef<any>;
   Cardinality = Cardinality;
