@@ -129,10 +129,10 @@ jobs:
         run: curl -o /tmp/latest-spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml
       - name: Compare specs
         run: |
-          if ! diff -q libs/vre/3rd-party-services/open-api/api-spec.yaml /tmp/latest-spec.yaml > /dev/null; then
+          if ! diff -q libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml /tmp/latest-spec.yaml > /dev/null; then
             echo "❌ API spec has changed!"
             echo "Please update the spec file and regenerate OpenAPI code."
-            echo "Run: curl -o libs/vre/3rd-party-services/open-api/api-spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml"
+            echo "Run: curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml"
             echo "Then: npm run generate-openapi-module"
             exit 1
           else
