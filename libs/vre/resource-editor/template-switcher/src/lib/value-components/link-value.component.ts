@@ -1,22 +1,10 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostBinding,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
-import { debounceTime, filter, finalize, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { filter, finalize, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
@@ -56,9 +44,9 @@ import { LinkValueDataService } from './link-value-data.service';
       <mat-error *ngIf="control.errors as errors">{{ errors | humanReadableError }}</mat-error>
     </mat-form-field>
   `,
-  providers: [LinkValueDataService, MatAutocompleteOptionsScrollDirective],
+  providers: [LinkValueDataService],
 })
-export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LinkValueComponent implements OnInit {
   private cancelPreviousCountRequest$ = new Subject<void>();
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
@@ -69,9 +57,7 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatAutocompleteTrigger) autoComplete!: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) auto!: MatAutocomplete;
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
-  @HostBinding('attr.scroll') matAutocompleteOptionsScrollDirective: MatAutocompleteOptionsScrollDirective | undefined;
 
-  destroyed$ = new Subject<void>();
   loading = false;
   useDefaultValue = true;
   resources: ReadResource[] = [];
@@ -90,10 +76,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this._getResourceProperties();
-  }
-
-  ngAfterViewInit() {
-    this._initAutocompleteScroll();
   }
 
   handleNonSelectedValues() {
@@ -168,11 +150,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.resources.find(res => res.id === resId)?.label ?? '';
   }
 
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
-
   private _getResourcesListCount(searchValue: string, resourceClassIri: string): Observable<number> {
     this.cancelPreviousCountRequest$.next();
     if (!searchValue || searchValue.length <= 2 || typeof searchValue !== 'string') return of(0);
@@ -214,23 +191,6 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
     return resource.entityInfo.properties[linkType].objectType;
   }
 
-  private _initAutocompleteScroll() {
-    this.matAutocompleteOptionsScrollDirective = new MatAutocompleteOptionsScrollDirective(this.auto);
-    this.matAutocompleteOptionsScrollDirective.scrollEvent
-      .pipe(
-        filter(() => {
-          return !this.loading && this.searchResultCount > this.resources.length;
-        }),
-        takeUntil(this.destroyed$),
-        map(() => {
-          this.loading = true;
-          this._cd.markForCheck();
-        }),
-        debounceTime(300)
-      )
-      .subscribe(() => this._search(this._getTextInput(), this.nextPageNumber));
-  }
-
   private _getResourceProperties() {
     const ontologyIri = this.resourceClassIri.split('#')[0];
     this.loading = true;
@@ -240,9 +200,9 @@ export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(onto => {
         const readResource = new ReadResource();
         readResource.entityInfo = onto;
+        this.readResource = readResource;
 
         this._linkValueDataService.onInit(ontologyIri, readResource, this.propIri);
-        this.readResource = readResource;
         this.useDefaultValue = false;
         this.loading = false;
         this._cd.markForCheck();
