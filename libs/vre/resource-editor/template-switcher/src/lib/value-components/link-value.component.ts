@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnInit, ViewCh
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import { KnoraApiConnection, ReadResource, ReadResourceSequence, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadResource, ResourceClassDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { filter, finalize, map, Observable, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { EMPTY, expand, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../create-resource-dialog.component';
 import { LinkValueDataService } from './link-value-data.service';
 
@@ -47,7 +47,6 @@ import { LinkValueDataService } from './link-value-data.service';
   providers: [LinkValueDataService],
 })
 export class LinkValueComponent implements OnInit {
-  private cancelPreviousCountRequest$ = new Subject<void>();
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
   @Input({ required: true }) control!: FormControl<string>;
@@ -64,7 +63,6 @@ export class LinkValueComponent implements OnInit {
   readResource: ReadResource | undefined;
 
   searchResultCount = 0;
-  nextPageNumber = 0;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -87,7 +85,6 @@ export class LinkValueComponent implements OnInit {
 
   onInputValueChange() {
     this.searchResultCount = 0;
-    this.nextPageNumber = 0;
     this.resources = [];
     const searchTerm = this._getTextInput();
     if (!this.readResource || searchTerm?.length < 3) {
@@ -95,14 +92,6 @@ export class LinkValueComponent implements OnInit {
     }
 
     this.loading = true;
-    const resourceClassIri = this._getRestrictToResourceClass(this.readResource as ReadResource)!;
-    this._getResourcesListCount(searchTerm, resourceClassIri)
-      .pipe(take(1))
-      .subscribe(count => {
-        this.searchResultCount = count;
-        this._cd.markForCheck();
-      });
-
     this._search(searchTerm);
   }
 
@@ -150,41 +139,36 @@ export class LinkValueComponent implements OnInit {
     return this.resources.find(res => res.id === resId)?.label ?? '';
   }
 
-  private _getResourcesListCount(searchValue: string, resourceClassIri: string): Observable<number> {
-    this.cancelPreviousCountRequest$.next();
-    if (!searchValue || searchValue.length <= 2 || typeof searchValue !== 'string') return of(0);
-
-    return this._dspApiConnection.v2.search
-      .doSearchByLabelCountQuery(searchValue, {
-        limitToResourceClass: resourceClassIri,
-      })
-      .pipe(
-        takeUntil(this.cancelPreviousCountRequest$),
-        map(response => response.numberOfResults)
-      );
-  }
-
-  private _search(searchTerm: string, offset = 0) {
+  private _search(searchTerm: string) {
+    let offset = 0;
     this.cancelPreviousSearchRequest$.next();
     const resourceClassIri = this._getRestrictToResourceClass(this.readResource as ReadResource)!;
-    console.log('ss', searchTerm);
-    this._dspApiConnection.v2.search
-      .doSearchByLabel(searchTerm, offset, {
-        limitToResourceClass: resourceClassIri,
-      })
+
+    this._searchApi(searchTerm, offset, resourceClassIri)
       .pipe(
         takeUntil(this.cancelPreviousSearchRequest$),
-        take(1),
+        expand(response => {
+          if (response.mayHaveMoreResults) {
+            offset += 1;
+            return this._searchApi(searchTerm, offset, resourceClassIri);
+          } else {
+            return EMPTY;
+          }
+        }),
         finalize(() => {
           this.loading = false;
         })
       )
       .subscribe(response => {
-        this.resources = this.resources.concat((response as ReadResourceSequence).resources);
-        this.nextPageNumber += 1;
-        this._cd.markForCheck();
+        this.resources = response.resources;
+        this._cd.detectChanges();
       });
   }
+
+  private _searchApi = (searchTerm: string, offset: number, resourceClassIri: string) =>
+    this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, offset, {
+      limitToResourceClass: resourceClassIri,
+    });
 
   private _getRestrictToResourceClass(resource: ReadResource) {
     const linkType = resource.getLinkPropertyIriFromLinkValuePropertyIri(this.propIri);
