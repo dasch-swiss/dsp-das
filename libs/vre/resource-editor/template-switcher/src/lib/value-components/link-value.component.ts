@@ -87,7 +87,6 @@ export class LinkValueComponent implements OnInit {
     }
 
     this.loading = true;
-    console.log('loading', this.loading);
     this._search(searchTerm);
   }
 
@@ -157,7 +156,6 @@ export class LinkValueComponent implements OnInit {
       )
       .subscribe(response => {
         this.resources = response.resources;
-        console.log('test loading', this.loading);
         this._cd.detectChanges();
       });
   }
