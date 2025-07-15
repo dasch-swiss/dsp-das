@@ -3,10 +3,9 @@ import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { LoadProjectMembershipAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 
 @Component({
   selector: 'app-project-members-row',
@@ -21,6 +20,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
       <app-select-group
         *ngIf="project"
         [projectId]="project.id"
+        [user]="user"
         [permissions]="user.permissions.groupsPerProject[project.id]"
         [disabled]="!user.status"
         [groups]="groups"
@@ -44,37 +44,6 @@ export class ProjectMembersRowComponent implements OnInit {
   ngOnInit() {
     this._store.select(ProjectsSelectors.currentProject).subscribe(project => {
       this.project = project;
-    });
-  }
-
-  updateGroupsMembership(userIri: string, groups: string[]): void {
-    if (!groups) {
-      return;
-    }
-
-    const currentUserGroups: string[] = [];
-    this._userApiService.getGroupMembershipsForUser(userIri).subscribe(response => {
-      for (const group of response.groups) {
-        currentUserGroups.push(group.id);
-      }
-
-      const removeOldGroup$ = from(currentUserGroups).pipe(
-        filter(oldGroup => groups.indexOf(oldGroup) === -1), // Filter out groups that are no longer in 'groups'
-        mergeMap(oldGroup => this._userApiService.removeFromGroupMembership(userIri, oldGroup).pipe(take(1)))
-      );
-
-      const addNewGroup$ = from(groups).pipe(
-        filter(newGroup => currentUserGroups.indexOf(newGroup) === -1), // Filter out groups that are already in 'currentUserGroups'
-        mergeMap(newGroup => this._userApiService.addToGroupMembership(userIri, newGroup).pipe(take(1)))
-      );
-
-      merge(removeOldGroup$, addNewGroup$)
-        .pipe(takeLast(1))
-        .subscribe(() => {
-          if (this.project?.id) {
-            this._store.dispatch(new LoadProjectMembershipAction(this.project.id));
-          }
-        });
     });
   }
 
