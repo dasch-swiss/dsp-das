@@ -41,10 +41,11 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### OpenAPI Code Generation
 - `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
-- `npm run check-openapi-sync` - Check if local spec matches remote API
+- `npm run check-openapi-sync` - Check if local spec matches remote API (simple diff)
 - `npm run update-openapi` - Update spec file and regenerate client (one command)
 - Uses local spec file `libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml`
-- CI automatically checks for API spec changes and will fail if outdated
+- CI automatically checks for API spec changes using smart diff (ignores metadata)
+- CI only fails on meaningful changes (endpoints, schemas, parameters)
 
 ### Library Development
 - `nx run [library-name]:test` - Test specific library

@@ -37,7 +37,7 @@ git commit -m "update OpenAPI client for DSP-API changes"
 
 ### Available Scripts
 
-- `npm run check-openapi-sync` - Check if local spec matches remote API
+- `npm run check-openapi-sync` - Check if local spec matches remote API (simple diff)
 - `npm run update-openapi` - Update spec file and regenerate client (one command)
 - `npm run generate-openapi-module` - Generate client from existing spec file
 
@@ -45,7 +45,12 @@ git commit -m "update OpenAPI client for DSP-API changes"
 
 The GitHub Actions workflow includes a `check-openapi-sync` job that:
 - Downloads the latest API spec from `https://api.dev.dasch.swiss/api/docs/docs.yaml`
-- Compares it with the stored `dsp-api_spec.yaml`
-- Fails CI if they differ, with instructions on how to update
+- Uses smart diff that ignores metadata (versions, descriptions, examples, tags)
+- Only fails CI on meaningful changes (endpoints, schemas, parameters)
+- Provides clear instructions on how to update when changes are detected
 
-This ensures the generated client code stays in sync with the actual API.
+**Local vs CI checking:**
+- **Local**: `npm run check-openapi-sync` uses simple diff (may show false positives)
+- **CI**: Uses smart diff to avoid unnecessary failures from version bumps or doc changes
+
+This ensures the generated client code stays in sync with actual API changes.
