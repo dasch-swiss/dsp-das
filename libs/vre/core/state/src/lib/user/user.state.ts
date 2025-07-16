@@ -3,7 +3,7 @@ import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { Action, State, StateContext } from '@ngxs/store';
 import { map, take, tap } from 'rxjs';
-import { AddUserToProjectMembershipAction, SetProjectMemberAction } from '../projects/projects.actions';
+import { AddUserToProjectMembershipAction } from '../projects/projects.actions';
 import {
   CreateUserAction,
   LoadUserAction,
@@ -71,7 +71,7 @@ export class UserState {
     }
 
     ctx.setState({ ...state, isLoading: false });
-    ctx.dispatch([new SetUserProjectGroupsAction(user), new SetProjectMemberAction(user)]);
+    ctx.dispatch([new SetUserProjectGroupsAction(user)]);
   }
 
   @Action(RemoveUserAction)
@@ -184,7 +184,6 @@ export class UserState {
           }
           if ((<ReadUser>state.user).id === response.user.id) {
             state.user = response.user;
-            ctx.dispatch([new SetProjectMemberAction(state.user)]);
           }
 
           state.isLoading = false;

@@ -1,19 +1,11 @@
 import { Params } from '@angular/router';
-import {
-  Constants,
-  ProjectRestrictedViewSettings,
-  ReadGroup,
-  ReadProject,
-  ReadUser,
-  StoredProject,
-} from '@dasch-swiss/dsp-js';
+import { Constants, ProjectRestrictedViewSettings, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
-import { IKeyValuePairs } from '../model-interfaces';
 import { ResourceSelectors } from '../resource/resource.selectors';
 import { RouterSelectors } from '../router/router.selector';
 import { UserSelectors } from '../user/user.selectors';
@@ -52,16 +44,6 @@ export class ProjectsSelectors {
   @Selector([ProjectsState])
   static hasLoadingErrors(state: ProjectsStateModel): boolean {
     return state.hasLoadingErrors;
-  }
-
-  @Selector([ProjectsState])
-  static projectMembers(state: ProjectsStateModel): IKeyValuePairs<ReadUser> {
-    return state.projectMembers;
-  }
-
-  @Selector([ProjectsState])
-  static projectGroups(state: ProjectsStateModel): IKeyValuePairs<ReadGroup> {
-    return state.projectGroups;
   }
 
   @Selector([ProjectsState])

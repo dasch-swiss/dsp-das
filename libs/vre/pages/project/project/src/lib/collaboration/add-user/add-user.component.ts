@@ -1,37 +1,76 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiResponseData, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
+import { AdminUsersApiService, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { LoadProjectMembersAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
-import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { combineLatest, map, Observable, startWith, Subject, take, takeUntil } from 'rxjs';
+import { combineLatest, map, startWith, Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-user',
-  templateUrl: './add-user.component.html',
+  template: `
+    <div class="app-toolbar transparent more-space-bottom">
+      <div class="app-toolbar-row toolbar-subtitle">
+        <h3 class="mat-body subtitle">{{ 'pages.project.addUser.description' | translate }}</h3>
+      </div>
+      <div class="app-toolbar-row toolbar-form">
+        <h2 class="mat-headline-6">{{ 'pages.project.addUser.title' | translate }}</h2>
+
+        <span class="fill-remaining-space"></span>
+
+        <span class="app-toolbar-action select-form">
+          <div class="form-content">
+            <mat-form-field class="large-field select-user">
+              <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
+              <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
+
+              <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
+                <mat-option *ngIf="!users?.length" class="loading-option">
+                  <div class="loading-container">
+                    <mat-spinner diameter="20" />
+                    <span>{{ 'pages.project.addUser.usersLoading' | translate }}</span>
+                  </div>
+                </mat-option>
+                <mat-option
+                  *ngFor="let user of filteredUsers$ | async; trackBy: trackByFn"
+                  [value]="user.id"
+                  [disabled]="isMember(user)">
+                  {{ getLabel(user) }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </span>
+
+        <span class="fill-remaining-space"></span>
+
+        <span class="app-toolbar-action select-form">
+          <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
+            {{ 'pages.project.addUser.newUser' | translate }}
+          </button>
+        </span>
+      </div>
+    </div>
+  `,
   styleUrls: ['./add-user.component.scss'],
 })
-export class AddUserComponent implements OnInit, OnDestroy {
-  @Input() projectUuid: string;
+export class AddUserComponent implements OnDestroy {
+  @Input({ required: true }) projectUuid!: string;
 
   private readonly _destroyed$: Subject<void> = new Subject<void>();
-  selectUserForm: FormGroup;
 
-  /**
-   * list of all users
-   */
+  usernameControl = new FormControl<string | null>(null);
+
   users: ReadUser[] = [];
-  projectMembers: string[] = [];
-
-  /**
-   * filter users while typing (autocomplete)
-   */
-  filteredUsers$: Observable<ReadUser[]>;
+  filteredUsers$ = combineLatest([
+    this.usernameControl.valueChanges.pipe(
+      startWith(null) // initial empty string value for autocomplete to open on focus
+    ),
+    this._adminUsersApiService.getAdminUsers().pipe(map(response => response.users || [])),
+  ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   get projectIri(): string {
     return this._projectService.uuidToIri(this.projectUuid);
@@ -41,87 +80,40 @@ export class AddUserComponent implements OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
+    private _adminUsersApiService: AdminUsersApiService,
     private fb: FormBuilder,
-    private _projectService: ProjectService,
-    private _store: Store,
-    private _cd: ChangeDetectorRef
+    private _projectService: ProjectService
   ) {}
 
-  ngOnInit() {
-    this.selectUserForm = this.fb.group({
-      addUser: new FormControl<ReadUser | null>(null),
-    });
-
-    combineLatest(
-      this._dspApiConnection.admin.usersEndpoint.getUsers(),
-      this._store.select(ProjectsSelectors.projectMembers)
-    )
-      .pipe(takeUntil(this._destroyed$))
-      .subscribe(([response, projectMembers]) => {
-        if (response && response instanceof ApiResponseData && projectMembers[this.projectIri]) {
-          this.projectMembers = projectMembers[this.projectIri].value.map((member: ReadUser) => member.id);
-          this._populateUserForm(response.body.users);
-        }
-      });
-  }
-
-  private _populateUserForm(users: ReadUser[]) {
-    this.users = users.sort((u1: ReadUser, u2: ReadUser) => {
-      if (this.fullName(u1) < this.fullName(u2)) {
-        return -1;
-      } else if (this.fullName(u1) > this.fullName(u2)) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
-    this.filteredUsers$ = this.selectUserForm.controls['addUser'].valueChanges.pipe(
-      startWith(''), // initial empty string value for autocomplete to open on focus
-      map((filterVal: string) => (filterVal ? this._filter(this.users, filterVal) : this.users))
-    );
-    this._cd.markForCheck();
-  }
-
-  private _filter(list: ReadUser[], filterVal: string) {
+  private _filter(list: UserDto[], filterVal: string) {
     return list.filter(user => this.fullName(user).toLowerCase().includes(filterVal.toLowerCase()));
   }
 
-  getLabel(user: ReadUser): string {
+  getLabel(user: UserDto): string {
     const usernameLabel = user.username ? `${user.username} | ` : '';
     const emailLabel = user.email ? `${user.email} | ` : '';
     return `${usernameLabel}${emailLabel}${user.givenName} ${user.familyName}`;
   }
 
-  isMember(user: ReadUser): boolean {
-    return this.projectMembers.includes(user.id);
+  isMember(user: UserDto): boolean {
+    return user.projects
+      ? user.projects.map(project => project.id as unknown as string).includes(this.projectIri)
+      : false;
   }
 
-  fullName(user: ReadUser): string {
+  fullName(user: UserDto): string {
     return `${user.givenName} ${user.familyName}`;
   }
 
   addUser(userId: string) {
-    this._dspApiConnection.admin.usersEndpoint
-      .addUserToProjectMembership(userId, this.projectIri)
-      .pipe(take(1))
-      .subscribe(() => {
-        this._store.dispatch(new LoadProjectMembersAction(this.projectUuid));
-      });
-    this.selectUserForm.controls['addUser'].reset('');
+    this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe();
   }
 
   createUser() {
-    const dialogConfig = DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true);
-    this._dialog.open(CreateUserDialogComponent, dialogConfig);
+    this._dialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true));
   }
 
-  resetInput(ev: Event) {
-    ev.preventDefault();
-    this.selectUserForm.controls['addUser'].reset('');
-  }
-
-  trackByFn = (index: number, item: AutocompleteItem) => `${index}-${item.label}`;
+  trackByFn = (index: number) => index;
 
   ngOnDestroy(): void {
     this._destroyed$.next();

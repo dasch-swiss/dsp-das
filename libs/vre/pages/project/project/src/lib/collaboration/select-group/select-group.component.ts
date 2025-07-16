@@ -1,13 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminUsersApiService, Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { LoadProjectMembershipAction } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
-import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 
 @Component({
   selector: 'app-select-group',
@@ -17,7 +12,7 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
         placeholder="Permission group"
         [formControl]="groupCtrl"
         multiple
-        (selectionChange)="onGroupChange($event)">
+        (selectionChange)="updateGroupsMembership($event.value)">
         <mat-option *ngFor="let group of groups; trackBy: trackByFn" [value]="group.id" [disabled]="disabled">
           {{ group.name }}
         </mat-option>
@@ -49,55 +44,13 @@ export class SelectGroupComponent implements OnInit {
 
   trackByFn = (item: Group) => item.id;
 
-  constructor(
-    private _userApiService: UserApiService,
-    private _adminUsersApiService: AdminUsersApiService,
-    private _store: Store
-  ) {}
+  constructor(private _adminUsersApiService: AdminUsersApiService) {}
 
   ngOnInit() {
     this.groupCtrl = new FormControl<string[]>(this.permissions);
-    console.log('this', this);
   }
 
-  onGroupChange(event: MatSelectChange) {
-    this._updateGroupsMembership2(this.user.id, event.value);
-  }
-
-  private _sort(arrOne: string[], arrTwo: string[]): boolean {
-    return [...arrOne].sort().join(',') !== [...arrTwo].sort().join(',');
-  }
-
-  private _updateGroupsMembership(userIri: string, groups: string[]): void {
-    const currentUserGroups: string[] = [];
-    this._userApiService.getGroupMembershipsForUser(userIri).subscribe(response => {
-      for (const group of response.groups) {
-        currentUserGroups.push(group.id);
-      }
-
-      const removeOldGroup$ = from(currentUserGroups).pipe(
-        filter(oldGroup => groups.indexOf(oldGroup) === -1), // Filter out groups that are no longer in 'groups'
-        mergeMap(oldGroup => this._userApiService.removeFromGroupMembership(userIri, oldGroup).pipe(take(1)))
-      );
-
-      const addNewGroup$ = from(groups).pipe(
-        filter(newGroup => currentUserGroups.indexOf(newGroup) === -1), // Filter out groups that are already in 'currentUserGroups'
-        mergeMap(newGroup => this._userApiService.addToGroupMembership(userIri, newGroup).pipe(take(1)))
-      );
-
-      merge(removeOldGroup$, addNewGroup$)
-        .pipe(takeLast(1))
-        .subscribe(() => {
-          if (this.projectId) {
-            this._store.dispatch(new LoadProjectMembershipAction(this.projectId));
-          }
-        });
-    });
-  }
-
-  private _updateGroupsMembership2(userIri: string, newGroups: string[]): void {
-    console.log(this.user.groups, newGroups);
-
+  updateGroupsMembership(newGroups: string[]): void {
     if (newGroups.length > this.user.groups.length) {
       const groupIdAdded = newGroups.find(groupId =>
         this.user.groups.map(group => group.id).every(_groupId => _groupId !== groupId)
@@ -107,12 +60,7 @@ export class SelectGroupComponent implements OnInit {
       }
       this._adminUsersApiService
         .postAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdAdded)
-        .subscribe(() => {
-          // TODO change
-          if (this.projectId) {
-            this._store.dispatch(new LoadProjectMembershipAction(this.projectId));
-          }
-        });
+        .subscribe();
     } else if (newGroups.length < this.user.groups.length) {
       const groupIdRemoved = this.user.groups.find(group => newGroups.indexOf(group.id) === -1);
 

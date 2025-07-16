@@ -1,27 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, ReadGroup, ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Action, Actions, ofActionSuccessful, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
-import { concatMap, EMPTY, finalize, map, of, take, tap } from 'rxjs';
-import { IKeyValuePairs } from '../model-interfaces';
+import { concatMap, EMPTY, finalize, take, tap } from 'rxjs';
 import { SetUserAction } from '../user/user.actions';
 import { UserSelectors } from '../user/user.selectors';
 import {
   AddUserToProjectMembershipAction,
   ClearProjectsAction,
-  ClearProjectsMembershipAction,
   LoadProjectAction,
-  LoadProjectGroupsAction,
-  LoadProjectMembersAction,
   LoadProjectMembershipAction,
   LoadProjectRestrictedViewSettingsAction,
   LoadProjectsAction,
   RemoveUserFromProjectAction,
-  SetProjectMemberAction,
   UpdateProjectAction,
   UpdateProjectRestrictedViewSettingsAction,
 } from './projects.actions';
@@ -32,8 +27,6 @@ const defaults: ProjectsStateModel = {
   isMembershipLoading: false, // loading state of project membership
   hasLoadingErrors: false, // loading error state
   allProjects: [], // all projects in the system grouped by project IRI
-  projectMembers: {}, // project members grouped by project IRI
-  projectGroups: {}, // project user groups grouped by project IRI
   projectRestrictedViewSettings: {}, // project image settings grouped by project id
 };
 
@@ -52,7 +45,6 @@ export class ProjectsState {
     private store: Store,
     private projectService: ProjectService,
     private projectApiService: ProjectApiService,
-    private actions: Actions,
     private adminProjectsApiService: AdminProjectsApiService
   ) {}
 
@@ -130,28 +122,12 @@ export class ProjectsState {
     const isProjectAdmin = ProjectService.IsProjectAdminOrSysAdmin(user, userProjectAdminGroups, projectIri);
     if (isProjectAdmin) {
       ctx.patchState({ isMembershipLoading: true });
-      ctx.dispatch([new LoadProjectMembersAction(projectUuid), new LoadProjectGroupsAction(projectUuid)]);
-      this.actions.pipe(take(1), ofActionSuccessful(LoadProjectGroupsAction)).subscribe(() => {
-        ctx.patchState({ isMembershipLoading: false });
-      });
     }
   }
 
   @Action(ClearProjectsAction)
   clearProjects(ctx: StateContext<ProjectsStateModel>) {
     ctx.patchState(defaults);
-  }
-
-  @Action(ClearProjectsMembershipAction)
-  clearProjectsMembership(ctx: StateContext<ProjectsStateModel>) {
-    return of(ctx.getState()).pipe(
-      map(currentState => {
-        currentState.projectMembers = defaults.projectMembers;
-        currentState.projectGroups = defaults.projectGroups;
-        ctx.patchState(currentState);
-        return currentState;
-      })
-    );
   }
 
   @Action(RemoveUserFromProjectAction)
@@ -161,7 +137,7 @@ export class ProjectsState {
       take(1),
       tap({
         next: response => {
-          ctx.dispatch([new SetUserAction(response.body.user), new LoadProjectMembersAction(projectIri)]);
+          ctx.dispatch([new SetUserAction(response.body.user)]);
           ctx.patchState({ isMembershipLoading: false });
         },
       })
@@ -178,65 +154,11 @@ export class ProjectsState {
       take(1),
       tap({
         next: response => {
-          ctx.dispatch([new SetUserAction(response.body.user), new LoadProjectMembersAction(projectIri)]);
+          ctx.dispatch([new SetUserAction(response.body.user)]);
           ctx.patchState({ isMembershipLoading: false });
         },
         error: error => {
           ctx.patchState({ hasLoadingErrors: true });
-        },
-      })
-    );
-  }
-
-  @Action(LoadProjectMembersAction)
-  loadProjectMembersAction(ctx: StateContext<ProjectsStateModel>, { projectUuid }: LoadProjectMembersAction) {
-    if (!this.store.selectSnapshot(UserSelectors.isLoggedIn)) {
-      return;
-    }
-
-    ctx.patchState({ isMembershipLoading: true });
-    const projectIri = this.projectService.uuidToIri(projectUuid);
-    return this._dspApiConnection.admin.projectsEndpoint.getProjectMembersByIri(projectIri).pipe(
-      take(1),
-      tap({
-        next: response => {
-          ctx.setState({
-            ...ctx.getState(),
-            isMembershipLoading: false,
-            projectMembers: {
-              [projectIri]: { value: response.body.members },
-            },
-          });
-        },
-        error: error => {
-          ctx.patchState({ hasLoadingErrors: true });
-        },
-      })
-    );
-  }
-
-  @Action(LoadProjectGroupsAction)
-  loadProjectGroupsAction(ctx: StateContext<ProjectsStateModel>) {
-    ctx.patchState({ isMembershipLoading: true });
-    return this._dspApiConnection.admin.groupsEndpoint.getGroups().pipe(
-      take(1),
-      tap({
-        next: response => {
-          const groups: IKeyValuePairs<ReadGroup> = {};
-          response.body.groups.forEach((group: ReadGroup) => {
-            const projectId = group.project?.id as string;
-            if (!groups[projectId]) {
-              groups[projectId] = { value: [] };
-            }
-
-            groups[projectId].value = [...groups[projectId].value, group];
-          });
-
-          ctx.setState({
-            ...ctx.getState(),
-            isMembershipLoading: false,
-            projectGroups: groups,
-          });
         },
       })
     );
@@ -258,19 +180,6 @@ export class ProjectsState {
         ctx.patchState({ isLoading: false });
       })
     );
-  }
-
-  @Action(SetProjectMemberAction)
-  setProjectMember(ctx: StateContext<ProjectsStateModel>, { member }: SetProjectMemberAction) {
-    const state = ctx.getState();
-    Object.keys(state.projectMembers).forEach(projectId => {
-      const index = state.projectMembers[projectId].value.findIndex(u => u.id === member.id);
-      if (index > -1) {
-        state.projectMembers[projectId].value[index] = member;
-      }
-    });
-
-    ctx.setState({ ...state });
   }
 
   @Action(LoadProjectRestrictedViewSettingsAction, { cancelUncompleted: true })

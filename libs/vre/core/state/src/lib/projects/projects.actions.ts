@@ -1,4 +1,4 @@
-import { ReadUser, UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { UpdateProjectRequest } from '@dasch-swiss/dsp-js';
 import { SetRestrictedViewRequest } from '@dasch-swiss/vre/3rd-party-services/open-api';
 
 export class LoadProjectsAction {
@@ -21,11 +21,7 @@ export class LoadProjectMembershipAction {
 }
 
 export class ClearProjectsAction {
-  static readonly type = '[Projects] Clear projects';
-}
-
-export class ClearProjectsMembershipAction {
-  static readonly type = '[Projects] Clear projects membership';
+  static readonly type = 'c[Projects] Clear projects';
 }
 
 export class RemoveUserFromProjectAction {
@@ -46,18 +42,6 @@ export class AddUserToProjectMembershipAction {
   ) {}
 }
 
-export class LoadProjectMembersAction {
-  static readonly type = '[Projects] Load Project Members';
-
-  constructor(public projectUuid: string) {}
-}
-
-export class LoadProjectGroupsAction {
-  static readonly type = '[Projects] Load Project Groups';
-
-  constructor(public projectUuid: string) {}
-}
-
 export class UpdateProjectAction {
   static readonly type = '[Projects] Update Project';
 
@@ -65,12 +49,6 @@ export class UpdateProjectAction {
     public projectUuid: string,
     public projectData: UpdateProjectRequest
   ) {}
-}
-
-export class SetProjectMemberAction {
-  static readonly type = '[Projects] Set Project Member';
-
-  constructor(public member: ReadUser) {}
 }
 
 export class LoadProjectRestrictedViewSettingsAction {
