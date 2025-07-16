@@ -14,12 +14,6 @@ export class LoadProjectAction {
   ) {}
 }
 
-export class LoadProjectMembershipAction {
-  static readonly type = '[Projects] Load Project Membership';
-
-  constructor(public projectUuid: string) {}
-}
-
 export class ClearProjectsAction {
   static readonly type = 'c[Projects] Clear projects';
 }

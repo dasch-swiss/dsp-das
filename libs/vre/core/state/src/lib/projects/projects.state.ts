@@ -1,17 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { produce } from 'immer';
-import { concatMap, EMPTY, finalize, take, tap } from 'rxjs';
-import { UserSelectors } from '../user/user.selectors';
+import { finalize, take, tap } from 'rxjs';
 import {
   ClearProjectsAction,
   LoadProjectAction,
-  LoadProjectMembershipAction,
   LoadProjectRestrictedViewSettingsAction,
   LoadProjectsAction,
   UpdateProjectAction,
@@ -39,7 +37,6 @@ export class ProjectsState {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private store: Store,
     private projectService: ProjectService,
     private projectApiService: ProjectApiService,
     private adminProjectsApiService: AdminProjectsApiService
@@ -102,24 +99,10 @@ export class ProjectsState {
           ctx.patchState({ hasLoadingErrors: true });
         },
       }),
-      concatMap(() => {
-        return loadMembership ? ctx.dispatch(new LoadProjectMembershipAction(projectUuid)) : EMPTY;
-      }),
       finalize(() => {
         ctx.patchState({ isLoading: false });
       })
     );
-  }
-
-  @Action(LoadProjectMembershipAction, { cancelUncompleted: true })
-  loadProjectMembershipAction(ctx: StateContext<ProjectsStateModel>, { projectUuid }: LoadProjectMembershipAction) {
-    const projectIri = this.projectService.uuidToIri(projectUuid);
-    const user = this.store.selectSnapshot(UserSelectors.user) as ReadUser;
-    const userProjectAdminGroups = this.store.selectSnapshot(UserSelectors.userProjectAdminGroups);
-    const isProjectAdmin = ProjectService.IsProjectAdminOrSysAdmin(user, userProjectAdminGroups, projectIri);
-    if (isProjectAdmin) {
-      ctx.patchState({ isMembershipLoading: true });
-    }
   }
 
   @Action(ClearProjectsAction)
