@@ -5,12 +5,13 @@ import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadUserAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
+import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
   selector: 'app-project-members-row-menu',
@@ -44,7 +45,8 @@ export class ProjectMembersRowMenuComponent {
     private _userApiService: UserApiService,
     private _router: Router,
     private _matDialog: MatDialog,
-    private _dialog: DialogService
+    private _dialog: DialogService,
+    private _collaborationPageService: CollaborationPageService
   ) {}
 
   isProjectAdmin(permissions: PermissionsData): boolean {
@@ -111,23 +113,16 @@ export class ProjectMembersRowMenuComponent {
   }
 
   openEditPasswordDialog(user: ReadUser) {
-    this._matDialog
-      .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
-      .afterClosed()
-      .subscribe(response => {
-        if (response === true) {
-          this.refresh();
-        }
-      });
+    this._matDialog.open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true));
   }
 
   askToRemoveFromProject(user: ReadUser) {
     this._dialog.afterConfirmation('Do you want to remove this user from the project?').subscribe(() => {
-      this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
+      this.refresh();
     });
   }
 
   refresh() {
-    (window as any).location.reload(); // TODO change later on with a service reloading users.
+    this._collaborationPageService.reloadProjectMembers();
   }
 }

@@ -16,7 +16,6 @@ import {
   LoadProjectMembershipAction,
   LoadProjectRestrictedViewSettingsAction,
   LoadProjectsAction,
-  RemoveUserFromProjectAction,
   UpdateProjectAction,
   UpdateProjectRestrictedViewSettingsAction,
 } from './projects.actions';
@@ -128,20 +127,6 @@ export class ProjectsState {
   @Action(ClearProjectsAction)
   clearProjects(ctx: StateContext<ProjectsStateModel>) {
     ctx.patchState(defaults);
-  }
-
-  @Action(RemoveUserFromProjectAction)
-  removeUserFromProject(ctx: StateContext<ProjectsStateModel>, { userId, projectIri }: RemoveUserFromProjectAction) {
-    ctx.patchState({ isMembershipLoading: true });
-    return this._dspApiConnection.admin.usersEndpoint.removeUserFromProjectMembership(userId, projectIri).pipe(
-      take(1),
-      tap({
-        next: response => {
-          ctx.dispatch([new SetUserAction(response.body.user)]);
-          ctx.patchState({ isMembershipLoading: false });
-        },
-      })
-    );
   }
 
   @Action(AddUserToProjectMembershipAction)
