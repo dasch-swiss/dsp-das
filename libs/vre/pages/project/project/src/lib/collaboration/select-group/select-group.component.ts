@@ -1,10 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { LoadProjectMembershipAction } from '@dasch-swiss/vre/core/state';
-import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
 import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 
@@ -26,11 +25,21 @@ import { filter, from, merge, mergeMap, take, takeLast } from 'rxjs';
 export class SelectGroupComponent implements AfterViewInit {
   @Input({ required: true }) projectId!: string;
   @Input({ required: true }) user!: ReadUser;
-  @Input({ required: true }) disabled!: boolean;
-  @Input({ required: true }) permissions: any;
   @Input({ required: true }) groups!: Group[];
 
-  groupCtrl = new UntypedFormControl();
+  get permissions() {
+    if (this.user.permissions?.groupsPerProject) {
+      return this.user.permissions?.groupsPerProject[this.projectId];
+    } else {
+      return [];
+    }
+  }
+
+  get disabled() {
+    return !this.user.status;
+  }
+
+  groupCtrl = new FormControl<string[]>([]);
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -38,7 +47,7 @@ export class SelectGroupComponent implements AfterViewInit {
     });
   }
 
-  trackByFn = (index: number, item: AutocompleteItem) => `${index}-${item.label}`;
+  trackByFn = (item: Group) => item.id;
 
   constructor(
     private _userApiService: UserApiService,
