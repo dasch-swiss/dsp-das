@@ -7,10 +7,8 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { produce } from 'immer';
 import { concatMap, EMPTY, finalize, take, tap } from 'rxjs';
-import { SetUserAction } from '../user/user.actions';
 import { UserSelectors } from '../user/user.selectors';
 import {
-  AddUserToProjectMembershipAction,
   ClearProjectsAction,
   LoadProjectAction,
   LoadProjectMembershipAction,
@@ -127,26 +125,6 @@ export class ProjectsState {
   @Action(ClearProjectsAction)
   clearProjects(ctx: StateContext<ProjectsStateModel>) {
     ctx.patchState(defaults);
-  }
-
-  @Action(AddUserToProjectMembershipAction)
-  addUserToProjectMembership(
-    ctx: StateContext<ProjectsStateModel>,
-    { userId, projectIri }: AddUserToProjectMembershipAction
-  ) {
-    ctx.patchState({ isMembershipLoading: true, hasLoadingErrors: false });
-    return this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, projectIri).pipe(
-      take(1),
-      tap({
-        next: response => {
-          ctx.dispatch([new SetUserAction(response.body.user)]);
-          ctx.patchState({ isMembershipLoading: false });
-        },
-        error: error => {
-          ctx.patchState({ hasLoadingErrors: true });
-        },
-      })
-    );
   }
 
   @Action(UpdateProjectAction)

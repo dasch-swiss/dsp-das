@@ -9,13 +9,8 @@ import {
 } from '@angular/core';
 import { Constants, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import {
-  AddUserToProjectMembershipAction,
-  LoadProjectsAction,
-  ProjectsSelectors,
-  RemoveUserFromProjectAction,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
@@ -104,7 +99,10 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
 
   isMembershipLoading$ = this._store.select(ProjectsSelectors.isMembershipLoading);
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _store: Store,
+    private _adminUsersApi: AdminUsersApiService
+  ) {}
 
   ngAfterViewInit() {
     this._store.dispatch(new LoadProjectsAction());
@@ -115,13 +113,12 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
     this._ngUnsubscribe.complete();
   }
 
-  removeFromProject(iri: string) {
-    this._store.dispatch(new RemoveUserFromProjectAction(this.user.id, iri));
-    this.selectedValue = null;
+  removeFromProject(projectIri: string) {
+    this._adminUsersApi.deleteAdminUsersIriUseririProjectMembershipsProjectiri(this.user.id, projectIri);
   }
 
-  addToProject(iri: string) {
-    this._store.dispatch(new AddUserToProjectMembershipAction(this.user.id, iri));
+  addToProject(projectIri: string) {
+    this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(this.user.id, projectIri).subscribe();
   }
 
   trackByFn = (index: number, item: StoredProject) => `${index}-${item?.id}`;

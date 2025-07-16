@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadUserAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
@@ -11,6 +12,7 @@ import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/us
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
+import { switchMap } from 'rxjs';
 import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
@@ -46,6 +48,7 @@ export class ProjectMembersRowMenuComponent {
     private _router: Router,
     private _matDialog: MatDialog,
     private _dialog: DialogService,
+    private _adminUsersApi: AdminUsersApiService,
     private _collaborationPageService: CollaborationPageService
   ) {}
 
@@ -117,9 +120,16 @@ export class ProjectMembersRowMenuComponent {
   }
 
   askToRemoveFromProject(user: ReadUser) {
-    this._dialog.afterConfirmation('Do you want to remove this user from the project?').subscribe(() => {
-      this.refresh();
-    });
+    this._dialog
+      .afterConfirmation('Do you want to remove this user from the project?')
+      .pipe(
+        switchMap(() =>
+          this._adminUsersApi.deleteAdminUsersIriUseririProjectMembershipsProjectiri(user.id, this.project.id)
+        )
+      )
+      .subscribe(() => {
+        this.refresh();
+      });
   }
 
   refresh() {

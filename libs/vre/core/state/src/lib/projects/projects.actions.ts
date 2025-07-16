@@ -24,15 +24,6 @@ export class ClearProjectsAction {
   static readonly type = 'c[Projects] Clear projects';
 }
 
-export class AddUserToProjectMembershipAction {
-  static readonly type = '[Projects] Add User To Project Membership';
-
-  constructor(
-    public userId: string,
-    public projectIri: string
-  ) {}
-}
-
 export class UpdateProjectAction {
   static readonly type = '[Projects] Update Project';
 

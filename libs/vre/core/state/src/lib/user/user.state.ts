@@ -3,7 +3,6 @@ import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { Action, State, StateContext } from '@ngxs/store';
 import { map, take, tap } from 'rxjs';
-import { AddUserToProjectMembershipAction } from '../projects/projects.actions';
 import {
   CreateUserAction,
   LoadUserAction,
@@ -162,9 +161,6 @@ export class UserState {
           state.allUsers.push(response.user);
           state.isLoading = false;
           ctx.patchState(state);
-          if (enrollToProject) {
-            ctx.dispatch(new AddUserToProjectMembershipAction(response.user.id, enrollToProject));
-          }
         },
       })
     );
