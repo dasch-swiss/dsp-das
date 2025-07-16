@@ -17,7 +17,7 @@ import { Store } from '@ngxs/store';
         <mat-chip class="admin-chip" *ngIf="isProjectAdmin(user.permissions)">Admin</mat-chip>
       </mat-chip-listbox>
 
-      <app-select-group *ngIf="project" [projectId]="project.id" [user]="user" [groups]="groups" />
+      <app-select-group *ngIf="project && groups" [projectId]="project.id" [user]="user" [groups]="groups" />
 
       <app-project-members-row-menu [user]="user" *ngIf="project" [project]="project" />
     </div>
