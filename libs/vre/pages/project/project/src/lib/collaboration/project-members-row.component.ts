@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -17,22 +16,18 @@ import { Store } from '@ngxs/store';
         <mat-chip class="admin-chip" *ngIf="isProjectAdmin(user.permissions)">Admin</mat-chip>
       </mat-chip-listbox>
 
-      <app-select-group *ngIf="project && groups" [projectId]="project.id" [user]="user" [groups]="groups" />
+      <app-select-group *ngIf="project" [projectId]="project.id" [user]="user" />
 
       <app-project-members-row-menu [user]="user" *ngIf="project" [project]="project" />
     </div>
   `,
 })
 export class ProjectMembersRowComponent implements OnInit {
-  @Input({ required: true }) user!: ReadUser;
-  @Input({ required: true }) groups!: Group[];
+  @Input({ required: true }) user!: UserDto;
 
   project?: ReadProject;
 
-  constructor(
-    private _store: Store,
-    private _userApiService: UserApiService
-  ) {}
+  constructor(private _store: Store) {}
 
   ngOnInit() {
     this._store.select(ProjectsSelectors.currentProject).subscribe(project => {

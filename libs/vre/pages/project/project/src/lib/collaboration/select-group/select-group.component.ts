@@ -1,59 +1,51 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ReadUser } from '@dasch-swiss/dsp-js';
-import { AdminUsersApiService, Group } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminUsersApiService, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { ProjectMembersService } from '../project-members.service';
 
 @Component({
   selector: 'app-select-group',
   template: `
-    <mat-form-field *ngIf="groups.length > 0">
-      <mat-select
-        placeholder="Permission group"
-        [formControl]="groupCtrl"
-        multiple
-        (selectionChange)="updateGroupsMembership($event.value)">
-        <mat-option *ngFor="let group of groups; trackBy: trackByFn" [value]="group.id" [disabled]="disabled">
-          {{ group.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <ng-container *ngIf="groups$ | async as groups">
+      <mat-form-field *ngIf="groups.length > 0">
+        <mat-select
+          placeholder="Permission group"
+          [formControl]="groupCtrl"
+          multiple
+          (selectionChange)="updateGroupsMembership($event.value)">
+          <mat-option *ngFor="let group of groups" [value]="group.id" [disabled]="!user.status">
+            {{ group.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <div *ngIf="groups.length === 0" class="center">No group defined yet.</div>
+      <div *ngIf="groups.length === 0" class="center">No group defined yet.</div>
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectGroupComponent implements OnInit {
   @Input({ required: true }) projectId!: string;
-  @Input({ required: true }) user!: ReadUser;
-  @Input({ required: true }) groups!: Group[];
+  @Input({ required: true }) user!: UserDto;
 
-  get permissions() {
-    if (this.user.permissions?.groupsPerProject) {
-      return this.user.permissions?.groupsPerProject[this.projectId];
-    } else {
-      return [];
-    }
-  }
-
-  get disabled() {
-    return !this.user.status;
-  }
-
+  groups$ = this._projectMembersService.groups$;
   groupCtrl!: FormControl<string[] | null>;
 
-  trackByFn = (item: Group) => item.id;
-
-  constructor(private _adminUsersApiService: AdminUsersApiService) {}
+  constructor(
+    private _adminUsersApiService: AdminUsersApiService,
+    private _projectMembersService: ProjectMembersService
+  ) {}
 
   ngOnInit() {
-    this.groupCtrl = new FormControl<string[]>(this.permissions);
+    this.groupCtrl = new FormControl<string[]>(this._getPermissions());
   }
 
   updateGroupsMembership(newGroups: string[]): void {
-    if (newGroups.length > this.user.groups.length) {
+    const userGroups = this.user.groups || [];
+    if (newGroups.length > userGroups.length) {
       const groupIdAdded = newGroups.find(groupId =>
-        this.user.groups.map(group => group.id).every(_groupId => _groupId !== groupId)
+        userGroups.map(group => group.id).every(_groupId => _groupId !== groupId)
       );
       if (!groupIdAdded) {
         throw new AppError('Group should exist');
@@ -61,8 +53,8 @@ export class SelectGroupComponent implements OnInit {
       this._adminUsersApiService
         .postAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdAdded)
         .subscribe();
-    } else if (newGroups.length < this.user.groups.length) {
-      const groupIdRemoved = this.user.groups.find(group => newGroups.indexOf(group.id) === -1);
+    } else if (newGroups.length < userGroups.length) {
+      const groupIdRemoved = userGroups.find(group => newGroups.indexOf(group.id) === -1);
 
       if (!groupIdRemoved) {
         throw new AppError('Group should exist');
@@ -70,6 +62,14 @@ export class SelectGroupComponent implements OnInit {
       this._adminUsersApiService
         .deleteAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdRemoved.id)
         .subscribe();
+    }
+  }
+
+  private _getPermissions() {
+    if (this.user.permissions?.groupsPerProject) {
+      return this.user.permissions?.groupsPerProject[this.projectId];
+    } else {
+      return [];
     }
   }
 }

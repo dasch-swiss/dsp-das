@@ -5,7 +5,7 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
@@ -94,11 +94,15 @@ export class UsersListRowMenuComponent {
   }
 
   editUser(user: ReadUser) {
-    const dialogConfig = DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true);
-    const dialogRef = this._matDialog.open(EditUserDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(() => {
-      this.refreshParent.emit();
-    });
+    this._matDialog
+      .open<EditUserDialogComponent, EditUserDialogProps, null>(
+        EditUserDialogComponent,
+        DspDialogConfig.dialogDrawerConfig({ user }, true)
+      )
+      .afterClosed()
+      .subscribe(() => {
+        this.refreshParent.emit();
+      });
   }
 
   openEditPasswordDialog(user: ReadUser) {

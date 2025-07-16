@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
-import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { PermissionsDataADM, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadUserAction, RemoveUserFromProjectAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
@@ -35,7 +35,7 @@ import { Store } from '@ngxs/store';
   `,
 })
 export class ProjectMembersRowMenuComponent {
-  @Input({ required: true }) user!: ReadUser;
+  @Input({ required: true }) user!: UserDto;
   @Input({ required: true }) project!: ReadProject;
   @Output() refreshParent = new EventEmitter<void>();
 
@@ -47,7 +47,7 @@ export class ProjectMembersRowMenuComponent {
     private _dialog: DialogService
   ) {}
 
-  isProjectAdmin(permissions: PermissionsData): boolean {
+  isProjectAdmin(permissions: PermissionsDataADM): boolean {
     if (!permissions.groupsPerProject) {
       return false;
     }
@@ -101,16 +101,16 @@ export class ProjectMembersRowMenuComponent {
     });
   }
 
-  editUser(user: ReadUser) {
+  editUser(user: UserDto) {
     this._matDialog
-      .open(EditUserDialogComponent, DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true))
+      .open(EditUserDialogComponent, DspDialogConfig.dialogDrawerConfig<UserDto>(user, true))
       .afterClosed()
       .subscribe(() => {
         this.refresh();
       });
   }
 
-  openEditPasswordDialog(user: ReadUser) {
+  openEditPasswordDialog(user: UserDto) {
     this._matDialog
       .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
       .afterClosed()
@@ -121,7 +121,7 @@ export class ProjectMembersRowMenuComponent {
       });
   }
 
-  askToRemoveFromProject(user: ReadUser) {
+  askToRemoveFromProject(user: UserDto) {
     this._dialog.afterConfirmation('Do you want to remove this user from the project?').subscribe(() => {
       this._store.dispatch(new RemoveUserFromProjectAction(user.id, this.project.id));
     });

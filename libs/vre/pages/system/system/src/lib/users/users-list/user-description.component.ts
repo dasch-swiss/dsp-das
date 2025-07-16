@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 
 @Component({
   selector: 'app-user-description',
@@ -15,5 +15,5 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
   </span>`,
 })
 export class UserDescriptionComponent {
-  @Input({ required: true }) user!: ReadUser;
+  @Input({ required: true }) user!: UserDto;
 }
