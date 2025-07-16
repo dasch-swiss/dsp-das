@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
-import { AdminUsersApiService, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -69,7 +69,7 @@ export class AddUserComponent implements OnDestroy {
     this.usernameControl.valueChanges.pipe(
       startWith(null) // initial empty string value for autocomplete to open on focus
     ),
-    this._adminUsersApiService.getAdminUsers().pipe(map(response => response.users || [])),
+    this._userApiService.list().pipe(map(response => response.users)),
   ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   get projectIri(): string {
@@ -80,28 +80,27 @@ export class AddUserComponent implements OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
-    private _adminUsersApiService: AdminUsersApiService,
-    private fb: FormBuilder,
+    private _userApiService: UserApiService,
     private _projectService: ProjectService
   ) {}
 
-  private _filter(list: UserDto[], filterVal: string) {
+  private _filter(list: ReadUser[], filterVal: string) {
     return list.filter(user => this.fullName(user).toLowerCase().includes(filterVal.toLowerCase()));
   }
 
-  getLabel(user: UserDto): string {
+  getLabel(user: ReadUser): string {
     const usernameLabel = user.username ? `${user.username} | ` : '';
     const emailLabel = user.email ? `${user.email} | ` : '';
     return `${usernameLabel}${emailLabel}${user.givenName} ${user.familyName}`;
   }
 
-  isMember(user: UserDto): boolean {
+  isMember(user: ReadUser): boolean {
     return user.projects
       ? user.projects.map(project => project.id as unknown as string).includes(this.projectIri)
       : false;
   }
 
-  fullName(user: UserDto): string {
+  fullName(user: ReadUser): string {
     return `${user.givenName} ${user.familyName}`;
   }
 

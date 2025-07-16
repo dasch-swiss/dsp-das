@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ReadUser } from '@dasch-swiss/dsp-js';
 import { ProjectMembersService } from './project-members.service';
 
 @Component({
@@ -8,5 +8,5 @@ import { ProjectMembersService } from './project-members.service';
   providers: [ProjectMembersService],
 })
 export class ProjectMembersComponent {
-  @Input({ required: true }) users!: UserDto[];
+  @Input({ required: true }) users!: ReadUser[];
 }

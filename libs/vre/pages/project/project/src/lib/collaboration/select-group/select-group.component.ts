@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AdminUsersApiService, UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ReadUser } from '@dasch-swiss/dsp-js';
+import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectMembersService } from '../project-members.service';
 
@@ -27,7 +28,7 @@ import { ProjectMembersService } from '../project-members.service';
 })
 export class SelectGroupComponent implements OnInit {
   @Input({ required: true }) projectId!: string;
-  @Input({ required: true }) user!: UserDto;
+  @Input({ required: true }) user!: ReadUser;
 
   groups$ = this._projectMembersService.groups$;
   groupCtrl!: FormControl<string[] | null>;

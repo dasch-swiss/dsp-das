@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { UserDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -23,7 +22,7 @@ import { Store } from '@ngxs/store';
   `,
 })
 export class ProjectMembersRowComponent implements OnInit {
-  @Input({ required: true }) user!: UserDto;
+  @Input({ required: true }) user!: ReadUser;
 
   project?: ReadProject;
 
