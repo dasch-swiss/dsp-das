@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { ProjectMembersService } from '../project-members.service';
+import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
   selector: 'app-select-group',
@@ -30,12 +30,12 @@ export class SelectGroupComponent implements OnInit {
   @Input({ required: true }) projectId!: string;
   @Input({ required: true }) user!: ReadUser;
 
-  groups$ = this._projectMembersService.groups$;
+  groups$ = this._collaborationPageService.groups$;
   groupCtrl!: FormControl<string[] | null>;
 
   constructor(
     private _adminUsersApiService: AdminUsersApiService,
-    private _projectMembersService: ProjectMembersService
+    private _collaborationPageService: CollaborationPageService
   ) {}
 
   ngOnInit() {
@@ -53,7 +53,9 @@ export class SelectGroupComponent implements OnInit {
       }
       this._adminUsersApiService
         .postAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdAdded)
-        .subscribe();
+        .subscribe(() => {
+          this._collaborationPageService.reloadProjectMembers();
+        });
     } else if (newGroups.length < userGroups.length) {
       const groupIdRemoved = userGroups.find(group => newGroups.indexOf(group.id) === -1);
 
@@ -62,7 +64,9 @@ export class SelectGroupComponent implements OnInit {
       }
       this._adminUsersApiService
         .deleteAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdRemoved.id)
-        .subscribe();
+        .subscribe(() => {
+          this._collaborationPageService.reloadProjectMembers();
+        });
     }
   }
 

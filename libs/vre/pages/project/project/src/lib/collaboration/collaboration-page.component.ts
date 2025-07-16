@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { filter, first, map, switchMap, tap } from 'rxjs';
+import { filter, first, map, tap } from 'rxjs';
+import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,16 +37,11 @@ import { filter, first, map, switchMap, tap } from 'rxjs';
     </div>
   `,
   styleUrls: ['./collaboration-page.component.scss'],
+  providers: [CollaborationPageService],
 })
 export class CollaborationPageComponent {
   project$ = this._store.select(ProjectsSelectors.currentProject);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
-  projectMembers$ = this.project$.pipe(
-    filter(project => project !== undefined),
-    switchMap(project => this._adminProjectsApi.getAdminProjectsIriProjectiriAdminMembers(project!.id)),
-    map(response => response.members)
-  );
 
   projectUuid$ = this.project$.pipe(
     tap(p => {
@@ -61,12 +56,16 @@ export class CollaborationPageComponent {
 
   showActiveUsers = true;
 
-  activeProjectMembers$ = this.projectMembers$.pipe(map(members => (members ?? []).filter(v => v.status === true)));
-  inactiveProjectMembers$ = this.projectMembers$.pipe(map(members => (members ?? []).filter(v => v.status === false)));
+  activeProjectMembers$ = this.collaborationPageService.projectMembers$.pipe(
+    map(members => (members ?? []).filter(v => v.status === true))
+  );
+  inactiveProjectMembers$ = this.collaborationPageService.projectMembers$.pipe(
+    map(members => (members ?? []).filter(v => v.status === false))
+  );
 
   constructor(
     private _store: Store,
     protected _titleService: Title,
-    private _adminProjectsApi: AdminProjectsApiService
+    public collaborationPageService: CollaborationPageService
   ) {}
 }
