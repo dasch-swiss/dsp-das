@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
@@ -6,75 +6,49 @@ import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, startWith, Subject } from 'rxjs';
+import { combineLatest, map, startWith } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-user',
   template: `
-    <div class="app-toolbar transparent more-space-bottom">
-      <div class="app-toolbar-row toolbar-subtitle">
-        <h3 class="mat-body subtitle">{{ 'pages.project.addUser.description' | translate }}</h3>
-      </div>
-      <div class="app-toolbar-row toolbar-form">
-        <h2 class="mat-headline-6">{{ 'pages.project.addUser.title' | translate }}</h2>
+    <h3>{{ 'pages.project.addUser.title' | translate }}</h3>
+    <div style="display: flex; gap: 8px; align-items: center">
+      <mat-form-field style="flex: 1">
+        <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
+        <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
-        <span class="fill-remaining-space"></span>
+        <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
+          <mat-option
+            *ngFor="let user of filteredUsers$ | async; trackBy: trackByFn"
+            [value]="user.id"
+            [disabled]="isMember(user)">
+            {{ getLabel(user) }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-        <span class="app-toolbar-action select-form">
-          <div class="form-content">
-            <mat-form-field class="large-field select-user">
-              <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
-              <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
-
-              <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
-                <mat-option *ngIf="!users?.length" class="loading-option">
-                  <div class="loading-container">
-                    <mat-spinner diameter="20" />
-                    <span>{{ 'pages.project.addUser.usersLoading' | translate }}</span>
-                  </div>
-                </mat-option>
-                <mat-option
-                  *ngFor="let user of filteredUsers$ | async; trackBy: trackByFn"
-                  [value]="user.id"
-                  [disabled]="isMember(user)">
-                  {{ getLabel(user) }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-        </span>
-
-        <span class="fill-remaining-space"></span>
-
-        <span class="app-toolbar-action select-form">
-          <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
-            {{ 'pages.project.addUser.newUser' | translate }}
-          </button>
-        </span>
-      </div>
+      <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
+        {{ 'pages.project.addUser.newUser' | translate }}
+      </button>
     </div>
   `,
   styleUrls: ['./add-user.component.scss'],
 })
-export class AddUserComponent implements OnDestroy {
+export class AddUserComponent {
   @Input({ required: true }) projectUuid!: string;
-
-  private readonly _destroyed$: Subject<void> = new Subject<void>();
-
-  usernameControl = new FormControl<string | null>(null);
-
-  users: ReadUser[] = [];
-  filteredUsers$ = combineLatest([
-    this.usernameControl.valueChanges.pipe(
-      startWith(null) // initial empty string value for autocomplete to open on focus
-    ),
-    this._userApiService.list().pipe(map(response => response.users)),
-  ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   get projectIri(): string {
     return this._projectService.uuidToIri(this.projectUuid);
   }
+
+  usernameControl = new FormControl<string | null>(null);
+  users: ReadUser[] = [];
+
+  filteredUsers$ = combineLatest([
+    this.usernameControl.valueChanges.pipe(startWith(null)),
+    this._userApiService.list().pipe(map(response => response.users)),
+  ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -113,9 +87,4 @@ export class AddUserComponent implements OnDestroy {
   }
 
   trackByFn = (index: number) => index;
-
-  ngOnDestroy(): void {
-    this._destroyed$.next();
-    this._destroyed$.complete();
-  }
 }
