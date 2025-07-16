@@ -37,11 +37,6 @@ export class ProjectsSelectors {
   }
 
   @Selector([ProjectsState])
-  static isMembershipLoading(state: ProjectsStateModel): boolean {
-    return state.isMembershipLoading;
-  }
-
-  @Selector([ProjectsState])
   static hasLoadingErrors(state: ProjectsStateModel): boolean {
     return state.hasLoadingErrors;
   }

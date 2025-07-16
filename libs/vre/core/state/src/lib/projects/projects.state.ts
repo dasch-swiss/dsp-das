@@ -19,7 +19,6 @@ import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
   isLoading: false,
-  isMembershipLoading: false, // loading state of project membership
   hasLoadingErrors: false, // loading error state
   allProjects: [], // all projects in the system grouped by project IRI
   projectRestrictedViewSettings: {}, // project image settings grouped by project id

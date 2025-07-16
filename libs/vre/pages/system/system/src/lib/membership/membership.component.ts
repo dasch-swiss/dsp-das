@@ -19,56 +19,52 @@ import { combineLatest, map, Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-membership',
   template: `
-    @if (isMembershipLoading$ | async) {
-      <app-progress-indicator />
-    } @else {
-      <div class="mat-headline-6 mb-2">
-        This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
-      </div>
+    <div class="mat-headline-6 mb-2">
+      This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
+    </div>
 
-      <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
-        <div class="flex-1">
-          <div>{{ project.longname }} ({{ project.shortname }})</div>
-          <div>
-            @if (isUserProjectAdmin((user$ | async)?.permissions, project.id)) {
-              User is <strong>Project admin</strong>
-            }
-          </div>
+    <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
+      <div class="flex-1">
+        <div>{{ project.longname }} ({{ project.shortname }})</div>
+        <div>
+          @if (isUserProjectAdmin((user$ | async)?.permissions, project.id)) {
+            User is <strong>Project admin</strong>
+          }
         </div>
-
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="removeFromProject(project.id)"
-          aria-label="Button to remove user from project"
-          matTooltip="Remove user from project"
-          matTooltipPosition="above">
-          <mat-icon>delete_outline</mat-icon>
-        </button>
       </div>
 
-      <mat-divider class="my-2" />
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="removeFromProject(project.id)"
+        aria-label="Button to remove user from project"
+        matTooltip="Remove user from project"
+        matTooltipPosition="above">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
 
-      <div class="d-flex">
-        <mat-form-field class="flex-1 mr-2">
-          <mat-select placeholder="Add user to project" [(value)]="selectedValue">
-            <mat-option *ngFor="let project of projects$ | async; trackBy: trackByFn" [value]="project?.iri">
-              {{ project?.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button
-          mat-icon-button
-          color="primary"
-          (click)="addToProject(selectedValue)"
-          [disabled]="selectedValue === null"
-          aria-label="Button to add user to project"
-          matTooltip="Add user to selected project"
-          matTooltipPosition="above">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    }
+    <mat-divider class="my-2" />
+
+    <div class="d-flex">
+      <mat-form-field class="flex-1 mr-2">
+        <mat-select placeholder="Add user to project" [(value)]="selectedValue">
+          <mat-option *ngFor="let project of projects$ | async; trackBy: trackByFn" [value]="project?.iri">
+            {{ project?.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="addToProject(selectedValue)"
+        [disabled]="selectedValue === null"
+        aria-label="Button to add user to project"
+        matTooltip="Add user to selected project"
+        matTooltipPosition="above">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
   `,
   styleUrls: ['./membership.component.scss'],
 })
@@ -96,8 +92,6 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
       other: '# projects',
     },
   };
-
-  isMembershipLoading$ = this._store.select(ProjectsSelectors.isMembershipLoading);
 
   constructor(
     private _store: Store,
