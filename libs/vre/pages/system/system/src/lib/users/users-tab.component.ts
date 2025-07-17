@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { LoadUsersAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { map, shareReplay } from 'rxjs';
 
@@ -27,7 +27,7 @@ import { map, shareReplay } from 'rxjs';
     </ng-template>
   `,
 })
-export class UsersTabComponent implements OnInit {
+export class UsersTabComponent {
   allUsers$ = this._userApiService.list().pipe(
     map(response => response.users),
     shareReplay({
@@ -47,9 +47,5 @@ export class UsersTabComponent implements OnInit {
     private _userApiService: UserApiService
   ) {
     this._titleService.setTitle('All users in DSP');
-  }
-
-  ngOnInit() {
-    this._store.dispatch(new LoadUsersAction());
   }
 }
