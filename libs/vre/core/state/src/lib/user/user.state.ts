@@ -12,7 +12,6 @@ const defaults = <UserStateModel>{
   userProjectAdminGroups: [], // users permission groups
   userProjectGroups: [], // users project groups
   isMemberOfSystemAdminGroup: false, // current user is system admin
-  allUsers: [], // other user data in the system
   usersLoading: false, // loading state for all users
 };
 

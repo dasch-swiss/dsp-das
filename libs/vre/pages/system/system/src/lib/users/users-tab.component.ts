@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
-import { map, shareReplay } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-tab',
   template: `
-    <ng-container *ngIf="(isLoading$ | async) === false; else loadingTpl">
+    <ng-container *ngIf="!isLoading; else loadingTpl">
       <div style="display: flex; justify-content: center; margin: 16px 0">
         <app-double-chip-selector [options]="['Active users', 'Inactive users']" [(value)]="showActiveUsers" />
       </div>
@@ -28,8 +26,12 @@ import { map, shareReplay } from 'rxjs';
   `,
 })
 export class UsersTabComponent {
+  isLoading = true;
   allUsers$ = this._userApiService.list().pipe(
     map(response => response.users),
+    tap(() => {
+      this.isLoading = false;
+    }),
     shareReplay({
       bufferSize: 1,
       refCount: true,
@@ -37,12 +39,10 @@ export class UsersTabComponent {
   );
   activeUsers$ = this.allUsers$.pipe(map(users => users.filter(user => user.status)));
   inactiveUsers$ = this.allUsers$.pipe(map(users => users.filter(user => !user.status)));
-  isLoading$ = this._store.select(UserSelectors.usersLoading);
 
   showActiveUsers = true;
 
   constructor(
-    private readonly _store: Store,
     private readonly _titleService: Title,
     private _userApiService: UserApiService
   ) {
