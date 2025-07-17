@@ -7,6 +7,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, map, startWith } from 'rxjs';
+import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,12 +53,9 @@ export class AddUserComponent {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     private _userApiService: UserApiService,
-    private _projectService: ProjectService
+    private _projectService: ProjectService,
+    public collaborationPageService: CollaborationPageService
   ) {}
-
-  private _filter(list: ReadUser[], filterVal: string) {
-    return list.filter(user => this.fullName(user).toLowerCase().includes(filterVal.toLowerCase()));
-  }
 
   getLabel(user: ReadUser): string {
     const usernameLabel = user.username ? `${user.username} | ` : '';
@@ -71,15 +69,28 @@ export class AddUserComponent {
       : false;
   }
 
-  fullName(user: ReadUser): string {
-    return `${user.givenName} ${user.familyName}`;
-  }
-
   addUser(userId: string) {
-    this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe();
+    this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe(() => {
+      this.usernameControl.setValue(null);
+      this.collaborationPageService.reloadProjectMembers();
+    });
   }
 
   createUser() {
-    this._dialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true));
+    this._dialog
+      .open<CreateUserDialogComponent, string, boolean>(
+        CreateUserDialogComponent,
+        DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true)
+      )
+      .afterClosed()
+      .subscribe(success => {
+        if (success) {
+          this.collaborationPageService.reloadProjectMembers();
+        }
+      });
+  }
+
+  private _filter(list: ReadUser[], filterVal: string) {
+    return list.filter(user => `${user.givenName} ${user.familyName}`.toLowerCase().includes(filterVal.toLowerCase()));
   }
 }

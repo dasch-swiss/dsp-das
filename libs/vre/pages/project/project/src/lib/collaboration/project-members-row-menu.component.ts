@@ -8,7 +8,7 @@ import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-a
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { LoadUserAction, SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
-import { EditUserDialogComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
@@ -108,10 +108,15 @@ export class ProjectMembersRowMenuComponent {
 
   editUser(user: ReadUser) {
     this._matDialog
-      .open(EditUserDialogComponent, DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true))
+      .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
+        EditUserDialogComponent,
+        DspDialogConfig.dialogDrawerConfig<EditUserDialogProps>({ user }, true)
+      )
       .afterClosed()
-      .subscribe(() => {
-        this._refresh();
+      .subscribe(success => {
+        if (success) {
+          this._refresh();
+        }
       });
   }
 

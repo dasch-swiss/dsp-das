@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AdminGroupsApiService, AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, EMPTY, filter, map, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, filter, map, shareReplay, switchMap } from 'rxjs';
 
 @Injectable()
 export class CollaborationPageService {
@@ -30,7 +30,6 @@ export class CollaborationPageService {
     filter(project => project !== undefined),
     switchMap(project => this._adminProjectsApi.getAdminProjectsIriProjectiriMembers(project!.id)),
     map(response => response.members || []),
-    tap(response => console.log(response)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

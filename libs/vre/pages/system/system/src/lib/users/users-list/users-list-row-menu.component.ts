@@ -96,22 +96,27 @@ export class UsersListRowMenuComponent {
 
   editUser(user: ReadUser) {
     this._matDialog
-      .open<EditUserDialogComponent, EditUserDialogProps, null>(
+      .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
         EditUserDialogComponent,
         DspDialogConfig.dialogDrawerConfig({ user }, true)
       )
       .afterClosed()
-      .subscribe(() => {
-        this._reloadUserList();
+      .subscribe(success => {
+        if (success) {
+          this._reloadUserList();
+        }
       });
   }
 
   openEditPasswordDialog(user: ReadUser) {
     this._matDialog
-      .open(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
+      .open<EditPasswordDialogComponent, any, boolean>(
+        EditPasswordDialogComponent,
+        DspDialogConfig.dialogDrawerConfig({ user }, true)
+      )
       .afterClosed()
-      .subscribe(response => {
-        if (response === true) {
+      .subscribe(success => {
+        if (success) {
           this._reloadUserList();
         }
       });

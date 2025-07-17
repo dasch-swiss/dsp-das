@@ -56,7 +56,7 @@ export class EditUserDialogComponent {
       ) {
         this._localizationsService.setLanguage(userUpdate.lang);
       }
-      this._dialogRef.close();
+      this._dialogRef.close(true);
       this._notification.openSnackBar(this._translateService.instant('pages.userSettings.userForm.updateSuccess'));
     });
   }

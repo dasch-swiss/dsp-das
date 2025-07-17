@@ -51,7 +51,7 @@ export class CreateUserDialogComponent {
 
     this._userApiService.create(user).subscribe(() => {
       this.isLoading = false;
-      this._dialogRef.close();
+      this._dialogRef.close(true);
 
       const enrolled = this.projectUuId ? ' and added the user to the project' : '';
       this._notification.openSnackBar(`You have successfully created a user's profile${enrolled}.`);

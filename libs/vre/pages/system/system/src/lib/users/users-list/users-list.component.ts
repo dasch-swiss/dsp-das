@@ -106,10 +106,15 @@ export class UsersListComponent {
 
   createUser() {
     this._matDialog
-      .open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig({}, true))
+      .open<CreateUserDialogComponent, any, boolean>(
+        CreateUserDialogComponent,
+        DspDialogConfig.dialogDrawerConfig({}, true)
+      )
       .afterClosed()
-      .subscribe(() => {
-        this._usersTabService.reloadUsers();
+      .subscribe(isCreated => {
+        if (isCreated) {
+          this._usersTabService.reloadUsers();
+        }
       });
   }
 
