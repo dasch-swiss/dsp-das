@@ -1,9 +1,8 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -31,9 +30,7 @@ export class CreateUserDialogComponent {
 
   constructor(
     private readonly _dialogRef: MatDialogRef<CreateUserDialogComponent>,
-    private readonly _notification: NotificationService,
-    private readonly _userApiService: UserApiService,
-    @Inject(MAT_DIALOG_DATA) public projectUuId: string
+    private readonly _userApiService: UserApiService
   ) {}
 
   createUser(): void {
@@ -49,12 +46,10 @@ export class CreateUserDialogComponent {
     user.systemAdmin = this.form.controls.systemAdmin.value;
     user.status = true;
 
-    this._userApiService.create(user).subscribe(() => {
+    console.log('test');
+    this._userApiService.create(user).subscribe(response => {
       this.isLoading = false;
-      this._dialogRef.close(true);
-
-      const enrolled = this.projectUuId ? ' and added the user to the project' : '';
-      this._notification.openSnackBar(`You have successfully created a user's profile${enrolled}.`);
+      this._dialogRef.close(response.user.id);
     });
   }
 }

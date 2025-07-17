@@ -3,10 +3,11 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, startWith } from 'rxjs';
+import { combineLatest, filter, map, startWith, switchMap } from 'rxjs';
 import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
@@ -54,6 +55,7 @@ export class AddUserComponent {
     private _dialog: MatDialog,
     private _userApiService: UserApiService,
     private _projectService: ProjectService,
+    private readonly _adminUsersApi: AdminUsersApiService,
     public collaborationPageService: CollaborationPageService
   ) {}
 
@@ -78,15 +80,19 @@ export class AddUserComponent {
 
   createUser() {
     this._dialog
-      .open<CreateUserDialogComponent, string, boolean>(
+      .open<CreateUserDialogComponent, undefined, string>(
         CreateUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true)
+        DspDialogConfig.dialogDrawerConfig(undefined, true)
       )
       .afterClosed()
-      .subscribe(success => {
-        if (success) {
-          this.collaborationPageService.reloadProjectMembers();
-        }
+      .pipe(
+        filter(result => result !== undefined),
+        switchMap(userId =>
+          this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(userId!, this.projectUuid)
+        )
+      )
+      .subscribe(() => {
+        this.collaborationPageService.reloadProjectMembers();
       });
   }
 
