@@ -4,7 +4,6 @@ import { IKeyValuePair } from '../model-interfaces';
 
 export class ProjectsStateModel {
   isLoading = false;
-  hasLoadingErrors = false;
   allProjects: ReadProject[] = [];
   projectRestrictedViewSettings: IKeyValuePair<ProjectRestrictedViewSettings | RestrictedViewResponse> = {};
 }

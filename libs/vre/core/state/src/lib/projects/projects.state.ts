@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -19,7 +19,6 @@ import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
   isLoading: false,
-  hasLoadingErrors: false, // loading error state
   allProjects: [], // all projects in the system grouped by project IRI
   projectRestrictedViewSettings: {}, // project image settings grouped by project id
 };
@@ -52,9 +51,6 @@ export class ProjectsState {
             isLoading: false,
             allProjects: response.projects,
           });
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true });
         },
       }),
       finalize(() => {
@@ -94,9 +90,6 @@ export class ProjectsState {
           ctx.patchState(state);
           return project;
         },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true });
-        },
       }),
       finalize(() => {
         ctx.patchState({ isLoading: false });
@@ -116,9 +109,6 @@ export class ProjectsState {
       tap({
         next: response => {
           ctx.dispatch(new LoadProjectsAction());
-        },
-        error: () => {
-          ctx.patchState({ hasLoadingErrors: true });
         },
       }),
       finalize(() => {
