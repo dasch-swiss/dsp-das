@@ -4,30 +4,31 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
 } from '@angular/core';
 import { Constants, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { LoadProjectsAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadProjectsAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-membership',
   template: `
     <div class="mat-headline-6 mb-2">
-      This user is member of {{ (user$ | async)?.projects.length | i18nPlural: itemPluralMapping['project'] }}
+      This user is member of {{ user.projects.length | i18nPlural: itemPluralMapping['project'] }}
     </div>
 
-    <div *ngFor="let project of (user$ | async)?.projects; trackBy: trackByFn" class="align-center">
+    <div *ngFor="let project of user.projects" class="align-center">
       <div class="flex-1">
         <div>{{ project.longname }} ({{ project.shortname }})</div>
         <div>
-          @if (isUserProjectAdmin((user$ | async)?.permissions, project.id)) {
+          @if (isUserProjectAdmin(user.permissions, project.id)) {
             User is <strong>Project admin</strong>
           }
         </div>
@@ -49,7 +50,7 @@ import { combineLatest, map, Subject, takeUntil } from 'rxjs';
     <div class="d-flex">
       <mat-form-field class="flex-1 mr-2">
         <mat-select placeholder="Add user to project" [(value)]="selectedValue">
-          <mat-option *ngFor="let project of projects$ | async; trackBy: trackByFn" [value]="project?.iri">
+          <mat-option *ngFor="let project of projects$ | async" [value]="project?.iri">
             {{ project?.name }}
           </mat-option>
         </mat-select>
@@ -57,7 +58,7 @@ import { combineLatest, map, Subject, takeUntil } from 'rxjs';
       <button
         mat-icon-button
         color="primary"
-        (click)="addToProject(selectedValue)"
+        (click)="addToProject(selectedValue!)"
         [disabled]="selectedValue === null"
         aria-label="Button to add user to project"
         matTooltip="Add user to selected project"
@@ -68,7 +69,7 @@ import { combineLatest, map, Subject, takeUntil } from 'rxjs';
   `,
   styleUrls: ['./membership.component.scss'],
 })
-export class MembershipComponent implements AfterViewInit, OnDestroy {
+export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges {
   private _ngUnsubscribe = new Subject<void>();
 
   selectedValue: string | null = null;
@@ -76,15 +77,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) user!: ReadUser;
   @Output() closeDialog = new EventEmitter<any>();
 
-  user$ = this._store.select(UserSelectors.allUsers).pipe(
-    takeUntil(this._ngUnsubscribe),
-    map(users => users.find(u => u.id === this.user.id))
-  );
-
-  projects$ = combineLatest([this._store.select(ProjectsSelectors.allProjects), this.user$]).pipe(
-    takeUntil(this._ngUnsubscribe),
-    map(([projects, user]) => this._getProjects(projects, user))
-  );
+  projects$!: Observable<AutocompleteItem[]>;
 
   readonly itemPluralMapping = {
     project: {
@@ -102,6 +95,13 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
     this._store.dispatch(new LoadProjectsAction());
   }
 
+  ngOnChanges() {
+    this.projects$ = this._store.select(ProjectsSelectors.allProjects).pipe(
+      map(projects => this._getProjects(projects, this.user)),
+      takeUntil(this._ngUnsubscribe)
+    );
+  }
+
   ngOnDestroy() {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
@@ -114,8 +114,6 @@ export class MembershipComponent implements AfterViewInit, OnDestroy {
   addToProject(projectIri: string) {
     this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(this.user.id, projectIri).subscribe();
   }
-
-  trackByFn = (index: number, item: StoredProject) => `${index}-${item?.id}`;
 
   isUserProjectAdmin(permissions: PermissionsData, projectIri: string): boolean {
     if (!permissions.groupsPerProject) return false;
