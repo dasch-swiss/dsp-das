@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { LoadUsersAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
+import { map, shareReplay } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,15 +28,23 @@ import { Store } from '@ngxs/store';
   `,
 })
 export class UsersTabComponent implements OnInit {
-  activeUsers$ = this._store.select(UserSelectors.activeUsers);
-  inactiveUsers$ = this._store.select(UserSelectors.inactiveUsers);
+  allUsers$ = this._userApiService.list().pipe(
+    map(response => response.users),
+    shareReplay({
+      bufferSize: 1,
+      refCount: true,
+    })
+  );
+  activeUsers$ = this.allUsers$.pipe(map(users => users.filter(user => user.status)));
+  inactiveUsers$ = this.allUsers$.pipe(map(users => users.filter(user => !user.status)));
   isLoading$ = this._store.select(UserSelectors.usersLoading);
 
   showActiveUsers = true;
 
   constructor(
     private readonly _store: Store,
-    private readonly _titleService: Title
+    private readonly _titleService: Title,
+    private _userApiService: UserApiService
   ) {
     this._titleService.setTitle('All users in DSP');
   }

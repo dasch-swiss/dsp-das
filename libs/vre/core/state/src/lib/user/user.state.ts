@@ -4,7 +4,6 @@ import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { Action, State, StateContext } from '@ngxs/store';
 import { map, take, tap } from 'rxjs';
 import {
-  CreateUserAction,
   LoadUserAction,
   LoadUsersAction,
   LogUserOutAction,
@@ -148,22 +147,6 @@ export class UserState {
   @Action(ResetUsersAction)
   resetUsers(ctx: StateContext<UserStateModel>) {
     ctx.patchState({ allUsers: defaults.allUsers });
-  }
-
-  @Action(CreateUserAction)
-  createUserAction(ctx: StateContext<UserStateModel>, { userData, enrollToProject }: CreateUserAction) {
-    ctx.patchState({ isLoading: true });
-    return this._userApiService.create(userData).pipe(
-      take(1),
-      tap({
-        next: response => {
-          const state = ctx.getState();
-          state.allUsers.push(response.user);
-          state.isLoading = false;
-          ctx.patchState(state);
-        },
-      })
-    );
   }
 
   @Action(UpdateUserAction)

@@ -1,4 +1,4 @@
-import { ReadUser, UpdateUserRequest, User } from '@dasch-swiss/dsp-js';
+import { ReadUser, UpdateUserRequest } from '@dasch-swiss/dsp-js';
 
 export class LoadUserAction {
   static readonly type = '[User] Load User';
@@ -37,15 +37,6 @@ export class LoadUsersAction {
 
 export class ResetUsersAction {
   static readonly type = '[User] Reset All Users';
-}
-
-export class CreateUserAction {
-  static readonly type = '[User] Create User';
-
-  constructor(
-    public userData: User,
-    public enrollToProject = ''
-  ) {}
 }
 
 export class UpdateUserAction {
