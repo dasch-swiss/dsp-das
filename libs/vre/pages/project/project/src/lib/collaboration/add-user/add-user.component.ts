@@ -19,10 +19,7 @@ import { combineLatest, map, startWith } from 'rxjs';
         <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
         <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
-          <mat-option
-            *ngFor="let user of filteredUsers$ | async; trackBy: trackByFn"
-            [value]="user.id"
-            [disabled]="isMember(user)">
+          <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user.id" [disabled]="isMember(user)">
             {{ getLabel(user) }}
           </mat-option>
         </mat-autocomplete>
@@ -85,6 +82,4 @@ export class AddUserComponent {
   createUser() {
     this._dialog.open(CreateUserDialogComponent, DspDialogConfig.dialogDrawerConfig<string>(this.projectUuid, true));
   }
-
-  trackByFn = (index: number) => index;
 }

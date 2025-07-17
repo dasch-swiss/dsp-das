@@ -68,12 +68,12 @@ export class ProjectMembersRowMenuComponent {
     this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
       if (currentUser.username !== response.user.username) {
         this._store.dispatch(new SetUserAction(response.user));
-        this.refresh();
+        this._refresh();
       } else {
         this._store.dispatch(new LoadUserAction(currentUser.username)).subscribe(() => {
           const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup(currentUser.permissions?.groupsPerProject || {});
           if (isSysAdmin) {
-            this.refresh();
+            this._refresh();
           } else {
             this._router
               .navigateByUrl(RouteConstants.refreshRelative, {
@@ -95,12 +95,12 @@ export class ProjectMembersRowMenuComponent {
     this._userApiService.addToProjectMembership(id, this.project.id, true).subscribe(response => {
       if (currentUser.username !== response.user.username) {
         this._store.dispatch(new SetUserAction(response.user));
-        this.refresh();
+        this._refresh();
       } else {
         // the logged-in user (system admin) added himself as project admin
         // update the application state of logged-in user and the session
         this._store.dispatch(new LoadUserAction(currentUser.username)).subscribe(() => {
-          this.refresh();
+          this._refresh();
         });
       }
     });
@@ -111,7 +111,7 @@ export class ProjectMembersRowMenuComponent {
       .open(EditUserDialogComponent, DspDialogConfig.dialogDrawerConfig<ReadUser>(user, true))
       .afterClosed()
       .subscribe(() => {
-        this.refresh();
+        this._refresh();
       });
   }
 
@@ -128,11 +128,11 @@ export class ProjectMembersRowMenuComponent {
         )
       )
       .subscribe(() => {
-        this.refresh();
+        this._refresh();
       });
   }
 
-  refresh() {
+  private _refresh() {
     this._collaborationPageService.reloadProjectMembers();
   }
 }

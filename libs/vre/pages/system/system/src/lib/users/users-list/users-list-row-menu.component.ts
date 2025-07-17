@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
@@ -11,6 +11,7 @@ import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
 import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
+import { UsersTabService } from '../users-tab.service';
 
 @Component({
   selector: 'app-users-list-row-menu',
@@ -42,7 +43,6 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
 })
 export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;
-  @Output() refreshParent = new EventEmitter<void>();
 
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   username$ = this._store.select(UserSelectors.username);
@@ -51,7 +51,8 @@ export class UsersListRowMenuComponent {
     private _matDialog: MatDialog,
     private _store: Store,
     private _dialog: DialogService,
-    private readonly _userApiService: UserApiService
+    private readonly _userApiService: UserApiService,
+    private _usersTabService: UsersTabService
   ) {}
 
   isSystemAdmin(permissions: PermissionsData): boolean {
@@ -76,7 +77,7 @@ export class UsersListRowMenuComponent {
       .subscribe(response => {
         this._store.dispatch(new SetUserAction(response.user));
         if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
-          this.refreshParent.emit();
+          this._reloadUserList();
         }
       });
   }
@@ -101,7 +102,7 @@ export class UsersListRowMenuComponent {
       )
       .afterClosed()
       .subscribe(() => {
-        this.refreshParent.emit();
+        this._reloadUserList();
       });
   }
 
@@ -111,7 +112,7 @@ export class UsersListRowMenuComponent {
       .afterClosed()
       .subscribe(response => {
         if (response === true) {
-          this.refreshParent.emit();
+          this._reloadUserList();
         }
       });
   }
@@ -123,14 +124,18 @@ export class UsersListRowMenuComponent {
   private deactivateUser(userIri: string) {
     this._userApiService.delete(userIri).subscribe(response => {
       this._store.dispatch(new SetUserAction(response.user));
-      this.refreshParent.emit();
+      this._reloadUserList();
     });
   }
 
   private activateUser(userIri: string) {
     this._userApiService.updateStatus(userIri, true).subscribe(response => {
       this._store.dispatch(new SetUserAction(response.user));
-      this.refreshParent.emit();
+      this._reloadUserList();
     });
+  }
+
+  private _reloadUserList() {
+    this._usersTabService.reloadUsers();
   }
 }
