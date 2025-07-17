@@ -5,14 +5,5 @@
 
 @use '@angular/material' as mat;
 
-// define the primary button typography level
-$dsp-primary-button-typography-level: mat.define-typography-level(
-        $font-size: 16px,
-        $line-height: 36px,
-        $font-weight: 400,
-        $font-family: 'Roboto, "Helvetica Neue", sans-serif',
-        $letter-spacing: normal
-);
-
-// combine everything in a typography config
-$dsp-typography-config: mat.define-typography-config($button: $dsp-primary-button-typography-level);
+// For Angular Material 18, use default typography
+$dsp-typography-config: mat.define-typography-config();
