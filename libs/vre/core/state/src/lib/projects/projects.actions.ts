@@ -15,7 +15,7 @@ export class LoadProjectAction {
 }
 
 export class ClearProjectsAction {
-  static readonly type = 'c[Projects] Clear projects';
+  static readonly type = '[Projects] Clear projects';
 }
 
 export class UpdateProjectAction {

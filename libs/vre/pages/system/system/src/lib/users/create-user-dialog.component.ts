@@ -46,7 +46,6 @@ export class CreateUserDialogComponent {
     user.systemAdmin = this.form.controls.systemAdmin.value;
     user.status = true;
 
-    console.log('test');
     this._userApiService.create(user).subscribe(response => {
       this.isLoading = false;
       this._dialogRef.close(response.user.id);
