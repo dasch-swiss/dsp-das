@@ -106,7 +106,7 @@ export class UsersListComponent {
 
   createUser() {
     this._matDialog
-      .open<CreateUserDialogComponent, any, boolean>(
+      .open<CreateUserDialogComponent, undefined, boolean>(
         CreateUserDialogComponent,
         DspDialogConfig.dialogDrawerConfig({}, true)
       )

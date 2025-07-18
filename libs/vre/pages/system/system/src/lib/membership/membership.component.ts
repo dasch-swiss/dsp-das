@@ -18,7 +18,7 @@ import {
 import { LoadProjectsAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,7 +77,7 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, ta
 })
 export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input({ required: true }) userId!: string;
-  @Output() closeDialog = new EventEmitter<any>();
+  @Output() closeDialog = new EventEmitter<void>();
 
   private _ngUnsubscribe = new Subject<void>();
   selectedValue: string | null = null;
@@ -107,10 +107,7 @@ export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges 
   ngOnChanges() {
     this.user$ = this._refreshSubject.pipe(
       switchMap(() => this._adminUsersApi.getAdminUsersIriUseriri(this.userId)),
-      map(response => response.user),
-      tap(z => {
-        console.log('z', z);
-      })
+      map(response => response.user)
     );
     this.projects$ = combineLatest([this._store.select(ProjectsSelectors.allProjects), this.user$]).pipe(
       map(([projects, user]) => this._getProjects(projects, user)),

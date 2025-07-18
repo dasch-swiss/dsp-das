@@ -9,7 +9,7 @@ import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/p
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
-import { EditPasswordDialogComponent } from '../edit-password-dialog.component';
+import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { UsersTabService } from '../users-tab.service';
 
@@ -110,7 +110,7 @@ export class UsersListRowMenuComponent {
 
   openEditPasswordDialog(user: ReadUser) {
     this._matDialog
-      .open<EditPasswordDialogComponent, any, boolean>(
+      .open<EditPasswordDialogComponent, EditPasswordDialogProps, boolean>(
         EditPasswordDialogComponent,
         DspDialogConfig.dialogDrawerConfig({ user }, true)
       )
