@@ -7,7 +7,7 @@ import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-a
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, filter, map, startWith, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, startWith, switchMap } from 'rxjs';
 import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
@@ -44,9 +44,14 @@ export class AddUserComponent {
   usernameControl = new FormControl<string | null>(null);
   users: ReadUser[] = [];
 
+  reloadListSubject = new BehaviorSubject(null);
+
   filteredUsers$ = combineLatest([
     this.usernameControl.valueChanges.pipe(startWith(null)),
-    this._userApiService.list().pipe(map(response => response.users)),
+    this.reloadListSubject.pipe(
+      switchMap(() => this._userApiService.list()),
+      map(response => response.users)
+    ),
   ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   constructor(
@@ -75,6 +80,7 @@ export class AddUserComponent {
     this._dspApiConnection.admin.usersEndpoint.addUserToProjectMembership(userId, this.projectIri).subscribe(() => {
       this.usernameControl.setValue(null);
       this.collaborationPageService.reloadProjectMembers();
+      this.reloadListSubject.next(null);
     });
   }
 
