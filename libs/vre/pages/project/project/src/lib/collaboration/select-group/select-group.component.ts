@@ -24,6 +24,13 @@ import { CollaborationPageService } from '../collaboration-page.service';
       <div *ngIf="groups.length === 0" class="center">No group defined yet.</div>
     </ng-container>
   `,
+  styles: [
+    `
+      :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectGroupComponent implements OnInit {
