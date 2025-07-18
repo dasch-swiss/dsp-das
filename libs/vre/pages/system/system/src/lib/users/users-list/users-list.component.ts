@@ -108,7 +108,7 @@ export class UsersListComponent {
     this._matDialog
       .open<CreateUserDialogComponent, undefined, boolean>(
         CreateUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({}, true)
+        DspDialogConfig.dialogDrawerConfig(undefined, true)
       )
       .afterClosed()
       .subscribe(isCreated => {
