@@ -4,14 +4,13 @@ import {
   CreateGeomValue,
   CreateLinkValue,
   CreateResource,
-  CreateTextValueAsString,
   CreateTextValueAsXml,
   Point2D,
   ReadResource,
   ReadStillImageFileValue,
   RegionGeometry,
 } from '@dasch-swiss/dsp-js';
-import { handleXML } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { handleXML } from '@dasch-swiss/vre/shared/app-common';
 import OpenSeadragon from 'openseadragon';
 import { Region } from '../region';
 import { GeometryForRegion } from './geometry-for-region';
