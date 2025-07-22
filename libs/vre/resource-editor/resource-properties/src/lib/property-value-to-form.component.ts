@@ -1,13 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { FootnoteService } from './footnote.service';
-import { FormValueArray } from './form-value-array.type';
-import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-property-value-to-form',
+  selector: 'app-property-values-with-footnotes',
   template: `
     <app-property-values *ngIf="resource.type" [myProperty]="prop" [editModeData]="{ resource, values: prop.values }" />
 
@@ -16,33 +13,15 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
   styles: [':host { display: block; position: relative; width: 100%}'],
   providers: [FootnoteService],
 })
-export class PropertyValueToFormComponent implements OnChanges {
+export class PropertyValuesWithFootnotesComponent implements OnChanges {
   @Input({ required: true }) prop!: PropertyInfoValues;
   @Input({ required: true }) resource!: ReadResource;
 
-  formArray!: FormValueArray;
-
-  constructor(
-    private _fb: FormBuilder,
-    public footnoteService: FootnoteService
-  ) {}
+  constructor(public footnoteService: FootnoteService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['prop']) {
       this.footnoteService.reset();
     }
-
-    this.formArray = this._fb.array(
-      this.prop.values.map(value => {
-        const property = propertiesTypeMapping.get(this.prop.propDef.objectType!);
-        if (property === undefined) {
-          throw new Error(`The property of type ${this.prop.propDef.objectType} is unknown`);
-        }
-        return this._fb.group({
-          item: property.control(value) as AbstractControl,
-          comment: this._fb.control(value?.valueHasComment ?? null),
-        });
-      })
-    );
   }
 }

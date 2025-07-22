@@ -51,7 +51,7 @@ import { map } from 'rxjs';
           prop.propDef.label +
           (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
         ">
-        <app-property-value-to-form [prop]="prop" [resource]="resource.res" />
+        <app-property-values-with-footnotes [prop]="prop" [resource]="resource.res" />
       </app-property-row>
     </ng-container>
 

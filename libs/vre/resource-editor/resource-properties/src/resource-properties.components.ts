@@ -13,7 +13,7 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueDisplayCommentComponent } from './lib/property-value-display-comment.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
-import { PropertyValueToFormComponent } from './lib/property-value-to-form.component';
+import { PropertyValuesWithFootnotesComponent } from './lib/property-value-to-form.component';
 import { PropertyValueUpdateComponent } from './lib/property-value-update.component';
 import { PropertyValueComponent } from './lib/property-value.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
@@ -28,7 +28,7 @@ export const ResourcePropertiesComponents = [
   PropertyValueDisplayCommentComponent,
   PropertyValueUpdateComponent,
   PropertyValueAddComponent,
-  PropertyValueToFormComponent,
+  PropertyValuesWithFootnotesComponent,
   PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
