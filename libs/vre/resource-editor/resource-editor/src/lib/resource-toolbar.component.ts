@@ -133,29 +133,27 @@ export class ResourceToolbarComponent {
   ) {}
 
   checkResourceCanBeDeleted() {
-    const noIncomingRefs$ = of(this.resource.incomingReferences.length === 0);
+    if (this.resource.incomingReferences.length > 0) {
+      this.resourceCanBeDeleted = false;
+      return;
+    }
 
-    const noIncomingLinks$ = this._dspApi.v2.search.doSearchIncomingLinks(this.resource.id).pipe(
-      take(1),
-      map(res => res.resources.length === 0)
-    );
+    const noIncomingLinks$ = this._dspApi.v2.search
+      .doSearchIncomingLinks(this.resource.id)
+      .pipe(map(res => res.resources.length === 0));
 
-    const noStillImageLinks$ = this._dspApi.v2.search.doSearchStillImageRepresentationsCount(this.resource.id).pipe(
-      take(1),
-      map(res => res.numberOfResults === 0)
-    );
+    const noStillImageLinks$ = this._dspApi.v2.search
+      .doSearchStillImageRepresentationsCount(this.resource.id)
+      .pipe(map(res => res.numberOfResults === 0));
 
     const noRegions$ = this.resource.properties[Constants.HasStillImageFileValue]
-      ? this._dspApi.v2.search.doSearchIncomingRegions(this.resource.id).pipe(
-          take(1),
-          map(seq => seq.resources.length === 0)
-        )
+      ? this._dspApi.v2.search.doSearchIncomingRegions(this.resource.id).pipe(map(seq => seq.resources.length === 0))
       : of(true);
 
-    combineLatest([noIncomingRefs$, noIncomingLinks$, noStillImageLinks$, noRegions$])
+    combineLatest([noIncomingLinks$, noStillImageLinks$, noRegions$])
       .pipe(take(1))
-      .subscribe(([noRefs, noLinks, noStills, noRegions]) => {
-        this.resourceCanBeDeleted = noRefs && noLinks && noStills && noRegions;
+      .subscribe(([noLinks, noStills, noRegions]) => {
+        this.resourceCanBeDeleted = noLinks && noStills && noRegions;
       });
   }
 
