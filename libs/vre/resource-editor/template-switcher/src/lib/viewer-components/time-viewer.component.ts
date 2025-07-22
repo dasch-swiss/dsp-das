@@ -24,6 +24,6 @@ export class TimeViewerComponent implements OnChanges {
   }
 
   get dateTime() {
-    return dateTimeTimestamp(this.myDate.date, this.value.time);
+    return dateTimeTimestamp(this.myDate.date, this.myDate.time);
   }
 }
