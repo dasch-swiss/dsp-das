@@ -317,7 +317,7 @@ describe('Resource', () => {
         });
     });
 
-    it.only('link', () => {
+    it('link', () => {
       // create John Smith person
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
         '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
