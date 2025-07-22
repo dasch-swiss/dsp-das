@@ -189,6 +189,44 @@
   },
   "resourceEditor": {
     "properties": "Properties",
+    "deleteValueDialog": {
+      "title": "Es ti segir ch'ti vuls stizzer questa valo da",
+      "description": "Ti pos laschar in commentari per declerar tia tscherna.",
+      "reason": "Motiv",
+      "reasonPlaceholder": "Declera per plaschair il motiv per tia stizzada.",
+      "cancel": "Na, tegnair la valo",
+      "confirm": "Gea, stizzer la valo"
+    },
+    "createResourceDialog": {
+      "title": "Crear ina nova resursa dal tip:"
+    },
+    "eraseResourceDialog": {
+      "title": "Vuls ti stizzer questa resursa per adina?",
+      "subtitle": "Stizzer l'instanza da resursa",
+      "warning": "ATTENZIUN: Questa acziun na po betg vegnir revocada, duvra ella cun precauziun.",
+      "reason": "Motiv",
+      "cancel": "Na, tegnair ella",
+      "confirm": "Gea, stizzer"
+    },
+    "editResourceLabelDialog": {
+      "subtitle": "Redeger l'etichetta da la resursa",
+      "label": "Etichetta"
+    },
+    "deleteResourceDialog": {
+      "title": "Vuls ti stizzer questa resursa?",
+      "comment": "Commentescha pertge che la resursa vegn stizzada",
+      "commentPlaceholder": "P.ex. La resursa è vegnida creada per sbagl...",
+      "cancel": "Na, tegnair ella",
+      "confirm": "Gea, stizzer"
+    },
+    "createSegmentDialog": {
+      "label": "Etichetta",
+      "start": "Cumenz",
+      "end": "Fin",
+      "title": "Titel",
+      "description": "Descripziun",
+      "comment": "Commentari"
+    },
     "labelAnnotations": "Annotations",
     "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
     "versioned": "You are watching a resource dating from",
@@ -250,6 +288,11 @@
     }
   },
   "ui": {
+    "dialog": {
+      "confirmTitle": "Conferma necessaria",
+      "yes": "Gea",
+      "no": "Na"
+    },
     "form": {
       "action": {
         "cancel": "Cancel",

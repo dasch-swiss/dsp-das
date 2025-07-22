@@ -15,23 +15,23 @@ export interface DeleteValueDialogProps {
   template: `
     <app-dialog-header
       [title]="
-        'Are you sure you want to delete this value from ' + propertyValueService.propertyDefinition.label + '?'
+        ('resourceEditor.deleteValueDialog.title' | translate) + ' ' + propertyValueService.propertyDefinition.label + '?'
       " />
     <div mat-dialog-content>
-      You can leave a comment to explain your choice.
+      {{ 'resourceEditor.deleteValueDialog.description' | translate }}
 
       <mat-form-field style="display: block; width: 100%; margin-top: 16px">
-        <mat-label>Reason</mat-label>
+        <mat-label>{{ 'resourceEditor.deleteValueDialog.reason' | translate }}</mat-label>
         <textarea
           matInput
           data-cy="delete-comment"
           rows="5"
-          placeholder="Please explain the reason for your deletion."
+          [placeholder]="'resourceEditor.deleteValueDialog.reasonPlaceholder' | translate"
           [(ngModel)]="comment"></textarea>
       </mat-form-field>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close (click)="dialogRef.close()">No, keep the value</button>
+      <button mat-button mat-dialog-close (click)="dialogRef.close()">{{ 'resourceEditor.deleteValueDialog.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -39,7 +39,7 @@ export interface DeleteValueDialogProps {
         [isLoading]="loading"
         (click)="deleteValue()"
         data-cy="confirm-button">
-        Yes, delete the value
+        {{ 'resourceEditor.deleteValueDialog.confirm' | translate }}
       </button>
     </div>
   `,

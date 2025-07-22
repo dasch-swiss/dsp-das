@@ -189,6 +189,44 @@
   },
   "resourceEditor": {
     "properties": "Eigenschaften",
+    "deleteValueDialog": {
+      "title": "Möchten Sie diesen Wert wirklich löschen aus",
+      "description": "Sie können einen Kommentar hinterlassen, um Ihre Wahl zu erklären.",
+      "reason": "Grund",
+      "reasonPlaceholder": "Bitte erklären Sie den Grund für Ihre Löschung.",
+      "cancel": "Nein, Wert behalten",
+      "confirm": "Ja, Wert löschen"
+    },
+    "createResourceDialog": {
+      "title": "Neue Ressource erstellen vom Typ:"
+    },
+    "eraseResourceDialog": {
+      "title": "Möchten Sie diese Ressource für immer löschen?",
+      "subtitle": "Ressourcen-Instanz löschen",
+      "warning": "WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden, verwenden Sie sie daher mit Vorsicht.",
+      "reason": "Grund",
+      "cancel": "Nein, behalten",
+      "confirm": "Ja, löschen"
+    },
+    "editResourceLabelDialog": {
+      "subtitle": "Ressourcen-Label bearbeiten",
+      "label": "Label"
+    },
+    "deleteResourceDialog": {
+      "title": "Möchten Sie diese Ressource löschen?",
+      "comment": "Kommentar, warum die Ressource gelöscht wird",
+      "commentPlaceholder": "Z.B. Ressource wurde aus Versehen erstellt...",
+      "cancel": "Nein, behalten",
+      "confirm": "Ja, löschen"
+    },
+    "createSegmentDialog": {
+      "label": "Label",
+      "start": "Start",
+      "end": "Ende",
+      "title": "Titel",
+      "description": "Beschreibung",
+      "comment": "Kommentar"
+    },
     "labelAnnotations": "Annotationen",
     "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
     "versioned": "You are watching a resource dating from",
@@ -250,6 +288,11 @@
     }
   },
   "ui": {
+    "dialog": {
+      "confirmTitle": "Bestätigung erforderlich",
+      "yes": "Ja",
+      "no": "Nein"
+    },
     "form": {
       "action": {
         "cancel": "Abbrechen",

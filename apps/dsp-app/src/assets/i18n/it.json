@@ -189,6 +189,44 @@
   },
   "resourceEditor": {
     "properties": "Proprietà",
+    "deleteValueDialog": {
+      "title": "Sei sicuro di voler eliminare questo valore da",
+      "description": "Puoi lasciare un commento per spiegare la tua scelta.",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Spiega il motivo della tua eliminazione.",
+      "cancel": "No, mantieni il valore",
+      "confirm": "Sì, elimina il valore"
+    },
+    "createResourceDialog": {
+      "title": "Crea nuova risorsa di tipo:"
+    },
+    "eraseResourceDialog": {
+      "title": "Vuoi eliminare definitivamente questa risorsa?",
+      "subtitle": "Elimina istanza risorsa",
+      "warning": "ATTENZIONE: Questa azione non può essere annullata, usala con cautela.",
+      "reason": "Motivo",
+      "cancel": "No, mantienila",
+      "confirm": "Sì, elimina"
+    },
+    "editResourceLabelDialog": {
+      "subtitle": "Modifica etichetta della risorsa",
+      "label": "Etichetta"
+    },
+    "deleteResourceDialog": {
+      "title": "Vuoi eliminare questa risorsa?",
+      "comment": "Commenta perché la risorsa viene eliminata",
+      "commentPlaceholder": "Es. La risorsa è stata creata per errore...",
+      "cancel": "No, mantienila",
+      "confirm": "Sì, elimina"
+    },
+    "createSegmentDialog": {
+      "label": "Etichetta",
+      "start": "Inizio",
+      "end": "Fine",
+      "title": "Titolo",
+      "description": "Descrizione",
+      "comment": "Commento"
+    },
     "labelAnnotations": "Annotazioni",
     "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
     "versioned": "You are watching a resource dating from",
@@ -250,6 +288,11 @@
     }
   },
   "ui": {
+    "dialog": {
+      "confirmTitle": "Conferma necessaria",
+      "yes": "Sì",
+      "no": "No"
+    },
     "form": {
       "action": {
         "cancel": "Annulla",

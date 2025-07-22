@@ -9,12 +9,12 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'app-erase-resource-dialog',
   template: `
-    <app-dialog-header title="Do you want to erase this resource forever?" [subtitle]="'Erase resource instance'" />
+    <app-dialog-header [title]="'resourceEditor.eraseResourceDialog.title' | translate" [subtitle]="'resourceEditor.eraseResourceDialog.subtitle' | translate" />
 
     <mat-dialog-content>
-      <div style="margin-bottom: 8px">WARNING: This action cannot be undone, so use it with care.</div>
+      <div style="margin-bottom: 8px">{{ 'resourceEditor.eraseResourceDialog.warning' | translate }}</div>
       <mat-form-field style="width: 100%">
-        <mat-label>Reason</mat-label>
+        <mat-label>{{ 'resourceEditor.eraseResourceDialog.reason' | translate }}</mat-label>
         <textarea
           matInput
           rows="4"
@@ -25,7 +25,7 @@ import { finalize } from 'rxjs';
     </mat-dialog-content>
 
     <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
+      <button mat-button color="primary" mat-dialog-close class="cancel-button center">{{ 'resourceEditor.eraseResourceDialog.cancel' | translate }}</button>
       <span class="fill-remaining-space"></span>
       <button
         [disabled]="eraseForm.invalid"
@@ -37,7 +37,7 @@ import { finalize } from 'rxjs';
         [color]="'warn'"
         class="confirm-button center"
         (click)="submit()">
-        Yes, erase
+        {{ 'resourceEditor.eraseResourceDialog.confirm' | translate }}
       </button>
     </mat-dialog-actions>
   `,

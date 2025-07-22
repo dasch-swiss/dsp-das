@@ -189,6 +189,44 @@
   },
   "resourceEditor": {
     "properties": "Properties",
+    "deleteValueDialog": {
+      "title": "Are you sure you want to delete this value from",
+      "description": "You can leave a comment to explain your choice.",
+      "reason": "Reason",
+      "reasonPlaceholder": "Please explain the reason for your deletion.",
+      "cancel": "No, keep the value",
+      "confirm": "Yes, delete the value"
+    },
+    "createResourceDialog": {
+      "title": "Create new resource of type:"
+    },
+    "eraseResourceDialog": {
+      "title": "Do you want to erase this resource forever?",
+      "subtitle": "Erase resource instance",
+      "warning": "WARNING: This action cannot be undone, so use it with care.",
+      "reason": "Reason",
+      "cancel": "No, keep it",
+      "confirm": "Yes, erase"
+    },
+    "editResourceLabelDialog": {
+      "subtitle": "Edit resource's label",
+      "label": "Label"
+    },
+    "deleteResourceDialog": {
+      "title": "Do you want to delete this resource?",
+      "comment": "Comment why resource is being deleted",
+      "commentPlaceholder": "Ex. Resource was created by mistake...",
+      "cancel": "No, keep it",
+      "confirm": "Yes, delete"
+    },
+    "createSegmentDialog": {
+      "label": "Label",
+      "start": "Start",
+      "end": "End",
+      "title": "Title",
+      "description": "Description",
+      "comment": "Comment"
+    },
     "labelAnnotations": "Annotations",
     "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
     "versioned": "You are watching a resource dating from",
@@ -250,6 +288,11 @@
     }
   },
   "ui": {
+    "dialog": {
+      "confirmTitle": "Confirmation needed",
+      "yes": "Yes",
+      "no": "No"
+    },
     "form": {
       "action": {
         "cancel": "Cancel",

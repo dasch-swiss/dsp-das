@@ -189,6 +189,44 @@
   },
   "resourceEditor": {
     "properties": "Propriétés",
+    "deleteValueDialog": {
+      "title": "Êtes-vous sûr de vouloir supprimer cette valeur de",
+      "description": "Vous pouvez laisser un commentaire pour expliquer votre choix.",
+      "reason": "Raison",
+      "reasonPlaceholder": "Veuillez expliquer la raison de votre suppression.",
+      "cancel": "Non, garder la valeur",
+      "confirm": "Oui, supprimer la valeur"
+    },
+    "createResourceDialog": {
+      "title": "Créer une nouvelle ressource de type :"
+    },
+    "eraseResourceDialog": {
+      "title": "Voulez-vous supprimer définitivement cette ressource ?",
+      "subtitle": "Supprimer l'instance de ressource",
+      "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec précaution.",
+      "reason": "Raison",
+      "cancel": "Non, la garder",
+      "confirm": "Oui, supprimer"
+    },
+    "editResourceLabelDialog": {
+      "subtitle": "Modifier le libellé de la ressource",
+      "label": "Libellé"
+    },
+    "deleteResourceDialog": {
+      "title": "Voulez-vous supprimer cette ressource ?",
+      "comment": "Commentez pourquoi la ressource est supprimée",
+      "commentPlaceholder": "Ex. La ressource a été créée par erreur...",
+      "cancel": "Non, la garder",
+      "confirm": "Oui, supprimer"
+    },
+    "createSegmentDialog": {
+      "label": "Libellé",
+      "start": "Début",
+      "end": "Fin",
+      "title": "Titre",
+      "description": "Description",
+      "comment": "Commentaire"
+    },
     "labelAnnotations": "Annotations",
     "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
     "versioned": "You are watching a resource dating from",
@@ -250,6 +288,11 @@
     }
   },
   "ui": {
+    "dialog": {
+      "confirmTitle": "Confirmation nécessaire",
+      "yes": "Oui",
+      "no": "Non"
+    },
     "form": {
       "action": {
         "cancel": "Annuler",
