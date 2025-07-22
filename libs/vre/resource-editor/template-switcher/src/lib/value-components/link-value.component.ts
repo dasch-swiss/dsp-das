@@ -54,7 +54,7 @@ import { LinkValueDataService } from './link-value-data.service';
 export class LinkValueComponent implements OnInit {
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
-  @Input({ required: true }) control!: FormControl<string>;
+  @Input({ required: true }) control!: FormControl<string | null>;
   @Input({ required: true }) propIri!: string;
   @Input({ required: true }) resourceClassIri!: string;
   @Input() defaultValue?: ReadValue;

@@ -29,5 +29,5 @@ import { FormControl } from '@angular/forms';
   styles: [':host { z-index: 1; position: relative}'], // for color picker popup z-index
 })
 export class ColorValueComponent {
-  @Input({ required: true }) control!: FormControl<string>;
+  @Input({ required: true }) control!: FormControl<string | null>;
 }
