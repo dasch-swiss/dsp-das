@@ -119,8 +119,4 @@ describe('Project Member - List management', () => {
       cy.get('[data-cy=comment-title]').contains(editData.comment);
     });
   });
-
-  after(() => {
-    Cypress.env('skipDatabaseCleanup', false);
-  });
 });

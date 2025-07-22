@@ -71,8 +71,4 @@ describe('Project Member - Ontology management', () => {
       cy.get('[data-cy=ontology-label]').contains(editData.label).should('be.visible');
     });
   });
-
-  after(() => {
-    Cypress.env('skipDatabaseCleanup', false);
-  });
 });
