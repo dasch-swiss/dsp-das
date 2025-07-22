@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -21,14 +21,18 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     <button
       mat-icon-button
       type="button"
-      *ngIf="myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n"
-      (click)="addEntry()">
-      <mat-icon>add_box</mat-icon>
+      *ngIf="
+        (myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n) &&
+        formArray.controls[formArray.controls.length - 1].value.item !== null
+      "
+      (click)="addEntry()"
+      [matTooltip]="'Add new value'">
+      <mat-icon>add_circle</mat-icon>
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValuesCreatorComponent {
+export class PropertyValuesCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) resourceClassIri!: string;
@@ -40,6 +44,10 @@ export class PropertyValuesCreatorComponent {
     private _cd: ChangeDetectorRef,
     private _fb: FormBuilder
   ) {}
+
+  ngOnInit() {
+    console.log(this.formArray.controls[this.formArray.controls.length - 1].value.item);
+  }
 
   templateFound(template: TemplateRef<any>) {
     this.template = template;
