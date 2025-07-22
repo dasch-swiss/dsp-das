@@ -2,7 +2,6 @@ import { Component, Inject, Input } from '@angular/core';
 import { KnoraApiConnection, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { finalize, take, tap } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
@@ -17,8 +16,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
 export class PropertyValueUpdateComponent {
   @Input({ required: true }) index!: number;
 
-  loading = false; // TODO something with it
-
   constructor(
     public propertyValueService: PropertyValueService,
     private _resourceFetcherService: ResourceFetcherService,
@@ -31,18 +28,10 @@ export class PropertyValueUpdateComponent {
   }
 
   update(group: FormValueGroup) {
-    this._dspApiConnection.v2.values
-      .updateValue(this._getPayload(this.index, group))
-      .pipe(
-        take(1),
-        tap(() => this._resourceFetcherService.reload()),
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe(() => {
-        this.propertyValueService.toggleOpenedValue(this.index);
-      });
+    this._dspApiConnection.v2.values.updateValue(this._getPayload(this.index, group)).subscribe(() => {
+      this._resourceFetcherService.reload();
+      this.propertyValueService.toggleOpenedValue(this.index);
+    });
   }
 
   private _getPayload(index: number, group: FormValueGroup) {

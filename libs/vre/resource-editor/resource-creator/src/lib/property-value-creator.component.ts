@@ -49,7 +49,6 @@ export class PropertyValueCreatorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('t', this);
     this.isValid$ = this.formArray.controls.item.valueChanges.pipe(
       startWith(this.formArray.controls.item.getRawValue()),
       map(change => {
