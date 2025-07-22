@@ -26,7 +26,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #intDisplayTpl let-item="item">
-      <span>{{ item.int }}</span>
+      <span>{{ item.strval }}</span>
     </ng-template>
 
     <ng-template #booleanDisplayTpl let-item="item">
