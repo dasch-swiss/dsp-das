@@ -41,7 +41,8 @@ export class DefaultResourceClasses {
   ] as const;
 
   public static getLabel(iri: string): string {
-    return this.data.find(rc => rc.iri === iri)?.label || this.data[0].label;
+    const label = this.data.find(rc => rc.iri === iri)?.label;
+    return label || iri.split('/')?.pop() || '';
   }
 
   public static getIcon(iri: string): string | undefined {
