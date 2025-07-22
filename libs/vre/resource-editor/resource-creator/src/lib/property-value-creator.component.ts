@@ -16,6 +16,7 @@ import { map, startWith } from 'rxjs/operators';
       <div style="width: 140px; position: absolute; right: -160px">
         <button
           mat-icon-button
+          type="button"
           [matTooltip]="'Delete this value'"
           [hidden]="isHidden$ | async"
           (click)="removeValue()"
@@ -25,6 +26,7 @@ import { map, startWith } from 'rxjs/operators';
 
         <button
           mat-icon-button
+          type="button"
           style="color: #acacac"
           [hidden]="isHidden$ | async"
           (click)="toggleCommentValue()"

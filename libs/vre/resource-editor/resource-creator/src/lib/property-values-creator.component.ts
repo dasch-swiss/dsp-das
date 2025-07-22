@@ -20,6 +20,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
     <button
       mat-icon-button
+      type="button"
       *ngIf="myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n"
       (click)="addEntry()">
       <mat-icon>add_box</mat-icon>
