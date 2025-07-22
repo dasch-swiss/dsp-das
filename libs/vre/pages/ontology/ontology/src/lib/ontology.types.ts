@@ -1,4 +1,5 @@
 import {
+  Constants,
   IHasProperty,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
@@ -57,6 +58,12 @@ export class ResourceClassInfo {
 
   get defaultClassLabel() {
     return this._resClass.subClassOf
+      .sort((a, b) => {
+        // sort so interneal Knora classes come first
+        const aIsKnora = a.startsWith(Constants.KnoraApiV2) ? -1 : 1;
+        const bIsKnora = b.startsWith(Constants.KnoraApiV2) ? -1 : 1;
+        return aIsKnora - bIsKnora;
+      })
       .map(superIri => DefaultResourceClasses.getLabel(superIri))
       .filter(Boolean)
       .join(', ');
