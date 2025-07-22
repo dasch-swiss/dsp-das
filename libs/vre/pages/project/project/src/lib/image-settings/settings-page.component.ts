@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MenuItem } from '@dasch-swiss/vre/pages/user-settings/user';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +35,7 @@ import { MenuItem } from '@dasch-swiss/vre/pages/user-settings/user';
 })
 export class SettingsPageComponent {
   private _translateService = inject(TranslateService);
-  
+
   navigation: MenuItem[] = [
     {
       label: 'Project Description',
