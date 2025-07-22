@@ -20,6 +20,7 @@ import { ListViewerComponent } from './lib/viewer-components/list-viewer.compone
 import { RichTextViewerComponent } from './lib/viewer-components/rich-text-viewer.component';
 import { TextHtmlViewerComponent } from './lib/viewer-components/text-html-viewer.component';
 import { TimeViewerComponent } from './lib/viewer-components/time-viewer.component';
+import { UriViewerComponent } from './lib/viewer-components/uri-viewer.component';
 
 export const TemplateSwitcherComponents = [
   // Value components
@@ -41,6 +42,7 @@ export const TemplateSwitcherComponents = [
   TextHtmlViewerComponent,
   TimeViewerComponent,
   ColorViewerComponent,
+  UriViewerComponent,
   // Other components
   TemplateViewerSwitcherComponent,
   TemplateEditorSwitcherComponent,

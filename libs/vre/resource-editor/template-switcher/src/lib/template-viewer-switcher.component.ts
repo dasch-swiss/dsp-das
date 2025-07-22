@@ -69,6 +69,10 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
       <app-link-viewer [value]="item" />
     </ng-template>
 
+    <ng-template #uriDisplayTpl let-item="item">
+      <app-uri-viewer [value]="item" />
+    </ng-template>
+
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
