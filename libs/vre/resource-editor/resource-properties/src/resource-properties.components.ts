@@ -13,9 +13,9 @@ import { PropertyValueCommentComponent } from './lib/property-value-comment.comp
 import { PropertyValueDisplayCommentComponent } from './lib/property-value-display-comment.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
-import { PropertyValuesWithFootnotesComponent } from './lib/property-value-to-form.component';
 import { PropertyValueUpdateComponent } from './lib/property-value-update.component';
 import { PropertyValueComponent } from './lib/property-value.component';
+import { PropertyValuesWithFootnotesComponent } from './lib/property-values-with-footnotes.component';
 import { PropertyValuesComponent } from './lib/property-values.component';
 
 export const ResourcePropertiesComponents = [
