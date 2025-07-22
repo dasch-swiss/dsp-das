@@ -3,15 +3,16 @@ import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swis
 import { DateTime } from './date-time';
 
 function userInputToTimestamp(userInput: DateTime): string {
-  const splitTime = userInput.time.split(':');
+  const time = userInput.time.split('T')[1];
+  const [hours, mins] = time.split(':').map(v => parseInt(v));
 
   // in a Javascript Date, the month is 0-based so we need to subtract 1
   const updateDate = new Date(
     userInput.date.toCalendarPeriod().periodStart.year,
     userInput.date.toCalendarPeriod().periodStart.month - 1,
     userInput.date.toCalendarPeriod().periodStart.day,
-    Number(splitTime[0]),
-    Number(splitTime[1])
+    hours,
+    mins
   );
 
   return `${updateDate.toISOString().split('.')[0]}Z`;
