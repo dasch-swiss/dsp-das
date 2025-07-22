@@ -150,11 +150,9 @@ export class ResourceToolbarComponent {
       ? this._dspApi.v2.search.doSearchIncomingRegions(this.resource.id).pipe(map(seq => seq.resources.length === 0))
       : of(true);
 
-    combineLatest([noIncomingLinks$, noStillImageLinks$, noRegions$])
-      .pipe(take(1))
-      .subscribe(([noLinks, noStills, noRegions]) => {
-        this.resourceCanBeDeleted = noLinks && noStills && noRegions;
-      });
+    combineLatest([noIncomingLinks$, noStillImageLinks$, noRegions$]).subscribe(([noLinks, noStills, noRegions]) => {
+      this.resourceCanBeDeleted = noLinks && noStills && noRegions;
+    });
   }
 
   openResource() {
