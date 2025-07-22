@@ -123,7 +123,11 @@
         "copyrightHolder": "Titulaire des droits",
         "enabled": "Activé",
         "authorshipOverview": "Auteur·ice - Vue d'ensemble",
-        "authorshipReadOnly": "Cette vue d'ensemble est en lecture seule. Pour ajouter un·e nouvelle·au auteur·ice, veuillez l'ajouter directement dans la ressource."
+        "authorshipReadOnly": "Cette vue d'ensemble est en lecture seule. Pour ajouter un·e nouvelle·au auteur·ice, veuillez l'ajouter directement dans la ressource.",
+        "dialog": {
+          "addCopyrightHolder": "Ajouter titulaire des droits",
+          "text": "Texte"
+        }
       }
     },
     "system": {

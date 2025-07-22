@@ -123,7 +123,11 @@
         "copyrightHolder": "Titulare de dritti",
         "enabled": "Attivato",
         "authorshipOverview": "Panoramica di autori/autrici",
-        "authorshipReadOnly": "Questa panoramica di autori/autrici è in modalità sola lettura. Per aggiungere un nuovo autore, aggiungerlo direttamente nella risorsa."
+        "authorshipReadOnly": "Questa panoramica di autori/autrici è in modalità sola lettura. Per aggiungere un nuovo autore, aggiungerlo direttamente nella risorsa.",
+        "dialog": {
+          "addCopyrightHolder": "Aggiungere titolare dei diritti",
+          "text": "Testo"
+        }
       }
     },
     "system": {

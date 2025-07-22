@@ -123,7 +123,11 @@
         "copyrightHolder": "Copyright holder",
         "enabled": "Enabled",
         "authorshipOverview": "Authorship - Overview",
-        "authorshipReadOnly": "This authorship overview is read-only. To add a new authorship, please update them directly in the resource."
+        "authorshipReadOnly": "This authorship overview is read-only. To add a new authorship, please update them directly in the resource.",
+        "dialog": {
+          "addCopyrightHolder": "Add copyright holder",
+          "text": "Text"
+        }
       }
     },
     "system": {

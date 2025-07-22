@@ -123,7 +123,11 @@
         "copyrightHolder": "Rechteinhaber:in",
         "enabled": "Aktiviert",
         "authorshipOverview": "Urheber:innen - Übersicht",
-        "authorshipReadOnly": "Diese Übersicht der Urheber:innen ist lediglich zur Ansicht. Neue Urheber:innen fügen sie bitte direkt über die Ressourcen hinzu."
+        "authorshipReadOnly": "Diese Übersicht der Urheber:innen ist lediglich zur Ansicht. Neue Urheber:innen fügen sie bitte direkt über die Ressourcen hinzu.",
+        "dialog": {
+          "addCopyrightHolder": "Rechteinhaber:in hinzufügen",
+          "text": "Text"
+        }
       }
     },
     "system": {
