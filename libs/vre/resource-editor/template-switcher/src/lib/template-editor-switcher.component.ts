@@ -32,7 +32,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
 
     <ng-template #decimalEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
-        <input matInput [formControl]="item" type="number" step="0.05" />
+        <input matInput [formControl]="item" type="number" step="0.05" placeholder="e.g. 8.05" />
       </mat-form-field>
     </ng-template>
 

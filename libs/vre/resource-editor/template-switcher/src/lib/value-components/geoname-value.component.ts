@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { filter, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { GeonameService, SearchPlace } from '../geoname.service';
 
 @Component({
@@ -42,10 +42,7 @@ export class GeonameValueComponent implements OnInit {
     }
 
     this.control.valueChanges
-      .pipe(
-        filter(searchTerm => searchTerm.length >= 3),
-        switchMap((searchTerm: string) => this._geonameService.searchPlace(searchTerm))
-      )
+      .pipe(switchMap((searchTerm: string) => this._geonameService.searchPlace(searchTerm)))
       .subscribe(places => {
         this.places = places;
       });

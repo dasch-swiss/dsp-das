@@ -3,12 +3,7 @@ import { ReadUriValue } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-uri-viewer',
-  template: ` <a [href]="value.uri" target="_blank"
-    >{{ value.uri }}
-    <mat-icon style="font-size: 18px;vertical-align: middle;line-height: 0.8;width: 18px;height: 18px;"
-      >open_in_new
-    </mat-icon>
-  </a>`,
+  template: ` <a [href]="value.uri" target="_blank">{{ value.uri }}</a>`,
 })
 export class UriViewerComponent {
   @Input({ required: true }) value!: ReadUriValue;
