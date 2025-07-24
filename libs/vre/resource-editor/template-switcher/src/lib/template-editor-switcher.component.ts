@@ -25,6 +25,9 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
       <mat-form-field style="width: 100%">
         <input matInput [formControl]="item" type="number" step="0.05" placeholder="e.g. 8.05" />
       </mat-form-field>
+      <mat-error *ngIf="item.touched && item.errors as errors">
+        {{ errors | humanReadableError }}
+      </mat-error>
     </ng-template>
 
     <ng-template #booleanEditorTpl let-item="item">
@@ -53,7 +56,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
       <mat-form-field style="width: 100%">
         <textarea matInput [formControl]="item" rows="9" placeholder="Text value"></textarea>
       </mat-form-field>
-      <mat-error *ngIf="item.errors as errors">
+      <mat-error *ngIf="item.touched && item.errors as errors">
         {{ errors | humanReadableError }}
       </mat-error>
     </ng-template>

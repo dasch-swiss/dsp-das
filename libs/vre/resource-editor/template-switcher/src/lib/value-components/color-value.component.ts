@@ -25,6 +25,9 @@ import { FormControl } from '@angular/forms';
           readonly />
       </mat-form-field>
     </app-nullable-editor>
+    <mat-error *ngIf="control.touched && control.errors as errors">
+      {{ errors | humanReadableError }}
+    </mat-error>
   `,
   styles: [':host { z-index: 1; position: relative}'], // for color picker popup z-index
 })

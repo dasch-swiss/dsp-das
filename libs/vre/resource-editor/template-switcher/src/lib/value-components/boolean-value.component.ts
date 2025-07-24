@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -11,8 +11,10 @@ import { FormControl } from '@angular/forms';
         *ngIf="control.value !== null"
         style="padding: 16px" />
     </app-nullable-editor>
+    <mat-error *ngIf="control.touched && control.errors as errors">
+      {{ errors | humanReadableError }}
+    </mat-error>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BooleanValueComponent {
   @Input({ required: true }) control!: FormControl<boolean | null>;
