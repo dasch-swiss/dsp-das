@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap } from 'rxjs';
 import { GeonameService, SearchPlace } from '../geoname.service';
@@ -23,10 +23,13 @@ import { GeonameService, SearchPlace } from '../geoname.service';
   </mat-form-field>`,
 })
 export class GeonameValueComponent implements OnInit {
-  @Input() control!: FormControl<string>;
+  @Input({ required: true }) control!: FormControl<string>;
   places: SearchPlace[] = [];
 
-  constructor(private _geonameService: GeonameService) {}
+  constructor(
+    private _geonameService: GeonameService,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (this.control.value) {
@@ -48,6 +51,7 @@ export class GeonameValueComponent implements OnInit {
       )
       .subscribe(places => {
         this.places = places;
+        this._cdr.detectChanges();
       });
   }
 
