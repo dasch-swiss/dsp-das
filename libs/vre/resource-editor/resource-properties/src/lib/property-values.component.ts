@@ -48,7 +48,6 @@ export class PropertyValuesComponent implements OnChanges {
 
   ngOnChanges() {
     this._setupData();
-    console.log('a', this);
   }
 
   private _setupData() {

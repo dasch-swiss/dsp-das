@@ -5,21 +5,21 @@ import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
   selector: 'app-date-viewer',
   template: `
     <ng-container *ngIf="isKnoraPeriod; else knoraDateTpl">
-      <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
       <span>{{ start | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
       -
       <span>{{ end | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
+      <ng-container *ngTemplateOutlet="calendarType; context: { date: start }"></ng-container>
     </ng-container>
 
     <ng-template #knoraDateTpl>
-      <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
       <span>{{ knoraDate | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
+      <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
     </ng-template>
 
     <ng-template #calendarType let-date="date">
-      <div class="mat-body-2" data-cy="date-switch" style="font-size: 12px">
-        {{ date | knoraDate: 'dd.MM.YYYY' : 'calendarOnly' }}
-      </div>
+      <span class="mat-body-2" data-cy="date-switch" style="display: inline-block; margin-left: 8px">
+        ({{ date | knoraDate: 'dd.MM.YYYY' : 'calendarOnly' }})
+      </span>
     </ng-template>
   `,
 })
