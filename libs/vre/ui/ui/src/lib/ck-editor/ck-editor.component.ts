@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as Editor from 'ckeditor5-custom-build';
 import { startWith } from 'rxjs/operators';
@@ -6,7 +6,6 @@ import { ckEditor } from './ck-editor';
 import { unescapeHtml } from './unescape-html';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-ck-editor',
   template: ` <ckeditor
       [formControl]="footnoteControl"
