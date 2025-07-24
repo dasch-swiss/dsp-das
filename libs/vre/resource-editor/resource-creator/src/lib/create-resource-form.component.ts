@@ -39,7 +39,11 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         label="Resource label *"
         tooltip="Each resource needs a (preferably unique) label. It will be a kind of resource identifier."
         data-cy="resource-label">
-        <app-common-input [control]="form.controls.label" data-cy="label-input" label="Text value" />
+        <app-common-input
+          [control]="form.controls.label"
+          [withLabel]="false"
+          data-cy="label-input"
+          label="Text value" />
       </app-create-resource-form-row>
       <app-create-resource-form-properties
         *ngIf="properties"

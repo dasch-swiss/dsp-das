@@ -47,7 +47,12 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #textEditorTpl let-item="item">
-      <app-common-input [control]="item" style="width: 100%" data-cy="text-input" label="Text value" />
+      <app-common-input
+        [control]="item"
+        [withLabel]="false"
+        style="width: 100%"
+        data-cy="text-input"
+        label="Text value" />
     </ng-template>
 
     <ng-template #textHtmlEditorTpl>This value cannot be edited.</ng-template>
@@ -89,6 +94,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     <ng-template #uriEditorTpl let-item="item">
       <app-common-input
         [control]="item"
+        [withLabel]="false"
         label="External link"
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>

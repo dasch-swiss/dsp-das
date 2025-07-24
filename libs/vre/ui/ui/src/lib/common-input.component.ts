@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
   selector: 'app-common-input',
   template: `
     <mat-form-field style="width: 100%">
-      <mat-label data-cy="common-input-label">{{ label }}</mat-label>
+      <mat-label data-cy="common-input-label" *ngIf="withLabel">{{ label }}</mat-label>
       <mat-icon matIconPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
       <input
         matInput
@@ -32,6 +32,7 @@ import { FormControl } from '@angular/forms';
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;
   @Input({ required: true }) label!: string;
+  @Input() withLabel = true;
   @Input() prefixIcon: string | null = null;
   @Input() validatorErrors: { errorKey: string; message: string }[] | null = null;
   @Input() type: 'number' | 'text' = 'text';
