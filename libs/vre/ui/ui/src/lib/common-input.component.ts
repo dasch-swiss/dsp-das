@@ -26,7 +26,8 @@ import { FormControl } from '@angular/forms';
     </mat-form-field>
   `,
   styles: [':host { display: block;}'],
-  // TODO can't mark as OnPush because it does not detect touched / pristine changes. This should be fixed with ControlValueAccessor
+  /** TODO can't mark as OnPush because it does not detect touched / pristine changes.
+   This should be fixed with angular 18 form touchedChangedEvent. * */
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;
