@@ -250,22 +250,25 @@ export class OntologyEditService {
 
         const usedByClasses: ClassShortInfo[] = [];
         ontologies.forEach(onto => {
-          getAllEntityDefinitionsAsArray(onto.classes).forEach(resClass => {
+          const classes = this._filterAndSortOntoClasses(
+            onto.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
+              ResourceClassDefinitionWithAllLanguages
+            )
+          );
+          classes.forEach(resClass => {
             const usedByClass = resClass.propertiesList.some(p => p.propertyIndex === propId);
             const alreadyAdded = usedByClasses.some(c => c.id === resClass.id);
 
             if (usedByClass && !alreadyAdded) {
               usedByClasses.push({
                 id: resClass.id,
-                label: resClass.label!,
-                comment: `${onto.label}: ${resClass.comment ?? ''}`,
+                labels: resClass.labels,
+                comments: resClass.comments,
                 restrictedToClass: prop.isLinkProperty ? prop.subjectType : undefined,
               });
             }
           });
         });
-
-        usedByClasses.sort((a, b) => a?.label?.localeCompare(b?.label));
 
         const propertyInfo: PropertyInfo = {
           propDef: prop,
@@ -273,25 +276,31 @@ export class OntologyEditService {
           baseOntologyId,
           baseOntologyLabel,
           usedByClasses,
+          objectLabels: [],
+          objectComments: [],
         };
 
         if (prop.objectType === Constants.Region) {
-          propertyInfo.objectLabel = 'Region';
+          propertyInfo.objectLabels = [
+            {
+              value: 'Region',
+            } as StringLiteralV2,
+          ];
           return propertyInfo;
         }
 
         if (prop.objectType === Constants.ListValue) {
           const listIri = prop.guiAttributes?.[0]?.split('<')[1]?.replace(/>/g, '');
-          const { label, comment } = this._getListLabelAndComment(listIri, allLists);
-          propertyInfo.objectLabel = label;
-          propertyInfo.objectComment = comment;
+          const list = allLists.find(l => l.id === listIri);
+          propertyInfo.objectLabels = list?.labels || [];
+          propertyInfo.objectComments = list?.comments || [];
           return propertyInfo;
         }
 
         if (prop.isLinkProperty && prop.objectType) {
-          const { label, comment } = this._getObjectLabelAndComment(prop.objectType, ontologies);
-          propertyInfo.objectLabel = label ?? '';
-          propertyInfo.objectComment = comment ?? '';
+          const { labels, comments } = this._getObjectLabelAndComment(prop.objectType, ontologies);
+          propertyInfo.objectLabels = labels;
+          propertyInfo.objectComments = comments;
         }
 
         return propertyInfo;
@@ -313,25 +322,19 @@ export class OntologyEditService {
     return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
   }
 
-  private _getListLabelAndComment(listId: string, allLists: ListNodeInfo[]): { label?: string; comment?: string } {
-    const list = allLists.find(l => l.id === listId);
-    return {
-      label: list?.labels?.[0]?.value,
-      comment: list?.comments?.[0]?.value,
-    };
-  }
-
   private _getObjectLabelAndComment(
     objectType: string,
     allOntologies: ReadOntology[]
-  ): { label?: string; comment?: string } {
+  ): { labels: StringLiteralV2[]; comments: StringLiteralV2[] } {
     const baseOntologyId = objectType.split('#')[0];
     const onto = allOntologies.find(o => o.id === baseOntologyId);
-
-    const classDef = onto?.classes?.[objectType];
+    const resourceCLassDefs = onto?.getClassDefinitionsByType<ResourceClassDefinitionWithAllLanguages>(
+      ResourceClassDefinitionWithAllLanguages
+    );
+    const resClassDef = resourceCLassDefs?.find(c => c.id === objectType);
     return {
-      label: classDef?.label,
-      comment: classDef?.comment,
+      labels: resClassDef?.labels || [],
+      comments: resClassDef?.comments || [],
     };
   }
 

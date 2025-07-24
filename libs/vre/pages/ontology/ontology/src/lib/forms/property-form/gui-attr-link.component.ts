@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
 import { PropertyForm } from './property-form.type';
@@ -21,7 +21,9 @@ export interface ClassToSelect {
       <mat-label>Select resource class</mat-label>
       <mat-select [formControl]="control">
         <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
-          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id"> {{ getClassLabel(oClass) }}</mat-option>
+          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id">
+            {{ oClass.labels | appStringifyStringLiteral }}</mat-option
+          >
         </mat-optgroup>
       </mat-select>
       <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
@@ -58,14 +60,9 @@ export class GuiAttrLinkComponent {
     })
   );
 
-  getClassLabel(classDef: ResourceClassDefinitionWithAllLanguages) {
-    return this._ontologyService.getInPreferedLanguage(classDef.labels) || classDef.label;
-  }
-
   constructor(
     private _store: Store,
     private _sortingService: SortingService,
-    private _localizationService: LocalizationService,
-    private _ontologyService: OntologyService
+    private _localizationService: LocalizationService
   ) {}
 }

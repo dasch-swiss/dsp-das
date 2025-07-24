@@ -54,12 +54,14 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         <div class="property-item-content-container">
           <div>
             <div class="upper-prop-container">
-              <span class="label" data-cy="property-label">{{ classProp.propDef.label }} </span>
+              <span class="label" data-cy="property-label"
+                >{{ classProp.propDef.labels | appStringifyStringLiteral }}
+              </span>
               <span
                 data-cy="property-object-label"
                 class="additional-info"
-                *ngIf="classProp.objectLabel"
-                [innerHTML]="'&rarr;&nbsp;' + classProp.objectLabel"></span>
+                *ngIf="classProp.objectLabels && classProp.objectLabels.length > 0"
+                [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
             </div>
             <div mat-line class="lower-prop-container">
               <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>

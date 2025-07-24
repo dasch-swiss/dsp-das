@@ -39,7 +39,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           <button
             mat-menu-item
             *ngFor="let prop of onto.properties; trackBy: trackByPropFn"
-            [matTooltip]="prop.propDef!.comment || ''"
+            [matTooltip]="prop.propDef!.comments | appStringifyStringLiteral"
             matTooltipPosition="after"
             (click)="assignExistingProperty(prop.propDef!.id)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>

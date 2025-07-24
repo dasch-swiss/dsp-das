@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
@@ -14,7 +14,6 @@ import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
 } from '../../forms/resource-class-form/edit-resource-class-dialog.component';
-import { UpdateResourceClassData } from '../../forms/resource-class-form/resource-class-form.type';
 import { OntologyPageService } from '../../ontology-page.service';
 import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
@@ -39,14 +38,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   expandClasses = true;
 
-  get classLabel() {
-    return this._ontologyService.getInPreferedLanguage(this.resourceClass.labels) || this.resourceClass.label;
-  }
-
-  get classComment() {
-    return this._ontologyService.getInPreferedLanguage(this.resourceClass.comments) || this.resourceClass.comment;
-  }
-
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
@@ -57,7 +48,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _dialogService: DialogService,
     private _notification: NotificationService,
     private _oes: OntologyEditService,
-    private _ontologyService: OntologyService,
     private _store: Store
   ) {}
 
@@ -87,7 +77,10 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   editResourceClassInfo() {
     this._dialog.open<EditResourceClassDialogComponent, EditResourceClassDialogProps>(
       EditResourceClassDialogComponent,
-      DspDialogConfig.mediumDialog({ title: this.classLabel, data: this.resourceClass.updateResourceClassData })
+      DspDialogConfig.mediumDialog({
+        labels: this.resourceClass.labels,
+        data: this.resourceClass.updateResourceClassData,
+      })
     );
   }
 
