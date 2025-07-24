@@ -17,7 +17,7 @@ import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
     </ng-template>
 
     <ng-template #calendarType let-date="date">
-      <span class="mat-body-2" data-cy="date-switch" style="display: inline-block; margin-left: 8px">
+      <span data-cy="date-switch" style="display: inline-block; margin-left: 8px">
         ({{ date | knoraDate: 'dd.MM.YYYY' : 'calendarOnly' }})
       </span>
     </ng-template>

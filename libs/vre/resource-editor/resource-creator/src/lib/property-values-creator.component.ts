@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -32,7 +32,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyValuesCreatorComponent implements OnInit {
+export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
   @Input({ required: true }) formArray!: FormValueArray;
   @Input({ required: true }) resourceClassIri!: string;
@@ -44,10 +44,6 @@ export class PropertyValuesCreatorComponent implements OnInit {
     private _cd: ChangeDetectorRef,
     private _fb: FormBuilder
   ) {}
-
-  ngOnInit() {
-    console.log(this.formArray.controls[this.formArray.controls.length - 1].value.item);
-  }
 
   templateFound(template: TemplateRef<any>) {
     this.template = template;
