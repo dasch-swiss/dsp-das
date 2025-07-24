@@ -378,7 +378,8 @@ export class OntologyEditService {
       tap(resClass => {
         this.lastModificationDate = resClass.lastModificationDate;
         this._loadOntology(this.ontologyId, resClass.id);
-        this._notification.openSnackBar(`Successfully created ${resClass.id}.`);
+        const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
+        this._notification.openSnackBar(`Successfully created the class ${classLabel}.`);
       })
     );
   }
