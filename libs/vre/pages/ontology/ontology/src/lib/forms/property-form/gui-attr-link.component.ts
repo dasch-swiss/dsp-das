@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
 export interface ClassToSelect {
@@ -34,24 +34,24 @@ export interface ClassToSelect {
 export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
 
-  ontologyClasses$ = this._store.select(OntologiesSelectors.currentProjectOntologies).pipe(
-    map((response: ReadOntology[]) => {
-      // reset list of ontology classes
-      const lang = this._localizationService.getCurrentLanguage();
+  ontologyClasses$ = combineLatest([
+    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this._localizationService.currentLanguage$,
+  ]).pipe(
+    map(([response, lang]) => {
       const ontologyClasses = [] as ClassToSelect[];
       response.forEach(onto => {
-        const classDef = this._sortingService.sortLabelsAlphabetically(
+        const classDefs = this._sortingService.sortLabelsAlphabetically(
           getAllEntityDefinitionsAsArray(onto.classes),
           'label',
           lang
         ) as ResourceClassDefinitionWithAllLanguages[];
-        if (classDef.length) {
-          const ontoClasses: ClassToSelect = {
+        if (classDefs.length) {
+          ontologyClasses.push({
             ontologyId: onto.id,
             ontologyLabel: onto.label,
-            classes: classDef,
-          };
-          ontologyClasses.push(ontoClasses);
+            classes: classDefs,
+          } as ClassToSelect);
         }
       });
       return ontologyClasses;
@@ -59,17 +59,13 @@ export class GuiAttrLinkComponent {
   );
 
   getClassLabel(classDef: ResourceClassDefinitionWithAllLanguages) {
-    return this._getClassLabelByLanguage(classDef, this._localizationService.getCurrentLanguage());
+    return this._ontologyService.getInPreferedLanguage(classDef.labels) || classDef.label;
   }
 
   constructor(
     private _store: Store,
     private _sortingService: SortingService,
-    private _localizationService: LocalizationService
+    private _localizationService: LocalizationService,
+    private _ontologyService: OntologyService
   ) {}
-
-  private _getClassLabelByLanguage(resourceClass: ResourceClassDefinitionWithAllLanguages, language: string) {
-    const preferedLangLabel = resourceClass.labels.find(l => l.language === language);
-    return preferedLangLabel?.value || resourceClass.label || '';
-  }
 }

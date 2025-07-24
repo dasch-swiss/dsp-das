@@ -40,29 +40,25 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   expandClasses = true;
 
   get classLabel() {
-    const lang = this._localizationService.getCurrentLanguage();
-    const preferedLangLabel = this.resourceClass.labels.find(l => l.language === lang);
-    return preferedLangLabel?.value || this.resourceClass.label || '';
+    return this._ontologyService.getInPreferedLanguage(this.resourceClass.labels) || this.resourceClass.label;
   }
 
   get classComment() {
-    const lang = this._localizationService.getCurrentLanguage();
-    const preferedLangComment = this.resourceClass.comments.find(c => c.language === lang);
-    return preferedLangComment?.value || this.resourceClass.comment || '';
+    return this._ontologyService.getInPreferedLanguage(this.resourceClass.comments) || this.resourceClass.comment;
   }
 
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
     public ops: OntologyPageService,
+    private _cd: ChangeDetectorRef,
     private _clipboard: Clipboard,
     private _dialog: MatDialog,
-    private _localizationService: LocalizationService,
     private _dialogService: DialogService,
-    private _oes: OntologyEditService,
-    private _store: Store,
     private _notification: NotificationService,
-    private _cd: ChangeDetectorRef
+    private _oes: OntologyEditService,
+    private _ontologyService: OntologyService,
+    private _store: Store
   ) {}
 
   ngOnInit() {
