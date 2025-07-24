@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import {
   Constants,
   PropertyDefinition,
@@ -62,6 +53,9 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
       <mat-form-field style="width: 100%">
         <textarea matInput [formControl]="item" rows="9" placeholder="Text value"></textarea>
       </mat-form-field>
+      <mat-error *ngIf="item.errors as errors">
+        {{ errors | humanReadableError }}
+      </mat-error>
     </ng-template>
 
     <ng-template #dateEditorTpl let-control="item">
@@ -96,7 +90,6 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;
