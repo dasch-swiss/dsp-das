@@ -1,5 +1,30 @@
 # Changelog
 
+## [11.38.0](https://github.com/dasch-swiss/dsp-das/compare/v11.37.0...v11.38.0) (2025-07-24)
+
+
+### Enhancements
+
+* Add legal settings translations(DEV-4632) ([#2440](https://github.com/dasch-swiss/dsp-das/issues/2440)) ([6795ff9](https://github.com/dasch-swiss/dsp-das/commit/6795ff99856baee2641a3a1f9c9a097e43da793b))
+* Add missing translations for resource metadata export ([#2431](https://github.com/dasch-swiss/dsp-das/issues/2431)) ([980e562](https://github.com/dasch-swiss/dsp-das/commit/980e56207c8cc047d63c2647b21ba1bb55c0a0e5))
+* ontology editor property comments no longer visible (DEV-5152) ([#2420](https://github.com/dasch-swiss/dsp-das/issues/2420)) ([b8989f1](https://github.com/dasch-swiss/dsp-das/commit/b8989f116180caf23a1d52efa1ae3173110a52b6))
+* rename license labels ([#2435](https://github.com/dasch-swiss/dsp-das/issues/2435)) ([d6127d8](https://github.com/dasch-swiss/dsp-das/commit/d6127d8c14b696a2883f3b9147f56f8a8d2e856a))
+* translate lists label (DEV-5151) ([#2436](https://github.com/dasch-swiss/dsp-das/issues/2436)) ([11a941f](https://github.com/dasch-swiss/dsp-das/commit/11a941f598dd7748683227b07def02a64f33678b))
+
+
+### Bug Fixes
+
+* a user can be created and added to the project ([#2439](https://github.com/dasch-swiss/dsp-das/issues/2439)) ([6f10bf5](https://github.com/dasch-swiss/dsp-das/commit/6f10bf50f6562385ac8c828fba5f43fa187f9e9d))
+* introduce canBeDeleted check (DEV-5015) ([#2416](https://github.com/dasch-swiss/dsp-das/issues/2416)) ([438f22d](https://github.com/dasch-swiss/dsp-das/commit/438f22d30a44e1983dd5847fca5eda220ef23902))
+* ontology editor linked external ontologies not displayed (DEV-5188) ([#2432](https://github.com/dasch-swiss/dsp-das/issues/2432)) ([6b8a065](https://github.com/dasch-swiss/dsp-das/commit/6b8a06577d20f759aef8a98eddb380918d9db618))
+* react on changes to filter unused properties (DEV-5150) ([#2433](https://github.com/dasch-swiss/dsp-das/issues/2433)) ([001ab14](https://github.com/dasch-swiss/dsp-das/commit/001ab1468dd99de486f931da588a84a9bc6003ff))
+* undefined property for property value ([#2437](https://github.com/dasch-swiss/dsp-das/issues/2437)) ([b766c13](https://github.com/dasch-swiss/dsp-das/commit/b766c13b248086f312c7442547665b32ab890c45))
+
+
+### Tests
+
+* add tests for data model and list editing (DEV-5190) ([#2429](https://github.com/dasch-swiss/dsp-das/issues/2429)) ([e731f37](https://github.com/dasch-swiss/dsp-das/commit/e731f378ab83369589b1a0f637fc08e33a10a71c))
+
 ## [11.37.0](https://github.com/dasch-swiss/dsp-das/compare/v11.36.1...v11.37.0) (2025-07-22)
 
 
