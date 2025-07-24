@@ -41,7 +41,6 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
         data-cy="resource-label">
         <app-common-input [control]="form.controls.label" data-cy="label-input" label="Text value" />
       </app-create-resource-form-row>
-
       <app-create-resource-form-properties
         *ngIf="properties"
         [resourceClassIri]="resourceClassIri"
@@ -125,6 +124,8 @@ export class CreateResourceFormComponent implements OnInit {
 
   submitData() {
     this.form.markAllAsTouched();
+    this._cd.detectChanges();
+    console.log(this.form);
     if (this.form.invalid) {
       return;
     }

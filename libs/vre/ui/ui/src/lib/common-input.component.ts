@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -26,7 +26,7 @@ import { FormControl } from '@angular/forms';
     </mat-form-field>
   `,
   styles: [':host { display: block;}'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO can't mark as OnPush because it does not detect touched / pristine changes. This should be fixed with ControlValueAccessor
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;
