@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 
@@ -11,7 +11,6 @@ import { startWith } from 'rxjs/operators';
       {{ errors | humanReadableError }}
     </mat-error>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntervalValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<{ start: number; end: number } | null>;
