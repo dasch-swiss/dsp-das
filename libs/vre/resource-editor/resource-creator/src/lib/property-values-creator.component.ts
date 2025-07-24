@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
@@ -30,7 +30,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       <mat-icon>add_circle</mat-icon>
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO do not change detection strategy until ng18 is on with formControls touchedChanged to manage common-inputs change event
 })
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;
