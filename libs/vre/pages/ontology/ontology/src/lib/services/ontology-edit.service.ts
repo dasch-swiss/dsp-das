@@ -19,7 +19,6 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
@@ -29,7 +28,7 @@ import {
   RemoveProjectOntologyAction,
   ResetCurrentOntologyAction,
 } from '@dasch-swiss/vre/core/state';
-import { OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import {
@@ -185,6 +184,7 @@ export class OntologyEditService {
     private _dspApiConnection: KnoraApiConnection,
     private _lists: ListsFacade,
     private _notification: NotificationService,
+    private _localizationService: LocalizationService,
     private _ontologyService: OntologyService,
     private _sortingService: SortingService,
     private _store: Store
@@ -240,8 +240,9 @@ export class OntologyEditService {
     allLists: ListNodeInfo[],
     props: ResourcePropertyDefinitionWithAllLanguages[]
   ): PropertyInfo[] {
+    const lang = this._localizationService.getCurrentLanguage();
     return this._sortingService
-      .keySortByAlphabetical(props, 'label')
+      .sortByLabelsAlphabetically(props, 'label', lang)
       .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
       .map((prop): PropertyInfo => {
         const propId = prop.id;
@@ -319,7 +320,8 @@ export class OntologyEditService {
         }
       }
     });
-    return this._sortingService.keySortByAlphabetical(ontoClasses, 'label');
+    const lang = this._localizationService.getCurrentLanguage();
+    return this._sortingService.sortByLabelsAlphabetically(ontoClasses, 'label', lang);
   }
 
   private _getObjectLabelAndComment(

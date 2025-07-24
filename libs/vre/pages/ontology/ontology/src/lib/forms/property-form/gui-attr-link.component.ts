@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
@@ -43,11 +42,8 @@ export class GuiAttrLinkComponent {
     map(([response, lang]) => {
       const ontologyClasses = [] as ClassToSelect[];
       response.forEach(onto => {
-        const classDefs = this._sortingService.sortLabelsAlphabetically(
-          getAllEntityDefinitionsAsArray(onto.classes),
-          'label',
-          lang
-        ) as ResourceClassDefinitionWithAllLanguages[];
+        const classes = onto.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);
+        const classDefs = this._sortingService.sortByLabelsAlphabetically(classes, 'label', lang);
         if (classDefs.length) {
           ontologyClasses.push({
             ontologyId: onto.id,
