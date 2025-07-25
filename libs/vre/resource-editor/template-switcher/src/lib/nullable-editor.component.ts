@@ -1,21 +1,51 @@
-import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-nullable-editor',
-  template: ` <ng-content *ngIf="control.value !== null; else addTpl" />
+  template: `
+    <ng-content *ngIf="value !== null; else addTpl" />
     <ng-template #addTpl>
       <button
         mat-icon-button
-        (click)="control.setValue(defaultValue)"
+        (click)="setValue(defaultValue)"
         title="Add"
         data-cy="add-value-button"
         matTooltip="Set a value">
         <mat-icon>add_box</mat-icon>
       </button>
-    </ng-template>`,
+    </ng-template>
+  `,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NullableEditorComponent),
+      multi: true,
+    },
+  ],
 })
-export class NullableEditorComponent {
-  @Input({ required: true }) control!: FormControl;
+export class NullableEditorComponent implements ControlValueAccessor {
   @Input({ required: true }) defaultValue!: unknown;
+
+  value: unknown = null;
+  private onChange: (_: unknown) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  writeValue(obj: unknown): void {
+    this.value = obj;
+  }
+
+  registerOnChange(fn: (_: unknown) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setValue(val: unknown): void {
+    this.value = val;
+    this.onChange(val);
+    this.onTouched();
+  }
 }

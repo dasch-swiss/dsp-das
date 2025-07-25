@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-color-value',
   template: `
-    <app-nullable-editor [control]="control" [defaultValue]="'#000000'">
+    <app-nullable-editor [formControl]="control" [defaultValue]="'#000000'">
       <mat-form-field appearance="outline" style="cursor: pointer">
         <mat-label>{{ control.value }}</mat-label>
         <!-- check the ngx-color-picker doc to know more about the options - https://www.npmjs.com/package/ngx-color-picker -->

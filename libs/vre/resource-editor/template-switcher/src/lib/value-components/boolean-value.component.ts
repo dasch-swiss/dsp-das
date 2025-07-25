@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-boolean-value',
   template: `
-    <app-nullable-editor [control]="control" [defaultValue]="false">
+    <app-nullable-editor [formControl]="control" [defaultValue]="false">
       <mat-slide-toggle
         [formControl]="control"
         data-cy="bool-toggle"
