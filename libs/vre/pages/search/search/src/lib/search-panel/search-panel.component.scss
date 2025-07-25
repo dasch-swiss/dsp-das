@@ -17,6 +17,11 @@
       border-radius: 0 0 4px 4px;
       padding-top: 4px;
       height: 25px;
+      background-color: #fff;
+
+      &:last-child {
+        color: $dark;
+      }
 
       &.active {
         background-color: $black-12-opacity;
