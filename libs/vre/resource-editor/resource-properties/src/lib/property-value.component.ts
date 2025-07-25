@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Cardinality } from '@dasch-swiss/dsp-js';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
@@ -10,17 +10,21 @@ import { PropertyValueService } from './property-value.service';
     <app-property-value-update [index]="index" *ngIf="!displayMode" />
   `,
 })
-export class PropertyValueComponent implements OnInit {
+export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
 
   displayMode = false;
-  readonly Cardinality = Cardinality;
+  private _subscription!: Subscription;
 
   constructor(public propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
-    this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
+    this._subscription = this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {
       this.displayMode = this.index !== value;
     });
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 }
