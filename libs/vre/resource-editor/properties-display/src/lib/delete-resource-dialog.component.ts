@@ -6,20 +6,20 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 
 @Component({
   selector: 'app-delete-resource-dialog',
-  template: ` <app-dialog-header title="Do you want to delete this resource ?" [subtitle]="data.label" />
+  template: ` <app-dialog-header [title]="'resourceEditor.deleteResourceDialog.title' | translate" [subtitle]="data.label" />
     <mat-dialog-content class="form-content">
       <mat-form-field class="large-field">
-        <mat-label>Comment why resource is being deleted</mat-label>
+        <mat-label>{{ 'resourceEditor.deleteResourceDialog.comment' | translate }}</mat-label>
         <textarea
           data-cy="app-delete-resource-dialog-comment"
           matInput
           type="text"
           [(ngModel)]="comment"
-          [placeholder]="'Ex. Resource was created by mistake...'"></textarea>
+          [placeholder]="'resourceEditor.deleteResourceDialog.commentPlaceholder' | translate"></textarea>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
+      <button mat-button color="primary" mat-dialog-close class="cancel-button center">{{ 'resourceEditor.deleteResourceDialog.cancel' | translate }}</button>
       <span class="fill-remaining-space"></span>
       <button
         data-cy="app-delete-resource-dialog-button"
@@ -28,7 +28,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
         [color]="'warn'"
         class="confirm-button center"
         (click)="submit()">
-        Yes, delete
+        {{ 'resourceEditor.deleteResourceDialog.confirm' | translate }}
       </button>
     </mat-dialog-actions>`,
 })

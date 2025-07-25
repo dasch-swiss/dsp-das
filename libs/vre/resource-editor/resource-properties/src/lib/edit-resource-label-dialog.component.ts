@@ -8,14 +8,14 @@ import { finalize, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-edit-resource-label-dialog',
-  template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label" />
+  template: ` <app-dialog-header [title]="initialValue" [subtitle]="'resourceEditor.editResourceLabelDialog.subtitle' | translate" />
 
     <div mat-dialog-content>
-      <app-common-input [control]="control" [label]="'Label'" />
+      <app-common-input [control]="control" [label]="'resourceEditor.editResourceLabelDialog.label' | translate" />
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -24,7 +24,7 @@ import { finalize, switchMap } from 'rxjs';
         data-cy="edit-resource-label-submit"
         [isLoading]="loading"
         (click)="submit()">
-        Submit
+        {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
 })

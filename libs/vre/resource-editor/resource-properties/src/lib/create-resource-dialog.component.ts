@@ -11,7 +11,7 @@ export interface CreateResourceDialogProps {
 @Component({
   selector: 'app-create-resource-dialog',
   template: `
-    <app-dialog-header [title]="'Create new resource of type: ' + data.resourceType" />
+    <app-dialog-header [title]="('resourceEditor.createResourceDialog.title' | translate) + ' ' + data.resourceType" />
     <div mat-dialog-content>
       <app-create-resource-form
         [resourceClassIri]="data.resourceClassIri"

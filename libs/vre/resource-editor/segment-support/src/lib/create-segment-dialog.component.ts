@@ -17,19 +17,35 @@ export interface CreateSegmentDialogProps {
   template: ` <app-dialog-header
       title="{{ 'resourceEditor.segmentSupport.createSegmentDialog.createAnnotation' | translate }}" />
     <div mat-dialog-content>
-      <app-common-input [control]="form.controls.label" label="Label" />
-      <app-time-input label="Start" [control]="form.controls.start" data-cy="start-input" />
-      <app-time-input label="End" [control]="form.controls.end" data-cy="end-input" />
-      <app-common-input label="Title" [control]="form.controls.title" data-cy="title-input" />
-      <app-common-input label="Description" [control]="form.controls.description" data-cy="description-input" />
+      <app-common-input
+        [control]="form.controls.label"
+        [label]="'resourceEditor.createSegmentDialog.label' | translate" />
+      <app-time-input
+        [label]="'resourceEditor.createSegmentDialog.start' | translate"
+        [control]="form.controls.start"
+        data-cy="start-input" />
+      <app-time-input
+        [label]="'resourceEditor.createSegmentDialog.end' | translate"
+        [control]="form.controls.end"
+        data-cy="end-input" />
+      <app-common-input
+        [label]="'resourceEditor.createSegmentDialog.title' | translate"
+        [control]="form.controls.title"
+        data-cy="title-input" />
+      <app-common-input
+        [label]="'resourceEditor.createSegmentDialog.description' | translate"
+        [control]="form.controls.description"
+        data-cy="description-input" />
       <app-chip-list-input
         [formArray]="form.controls.keywords"
         data-cy="keywords-input"
         [validators]="keywordsValidators" />
-      <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
+      <app-ck-editor-control
+        [control]="form.controls.comment"
+        [label]="'resourceEditor.createSegmentDialog.comment' | translate" />
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close data-cy="cancel-button">Cancel</button>
+      <button mat-button mat-dialog-close data-cy="cancel-button">{{ 'ui.form.action.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
         mat-raised-button
@@ -38,7 +54,7 @@ export interface CreateSegmentDialogProps {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        Submit
+        {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
 })
