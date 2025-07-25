@@ -21,7 +21,8 @@ export class InvalidControlScrollDirective {
    */
   private _scrollToFirstInvalidControl() {
     // target the first invalid form field
-    const firstInvalidControl: HTMLElement = this._el.nativeElement.querySelector('.mat-mdc-form-field .ng-invalid');
+    const firstInvalidControl: HTMLElement = this._el.nativeElement.querySelector('.ng-invalid:not([ng-reflect-form])');
+    console.log('firstInvalidControl', firstInvalidControl);
     if (!firstInvalidControl) {
       return;
     }
