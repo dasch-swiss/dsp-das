@@ -1,18 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  IProjectOntologiesKeyValuePairs,
-  OntologiesSelectors,
-  ProjectsSelectors,
-  UserSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Select, Store } from '@ngxs/store';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { Store } from '@ngxs/store';
 import { search } from 'effect/String';
-import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'rxjs';
+import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-browser-page',
@@ -27,17 +22,11 @@ import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'r
   `,
 })
 export class ResourceClassBrowserPageComponent implements OnDestroy {
-  @Select(OntologiesSelectors.projectOntologies)
-  projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
-  @Select(ProjectsSelectors.currentProject) project$!: Observable<ReadProject>;
-
+  project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   get ontoId$(): Observable<string> {
     return combineLatest([this.project$, this._route.params]).pipe(
-      takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([project, params]) => {
         const iriBase = this._ontologyService.getIriBaseUrl();
@@ -72,7 +61,6 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
   // id (iri) or resource instance
   get resourceIri$(): Observable<string> {
     return combineLatest([this.instanceId$, this.project$]).pipe(
-      takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([instanceId, project]) =>
         instanceId === RouteConstants.addClassInstance
@@ -84,7 +72,6 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
 
   get searchParams$(): Observable<SearchParams> {
     return combineLatest([this.classId$, this.instanceId$, this.project$]).pipe(
-      takeWhile(([project]) => project !== undefined),
       takeUntil(this.ngUnsubscribe),
       map(([classId, instanceId]) =>
         instanceId
@@ -103,10 +90,8 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
     private _acs: AppConfigService,
     protected _route: ActivatedRoute,
     private _ontologyService: OntologyService,
-    protected _projectService: ProjectService,
     protected _router: Router,
-    protected _store: Store,
-    protected _actions$: Actions
+    protected _store: Store
   ) {}
 
   ngOnDestroy() {
