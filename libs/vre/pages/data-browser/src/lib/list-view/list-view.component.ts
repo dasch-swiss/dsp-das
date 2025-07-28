@@ -32,17 +32,6 @@ export interface ShortResInfo {
   label: string;
 }
 
-/* return the selected resources in below format
- *
- * count: total number of resources selected
- * selectedIds: list of selected resource's ids
- */
-
-/* return the checkbox value
- *
- * checked: checkbox value
- * resIndex: resource index from the list
- */
 export interface CheckboxUpdate {
   checked: boolean;
   resIndex: number;
@@ -58,23 +47,15 @@ export interface CheckboxUpdate {
   styleUrls: ['./list-view.component.scss'],
 })
 export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
   @Input() search: SearchParams | undefined = undefined;
   @Input() withMultipleSelection = false;
   @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
 
   currentSearch: SearchParams | undefined = undefined;
   resources: ReadResource[] = [];
-
   selectedResourceIdx: number[] = [];
-
   componentCommsSubscriptions: Subscription[] = [];
-
-  // number of all results including the ones not included as resources in the response bc. the user does not have the permissions to see them
   numberOfAllResults = 0;
-
-  // progress status
   loading = true;
 
   translation$ = this._translateService.onLangChange.pipe(
@@ -85,6 +66,8 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
       }
     })
   );
+
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -165,11 +148,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  /**
-   * do the search and send the resources to the child components
-   * like resource-list, resource-grid or resource-table
-   * @param index offset of gravsearch query
-   */
   doSearch(index = 0) {
     this.loading = true;
 
