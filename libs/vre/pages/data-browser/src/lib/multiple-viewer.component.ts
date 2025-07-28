@@ -29,10 +29,10 @@ import { SplitSize } from './split-size.interface';
               (action)="viewMode = $event" />
 
             <!-- multiple resources view / comparison viewer -->
-            <app-comparison
+            <!--<app-comparison
               *ngSwitchCase="'compare'"
               [resources]="selectedResources?.resInfo"
-              [splitSizeChanged]="splitSizeChanged" />
+              [splitSizeChanged]="splitSizeChanged" />-->
           </div>
         </as-split-area>
       </as-split>

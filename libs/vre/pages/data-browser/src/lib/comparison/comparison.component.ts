@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ShortResInfo } from '../list-view/list-view.component';
 import { SplitSize } from '../split-size.interface';
 
 @Component({
@@ -37,7 +36,7 @@ import { SplitSize } from '../split-size.interface';
   ],
 })
 export class ComparisonComponent implements OnChanges {
-  @Input() resources?: ShortResInfo[];
+  @Input({ required: true }) resourceIds!: string[];
 
   // parent (or own) split size changed
   @Input() splitSizeChanged: SplitSize;
@@ -46,11 +45,11 @@ export class ComparisonComponent implements OnChanges {
   bottomRow: string[] = [];
 
   get resourcesNumber() {
-    return this.resources.length;
+    return this.resourceIds.length;
   }
 
   ngOnChanges(): void {
-    const resourceIds = this.resources.map(res => res.id);
+    const resourceIds = this.resourceIds;
 
     if (this.resourcesNumber < 4) {
       this.topRow = resourceIds;

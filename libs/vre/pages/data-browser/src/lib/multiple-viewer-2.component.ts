@@ -8,19 +8,22 @@ import { SplitSize } from './split-size.interface';
   selector: 'app-multiple-viewer-2',
   template: ` <div [ngSwitch]="viewMode">
     <!-- single resource view -->
-    <app-resource-fetcher
-      *ngIf="multipleViewerService.activatedResourceId as resourceIri"
-      [resourceIri]="resourceIri"
-      (afterResourceDeleted)="updateResourceCount($event)" />
+    <ng-container *ngIf="multipleViewerService.selectedResourceIds$ | async as selectedResources">
+      <app-comparison *ngIf="selectedResources.length > 1; else singleResourceTpl" [resourceIds]="selectedResources" />
+    </ng-container>
+
+    <ng-template #singleResourceTpl>
+      <app-resource-fetcher
+        *ngIf="multipleViewerService.activatedResourceId as resourceIri"
+        [resourceIri]="resourceIri"
+        (afterResourceDeleted)="updateResourceCount($event)" />
+    </ng-template>
+    ">
 
     <!-- intermediate view -->
     <!--<app-intermediate *ngSwitchCase="'intermediate'" [resources]="selectedResources" />-->
 
     <!-- multiple resources view / comparison viewer -->
-    <!--<app-comparison
-              *ngSwitchCase="'compare'"
-              [resources]="selectedResources?.resInfo"
-              [splitSizeChanged]="splitSizeChanged" />-->
   </div>`,
 })
 export class MultipleViewer2Component {

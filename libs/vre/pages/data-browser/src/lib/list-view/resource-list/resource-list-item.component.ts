@@ -9,7 +9,7 @@ import { MultipleViewerService } from '../../multiple-viewer.service';
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
-      *ngIf="multipleViewerService.selectedResources$ | async as selectedResources"
+      *ngIf="multipleViewerService.selectedResourceIds$ | async as selectedResources"
       (click)="multipleViewerService.selectOneResource(resource.id)">
       <div style="display: flex">
         <span style="flex: 1; display: flex; align-items: center">{{ resource.label }}</span>

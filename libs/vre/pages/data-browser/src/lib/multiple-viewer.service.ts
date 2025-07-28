@@ -3,25 +3,25 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class MultipleViewerService {
-  private _selectedResourcesSubject = new BehaviorSubject<string[]>([]);
-  selectedResources$ = this._selectedResourcesSubject.asObservable();
+  private _selectedResourceIdsSubject = new BehaviorSubject<string[]>([]);
+  selectedResourceIds$ = this._selectedResourceIdsSubject.asObservable();
 
   activatedResourceId?: string;
 
   addResource(resourceId: string) {
-    const currentResources = this._selectedResourcesSubject.getValue();
+    const currentResources = this._selectedResourceIdsSubject.getValue();
     if (!currentResources.includes(resourceId)) {
       currentResources.push(resourceId);
-      this._selectedResourcesSubject.next(currentResources);
+      this._selectedResourceIdsSubject.next(currentResources);
     }
   }
 
   removeResource(resourceId: string) {
-    const currentResources = this._selectedResourcesSubject.getValue();
+    const currentResources = this._selectedResourceIdsSubject.getValue();
     const index = currentResources.indexOf(resourceId);
     if (index > -1) {
       currentResources.splice(index, 1);
-      this._selectedResourcesSubject.next(currentResources);
+      this._selectedResourceIdsSubject.next(currentResources);
     }
   }
 
