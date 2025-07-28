@@ -11,36 +11,11 @@ import { ListViewService } from '../list-view.service';
   styleUrls: ['./resource-list.component.scss'],
 })
 export class ResourceListComponent implements OnChanges {
-  /**
-   * list of all resource checkboxes. This list is used to
-   * unselect all checkboxes when single selection to view
-   * resource is used
-   */
   @ViewChildren('ckbox') resChecks: MatCheckbox[];
-
-  /**
-   * list of resources of type ReadResource
-   *
-   * @param  {ReadResource[]} resources
-   */
   @Input() resources: ReadResource[] = [];
-
-  /**
-   * list of all selected resources indices
-   */
   @Input() selectedResourceIdx: number[];
-
-  /**
-   * set to true if multiple resources can be selected for comparison
-   */
-  @Input() withMultipleSelection?: boolean = false;
-
-  /**
-   * click on checkbox will emit the resource info
-   *
-   * @param  {EventEmitter<FilteredResources>} resourcesSelected
-   */
-  @Output() resourcesSelected?: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
+  @Input() withMultipleSelection = false;
+  @Output() resourcesSelected = new EventEmitter<FilteredResources>();
 
   constructor(private _listView: ListViewService) {}
 
@@ -70,11 +45,6 @@ export class ResourceListComponent implements OnChanges {
     this.resourcesSelected.emit(selection);
   }
 
-  /**
-   * given a resource, return the corresponding mat-icon for the subclass
-   *
-   * @returns mat-icon name as string
-   */
   getIcon(resource: ReadResource): string {
     const subclass = resource.entityInfo.classes[resource.type].subClassOf[0];
 
