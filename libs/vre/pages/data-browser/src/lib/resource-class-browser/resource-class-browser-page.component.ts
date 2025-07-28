@@ -6,17 +6,14 @@ import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { search } from 'effect/String';
-import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-browser-page',
   template: `
     <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
 
-    <div
-      class="single-instance"
-      *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
+    <div class="single-instance">
       <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
     </div>
   `,
@@ -25,66 +22,26 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
   project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  get ontoId$(): Observable<string> {
-    return combineLatest([this.project$, this._route.params]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([project, params]) => {
-        const iriBase = this._ontologyService.getIriBaseUrl();
-        const ontologyName = params[RouteConstants.ontoParameter];
-        // get the resource ids from the route. Do not use the RouteConstants ontology route constant here,
-        // because the ontology and class ids are not defined within the apps domain. They are defined by
-        // the api and can not be changed generically via route constants.
-        return `${iriBase}/ontology/${project.shortcode}/${ontologyName}/v2`;
-      })
-    );
-  }
+  resourceIri$ = combineLatest([this._route.params, this.project$]).pipe(
+    map(
+      ([params, project]) =>
+        `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${params[RouteConstants.instanceParameter]}`
+    ),
+    takeUntil(this.ngUnsubscribe)
+  );
 
-  // uuid of resource instance
-  get instanceId$(): Observable<string> {
-    return this._route.params.pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(params => params[RouteConstants.instanceParameter])
-    );
-  }
+  searchParams$ = combineLatest([this.project$, this._route.params]).pipe(
+    map(([project, params]) => {
+      const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${project.shortcode}/${params[RouteConstants.ontoParameter]}/v2`;
+      const classId = `${ontoId}#${params[RouteConstants.classParameter]}`;
 
-  // id (iri) of resource class
-  get classId$(): Observable<string> {
-    return combineLatest([this.ontoId$, this._route.params]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([ontoId, params]) => {
-        const className = params[RouteConstants.classParameter];
-        return `${ontoId}#${className}`;
-      })
-    );
-  }
-
-  // id (iri) or resource instance
-  get resourceIri$(): Observable<string> {
-    return combineLatest([this.instanceId$, this.project$]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([instanceId, project]) =>
-        instanceId === RouteConstants.addClassInstance
-          ? ''
-          : `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${instanceId}`
-      )
-    );
-  }
-
-  get searchParams$(): Observable<SearchParams> {
-    return combineLatest([this.classId$, this.instanceId$, this.project$]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([classId, instanceId]) =>
-        instanceId
-          ? null
-          : <SearchParams>{
-              query: this._setGravsearch(classId),
-              mode: 'gravsearch',
-            }
-      )
-    );
-  }
-
-  routeConstants = RouteConstants;
+      return <SearchParams>{
+        query: this._setGravsearch(classId),
+        mode: 'gravsearch',
+      };
+    }),
+    takeUntil(this.ngUnsubscribe)
+  );
 
   constructor(
     private _acs: AppConfigService,
@@ -121,6 +78,4 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
 
         OFFSET 0`;
   }
-
-  protected readonly search = search;
 }
