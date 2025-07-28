@@ -6,14 +6,20 @@ export class MultipleViewerService {
   private _selectedResourceIdsSubject = new BehaviorSubject<string[]>([]);
   selectedResourceIds$ = this._selectedResourceIdsSubject.asObservable();
 
-  activatedResourceId?: string;
+  multiMode = false;
 
   addResource(resourceId: string) {
     const currentResources = this._selectedResourceIdsSubject.getValue();
+    if (!this.multiMode && currentResources.length === 1) {
+      currentResources.length = 0; // Clear the previous single selection if switching to multi-mode
+    }
+
     if (!currentResources.includes(resourceId)) {
       currentResources.push(resourceId);
       this._selectedResourceIdsSubject.next(currentResources);
     }
+
+    this.multiMode = true;
   }
 
   removeResource(resourceId: string) {
@@ -24,13 +30,11 @@ export class MultipleViewerService {
       this._selectedResourceIdsSubject.next(currentResources);
     }
 
-    if (currentResources.length === 1) {
-      console.log('got one', currentResources);
-      this.activatedResourceId = currentResources[0]; // Reset activated resource if no resources left
-    }
+    this.multiMode = true;
   }
 
   selectOneResource(resourceId: string) {
-    this.activatedResourceId = resourceId;
+    this._selectedResourceIdsSubject.next([resourceId]);
+    this.multiMode = false;
   }
 }
