@@ -10,7 +10,7 @@ import {
   ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
-import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs';
 import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
@@ -30,7 +30,6 @@ export class DataModelsComponent {
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
   constructor(
-    public ls: LocalizationService,
     private _dialog: MatDialog,
     public _route: ActivatedRoute,
     private _router: Router,

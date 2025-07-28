@@ -16,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Cardinality, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import { Subject, takeUntil } from 'rxjs';
@@ -56,21 +55,19 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           <div>
             <div class="upper-prop-container">
               <span class="label" data-cy="property-label"
-                >{{ classProp.propDef.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) }}
+                >{{ classProp.propDef.labels | appStringifyStringLiteral }}
               </span>
               <span
                 data-cy="property-object-label"
                 class="additional-info"
                 *ngIf="classProp.objectLabels && classProp.objectLabels.length > 0"
-                [innerHTML]="
-                  '&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral: (ls.currentLanguage$ | async))
-                "></span>
+                [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
             </div>
             <div mat-line class="lower-prop-container">
               <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
               <mat-icon
                 *ngIf="isHovered && classProp.propDef.comments?.length"
-                [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async)"
+                [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
                 matTooltipPosition="above"
                 class="info-icon">
                 info
@@ -214,7 +211,6 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private _destroy = new Subject<void>();
 
   constructor(
-    public ls: LocalizationService,
     private _cdr: ChangeDetectorRef,
     private _clipboard: Clipboard,
     private _dialog: MatDialog,

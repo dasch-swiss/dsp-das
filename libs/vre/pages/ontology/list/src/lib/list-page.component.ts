@@ -9,7 +9,6 @@ import {
   LoadListsInProjectAction,
   ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { combineLatest, map, Subject, switchMap, take, takeUntil } from 'rxjs';
@@ -43,7 +42,6 @@ export class ListPageComponent implements OnInit, OnDestroy {
   private _destroy = new Subject<void>();
 
   constructor(
-    public ls: LocalizationService,
     private _actions$: Actions,
     private _dialog: DialogService,
     private _listItemService: ListItemService,
