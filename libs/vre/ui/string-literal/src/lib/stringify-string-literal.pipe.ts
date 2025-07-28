@@ -19,14 +19,23 @@ export class StringifyStringLiteralPipe implements PipeTransform {
   constructor(private localizationService: LocalizationService) {}
 
   transform(value: StringLiteral[], language?: string | 'all' | null): string {
+    if (!value || value.length === 0) {
+      return '';
+    }
     if (language === 'all') {
       return value.map(sl => `${sl.value} (${sl.language})`).join(' / ');
     } else {
-      const selectedLanguage =
+      const userPreferedLanguage =
         (language as LanguageShort)?.length === 2
           ? (language as LanguageShort)
-          : this.localizationService.getCurrentLanguage() || navigator.language.substring(0, 2);
-      return value.find(i => i.language === selectedLanguage)?.value || value[0].value;
+          : this.localizationService.getCurrentLanguage();
+      // passed preferred language
+      let translated = value.find(i => i.language === userPreferedLanguage)?.value;
+      if (!translated) {
+        // if the string literal is not translated in the user preferred language
+        translated = value.find(i => i.language === this.localizationService.getLanguageFromBrowser())?.value;
+      }
+      return translated || value[0].value; // fallback to the first value in the array
     }
   }
 }

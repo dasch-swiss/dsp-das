@@ -48,6 +48,12 @@ export class LocalizationService {
     this.saveLanguageToLocalStorage(language);
   }
 
+  getLanguageFromBrowser(): string {
+    const browserLang = this.translateService.getBrowserLang();
+    const availableLanguageExp = AvailableLanguages.map(lang => lang.language).join('|');
+    return browserLang?.match(`/${availableLanguageExp}/`) ? browserLang : this.defaultLanguage;
+  }
+
   private saveLanguageToLocalStorage(language: string) {
     localStorage.setItem(LocalStorageLanguageKey, JSON.stringify(language));
   }
@@ -55,12 +61,6 @@ export class LocalizationService {
   private getLanguage(): string {
     const key = localStorage.getItem(LocalStorageLanguageKey);
     return key ? JSON.parse(key) : this.getLanguageFromBrowser();
-  }
-
-  private getLanguageFromBrowser(): string {
-    const browserLang = this.translateService.getBrowserLang();
-    const availableLanguageExp = AvailableLanguages.map(lang => lang.language).join('|');
-    return browserLang?.match(`/${availableLanguageExp}/`) ? browserLang : this.defaultLanguage;
   }
 
   private setDefaultLanguage() {
