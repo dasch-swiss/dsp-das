@@ -21,7 +21,40 @@ import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-sidenav-item',
-  templateUrl: './resource-class-sidenav-item.component.html',
+  template: `
+    <div class="class-item-container">
+      <div class="content" data-cy="class-item" [routerLinkActive]="['is-active']">
+        <div class="box link" [routerLink]="classLink">
+          <div
+            #resClassLabel
+            class="label"
+            matTooltip="{{ ontologiesLabel }}"
+            matTooltipShowDelay="750"
+            [matTooltipPosition]="'above'"
+            [matTooltipDisabled]="tooltipDisabled">
+            {{ ontologiesLabel }}
+          </div>
+          <div class="entry-container">
+            <mat-icon>{{ icon }}</mat-icon>
+            <ngx-skeleton-loader
+              *ngIf="(results$ | async) === undefined"
+              count="1"
+              appearance="line"
+              [theme]="{
+                'margin-bottom': 0,
+                'vertical-align': 'middle',
+              }" />
+            <div *ngIf="(results$ | async) !== undefined" class="entry">
+              {{ results$ | async | i18nPlural: itemPluralMapping['entry'] }}
+            </div>
+          </div>
+        </div>
+        <a class="icon link" data-cy="add-class-instance" *ngIf="isMember$ | async" (click)="goToAddClassInstance()">
+          <mat-icon>add_circle_outline</mat-icon>
+        </a>
+      </div>
+    </div>
+  `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit, OnDestroy {
