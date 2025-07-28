@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-list-view-normal',
-  template: ``,
+  template: ` <app-resource-list [withMultipleSelection]="true" [resources]="resources" [selectedResourceIdx]="[]" />`,
 })
-export class ListViewNormalComponent {}
+export class ListViewNormalComponent {
+  @Input({ required: true }) resources!: ReadResource[];
+}

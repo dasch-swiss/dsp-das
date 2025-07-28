@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ReadResource } from '@dasch-swiss/dsp-js';
 import { SplitSize } from './split-size.interface';
 
 @Component({
   selector: 'app-multiple-viewer-gateway',
   template: ` <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
     <as-split-area [size]="40">
-      LIST VIEW
-      <app-list-view-normal />
+      <app-list-view-normal [resources]="resources" />
     </as-split-area>
     <as-split-area [size]="60" cdkScrollable>
-      MULTIPLE VIEWER
-      <app-multiple-viewer-2 />
+      <app-multiple-viewer-2 [resources]="resources" />
     </as-split-area>
   </as-split>`,
 })
 export class MultipleViewerGatewayComponent {
+  @Input({ required: true }) resources!: ReadResource[];
+
   splitSizeChanged: SplitSize | undefined = undefined;
 }
