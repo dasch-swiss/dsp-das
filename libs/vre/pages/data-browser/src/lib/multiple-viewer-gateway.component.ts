@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { MultipleViewerService } from './multiple-viewer.service';
 import { SplitSize } from './split-size.interface';
 
 @Component({
@@ -15,6 +16,7 @@ import { SplitSize } from './split-size.interface';
     </as-split>
   </div>`,
   styleUrls: ['./multiple-viewer-gateway.component.scss'],
+  providers: [MultipleViewerService],
 })
 export class MultipleViewerGatewayComponent {
   @Input({ required: true }) resources!: ReadResource[];
