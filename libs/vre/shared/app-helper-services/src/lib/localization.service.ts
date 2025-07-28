@@ -20,12 +20,12 @@ export class LocalizationService {
     this.setLocale(this._locale);
   }
 
-  availableLocales = [
+  private readonly AVAILABLE_LOCALES = [
     { locale: 'en-GB', localeData: en_GB },
     { locale: 'fr-CH', localeData: fr_CH },
     { locale: 'de-CH', localeData: de_CH },
     { locale: 'it-CH', localeData: it_CH },
-  ];
+  ] as const;
 
   constructor(private translateService: TranslateService) {}
 
@@ -68,13 +68,13 @@ export class LocalizationService {
   }
 
   private setLocale(locale: string) {
-    let localeItem = this.availableLocales.find(item => item.locale === locale);
+    let localeItem = this.AVAILABLE_LOCALES.find(item => item.locale === locale);
 
     if (!localeItem) {
-      localeItem = { locale: 'en', localeData: en_GB };
+      localeItem = { locale: 'en-GB', localeData: en_GB };
     }
 
     registerLocaleData(localeItem.localeData, locale);
-    document.documentElement.lang = (localeItem.localeData[0] as string).substr(0, 2);
+    document.documentElement.lang = (localeItem.localeData[0] as string).substring(0, 1);
   }
 }
