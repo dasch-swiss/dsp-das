@@ -14,8 +14,8 @@
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip"
         data-cy="property-labels">
-        {{ !property.propDef!.labels.length ? property.propDef?.label : property.propDef!.labels |
-        appStringifyStringLiteral }}
+        {{ property.propDef!.labels.length ? (property.propDef!.labels | appStringifyStringLiteral) :
+        property.propDef?.label }}
       </span>
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
