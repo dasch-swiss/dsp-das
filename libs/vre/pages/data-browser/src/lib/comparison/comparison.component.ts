@@ -1,7 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
 import { ShortResInfo } from '../list-view/list-view.component';
 import { SplitSize } from '../split-size.interface';
 
@@ -51,8 +49,6 @@ export class ComparisonComponent implements OnChanges {
     return this.resources.length;
   }
 
-  constructor(private _store: Store) {}
-
   ngOnChanges(): void {
     const resourceIds = this.resources.map(res => res.id);
 
@@ -65,6 +61,6 @@ export class ComparisonComponent implements OnChanges {
   }
 
   updateResourceCount(resource: ReadResource) {
-    this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
+    // TODO
   }
 }

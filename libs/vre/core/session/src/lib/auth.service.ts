@@ -5,15 +5,14 @@ import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import {
   ClearListsAction,
   ClearOntologiesAction,
-  ClearOntologyClassAction,
   ClearProjectsAction,
   LoadUserAction,
   LogUserOutAction,
 } from '@dasch-swiss/vre/core/state';
 import {
-  Events as CommsEvents,
   ComponentCommunicationEventService,
   EmitEvent,
+  Events as CommsEvents,
   LocalizationService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
@@ -88,7 +87,6 @@ export class AuthService {
       new ClearProjectsAction(),
       new ClearListsAction(),
       new ClearOntologiesAction(),
-      new ClearOntologyClassAction(),
     ]);
   }
 }

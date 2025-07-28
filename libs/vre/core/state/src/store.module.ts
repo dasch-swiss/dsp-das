@@ -10,7 +10,6 @@ import {
   ConfigState,
   ListsState,
   OntologiesState,
-  OntologyClassState,
   ProjectsState,
   ResourceState,
   SetConfigAction,
@@ -21,15 +20,7 @@ export function initializeConfigState(configService: AppConfigService, store: St
   return () => store.dispatch(new SetConfigAction(configService));
 }
 
-const STATE_MODULES = [
-  UserState,
-  ProjectsState,
-  OntologiesState,
-  ListsState,
-  OntologyClassState,
-  ResourceState,
-  ConfigState,
-];
+const STATE_MODULES = [UserState, ProjectsState, OntologiesState, ListsState, ResourceState, ConfigState];
 
 @NgModule({
   exports: [NgxsModule],

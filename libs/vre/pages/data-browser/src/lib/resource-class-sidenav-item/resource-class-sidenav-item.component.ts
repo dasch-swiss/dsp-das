@@ -1,51 +1,33 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadClassItemsCountAction, OntologyClassSelectors, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { finalize, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { ResourceClassSidenavItemService } from './resource-class-sidenav-item.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-sidenav-item',
   template: `
     <div class="class-item-container">
       <div class="content" data-cy="class-item" [routerLinkActive]="['is-active']">
         <div class="box link" [routerLink]="classLink">
-          <div
-            #resClassLabel
-            class="label"
-            matTooltip="{{ ontologiesLabel }}"
-            matTooltipShowDelay="750"
-            [matTooltipPosition]="'above'"
-            [matTooltipDisabled]="tooltipDisabled">
-            {{ ontologiesLabel }}
-          </div>
+          <div class="label">{{ ontologiesLabel }}</div>
           <div class="entry-container">
             <mat-icon>{{ icon }}</mat-icon>
             <ngx-skeleton-loader
-              *ngIf="(results$ | async) === undefined"
+              *ngIf="loading"
               count="1"
               appearance="line"
               [theme]="{
                 'margin-bottom': 0,
                 'vertical-align': 'middle',
               }" />
-            <div *ngIf="(results$ | async) !== undefined" class="entry">
-              {{ results$ | async | i18nPlural: itemPluralMapping['entry'] }}
+            <div class="entry">
+              {{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}
             </div>
           </div>
         </div>
@@ -56,24 +38,20 @@ import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
     </div>
   `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
+  providers: [ResourceClassSidenavItemService],
 })
-export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit, OnDestroy {
-  destroyed: Subject<void> = new Subject<void>();
-
+export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
-  @ViewChild('resClassLabel') resClassLabel: ElementRef;
-
+  destroyed = new Subject<void>();
   isMember$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember);
+  classLink!: string;
+  icon!: string;
+  ontologiesLabel!: string;
+  count$!: Observable<number>;
+  loading = true;
 
-  classLink: string;
-
-  icon: string;
-
-  tooltipDisabled = true;
-
-  // i18n setup
-  itemPluralMapping = {
+  readonly itemPluralMapping = {
     entry: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       '=1': '1 Entry',
@@ -81,45 +59,33 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
     },
   };
 
-  ontologiesLabel: string;
-
-  get results$(): Observable<number> {
-    return combineLatest([
-      this._store.select(OntologyClassSelectors.classItems),
-      this._store.select(OntologyClassSelectors.isLoading),
-    ]).pipe(map(([classItems]) => classItems[this.resClass.id]?.classItemsCount));
-  }
-
   constructor(
-    private _actions$: Actions,
     private _cd: ChangeDetectorRef,
     private _localizationService: LocalizationService,
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
-    private _translateService: TranslateService
-  ) {
-    this._actions$.pipe(takeUntil(this.destroyed), ofActionSuccessful(LoadClassItemsCountAction)).subscribe(() => {
-      this._cd.markForCheck();
-    });
-  }
+    private _translateService: TranslateService,
+    private _resourceClassSidenavItemService: ResourceClassSidenavItemService
+  ) {}
 
   ngOnInit(): void {
     const projectUuid = this._route.snapshot.paramMap.get(RouteConstants.uuidParameter);
     const [ontologyIri, className] = this.resClass.id.split('#');
     const ontologyName = OntologyService.getOntologyName(ontologyIri);
-    this._store.dispatch(new LoadClassItemsCountAction(ontologyIri, this.resClass.id));
+
     this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
     this.icon = this._getIcon();
-    this._translateService.onLangChange.pipe(takeUntil(this.destroyed)).subscribe(() => {
+
+    this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
       this.getOntologiesLabelsInPreferredLanguage();
     });
-    this.getOntologiesLabelsInPreferredLanguage();
-  }
 
-  ngAfterViewInit(): void {
-    this.tooltipDisabled = !this.isTextOverflowing(this.resClassLabel.nativeElement);
-    this._cd.detectChanges();
+    this.count$ = this._resourceClassSidenavItemService.getCount(this.resClass.id).pipe(
+      finalize(() => {
+        this.loading = false;
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -127,14 +93,9 @@ export class ResourceClassSidenavItemComponent implements OnInit, AfterViewInit,
     this.destroyed.complete();
   }
 
-  isTextOverflowing(element: HTMLElement): boolean {
-    return element.scrollHeight > element.clientHeight;
-  }
-
   private getOntologiesLabelsInPreferredLanguage(): void {
-    const prefferedLanguage = this._localizationService.getCurrentLanguage();
     if (this.resClass.labels) {
-      const label = this.resClass.labels.find(l => l.language === prefferedLanguage);
+      const label = this.resClass.labels.find(l => l.language === this._localizationService.getCurrentLanguage());
       this.ontologiesLabel = label ? label.value : this.resClass.labels[0].value;
       this._cd.markForCheck();
     }

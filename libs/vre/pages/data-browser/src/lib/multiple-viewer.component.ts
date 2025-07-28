@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
 import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { Store } from '@ngxs/store';
 import { SplitSize } from './split-size.interface';
 
 @Component({
@@ -48,10 +46,7 @@ export class MultipleViewerComponent {
   selectedResources: FilteredResources | undefined = undefined;
   splitSizeChanged: SplitSize | undefined = undefined;
 
-  constructor(
-    private _cdr: ChangeDetectorRef,
-    private _store: Store
-  ) {}
+  constructor(private _cdr: ChangeDetectorRef) {}
 
   openSelectedResources(res: FilteredResources) {
     this.selectedResources = { ...res, resInfo: [...res.resInfo] };
@@ -65,6 +60,6 @@ export class MultipleViewerComponent {
   }
 
   updateResourceCount(resource: ReadResource) {
-    this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
+    // TODO
   }
 }
