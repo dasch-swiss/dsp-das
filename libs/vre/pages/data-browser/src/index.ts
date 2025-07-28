@@ -18,3 +18,5 @@ export * from './lib/list-view/resource-list/resource-list.component';
 export * from './lib/list-view/list-view-normal.component';
 export * from './lib/multiple-viewer-2.component';
 export * from './lib/multiple-viewer-gateway.component';
+export * from './lib/list-view/resource-list/resource-list-2.component';
+export * from './lib/list-view/resource-list/resource-list-item.component';
