@@ -10,7 +10,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiResponseError,
   CountQueryResponse,
@@ -18,14 +17,14 @@ import {
   ReadResource,
   ReadResourceSequence,
 } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { FilteredResources, SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ComponentCommunicationEventService, EmitEvent, Events } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { combineLatest, map, of, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, finalize, map, of, switchMap, take, tap } from 'rxjs';
 
 export interface ShortResInfo {
   id: string;
@@ -43,18 +42,31 @@ export interface CheckboxUpdate {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-list-view',
-  templateUrl: './list-view.component.html',
+  template: `
+    <app-pager
+      *ngIf="numberOfAllResults"
+      (pageIndexChanged)="doSearch($event)"
+      [numberOfAllResults]="numberOfAllResults" />
+    <div class="loader-container">
+      <mat-progress-bar mode="indeterminate" *ngIf="loading" />
+    </div>
+
+    <app-resource-list
+      [withMultipleSelection]="true"
+      [resources]="resources"
+      [selectedResourceIdx]="selectedResourceIdx"
+      (resourcesSelected)="emitSelectedResources($event)" />
+  `,
   styleUrls: ['./list-view.component.scss'],
 })
 export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   @Input() search: SearchParams | undefined = undefined;
   @Input() withMultipleSelection = false;
-  @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
+  @Output() selectedResources = new EventEmitter<FilteredResources>();
 
   currentSearch: SearchParams | undefined = undefined;
   resources: ReadResource[] = [];
   selectedResourceIdx: number[] = [];
-  componentCommsSubscriptions: Subscription[] = [];
   numberOfAllResults = 0;
   loading = true;
 
@@ -67,50 +79,39 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     })
   );
 
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _componentCommsService: ComponentCommunicationEventService,
     private _notification: NotificationService,
-    private _route: ActivatedRoute,
-    private _router: Router,
     private _cd: ChangeDetectorRef,
     private _store: Store,
     private _translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
-    this.componentCommsSubscriptions.push(
-      this.translation$.subscribe(() => this.doSearch()),
-      this._componentCommsService.on([Events.loginSuccess], () => {
-        const currentOntologyClass = this._store.selectSnapshot(OntologiesSelectors.currentOntologyClass);
-        if (currentOntologyClass) {
-          const currentOntology = this._store.selectSnapshot(OntologiesSelectors.projectOntology);
-          this._dspApiConnection.v2.ontologyCache
-            .reloadCachedItem(currentOntology.id)
-            .pipe(take(1))
-            .subscribe(() => {
-              this.initSearch();
-            });
-        }
-      })
-    );
+    this.translation$.subscribe(() => this.doSearch());
+
+    const currentOntologyClass = this._store.selectSnapshot(OntologiesSelectors.currentOntologyClass);
+    if (currentOntologyClass) {
+      const currentOntology = this._store.selectSnapshot(OntologiesSelectors.projectOntology);
+      this._dspApiConnection.v2.ontologyCache.reloadCachedItem(currentOntology.id).subscribe(() => {
+        this._initSearch();
+      });
+    }
   }
 
   ngOnChanges(): void {
     if (this.isCurrentSearch()) {
       this.currentSearch = this.search;
-      this.initSearch();
+      this._initSearch();
     }
   }
 
   isCurrentSearch = (): boolean =>
     this.search?.query !== this.currentSearch?.query || this.currentSearch?.query === undefined;
 
-  initSearch(): void {
-    // reset
+  private _initSearch(): void {
     this.loading = true;
     this.resources = [];
     this._cd.detectChanges();
@@ -118,14 +119,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     this.doSearch();
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
-  // the child component send the selected resources to the parent of this component directly;
-  // but when this component is initialized, it should select the first item in the list and
-  // emit this selected resource to the parent.
   emitSelectedResources(res?: FilteredResources) {
     if (!res || res.count === 0) {
       // no resource is selected: In case of an error or no search results
@@ -141,69 +134,21 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  handleBackButtonClicked() {
-    const projectUuid = this._route.parent?.snapshot.paramMap.get('uuid');
-    if (projectUuid) {
-      this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.advancedSearch]);
-    }
-  }
-
   doSearch(index = 0) {
     this.loading = true;
 
     if (this.search?.mode === 'fulltext') {
       if (index === 0 && !this.isCurrentSearch()) {
-        // perform count query
-        this._dspApiConnection.v2.search
-          .doFulltextSearchCountQuery(this.search.query, index, this.search.filter)
-          .pipe(takeUntil(this.ngUnsubscribe))
-          .subscribe(
-            (count: CountQueryResponse) => {
-              this.numberOfAllResults = count.numberOfResults;
-              if (this.numberOfAllResults === 0) {
-                this.emitSelectedResources();
-                this.resources = [];
-                this.loading = false;
-                this._cd.markForCheck();
-              }
-            },
-            error => {
-              if (error instanceof ApiResponseError && error.status === 400) {
-                this.numberOfAllResults = 0;
-              }
-              this.loading = false;
-              this._cd.markForCheck();
-            }
-          );
+        this._performCountQuery(index);
       }
 
-      // perform full text search
-      this._dspApiConnection.v2.search
-        .doFulltextSearch(this.search.query, index, this.search.filter)
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe(
-          response => {
-            // if the response does not contain any resources even though the search count is greater than 0,
-            // it means that the user does not have the permissions to see anything: emit an empty result
-            if (response.resources.length === 0) {
-              this.emitSelectedResources();
-            }
-            this.resources = response.resources;
-            this.loading = false;
-            this._cd.markForCheck();
-          },
-          error => {
-            this.loading = false;
-            this.resources = [];
-          }
-        );
+      this._performFulltextSearch(index);
     } else if (this.search?.mode === 'gravsearch') {
-      this.performGravSearch(index);
+      this._performGravSearch(index);
     }
   }
 
-  performGravSearch(index: number) {
-    // emit 'gravSearchExecuted' event to the fulltext-search component in order to clear the input field
+  private _performGravSearch(index: number) {
     this._componentCommsService.emit(new EmitEvent(Events.gravSearchExecuted, true));
 
     if (this.search?.query === undefined) {
@@ -214,36 +159,29 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
-    // request the count query if the page index is zero otherwise it is already stored in the numberOfAllResults
     const numberOfAllResults$ =
       index !== 0
         ? of(this.numberOfAllResults)
-        : this._dspApiConnection.v2.search
-            .doExtendedSearchCountQuery(this.search.query)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .pipe(
-              map(count => {
-                this.numberOfAllResults = count.numberOfResults;
-                if (this.numberOfAllResults === 0) {
-                  this._notification.openSnackBar('No resources to display.');
-                  this.emitSelectedResources();
-                  this.resources = [];
-                  this.loading = false;
-                  this._cd.markForCheck();
-                }
+        : this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).pipe(
+            map(count => {
+              this.numberOfAllResults = count.numberOfResults;
+              if (this.numberOfAllResults === 0) {
+                this._notification.openSnackBar('No resources to display.');
+                this.emitSelectedResources();
+                this.resources = [];
+                this.loading = false;
+                this._cd.markForCheck();
+              }
 
-                return count.numberOfResults;
-              })
-            );
+              return count.numberOfResults;
+            })
+          );
 
     let gravsearch = this.search.query;
     gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
     gravsearch = `${gravsearch}OFFSET ${index}`;
 
-    const graveSearchQuery$ = this._dspApiConnection.v2.search
-      .doExtendedSearch(gravsearch)
-      .pipe(takeUntil(this.ngUnsubscribe));
-
+    const graveSearchQuery$ = this._dspApiConnection.v2.search.doExtendedSearch(gravsearch);
     combineLatest([graveSearchQuery$, numberOfAllResults$])
       .pipe(
         tap({
@@ -259,8 +197,6 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
           this.numberOfAllResults = response.resources.length;
         }
 
-        // if the response does not contain any resources even the search count is greater than 0,
-        // it means that the user does not have the permissions to see anything: emit an empty result
         if (response.resources.length === 0 && this.numberOfAllResults > 0) {
           this._notification.openSnackBar('No permission to display the resources.');
           this.emitSelectedResources();
@@ -271,5 +207,51 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
         this.loading = false;
         this._cd.markForCheck();
       });
+  }
+
+  private _performCountQuery(index: number) {
+    // perform count query
+    this._dspApiConnection.v2.search.doFulltextSearchCountQuery(this.search.query, index, this.search.filter).subscribe(
+      (count: CountQueryResponse) => {
+        this.numberOfAllResults = count.numberOfResults;
+        if (this.numberOfAllResults === 0) {
+          this.emitSelectedResources();
+          this.resources = [];
+          this.loading = false;
+          this._cd.markForCheck();
+        }
+      },
+      error => {
+        if (error instanceof ApiResponseError && error.status === 400) {
+          this.numberOfAllResults = 0;
+        }
+        this.loading = false;
+        this._cd.markForCheck();
+      }
+    );
+  }
+
+  private _performFulltextSearch(index: number) {
+    this._dspApiConnection.v2.search
+      .doFulltextSearch(this.search.query, index, this.search.filter)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe(
+        response => {
+          // if the response does not contain any resources even though the search count is greater than 0,
+          // it means that the user does not have the permissions to see anything: emit an empty result
+          if (response.resources.length === 0) {
+            this.emitSelectedResources();
+          }
+          this.resources = response.resources;
+          this._cd.markForCheck();
+        },
+        () => {
+          this.resources = [];
+        }
+      );
   }
 }
