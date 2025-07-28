@@ -45,10 +45,9 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
-import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { CustomRegex, handleXML } from '@dasch-swiss/vre/shared/app-common';
 import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
-import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
 
 interface MappingParameters<T extends ReadValue> {
