@@ -11,17 +11,17 @@
         <div class="list-info">
           <h3
             class="mat-headline-6"
-            [matTooltip]="list.labels |appStringifyStringLiteral:'all'"
+            [matTooltip]="list.labels | appStringifyStringLiteral:'all'"
             matTooltipPosition="above"
             data-cy="label-title">
-            {{ list.labels | appStringifyStringLiteral }}
+            {{ list.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) }}
           </h3>
           <p
             class="mat-body"
-            [matTooltip]="list.comments | appStringifyStringLiteral"
+            [matTooltip]="list.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async)"
             matTooltipPosition="above"
             data-cy="comment-title">
-            {{ list.comments | appStringifyStringLiteral | appTruncate:64 }}
+            {{ list.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async) | appTruncate:64 }}
           </p>
         </div>
         <span class="fill-remaining-space"></span>

@@ -58,7 +58,7 @@
       *ngFor="let list of (listsInProject$ | async); trackBy: trackByFn"
       (click)="navigateToList(list.id)">
       <mat-icon class="icon-prefix">list</mat-icon>
-      <p class="label">{{list.labels | appStringifyStringLiteral}}</p>
+      <p class="label">{{list.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) }}</p>
       <span class="fill-remaining-space"></span>
       <mat-icon class="icon-suffix">chevron_right</mat-icon>
     </div>

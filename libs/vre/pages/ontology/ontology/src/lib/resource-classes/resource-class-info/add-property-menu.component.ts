@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
+import {
+  DefaultProperties,
+  DefaultProperty,
+  LocalizationService,
+  PropertyCategory,
+} from '@dasch-swiss/vre/shared/app-helper-services';
 import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -43,7 +48,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
             matTooltipPosition="after"
             (click)="assignExistingProperty(prop.propDef!.id)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>
-            {{ prop.propDef!.label }}
+            {{ prop.propDef!.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) }}
           </button>
         </mat-menu>
       </ng-container>
@@ -119,6 +124,7 @@ export class AddPropertyMenuComponent implements OnChanges {
   );
 
   constructor(
+    public ls: LocalizationService,
     private _dialog: MatDialog,
     private _oes: OntologyEditService
   ) {}

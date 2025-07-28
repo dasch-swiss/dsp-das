@@ -10,16 +10,15 @@
       </span>
       <span
         class="label"
-        [matTooltip]="property.propDef.comments | appStringifyStringLiteral"
+        [matTooltip]="property.propDef.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async)"
         matTooltipPosition="above"
         matTooltipClass="multi-line-tooltip"
         data-cy="property-labels">
-        {{ property.propDef!.labels.length ? (property.propDef!.labels | appStringifyStringLiteral) :
-        property.propDef?.label }}
+        {{ property.propDef!.labels.length ? (property.propDef!.labels | appStringifyStringLiteral: (ls.currentLanguage$
+        | async) ) : property.propDef?.label }}
       </span>
       <mat-icon
-        *ngIf="property.propDef.comment"
-        [matTooltip]="property.propDef.comment"
+        [matTooltip]="property.propDef.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async)"
         matTooltipPosition="above"
         class="icon property-info-icon">
         info
@@ -28,9 +27,9 @@
       <span
         class="attribute additional-info"
         *ngIf="property.objectLabels && property.objectLabels.length"
-        [matTooltip]="property.objectComments | appStringifyStringLiteral"
+        [matTooltip]="property.objectComments | appStringifyStringLiteral: (ls.currentLanguage$ | async) "
         matTooltipPosition="above"
-        [innerHTML]="'&rarr;&nbsp;' + (property.objectLabels | appStringifyStringLiteral)">
+        [innerHTML]="'&rarr;&nbsp;' + (property.objectLabels | appStringifyStringLiteral: (ls.currentLanguage$ | async) )">
       </span>
     </div>
   </div>
@@ -51,13 +50,13 @@
         <span class="mat-caption">&gt; Property is used in:</span>
         <span *ngFor="let c of property.usedByClasses; trackBy: trackByFn; let last = last">
           <span
-            [matTooltip]="(c.labels | appStringifyStringLiteral) + ': ' +(c.comments | appStringifyStringLiteral)"
+            [matTooltip]="(c.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) ) + ': ' +(c.comments | appStringifyStringLiteral: (ls.currentLanguage$ | async) )"
             matTooltipPosition="above"
             [matTooltipDisabled]="isLockHovered"
-            >{{ c.labels | appStringifyStringLiteral }}
+            >{{ c.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) }}
             <span
               *ngIf="c.id && c.id === c.restrictedToClass"
-              [matTooltip]="'This property can only be used by the class ' + (c.labels | appStringifyStringLiteral)"
+              [matTooltip]="'This property can only be used by the class ' + (c.labels | appStringifyStringLiteral: (ls.currentLanguage$ | async) )"
               (mouseenter)="isLockHovered = true"
               (mouseleave)="isLockHovered = false">
               <mat-icon class="type">lock</mat-icon>

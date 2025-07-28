@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
@@ -41,6 +41,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
+    public ls: LocalizationService,
     public ops: OntologyPageService,
     private _cd: ChangeDetectorRef,
     private _clipboard: Clipboard,

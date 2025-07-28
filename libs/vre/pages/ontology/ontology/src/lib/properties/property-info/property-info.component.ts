@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadProject, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
+import { DefaultProperty, LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, map, startWith, switchMap } from 'rxjs';
@@ -38,6 +38,7 @@ export class PropertyInfoComponent {
   isLockHovered = false;
 
   constructor(
+    public ls: LocalizationService,
     private _dialog: MatDialog,
     private _oes: OntologyEditService,
     private _dialogService: DialogService,
