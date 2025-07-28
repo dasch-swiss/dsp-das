@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
@@ -6,7 +6,7 @@ import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-browser-page',
@@ -18,19 +18,17 @@ import { combineLatest, map, Subject, takeUntil } from 'rxjs';
     </div>
   `,
 })
-export class ResourceClassBrowserPageComponent implements OnDestroy {
-  project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+export class ResourceClassBrowserPageComponent {
+  private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
 
-  resourceIri$ = combineLatest([this._route.params, this.project$]).pipe(
+  resourceIri$ = combineLatest([this._route.params, this._project$]).pipe(
     map(
       ([params, project]) =>
         `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${params[RouteConstants.instanceParameter]}`
-    ),
-    takeUntil(this.ngUnsubscribe)
+    )
   );
 
-  searchParams$ = combineLatest([this.project$, this._route.params]).pipe(
+  searchParams$ = combineLatest([this._project$, this._route.params]).pipe(
     map(([project, params]) => {
       const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${project.shortcode}/${params[RouteConstants.ontoParameter]}/v2`;
       const classId = `${ontoId}#${params[RouteConstants.classParameter]}`;
@@ -39,8 +37,7 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
         query: this._setGravsearch(classId),
         mode: 'gravsearch',
       };
-    }),
-    takeUntil(this.ngUnsubscribe)
+    })
   );
 
   constructor(
@@ -50,11 +47,6 @@ export class ResourceClassBrowserPageComponent implements OnDestroy {
     protected _router: Router,
     protected _store: Store
   ) {}
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 
   private _setGravsearch(iri: string): string {
     return `
