@@ -3,6 +3,8 @@ import { IntermediateComponent } from './lib/intermediate/intermediate.component
 import { ListViewNormalComponent } from './lib/list-view/list-view-normal.component';
 import { ListViewComponent } from './lib/list-view/list-view.component';
 import { ResourceListComponent } from './lib/list-view/resource-list/resource-list.component';
+import { MultipleViewer2Component } from './lib/multiple-viewer-2.component';
+import { MultipleViewerGatewayComponent } from './lib/multiple-viewer-gateway.component';
 import { MultipleViewerComponent } from './lib/multiple-viewer.component';
 import { ResourceClassBrowserPageComponent } from './lib/resource-class-browser/resource-class-browser-page.component';
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
@@ -20,4 +22,6 @@ export const DataBrowserComponents = [
   ListViewComponent,
   ResourceListComponent,
   ListViewNormalComponent,
+  MultipleViewer2Component,
+  MultipleViewerGatewayComponent,
 ];

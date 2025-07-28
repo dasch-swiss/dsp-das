@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -10,7 +10,7 @@ import { combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-browser-page',
-  template: ` <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" /> `,
+  template: ` <app-multiple-viewer-gateway *ngIf="searchParams$ | async as searchParams" /> `,
 })
 export class ResourceClassBrowserPageComponent {
   private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
@@ -28,7 +28,6 @@ export class ResourceClassBrowserPageComponent {
   );
 
   constructor(
-    private _acs: AppConfigService,
     protected _route: ActivatedRoute,
     private _ontologyService: OntologyService,
     protected _router: Router,

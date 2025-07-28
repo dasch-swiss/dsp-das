@@ -6,7 +6,6 @@ import {
   Inject,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -59,7 +58,7 @@ export interface CheckboxUpdate {
   `,
   styleUrls: ['./list-view.component.scss'],
 })
-export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
+export class ListViewComponent implements OnChanges, OnInit {
   @Input() search: SearchParams | undefined = undefined;
   @Input() withMultipleSelection = false;
   @Output() selectedResources = new EventEmitter<FilteredResources>();
