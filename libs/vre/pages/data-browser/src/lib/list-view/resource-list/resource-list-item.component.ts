@@ -9,10 +9,13 @@ import { MultipleViewerService } from '../../multiple-viewer.service';
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
-      *ngIf="multipleViewerService.selectedResources$ | async as selectedResources">
+      *ngIf="multipleViewerService.selectedResources$ | async as selectedResources"
+      (click)="multipleViewerService.selectOneResource(resource.id)">
       <div style="display: flex">
         <span style="flex: 1; display: flex; align-items: center">{{ resource.label }}</span>
-        <mat-checkbox *ngIf="showCheckbox || selectedResources.length > 0" (change)="selectResource($event.checked)" />
+        <mat-checkbox
+          *ngIf="showCheckbox || selectedResources.length > 0"
+          (change)="onCheckboxChanged($event.checked)" />
       </div>
     </mat-list-item>
   `,
@@ -31,7 +34,8 @@ export class ResourceListItemComponent {
 
   constructor(public multipleViewerService: MultipleViewerService) {}
 
-  selectResource(checked: boolean) {
+  onCheckboxChanged(checked: boolean) {
+    console.log('checked', checked);
     if (checked) {
       this.multipleViewerService.addResource(this.resource.id);
     } else {

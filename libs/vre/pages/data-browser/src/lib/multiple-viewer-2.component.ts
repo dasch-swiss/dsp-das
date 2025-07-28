@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { MultipleViewerService } from './multiple-viewer.service';
 import { SplitSize } from './split-size.interface';
 
 @Component({
@@ -8,8 +9,8 @@ import { SplitSize } from './split-size.interface';
   template: ` <div [ngSwitch]="viewMode">
     <!-- single resource view -->
     <app-resource-fetcher
-      *ngSwitchCase="'single'"
-      [resourceIri]="resources[0].id"
+      *ngIf="multipleViewerService.activatedResourceId as resourceIri"
+      [resourceIri]="resourceIri"
       (afterResourceDeleted)="updateResourceCount($event)" />
 
     <!-- intermediate view -->
@@ -17,17 +18,17 @@ import { SplitSize } from './split-size.interface';
 
     <!-- multiple resources view / comparison viewer -->
     <!--<app-comparison
-        *ngSwitchCase="'compare'"
-        [resources]="selectedResources?.resInfo"
-        [splitSizeChanged]="splitSizeChanged" />-->
+              *ngSwitchCase="'compare'"
+              [resources]="selectedResources?.resInfo"
+              [splitSizeChanged]="splitSizeChanged" />-->
   </div>`,
 })
 export class MultipleViewer2Component {
-  @Input({ required: true }) resources!: ReadResource[];
-
   splitSizeChanged: SplitSize | undefined = undefined;
   selectedResources: FilteredResources | undefined = undefined;
   viewMode: 'single' | 'intermediate' | 'compare' = 'single';
+
+  constructor(public multipleViewerService: MultipleViewerService) {}
 
   updateResourceCount(resource: ReadResource) {
     // TODO

@@ -11,7 +11,7 @@ import { SplitSize } from './split-size.interface';
         <app-list-view-normal [resources]="resources" />
       </as-split-area>
       <as-split-area [size]="60" cdkScrollable>
-        <app-multiple-viewer-2 [resources]="resources" />
+        <app-multiple-viewer-2 />
       </as-split-area>
     </as-split>
   </div>`,

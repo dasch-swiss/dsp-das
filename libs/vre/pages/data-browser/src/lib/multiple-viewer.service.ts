@@ -6,6 +6,8 @@ export class MultipleViewerService {
   private _selectedResourcesSubject = new BehaviorSubject<string[]>([]);
   selectedResources$ = this._selectedResourcesSubject.asObservable();
 
+  activatedResourceId?: string;
+
   addResource(resourceId: string) {
     const currentResources = this._selectedResourcesSubject.getValue();
     if (!currentResources.includes(resourceId)) {
@@ -21,5 +23,9 @@ export class MultipleViewerService {
       currentResources.splice(index, 1);
       this._selectedResourcesSubject.next(currentResources);
     }
+  }
+
+  selectOneResource(resourceId: string) {
+    this.activatedResourceId = resourceId;
   }
 }
