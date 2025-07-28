@@ -14,3 +14,5 @@ export * from './lib/resource-link-dialog/resource-link-dialog.component';
 export * from './lib/list-view/list-view.component';
 export * from './lib/list-view/list-view.service';
 export * from './lib/list-view/resource-list/resource-list.component';
+
+export * from './lib/list-view/list-view-normal.component';

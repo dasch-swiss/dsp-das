@@ -1,5 +1,6 @@
 import { ComparisonComponent } from './lib/comparison/comparison.component';
 import { IntermediateComponent } from './lib/intermediate/intermediate.component';
+import { ListViewNormalComponent } from './lib/list-view/list-view-normal.component';
 import { ListViewComponent } from './lib/list-view/list-view.component';
 import { ResourceListComponent } from './lib/list-view/resource-list/resource-list.component';
 import { MultipleViewerComponent } from './lib/multiple-viewer.component';
@@ -18,4 +19,5 @@ export const DataBrowserComponents = [
   ResourceLinkDialogComponent,
   ListViewComponent,
   ResourceListComponent,
+  ListViewNormalComponent,
 ];
