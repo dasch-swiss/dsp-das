@@ -61,18 +61,10 @@ export class ListViewComponent implements OnChanges, OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input() search: SearchParams | undefined = undefined;
-  currentSearch: SearchParams | undefined = undefined;
-
-  /**
-   * set to true if multiple resources can be selected for comparison
-   */
   @Input() withMultipleSelection = false;
-
-  /**
-   * emits the selected resources 1-n
-   */
   @Output() selectedResources: EventEmitter<FilteredResources> = new EventEmitter<FilteredResources>();
 
+  currentSearch: SearchParams | undefined = undefined;
   resources: ReadResource[] = [];
 
   selectedResourceIdx: number[] = [];
