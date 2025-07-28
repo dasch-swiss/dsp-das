@@ -10,23 +10,10 @@ import { combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-browser-page',
-  template: `
-    <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
-
-    <div class="single-instance">
-      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
-    </div>
-  `,
+  template: ` <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" /> `,
 })
 export class ResourceClassBrowserPageComponent {
   private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
-
-  resourceIri$ = combineLatest([this._route.params, this._project$]).pipe(
-    map(
-      ([params, project]) =>
-        `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${params[RouteConstants.instanceParameter]}`
-    )
-  );
 
   searchParams$ = combineLatest([this._project$, this._route.params]).pipe(
     map(([project, params]) => {
