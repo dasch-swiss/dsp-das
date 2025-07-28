@@ -23,6 +23,11 @@ export class MultipleViewerService {
       currentResources.splice(index, 1);
       this._selectedResourceIdsSubject.next(currentResources);
     }
+
+    if (currentResources.length === 1) {
+      console.log('got one', currentResources);
+      this.activatedResourceId = currentResources[0]; // Reset activated resource if no resources left
+    }
   }
 
   selectOneResource(resourceId: string) {

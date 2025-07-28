@@ -1,21 +1,30 @@
 import { Component, Input } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { map } from 'rxjs';
 import { MultipleViewerService } from '../../multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-list-item',
   template: `
     <mat-list-item
+      [ngStyle]="{
+        'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
+      }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
-      *ngIf="multipleViewerService.selectedResourceIds$ | async as selectedResources"
       (click)="multipleViewerService.selectOneResource(resource.id)">
       <div style="display: flex">
-        <span style="flex: 1; display: flex; align-items: center">{{ resource.label }}</span>
+        <span
+          style="flex: 1; display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+          >{{ resource.label }}</span
+        >
+
         <mat-checkbox
-          *ngIf="showCheckbox || selectedResources.length > 0"
-          (change)="onCheckboxChanged($event.checked)" />
+          *ngIf="showCheckbox || (multipleResourcesSelected$ | async)"
+          (change)="onCheckboxChanged($event)"
+          (click)="$event.stopPropagation()" />
       </div>
     </mat-list-item>
   `,
@@ -32,11 +41,24 @@ export class ResourceListItemComponent {
 
   showCheckbox = false;
 
+  isHighlighted$ = this.multipleViewerService.selectedResourceIds$.pipe(
+    map(resourceIds => {
+      if (resourceIds.length > 1) {
+        return resourceIds.includes(this.resource.id);
+      } else {
+        return this.multipleViewerService.activatedResourceId === this.resource.id;
+      }
+    })
+  );
+
+  multipleResourcesSelected$ = this.multipleViewerService.selectedResourceIds$.pipe(
+    map(resourceIds => resourceIds.length > 0)
+  );
+
   constructor(public multipleViewerService: MultipleViewerService) {}
 
-  onCheckboxChanged(checked: boolean) {
-    console.log('checked', checked);
-    if (checked) {
+  onCheckboxChanged(event: MatCheckboxChange) {
+    if (event.checked) {
       this.multipleViewerService.addResource(this.resource.id);
     } else {
       this.multipleViewerService.removeResource(this.resource.id);

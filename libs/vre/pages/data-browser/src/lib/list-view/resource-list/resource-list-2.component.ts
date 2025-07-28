@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { MultipleViewerService } from '../../multiple-viewer.service';
 import { CheckboxUpdate } from '../list-view.component';
-import { ListViewService } from '../list-view.service';
 
 @Component({
   selector: 'app-resource-list-2',
@@ -14,7 +14,7 @@ import { ListViewService } from '../list-view.service';
 export class ResourceList2Component implements OnChanges {
   @Input({ required: true }) resources: ReadResource[] = [];
 
-  constructor(private _listView: ListViewService) {}
+  constructor(public multipleViewerService: MultipleViewerService) {}
 
   ngOnChanges(changes: SimpleChanges) {}
 
