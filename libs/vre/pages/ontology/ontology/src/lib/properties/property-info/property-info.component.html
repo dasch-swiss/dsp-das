@@ -1,6 +1,6 @@
 <div data-cy="property-info" class="property-info" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
   <div class="prop-container">
-    <div mat-line class="title" [class.with-line-break]="true">
+    <div mat-line class="title property-info-title" [class.with-line-break]="true">
       <span
         class="icon"
         *ngIf="property.propType"
@@ -17,6 +17,13 @@
         {{ property.propDef!.labels.length ? (property.propDef!.labels | appStringifyStringLiteral) :
         property.propDef?.label }}
       </span>
+      <mat-icon
+        *ngIf="property.propDef.comment"
+        [matTooltip]="property.propDef.comment"
+        matTooltipPosition="above"
+        class="icon property-info-icon">
+        info
+      </mat-icon>
       <!-- property is linked to a class or to a list: display connected class or list -->
       <span
         class="attribute additional-info"
