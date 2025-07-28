@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceClassBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceClassBrowserPageComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
   DataModelsComponent,
@@ -93,7 +93,7 @@ const routes: Routes = [
       {
         canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
-        component: ResourceClassBrowserComponent,
+        component: ResourceClassBrowserPageComponent,
       },
       {
         canActivate: [OntologyClassInstanceGuard],

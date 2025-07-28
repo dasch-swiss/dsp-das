@@ -15,7 +15,7 @@ import { search } from 'effect/String';
 import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
-  selector: 'app-resource-class-browser',
+  selector: 'app-resource-class-browser-page',
   template: `
     <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
 
@@ -26,7 +26,7 @@ import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'r
     </div>
   `,
 })
-export class ResourceClassBrowserComponent implements OnDestroy {
+export class ResourceClassBrowserPageComponent implements OnDestroy {
   @Select(OntologiesSelectors.projectOntologies)
   projectOntologies$: Observable<IProjectOntologiesKeyValuePairs>;
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;

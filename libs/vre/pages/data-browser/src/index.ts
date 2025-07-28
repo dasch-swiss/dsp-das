@@ -4,7 +4,7 @@ export * from './lib/resource-class-sidenav.component';
 export * from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
 
 export * from './lib/multiple-viewer.component';
-export * from './lib/resource-class-browser/resource-class-browser.component';
+export * from './lib/resource-class-browser/resource-class-browser-page.component';
 export * from './lib/split-size.interface';
 export * from './lib/comparison/comparison.component';
 export * from './lib/intermediate/intermediate.component';
