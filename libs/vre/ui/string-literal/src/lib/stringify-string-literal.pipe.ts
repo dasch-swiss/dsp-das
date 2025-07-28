@@ -18,10 +18,6 @@ export class StringifyStringLiteralPipe implements PipeTransform {
   constructor(private localizationService: LocalizationService) {}
 
   transform(value: StringLiteral[], args: 'single' | 'all' = 'single', language?: string): string | undefined {
-    if (!value || !value.length) {
-      return undefined;
-    }
-
     if (args === 'single') {
       const selectedLanguage =
         language || this.localizationService.getCurrentLanguage() || navigator.language.substring(0, 2);
