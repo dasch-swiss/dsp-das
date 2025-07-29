@@ -6,7 +6,6 @@ export * from './lib/resource-class-sidenav-item/resource-class-sidenav-item.com
 export * from './lib/resource-class-browser/resource-class-browser-page.component';
 export * from './lib/split-size.interface';
 export * from './lib/comparison/comparison.component';
-export * from './lib/intermediate/intermediate.component';
 
 export * from './lib/resource-link-dialog/resource-link-dialog.component';
 
