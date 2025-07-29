@@ -6,7 +6,8 @@ import { combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-results',
-  template: ' <app-multiple-viewer [searchParams]="searchParams" />',
+  template: '',
+  // ' <app-multiple-viewer [searchParams]="searchParams" />',
 })
 export class ResultsComponent implements AfterViewChecked {
   searchParams: SearchParams;
