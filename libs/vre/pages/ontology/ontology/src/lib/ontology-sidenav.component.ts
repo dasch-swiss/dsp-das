@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import {
   DefaultClass,
@@ -19,10 +19,20 @@ import { OntologyPageService } from './ontology-page.service';
   selector: 'app-ontology-sidenav',
   template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-      <a mat-tab-link routerLink="./classes" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">
+      <a
+        mat-tab-link
+        routerLink="./{{ RouteConstants.classes }}"
+        routerLinkActive
+        #rla1="routerLinkActive"
+        [active]="rla1.isActive">
         Classes
       </a>
-      <a mat-tab-link routerLink="./properties" routerLinkActive #rla2="routerLinkActive" [active]="rla2.isActive">
+      <a
+        mat-tab-link
+        routerLink="./{{ RouteConstants.properties }}"
+        routerLinkActive
+        #rla2="routerLinkActive"
+        [active]="rla2.isActive">
         Properties
       </a>
     </nav>
@@ -98,7 +108,7 @@ import { OntologyPageService } from './ontology-page.service';
         display: inline-block;
       }
 
-      button:hovered {
+      button:hover {
         background: var(--element-active-hover);
       }
     `,
@@ -133,4 +143,5 @@ export class OntologySidenavComponent {
   trackByPropCategoryFn = (index: number, item: PropertyCategory) => `${index}-${item.group}`;
   trackByDefaultPropertyFn = (index: number, item: DefaultProperty) => `${index}-${item.label}`;
   trackByDefaultClassFn = (index: number, item: DefaultClass) => `${index}-${item.iri}`;
+  protected readonly RouteConstants = RouteConstants;
 }
