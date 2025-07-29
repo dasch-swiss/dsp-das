@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -14,7 +14,7 @@ import { ResourceClassBrowserPageService } from './resource-class-browser-page.s
   template: ` <app-multiple-viewer-gateway *ngIf="resources$ | async as resources" [resources]="resources" /> `,
   providers: [ResourceClassBrowserPageService],
 })
-export class ResourceClassBrowserPageComponent {
+export class ResourceClassBrowserPageComponent implements OnChanges {
   private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
 
   resources$ = combineLatest([
@@ -40,6 +40,10 @@ export class ResourceClassBrowserPageComponent {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
+
+  ngOnChanges() {
+    this._resourceClassBrowserPageService.updatePageIndex(0);
+  }
 
   private _setGravsearch(iri: string): string {
     return `

@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { MultipleViewerService } from './multiple-viewer.service';
-import { SplitSize } from './split-size.interface';
 
 @Component({
   selector: 'app-multiple-viewer-gateway',
   template: ` <div class="multiple-instances">
-    <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+    <as-split direction="horizontal">
       <as-split-area [size]="40">
         <app-list-view-normal [resources]="resources" />
       </as-split-area>
@@ -20,8 +19,6 @@ import { SplitSize } from './split-size.interface';
 })
 export class MultipleViewerGatewayComponent implements OnInit {
   @Input({ required: true }) resources!: ReadResource[];
-
-  splitSizeChanged: SplitSize | undefined = undefined;
 
   constructor(private _multipleViewerService: MultipleViewerService) {}
 
