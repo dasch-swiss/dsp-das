@@ -5,6 +5,7 @@ import { ListViewComponent } from './lib/list-view/list-view.component';
 import { ResourceList2Component } from './lib/list-view/resource-list/resource-list-2.component';
 import { ResourceListItemComponent } from './lib/list-view/resource-list/resource-list-item.component';
 import { ResourceListComponent } from './lib/list-view/resource-list/resource-list.component';
+import { ResourceListSelectionComponent } from './lib/list-view/resource-list-selection.component';
 import { MultipleViewer2Component } from './lib/multiple-viewer-2.component';
 import { MultipleViewerGatewayComponent } from './lib/multiple-viewer-gateway.component';
 import { MultipleViewerComponent } from './lib/multiple-viewer.component';
@@ -28,4 +29,5 @@ export const DataBrowserComponents = [
   MultipleViewerGatewayComponent,
   ResourceList2Component,
   ResourceListItemComponent,
+  ResourceListSelectionComponent,
 ];

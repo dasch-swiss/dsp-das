@@ -60,7 +60,7 @@ export class ResourceListItemComponent {
 
   onCheckboxChanged(event: MatCheckboxChange) {
     if (event.checked) {
-      this.multipleViewerService.addResource(this.resource.id);
+      this.multipleViewerService.addResources([this.resource.id]);
     } else {
       this.multipleViewerService.removeResource(this.resource.id);
     }

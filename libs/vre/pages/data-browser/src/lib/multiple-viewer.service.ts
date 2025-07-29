@@ -8,16 +8,18 @@ export class MultipleViewerService {
 
   selectMode = false;
 
-  addResource(resourceId: string) {
+  addResources(resourceIds: string[]) {
     const currentResources = this._selectedResourceIdsSubject.getValue();
     if (!this.selectMode && currentResources.length === 1) {
       currentResources.length = 0; // Clear the previous single selection if switching to multi-mode
     }
 
-    if (!currentResources.includes(resourceId)) {
-      currentResources.push(resourceId);
-      this._selectedResourceIdsSubject.next(currentResources);
-    }
+    resourceIds.forEach(resourceId => {
+      if (!currentResources.includes(resourceId)) {
+        currentResources.push(resourceId);
+      }
+    });
+    this._selectedResourceIdsSubject.next(currentResources);
 
     this.selectMode = true;
   }

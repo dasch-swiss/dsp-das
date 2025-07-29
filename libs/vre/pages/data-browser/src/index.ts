@@ -21,3 +21,4 @@ export * from './lib/multiple-viewer-gateway.component';
 export * from './lib/list-view/resource-list/resource-list-2.component';
 export * from './lib/list-view/resource-list/resource-list-item.component';
 export * from './lib/multiple-viewer.service';
+export * from './lib/list-view/resource-list-selection.component';
