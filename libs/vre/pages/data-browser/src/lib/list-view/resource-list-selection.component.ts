@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { map } from 'rxjs';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { Store } from '@ngxs/store';
+import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../multiple-viewer.service';
 import {
   ResourceLinkDialogComponent,
@@ -18,8 +20,8 @@ import {
         <div>{{ count$ | async }} resources selected</div>
         <button
           mat-button
-          *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResourceIds"
-          (click)="openCreateLinkDialog(selectedResourceIds)">
+          *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
+          (click)="openCreateLinkDialog(selectedResources)">
           <mat-icon>link</mat-icon>
           Create a link
         </button>
@@ -36,7 +38,10 @@ export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];
 
   count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
-  showCreateLink$ = this.count$.pipe(map(count => count > 1));
+  showCreateLink$ = combineLatest([
+    this.count$,
+    this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember),
+  ]).pipe(map(([count, isAdminOrSysAdminOrMember]) => count > 1 && isAdminOrSysAdminOrMember === true));
 
   allSelected$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => this.resources.every(resource => resources.includes(resource)))
@@ -45,7 +50,8 @@ export class ResourceListSelectionComponent {
   constructor(
     public multipleViewerService: MultipleViewerService,
     private _dialog: MatDialog,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _store: Store
   ) {}
 
   selectAll() {
@@ -56,18 +62,16 @@ export class ResourceListSelectionComponent {
     this.multipleViewerService.removeResources(this.resources);
   }
 
-  openCreateLinkDialog(selectedResourceIds: string[]): void {
+  openCreateLinkDialog(resources: ReadResource[]): void {
     const projectUuid =
       this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ??
       this._route.snapshot.params[RouteConstants.project];
 
     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
       data: {
-        resources: this.resources,
+        resources,
         projectUuid,
       },
     });
   }
-
-  protected readonly open = open;
 }
