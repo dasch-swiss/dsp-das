@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 
@@ -8,9 +7,9 @@ import { Store } from '@ngxs/store';
   template: ` <div class="main-content">
     <!-- Project label -->
     <div *ngIf="currentProject$ | async as currentProject" class="project-title">
-      <p #projectTitle [matTooltip]="currentProject" [matTooltipShowDelay]="500" matTooltipPosition="right">
+      <span [matTooltip]="currentProject.longname || ''" [matTooltipShowDelay]="500" matTooltipPosition="right">
         {{ currentProject.longname }}
-      </p>
+      </span>
     </div>
     <mat-list class="main-list">
       <mat-divider />
@@ -21,8 +20,6 @@ import { Store } from '@ngxs/store';
   </div>`,
 })
 export class ProjectSidenavComponent {
-  protected readonly routeConstants = RouteConstants;
-
   currentProject$ = this._store.select(ProjectsSelectors.currentProject);
 
   constructor(private _store: Store) {}

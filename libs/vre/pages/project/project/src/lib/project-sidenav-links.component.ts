@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { isA } from '@jest/expect-utils';
 import { Store } from '@ngxs/store';
 import { filter, map, startWith } from 'rxjs';
 
@@ -57,6 +56,4 @@ export class ProjectSidenavLinksComponent {
     private _store: Store,
     private _router: Router
   ) {}
-
-  protected readonly isA = isA;
 }
