@@ -22,7 +22,7 @@ import { MultipleViewerService } from '../../multiple-viewer.service';
         >
 
         <mat-checkbox
-          *ngIf="showCheckbox || multipleViewerService.multiMode"
+          *ngIf="showCheckbox || multipleViewerService.selectMode"
           [checked]="isSelected$ | async"
           (change)="onCheckboxChanged($event)"
           (click)="$event.stopPropagation()" />
@@ -44,7 +44,7 @@ export class ResourceListItemComponent {
 
   isHighlighted$ = this.multipleViewerService.selectedResourceIds$.pipe(
     map(resourceIds => {
-      if (this.multipleViewerService.multiMode) {
+      if (this.multipleViewerService.selectMode) {
         return resourceIds.includes(this.resource.id);
       } else {
         return resourceIds.length > 0 && resourceIds[0] === this.resource.id;
@@ -53,7 +53,7 @@ export class ResourceListItemComponent {
   );
 
   isSelected$ = this.multipleViewerService.selectedResourceIds$.pipe(
-    map(resourceIds => resourceIds.includes(this.resource.id) && this.multipleViewerService.multiMode)
+    map(resourceIds => resourceIds.includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
   constructor(public multipleViewerService: MultipleViewerService) {}
