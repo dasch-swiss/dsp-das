@@ -62,7 +62,7 @@ export class ResourceListItemComponent {
     if (event.checked) {
       this.multipleViewerService.addResources([this.resource.id]);
     } else {
-      this.multipleViewerService.removeResource(this.resource.id);
+      this.multipleViewerService.removeResources([this.resource.id]);
     }
   }
 }

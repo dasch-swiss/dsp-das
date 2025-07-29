@@ -24,19 +24,21 @@ export class MultipleViewerService {
     this.selectMode = true;
   }
 
-  removeResource(resourceId: string) {
+  removeResources(resourceIds: string[]) {
     const currentResources = this._selectedResourceIdsSubject.getValue();
 
-    if (currentResources.length === 1) {
-      this.selectOneResource(resourceId);
-      return;
-    }
+    resourceIds.forEach(resourceId => {
+      const index = currentResources.indexOf(resourceId);
+      if (index <= -1) {
+        // does not exist
+        return;
+      }
 
-    const index = currentResources.indexOf(resourceId);
-    if (index > -1) {
       currentResources.splice(index, 1);
-      this._selectedResourceIdsSubject.next(currentResources);
-    }
+    });
+
+    this._selectedResourceIdsSubject.next(currentResources);
+    this.selectMode = currentResources.length > 0;
   }
 
   selectOneResource(resourceId: string) {
