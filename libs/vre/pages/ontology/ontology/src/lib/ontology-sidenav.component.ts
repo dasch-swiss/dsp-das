@@ -24,7 +24,8 @@ import { OntologyPageService } from './ontology-page.service';
       {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
     </button>
     <button
-      [disabled]="!(project$ | async)?.status || (isAdmin$ | async) !== true"
+      *ngIf="isAdmin$ | async"
+      [disabled]="!(project$ | async)?.status"
       mat-button
       data-cy="create-class-button"
       [matMenuTriggerFor]="addResClassMenu">
@@ -33,7 +34,7 @@ import { OntologyPageService } from './ontology-page.service';
     </button>
     <mat-menu #addResClassMenu="matMenu" xPosition="before">
       <button
-        [disabled]="!(project$ | async)?.status && (isAdmin$ | async) !== true"
+        [disabled]="!(project$ | async)?.status"
         [attr.data-cy]="type.iri.split('#').pop()"
         mat-menu-item
         *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
@@ -45,9 +46,10 @@ import { OntologyPageService } from './ontology-page.service';
     <mat-divider></mat-divider>
     <a class="sidenav-link" mat-list-item [routerLink]="['properties']" routerLinkActive="active">Properties</a>
     <button
+      *ngIf="isAdmin$ | async"
       mat-button
       data-cy="create-property-button"
-      [disabled]="!(project$ | async)?.status || (isAdmin$ | async) !== true"
+      [disabled]="!(project$ | async)?.status"
       [matMenuTriggerFor]="newFromPropType">
       <mat-icon>add</mat-icon>
       Add Property
