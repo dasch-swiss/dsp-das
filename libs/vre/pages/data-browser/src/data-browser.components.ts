@@ -8,7 +8,6 @@ import { ResourceListComponent } from './lib/list-view/resource-list/resource-li
 import { ResourceListSelectionComponent } from './lib/list-view/resource-list-selection.component';
 import { MultipleViewer2Component } from './lib/multiple-viewer-2.component';
 import { MultipleViewerGatewayComponent } from './lib/multiple-viewer-gateway.component';
-import { MultipleViewerComponent } from './lib/multiple-viewer.component';
 import { ResourceClassBrowserPageComponent } from './lib/resource-class-browser/resource-class-browser-page.component';
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav.component';
@@ -16,7 +15,6 @@ import { ResourceLinkDialogComponent } from './lib/resource-link-dialog/resource
 
 export const DataBrowserComponents = [
   ResourceClassSidenavComponent,
-  MultipleViewerComponent,
   ResourceClassSidenavItemComponent,
   ResourceClassBrowserPageComponent,
   ComparisonComponent,
