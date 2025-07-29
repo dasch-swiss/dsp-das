@@ -14,7 +14,7 @@ import { MultipleViewerService } from '../../multiple-viewer.service';
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
-      (click)="multipleViewerService.selectOneResource(resource.id)">
+      (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex">
         <span
           style="flex: 1; display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
@@ -42,27 +42,27 @@ export class ResourceListItemComponent {
 
   showCheckbox = false;
 
-  isHighlighted$ = this.multipleViewerService.selectedResourceIds$.pipe(
-    map(resourceIds => {
+  isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
+    map(resources => {
       if (this.multipleViewerService.selectMode) {
-        return resourceIds.includes(this.resource.id);
+        return resources.includes(this.resource);
       } else {
-        return resourceIds.length > 0 && resourceIds[0] === this.resource.id;
+        return resources.length > 0 && resources[0] === this.resource;
       }
     })
   );
 
-  isSelected$ = this.multipleViewerService.selectedResourceIds$.pipe(
-    map(resourceIds => resourceIds.includes(this.resource.id) && this.multipleViewerService.selectMode)
+  isSelected$ = this.multipleViewerService.selectedResources$.pipe(
+    map(resources => resources.includes(this.resource) && this.multipleViewerService.selectMode)
   );
 
   constructor(public multipleViewerService: MultipleViewerService) {}
 
   onCheckboxChanged(event: MatCheckboxChange) {
     if (event.checked) {
-      this.multipleViewerService.addResources([this.resource.id]);
+      this.multipleViewerService.addResources([this.resource]);
     } else {
-      this.multipleViewerService.removeResources([this.resource.id]);
+      this.multipleViewerService.removeResources([this.resource]);
     }
   }
 }

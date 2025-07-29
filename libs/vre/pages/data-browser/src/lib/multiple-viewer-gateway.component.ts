@@ -27,7 +27,7 @@ export class MultipleViewerGatewayComponent implements OnInit {
 
   ngOnInit() {
     if (this.resources.length > 0) {
-      this._multipleViewerService.selectOneResource(this.resources[0].id);
+      this._multipleViewerService.selectOneResource(this.resources[0]);
     }
   }
 }

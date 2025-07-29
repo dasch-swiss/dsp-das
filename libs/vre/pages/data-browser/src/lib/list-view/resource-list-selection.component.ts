@@ -18,9 +18,7 @@ import {
         <div>{{ count$ | async }} resources selected</div>
         <button
           mat-button
-          *ngIf="
-            (showCreateLink$ | async) && (multipleViewerService.selectedResourceIds$ | async) as selectedResourceIds
-          "
+          *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResourceIds"
           (click)="openCreateLinkDialog(selectedResourceIds)">
           <mat-icon>link</mat-icon>
           Create a link
@@ -37,11 +35,11 @@ import {
 export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];
 
-  count$ = this.multipleViewerService.selectedResourceIds$.pipe(map(ids => ids.length));
+  count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
   showCreateLink$ = this.count$.pipe(map(count => count > 1));
 
-  allSelected$ = this.multipleViewerService.selectedResourceIds$.pipe(
-    map(ids => this.resources.every(resource => ids.includes(resource.id)))
+  allSelected$ = this.multipleViewerService.selectedResources$.pipe(
+    map(resources => this.resources.every(resource => resources.includes(resource)))
   );
 
   constructor(
@@ -51,11 +49,11 @@ export class ResourceListSelectionComponent {
   ) {}
 
   selectAll() {
-    this.multipleViewerService.addResources(this.resources.map(resource => resource.id));
+    this.multipleViewerService.addResources(this.resources);
   }
 
   unselectAll() {
-    this.multipleViewerService.removeResources(this.resources.map(resource => resource.id));
+    this.multipleViewerService.removeResources(this.resources);
   }
 
   openCreateLinkDialog(selectedResourceIds: string[]): void {
