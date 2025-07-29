@@ -16,7 +16,12 @@ import {
     <div style="background: #ebebeb; padding: 16px; display: flex; justify-content: space-between">
       <div>
         <div>{{ count$ | async }} resources selected</div>
-        <button mat-button *ngIf="showCreateLink$ | async" (click)="openCreateLinkDialog()">
+        <button
+          mat-button
+          *ngIf="
+            (showCreateLink$ | async) && (multipleViewerService.selectedResourceIds$ | async) as selectedResourceIds
+          "
+          (click)="openCreateLinkDialog(selectedResourceIds)">
           <mat-icon>link</mat-icon>
           Create a link
         </button>
@@ -53,8 +58,7 @@ export class ResourceListSelectionComponent {
     this.multipleViewerService.removeResources(this.resources.map(resource => resource.id));
   }
 
-  openCreateLinkDialog(): void {
-    console.log(this._route);
+  openCreateLinkDialog(selectedResourceIds: string[]): void {
     const projectUuid =
       this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ??
       this._route.snapshot.params[RouteConstants.project];

@@ -7,26 +7,33 @@ import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, map, switchMap } from 'rxjs';
+import { ResourceClassBrowserPageService } from './resource-class-browser-page.service';
 
 @Component({
   selector: 'app-resource-class-browser-page',
   template: ` <app-multiple-viewer-gateway *ngIf="resources$ | async as resources" [resources]="resources" /> `,
+  providers: [ResourceClassBrowserPageService],
 })
 export class ResourceClassBrowserPageComponent {
   private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
 
-  resources$ = combineLatest([this._project$, this._route.params]).pipe(
-    switchMap(([project, params]) => {
+  resources$ = combineLatest([
+    this._project$,
+    this._route.params,
+    this._resourceClassBrowserPageService.pageIndex$,
+  ]).pipe(
+    switchMap(([project, params, pageIndex]) => {
       const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${project.shortcode}/${params[RouteConstants.ontoParameter]}/v2`;
       const classId = `${ontoId}#${params[RouteConstants.classParameter]}`;
 
-      return this._performGravSearch(this._setGravsearch(classId), 0);
+      return this._performGravSearch(this._setGravsearch(classId), pageIndex);
     }),
     map(response => response.resources)
   );
 
   constructor(
     protected _route: ActivatedRoute,
+    private _resourceClassBrowserPageService: ResourceClassBrowserPageService,
     private _ontologyService: OntologyService,
     protected _router: Router,
     protected _store: Store,
