@@ -22,7 +22,7 @@
     <div class="resource-container">
       <p>The following resources will be connected:</p>
       <ul>
-        <li *ngFor="let res of data.resources.resInfo; trackBy: trackByFn">{{ res.label }}</li>
+        <li *ngFor="let res of data.resources; trackBy: trackByFn">{{ res.label }}</li>
       </ul>
     </div>
   </form>

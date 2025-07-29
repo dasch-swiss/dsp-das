@@ -9,10 +9,6 @@ import { FilteredResources } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, forkJoin, map, Observable, shareReplay, switchMap } from 'rxjs';
-import {
-  ResourceLinkDialogComponent,
-  ResourceLinkDialogProps,
-} from '../resource-link-dialog/resource-link-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -140,12 +136,13 @@ export class IntermediateComponent {
     if (!projectUuid) {
       throw new AppError('Project UUID is missing.');
     }
-
-    this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
-      data: {
-        resources: this.resources,
-        projectUuid: this._projectService.uuidToIri(projectUuid),
-      },
-    });
+    /**
+     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
+     data: {
+     resources: this.resources,
+     projectUuid: this._projectService.uuidToIri(projectUuid),
+     },
+     });
+     */
   }
 }

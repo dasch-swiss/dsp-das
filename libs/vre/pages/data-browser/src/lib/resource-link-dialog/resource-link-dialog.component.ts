@@ -8,18 +8,19 @@ import {
   CreateResource,
   CreateTextValueAsString,
   KnoraApiConnection,
+  ReadResource,
   StoredProject,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { FilteredResources, ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 
 export interface ResourceLinkDialogProps {
-  resources: FilteredResources;
+  resources: ReadResource[];
   projectUuid: string;
 }
 
@@ -32,7 +33,7 @@ export interface ResourceLinkDialogProps {
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
 
-  readonly title = `Create a collection of ${this.data.resources.count} resources`;
+  readonly title = `Create a collection of ${this.data.resources.length} resources`;
   form = this._fb.group({
     label: ['', [Validators.required]],
     comment: [''],
@@ -108,7 +109,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     linkObj.type = Constants.LinkObj;
     linkObj.attachedToProject = this.data.projectUuid;
 
-    linkObj.properties[Constants.HasLinkToValue] = this.data.resources.resInfo.map(res => {
+    linkObj.properties[Constants.HasLinkToValue] = this.data.resources.map(res => {
       const linkVal = new CreateLinkValue();
       linkVal.type = Constants.LinkValue;
       linkVal.linkedResourceIri = res.id;
