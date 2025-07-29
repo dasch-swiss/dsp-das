@@ -18,60 +18,77 @@ import { OntologyPageService } from './ontology-page.service';
 @Component({
   selector: 'app-ontology-sidenav',
   template: `
-    <a class="sidenav-link" mat-list-item [routerLink]="['classes']" routerLinkActive="active">Classes</a>
-    <button mat-button (click)="ops.toggleExpandClasses()">
-      <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
-      {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
-    </button>
-    <button
-      *ngIf="isAdmin$ | async"
-      [disabled]="!(project$ | async)?.status"
-      mat-button
-      data-cy="create-class-button"
-      [matMenuTriggerFor]="addResClassMenu">
-      <mat-icon>add</mat-icon>
-      Create new class
-    </button>
-    <mat-menu #addResClassMenu="matMenu" xPosition="before">
-      <button
-        [disabled]="!(project$ | async)?.status"
-        [attr.data-cy]="type.iri.split('#').pop()"
-        mat-menu-item
-        *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
-        (click)="openCreateResourceClass(type)">
-        <mat-icon>{{ type.icon }}</mat-icon>
-        {{ type.label }}
-      </button>
-    </mat-menu>
-    <mat-divider></mat-divider>
-    <a class="sidenav-link" mat-list-item [routerLink]="['properties']" routerLinkActive="active">Properties</a>
-    <button
-      *ngIf="isAdmin$ | async"
-      mat-button
-      data-cy="create-property-button"
-      [disabled]="!(project$ | async)?.status"
-      [matMenuTriggerFor]="newFromPropType">
-      <mat-icon>add</mat-icon>
-      Add Property
-    </button>
-    <mat-menu #newFromPropType="matMenu">
-      <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
-        <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
-        <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <a mat-tab-link routerLink="./classes" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">
+        Classes
+      </a>
+      <a mat-tab-link routerLink="./properties" routerLinkActive #rla2="routerLinkActive" [active]="rla2.isActive">
+        Properties
+      </a>
+    </nav>
+    <mat-divider />
+    <mat-tab-nav-panel #tabPanel>
+      <div *ngIf="rla1.isActive">
+        <!-- Classes tab content -->
+        <button mat-button (click)="ops.toggleExpandClasses()">
+          <mat-icon>{{ (ops.expandClasses$ | async) ? 'compress' : 'expand' }}</mat-icon>
+          {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
+        </button>
+        <button
+          *ngIf="isAdmin$ | async"
+          [disabled]="!(project$ | async)?.status"
+          mat-button
+          data-cy="create-class-button"
+          [matMenuTriggerFor]="addResClassMenu">
+          <mat-icon>add</mat-icon>
+          Create new class
+        </button>
+        <mat-menu #addResClassMenu="matMenu" xPosition="before">
           <button
+            [disabled]="!(project$ | async)?.status"
+            [attr.data-cy]="type.iri.split('#').pop()"
             mat-menu-item
-            *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
-            [value]="ele"
-            [attr.data-cy]="ele.label"
-            [matTooltip]="ele.description"
-            matTooltipPosition="after"
-            (click)="openCreateNewProperty(ele)">
-            <mat-icon>{{ ele.icon }}</mat-icon>
-            {{ ele.label }}
+            *ngFor="let type of defaultClasses; trackBy: trackByDefaultClassFn"
+            (click)="openCreateResourceClass(type)">
+            <mat-icon>{{ type.icon }}</mat-icon>
+            {{ type.label }}
           </button>
         </mat-menu>
-      </ng-container>
-    </mat-menu>
+      </div>
+
+      <div *ngIf="rla2.isActive">
+        <!-- Properties tab content -->
+        <button
+          *ngIf="isAdmin$ | async"
+          mat-button
+          data-cy="create-property-button"
+          [disabled]="!(project$ | async)?.status"
+          [matMenuTriggerFor]="newFromPropType">
+          <mat-icon>add</mat-icon>
+          Add Property
+        </button>
+        <mat-menu #newFromPropType="matMenu">
+          <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
+            <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">
+              {{ type.group }}
+            </button>
+            <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
+              <button
+                mat-menu-item
+                *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
+                [value]="ele"
+                [attr.data-cy]="ele.label"
+                [matTooltip]="ele.description"
+                matTooltipPosition="after"
+                (click)="openCreateNewProperty(ele)">
+                <mat-icon>{{ ele.icon }}</mat-icon>
+                {{ ele.label }}
+              </button>
+            </mat-menu>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </mat-tab-nav-panel>
   `,
   styles: [
     `
@@ -81,14 +98,8 @@ import { OntologyPageService } from './ontology-page.service';
         display: inline-block;
       }
 
-      .sidenav-link {
-        display: block;
-        width: 100%;
-        text-align: left;
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
+      button:hovered {
+        background: var(--element-active-hover);
       }
     `,
   ],
