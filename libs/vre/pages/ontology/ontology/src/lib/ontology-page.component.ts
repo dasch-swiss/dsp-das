@@ -15,19 +15,13 @@ import { OntologyEditService } from './services/ontology-edit.service';
       <div class="overlay-blocker" *ngIf="isTransacting$ | async">
         <app-progress-indicator class="floating-center" />
       </div>
-
-      <mat-sidenav-container class="ontology-editor-container">
-        <mat-sidenav class="ontology-editor-sidenav" mode="side" position="end" opened>
-          <app-ontology-sidenav />
-        </mat-sidenav>
-
-        <mat-sidenav-content class="ontology-editor-canvas drag-drop-stop">
-          <app-ontology-editor-header class="sticky-header" />
-          <div class="scroll">
-            <router-outlet />
-          </div>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
+      <div class="ontology-editor-container">
+        <app-ontology-editor-header />
+        <app-ontology-sidenav />
+        <div class="ontology-editor-canvas">
+          <router-outlet />
+        </div>
+      </div>
     </div>
 
     <app-status *ngIf="disableContent" [status]="204" />
