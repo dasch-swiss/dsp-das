@@ -21,3 +21,8 @@ export * from './lib/licenses-enabled-table.component';
 export * from './lib/collaboration/project-members.component';
 export * from './lib/collaboration/project-members-row.component';
 export * from './lib/collaboration/project-members-row-menu.component';
+
+export * from './lib/project-sidenav.component';
+export * from './lib/project-sidenav-links.component';
+export * from './lib/project-sidenav-links-item.component';
+export * from './lib/project-sidenav-ontologies.component';

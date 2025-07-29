@@ -16,6 +16,10 @@ import { LegalSettingsLicensesComponent } from './lib/legal-settings-licenses.co
 import { LegalSettingsComponent } from './lib/legal-settings.component';
 import { LicensesEnabledTableComponent } from './lib/licenses-enabled-table.component';
 import { ProjectComponent } from './lib/project/project.component';
+import { ProjectSidenavLinksItemComponent } from './lib/project-sidenav-links-item.component';
+import { ProjectSidenavLinksComponent } from './lib/project-sidenav-links.component';
+import { ProjectSidenavOntologiesComponent } from './lib/project-sidenav-ontologies.component';
+import { ProjectSidenavComponent } from './lib/project-sidenav.component';
 import { ResourceMetadataComponent } from './lib/resource-metadata/resource-metadata.component';
 import { ReusableProjectFormComponent } from './lib/reusable-project-form/reusable-project-form.component';
 
@@ -40,4 +44,8 @@ export const ProjectComponents = [
   ProjectMembersComponent,
   ProjectMembersRowComponent,
   ProjectMembersRowMenuComponent,
+  ProjectSidenavComponent,
+  ProjectSidenavLinksComponent,
+  ProjectSidenavLinksItemComponent,
+  ProjectSidenavOntologiesComponent,
 ];

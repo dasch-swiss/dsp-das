@@ -12,7 +12,7 @@ import {
 } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { Observable, Subject, distinctUntilChanged, filter, map, startWith, take, takeUntil, takeWhile } from 'rxjs';
+import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'app-project',
@@ -144,10 +144,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   trackByFn = (index: number, item: ReadOntology) => `${index}-${item.id}`;
-
-  compareElementHeights(elem: HTMLElement): boolean {
-    return !(elem.scrollHeight > elem.clientHeight);
-  }
 
   toggleSidenav() {
     this.sideNavOpened = !this.sideNavOpened;
