@@ -26,6 +26,7 @@ import {
           Create a link
         </button>
       </div>
+
       <button mat-button *ngIf="allSelected$ | async; else selectAllTpl" (click)="unselectAll()">Unselect all</button>
     </div>
 
