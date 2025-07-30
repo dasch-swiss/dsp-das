@@ -27,6 +27,7 @@ import { Store } from '@ngxs/store';
       <mat-divider />
     </mat-accordion>
   `,
+  styleUrls: ['./project-sidenav-ontologies.component.scss'],
 })
 export class ProjectSidenavOntologiesComponent {
   projectOntologies$ = this._store.select(OntologiesSelectors.currentProjectOntologies);

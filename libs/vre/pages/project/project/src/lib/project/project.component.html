@@ -1,43 +1,35 @@
-<div *ngIf="(hasLoadingErrors$ | async) === false; else StatusMsg">
-  <mat-sidenav-container class="project-view">
-    <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" class="project-nav">
-      <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
-        <button
-          mat-icon-button
-          color="primary"
-          data-cy="side-panel-collapse-btn"
-          class="collapse-btn"
-          (click)="toggleSidenav()"
-          matTooltip="collapse"
-          matTooltipShowDelay="500"
-          matTooltipPosition="right">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-      </div>
-      <app-project-sidenav />
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
-        <button
-          mat-icon-button
-          color="primary"
-          class="expand-btn"
-          (click)="toggleSidenav()"
-          matTooltip="expand"
-          matTooltipShowDelay="500"
-          matTooltipPosition="right">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
-      <div class="main-content">
-        <router-outlet />
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</div>
-
-<ng-template #StatusMsg>
-  <div class="content large middle">
-    <app-status *ngIf="hasLoadingErrors$ | async" [status]="404" />
-  </div>
-</ng-template>
+<mat-sidenav-container class="project-view" autosize>
+  <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true">
+    <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
+      <button
+        mat-icon-button
+        color="primary"
+        data-cy="side-panel-collapse-btn"
+        class="collapse-btn"
+        (click)="toggleSidenav()"
+        matTooltip="collapse"
+        matTooltipShowDelay="500"
+        matTooltipPosition="right">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    </div>
+    <app-project-sidenav />
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
+      <button
+        mat-icon-button
+        color="primary"
+        class="expand-btn"
+        (click)="toggleSidenav()"
+        matTooltip="expand"
+        matTooltipShowDelay="500"
+        matTooltipPosition="right">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <div class="main-content">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

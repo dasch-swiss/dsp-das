@@ -5,22 +5,34 @@ import { Store } from '@ngxs/store';
 @Component({
   selector: 'app-project-sidenav',
   template: `
-    <div *ngIf="currentProject$ | async as currentProject" class="project-title">
-      <span [matTooltip]="currentProject.longname || ''" [matTooltipShowDelay]="500" matTooltipPosition="right">
-        {{ currentProject.longname }}
-      </span>
-    </div>
-
+    <div *ngIf="currentProject$ | async as currentProject" class="project-title">{{ currentProject.longname }}</div>
     <mat-divider />
-
     <mat-list>
       <app-projects-sidenav-links />
-
       <mat-divider />
-
       <app-projects-sidenav-ontologies />
     </mat-list>
   `,
+  styles: [
+    `
+      :host {
+        width: 290px;
+        display: block;
+        border-right: 1px solid #ebebeb;
+      }
+
+      .project-title {
+        padding: 20px 16px 20px 16px;
+
+        font-size: 24px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin: 0px;
+      }
+    `,
+  ],
 })
 export class ProjectSidenavComponent {
   currentProject$ = this._store.select(ProjectsSelectors.currentProject);

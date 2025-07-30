@@ -2,14 +2,8 @@ import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/
 import { MatSidenav } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ReadOntology } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  LoadProjectOntologiesAction,
-  LoadProjectsAction,
-  OntologiesSelectors,
-  ProjectsSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { LoadProjectOntologiesAction, LoadProjectsAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take, takeUntil, takeWhile } from 'rxjs';
@@ -24,29 +18,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   projectUuid$: Observable<string> = this._route.params.pipe(map(params => params[RouteConstants.uuidParameter]));
   isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
-  hasLoadingErrors$ = this._store.select(OntologiesSelectors.hasLoadingErrors);
-  currentProject$ = this._store.select(ProjectsSelectors.currentProject);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-
-  routeConstants = RouteConstants;
-
   sideNavOpened = true;
   currentOntologyName: undefined | string;
-
-  projectOntologies$: Observable<ReadOntology[]> = this._store.select(OntologiesSelectors.currentProjectOntologies);
-
-  activeForDataModels$ = this._router.events.pipe(
-    filter(e => e instanceof NavigationEnd),
-    startWith(null),
-    map(() => {
-      const url = this._router.url;
-      return (
-        url.includes(RouteConstants.dataModels) ||
-        url.includes(RouteConstants.ontology) ||
-        url.includes(RouteConstants.list)
-      );
-    })
-  );
 
   destroyed: Subject<void> = new Subject<void>();
 
@@ -142,8 +116,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.destroyed.next();
     this.destroyed.complete();
   }
-
-  trackByFn = (index: number, item: ReadOntology) => `${index}-${item.id}`;
 
   toggleSidenav() {
     this.sideNavOpened = !this.sideNavOpened;
