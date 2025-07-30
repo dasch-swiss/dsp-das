@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
   template: ` <mat-form-field style="flex: 1; width: 100%; margin: 10px 0" subscriptSizing="dynamic">
     <mat-label>{{ 'resourceEditor.resourceProperties.comment' | translate }}</mat-label>
     <mat-icon matPrefix style="color: #808080" *ngIf="control.disabled">lock</mat-icon>
-    <textarea matInput rows="1" data-cy="comment-textarea" [formControl]="control"></textarea>
+    <textarea cdkTextareaAutosize matInput data-cy="comment-textarea" [formControl]="control"></textarea>
   </mat-form-field>`,
 })
 export class PropertyValueBasicCommentComponent {
