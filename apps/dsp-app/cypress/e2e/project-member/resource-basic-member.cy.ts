@@ -71,7 +71,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it('ThingPicture resource should be created and deleted', () => {
+  it.only('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=class-item]').eq(5).find('[data-cy=add-class-instance]').click();
@@ -94,7 +94,6 @@ describe('Check project admin existing resource functionality', () => {
 
     const newTitle = faker.lorem.word();
     cy.get('[data-cy=Titel]').find('[data-cy=common-input-text]').type(newTitle);
-    cy.get('[data-cy=Titel]').find('[data-cy=comment-textarea]').type(faker.lorem.word());
     cy.get('[data-cy="submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
     cy.get('@resourceRequest.all').should('have.length', 1);

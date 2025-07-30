@@ -16,6 +16,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
         [tooltip]="prop.propDef.comment">
         <app-property-values-creator
           [myProperty]="prop"
+          [attr.data-cy]="prop.propDef.label"
           [formArray]="formGroup.controls[prop.propDef.id]"
           [resourceClassIri]="resourceClassIri" />
       </app-create-resource-form-row>
