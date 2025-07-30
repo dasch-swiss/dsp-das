@@ -7,11 +7,9 @@ import { Store } from '@ngxs/store';
   template: `
     <div *ngIf="currentProject$ | async as currentProject" class="project-title">{{ currentProject.longname }}</div>
     <mat-divider />
-    <mat-list>
-      <app-projects-sidenav-links />
-      <mat-divider />
-      <app-projects-sidenav-ontologies />
-    </mat-list>
+    <app-projects-sidenav-links />
+    <mat-divider />
+    <app-projects-sidenav-ontologies />
   `,
   styles: [
     `

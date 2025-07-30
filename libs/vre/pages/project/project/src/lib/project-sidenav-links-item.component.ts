@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-projects-sidenav-links-item',
   template: `
-    <a mat-list-item class="section-title" [routerLink]="link" [routerLinkActive]="active">
+    <a mat-list-item class="section-title" [routerLink]="link" [routerLinkActive]="active" style="cursor: pointer">
       <span matListItemTitle class="section-label">
         <mat-icon class="sidenav-prefix-icon">{{ icon }}</mat-icon>
         <p>{{ label }}</p>

@@ -8,31 +8,40 @@ import { filter, map, startWith } from 'rxjs';
 @Component({
   selector: 'app-projects-sidenav-links',
   template: `
-    <app-projects-sidenav-links-item
-      [link]="[routeConstants.advancedSearch]"
-      [label]="'Advanced search'"
-      [icon]="'search'"
-      [active]="true" />
+    <mat-list>
+      <app-projects-sidenav-links-item
+        [link]="[routeConstants.advancedSearch]"
+        [label]="'Advanced Search'"
+        [icon]="'search'"
+        [active]="true" />
 
-    <app-projects-sidenav-links-item
-      [link]="[routeConstants.projectDescription]"
-      [label]="'Project Description'"
-      [icon]="'description'"
-      [active]="true" />
+      <app-projects-sidenav-links-item
+        [link]="[routeConstants.projectDescription]"
+        [label]="'Project Description'"
+        [icon]="'description'"
+        [active]="true" />
 
-    <app-projects-sidenav-links-item
-      *ngIf="isAdmin$ | async"
-      [link]="[routeConstants.settings]"
-      [label]="'Project Settings'"
-      [icon]="'settings'"
-      [active]="true" />
+      <app-projects-sidenav-links-item
+        *ngIf="isAdmin$ | async"
+        [link]="[routeConstants.settings]"
+        [label]="'Project Settings'"
+        [icon]="'settings'"
+        [active]="true" />
 
-    <app-projects-sidenav-links-item
-      [link]="[routeConstants.dataModels]"
-      [label]="'Data Model'"
-      [icon]="'bubble_chart'"
-      [active]="(activeForDataModels$ | async) || false" />
+      <app-projects-sidenav-links-item
+        [link]="[routeConstants.dataModels]"
+        [label]="'Data Model'"
+        [icon]="'bubble_chart'"
+        [active]="(activeForDataModels$ | async) || false" />
+    </mat-list>
   `,
+  styles: [
+    `
+      mat-list {
+        padding: 0;
+      }
+    `,
+  ],
 })
 export class ProjectSidenavLinksComponent {
   protected readonly routeConstants = RouteConstants;
