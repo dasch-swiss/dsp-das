@@ -51,6 +51,7 @@ import { map } from 'rxjs';
         [tooltip]="prop.propDef.comment"
         [prop]="prop"
         [singleRow]="false"
+        [attr.data-cy]="'row-' + prop.propDef.label"
         [label]="
           prop.propDef.label +
           (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
