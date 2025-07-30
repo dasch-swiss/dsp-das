@@ -9,7 +9,6 @@ import { PropertyRowComponent } from './lib/property-row.component';
 import { PropertyValueActionBubbleComponent } from './lib/property-value-action-bubble.component';
 import { PropertyValueAddComponent } from './lib/property-value-add.component';
 import { PropertyValueBasicCommentComponent } from './lib/property-value-basic-comment.component';
-import { PropertyValueCommentComponent } from './lib/property-value-comment.component';
 import { PropertyValueDisplayCommentComponent } from './lib/property-value-display-comment.component';
 import { PropertyValueDisplayComponent } from './lib/property-value-display.component';
 import { PropertyValueEditComponent } from './lib/property-value-edit.component';
@@ -29,7 +28,6 @@ export const ResourcePropertiesComponents = [
   PropertyValueUpdateComponent,
   PropertyValueAddComponent,
   PropertyValuesWithFootnotesComponent,
-  PropertyValueCommentComponent,
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
   PropertyRowComponent,
