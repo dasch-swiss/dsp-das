@@ -1,28 +1,5 @@
 @use "config" as *;
 
-// general app layout
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-
-  .app-header {
-    height: $header-height;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
-  }
-
-  .app-content {
-    flex: 1;
-    //    height: calc(100vh - #{$header-height});
-    margin-top: $header-height;
-    // overflow: auto;
-  }
-}
 
 //
 // content wrapper
