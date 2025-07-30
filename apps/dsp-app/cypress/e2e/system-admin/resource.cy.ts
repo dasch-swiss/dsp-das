@@ -345,7 +345,7 @@ describe('Resource', () => {
           po.addInitialLabel();
           input.type('John').click({ force: true });
           cy.wait(2000);
-          input.type('{downarrow}{downarrow}{downarrow}{enter}');
+          input.type('{downarrow}{downarrow}{enter}');
           po.clickOnSubmit();
 
           // edit
