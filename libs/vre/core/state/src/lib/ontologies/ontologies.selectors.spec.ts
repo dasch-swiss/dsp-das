@@ -175,36 +175,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('hasLoadingErrors', () => {
-    it('should return loading errors state', () => {
-      const result = OntologiesSelectors.hasLoadingErrors(mockState);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return true when has loading errors', () => {
-      mockState.hasLoadingErrors = true;
-      const result = OntologiesSelectors.hasLoadingErrors(mockState);
-
-      expect(result).toBe(true);
-    });
-
-    it('should return undefined when loading errors state is undefined', () => {
-      mockState.hasLoadingErrors = undefined;
-      const result = OntologiesSelectors.hasLoadingErrors(mockState);
-
-      expect(result).toBeUndefined();
-    });
-  });
-
-  describe('projectOntologies', () => {
-    it('should return project ontologies', () => {
-      const result = OntologiesSelectors.projectOntologies(mockState);
-
-      expect(result).toEqual(mockProjectOntologies);
-    });
-  });
-
   describe('currentProjectOntologyMetadata', () => {
     it('should return ontology metadata for current project', () => {
       const result = OntologiesSelectors.currentProjectOntologyMetadata(mockState, mockProject);

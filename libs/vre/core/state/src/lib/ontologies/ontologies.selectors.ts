@@ -12,7 +12,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
-import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
+import { OntologyProperties } from '../model-interfaces';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { ResourceSelectors } from '../resource/resource.selectors';
 import { RouterSelectors } from '../router/router.selector';
@@ -23,16 +23,6 @@ export class OntologiesSelectors {
   @Selector([OntologiesState])
   static isLoading(state: OntologiesStateModel): boolean | undefined {
     return state.isLoading;
-  }
-
-  @Selector([OntologiesState])
-  static hasLoadingErrors(state: OntologiesStateModel): boolean | undefined {
-    return state.hasLoadingErrors;
-  }
-
-  @Selector([OntologiesState])
-  static projectOntologies(state: OntologiesStateModel): IProjectOntologiesKeyValuePairs {
-    return state.projectOntologies;
   }
 
   @Selector([OntologiesState, ProjectsSelectors.currentProject])
