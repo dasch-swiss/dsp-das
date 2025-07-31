@@ -29,7 +29,6 @@ const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,
   projectOntologies: {}, // project ontologies grouped by project IRI
   currentOntology: null, // the currently selected ontology
-  currentOntologyCanBeDeleted: false,
   currentProjectOntologyProperties: [], // reflects current ontology properties in data model grouped by ontology IRI
 };
 
@@ -321,7 +320,6 @@ export class OntologiesState {
           ctx.setState({
             ...ctx.getState(),
             isLoading: false,
-            currentOntologyCanBeDeleted: response.canDo,
           });
         },
       })

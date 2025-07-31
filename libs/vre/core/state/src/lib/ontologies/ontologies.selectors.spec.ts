@@ -138,7 +138,6 @@ describe('OntologiesSelectors', () => {
       isLoading: false,
       projectOntologies: mockProjectOntologies,
       currentOntology: mockOntologies[0],
-      currentOntologyCanBeDeleted: false,
       currentProjectOntologyProperties: mockOntologyProperties,
     };
 
