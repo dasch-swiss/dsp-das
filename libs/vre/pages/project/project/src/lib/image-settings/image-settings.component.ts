@@ -4,14 +4,11 @@ import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService, RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Select } from '@ngxs/store';
 import { IMask } from 'angular-imask';
-import { Observable } from 'rxjs';
 
 enum ImageSettingsEnum {
   Off = 'Off',
@@ -60,8 +57,6 @@ export class ImageSettingsComponent implements OnInit {
   get isPercentageSize(): boolean {
     return this.percentage !== null;
   }
-
-  @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
 
   constructor(
     private _projectService: ProjectService,

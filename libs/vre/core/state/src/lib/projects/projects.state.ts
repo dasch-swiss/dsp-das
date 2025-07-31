@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, State, StateContext } from '@ngxs/store';
@@ -28,8 +27,7 @@ export class ProjectsState {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private projectService: ProjectService,
-    private projectApiService: ProjectApiService,
-    private adminProjectsApiService: AdminProjectsApiService
+    private projectApiService: ProjectApiService
   ) {}
 
   @Action(LoadProjectsAction, { cancelUncompleted: true })

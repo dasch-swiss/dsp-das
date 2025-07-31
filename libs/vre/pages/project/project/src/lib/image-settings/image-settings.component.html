@@ -1,6 +1,5 @@
 <app-centered-layout>
-  <app-progress-indicator *ngIf="isProjectsLoading$ | async" />
-  <div class="content large middle" *ngIf="(isProjectsLoading$ | async) === false">
+  <div class="content large middle">
     <div>
       <p>{{ 'pages.project.imageSettings.restrictions' | translate }}</p>
       <div>
@@ -56,9 +55,7 @@
         [disabled]="!hasChanges
           || (imageSettings === imageSettingsEnum.RestrictImageSize
             && ((isPercentageSize && ratio <= 0) || (!isPercentageSize && !fixedWidth)))"
-        (click)="onSubmit()"
-        appLoadingButton
-        [isLoading]="isProjectsLoading$ | async">
+        (click)="onSubmit()">
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>
