@@ -27,11 +27,6 @@ export class ProjectsSelectors {
   }
 
   @Selector([ProjectsState])
-  static allProjectShortcodes(state: ProjectsStateModel): string[] {
-    return state.allProjects.map(project => project.shortcode);
-  }
-
-  @Selector([ProjectsState])
   static isProjectsLoading(state: ProjectsStateModel): boolean {
     return state.isLoading;
   }

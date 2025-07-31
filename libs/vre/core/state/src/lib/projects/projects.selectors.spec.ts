@@ -166,14 +166,6 @@ describe('ProjectsSelectors', () => {
     });
   });
 
-  describe('allProjectShortcodes', () => {
-    it('should return shortcodes of all projects', () => {
-      const result = ProjectsSelectors.allProjectShortcodes(mockState);
-
-      expect(result).toEqual(['P001', 'P002', 'SYS', 'P003']);
-    });
-  });
-
   describe('isProjectsLoading', () => {
     it('should return loading state', () => {
       const result = ProjectsSelectors.isProjectsLoading(mockState);

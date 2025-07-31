@@ -79,7 +79,9 @@ export class ReusableProjectFormComponent implements OnInit {
   }
 
   private _buildForm() {
-    const existingShortcodes = this._store.selectSnapshot(ProjectsSelectors.allProjectShortcodes);
+    const existingShortcodes = this._store
+      .selectSnapshot(ProjectsSelectors.allProjects)
+      .map(project => project.shortcode);
 
     this.form = this._fb.group({
       shortcode: [
