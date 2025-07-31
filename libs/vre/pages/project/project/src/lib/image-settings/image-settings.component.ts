@@ -1,20 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
-import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AdminProjectsApiService, RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  LoadProjectRestrictedViewSettingsAction,
-  ProjectsSelectors,
-  UpdateProjectRestrictedViewSettingsAction,
-} from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { IMask } from 'angular-imask';
-import { Observable, switchMap, take, takeWhile } from 'rxjs';
+import { Observable } from 'rxjs';
 
 enum ImageSettingsEnum {
   Off = 'Off',
@@ -65,15 +62,16 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   @Select(ProjectsSelectors.isProjectsLoading) isProjectsLoading$: Observable<boolean>;
-  @Select(ProjectsSelectors.projectRestrictedViewSettings) viewSettings$: Observable<ProjectRestrictedViewSettings>;
 
   constructor(
     private _projectService: ProjectService,
     private route: ActivatedRoute,
-    private _store: Store,
+    private projectApiService: ProjectApiService,
     private _notification: NotificationService,
     private translateService: TranslateService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private projectService: ProjectService,
+    private adminProjectsApiService: AdminProjectsApiService
   ) {}
 
   ngOnInit() {
@@ -81,10 +79,13 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   onSubmit() {
-    this._store
-      .dispatch(new UpdateProjectRestrictedViewSettingsAction(this.projectUuid, this.getRequest()))
-      .subscribe(() => {
-        this.currentSettings = this._store.selectSnapshot(ProjectsSelectors.projectRestrictedViewSettings);
+    this.adminProjectsApiService
+      .postAdminProjectsIriProjectiriRestrictedviewsettings(
+        this.projectService.uuidToIri(this.projectUuid!),
+        this.getRequest()
+      )
+      .subscribe(response => {
+        this.currentSettings = response;
         this._notification.openSnackBar(
           this.translateService.instant('pages.project.imageSettings.updateConfirmation')
         );
@@ -106,17 +107,11 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   private getImageSettings() {
-    this._store
-      .dispatch(new LoadProjectRestrictedViewSettingsAction(this._projectService.uuidToIri(this.projectUuid)))
-      .pipe(
-        switchMap(() =>
-          this.viewSettings$.pipe(
-            take(1),
-            takeWhile(settings => settings !== null)
-          )
-        )
-      )
-      .subscribe(settings => {
+    this.projectApiService
+      .getRestrictedViewSettingsForProject(this._projectService.uuidToIri(this.projectUuid!))
+      .subscribe(response => {
+        const settings = response.settings;
+
         if (settings && !settings.watermark && settings.size) {
           delete settings.watermark;
         } else if (!settings || !settings.watermark) {
