@@ -12,7 +12,6 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
-import { OntologyProperties } from '../model-interfaces';
 import { ProjectsSelectors } from '../projects/projects.selectors';
 import { ResourceSelectors } from '../resource/resource.selectors';
 import { RouterSelectors } from '../router/router.selector';
@@ -42,11 +41,6 @@ export class OntologiesSelectors {
       return [];
     }
     return state.projectOntologies[project.id].readOntologies;
-  }
-
-  @Selector([OntologiesState])
-  static currentProjectOntologyProperties(state: OntologiesStateModel): OntologyProperties[] {
-    return state.currentProjectOntologyProperties;
   }
 
   @Selector([OntologiesState])

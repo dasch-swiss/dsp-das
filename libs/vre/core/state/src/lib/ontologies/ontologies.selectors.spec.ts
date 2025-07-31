@@ -225,14 +225,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('currentProjectOntologyProperties', () => {
-    it('should return current project ontology properties', () => {
-      const result = OntologiesSelectors.currentProjectOntologyProperties(mockState);
-
-      expect(result).toEqual(mockOntologyProperties);
-    });
-  });
-
   describe('currentOntologyCanBeDeleted', () => {
     it('should return deletion state', () => {
       const result = OntologiesSelectors.currentOntologyCanBeDeleted(mockState);
