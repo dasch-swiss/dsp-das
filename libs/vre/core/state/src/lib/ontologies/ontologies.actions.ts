@@ -37,10 +37,6 @@ export class ResetCurrentOntologyAction {
   ) {}
 }
 
-export class ClearCurrentOntologyAction {
-  static readonly type = '[Ontologies] Clear Current Ontology Action';
-}
-
 export class ClearOntologiesAction {
   static readonly type = '[Ontologies] Clear Ontologies';
 }
