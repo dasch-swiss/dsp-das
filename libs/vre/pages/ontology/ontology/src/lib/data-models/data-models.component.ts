@@ -8,7 +8,6 @@ import {
   LoadListsInProjectAction,
   OntologiesSelectors,
   ProjectsSelectors,
-  UserSelectors,
 } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -27,7 +26,6 @@ export class DataModelsComponent {
 
   ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
-  isLoading$ = this._store.select(OntologiesSelectors.isLoading);
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
   constructor(

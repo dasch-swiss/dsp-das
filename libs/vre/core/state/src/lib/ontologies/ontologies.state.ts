@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ApiResponseError, Constants, KnoraApiConnection, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
+import { Constants, KnoraApiConnection, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { OntologyService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
@@ -18,7 +18,6 @@ import {
 import { OntologiesStateModel } from './ontologies.state-model';
 
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
-  isLoading: false,
   projectOntologies: {}, // project ontologies grouped by project IRI
   currentOntology: null, // the currently selected ontology
 };
@@ -95,7 +94,6 @@ export class OntologiesState {
     ctx: StateContext<OntologiesStateModel>,
     { projectIri, ontologyName }: LoadProjectOntologiesAction
   ) {
-    ctx.patchState({ isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
 
     // get all project ontologies
@@ -105,7 +103,6 @@ export class OntologiesState {
         next: ontoMeta => {
           if (!ontoMeta.ontologies.length) {
             ctx.dispatch(new LoadListsInProjectAction(projectIri));
-            ctx.patchState({ isLoading: false });
             return;
           }
 
@@ -148,9 +145,6 @@ export class OntologiesState {
               ctx.dispatch(new LoadListsInProjectAction(projectIri));
             });
         },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ isLoading: false });
-        },
       })
     );
   }
@@ -160,7 +154,6 @@ export class OntologiesState {
     ctx: StateContext<OntologiesStateModel>,
     { ontologyIri, projectUuid, stopLoadingWhenCompleted }: LoadOntologyAction
   ) {
-    ctx.patchState({ isLoading: true });
     return this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).pipe(
       take(1),
       tap({
@@ -191,12 +184,8 @@ export class OntologiesState {
 
           ctx.setState({
             ...ctx.getState(),
-            isLoading: !stopLoadingWhenCompleted,
             projectOntologies: { ...projectOntologiesState }, // batch update with a new reference!
           });
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ isLoading: false });
         },
       })
     );

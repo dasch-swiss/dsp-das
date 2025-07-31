@@ -135,7 +135,6 @@ describe('OntologiesSelectors', () => {
 
     // Initialize state
     mockState = {
-      isLoading: false,
       projectOntologies: mockProjectOntologies,
       currentOntology: mockOntologies[0],
     };
@@ -147,28 +146,6 @@ describe('OntologiesSelectors', () => {
     });
 
     jest.spyOn(ProjectService, 'getProjectIri').mockImplementation(() => 'http://rdfh.ch/projects/project1');
-  });
-
-  describe('isLoading', () => {
-    it('should return loading state', () => {
-      const result = OntologiesSelectors.isLoading(mockState);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return true when loading', () => {
-      mockState.isLoading = true;
-      const result = OntologiesSelectors.isLoading(mockState);
-
-      expect(result).toBe(true);
-    });
-
-    it('should return undefined when loading state is undefined', () => {
-      mockState.isLoading = undefined;
-      const result = OntologiesSelectors.isLoading(mockState);
-
-      expect(result).toBeUndefined();
-    });
   });
 
   describe('currentProjectOntologyMetadata', () => {

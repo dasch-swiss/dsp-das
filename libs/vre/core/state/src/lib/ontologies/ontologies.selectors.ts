@@ -5,11 +5,6 @@ import { OntologiesState } from './ontologies.state';
 import { OntologiesStateModel } from './ontologies.state-model';
 
 export class OntologiesSelectors {
-  @Selector([OntologiesState])
-  static isLoading(state: OntologiesStateModel): boolean | undefined {
-    return state.isLoading;
-  }
-
   @Selector([OntologiesState, ProjectsSelectors.currentProject])
   static currentProjectOntologyMetadata(
     state: OntologiesStateModel,
