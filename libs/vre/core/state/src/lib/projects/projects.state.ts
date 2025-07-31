@@ -7,20 +7,12 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, State, StateContext } from '@ngxs/store';
 import { produce } from 'immer';
 import { finalize, take, tap } from 'rxjs';
-import {
-  ClearProjectsAction,
-  LoadProjectAction,
-  LoadProjectRestrictedViewSettingsAction,
-  LoadProjectsAction,
-  UpdateProjectAction,
-  UpdateProjectRestrictedViewSettingsAction,
-} from './projects.actions';
+import { ClearProjectsAction, LoadProjectAction, LoadProjectsAction, UpdateProjectAction } from './projects.actions';
 import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
   isLoading: false,
   allProjects: [], // all projects in the system grouped by project IRI
-  projectRestrictedViewSettings: {}, // project image settings grouped by project id
 };
 
 /*
@@ -115,56 +107,5 @@ export class ProjectsState {
         ctx.patchState({ isLoading: false });
       })
     );
-  }
-
-  @Action(LoadProjectRestrictedViewSettingsAction, { cancelUncompleted: true })
-  projectRestrictedViewSettings(
-    ctx: StateContext<ProjectsStateModel>,
-    { projectIri }: LoadProjectRestrictedViewSettingsAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    return this.projectApiService.getRestrictedViewSettingsForProject(projectIri).pipe(
-      tap({
-        next: response => {
-          ctx.setState({
-            ...ctx.getState(),
-            projectRestrictedViewSettings: {
-              [ProjectService.IriToUuid(projectIri)]: { value: response.settings },
-            },
-          });
-        },
-      }),
-      finalize(() => {
-        ctx.patchState({ isLoading: false });
-      })
-    );
-  }
-
-  @Action(UpdateProjectRestrictedViewSettingsAction)
-  updateProjectRestrictedViewSettingsAction(
-    ctx: StateContext<ProjectsStateModel>,
-    { projectUuid, setRestrictedViewRequest }: UpdateProjectRestrictedViewSettingsAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    return this.adminProjectsApiService
-      .postAdminProjectsIriProjectiriRestrictedviewsettings(
-        this.projectService.uuidToIri(projectUuid),
-        setRestrictedViewRequest
-      )
-      .pipe(
-        tap({
-          next: response => {
-            ctx.setState({
-              ...ctx.getState(),
-              projectRestrictedViewSettings: {
-                [projectUuid]: { value: response },
-              },
-            });
-          },
-        }),
-        finalize(() => {
-          ctx.patchState({ isLoading: false });
-        })
-      );
   }
 }

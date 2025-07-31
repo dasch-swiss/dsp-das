@@ -1,6 +1,5 @@
 import { Params } from '@angular/router';
-import { ProjectRestrictedViewSettings, ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
-import { RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -130,19 +129,5 @@ export class ProjectsSelectors {
     if (!projectIri) return false;
     const isProjectMember = ProjectService.IsProjectMember(user, userProjectGroups, projectIri);
     return isProjectMember;
-  }
-
-  @Selector([ProjectsState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
-  static projectRestrictedViewSettings(
-    state: ProjectsStateModel,
-    resource: DspResource | null,
-    dspApiConfig: DspAppConfig,
-    params: Params | undefined
-  ): ProjectRestrictedViewSettings | RestrictedViewResponse | undefined {
-    if (!params) return undefined;
-    const projectUuid = params[`${RouteConstants.uuidParameter}`];
-    return !projectUuid || !state.projectRestrictedViewSettings[projectUuid]
-      ? undefined
-      : state.projectRestrictedViewSettings[projectUuid].value;
   }
 }

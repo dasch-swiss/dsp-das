@@ -125,11 +125,6 @@ describe('ProjectsSelectors', () => {
     mockState = {
       allProjects: mockProjects,
       isLoading: false,
-      projectRestrictedViewSettings: {
-        'project1-uuid': {
-          value: mockProjectRestrictedViewSettings,
-        },
-      },
     };
   });
 
@@ -262,56 +257,6 @@ describe('ProjectsSelectors', () => {
 
     it('should return undefined when params are undefined', () => {
       const result = ProjectsSelectors.currentProjectsUuid(mockState, undefined);
-
-      expect(result).toBeUndefined();
-    });
-  });
-
-  describe('projectRestrictedViewSettings', () => {
-    it('should return restricted view settings for current project', () => {
-      const params = { [RouteConstants.uuidParameter]: 'project1-uuid' };
-      const result = ProjectsSelectors.projectRestrictedViewSettings(
-        mockState,
-        null,
-        { iriBase: 'http://rdfh.ch', geonameToken: 'token' },
-        params
-      );
-
-      expect(result).toEqual(mockProjectRestrictedViewSettings);
-    });
-
-    it('should return undefined when params are null', () => {
-      const result = ProjectsSelectors.projectRestrictedViewSettings(
-        mockState,
-        null,
-        { iriBase: 'http://rdfh.ch', geonameToken: 'token' },
-        undefined
-      );
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when project UUID is not found', () => {
-      const params = { [RouteConstants.uuidParameter]: 'nonexistent-uuid' };
-      const result = ProjectsSelectors.projectRestrictedViewSettings(
-        mockState,
-        null,
-        { iriBase: 'http://rdfh.ch', geonameToken: 'token' },
-        params
-      );
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when settings are not available', () => {
-      mockState.projectRestrictedViewSettings = {};
-      const params = { [RouteConstants.uuidParameter]: 'project1-uuid' };
-      const result = ProjectsSelectors.projectRestrictedViewSettings(
-        mockState,
-        null,
-        { iriBase: 'http://rdfh.ch', geonameToken: 'token' },
-        params
-      );
 
       expect(result).toBeUndefined();
     });
