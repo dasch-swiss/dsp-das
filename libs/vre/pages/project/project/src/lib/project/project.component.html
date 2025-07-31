@@ -1,35 +1,18 @@
 <mat-sidenav-container style="flex: 1" autosize>
-  <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true">
-    <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
-      <button
-        mat-icon-button
-        color="primary"
-        data-cy="side-panel-collapse-btn"
-        class="collapse-btn"
-        (click)="toggleSidenav()"
-        matTooltip="collapse"
-        matTooltipShowDelay="500"
-        matTooltipPosition="right">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-    </div>
+  <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" style="overflow: visible">
+    <app-project-sidenav-collapse-button
+      *ngIf="sideNavOpened"
+      [expand]="false"
+      (toggleSidenav)="toggleSidenav()"
+      style="position: absolute; right: -11px; top: 21px" />
     <app-project-sidenav />
   </mat-sidenav>
   <mat-sidenav-content>
-    <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
-      <button
-        mat-icon-button
-        color="primary"
-        class="expand-btn"
-        (click)="toggleSidenav()"
-        matTooltip="expand"
-        matTooltipShowDelay="500"
-        matTooltipPosition="right">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
-    <div class="main-content">
-      <router-outlet />
-    </div>
+    <app-project-sidenav-collapse-button
+      *ngIf="!sideNavOpened"
+      [expand]="true"
+      (toggleSidenav)="toggleSidenav()"
+      style="position: absolute; top: 21px; left: 8px" />
+    <router-outlet />
   </mat-sidenav-content>
 </mat-sidenav-container>

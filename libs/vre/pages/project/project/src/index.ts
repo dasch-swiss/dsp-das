@@ -26,3 +26,4 @@ export * from './lib/project-sidenav.component';
 export * from './lib/project-sidenav-links.component';
 export * from './lib/project-sidenav-links-item.component';
 export * from './lib/project-sidenav-ontologies.component';
+export * from './lib/project/project-sidenav-collapse-button.component';
