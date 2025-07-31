@@ -136,7 +136,6 @@ describe('OntologiesSelectors', () => {
     // Initialize state
     mockState = {
       isLoading: false,
-      hasLoadingErrors: false,
       projectOntologies: mockProjectOntologies,
       currentOntology: mockOntologies[0],
       currentOntologyCanBeDeleted: false,

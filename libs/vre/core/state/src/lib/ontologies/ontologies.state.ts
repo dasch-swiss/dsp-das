@@ -28,7 +28,6 @@ import { OntologiesStateModel } from './ontologies.state-model';
 const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,
   projectOntologies: {}, // project ontologies grouped by project IRI
-  hasLoadingErrors: false, // loading error state
   currentOntology: null, // the currently selected ontology
   currentOntologyCanBeDeleted: false,
   currentProjectOntologyProperties: [], // reflects current ontology properties in data model grouped by ontology IRI
@@ -177,7 +176,7 @@ export class OntologiesState {
             });
         },
         error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+          ctx.patchState({ isLoading: false });
         },
       })
     );
@@ -224,7 +223,7 @@ export class OntologiesState {
           });
         },
         error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true, isLoading: false });
+          ctx.patchState({ isLoading: false });
         },
       })
     );
@@ -242,9 +241,6 @@ export class OntologiesState {
         next: () => {
           const projectIri = this._projectService.uuidToIri(projectUuid);
           ctx.dispatch(new LoadProjectOntologiesAction(projectIri));
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true });
         },
       })
     );
@@ -327,9 +323,6 @@ export class OntologiesState {
             isLoading: false,
             currentOntologyCanBeDeleted: response.canDo,
           });
-        },
-        error: (error: ApiResponseError) => {
-          ctx.patchState({ hasLoadingErrors: true });
         },
       })
     );

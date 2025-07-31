@@ -3,7 +3,6 @@ import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-in
 
 export class OntologiesStateModel {
   isLoading: boolean | undefined;
-  hasLoadingErrors: boolean | undefined;
   projectOntologies: IProjectOntologiesKeyValuePairs = {};
   currentOntology: ReadOntology | null = null;
   currentOntologyCanBeDeleted = false;
