@@ -37,12 +37,6 @@ export class ResetCurrentOntologyAction {
   ) {}
 }
 
-export class ClearProjectOntologiesAction {
-  static readonly type = '[Ontologies] Clear Project Ontologies';
-
-  constructor(public projectUuid: string) {}
-}
-
 export class ClearCurrentOntologyAction {
   static readonly type = '[Ontologies] Clear Current Ontology Action';
 }

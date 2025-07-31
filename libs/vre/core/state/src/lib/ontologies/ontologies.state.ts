@@ -10,7 +10,6 @@ import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-in
 import {
   ClearCurrentOntologyAction,
   ClearOntologiesAction,
-  ClearProjectOntologiesAction,
   CurrentOntologyCanBeDeletedAction,
   LoadOntologyAction,
   LoadProjectOntologiesAction,
@@ -215,22 +214,6 @@ export class OntologiesState {
         error: (error: ApiResponseError) => {
           ctx.patchState({ isLoading: false });
         },
-      })
-    );
-  }
-
-  @Action(ClearProjectOntologiesAction)
-  clearProjectOntologies(ctx: StateContext<OntologiesStateModel>, { projectUuid }: ClearProjectOntologiesAction) {
-    const projectIri = this._projectService.uuidToIri(projectUuid);
-    return of(ctx.getState()).pipe(
-      map(currentState => {
-        if (currentState.projectOntologies[projectIri]) {
-          currentState.projectOntologies[projectIri].ontologiesMetadata = [];
-          currentState.projectOntologies[projectIri].readOntologies = [];
-          ctx.patchState(currentState);
-        }
-
-        return currentState;
       })
     );
   }
