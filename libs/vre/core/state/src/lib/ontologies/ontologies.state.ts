@@ -8,7 +8,6 @@ import { map, of, switchMap, take, tap } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
 import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
 import {
-  ClearCurrentOntologyAction,
   ClearOntologiesAction,
   CurrentOntologyCanBeDeletedAction,
   LoadOntologyAction,
@@ -226,13 +225,6 @@ export class OntologiesState {
         return currentState;
       })
     );
-  }
-
-  @Action(ClearCurrentOntologyAction)
-  clearCurrentOntology(ctx: StateContext<OntologiesStateModel>) {
-    const state = ctx.getState();
-    state.currentOntology = defaults.currentOntology;
-    ctx.patchState(state);
   }
 
   // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
