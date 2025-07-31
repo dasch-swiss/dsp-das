@@ -1,5 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -9,13 +8,30 @@ import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
-  selector: 'app-project',
-  templateUrl: './project-page.component.html',
+  selector: 'app-project-page',
+  template: `
+    <mat-sidenav-container style="flex: 1" autosize>
+      <mat-sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" style="overflow: visible">
+        <app-project-sidenav-collapse-button
+          *ngIf="sideNavOpened"
+          [expand]="false"
+          (toggleSidenav)="toggleSidenav()"
+          style="position: absolute; right: -11px; top: 21px" />
+        <app-project-sidenav />
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <app-project-sidenav-collapse-button
+          *ngIf="!sideNavOpened"
+          [expand]="true"
+          (toggleSidenav)="toggleSidenav()"
+          style="position: absolute; top: 21px; left: 8px" />
+        <router-outlet />
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  `,
   styleUrls: ['./project-page.component.scss'],
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-
   projectUuid$: Observable<string> = this._route.params.pipe(map(params => params[RouteConstants.uuidParameter]));
   isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
@@ -119,6 +135,5 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
   toggleSidenav() {
     this.sideNavOpened = !this.sideNavOpened;
-    this.sidenav.toggle();
   }
 }
