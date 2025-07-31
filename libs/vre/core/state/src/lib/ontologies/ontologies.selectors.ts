@@ -44,26 +44,6 @@ export class OntologiesSelectors {
   }
 
   @Selector([OntologiesState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
-  static projectOntology(
-    state: OntologiesStateModel,
-    resource: DspResource | null,
-    dspApiConfig: DspAppConfig,
-    params: Params | undefined
-  ): ReadOntology | undefined {
-    if (!resource || !params) return undefined;
-
-    const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
-    if (!projectIri || Object.values(state.projectOntologies).length === 0) return undefined;
-
-    const projectReadOntologies = state.projectOntologies[projectIri].readOntologies;
-    const projectReadOntologiesIndex = projectReadOntologies.findIndex(
-      o => o.id.indexOf(`/${params[RouteConstants.ontoParameter]}/`) !== -1
-    );
-
-    return projectReadOntologiesIndex === -1 ? undefined : projectReadOntologies[projectReadOntologiesIndex];
-  }
-
-  @Selector([OntologiesState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
   static currentOntologyClass(
     state: OntologiesStateModel,
     resource: DspResource | null,

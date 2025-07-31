@@ -225,52 +225,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('projectOntology', () => {
-    it('should return project ontology based on params', () => {
-      const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, mockParams);
-
-      expect(result).toEqual(mockOntologies[0]);
-    });
-
-    it('should return undefined when resource is null', () => {
-      const result = OntologiesSelectors.projectOntology(mockState, null, mockDspAppConfig, mockParams);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when params are undefined', () => {
-      const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, undefined);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when project IRI cannot be determined', () => {
-      jest.spyOn(ProjectService, 'getProjectIri').mockReturnValue(undefined);
-
-      const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, mockParams);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when project ontologies are empty', () => {
-      mockState.projectOntologies = {};
-
-      const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, mockParams);
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when ontology not found in project', () => {
-      mockParams = {
-        [RouteConstants.ontoParameter]: 'nonexistent',
-      };
-
-      const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, mockParams);
-
-      expect(result).toBeUndefined();
-    });
-  });
-
   describe('currentOntologyClass', () => {
     it('should return current ontology class based on params', () => {
       const result = OntologiesSelectors.currentOntologyClass(mockState, mockResource, mockDspAppConfig, mockParams);
