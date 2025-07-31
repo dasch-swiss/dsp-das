@@ -47,15 +47,6 @@ export class SetCurrentOntologyAction {
   constructor(public readOntology: ReadOntology) {}
 }
 
-export class UpdateProjectOntologyAction {
-  static readonly type = '[Ontologies] Update Project Ontology';
-
-  constructor(
-    public readOntology: ReadOntology,
-    public projectUuid: string
-  ) {}
-}
-
 export class RemoveProjectOntologyAction {
   static readonly type = '[Ontologies] Remove Project Ontology';
 
@@ -63,14 +54,4 @@ export class RemoveProjectOntologyAction {
     public readOntologyId: string,
     public projectUuid: string
   ) {}
-}
-
-export class SetCurrentProjectOntologyPropertiesAction {
-  static readonly type = '[Ontologies] Set Current Project Ontology Properties';
-
-  constructor(public projectUuid: string) {}
-}
-
-export class CurrentOntologyCanBeDeletedAction {
-  static readonly type = '[Ontologies] Current Ontology Can Be Deleted';
 }

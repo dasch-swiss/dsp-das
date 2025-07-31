@@ -1,23 +1,19 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, Constants, KnoraApiConnection, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { OntologyService, ProjectService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
 import { map, of, switchMap, take, tap } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
-import { IProjectOntologiesKeyValuePairs, OntologyProperties } from '../model-interfaces';
+import { IProjectOntologiesKeyValuePairs } from '../model-interfaces';
 import {
   ClearOntologiesAction,
-  CurrentOntologyCanBeDeletedAction,
   LoadOntologyAction,
   LoadProjectOntologiesAction,
   RemoveProjectOntologyAction,
   ResetCurrentOntologyAction,
   SetCurrentOntologyAction,
-  SetCurrentProjectOntologyPropertiesAction,
   SetOntologyAction,
-  UpdateProjectOntologyAction,
 } from './ontologies.actions';
 import { OntologiesStateModel } from './ontologies.state-model';
 
@@ -56,17 +52,6 @@ export class OntologiesState {
   ) {
     ctx.dispatch(new SetOntologyAction(ontology, projectIri));
     ctx.dispatch(new SetCurrentOntologyAction(ontology));
-  }
-
-  @Action(UpdateProjectOntologyAction)
-  updateProjectOntologyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { readOntology, projectUuid }: UpdateProjectOntologyAction
-  ) {
-    const state = ctx.getState();
-    const readOntologies = state.projectOntologies[projectUuid].readOntologies;
-    readOntologies[readOntologies.findIndex(onto => onto.id === readOntology.id)] = readOntology;
-    ctx.patchState(state);
   }
 
   @Action(RemoveProjectOntologyAction)
@@ -223,48 +208,6 @@ export class OntologiesState {
       map(currentState => {
         ctx.patchState(defaults);
         return currentState;
-      })
-    );
-  }
-
-  // don't log error to rollbar if 'currentProjectOntologies' does not exist in the application state
-  @Action(SetCurrentProjectOntologyPropertiesAction)
-  setCurrentProjectOntologyPropertiesAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { projectUuid }: SetCurrentProjectOntologyPropertiesAction
-  ) {
-    const state = ctx.getState();
-    if (!state.projectOntologies[projectUuid]) {
-      return;
-    }
-    // get all project ontologies
-    const projectOntologies = state.projectOntologies[projectUuid].readOntologies;
-    const ontoProperties = <OntologyProperties[]>projectOntologies.map(
-      onto =>
-        <OntologyProperties>{
-          ontology: onto.id,
-          properties: this.initOntoProperties(getAllEntityDefinitionsAsArray(onto.properties)),
-        }
-    );
-  }
-
-  @Action(CurrentOntologyCanBeDeletedAction)
-  currentOntologyCanBeDeletedAction(ctx: StateContext<OntologiesStateModel>) {
-    ctx.patchState({ isLoading: true });
-    const state = ctx.getState();
-    if (!state.currentOntology) {
-      return;
-    }
-
-    return this._dspApiConnection.v2.onto.canDeleteOntology(state.currentOntology.id).pipe(
-      take(1),
-      tap({
-        next: response => {
-          ctx.setState({
-            ...ctx.getState(),
-            isLoading: false,
-          });
-        },
       })
     );
   }
