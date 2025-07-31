@@ -6,6 +6,7 @@ import { LoadProjectOntologiesAction, LoadProjectsAction, ProjectsSelectors } fr
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take, takeUntil, takeWhile } from 'rxjs';
+import { ProjectPageService } from './project-page.service';
 
 @Component({
   selector: 'app-project-page',
@@ -30,6 +31,7 @@ import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take
     </mat-sidenav-container>
   `,
   styleUrls: ['./project-page.component.scss'],
+  providers: [ProjectPageService],
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
   projectUuid$: Observable<string> = this._route.params.pipe(map(params => params[RouteConstants.uuidParameter]));
