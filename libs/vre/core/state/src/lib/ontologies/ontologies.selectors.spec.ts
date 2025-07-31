@@ -141,7 +141,6 @@ describe('OntologiesSelectors', () => {
       currentOntology: mockOntologies[0],
       currentOntologyCanBeDeleted: false,
       currentProjectOntologyProperties: mockOntologyProperties,
-      isOntologiesLoading: false,
     };
 
     // Mock service methods using spies

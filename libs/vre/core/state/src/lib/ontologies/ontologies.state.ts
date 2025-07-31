@@ -32,7 +32,6 @@ const defaults: OntologiesStateModel = <OntologiesStateModel>{
   currentOntology: null, // the currently selected ontology
   currentOntologyCanBeDeleted: false,
   currentProjectOntologyProperties: [], // reflects current ontology properties in data model grouped by ontology IRI
-  isOntologiesLoading: false, // loading state for project ontologies
 };
 
 /*
@@ -124,7 +123,7 @@ export class OntologiesState {
     ctx: StateContext<OntologiesStateModel>,
     { projectIri, ontologyName }: LoadProjectOntologiesAction
   ) {
-    ctx.patchState({ isOntologiesLoading: true, isLoading: true });
+    ctx.patchState({ isLoading: true });
     projectIri = this._projectService.uuidToIri(projectIri);
 
     // get all project ontologies
@@ -175,7 +174,6 @@ export class OntologiesState {
               }
 
               ctx.dispatch(new LoadListsInProjectAction(projectIri));
-              ctx.patchState({ isOntologiesLoading: false });
             });
         },
         error: (error: ApiResponseError) => {
