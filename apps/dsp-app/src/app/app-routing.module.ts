@@ -16,7 +16,7 @@ import {
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
-  ProjectComponent,
+  ProjectPageComponent,
   ResourceMetadataComponent,
   SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
@@ -51,7 +51,7 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.projectUuidRelative,
-    component: ProjectComponent,
+    component: ProjectPageComponent,
     children: [
       {
         path: RouteConstants.home,

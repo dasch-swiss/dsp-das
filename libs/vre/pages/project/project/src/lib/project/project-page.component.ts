@@ -10,10 +10,10 @@ import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take
 
 @Component({
   selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss'],
+  templateUrl: './project-page.component.html',
+  styleUrls: ['./project-page.component.scss'],
 })
-export class ProjectComponent implements OnInit, OnDestroy {
+export class ProjectPageComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   projectUuid$: Observable<string> = this._route.params.pipe(map(params => params[RouteConstants.uuidParameter]));

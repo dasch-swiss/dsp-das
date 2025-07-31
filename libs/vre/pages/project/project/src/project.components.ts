@@ -15,8 +15,8 @@ import { SettingsPageComponent } from './lib/image-settings/settings-page.compon
 import { LegalSettingsLicensesComponent } from './lib/legal-settings-licenses.component';
 import { LegalSettingsComponent } from './lib/legal-settings.component';
 import { LicensesEnabledTableComponent } from './lib/licenses-enabled-table.component';
+import { ProjectPageComponent } from './lib/project/project-page.component';
 import { ProjectSidenavCollapseButtonComponent } from './lib/project/project-sidenav-collapse-button.component';
-import { ProjectComponent } from './lib/project/project.component';
 import { ProjectSidenavLinksItemComponent } from './lib/project-sidenav-links-item.component';
 import { ProjectSidenavLinksComponent } from './lib/project-sidenav-links.component';
 import { ProjectSidenavOntologiesComponent } from './lib/project-sidenav-ontologies.component';
@@ -35,7 +35,7 @@ export const ProjectComponents = [
   ImageDisplayRatioComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
-  ProjectComponent,
+  ProjectPageComponent,
   ResourceMetadataComponent,
   ReusableProjectFormComponent,
   SelectGroupComponent,
