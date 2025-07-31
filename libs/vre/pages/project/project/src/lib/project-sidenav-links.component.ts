@@ -32,7 +32,8 @@ import { filter, map, startWith } from 'rxjs';
         [link]="[routeConstants.dataModels]"
         [label]="'Data Model'"
         [icon]="'bubble_chart'"
-        [active]="(activeForDataModels$ | async) || false" />
+        [active]="false" />
+      <!-- TODO -->
     </mat-list>
   `,
   styles: [

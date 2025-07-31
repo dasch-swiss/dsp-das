@@ -16,7 +16,6 @@ import { Store } from '@ngxs/store';
       :host {
         width: 290px;
         display: block;
-        border-right: 1px solid #ebebeb;
       }
 
       .project-title {
