@@ -225,21 +225,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('isOntologiesLoading', () => {
-    it('should return ontologies loading state', () => {
-      const result = OntologiesSelectors.isOntologiesLoading(mockState);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return true when ontologies are loading', () => {
-      mockState.isOntologiesLoading = true;
-      const result = OntologiesSelectors.isOntologiesLoading(mockState);
-
-      expect(result).toBe(true);
-    });
-  });
-
   describe('projectOntology', () => {
     it('should return project ontology based on params', () => {
       const result = OntologiesSelectors.projectOntology(mockState, mockResource, mockDspAppConfig, mockParams);

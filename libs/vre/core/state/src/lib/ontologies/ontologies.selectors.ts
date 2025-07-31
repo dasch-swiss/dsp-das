@@ -43,11 +43,6 @@ export class OntologiesSelectors {
     return state.projectOntologies[project.id].readOntologies;
   }
 
-  @Selector([OntologiesState])
-  static isOntologiesLoading(state: OntologiesStateModel): boolean {
-    return state.isOntologiesLoading;
-  }
-
   @Selector([OntologiesState, ResourceSelectors.resource, ConfigState.getConfig, RouterSelectors.params])
   static projectOntology(
     state: OntologiesStateModel,
