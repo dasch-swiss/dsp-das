@@ -9,7 +9,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
 import { ConfigState } from '../config.state';
 import { OntologyProperties } from '../model-interfaces';
@@ -42,20 +42,6 @@ export class OntologiesSelectors {
       return [];
     }
     return state.projectOntologies[project.id].readOntologies;
-  }
-
-  // ontology name has to be unique
-  @Selector([OntologiesState, ProjectsSelectors.currentProject])
-  static currentProjectExistingOntologyNames(state: OntologiesStateModel, project: ReadProject | undefined): string[] {
-    if (!project || !state.projectOntologies[project.id]) {
-      return [];
-    }
-    return state.projectOntologies[project.id].ontologiesMetadata.map(meta => OntologyService.getOntologyName(meta.id));
-  }
-
-  @Selector([OntologiesState])
-  static currentOntology(state: OntologiesStateModel): ReadOntology | null {
-    return state.currentOntology?.id ? state.currentOntology : null;
   }
 
   @Selector([OntologiesState])

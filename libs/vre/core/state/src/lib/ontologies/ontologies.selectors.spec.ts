@@ -225,53 +225,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('currentProjectExistingOntologyNames', () => {
-    it('should return existing ontology names for current project', () => {
-      const result = OntologiesSelectors.currentProjectExistingOntologyNames(mockState, mockProject);
-
-      expect(result).toEqual(['project1', 'project1']);
-    });
-
-    it('should return empty array when project is undefined', () => {
-      const result = OntologiesSelectors.currentProjectExistingOntologyNames(mockState, undefined);
-
-      expect(result).toEqual([]);
-    });
-
-    it('should return empty array when project ontologies not found', () => {
-      const differentProject = {
-        ...mockProject,
-        id: 'http://rdfh.ch/projects/project2',
-      };
-
-      const result = OntologiesSelectors.currentProjectExistingOntologyNames(mockState, differentProject);
-
-      expect(result).toEqual([]);
-    });
-  });
-
-  describe('currentOntology', () => {
-    it('should return current ontology when it has an id', () => {
-      const result = OntologiesSelectors.currentOntology(mockState);
-
-      expect(result).toEqual(mockOntologies[0]);
-    });
-
-    it('should return null when current ontology has no id', () => {
-      mockState.currentOntology = { id: '' } as ReadOntology;
-      const result = OntologiesSelectors.currentOntology(mockState);
-
-      expect(result).toBeNull();
-    });
-
-    it('should return null when current ontology is null', () => {
-      mockState.currentOntology = null;
-      const result = OntologiesSelectors.currentOntology(mockState);
-
-      expect(result).toBeNull();
-    });
-  });
-
   describe('currentProjectOntologyProperties', () => {
     it('should return current project ontology properties', () => {
       const result = OntologiesSelectors.currentProjectOntologyProperties(mockState);
