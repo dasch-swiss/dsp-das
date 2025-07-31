@@ -29,7 +29,6 @@ const defaults: OntologiesStateModel = <OntologiesStateModel>{
   isLoading: false,
   projectOntologies: {}, // project ontologies grouped by project IRI
   currentOntology: null, // the currently selected ontology
-  currentProjectOntologyProperties: [], // reflects current ontology properties in data model grouped by ontology IRI
 };
 
 /*
@@ -275,7 +274,6 @@ export class OntologiesState {
   clearCurrentOntology(ctx: StateContext<OntologiesStateModel>) {
     const state = ctx.getState();
     state.currentOntology = defaults.currentOntology;
-    state.currentProjectOntologyProperties = defaults.currentProjectOntologyProperties;
     ctx.patchState(state);
   }
 
@@ -298,11 +296,6 @@ export class OntologiesState {
           properties: this.initOntoProperties(getAllEntityDefinitionsAsArray(onto.properties)),
         }
     );
-
-    ctx.setState({
-      ...state,
-      currentProjectOntologyProperties: ontoProperties,
-    });
   }
 
   @Action(CurrentOntologyCanBeDeletedAction)
