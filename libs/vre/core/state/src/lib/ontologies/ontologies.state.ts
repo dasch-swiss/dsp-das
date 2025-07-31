@@ -19,7 +19,6 @@ import {
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
   SetOntologyAction,
-  UpdateOntologyAction,
   UpdateProjectOntologyAction,
 } from './ontologies.actions';
 import { OntologiesStateModel } from './ontologies.state-model';
@@ -215,23 +214,6 @@ export class OntologiesState {
         },
         error: (error: ApiResponseError) => {
           ctx.patchState({ isLoading: false });
-        },
-      })
-    );
-  }
-
-  @Action(UpdateOntologyAction)
-  updateOntologyAction(
-    ctx: StateContext<OntologiesStateModel>,
-    { ontologyMetadata, projectUuid }: UpdateOntologyAction
-  ) {
-    ctx.patchState({ isLoading: true });
-    return this._dspApiConnection.v2.onto.updateOntology(ontologyMetadata).pipe(
-      take(1),
-      tap({
-        next: () => {
-          const projectIri = this._projectService.uuidToIri(projectUuid);
-          ctx.dispatch(new LoadProjectOntologiesAction(projectIri));
         },
       })
     );

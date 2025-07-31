@@ -1,4 +1,4 @@
-import { ReadOntology, UpdateOntologyMetadata } from '@dasch-swiss/dsp-js';
+import { ReadOntology } from '@dasch-swiss/dsp-js';
 
 export class LoadProjectOntologiesAction {
   static readonly type = '[Ontologies] Load Project Ontologies';
@@ -34,15 +34,6 @@ export class ResetCurrentOntologyAction {
   constructor(
     public ontology: ReadOntology,
     public projectIri: string
-  ) {}
-}
-
-export class UpdateOntologyAction {
-  static readonly type = '[Ontologies] Update Ontology';
-
-  constructor(
-    public ontologyMetadata: UpdateOntologyMetadata,
-    public projectUuid: string
   ) {}
 }
 
