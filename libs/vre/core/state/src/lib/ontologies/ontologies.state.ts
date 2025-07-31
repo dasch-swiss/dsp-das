@@ -18,7 +18,6 @@ import {
   ResetCurrentOntologyAction,
   SetCurrentOntologyAction,
   SetCurrentProjectOntologyPropertiesAction,
-  SetOntologiesLoadingAction,
   SetOntologyAction,
   UpdateOntologyAction,
   UpdateProjectOntologyAction,
@@ -47,12 +46,6 @@ export class OntologiesState {
     private _projectService: ProjectService,
     private _actions$: Actions
   ) {}
-
-  // TODO Remove this action when all actions containing this usage is implemented
-  @Action(SetOntologiesLoadingAction)
-  setOntologiesLoadingAction(ctx: StateContext<OntologiesStateModel>, { isLoading }: SetOntologiesLoadingAction) {
-    ctx.patchState({ isLoading });
-  }
 
   @Action(SetCurrentOntologyAction)
   setCurrentOntologyAction(ctx: StateContext<OntologiesStateModel>, { readOntology }: SetCurrentOntologyAction) {
