@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-project-sidenav-collapse-button',
   template: ` <button
     mat-icon-button
+    disableRipple="true"
     color="primary"
     data-cy="side-panel-collapse-btn"
     class="collapse-btn"
@@ -16,6 +17,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     `
       .collapse-btn {
         background-color: white;
+        position: relative;
+        z-index: 1;
         border: 1px solid #336790;
         width: 23px;
         height: 23px;
