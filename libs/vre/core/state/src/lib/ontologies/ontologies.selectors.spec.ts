@@ -225,21 +225,6 @@ describe('OntologiesSelectors', () => {
     });
   });
 
-  describe('currentOntologyCanBeDeleted', () => {
-    it('should return deletion state', () => {
-      const result = OntologiesSelectors.currentOntologyCanBeDeleted(mockState);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return true when ontology can be deleted', () => {
-      mockState.currentOntologyCanBeDeleted = true;
-      const result = OntologiesSelectors.currentOntologyCanBeDeleted(mockState);
-
-      expect(result).toBe(true);
-    });
-  });
-
   describe('isOntologiesLoading', () => {
     it('should return ontologies loading state', () => {
       const result = OntologiesSelectors.isOntologiesLoading(mockState);
