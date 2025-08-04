@@ -28,6 +28,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
         *ngIf="isAdmin$ | async"
         mat-button
         data-cy="create-property-button"
+        class="create-property-button"
         [disabled]="!(project$ | async)?.status"
         [matMenuTriggerFor]="newFromPropType">
         <mat-icon>add</mat-icon>
@@ -87,7 +88,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       justify-content: space-between;
 
       .search-input-wrapper {
-        width: 30%;
+        width: 50%;
         max-width: 30em;
         display: flex;
         align-items: center;
@@ -126,6 +127,10 @@ import { OntologyEditService } from '../services/ontology-edit.service';
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
       }
+    }
+
+    .create-property-button {
+      margin-right: 1em;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

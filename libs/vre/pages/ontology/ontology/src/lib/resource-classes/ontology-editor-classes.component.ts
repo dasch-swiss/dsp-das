@@ -72,6 +72,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 
     .ontology-classes-header {
       margin-top: 1rem;
+      margin-right: 1em;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
