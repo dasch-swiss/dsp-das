@@ -18,8 +18,4 @@ import { FormControl } from '@angular/forms';
 })
 export class BooleanValueComponent {
   @Input({ required: true }) control!: FormControl<boolean | null>;
-
-  add() {
-    this.control.setValue(false);
-  }
 }
