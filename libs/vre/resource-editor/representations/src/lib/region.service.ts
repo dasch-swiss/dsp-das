@@ -52,9 +52,10 @@ export class RegionService {
 
   private _getIncomingRegions(resourceId: string) {
     let offset = 0;
+
     return this._dspApi.v2.search.doSearchIncomingRegions(resourceId, offset).pipe(
-      expand(v => {
-        if (v.mayHaveMoreResults) {
+      expand(response => {
+        if (response.mayHaveMoreResults) {
           offset++;
           return this._dspApi.v2.search.doSearchIncomingRegions(resourceId, offset);
         } else {
@@ -64,9 +65,9 @@ export class RegionService {
       concatMap(page => page.resources),
       toArray(),
       map(res =>
-        res.map(_resource => {
-          const z = new DspResource(_resource);
-          z.resProps = GenerateProperty.regionProperty(_resource);
+        res.map(resource => {
+          const z = new DspResource(resource);
+          z.resProps = GenerateProperty.regionProperty(resource);
           return z;
         })
       )
