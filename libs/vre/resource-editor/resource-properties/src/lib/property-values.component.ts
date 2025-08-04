@@ -17,7 +17,7 @@ import { PropertyValueService } from './property-value.service';
       mat-icon-button
       (click)="currentlyAdding = true"
       data-cy="add-property-value-button"
-      *ngIf="userCanAdd && !currentlyAdding && matchesCardinality">
+      *ngIf="userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)">
       <mat-icon class="add-icon">add_box</mat-icon>
     </button>
 
