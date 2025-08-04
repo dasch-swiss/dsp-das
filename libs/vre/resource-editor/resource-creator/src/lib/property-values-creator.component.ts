@@ -51,8 +51,10 @@ export class PropertyValuesCreatorComponent {
   }
 
   addEntry() {
+    const propertyType = propertiesTypeMapping.get(this.myProperty.propDef.objectType!)!;
+
     const formGroup = this._fb.group({
-      item: propertiesTypeMapping.get(this.myProperty.propDef.objectType!)!.control() as AbstractControl,
+      item: propertyType.control(propertyType.newValue) as AbstractControl,
       comment: this._fb.control(null),
     });
 
