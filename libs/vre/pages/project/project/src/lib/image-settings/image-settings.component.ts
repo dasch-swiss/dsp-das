@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
-import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService, RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
@@ -9,6 +8,7 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { IMask } from 'angular-imask';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 
 enum ImageSettingsEnum {
   Off = 'Off',
@@ -27,11 +27,11 @@ export class ImageSettingsComponent implements OnInit {
   readonly maxWidth = 1024;
   readonly imageSettingsEnum = ImageSettingsEnum;
 
-  currentSettings: ProjectRestrictedViewSettings | RestrictedViewResponse;
+  currentSettings?: ProjectRestrictedViewSettings | RestrictedViewResponse;
   imageSettings: ImageSettingsEnum = ImageSettingsEnum.Off;
-  projectUuid = this.route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
-  percentage = '99';
-  fixedWidth: string;
+  projectUuid = this.route.parent?.parent?.snapshot.paramMap.get(RouteConstants.uuidParameter);
+  percentage: string | null = '99';
+  fixedWidth: string | null = null;
 
   minMaxInputMask(min: number, max: number) {
     return {
@@ -47,11 +47,7 @@ export class ImageSettingsComponent implements OnInit {
   }
 
   get ratio(): number {
-    if (!this.percentage) {
-      return 0;
-    }
-
-    return parseInt(this.percentage, 0) / 100;
+    return this.percentage ? parseInt(this.percentage, 0) / 100 : 0;
   }
 
   get isPercentageSize(): boolean {
@@ -129,16 +125,17 @@ export class ImageSettingsComponent implements OnInit {
       });
   }
 
-  private setRestrictedSize(size: string) {
-    if (size) {
+  private setRestrictedSize(size: string | Size) {
+    const sizeAsString = typeof size === 'string' ? size : size.value;
+    if (sizeAsString) {
       this.imageSettings = ImageSettingsEnum.RestrictImageSize;
     }
 
-    if (size.startsWith('pct')) {
-      this.percentage = size.split(':')[1];
+    if (sizeAsString.startsWith('pct')) {
+      this.percentage = sizeAsString.split(':')[1];
       this.fixedWidth = null;
     } else {
-      this.fixedWidth = size.split(',')[1];
+      this.fixedWidth = sizeAsString.split(',')[1];
       this.percentage = null;
     }
   }
