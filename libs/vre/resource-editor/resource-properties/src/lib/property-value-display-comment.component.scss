@@ -5,6 +5,7 @@ div {
   border: 2px solid $comment-color;
   border-radius: 4px;
   padding: 8px;
+  background-color: whitesmoke;
 }
 
 div:after,
@@ -18,8 +19,8 @@ div:before {
 div:after {
   top: -9px;
   left: 8px;
-  border-bottom: 10px solid white;
-  border-left: 2px solid white;
+  border-bottom: 10px solid whitesmoke;
+  border-left: 2px solid whitesmoke;
   border-right: 10px solid transparent;
 }
 
