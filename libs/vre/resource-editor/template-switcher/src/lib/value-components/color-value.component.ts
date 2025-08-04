@@ -29,7 +29,18 @@ import { FormControl } from '@angular/forms';
       {{ errors | humanReadableError }}
     </mat-error>
   `,
-  styles: [':host { z-index: 1; position: relative}'], // for color picker popup z-index
+  styles: [
+    `
+      :host {
+        z-index: 1;
+        position: relative;
+
+        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+          display: none !important;
+        }
+      }
+    `,
+  ], // for color picker popup z-index
 })
 export class ColorValueComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

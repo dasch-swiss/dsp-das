@@ -17,16 +17,6 @@ import { map, startWith } from 'rxjs/operators';
         <button
           mat-icon-button
           type="button"
-          [matTooltip]="'Delete this value'"
-          [hidden]="isHidden$ | async"
-          (click)="removeValue()"
-          color="primary">
-          <mat-icon>cancel</mat-icon>
-        </button>
-
-        <button
-          mat-icon-button
-          type="button"
           color="primary"
           [hidden]="isHidden$ | async"
           (click)="toggleCommentValue()"
@@ -69,10 +59,5 @@ export class PropertyValueCreatorComponent implements OnInit {
 
   toggleCommentValue() {
     this.formArray.controls.comment.setValue(this.commentIsNotNull ? null : '');
-  }
-
-  removeValue() {
-    this.formArray.controls.item.setValue(null);
-    this.formArray.controls.comment.setValue(null);
   }
 }

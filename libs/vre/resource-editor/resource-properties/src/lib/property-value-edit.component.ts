@@ -71,9 +71,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const propertyType = propertiesTypeMapping.get(this.propertyValueService.propertyDefinition.objectType!)!;
-    console.log('aaa', this.readValue ?? propertyType.newValue);
     this.group = new FormGroup({
-      item: propertyType.control(this.readValue === undefined ?? propertyType.newValue),
+      item: propertyType.control(this.readValue ?? propertyType.newValue),
       comment: new FormControl(this.readValue?.valueHasComment || null),
     });
 
