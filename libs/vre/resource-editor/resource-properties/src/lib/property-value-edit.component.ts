@@ -35,10 +35,6 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       </div>
 
       <div style="display: flex">
-        <button (click)="removeValue()" mat-icon-button color="primary">
-          <mat-icon>cancel</mat-icon>
-        </button>
-
         <button (click)="afterUndo.emit()" mat-icon-button color="primary">
           <mat-icon>undo</mat-icon>
         </button>
@@ -90,11 +86,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   foundTemplate(template: TemplateRef<any>) {
     this.template = template;
     this._cd.detectChanges();
-  }
-
-  removeValue() {
-    this.group.controls.item.setValue(null);
-    this.group.controls.comment.setValue(null);
   }
 
   onSave() {
