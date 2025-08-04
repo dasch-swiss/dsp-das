@@ -78,7 +78,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       justify-content: space-between;
 
       .search-input-wrapper {
-        width: 30%;
+        width: 50%;
         max-width: 30em;
         display: flex;
         align-items: center;
