@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectRestrictedViewSettings } from '@dasch-swiss/dsp-js';
-import { AdminProjectsApiService, RestrictedViewResponse } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AdminProjectsApiService, RestrictedViewResponse, Size } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ReplaceAnimation } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { IMask } from 'angular-imask';
-import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 
 enum ImageSettingsEnum {
   Off = 'Off',
