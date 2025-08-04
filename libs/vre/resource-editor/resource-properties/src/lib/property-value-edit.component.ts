@@ -74,10 +74,9 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   protected readonly Cardinality = Cardinality;
 
   ngOnInit() {
+    const propertyType = propertiesTypeMapping.get(this.propertyValueService.propertyDefinition.objectType!)!;
     this.group = new FormGroup({
-      item: propertiesTypeMapping
-        .get(this.propertyValueService.propertyDefinition.objectType!)!
-        .control(this.readValue),
+      item: propertyType.control(this.readValue),
       comment: new FormControl(this.readValue?.valueHasComment || null),
     });
 

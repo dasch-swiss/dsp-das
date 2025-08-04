@@ -102,7 +102,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.BooleanValue,
     {
       control: (value?: ReadBooleanValue) => {
-        const booleanValue = value ? value.bool : null;
+        const booleanValue = value ? value.bool : false;
         return new FormControl(booleanValue);
       },
       isNullValue: defaultNullValue,
@@ -257,7 +257,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.ColorValue,
     {
-      control: (value?: ReadColorValue) => new FormControl(value?.color ?? null),
+      control: (value?: ReadColorValue) => new FormControl(value?.color ?? '#000000'),
       isNullValue: defaultNullValue,
       createValue: (value: string) => {
         const newColorValue = new CreateColorValue();
