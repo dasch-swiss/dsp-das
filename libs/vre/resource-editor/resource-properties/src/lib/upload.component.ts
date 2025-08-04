@@ -1,14 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  NgZone,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   FileRepresentationType,
@@ -16,7 +7,7 @@ import {
   UploadFileService,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { catchError, finalize, of } from 'rxjs';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-upload',
@@ -100,8 +91,7 @@ export class UploadComponent {
   constructor(
     private _notification: NotificationService,
     private _upload: UploadFileService,
-    private _cdr: ChangeDetectorRef,
-    private _ngZone: NgZone
+    private _cdr: ChangeDetectorRef
   ) {}
 
   addFileFromClick(event: any) {
@@ -126,39 +116,30 @@ export class UploadComponent {
     this._upload
       .upload(file, this.projectShortcode)
       .pipe(
-        catchError(error => {
-          this._notification.openSnackBar('Upload failed. Please try again.');
-          return of();
-        }),
         finalize(() => {
-          this._ngZone.run(() => {
-            this.loading = false;
-            this.uploadProgress = 0;
-            this.processing = false;
-            this._cdr.markForCheck();
-          });
+          this.loading = false;
+          this.uploadProgress = 0;
+          this.processing = false;
+          this._cdr.markForCheck();
         })
       )
       .subscribe({
         next: event => {
           if (event.type === HttpEventType.UploadProgress) {
             if (event.total) {
-              this._ngZone.run(() => {
-                this.uploadProgress = Math.round((100 * event.loaded) / event.total);
+              this.uploadProgress = Math.round((100 * event.loaded) / event.total);
 
-                // When upload reaches 100%, switch to processing mode
-                if (event.loaded === event.total) {
-                  this.processing = true;
-                }
+              if (event.loaded === event.total) {
+                this.processing = true;
+              }
 
-                this._cdr.markForCheck();
-              });
+              this._cdr.markForCheck();
             }
           } else if (event.type === HttpEventType.Response) {
             this.afterFileUploaded.emit(event.body as UploadedFileResponse);
           }
         },
-        error: error => {
+        error: () => {
           this._notification.openSnackBar('Upload failed. Please try again.');
         },
       });
