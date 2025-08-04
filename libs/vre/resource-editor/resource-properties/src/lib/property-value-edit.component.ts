@@ -39,7 +39,12 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           <mat-icon>undo</mat-icon>
         </button>
 
-        <button (click)="onSave()" mat-icon-button data-cy="save-button" color="primary">
+        <button
+          *ngIf="group.controls.item.value !== null"
+          (click)="onSave()"
+          mat-icon-button
+          data-cy="save-button"
+          color="primary">
           <mat-icon>save</mat-icon>
         </button>
       </div>
