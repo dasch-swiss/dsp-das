@@ -20,14 +20,14 @@ import { map, startWith } from 'rxjs/operators';
           [matTooltip]="'Delete this value'"
           [hidden]="isHidden$ | async"
           (click)="removeValue()"
-          style="color: #acacac">
+          color="primary">
           <mat-icon>cancel</mat-icon>
         </button>
 
         <button
           mat-icon-button
           type="button"
-          style="color: #acacac"
+          color="primary"
           [hidden]="isHidden$ | async"
           (click)="toggleCommentValue()"
           [matTooltip]="commentIsNotNull ? 'Remove comment' : 'Add comment'">
