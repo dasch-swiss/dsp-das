@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
@@ -61,10 +60,7 @@ export class ResourceListSelectionComponent {
   }
 
   openCreateLinkDialog(resources: ReadResource[]): void {
-    const projectUuid =
-      this._route.parent?.snapshot.params[RouteConstants.uuidParameter] ??
-      this._route.snapshot.params[RouteConstants.project];
-
+    const projectUuid = resources[0].attachedToProject;
     this._dialog.open<ResourceLinkDialogComponent, ResourceLinkDialogProps>(ResourceLinkDialogComponent, {
       data: {
         resources,
