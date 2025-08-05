@@ -6,7 +6,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
-import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from '../resource-link-dialog.component';
+import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
 
 @Component({
   selector: 'app-resource-list-selection',
