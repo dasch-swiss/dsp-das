@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs';
@@ -29,6 +29,7 @@ import { MultipleViewerService } from '../../multiple-viewer.service';
       </div>
     </mat-list-item>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       mat-list-item {
@@ -53,7 +54,7 @@ export class ResourceListItemComponent {
   );
 
   isSelected$ = this.multipleViewerService.selectedResources$.pipe(
-    map(resources => resources.includes(this.resource) && this.multipleViewerService.selectMode)
+    map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
   constructor(public multipleViewerService: MultipleViewerService) {}
