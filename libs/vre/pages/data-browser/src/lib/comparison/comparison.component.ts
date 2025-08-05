@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { SplitSize } from '../split-size.interface';
 
 @Component({
   selector: 'app-comparison',
@@ -10,21 +9,25 @@ import { SplitSize } from '../split-size.interface';
         <as-split-area>
           <!-- note: This part is repeating twice (not added as component) because angular-split
                                                                                                                           library does not support addition div inside as-split -->
-          <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+          <as-split direction="horizontal">
             <as-split-area *ngFor="let res of topRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+              <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
             </as-split-area>
           </as-split>
         </as-split-area>
         <as-split-area *ngIf="resourcesNumber > 3">
-          <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+          <as-split direction="horizontal">
             <as-split-area *ngFor="let res of bottomRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+              <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
             </as-split-area>
           </as-split>
         </as-split-area>
       </as-split>
     </div>
+
+    <ng-template #resourceTemplate let-res="res">
+      <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+    </ng-template>
   `,
   styles: [
     `
@@ -37,9 +40,6 @@ import { SplitSize } from '../split-size.interface';
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];
-
-  // parent (or own) split size changed
-  @Input() splitSizeChanged: SplitSize;
 
   topRow: string[] = [];
   bottomRow: string[] = [];
