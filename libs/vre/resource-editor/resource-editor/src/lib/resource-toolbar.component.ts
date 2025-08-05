@@ -1,4 +1,4 @@
-import { Component, Inject, Input, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -9,7 +9,12 @@ import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/r
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
-import { combineLatest, map, of, take } from 'rxjs';
+import { combineLatest, map, of } from 'rxjs';
+
+interface DeletionCheck {
+  canDo: boolean;
+  reason?: string;
+}
 
 @Component({
   selector: 'app-resource-toolbar',
@@ -28,7 +33,6 @@ import { combineLatest, map, of, take } from 'rxjs';
       <button
         color="primary"
         mat-icon-button
-        class="share-res"
         data-cy="share-button"
         matTooltip="Share resource: {{ resource.versionArkUrl }}"
         matTooltipPosition="above"
@@ -43,7 +47,6 @@ import { combineLatest, map, of, take } from 'rxjs';
         color="primary"
         *ngIf="userCanDelete$ | async"
         mat-icon-button
-        class="more-menu"
         matTooltip="More"
         matTooltipPosition="above"
         [matMenuTriggerFor]="more"
@@ -52,51 +55,90 @@ import { combineLatest, map, of, take } from 'rxjs';
       </button>
     </span>
 
-    <mat-menu #share="matMenu" class="res-share-menu">
-      <button
-        mat-menu-item
-        matTooltip="Copy ARK url"
-        matTooltipPosition="above"
-        data-cy="copy-ark-url-button"
-        [cdkCopyToClipboard]="resource.versionArkUrl"
-        (click)="notification.openSnackBar('ARK URL copied to clipboard!')">
-        <mat-icon>content_copy</mat-icon>
-        Copy ARK url to clipboard
-      </button>
-      <button
-        mat-menu-item
-        matTooltip="Copy internal link"
-        data-cy="copy-internal-link-button"
-        matTooltipPosition="above"
-        [cdkCopyToClipboard]="resource.id"
-        (click)="notification.openSnackBar('Internal link copied to clipboard!')">
-        <mat-icon>content_copy</mat-icon>
-        Copy internal link to clipboard
-      </button>
-    </mat-menu>
-
-    <mat-menu #more="matMenu" class="res-more-menu">
+    <mat-menu #share="matMenu">
       <button
         data-cy="resource-toolbar-delete-resource-button"
         mat-menu-item
-        matTooltip="Move resource to trash bin."
+        [matTooltip]="
+          resourceCanBeDeleted?.canDo
+            ? 'Move resource to trash bin.'
+            : resourceCanBeDeleted?.reason || 'Checking if the resource can be deleted...'
+        "
         matTooltipPosition="above"
-        [disabled]="!resourceCanBeDeleted"
+        [disabled]="!resourceCanBeDeleted?.canDo"
         (click)="deleteResource()">
-        <mat-icon>delete</mat-icon>
-        {{ 'resourceEditor.resourceProperties.delete' | translate }}
-        <span appLoadingButton [isLoading]="resourceCanBeDeleted === undefined"></span>
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          <ng-container *ngIf="resourceCanBeDeleted === undefined; else icon">
+            <mat-progress-spinner
+              diameter="20"
+              strokeWidth="2"
+              mode="indeterminate"
+              style="width: 20px; height: 20px;"></mat-progress-spinner>
+          </ng-container>
+          <ng-template #icon>
+            <mat-icon>delete</mat-icon>
+          </ng-template>
+          {{ 'resourceEditor.resourceProperties.delete' | translate }}
+        </span>
+      </button>
+    </mat-menu>
+
+    <mat-menu #more="matMenu">
+      <button
+        data-cy="resource-toolbar-delete-resource-button"
+        mat-menu-item
+        style="display: flex; justify-content: space-between;"
+        [matTooltip]="
+          resourceCanBeDeleted?.canDo
+            ? 'Move resource to trash bin.'
+            : resourceCanBeDeleted?.reason || 'Checking if the resource can be deleted...'
+        "
+        matTooltipPosition="above"
+        [disabled]="!resourceCanBeDeleted?.canDo"
+        (click)="deleteResource()">
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; width: 32px; height: 24px;">
+            <ng-container *ngIf="resourceCanBeDeleted === undefined; else icon">
+              <mat-progress-spinner
+                diameter="20"
+                strokeWidth="2"
+                mode="indeterminate"
+                style="width: 24px; height: 24px;"></mat-progress-spinner>
+            </ng-container>
+            <ng-template #icon>
+              <mat-icon>delete</mat-icon>
+            </ng-template>
+          </span>
+          {{ 'resourceEditor.resourceProperties.delete' | translate }}
+        </span>
       </button>
       <button
         *ngIf="isAdmin$ | async"
         data-cy="resource-toolbar-erase-resource-button"
         mat-menu-item
-        matTooltip="Erase resource forever. This cannot be undone."
+        [matTooltip]="
+          resourceCanBeDeleted?.canDo
+            ? 'Erase resource forever. This cannot be undone.'
+            : resourceCanBeDeleted?.reason || 'Checking if resource can be deleted...'
+        "
         matTooltipPosition="above"
-        [disabled]="!resourceCanBeDeleted"
+        [disabled]="!resourceCanBeDeleted?.canDo"
         (click)="eraseResource()">
-        <mat-icon>delete_forever</mat-icon>
-        Erase resource <span appLoadingButton [isLoading]="resourceCanBeDeleted === undefined"></span>
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; width: 32px; height: 24px;">
+            <ng-container *ngIf="resourceCanBeDeleted === undefined; else icon">
+              <mat-progress-spinner
+                diameter="20"
+                strokeWidth="2"
+                mode="indeterminate"
+                style="width: 24px; height: 24px;"></mat-progress-spinner>
+            </ng-container>
+            <ng-template #icon>
+              <mat-icon>delete_forever</mat-icon>
+            </ng-template>
+          </span>
+          Erase resource
+        </span>
       </button>
     </mat-menu>
   `,
@@ -119,7 +161,7 @@ export class ResourceToolbarComponent {
 
   userCanDelete$ = this._resourceFetcherService.userCanDelete$;
 
-  resourceCanBeDeleted?: boolean;
+  resourceCanBeDeleted?: DeletionCheck;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -134,7 +176,10 @@ export class ResourceToolbarComponent {
 
   checkResourceCanBeDeleted() {
     if (this.resource.incomingReferences.length > 0) {
-      this.resourceCanBeDeleted = false;
+      this.resourceCanBeDeleted = {
+        canDo: false,
+        reason: 'This resource cannot be deleted as it has incoming references.',
+      };
       return;
     }
 
@@ -151,7 +196,23 @@ export class ResourceToolbarComponent {
       : of(true);
 
     combineLatest([noIncomingLinks$, noStillImageLinks$, noRegions$]).subscribe(([noLinks, noStills, noRegions]) => {
-      this.resourceCanBeDeleted = noLinks && noStills && noRegions;
+      const canDelete = noLinks && noStills && noRegions;
+
+      if (canDelete) {
+        this.resourceCanBeDeleted = {
+          canDo: true,
+        };
+      } else {
+        const reasons = [];
+        if (!noLinks) reasons.push('incoming links');
+        if (!noStills) reasons.push('still image representations (pages) linked to it');
+        if (!noRegions) reasons.push('regions annotating the still image representation');
+
+        this.resourceCanBeDeleted = {
+          canDo: false,
+          reason: `This resource cannot be deleted as it has ${reasons.join(' and ')}.`,
+        };
+      }
     });
   }
 
