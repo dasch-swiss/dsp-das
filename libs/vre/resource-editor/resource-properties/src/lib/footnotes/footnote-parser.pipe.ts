@@ -48,7 +48,7 @@ export class FootnoteParserPipe implements PipeTransform {
         }
         const startingIndex = this._footnoteService.footnotes.findIndex(footnote => footnote.indexValue === valueIndex);
 
-        const parsedFootnote = `<footnote content="${matchArray[1]}" id="${footnoteId}">${startingIndex + indexFootnote + 1}</footnote>`;
+        const parsedFootnote = `<footnote content="${matchArray[1]}" data-origin-uuid="${footnoteId}">${startingIndex + indexFootnote + 1}</footnote>`;
         newValue = newValue.replace(matchArray[0], parsedFootnote);
       });
     }

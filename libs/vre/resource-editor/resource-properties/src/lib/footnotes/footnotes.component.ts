@@ -38,14 +38,11 @@ export class FootnotesComponent {
   constructor(public readonly footnoteService: FootnoteService) {}
 
   goToFootnote(uuid: string) {
-    const element = document.getElementById(uuid);
-    if (!element) {
+    const targetFootnote = document.querySelector(`footnote[data-origin-uuid="${uuid}"]`);
+
+    if (!targetFootnote) {
       throw new AppError(`Element with uid ${uuid} is not found on page.`);
     }
-
-    const yOffset = -80;
-    const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    targetFootnote.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
