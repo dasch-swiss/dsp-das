@@ -36,34 +36,29 @@ import { TranslateService } from '@ngx-translate/core';
 export class SettingsPageComponent {
   private _translateService = inject(TranslateService);
 
-  navigation: MenuItem[] = [
+  navigation = [
     {
       label: 'Project Description',
-      shortLabel: 'Project Description',
       route: RouteConstants.edit,
       icon: 'edit_square',
     },
     {
       label: this._translateService.instant('pages.project.resourceMetadata.tab'),
-      shortLabel: this._translateService.instant('pages.project.resourceMetadata.tab'),
       route: RouteConstants.resourceMetadata,
       icon: 'code_blocks',
     },
     {
       label: 'Image Settings',
-      shortLabel: 'Image Settings',
       route: RouteConstants.imageSettings,
       icon: 'branding_watermark',
     },
     {
       label: this._translateService.instant('pages.project.legalSettings.tab'),
-      shortLabel: this._translateService.instant('pages.project.legalSettings.tab'),
       route: RouteConstants.legalSettings,
       icon: 'gavel',
     },
     {
       label: 'Project Members',
-      shortLabel: 'Members',
       route: RouteConstants.collaboration,
       icon: 'group',
     },
