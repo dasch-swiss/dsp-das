@@ -1,13 +1,13 @@
 import { ComparisonComponent } from './lib/comparison/comparison.component';
+import { MultipleViewer2Component } from './lib/comparison/multiple-viewer-2.component';
+import { MultipleViewerGatewayComponent } from './lib/comparison/multiple-viewer-gateway.component';
 import { ListViewNormalComponent } from './lib/list-view/list-view-normal.component';
 import { ResourceListItemComponent } from './lib/list-view/resource-list-item.component';
 import { ResourceListSelectionComponent } from './lib/list-view/resource-list-selection.component';
 import { ResourceListComponent } from './lib/list-view/resource-list.component';
-import { MultipleViewer2Component } from './lib/multiple-viewer-2.component';
-import { MultipleViewerGatewayComponent } from './lib/multiple-viewer-gateway.component';
 import { ResourceClassBrowserPageComponent } from './lib/resource-class-browser/resource-class-browser-page.component';
-import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
-import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav.component';
+import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
+import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav/resource-class-sidenav.component';
 import { ResourceLinkDialogComponent } from './lib/resource-link-dialog.component';
 
 export const DataBrowserComponents = [

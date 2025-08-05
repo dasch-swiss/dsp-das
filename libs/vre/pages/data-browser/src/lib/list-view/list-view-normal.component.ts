@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { MultipleViewerService } from '../multiple-viewer.service';
+import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceClassBrowserPageService } from '../resource-class-browser/resource-class-browser-page.service';
 
 @Component({
