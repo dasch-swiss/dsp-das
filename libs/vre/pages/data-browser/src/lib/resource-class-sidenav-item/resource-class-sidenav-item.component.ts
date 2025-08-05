@@ -1,13 +1,12 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { finalize, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { ResourceClassSidenavItemService } from './resource-class-sidenav-item.service';
+import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -38,7 +37,6 @@ import { ResourceClassSidenavItemService } from './resource-class-sidenav-item.s
     </div>
   `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
-  providers: [ResourceClassSidenavItemService],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
@@ -66,7 +64,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _store: Store,
     private _translateService: TranslateService,
-    private _resourceClassSidenavItemService: ResourceClassSidenavItemService
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +80,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       this.getOntologiesLabelsInPreferredLanguage();
     });
 
-    this.count$ = this._resourceClassSidenavItemService.getCount(this.resClass.id).pipe(
+    this.count$ = this._getCount(this.resClass.id).pipe(
       finalize(() => {
         this.loading = false;
       })
@@ -91,6 +90,11 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  goToAddClassInstance() {
+    const link = `${this.classLink}/${RouteConstants.addClassInstance}`;
+    this._router.navigate(['/']).then(() => this._router.navigate([link]));
   }
 
   private getOntologiesLabelsInPreferredLanguage(): void {
@@ -120,8 +124,29 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  goToAddClassInstance() {
-    const link = `${this.classLink}/${RouteConstants.addClassInstance}`;
-    this._router.navigate(['/']).then(() => this._router.navigate([link]));
+  private _getCount(resClassId: string) {
+    const gravsearch = this._getGravsearch(resClassId);
+
+    return this._dspApiConnection.v2.search
+      .doExtendedSearchCountQuery(gravsearch)
+      .pipe(map(response => response.numberOfResults));
+  }
+
+  private _getGravsearch(iri: string): string {
+    return `
+        PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
+        CONSTRUCT {
+
+        ?mainRes knora-api:isMainResource true .
+
+        } WHERE {
+
+        ?mainRes a knora-api:Resource .
+
+        ?mainRes a <${iri}> .
+
+        }
+
+        OFFSET 0`;
   }
 }
