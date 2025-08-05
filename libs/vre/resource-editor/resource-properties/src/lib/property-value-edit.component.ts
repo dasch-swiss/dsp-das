@@ -77,8 +77,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   loading = false;
   private _subscription!: Subscription;
 
-  showComment = false;
-
   group!: FormValueGroup;
 
   get commentIsNotNull() {
@@ -118,7 +116,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   toggleCommentValue() {
     this.group.controls.comment.setValue(this.commentIsNotNull ? null : '');
-    this.showComment = !this.showComment;
   }
 
   private _watchAndSetupCommentStatus() {
