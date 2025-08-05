@@ -24,6 +24,13 @@ import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
           &:last-child {
             margin-bottom: 0;
           }
+
+          footnote {
+            color: #336790;
+            vertical-align: super;
+            font-size: small;
+            cursor: pointer;
+          }
         }
       }
     `,
