@@ -14,7 +14,7 @@ import { ProjectForm } from './project-form.type';
 
 @Component({
   selector: 'app-edit-project-form-page',
-  template: ` <app-centered-layout>
+  template: `
     <app-reusable-project-form
       *ngIf="formData$ | async as formData"
       [formData]="formData"
@@ -33,7 +33,7 @@ import { ProjectForm } from './project-form.type';
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>
-  </app-centered-layout>`,
+  `,
 })
 export class EditProjectFormPageComponent {
   form: ProjectForm;

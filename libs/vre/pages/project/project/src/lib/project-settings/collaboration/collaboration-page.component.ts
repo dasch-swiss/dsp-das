@@ -10,7 +10,7 @@ import { CollaborationPageService } from './collaboration-page.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration-page',
   template: `
-    <div *ngIf="isAdmin$ | async" class="content large middle">
+    <div *ngIf="isAdmin$ | async">
       <ng-container *ngIf="project$ | async as project">
         <app-add-user *ngIf="project.status && (isAdmin$ | async) === true" [projectUuid]="projectUuid$ | async" />
       </ng-container>
