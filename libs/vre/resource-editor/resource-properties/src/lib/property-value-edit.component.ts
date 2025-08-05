@@ -46,6 +46,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           type="button"
           color="primary"
           (click)="toggleCommentValue()"
+          data-cy="toggle-comment-button"
           [matTooltip]="commentIsNotNull ? 'remove comment' : 'add comment'">
           <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
         </button>

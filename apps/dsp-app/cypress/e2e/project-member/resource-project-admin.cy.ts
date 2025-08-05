@@ -101,6 +101,7 @@ describe('Check project admin existing resource functionality', () => {
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=common-input-text]').should('be.visible', { timeout: 500 }).type(newLabel);
     const firstComment = faker.lorem.word();
+    cy.get('[data-cy=toggle-comment]').click();
     cy.get('[data-cy=comment-textarea]').should('be.visible').type(firstComment);
     cy.get('[data-cy="save-button"]').click();
     cy.wait('@resourcesRequest').its('response.statusCode').should('eq', 200);
