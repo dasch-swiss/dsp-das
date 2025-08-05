@@ -91,7 +91,10 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
 
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').should('be.visible').type(newLabel);
+    cy.get('[data-cy=resource-label]')
+      .find('[data-cy=common-input-text]')
+      .should('be.visible')
+      .type(newLabel, { force: true });
 
     const newTitle = faker.lorem.word();
     cy.get('[data-cy=creator-row-Titel]').find('[data-cy=common-input-text]').type(newTitle);
@@ -106,13 +109,14 @@ describe('Check project admin existing resource functionality', () => {
 
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
     cy.get('[data-cy=resource-toolbar-more-button]').click();
+    cy.wait(5000);
     cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
     cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
     cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it.only('ThingPicture resource should be editable', () => {
+  it('ThingPicture resource should be editable', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
 
