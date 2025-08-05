@@ -142,7 +142,7 @@ export class OntologiesState {
                   .getState()
                   .projectOntologies[
                     projectIri
-                  ].readOntologies.find(o => o.id === OntologyService.getOntologyName(ontologyName));
+                  ].readOntologies.find(o => o.id === OntologyService.getOntologyNameFromIri(ontologyName));
                 if (readOntology) {
                   ctx.dispatch(new SetCurrentOntologyAction(readOntology));
                 }
