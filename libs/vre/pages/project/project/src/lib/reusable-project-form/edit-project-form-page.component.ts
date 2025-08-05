@@ -10,7 +10,7 @@ import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateService } from '@ngx-translate/core';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
 import { map, switchMap, take } from 'rxjs';
-import { ProjectForm } from './reusable-project-form/project-form.type';
+import { ProjectForm } from './project-form.type';
 
 @Component({
   selector: 'app-edit-project-form-page',

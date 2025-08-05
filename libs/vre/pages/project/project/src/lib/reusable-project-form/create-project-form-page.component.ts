@@ -8,7 +8,7 @@ import { LoadProjectsAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { finalize } from 'rxjs';
-import { ProjectForm } from './reusable-project-form/project-form.type';
+import { ProjectForm } from './project-form.type';
 
 @Component({
   selector: 'app-create-project-form-page',

@@ -12,10 +12,10 @@ import {
 import {
   CollaborationPageComponent,
   CreateProjectFormPageComponent,
-  DescriptionComponent,
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
+  ProjectDescriptionPageComponent,
   ProjectPageComponent,
   ResourceMetadataComponent,
   SettingsPageComponent,
@@ -60,7 +60,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.projectDescription,
-        component: DescriptionComponent,
+        component: ProjectDescriptionPageComponent,
       },
       {
         path: RouteConstants.dataModels,

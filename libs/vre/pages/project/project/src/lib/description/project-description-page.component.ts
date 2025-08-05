@@ -4,15 +4,15 @@ import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-liter
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { map, filter, tap } from 'rxjs';
+import { filter, map, tap } from 'rxjs';
 import { LicenseCaptionsMapping } from './license-captions-mapping';
 
 @Component({
-  selector: 'app-description',
-  templateUrl: './description.component.html',
-  styleUrls: ['./description.component.scss'],
+  selector: 'app-project-description-page',
+  templateUrl: './project-description-page.component.html',
+  styleUrls: ['./project-description-page.component.scss'],
 })
-export class DescriptionComponent {
+export class ProjectDescriptionPageComponent {
   readonly routeConstants = RouteConstants;
 
   readProject$ = this._store.select(ProjectsSelectors.currentProject).pipe(
