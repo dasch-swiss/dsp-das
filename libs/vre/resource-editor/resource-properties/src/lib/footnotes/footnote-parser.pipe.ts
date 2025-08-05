@@ -37,7 +37,7 @@ export class FootnoteParserPipe implements PipeTransform {
     let newValue = controlValue;
     if (matches) {
       Array.from(matches).forEach((matchArray, indexFootnote) => {
-        const footnoteId = `${valueIndex}-${indexFootnote}`;
+        const footnoteId = `${this._footnoteService.uuid}-${valueIndex}-${indexFootnote}`;
 
         if (!this._footnoteAlreadyParsed(valueIndex, indexFootnote)) {
           this._footnoteService.addFootnote(

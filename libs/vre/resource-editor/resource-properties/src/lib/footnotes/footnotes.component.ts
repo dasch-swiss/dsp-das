@@ -8,9 +8,11 @@ import { FootnoteService } from './footnote.service';
     <div
       *ngFor="let footnote of footnoteService.footnotes; let index = index"
       class="footnote"
-      [attr.data-uuid]="footnote.indexValue + '-' + footnote.indexFootnote"
+      [attr.data-uuid]="footnoteService.uuid + '-' + footnote.indexValue + '-' + footnote.indexFootnote"
       data-cy="footnote">
-      <a (click)="goToFootnote(footnote.indexValue + '-' + footnote.indexFootnote)">{{ index + 1 }}.</a>
+      <a (click)="goToFootnote(footnoteService.uuid + '-' + footnote.indexValue + '-' + footnote.indexFootnote)"
+        >{{ index + 1 }}.</a
+      >
       <span class="footnote-value" [innerHTML]="footnote.content | internalLinkReplacer | addTargetBlank"></span>
     </div>`,
   styles: [
