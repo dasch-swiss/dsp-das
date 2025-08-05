@@ -7,7 +7,7 @@ import { ResourceClassBrowserPageService } from '../resource-class-browser/resou
   selector: 'app-list-view-normal',
   template: ` <app-pager (pageIndexChanged)="updatePageIndex($event)" [numberOfAllResults]="200" />
     <app-resource-list-selection *ngIf="multipleViewerService.selectMode" [resources]="resources" />
-    <app-resource-list-2 [resources]="resources" />`,
+    <app-resource-list [resources]="resources" />`,
 })
 export class ListViewNormalComponent {
   @Input({ required: true }) resources!: ReadResource[];
