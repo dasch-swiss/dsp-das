@@ -26,7 +26,10 @@ import { ProjectPageService } from './project-page.service';
           [expand]="true"
           (toggleSidenav)="toggleSidenav()"
           style="position: absolute; top: 21px; left: 8px" />
-        <router-outlet />
+
+        <app-centered-layout>
+          <router-outlet />
+        </app-centered-layout>
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,

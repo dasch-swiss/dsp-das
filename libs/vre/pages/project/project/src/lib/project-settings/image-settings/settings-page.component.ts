@@ -7,30 +7,28 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings-page',
   template: `
-    <app-centered-layout>
-      <nav
-        mat-tab-nav-bar
-        mat-align-tabs="center"
-        class="settings navigation"
-        style="background: none"
-        animationDuration="0ms"
-        [tabPanel]="tabPanel">
-        <a
-          mat-tab-link
-          *ngFor="let link of navigation; trackBy: trackByFn; let first = first"
-          id="{{ link.route }}"
-          [routerLink]="link.route"
-          routerLinkActive="active-tab"
-          #rla="routerLinkActive"
-          [active]="rla.isActive">
-          <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
-          {{ link.label }}
-        </a>
-      </nav>
-      <mat-tab-nav-panel #tabPanel>
-        <router-outlet />
-      </mat-tab-nav-panel>
-    </app-centered-layout>
+    <nav
+      mat-tab-nav-bar
+      mat-align-tabs="center"
+      class="settings navigation"
+      style="background: none"
+      animationDuration="0ms"
+      [tabPanel]="tabPanel">
+      <a
+        mat-tab-link
+        *ngFor="let link of navigation; trackBy: trackByFn; let first = first"
+        id="{{ link.route }}"
+        [routerLink]="link.route"
+        routerLinkActive="active-tab"
+        #rla="routerLinkActive"
+        [active]="rla.isActive">
+        <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
+        {{ link.label }}
+      </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel style="display: block; margin-top: 16px">
+      <router-outlet />
+    </mat-tab-nav-panel>
   `,
 })
 export class SettingsPageComponent {
@@ -38,7 +36,7 @@ export class SettingsPageComponent {
 
   navigation = [
     {
-      label: 'Project Description',
+      label: 'Description',
       route: RouteConstants.edit,
       icon: 'edit_square',
     },
@@ -48,7 +46,7 @@ export class SettingsPageComponent {
       icon: 'code_blocks',
     },
     {
-      label: 'Image Settings',
+      label: 'Image',
       route: RouteConstants.imageSettings,
       icon: 'branding_watermark',
     },
@@ -58,7 +56,7 @@ export class SettingsPageComponent {
       icon: 'gavel',
     },
     {
-      label: 'Project Members',
+      label: 'Members',
       route: RouteConstants.collaboration,
       icon: 'group',
     },

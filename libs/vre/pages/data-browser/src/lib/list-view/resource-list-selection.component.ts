@@ -19,7 +19,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
           *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
           (click)="openCreateLinkDialog(selectedResources)">
           <mat-icon>link</mat-icon>
-          Create a link
+          Create a link object
         </button>
       </div>
 

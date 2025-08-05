@@ -16,7 +16,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
   `,
 })
 export class MultipleViewer2Component {
-  readonly MAX_RESOURCES = 3;
+  readonly MAX_RESOURCES = 6;
 
   selectedResourceIds$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.map(r => r.id)));
 

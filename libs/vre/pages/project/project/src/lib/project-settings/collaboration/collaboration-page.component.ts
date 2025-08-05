@@ -32,9 +32,7 @@ import { CollaborationPageService } from './collaboration-page.service';
       </ng-container>
     </div>
 
-    <div *ngIf="(isAdmin$ | async) === false" class="content large middle">
-      <app-status [status]="403" />
-    </div>
+    <app-status [status]="403" *ngIf="(isAdmin$ | async) === false" />
   `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
