@@ -7,7 +7,7 @@ import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
     <div
       data-cy="rich-text-switch"
       class="rich-text-viewer"
-      [innerHTML]="value.strval || '' | footnoteParser | internalLinkReplacer | addTargetBlank"
+      [innerHTML]="value.strval || '' | footnoteParser: index | internalLinkReplacer | addTargetBlank"
       appFootnote></div>
   `,
   styles: [
@@ -38,4 +38,5 @@ import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 })
 export class RichTextViewerComponent {
   @Input({ required: true }) value!: ReadTextValueAsXml;
+  @Input({ required: true }) index!: number;
 }

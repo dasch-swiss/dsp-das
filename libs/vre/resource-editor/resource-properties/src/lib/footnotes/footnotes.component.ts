@@ -6,11 +6,11 @@ import { FootnoteService } from './footnote.service';
   selector: 'app-footnotes',
   template: `<h5>{{ 'resourceEditor.resourceProperties.footnotes' | translate }}</h5>
     <div
-      *ngFor="let footnote of footnoteService.footnotes; let index = index; trackBy: trackByIndex"
+      *ngFor="let footnote of footnoteService.footnotes; let index = index"
       class="footnote"
-      [attr.data-uuid]="footnote.uuid"
+      [attr.data-uuid]="footnote.indexValue + '-' + footnote.indexFootnote"
       data-cy="footnote">
-      <a (click)="goToFootnote(footnote.uuid)">{{ index + 1 }}.</a>
+      <a (click)="goToFootnote(footnote.indexValue + '-' + footnote.indexFootnote)">{{ index + 1 }}.</a>
       <span class="footnote-value" [innerHTML]="footnote.content | internalLinkReplacer | addTargetBlank"></span>
     </div>`,
   styles: [
@@ -47,9 +47,5 @@ export class FootnotesComponent {
     const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
 
     window.scrollTo({ top: y, behavior: 'smooth' });
-  }
-
-  trackByIndex(index: number) {
-    return index;
   }
 }
