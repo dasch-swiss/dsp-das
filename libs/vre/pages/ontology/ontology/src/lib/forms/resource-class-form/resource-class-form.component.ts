@@ -53,11 +53,14 @@ export class ResourceClassFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this._fb.group({
-      name: this._fb.control(this.formData.name, {
-        validators: [Validators.required, Validators.pattern(CustomRegex.ID_NAME_REGEX)],
-        asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
-        nonNullable: true,
-      }),
+      name: [
+        this.formData.name,
+        {
+          validators: [Validators.required, Validators.pattern(CustomRegex.ID_NAME_REGEX)],
+          asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
+          nonNullable: true,
+        },
+      ],
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, this.labelsValidators, [
         atLeastOneStringRequired('value'),
       ]),
@@ -65,6 +68,7 @@ export class ResourceClassFormComponent implements OnInit {
         atLeastOneStringRequired('value'),
       ]),
     }) as ResourceClassForm;
+
     this.afterFormInit.emit(this.form);
   }
 }
