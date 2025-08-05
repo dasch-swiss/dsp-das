@@ -13,7 +13,6 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { ShortResInfo } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { Store } from '@ngxs/store';
 import { finalize, Subject } from 'rxjs';
 
@@ -37,7 +36,7 @@ export interface ResourceLinkDialogProps {
         <div class="resource-container">
           <p>The following resources will be connected:</p>
           <ul>
-            <li *ngFor="let res of data.resources; trackBy: trackByFn">{{ res.label }}</li>
+            <li *ngFor="let res of data.resources">{{ res.label }}</li>
           </ul>
         </div>
       </form>
@@ -85,8 +84,6 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
   }
-
-  trackByFn = (index: number, item: ShortResInfo) => `${index}-${item.id}`;
 
   submitData() {
     this.isLoading = true;
