@@ -5,12 +5,16 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/advanced-search';
 
 @Component({
-  selector: 'app-advanced-search-container',
-  templateUrl: './advanced-search-container.component.html',
-  styleUrls: ['./advanced-search-container.component.scss'],
+  selector: 'app-advanced-search-page',
+  template: ` <app-centered-layout>
+    <app-advanced-search
+      [uuid]="uuid"
+      (emitGravesearchQuery)="onSearch($event)"
+      (emitBackButtonClicked)="onBackClicked()" />
+  </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdvancedSearchContainerComponent implements OnInit {
+export class AdvancedSearchPageComponent implements OnInit {
   uuid: string;
 
   constructor(
