@@ -78,6 +78,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
       name: this._fb.control(
         { value: this.ontologyName, disabled: !!this.data?.id },
         {
+          nonNullable: true,
           validators: [
             Validators.required,
             Validators.minLength(3),
@@ -85,18 +86,17 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
             Validators.pattern(CustomRegex.ID_NAME_REGEX),
             existingNamesValidator(this.blackListedNames),
           ],
-          nonNullable: true,
         }
       ),
       label: this._fb.control(this.data?.label || '', {
-        validators: [Validators.required, Validators.minLength(3)],
         nonNullable: true,
+        validators: [Validators.required, Validators.minLength(3)],
       }),
       comment: this._fb.control(this.data?.comment || '', {
-        validators: [Validators.required],
         nonNullable: true,
+        validators: [Validators.required],
       }),
-    }) as OntologyForm;
+    });
   }
 
   submitData() {
