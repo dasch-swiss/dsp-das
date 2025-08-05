@@ -6,9 +6,11 @@ import { ResourceListSelectionComponent } from './lib/list-view/resource-list-se
 import { MultipleViewer2Component } from './lib/multiple-viewer-2.component';
 import { MultipleViewerGatewayComponent } from './lib/multiple-viewer-gateway.component';
 import { ResourceClassBrowserPageComponent } from './lib/resource-class-browser/resource-class-browser-page.component';
-import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
+import {
+  ResourceClassSidenavItemComponent
+} from './lib/resource-class-sidenav-item/resource-class-sidenav-item.component';
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav.component';
-import { ResourceLinkDialogComponent } from './lib/resource-link-dialog/resource-link-dialog.component';
+import { ResourceLinkDialogComponent } from './lib/resource-link-dialog.component';
 
 export const DataBrowserComponents = [
   ResourceClassSidenavComponent,

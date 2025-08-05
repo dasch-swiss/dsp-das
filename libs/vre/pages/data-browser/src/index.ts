@@ -7,7 +7,7 @@ export * from './lib/resource-class-browser/resource-class-browser-page.componen
 export * from './lib/split-size.interface';
 export * from './lib/comparison/comparison.component';
 
-export * from './lib/resource-link-dialog/resource-link-dialog.component';
+export * from './lib/resource-link-dialog.component';
 
 export * from './lib/list-view/list-view-normal.component';
 export * from './lib/multiple-viewer-2.component';
