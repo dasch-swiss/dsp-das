@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs';
-import { MultipleViewerService } from '../../multiple-viewer.service';
+import { MultipleViewerService } from '../multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-list-item',
