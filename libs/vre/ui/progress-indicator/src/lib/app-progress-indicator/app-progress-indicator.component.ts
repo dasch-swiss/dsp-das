@@ -40,28 +40,30 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
       </svg>
     </div>
   `,
-  styles: [`
-    .app-progress-indicator.default {
-      margin: 48px auto;
+  styles: [
+    `
+      .app-progress-indicator.default {
+        margin: 48px auto;
 
-      .loader {
-        display: block;
-        margin: 0 auto;
-      }
-      
-      svg path {
-        stroke-dasharray: 530;
-        stroke-dashoffset: 530;
-        animation: load 3s both infinite;
-      }
+        .loader {
+          display: block;
+          margin: 0 auto;
+        }
 
-      @keyframes load {
-        to {
-          stroke-dashoffset: 2120;
+        svg path {
+          stroke-dasharray: 530;
+          stroke-dashoffset: 530;
+          animation: load 3s both infinite;
+        }
+
+        @keyframes load {
+          to {
+            stroke-dashoffset: 2120;
+          }
         }
       }
-    }
-  `],
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppProgressIndicatorComponent implements OnInit {
