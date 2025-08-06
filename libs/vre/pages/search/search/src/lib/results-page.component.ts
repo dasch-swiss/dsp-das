@@ -1,23 +1,28 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
+import { KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ResourceClassBrowserPageService } from '@dasch-swiss/vre/pages/data-browser';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { combineLatest, map } from 'rxjs';
 
 @Component({
-  selector: 'app-results',
-  template: '',
-  // ' <app-multiple-viewer [searchParams]="searchParams" />',
+  selector: 'app-results-page',
+  template: ` <app-multiple-viewer-gateway *ngIf="resources" [resources]="resources" /> `,
+  providers: [ResourceClassBrowserPageService],
 })
 export class ResultsPageComponent {
-  searchParams: SearchParams;
-  resourceIri: string;
-  projectUuid: string;
+  searchParams!: SearchParams;
+  projectUuid!: string;
+  resources!: ReadResource[];
 
   constructor(
     private _route: ActivatedRoute,
     private _titleService: Title,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
   ) {
     const parentParams$ = this._route.parent.paramMap;
     const params$ = this._route.paramMap;
@@ -58,6 +63,36 @@ export class ResultsPageComponent {
         limitToProject: decodeURIComponent(params.get('project')),
       };
     }
+    this.performGravSearch(0);
     console.log('a', this);
+  }
+
+  performGravSearch(index: number) {
+    /*
+    const numberOfAllResults$ = this._dspApiConnection.v2.search.doExtendedSearchCountQuery(this.search.query).pipe(
+      map(count => {
+        this.numberOfAllResults = count.numberOfResults;
+        if (this.numberOfAllResults === 0) {
+          this._notification.openSnackBar('No resources to display.');
+          this.emitSelectedResources();
+          this.resources = [];
+          this.loading = false;
+          this._cd.markForCheck();
+        }
+
+        return count.numberOfResults;
+      })
+    );
+
+     */
+
+    let gravsearch = this.searchParams.query;
+    gravsearch = gravsearch.substring(0, gravsearch.search('OFFSET'));
+    gravsearch = `${gravsearch}OFFSET ${index}`;
+
+    this._dspApiConnection.v2.search.doExtendedSearch(gravsearch).subscribe(response => {
+      this.resources = response.resources;
+      this._cd.markForCheck();
+    });
   }
 }
