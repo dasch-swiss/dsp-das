@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -9,7 +9,7 @@ import { combineLatest, map } from 'rxjs';
   template: '',
   // ' <app-multiple-viewer [searchParams]="searchParams" />',
 })
-export class ResultsComponent implements AfterViewChecked {
+export class ResultsPageComponent {
   searchParams: SearchParams;
   resourceIri: string;
   projectUuid: string;
@@ -33,19 +33,11 @@ export class ResultsComponent implements AfterViewChecked {
       const parentParams = data.parentParams;
       const params = data.params;
 
-      this._handleParentParams(parentParams);
+      this.projectUuid = parentParams.get('uuid')!;
       this._handleSearchParams(params);
 
       this._titleService.setTitle(`Search results for ${this.searchParams.mode} search`);
     });
-  }
-
-  ngAfterViewChecked() {
-    this._cd.detectChanges();
-  }
-
-  private _handleParentParams(parentParams: Params) {
-    this.projectUuid = parentParams.get('uuid');
   }
 
   private _handleSearchParams(params: Params) {
@@ -66,5 +58,6 @@ export class ResultsComponent implements AfterViewChecked {
         limitToProject: decodeURIComponent(params.get('project')),
       };
     }
+    console.log('a', this);
   }
 }

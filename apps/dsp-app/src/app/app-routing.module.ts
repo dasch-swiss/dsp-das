@@ -20,7 +20,7 @@ import {
   ResourceMetadataComponent,
   SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
-import { AdvancedSearchPageComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
+import { AdvancedSearchPageComponent, ResultsPageComponent } from '@dasch-swiss/vre/pages/search/search';
 import {
   CookiePolicyComponent,
   ProjectsComponent,
@@ -146,7 +146,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.advancedSearchResultsRelative,
-        component: ResultsComponent,
+        component: ResultsPageComponent,
       },
       {
         path: RouteConstants.notFoundWildcard,
@@ -190,11 +190,11 @@ const routes: Routes = [
     children: [
       {
         path: RouteConstants.searchProjectRelative,
-        component: ResultsComponent,
+        component: ResultsPageComponent,
       },
       {
         path: RouteConstants.searchRelative,
-        component: ResultsComponent,
+        component: ResultsPageComponent,
       },
     ],
   },
