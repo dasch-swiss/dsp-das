@@ -16,12 +16,12 @@ import { take } from 'rxjs';
 import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
 
 @Component({
-  selector: 'app-data-models',
-  templateUrl: './data-models.component.html',
-  styleUrls: ['./data-models.component.scss'],
+  selector: 'app-data-models-page',
+  templateUrl: './data-models-page.component.html',
+  styleUrls: ['./data-models-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataModelsComponent {
+export class DataModelsPageComponent {
   protected readonly RouteConstants = RouteConstants;
 
   ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
