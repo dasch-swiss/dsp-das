@@ -5,3 +5,4 @@ export * from './lib/fulltext-search/fulltext-search.component';
 export * from './lib/search-panel/search-panel.component';
 export * from './lib/services/search-params.service';
 export * from './lib/advanced-search-results-page.component';
+export * from './lib/fulltext-search-result-page.component';
