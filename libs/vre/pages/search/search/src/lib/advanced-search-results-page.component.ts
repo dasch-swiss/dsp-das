@@ -12,11 +12,18 @@ import { combineLatest, map, switchMap } from 'rxjs';
   providers: [ResourceClassBrowserPageService],
 })
 export class AdvancedSearchResultsPageComponent {
-  resources$ = combineLatest([this._route.params, this._resourceClassBrowserPageService.pageIndex$]).pipe(
-    switchMap(([data, pageNumber]) => this._performGravSearch(data, pageNumber)),
-    map(([count, response]) => {
-      this._resourceClassBrowserPageService.numberOfResults = count;
-      return response.resources;
+  readonly resources$ = this._route.params.pipe(
+    switchMap(params =>
+      combineLatest([
+        this._resourceClassBrowserPageService.pageIndex$.pipe(
+          switchMap(pageNumber => this._performGravSearch(params, pageNumber))
+        ),
+        this._numberOfAllResults$(params),
+      ])
+    ),
+    map(([resourceResponse, countResponse]) => {
+      this._resourceClassBrowserPageService.numberOfResults = countResponse.numberOfResults;
+      return resourceResponse.resources;
     })
   );
 
@@ -31,14 +38,18 @@ export class AdvancedSearchResultsPageComponent {
   }
 
   private _performGravSearch(params: Params, index: number) {
-    let query = decodeURIComponent(params['q']);
-    query = query.substring(0, query.search('OFFSET'));
+    let query = this._getQuery(params);
     query = `${query}OFFSET ${index}`;
 
-    const numberOfAllResults$ = this._dspApiConnection.v2.search
-      .doExtendedSearchCountQuery(query)
-      .pipe(map(count => count.numberOfResults));
+    return this._dspApiConnection.v2.search.doExtendedSearch(query);
+  }
 
-    return combineLatest([numberOfAllResults$, this._dspApiConnection.v2.search.doExtendedSearch(query)]);
+  private _getQuery(params: Params) {
+    const query = decodeURIComponent(params['q']);
+    return query.substring(0, query.search('OFFSET'));
+  }
+
+  private _numberOfAllResults$(params: Params) {
+    return this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(params)}OFFSET 0`);
   }
 }
