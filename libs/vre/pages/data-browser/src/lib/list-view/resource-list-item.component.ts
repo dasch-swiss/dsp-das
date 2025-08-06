@@ -16,10 +16,10 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       (mouseleave)="showCheckbox = false"
       (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex">
-        <span
-          style="flex: 1; display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
-          >{{ resource.label }}</span
-        >
+        <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+          <div class="mat-caption">{{ resource.resourceClassLabel }}</div>
+          <div>{{ resource.label }}</div>
+        </div>
 
         <mat-checkbox
           *ngIf="showCheckbox || multipleViewerService.selectMode"
@@ -34,6 +34,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
     `
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
+        padding: 32px 16px;
       }
     `,
   ],
