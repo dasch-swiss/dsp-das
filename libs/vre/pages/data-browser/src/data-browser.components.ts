@@ -1,7 +1,7 @@
 import { ComparisonComponent } from './lib/comparison/comparison.component';
-import { MultipleViewer2Component } from './lib/comparison/multiple-viewer-2.component';
 import { MultipleViewerGatewaySearchComponent } from './lib/comparison/multiple-viewer-gateway-search.component';
 import { MultipleViewerGatewayComponent } from './lib/comparison/multiple-viewer-gateway.component';
+import { MultipleViewerComponent } from './lib/comparison/multiple-viewer.component';
 import { ListViewNormalComponent } from './lib/list-view/list-view-normal.component';
 import { ResourceLinkDialogComponent } from './lib/list-view/resource-link-dialog.component';
 import { ResourceListItemComponent } from './lib/list-view/resource-list-item.component';
@@ -20,7 +20,7 @@ export const DataBrowserComponents = [
   ResourceLinkDialogComponent,
   ListViewNormalComponent,
   ListViewSearchComponent,
-  MultipleViewer2Component,
+  MultipleViewerComponent,
   MultipleViewerGatewayComponent,
   MultipleViewerGatewaySearchComponent,
   ResourceListComponent,

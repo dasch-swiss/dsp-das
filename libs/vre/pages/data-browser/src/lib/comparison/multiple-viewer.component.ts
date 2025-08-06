@@ -3,7 +3,7 @@ import { map } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
-  selector: 'app-multiple-viewer-2',
+  selector: 'app-multiple-viewer',
   template: `
     <ng-container *ngIf="selectedResourceIds$ | async as selectedResourceIds">
       <app-comparison *ngIf="selectedResourceIds.length <= MAX_RESOURCES" [resourceIds]="selectedResourceIds" />
@@ -15,7 +15,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
     </ng-container>
   `,
 })
-export class MultipleViewer2Component {
+export class MultipleViewerComponent {
   readonly MAX_RESOURCES = 6;
 
   selectedResourceIds$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.map(r => r.id)));
