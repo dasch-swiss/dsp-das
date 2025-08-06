@@ -10,6 +10,7 @@ import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourceInfoBarComponent } from './lib/resource-info-bar.component';
 import { ResourceLegalLicenseComponent } from './lib/resource-legal-license.component';
 import { ResourceLegalComponent } from './lib/resource-legal.component';
+import { ResourceEditMoreMenuComponent } from './lib/resource-edit-more-menu/resource-edit-more-menu.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceRestrictionComponent } from './lib/resource-restriction.component';
@@ -45,4 +46,5 @@ export const ResourcePageComponents = [
   ResourceInfoBarComponent,
   AlertInfoComponent,
   ResourceLegalLicenseComponent,
+  ResourceEditMoreMenuComponent,
 ];
