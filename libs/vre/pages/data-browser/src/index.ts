@@ -18,4 +18,4 @@ export * from './lib/comparison/multiple-viewer.service';
 export * from './lib/list-view/resource-list-selection.component';
 
 export * from './lib/list-view-search/list-view-search.component';
-export * from './lib/resource-class-browser-page.service';
+export * from './lib/resource-result.service';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
-export class ResourceClassBrowserPageService {
+export class ResourceResultService {
   private _pageIndexSubject = new BehaviorSubject(0);
   pageIndex$ = this._pageIndexSubject.asObservable();
 

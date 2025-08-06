@@ -7,12 +7,12 @@ import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, map, switchMap } from 'rxjs';
-import { ResourceClassBrowserPageService } from './resource-class-browser-page.service';
+import { ResourceResultService } from './resource-result.service';
 
 @Component({
   selector: 'app-resource-class-browser-page',
   template: ` <app-multiple-viewer-gateway *ngIf="resources$ | async as resources" [resources]="resources" /> `,
-  providers: [ResourceClassBrowserPageService],
+  providers: [ResourceResultService],
 })
 export class ResourceClassBrowserPageComponent implements OnChanges {
   resources$ = combineLatest([
@@ -35,7 +35,7 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
 
   constructor(
     protected _route: ActivatedRoute,
-    private _resourceClassBrowserPageService: ResourceClassBrowserPageService,
+    private _resourceClassBrowserPageService: ResourceResultService,
     private _ontologyService: OntologyService,
     protected _router: Router,
     protected _store: Store,

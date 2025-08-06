@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
-import { ResourceClassBrowserPageService } from '../resource-class-browser-page.service';
+import { ResourceResultService } from '../resource-result.service';
 
 @Component({
   selector: 'app-list-view-normal',
@@ -16,7 +16,7 @@ export class ListViewNormalComponent {
 
   constructor(
     public multipleViewerService: MultipleViewerService,
-    public resourceClassBrowserPageService: ResourceClassBrowserPageService
+    public resourceClassBrowserPageService: ResourceResultService
   ) {}
 
   updatePageIndex(index: number) {
