@@ -5,7 +5,9 @@ import { ResourceClassBrowserPageService } from '../resource-class-browser-page.
 
 @Component({
   selector: 'app-list-view-normal',
-  template: ` <app-pager (pageIndexChanged)="updatePageIndex($event)" [numberOfAllResults]="200" />
+  template: ` <app-pager
+      (pageIndexChanged)="updatePageIndex($event)"
+      [numberOfAllResults]="resourceClassBrowserPageService.numberOfResults" />
     <app-resource-list-selection *ngIf="multipleViewerService.selectMode" [resources]="resources" />
     <app-resource-list [resources]="resources" />`,
 })
@@ -14,10 +16,10 @@ export class ListViewNormalComponent {
 
   constructor(
     public multipleViewerService: MultipleViewerService,
-    private _resourceClassBrowserPageService: ResourceClassBrowserPageService
+    public resourceClassBrowserPageService: ResourceClassBrowserPageService
   ) {}
 
   updatePageIndex(index: number) {
-    this._resourceClassBrowserPageService.updatePageIndex(index);
+    this.resourceClassBrowserPageService.updatePageIndex(index);
   }
 }
