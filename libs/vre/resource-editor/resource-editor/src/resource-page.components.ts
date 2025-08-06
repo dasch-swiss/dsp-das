@@ -5,12 +5,12 @@ import { CompoundNavigationComponent } from './lib/compound/compound-navigation.
 import { CompoundSliderComponent } from './lib/compound/compound-slider.component';
 import { CompoundViewerComponent } from './lib/compound/compound-viewer.component';
 import { PermissionInfoComponent } from './lib/permission-info/permission-info.component';
+import { ResourceEditMoreMenuComponent } from './lib/resource-edit-more-menu/resource-edit-more-menu.component';
 import { ResourceFetcherComponent } from './lib/resource-fetcher.component';
 import { ResourceHeaderComponent } from './lib/resource-header.component';
 import { ResourceInfoBarComponent } from './lib/resource-info-bar.component';
 import { ResourceLegalLicenseComponent } from './lib/resource-legal-license.component';
 import { ResourceLegalComponent } from './lib/resource-legal.component';
-import { ResourceEditMoreMenuComponent } from './lib/resource-edit-more-menu/resource-edit-more-menu.component';
 import { ResourcePageComponent } from './lib/resource-page.component';
 import { ResourceRepresentationComponent } from './lib/resource-representation.component';
 import { ResourceRestrictionComponent } from './lib/resource-restriction.component';
