@@ -1,8 +1,21 @@
+import { ViewContainerRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { Store } from '@ngxs/store';
 import { of, BehaviorSubject } from 'rxjs';
 import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu.component';
 
 // Mock everything at the module level
+jest.mock('@dasch-swiss/dsp-js', () => ({
+  Constants: {
+    HasStillImageFileValue: 'http://api.knora.org/ontology/knora-api/v2#hasStillImageFileValue',
+  },
+  KnoraApiConnection: class MockKnoraApiConnection {},
+  ReadResource: class MockReadResource {},
+}));
+
 jest.mock('@angular/material/dialog', () => ({
   MatDialog: class MockMatDialog {},
 }));
@@ -11,8 +24,23 @@ jest.mock('@dasch-swiss/vre/core/config', () => ({
   DspApiConnectionToken: 'DspApiConnectionToken',
 }));
 
+jest.mock('@dasch-swiss/vre/core/state', () => ({
+  ProjectsSelectors: {
+    isCurrentProjectAdminOrSysAdmin: 'ProjectsSelectors.isCurrentProjectAdminOrSysAdmin',
+  },
+}));
+
+jest.mock('@dasch-swiss/vre/resource-editor/properties-display', () => ({
+  DeleteResourceDialogComponent: class MockDeleteResourceDialogComponent {},
+}));
+
 jest.mock('@dasch-swiss/vre/resource-editor/representations', () => ({
   ResourceFetcherService: class MockResourceFetcherService {},
+}));
+
+jest.mock('@dasch-swiss/vre/resource-editor/resource-properties', () => ({
+  EditResourceLabelDialogComponent: class MockEditResourceLabelDialogComponent {},
+  EraseResourceDialogComponent: class MockEraseResourceDialogComponent {},
 }));
 
 jest.mock('@ngxs/store', () => ({
@@ -57,14 +85,21 @@ describe('ResourceEditMoreMenuComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ResourceEditMoreMenuComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: 'MatDialog', useValue: mockDialog },
-        { provide: 'Store', useValue: mockStore },
-        { provide: 'DspApiConnectionToken', useValue: mockDspApiConnection },
-        { provide: 'ResourceFetcherService', useValue: mockResourceFetcher },
-        { provide: 'ViewContainerRef', useValue: {} },
+        { provide: MatDialog, useValue: mockDialog },
+        { provide: Store, useValue: mockStore },
+        { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
+        { provide: ResourceFetcherService, useValue: mockResourceFetcher },
+        { provide: ViewContainerRef, useValue: {} },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(ResourceEditMoreMenuComponent, {
+        set: {
+          template: '<div>Mock Template</div>', // Override template for unit testing
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ResourceEditMoreMenuComponent);
     component = fixture.componentInstance;
