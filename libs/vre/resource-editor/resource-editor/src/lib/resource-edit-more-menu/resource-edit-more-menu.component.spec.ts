@@ -4,19 +4,19 @@ import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu.compone
 
 // Mock everything at the module level
 jest.mock('@angular/material/dialog', () => ({
-  MatDialog: class MockMatDialog {}
+  MatDialog: class MockMatDialog {},
 }));
 
 jest.mock('@dasch-swiss/vre/core/config', () => ({
-  DspApiConnectionToken: 'DspApiConnectionToken'
+  DspApiConnectionToken: 'DspApiConnectionToken',
 }));
 
 jest.mock('@dasch-swiss/vre/resource-editor/representations', () => ({
-  ResourceFetcherService: class MockResourceFetcherService {}
+  ResourceFetcherService: class MockResourceFetcherService {},
 }));
 
 jest.mock('@ngxs/store', () => ({
-  Store: class MockStore {}
+  Store: class MockStore {},
 }));
 
 describe('ResourceEditMoreMenuComponent', () => {
@@ -26,32 +26,32 @@ describe('ResourceEditMoreMenuComponent', () => {
   const mockResource = {
     id: 'test-resource-id',
     incomingReferences: [],
-    properties: {}
+    properties: {},
   };
 
   const mockSearchEndpoint = {
     doSearchIncomingLinks: jest.fn().mockReturnValue(of({ resources: [] })),
     doSearchStillImageRepresentationsCount: jest.fn().mockReturnValue(of({ numberOfResults: 0 })),
-    doSearchIncomingRegions: jest.fn().mockReturnValue(of({ resources: [] }))
+    doSearchIncomingRegions: jest.fn().mockReturnValue(of({ resources: [] })),
   };
 
   const mockDspApiConnection = {
-    v2: { search: mockSearchEndpoint }
+    v2: { search: mockSearchEndpoint },
   };
 
   const userCanDelete$ = new BehaviorSubject(true);
   const mockResourceFetcher = { userCanDelete$ };
 
   const mockStore = {
-    select: jest.fn().mockReturnValue(of(false))
+    select: jest.fn().mockReturnValue(of(false)),
   };
 
   const mockDialogRef = {
-    afterClosed: jest.fn().mockReturnValue(of(false))
+    afterClosed: jest.fn().mockReturnValue(of(false)),
   };
 
   const mockDialog = {
-    open: jest.fn().mockReturnValue(mockDialogRef)
+    open: jest.fn().mockReturnValue(mockDialogRef),
   };
 
   beforeEach(async () => {
@@ -62,8 +62,8 @@ describe('ResourceEditMoreMenuComponent', () => {
         { provide: 'Store', useValue: mockStore },
         { provide: 'DspApiConnectionToken', useValue: mockDspApiConnection },
         { provide: 'ResourceFetcherService', useValue: mockResourceFetcher },
-        { provide: 'ViewContainerRef', useValue: {} }
-      ]
+        { provide: 'ViewContainerRef', useValue: {} },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceEditMoreMenuComponent);
@@ -86,7 +86,7 @@ describe('ResourceEditMoreMenuComponent', () => {
       // Assert
       expect(component.resourceCanBeDeleted).toEqual({
         canDo: false,
-        reason: 'You do not have permission to delete this resource.'
+        reason: 'You do not have permission to delete this resource.',
       });
     });
 
@@ -102,7 +102,7 @@ describe('ResourceEditMoreMenuComponent', () => {
       // Assert
       expect(component.resourceCanBeDeleted).toEqual({
         canDo: false,
-        reason: 'This resource cannot be deleted as it has incoming references.'
+        reason: 'This resource cannot be deleted as it has incoming references.',
       });
     });
 
@@ -118,7 +118,7 @@ describe('ResourceEditMoreMenuComponent', () => {
       // Assert
       expect(component.resourceCanBeDeleted).toEqual({
         canDo: true,
-        reason: 'Resource can be deleted.'
+        reason: 'Resource can be deleted.',
       });
     });
 
