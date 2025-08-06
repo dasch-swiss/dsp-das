@@ -1,6 +1,6 @@
 import { Component, Inject, OnChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
@@ -15,21 +15,23 @@ import { ResourceClassBrowserPageService } from './resource-class-browser-page.s
   providers: [ResourceClassBrowserPageService],
 })
 export class ResourceClassBrowserPageComponent implements OnChanges {
-  private readonly _project$ = this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined());
-
   resources$ = combineLatest([
-    this._project$,
     this._route.params,
-    this._resourceClassBrowserPageService.pageIndex$,
+    this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined()),
   ]).pipe(
-    switchMap(([project, params, pageIndex]) => {
-      const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${project.shortcode}/${params[RouteConstants.ontoParameter]}/v2`;
-      const classId = `${ontoId}#${params[RouteConstants.classParameter]}`;
-
-      return this._performGravSearch(this._setGravsearch(classId), pageIndex);
-    }),
-    map(response => response.resources)
+    switchMap(([params, project]) =>
+      combineLatest([this._request$(params, project), this.countQuery$(params, project)])
+    ),
+    map(([resourceResponse, countResponse]) => {
+      this._resourceClassBrowserPageService.numberOfResults = countResponse.numberOfResults;
+      return resourceResponse.resources;
+    })
   );
+
+  countQuery$ = (params: Params, project: ReadProject) =>
+    this._dspApiConnection.v2.search.doExtendedSearchCountQuery(
+      this._setGravsearch(this._getClassIdFromParams(params, project.shortcode))
+    );
 
   constructor(
     protected _route: ActivatedRoute,
@@ -44,6 +46,13 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
   ngOnChanges() {
     this._resourceClassBrowserPageService.updatePageIndex(0);
   }
+
+  private _request$ = (params: Params, project: ReadProject) =>
+    this._resourceClassBrowserPageService.pageIndex$.pipe(
+      switchMap(pageIndex =>
+        this._performGravSearch(this._setGravsearch(this._getClassIdFromParams(params, project.shortcode)), pageIndex)
+      )
+    );
 
   private _setGravsearch(iri: string): string {
     return `
@@ -66,6 +75,11 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
         ORDER BY ASC(?label)
 
         OFFSET 0`;
+  }
+
+  private _getClassIdFromParams(params: Params, projectShortcode: string) {
+    const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${projectShortcode}/${params[RouteConstants.ontoParameter]}/v2`;
+    return `${ontoId}#${params[RouteConstants.classParameter]}`;
   }
 
   private _performGravSearch(query: string, index: number) {

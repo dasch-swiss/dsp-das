@@ -49,7 +49,6 @@ export class AdvancedSearchResultsPageComponent {
     return query.substring(0, query.search('OFFSET'));
   }
 
-  private _numberOfAllResults$(params: Params) {
-    return this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(params)}OFFSET 0`);
-  }
+  private _numberOfAllResults$ = (params: Params) =>
+    this._dspApiConnection.v2.search.doExtendedSearchCountQuery(`${this._getQuery(params)}OFFSET 0`);
 }
