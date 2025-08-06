@@ -23,7 +23,7 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
       combineLatest([this._request$(params, project), this.countQuery$(params, project)])
     ),
     map(([resourceResponse, countResponse]) => {
-      this._resourceClassBrowserPageService.numberOfResults = countResponse.numberOfResults;
+      this._resourceResult.numberOfResults = countResponse.numberOfResults;
       return resourceResponse.resources;
     })
   );
@@ -35,7 +35,7 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
 
   constructor(
     protected _route: ActivatedRoute,
-    private _resourceClassBrowserPageService: ResourceResultService,
+    private _resourceResult: ResourceResultService,
     private _ontologyService: OntologyService,
     protected _router: Router,
     protected _store: Store,
@@ -44,11 +44,11 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    this._resourceClassBrowserPageService.updatePageIndex(0);
+    this._resourceResult.updatePageIndex(0);
   }
 
   private _request$ = (params: Params, project: ReadProject) =>
-    this._resourceClassBrowserPageService.pageIndex$.pipe(
+    this._resourceResult.pageIndex$.pipe(
       switchMap(pageIndex =>
         this._performGravSearch(this._setGravsearch(this._getClassIdFromParams(params, project.shortcode)), pageIndex)
       )

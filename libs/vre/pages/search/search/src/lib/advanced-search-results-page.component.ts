@@ -15,14 +15,14 @@ export class AdvancedSearchResultsPageComponent {
   readonly resources$ = this._route.params.pipe(
     switchMap(params =>
       combineLatest([
-        this._resourceClassBrowserPageService.pageIndex$.pipe(
+        this._resourceResultService.pageIndex$.pipe(
           switchMap(pageNumber => this._performGravSearch(params, pageNumber))
         ),
         this._numberOfAllResults$(params),
       ])
     ),
     map(([resourceResponse, countResponse]) => {
-      this._resourceClassBrowserPageService.numberOfResults = countResponse.numberOfResults;
+      this._resourceResultService.numberOfResults = countResponse.numberOfResults;
       return resourceResponse.resources;
     })
   );
@@ -32,7 +32,7 @@ export class AdvancedSearchResultsPageComponent {
     private _titleService: Title,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceClassBrowserPageService: ResourceResultService
+    private _resourceResultService: ResourceResultService
   ) {
     this._titleService.setTitle(`Advanced search results`);
   }

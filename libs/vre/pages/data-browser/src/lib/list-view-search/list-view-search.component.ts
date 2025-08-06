@@ -14,10 +14,10 @@ export class ListViewSearchComponent {
 
   constructor(
     public multipleViewerService: MultipleViewerService,
-    private _resourceClassBrowserPageService: ResourceResultService
+    private _resourceResultService: ResourceResultService
   ) {}
 
   updatePageIndex(index: number) {
-    this._resourceClassBrowserPageService.updatePageIndex(index);
+    this._resourceResultService.updatePageIndex(index);
   }
 }

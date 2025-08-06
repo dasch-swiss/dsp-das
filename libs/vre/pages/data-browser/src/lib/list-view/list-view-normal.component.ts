@@ -7,7 +7,7 @@ import { ResourceResultService } from '../resource-result.service';
   selector: 'app-list-view-normal',
   template: ` <app-pager
       (pageIndexChanged)="updatePageIndex($event)"
-      [numberOfAllResults]="resourceClassBrowserPageService.numberOfResults" />
+      [numberOfAllResults]="resourceResultService.numberOfResults" />
     <app-resource-list-selection *ngIf="multipleViewerService.selectMode" [resources]="resources" />
     <app-resource-list [resources]="resources" />`,
 })
@@ -16,10 +16,10 @@ export class ListViewNormalComponent {
 
   constructor(
     public multipleViewerService: MultipleViewerService,
-    public resourceClassBrowserPageService: ResourceResultService
+    public resourceResultService: ResourceResultService
   ) {}
 
   updatePageIndex(index: number) {
-    this.resourceClassBrowserPageService.updatePageIndex(index);
+    this.resourceResultService.updatePageIndex(index);
   }
 }
