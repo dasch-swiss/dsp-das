@@ -75,7 +75,7 @@ export class EraseResourceDialogComponent {
         })
       )
       .subscribe(() => {
-        this._resourceFetcherService.reload();
+        this._resourceFetcherService.reloadCurrentResource();
         this._dialogRef.close();
       });
   }

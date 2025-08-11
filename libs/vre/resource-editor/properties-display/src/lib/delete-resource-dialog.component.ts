@@ -51,7 +51,7 @@ export class DeleteResourceDialogComponent {
     payload.deleteComment = this.comment ?? undefined;
     payload.lastModificationDate = this.data.lastModificationDate;
     this._dspApiConnection.v2.res.deleteResource(payload).subscribe(() => {
-      this._resourceFetcherService.reload();
+      this._resourceFetcherService.reloadCurrentResource();
       this._dialogRef.close();
     });
   }

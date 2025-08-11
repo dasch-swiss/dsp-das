@@ -99,7 +99,7 @@ export class ReplaceFileDialogComponent {
     updateRes.value = uploadedFile;
 
     this._dspApiConnection.v2.values.updateValue(updateRes).subscribe(() => {
-      this.resourceFetcher.reload();
+      this.resourceFetcher.reloadCurrentResource();
       this.dialogRef.close();
     });
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, CountQueryResponse, KnoraApiConnection, ReadFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -21,6 +21,7 @@ import { CompoundService } from './compound/compound.service';
     <app-resource-tabs [resource]="resource" />
   `,
   providers: [CompoundService, RegionService, SegmentsService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

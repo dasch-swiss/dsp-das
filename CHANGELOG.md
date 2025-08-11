@@ -325,7 +325,7 @@
 * any dialog is visible in the resource tab ([#2255](https://github.com/dasch-swiss/dsp-das/issues/2255)) ([1e9fc72](https://github.com/dasch-swiss/dsp-das/commit/1e9fc72042298bdb802eff0c5390923b94f059f5))
 * label sorting (DEV-4786) ([#2265](https://github.com/dasch-swiss/dsp-das/issues/2265)) ([bb411be](https://github.com/dasch-swiss/dsp-das/commit/bb411bea032c325c875b298f03145b74ceb74b2f))
 * no results css (DEV-4802) ([#2267](https://github.com/dasch-swiss/dsp-das/issues/2267)) ([2551e25](https://github.com/dasch-swiss/dsp-das/commit/2551e25c681015971e29d50bcee60d07273bf341))
-* reload search results after query change (DEV-4772) ([#2257](https://github.com/dasch-swiss/dsp-das/issues/2257)) ([d3a8742](https://github.com/dasch-swiss/dsp-das/commit/d3a8742d1aba0440de974977bc1a6a5fb9e23538))
+* reloadCurrentResource search results after query change (DEV-4772) ([#2257](https://github.com/dasch-swiss/dsp-das/issues/2257)) ([d3a8742](https://github.com/dasch-swiss/dsp-das/commit/d3a8742d1aba0440de974977bc1a6a5fb9e23538))
 * resource-editor property title does not overlap with buttons ([#2268](https://github.com/dasch-swiss/dsp-das/issues/2268)) ([5949139](https://github.com/dasch-swiss/dsp-das/commit/5949139c162d1138b4cbbe01afcf4d8a997f41a8))
 
 
@@ -1159,7 +1159,7 @@
 * added localization service ([#1702](https://github.com/dasch-swiss/dsp-das/issues/1702)) ([b2d3df3](https://github.com/dasch-swiss/dsp-das/commit/b2d3df360ceff609b2577234a2ab2e212c851708))
 * adding new property boolean value (DEV-3833) ([#1700](https://github.com/dasch-swiss/dsp-das/issues/1700)) ([281212d](https://github.com/dasch-swiss/dsp-das/commit/281212d9ae28078d68a0430f589d8a00baa93232))
 * compound object page reset when loading a new resource  ([#1698](https://github.com/dasch-swiss/dsp-das/issues/1698)) ([8680542](https://github.com/dasch-swiss/dsp-das/commit/868054281cf952ab9c37e9b3b8d9c061ee37d8a9))
-* in seach, reload the selected resource after editing ([#1703](https://github.com/dasch-swiss/dsp-das/issues/1703)) ([3e92399](https://github.com/dasch-swiss/dsp-das/commit/3e92399399cc831d62857a1ed1e247bdd33b2e03))
+* in seach, reloadCurrentResource the selected resource after editing ([#1703](https://github.com/dasch-swiss/dsp-das/issues/1703)) ([3e92399](https://github.com/dasch-swiss/dsp-das/commit/3e92399399cc831d62857a1ed1e247bdd33b2e03))
 * projectRestrictedViewSettings selector (DEV-3888) ([#1696](https://github.com/dasch-swiss/dsp-das/issues/1696)) ([6ca419c](https://github.com/dasch-swiss/dsp-das/commit/6ca419ca5615d7fc4a9411bf44daddfda1d7cd1d))
 * resource property create dialog, resource info bar project data … ([#1701](https://github.com/dasch-swiss/dsp-das/issues/1701)) ([199e585](https://github.com/dasch-swiss/dsp-das/commit/199e585f0da33b7fbbca26b90b0c21766d36222a))
 
@@ -1357,7 +1357,7 @@
 * only use pendo in production ([#1577](https://github.com/dasch-swiss/dsp-das/issues/1577)) ([cc24204](https://github.com/dasch-swiss/dsp-das/commit/cc24204d20e7a4ea4dff96533054ffd2fb8ea9ab))
 * permissions in property values ([#1595](https://github.com/dasch-swiss/dsp-das/issues/1595)) ([f3b9789](https://github.com/dasch-swiss/dsp-das/commit/f3b9789da371f5d73811bff76a25fdabbe416048))
 * project link (DEV-3666) ([#1603](https://github.com/dasch-swiss/dsp-das/issues/1603)) ([c600c2c](https://github.com/dasch-swiss/dsp-das/commit/c600c2c6b956a935a2f2b6aaa1def12130a07b5c))
-* **project members list:** force reload project membership ([#1571](https://github.com/dasch-swiss/dsp-das/issues/1571)) ([5a05e82](https://github.com/dasch-swiss/dsp-das/commit/5a05e820faa0e6521aa2e07d8626503c42a0be44))
+* **project members list:** force reloadCurrentResource project membership ([#1571](https://github.com/dasch-swiss/dsp-das/issues/1571)) ([5a05e82](https://github.com/dasch-swiss/dsp-das/commit/5a05e820faa0e6521aa2e07d8626503c42a0be44))
 * project settings ([#1627](https://github.com/dasch-swiss/dsp-das/issues/1627)) ([948fd33](https://github.com/dasch-swiss/dsp-das/commit/948fd33da227d14f5713f06ff3d4bf77f046a37a))
 * property info edit permission (#DEV-3601), property form controls ux improvement (#DEV-3595) ([#1575](https://github.com/dasch-swiss/dsp-das/issues/1575)) ([595a958](https://github.com/dasch-swiss/dsp-das/commit/595a95854585beebed31a66f232aea155b894915))
 * refresh incoming resource (DEV-3676) ([#1609](https://github.com/dasch-swiss/dsp-das/issues/1609)) ([999fb33](https://github.com/dasch-swiss/dsp-das/commit/999fb33950b66e436923f95bb2c4989c34ebc935))
@@ -1997,7 +1997,7 @@
 
 ### Bug Fixes
 
-* **regions:** reload the resource after deletion of regions ([#1185](https://github.com/dasch-swiss/dsp-das/issues/1185)) ([c5a14e6](https://github.com/dasch-swiss/dsp-das/commit/c5a14e62009f8ed4ecbfa9dd5076bdd16d142091))
+* **regions:** reloadCurrentResource the resource after deletion of regions ([#1185](https://github.com/dasch-swiss/dsp-das/issues/1185)) ([c5a14e6](https://github.com/dasch-swiss/dsp-das/commit/c5a14e62009f8ed4ecbfa9dd5076bdd16d142091))
 * **runtime errors:** fix errors thrown ([#1178](https://github.com/dasch-swiss/dsp-das/issues/1178)) ([55f56cd](https://github.com/dasch-swiss/dsp-das/commit/55f56cd1a1b86850b8be26ee1877071bb8d26a2e))
 * **session service:** destroy session and return of false if an error… ([#1183](https://github.com/dasch-swiss/dsp-das/issues/1183)) ([3ead94d](https://github.com/dasch-swiss/dsp-das/commit/3ead94d4a1c971d446136fa9a8d0d016a86e2731))
 
@@ -2619,7 +2619,7 @@
 
 * **login-form:** keep user on same page after login (DEV-1158) ([#788](https://www.github.com/dasch-swiss/dsp-app/issues/788)) ([9ec6870](https://www.github.com/dasch-swiss/dsp-app/commit/9ec6870eee3d8101676cbf44f778f3cb4be4e0a8))
 * **notification:** fix snackbar notification only appearing for a split second ([#794](https://www.github.com/dasch-swiss/dsp-app/issues/794)) ([110039d](https://www.github.com/dasch-swiss/dsp-app/commit/110039d8bc5d590ab8c22375f37a55215c995661))
-* **resource view:** dsp app the resource viewer does not reload properly after deselecting a resource from the comparison viewer(Dev-1123) ([#793](https://www.github.com/dasch-swiss/dsp-app/issues/793)) ([f690a37](https://www.github.com/dasch-swiss/dsp-app/commit/f690a37e35abc13792de1bd4121c29f332ef756d))
+* **resource view:** dsp app the resource viewer does not reloadCurrentResource properly after deselecting a resource from the comparison viewer(Dev-1123) ([#793](https://www.github.com/dasch-swiss/dsp-app/issues/793)) ([f690a37](https://www.github.com/dasch-swiss/dsp-app/commit/f690a37e35abc13792de1bd4121c29f332ef756d))
 
 
 ### Enhancements

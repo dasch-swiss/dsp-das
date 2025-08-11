@@ -106,7 +106,7 @@ export class ResourceState {
   }
 
   @Action(SetCurrentResourceAction)
-  setCurrentOntologyAction(ctx: StateContext<ResourceStateModel>, { resource }: SetCurrentResourceAction) {
+  setCurrentResourceAction(ctx: StateContext<ResourceStateModel>, { resource }: SetCurrentResourceAction) {
     ctx.patchState({ resource });
   }
 }

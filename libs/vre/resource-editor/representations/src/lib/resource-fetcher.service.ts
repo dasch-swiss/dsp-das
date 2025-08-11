@@ -5,19 +5,30 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, shareReplay, switchMap, take } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _reloadSubject = new BehaviorSubject(null);
+  private _resource = new BehaviorSubject<DspResource | undefined>(undefined);
+  resource$ = this._resource.asObservable();
 
-  resource$!: Observable<DspResource>;
-  projectShortcode$!: Observable<string>;
-
-  userCanEdit$!: Observable<boolean>;
-  userCanDelete$!: Observable<boolean>;
   resourceVersion?: string;
+
+  projectShortcode$ = this.resource$.pipe(
+    filter(resource => resource !== undefined),
+    switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource!.res.attachedToProject)),
+    map(v => v.project.shortcode as unknown as string),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  userCanEdit$ = this.resource$.pipe(
+    map(resource => resource && this.resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
+  );
+
+  userCanDelete$ = this.resource$.pipe(
+    map(resource => resource && this.resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
+  );
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -26,33 +37,20 @@ export class ResourceFetcherService {
     private _store: Store
   ) {}
 
-  onInit(resourceIri: string, resourceVersion?: string) {
-    this.resource$ = this._reloadSubject.asObservable().pipe(
-      switchMap(() => this._getResource(resourceIri, resourceVersion)),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
-    this.projectShortcode$ = this.resource$.pipe(
-      switchMap(resource =>
-        this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)
-      ),
-      map(v => v.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
+  loadResource(resourceIri: string, resourceVersion?: string) {
     this.resourceVersion = resourceVersion;
-
-    this.userCanEdit$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
-    );
-
-    this.userCanDelete$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
-    );
+    this._getResource(resourceIri, resourceVersion)
+      .pipe(take(1))
+      .subscribe(resource => {
+        this._resource.next(resource);
+      });
   }
 
-  reload() {
-    this._reloadSubject.next(null);
+  reloadCurrentResource() {
+    const resourceIri = this._resource.value?.res.id;
+    if (resourceIri) {
+      this.loadResource(resourceIri);
+    }
   }
 
   private _getResource(resourceIri: string, resourceVersion?: string) {
