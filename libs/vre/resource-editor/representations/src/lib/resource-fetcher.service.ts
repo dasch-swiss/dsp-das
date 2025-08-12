@@ -5,7 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, filter, map, shareReplay, switchMap, take } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap, take } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
