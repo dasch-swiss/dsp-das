@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   ApiData,
@@ -41,6 +42,7 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatTooltipModule,
     PropertyFormValueComponent,
     PropertyFormLinkValueComponent,
     PropertyFormLinkMatchPropertyComponent,

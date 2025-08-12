@@ -15,21 +15,75 @@
     }
   }
 
-  .form-fields-container,
-  .side-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
   .form-fields-container {
-    width: 90%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; // Center all items vertically
+    gap: 12px;
   }
 
-  .side-container {
-    width: 9%;
-    margin-top: 2%;
+  // Property select container
+  .property-select-container {
+    flex: 1;
+    min-width: 200px;
+
+    mat-form-field {
+      width: 100%;
+    }
   }
 
+  // Operator container with sensible width for longest operator
+  .operator-container {
+    width: 18em; // Sensible width in em to accommodate longest operator text
+    flex-shrink: 0;
+
+    mat-form-field {
+      width: 100%;
+
+      &.operator {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  }
+
+  // Container for all conditional forms at the end of the line
+  .conditional-forms-container {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0; // Allow shrinking
+
+    .resource-class-container {
+      flex: 1;
+      min-width: 200px;
+
+      mat-form-field {
+        width: 100%;
+
+        &.resource-class {
+          width: 100%;
+        }
+      }
+    }
+
+    .value-container {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+
+  // Remove button container
+  .remove-button-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto; // Push to the right side
+  }
+
+  // Legacy dropdown-container styles (kept for backward compatibility)
   .dropdown-container {
     width: 49%;
     display: inline-flex;
@@ -108,7 +162,6 @@
   button {
     padding: 0% 3%;
     height: 50px;
-    margin: 1% 0% 5% 0%;
   }
 
   button:disabled {
@@ -125,14 +178,14 @@
 }
 
 .remove-property-button {
-  height: 44px;
-  width: 44px;
+  height: 36px;
+  width: 36px;
   padding: 0px;
-  color: #e11d48;
+  color: #336790; // Primary color instead of red
 
   mat-icon {
-    height: 44px;
-    width: 44px;
-    font-size: 44px;
+    height: 32px;
+    width: 32px;
+    font-size: 32px;
   }
 }

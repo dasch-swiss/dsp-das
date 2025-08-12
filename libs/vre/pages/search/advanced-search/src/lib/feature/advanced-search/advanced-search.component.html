@@ -35,10 +35,6 @@
             resourcesSearchNoResults: resourcesSearchNoResults$ | async,
             orderByButtonDisabled: orderByButtonDisabled$ | async,
         } as asyncData">
-    <app-order-by
-      [orderByList]="asyncData.propertiesOrderByList"
-      [orderByDisabled]="asyncData.orderByButtonDisabled"
-      (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)" />
     <app-ontology-resource-form
       [ontologies]="asyncData.ontologies"
       [ontologiesLoading]="asyncData.ontologiesLoading"
@@ -72,11 +68,18 @@
       (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
       (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
       (emitChildValueChanged)="handleChildValueChanged($event)" />
+    <div class="add-property-button">
+      <button mat-button [disabled]="asyncData.addButtonDisabled" (click)="handleAddPropertyForm()">
+        Add Search Criteria
+      </button>
+    </div>
+    <app-order-by
+      [orderByList]="asyncData.propertiesOrderByList"
+      [orderByDisabled]="asyncData.orderByButtonDisabled"
+      (emitPropertyOrderByChanged)="handlePropertyOrderByChanged($event)" />
     <app-form-actions
-      [addButtonDisabled]="asyncData.addButtonDisabled"
       [resetButtonDisabled]="asyncData.resetButtonDisabled"
       [searchButtonDisabled]="asyncData.searchButtonDisabled"
-      (emitAddPropertyForm)="handleAddPropertyForm()"
       (emitResetButtonClicked)="handleResetButtonClicked()"
       (emitSearchButtonClicked)="handleSearchButtonClicked()" />
   </div>
