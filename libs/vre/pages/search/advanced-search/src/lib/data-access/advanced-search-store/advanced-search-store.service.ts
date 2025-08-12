@@ -150,14 +150,12 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   );
 
   // order by button is disabled if:
-  // no resource class is selected OR
   // orderByList is empty OR
   // propertyFormList is empty
   orderByButtonDisabled$: Observable<boolean> = this.select(
-    this.selectedResourceClass$,
     this.propertyFormList$,
     this.propertiesOrderByList$,
-    (resourceClass, propertyFormList, orderBylist) => !resourceClass || !orderBylist.length || !propertyFormList.length
+    (propertyFormList, orderBylist) => !orderBylist.length || !propertyFormList.length
   );
 
   // add button is disabled if:
