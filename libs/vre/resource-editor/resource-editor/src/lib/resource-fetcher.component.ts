@@ -77,9 +77,9 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
         filter(resource => !!resource),
         takeUntil(this._destroy$)
       )
-      .subscribe(
-        resource => {
-          if (resource.res.type === 'http://api.knora.org/ontology/knora-api/v2#DeletedResource') {
+      .subscribe({
+        next: resource => {
+          if (resource?.res.type === 'http://api.knora.org/ontology/knora-api/v2#DeletedResource') {
             this.hideStatus = 'Deleted';
             this.resource = resource;
             this.afterResourceDeleted.emit(resource.res);
@@ -90,14 +90,14 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
           this.resource = resource;
 
           const hasResourceVersionOfLatestVersion =
-            (!!this.resourceVersion && this.resourceVersion === resource.res.lastModificationDate) ||
-            (!!this.resourceVersion && !resource.res.lastModificationDate);
+            (!!this.resourceVersion && this.resourceVersion === resource?.res.lastModificationDate) ||
+            (!!this.resourceVersion && !resource?.res.lastModificationDate);
 
           if (hasResourceVersionOfLatestVersion) {
             this._purgeVersionParam();
           }
         },
-        err => {
+        error: err => {
           if (err instanceof ApiResponseError && err.status === 404) {
             this.hideStatus = 'NotFound';
             return;
@@ -109,8 +109,8 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
           }
 
           throw err;
-        }
-      );
+        },
+      });
   }
 
   ngOnChanges() {
