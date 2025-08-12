@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { ComponentStore } from '@ngrx/component-store';
-import { catchError, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
+import { catchError, combineLatest, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,
@@ -220,7 +220,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     } else {
       // 'none' was selected
       this.patchState({ selectedResourceClass: undefined });
-      this.patchState({ filteredProperties: [] });
     }
 
     this.patchState({ propertyFormList: [] });
@@ -814,16 +813,56 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     )
   );
 
-  // load list of filtered properties, limited to a resource class
-  readonly filteredPropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
-    resourceClass$.pipe(
-      switchMap(resClass => {
+  // load list of filtered properties, limited to a resource class or all properties if no class selected
+  readonly filteredPropertiesList = this.effect((origin$: Observable<void>) =>
+    origin$.pipe(
+      switchMap(() => combineLatest([this.selectedOntology$, this.selectedResourceClass$])),
+      switchMap(([ontology, resourceClass]) => {
         this.patchState({ propertiesLoading: true });
-        if (!resClass) {
+
+        if (!ontology) {
+          // No ontology selected - clear filtered properties
+          this.patchState({ filteredProperties: [] });
           this.patchState({ propertiesLoading: false });
           return EMPTY;
         }
-        return this._advancedSearchService.filteredPropertiesList(resClass.iri).pipe(
+
+        if (!resourceClass) {
+          // No resource class selected - use all properties from the ontology
+          const allProperties = this.get(state => state.properties);
+
+          if (allProperties.length > 0) {
+            // Use existing properties from the ontology
+            this.patchState({
+              filteredProperties: allProperties,
+            });
+            this.patchState({ propertiesLoading: false });
+            return EMPTY;
+          } else {
+            // Load all properties for the ontology if not already loaded
+            return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+              tap({
+                next: response => {
+                  this.patchState({
+                    filteredProperties: response,
+                  });
+                  this.patchState({ propertiesLoading: false });
+                },
+                error: error => {
+                  this.patchState({ error });
+                  this.patchState({ propertiesLoading: false });
+                },
+              }),
+              catchError(() => {
+                this.patchState({ propertiesLoading: false });
+                return EMPTY;
+              })
+            );
+          }
+        }
+
+        // Resource class is selected - use filtered properties
+        return this._advancedSearchService.filteredPropertiesList(resourceClass.iri).pipe(
           tap({
             next: response => {
               this.patchState({
