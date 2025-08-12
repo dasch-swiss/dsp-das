@@ -116,11 +116,6 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     this.hideStatus = null;
     this.resource = undefined;
-    console.debug(
-      'ResourceFetcherComponent: resourceIri changed, loading resource',
-      this.resourceIri,
-      this.resourceVersion
-    );
     this._resourceFetcherService.loadResource(this.resourceIri, this.resourceVersion);
   }
 

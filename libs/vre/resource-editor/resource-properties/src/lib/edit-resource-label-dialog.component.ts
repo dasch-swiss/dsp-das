@@ -67,7 +67,7 @@ export class EditResourceLabelDialogComponent {
         })
       )
       .subscribe(() => {
-        this._resourceFetcherService.reloadCurrentResource();
+        this._resourceFetcherService.reload();
         this._dialogRef.close(true);
       });
   }

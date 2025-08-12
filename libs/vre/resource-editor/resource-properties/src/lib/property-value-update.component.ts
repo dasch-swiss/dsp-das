@@ -29,7 +29,7 @@ export class PropertyValueUpdateComponent {
 
   update(group: FormValueGroup) {
     this._dspApiConnection.v2.values.updateValue(this._getPayload(this.index, group)).subscribe(() => {
-      this._resourceFetcherService.reloadCurrentResource();
+      this._resourceFetcherService.reload();
       this.propertyValueService.toggleOpenedValue(this.index);
     });
   }

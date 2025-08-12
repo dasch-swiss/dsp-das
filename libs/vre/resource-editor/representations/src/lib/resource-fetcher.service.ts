@@ -46,7 +46,7 @@ export class ResourceFetcherService {
       });
   }
 
-  reloadCurrentResource() {
+  reload() {
     const resourceIri = this._resource.value?.res.id;
     if (resourceIri) {
       this.loadResource(resourceIri);

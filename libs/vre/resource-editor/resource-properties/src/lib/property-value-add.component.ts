@@ -54,7 +54,7 @@ export class PropertyValueAddComponent {
       )
       .subscribe(
         () => {
-          this._resourceFetcherService.reloadCurrentResource();
+          this._resourceFetcherService.reload();
           this.stopAdding.emit();
         },
         e => {

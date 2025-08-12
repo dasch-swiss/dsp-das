@@ -86,7 +86,7 @@ export class AnnotationToolbarComponent {
   ) {}
 
   onResourceUpdated() {
-    this.resourceFetcher.reloadCurrentResource();
+    this.resourceFetcher.reload();
   }
 
   onResourceDeleted() {

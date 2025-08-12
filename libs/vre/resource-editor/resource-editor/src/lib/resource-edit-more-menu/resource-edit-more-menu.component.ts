@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -110,16 +110,17 @@ export class ResourceEditMoreMenuComponent {
   resourceCanBeDeleted?: CanDeleteResource;
 
   constructor(
-    public resourceFetcher: ResourceFetcherService,
-    private _store: Store,
+    private _cdr: ChangeDetectorRef,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
+    public resourceFetcher: ResourceFetcherService,
+    private _store: Store,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
   checkResourceCanBeDeleted() {
-    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically(this.resource)])
+    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically$(this.resource)])
       .pipe(
         take(1),
         map(([userCanDelete, technicalCheck]) => {
@@ -142,10 +143,11 @@ export class ResourceEditMoreMenuComponent {
       )
       .subscribe((canDelete: CanDeleteResource) => {
         this.resourceCanBeDeleted = canDelete;
+        this._cdr.detectChanges();
       });
   }
 
-  private _resourceCanBeDeletedTechnically(resource: ReadResource) {
+  private _resourceCanBeDeletedTechnically$(resource: ReadResource) {
     if (resource.incomingReferences.length > 0) {
       return of({
         canDo: false,

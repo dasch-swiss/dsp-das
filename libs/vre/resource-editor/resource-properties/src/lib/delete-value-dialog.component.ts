@@ -76,7 +76,7 @@ export class DeleteValueDialogComponent {
 
     this._dspApiConnection.v2.values
       .deleteValue(updateRes as UpdateResource<DeleteValue>)
-      .pipe(tap(() => this._resourceFetcherService.reloadCurrentResource()))
+      .pipe(tap(() => this._resourceFetcherService.reload()))
       .subscribe(() => {
         this.dialogRef.close();
         this._cd.detectChanges();
