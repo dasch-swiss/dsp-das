@@ -18,8 +18,7 @@ export class ResourceFetcherService {
   projectShortcode$ = this.resource$.pipe(
     filter(resource => resource !== undefined),
     switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource!.res.attachedToProject)),
-    map(v => v.project.shortcode as unknown as string),
-    shareReplay({ bufferSize: 1, refCount: true })
+    map(v => v.project.shortcode as unknown as string)
   );
 
   userCanEdit$ = this.resource$.pipe(
