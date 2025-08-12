@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -110,7 +110,6 @@ export class ResourceEditMoreMenuComponent {
   resourceCanBeDeleted?: CanDeleteResource;
 
   constructor(
-    private _cdr: ChangeDetectorRef,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
@@ -143,7 +142,6 @@ export class ResourceEditMoreMenuComponent {
       )
       .subscribe((canDelete: CanDeleteResource) => {
         this.resourceCanBeDeleted = canDelete;
-        this._cdr.detectChanges();
       });
   }
 
