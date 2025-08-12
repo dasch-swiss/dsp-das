@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
@@ -39,6 +40,7 @@ export interface QueryObject {
     FormActionsComponent,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     TranslateModule,
   ],
   providers: [AdvancedSearchStoreService],

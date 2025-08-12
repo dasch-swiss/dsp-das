@@ -69,8 +69,13 @@
       (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
       (emitChildValueChanged)="handleChildValueChanged($event)" />
     <div class="add-property-button">
-      <button mat-button [disabled]="asyncData.addButtonDisabled" (click)="handleAddPropertyForm()">
-        Add Search Criteria
+      <button
+        mat-icon-button
+        [disabled]="asyncData.addButtonDisabled"
+        (click)="handleAddPropertyForm()"
+        class="add-property-icon-button"
+        matTooltip="Add search criteria">
+        <mat-icon>add_circle</mat-icon>
       </button>
     </div>
     <app-order-by

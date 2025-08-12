@@ -159,21 +159,26 @@
 }
 
 .add-property-button {
-  button {
-    padding: 0% 3%;
-    height: 50px;
-  }
+  display: flex;
+  justify-content: flex-end; // Position button to the very end
+  width: 100%;
+  margin-top: 12px;
 
-  button:disabled {
-    border: 1px solid #bdbfc1;
-    background-color: #bdbfc1;
-    color: white;
-  }
+  .add-property-icon-button {
+    height: 36px;
+    width: 36px;
+    padding: 0px;
+    color: #336790; // Primary blue color
 
-  button:not(:disabled) {
-    border: 1px solid #336790;
-    background-color: white;
-    color: #336790;
+    mat-icon {
+      height: 32px;
+      width: 32px;
+      font-size: 32px;
+    }
+
+    &:disabled {
+      color: #bdbfc1; // Disabled color
+    }
   }
 }
 
