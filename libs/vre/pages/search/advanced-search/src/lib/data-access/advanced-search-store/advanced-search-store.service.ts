@@ -208,15 +208,15 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   updateSelectedOntology(ontology: ApiData): void {
     this.patchState({ selectedOntology: ontology });
     this.patchState({ selectedResourceClass: undefined });
-    this.patchState({ filteredProperties: [] });
     this.patchState({ propertyFormList: [] });
+    this.patchState({ propertiesOrderByList: [] });
   }
 
   updateSelectedResourceClass(resourceClass: ApiData | undefined): void {
     if (resourceClass) {
       this.patchState({ selectedResourceClass: resourceClass });
     } else {
-      // 'none' was selected
+      // 'none' was selected or no resource class is selected at all
       this.patchState({ selectedResourceClass: undefined });
     }
 
@@ -812,9 +812,8 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   );
 
   // load list of filtered properties, limited to a resource class or all properties if no class selected
-  readonly filteredPropertiesList = this.effect((origin$: Observable<void>) =>
-    origin$.pipe(
-      switchMap(() => combineLatest([this.selectedOntology$, this.selectedResourceClass$])),
+  readonly filteredPropertiesList = this.effect(() =>
+    combineLatest([this.selectedOntology$, this.selectedResourceClass$]).pipe(
       switchMap(([ontology, resourceClass]) => {
         this.patchState({ propertiesLoading: true });
 
@@ -826,37 +825,26 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
 
         if (!resourceClass) {
-          // No resource class selected - use all properties from the ontology
-          const allProperties = this.get(state => state.properties);
-
-          if (allProperties.length > 0) {
-            // Use existing properties from the ontology
-            this.patchState({
-              filteredProperties: allProperties,
-            });
-            this.patchState({ propertiesLoading: false });
-            return EMPTY;
-          } else {
-            // Load all properties for the ontology if not already loaded
-            return this._advancedSearchService.propertiesList(ontology.iri).pipe(
-              tap({
-                next: response => {
-                  this.patchState({
-                    filteredProperties: response,
-                  });
-                  this.patchState({ propertiesLoading: false });
-                },
-                error: error => {
-                  this.patchState({ error });
-                  this.patchState({ propertiesLoading: false });
-                },
-              }),
-              catchError(() => {
+          // No resource class selected - load all properties from the ontology
+          return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+            tap({
+              next: response => {
+                this.patchState({
+                  filteredProperties: response,
+                  properties: response, // Also update the properties state
+                });
                 this.patchState({ propertiesLoading: false });
-                return EMPTY;
-              })
-            );
-          }
+              },
+              error: error => {
+                this.patchState({ error });
+                this.patchState({ propertiesLoading: false });
+              },
+            }),
+            catchError(() => {
+              this.patchState({ propertiesLoading: false });
+              return EMPTY;
+            })
+          );
         }
 
         // Resource class is selected - use filtered properties
