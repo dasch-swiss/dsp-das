@@ -32,7 +32,11 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       (mouseenter)="isHovered = true"
       (mouseleave)="isHovered = false">
       <mat-list-item class="drag-n-drop-placeholder" *cdkDragPlaceholder></mat-list-item>
-      <mat-list-item class="property-item" matRipple #propertyCardRipple="matRipple">
+      <mat-list-item
+        class="property-item"
+        [class.admin]="(isAdmin$ | async) === true"
+        matRipple
+        #propertyCardRipple="matRipple">
         <div cdkDragHandle matListItemIcon class="list-icon">
           <mat-icon *ngIf="(isAdmin$ | async) === true && isHovered" class="drag-n-drop-handle"
             >drag_indicator
@@ -54,14 +58,24 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         <div class="property-item-content-container">
           <div>
             <div class="upper-prop-container">
-              <span class="label" data-cy="property-label">{{ classProp.propDef.label }} </span>
+              <span class="label" data-cy="property-label"
+                >{{ classProp.propDef.labels | appStringifyStringLiteral }}
+              </span>
               <span
+                data-cy="property-object-label"
                 class="additional-info"
-                *ngIf="classProp.objectLabel"
-                [innerHTML]="'&rarr;&nbsp;' + classProp.objectLabel"></span>
+                *ngIf="classProp.objectLabels && classProp.objectLabels.length > 0"
+                [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
             </div>
             <div mat-line class="lower-prop-container">
               <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
+              <mat-icon
+                *ngIf="isHovered && classProp.propDef.comments?.length"
+                [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
+                matTooltipPosition="above"
+                class="info-icon">
+                info
+              </mat-icon>
             </div>
           </div>
           <app-cardinality
@@ -113,7 +127,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         margin: 0;
       }
 
-      .property-item:hover {
+      .property-item.admin:hover {
         background: var(--element-active-hover);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
@@ -145,8 +159,17 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       .lower-prop-container {
         color: $primary_700;
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .info-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        line-height: 1;
+        vertical-align: middle;
+        cursor: help;
       }
 
       .drag-n-drop-placeholder {
@@ -169,6 +192,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
       .menu-icon-button {
         font-size: medium;
         cursor: pointer;
+        margin-right: 0.1rem;
+        margin-top: 0.1rem;
       }
     `,
   ],

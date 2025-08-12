@@ -8,14 +8,14 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm, ResourceClassFormData, UpdateResourceClassData } from './resource-class-form.type';
 
 export interface EditResourceClassDialogProps {
-  title: string;
+  labels: StringLiteralV2[];
   data: UpdateResourceClassData;
 }
 
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.title" subtitle="Customize resource class" />
+    <app-dialog-header [title]="data.labels | appStringifyStringLiteral" subtitle="Customize resource class" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
@@ -45,13 +45,12 @@ export class EditResourceClassDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: EditResourceClassDialogProps,
     public dialogRef: MatDialogRef<EditResourceClassDialogComponent, UpdateResourceClassData>,
-    private _ontologyService: OntologyService,
     private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
     this.formData = {
-      name: this._ontologyService.getNameFromIri(this.data.data.id),
+      name: OntologyService.getNameFromIri(this.data.data.id),
       labels: this.data.data.labels as MultiLanguages,
       comments: this.data.data.comments as MultiLanguages,
     };

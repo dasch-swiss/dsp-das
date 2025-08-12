@@ -1,14 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ClassDefinition, PropertyDefinition } from '@dasch-swiss/dsp-js';
-import { getAllEntityDefinitionsAsArray } from '@dasch-swiss/vre/3rd-party-services/api';
-import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
+import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { take } from 'rxjs';
+import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { OntologyEditService } from '../../services/ontology-edit.service';
-import { ResourceClassForm } from './resource-class-form.type';
+import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
   selector: 'app-resource-class-form',
@@ -42,62 +38,26 @@ import { ResourceClassForm } from './resource-class-form.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceClassFormComponent implements OnInit {
-  @Input() formData: {
-    name: string;
-    labels: MultiLanguages;
-    comments: MultiLanguages;
-  };
+  @Input({ required: true }) formData!: ResourceClassFormData;
   @Output() afterFormInit = new EventEmitter<ResourceClassForm>();
 
-  form: ResourceClassForm;
-  ontology;
-  readonly existingNames: RegExp[] = [];
+  form!: ResourceClassForm;
+
   readonly labelsValidators = [Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.maxLength(2000)];
 
   constructor(
     private _fb: FormBuilder,
-    private _oes: OntologyEditService,
-    private _os: OntologyService
+    private _oes: OntologyEditService
   ) {}
 
   ngOnInit() {
-    this._oes.currentOntology$.pipe(take(1)).subscribe(ontology => {
-      if (!ontology) {
-        return;
-      }
-
-      const resourceClasses = getAllEntityDefinitionsAsArray(ontology.classes);
-      const resourceProperties = getAllEntityDefinitionsAsArray(ontology.properties);
-
-      // set list of all existing resource class names to avoid same name twice
-      resourceClasses.forEach((resClass: ClassDefinition) => {
-        const name = this._os.getNameFromIri(resClass.id);
-        this.existingNames.push(new RegExp(`(?:^|W)${name.toLowerCase()}(?:$|W)`));
-      });
-
-      // add all resource properties to the same list
-      resourceProperties.forEach((resProp: PropertyDefinition) => {
-        const name = this._os.getNameFromIri(resProp.id);
-        this.existingNames.push(new RegExp(`(?:^|W)${name}(?:$|W)`));
-      });
-
-      this.buildForm();
-
-      this.afterFormInit.emit(this.form);
-    });
-  }
-
-  buildForm() {
     this.form = this._fb.group({
-      name: [
-        this.formData.name,
-        [
-          Validators.required,
-          existingNamesValidator(this.existingNames, true),
-          Validators.pattern(CustomRegex.ID_NAME_REGEX),
-        ],
-      ],
+      name: this._fb.control(this.formData.name, {
+        validators: [Validators.required, Validators.pattern(CustomRegex.ID_NAME_REGEX)],
+        asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
+        nonNullable: true,
+      }),
       labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, this.labelsValidators, [
         atLeastOneStringRequired('value'),
       ]),
@@ -105,5 +65,7 @@ export class ResourceClassFormComponent implements OnInit {
         atLeastOneStringRequired('value'),
       ]),
     });
+
+    this.afterFormInit.emit(this.form);
   }
 }

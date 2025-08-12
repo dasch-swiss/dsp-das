@@ -8,7 +8,6 @@ import {
   LoadListsInProjectAction,
   OntologiesSelectors,
   ProjectsSelectors,
-  UserSelectors,
 } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -26,7 +25,7 @@ export class DataModelsComponent {
   protected readonly RouteConstants = RouteConstants;
 
   ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
-  isAdmin$ = this._store.select(UserSelectors.isMemberOfSystemAdminGroup);
+  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   isLoading$ = this._store.select(OntologiesSelectors.isLoading);
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
@@ -49,7 +48,7 @@ export class DataModelsComponent {
   }
 
   navigateToOntology(id: string) {
-    const ontoName = OntologyService.getOntologyName(id);
+    const ontoName = OntologyService.getOntologyNameFromIri(id);
     this._router.navigate(
       [RouteConstants.ontology, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes],
       {

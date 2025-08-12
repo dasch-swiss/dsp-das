@@ -78,6 +78,7 @@ Uses **NGXS** for state management with domain-specific states:
 
 ### Key Patterns
 - **Barrel exports** via `*.components.ts` files
+- **exposing exported files** via `*.index.ts` files
 - **TypeScript path mapping** with `@dasch-swiss/vre/*` aliases
 - **Feature-based organization** by domain
 - **Reactive programming** with RxJS observables
@@ -100,6 +101,7 @@ Multiple environment configurations available:
 - Prettier for code formatting
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
+- Self-closing tags for component selectors in templates
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
