@@ -18,7 +18,7 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
         {{ (showAllComments$ | async) ? 'Hide' : 'Show all' }} comments
       </button>
     </ng-container>
-
+    <div>UUUUUUUUUUU</div>
     <ng-container *ngIf="showToggleProperties">
       <button
         mat-button
