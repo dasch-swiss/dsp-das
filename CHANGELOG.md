@@ -1,5 +1,18 @@
 # Changelog
 
+## [11.40.1](https://github.com/dasch-swiss/dsp-das/compare/v11.40.0...v11.40.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* set min-size for preventing shift (DEV-5327) ([#2469](https://github.com/dasch-swiss/dsp-das/issues/2469)) ([fd7bc8e](https://github.com/dasch-swiss/dsp-das/commit/fd7bc8e5cf14b2374d29a17eb53c3e65da684605))
+
+
+### Maintenances
+
+* add DSP-API openAPI specification check ([#2408](https://github.com/dasch-swiss/dsp-das/issues/2408)) ([e42fdce](https://github.com/dasch-swiss/dsp-das/commit/e42fdce01829cca514632cff52c66263a9ff84ac))
+* **OpenAPI:** remove generated files and add to gitignore ([#2471](https://github.com/dasch-swiss/dsp-das/issues/2471)) ([5ed6db2](https://github.com/dasch-swiss/dsp-das/commit/5ed6db2bed2fc4171fdee1a84a984036367fc7a2))
+
 ## [11.40.0](https://github.com/dasch-swiss/dsp-das/compare/v11.39.0...v11.40.0) (2025-08-07)
 
 
