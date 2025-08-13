@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
   displayName: 'vre-open-api',
-  preset: '../../../jest.preset.js',
+  preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/vre/3rd-party-services/open-api',
+  coverageDirectory: '../../../../coverage/libs/vre/3rd-party-services/open-api',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
