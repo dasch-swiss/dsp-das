@@ -16,7 +16,17 @@ export class GravsearchService {
   ): string {
     // class restriction for the resource searched for
     let restrictToResourceClass = '';
-    const ontoShortCode = ontoIri.match(/\/([^/]+)\/v2$/)![1];
+    
+    // Safety check for ontoIri
+    if (!ontoIri || typeof ontoIri !== 'string') {
+      throw new Error('Invalid ontology IRI provided');
+    }
+    
+    const ontoShortCodeMatch = ontoIri.match(/\/([^/]+)\/v2$/);
+    if (!ontoShortCodeMatch) {
+      throw new Error(`Invalid ontology IRI format: ${ontoIri}`);
+    }
+    const ontoShortCode = ontoShortCodeMatch[1];
 
     // if given, create the class restriction for the main resource
     restrictToResourceClass =

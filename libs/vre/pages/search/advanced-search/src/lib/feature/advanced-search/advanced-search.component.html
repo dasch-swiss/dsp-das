@@ -24,7 +24,6 @@
             propertiesOrderByList: propertiesOrderByList$ | async,
             propertiesLoading: propertiesLoading$ | async,
             filteredProperties: filteredProperties$ | async,
-            addButtonDisabled: addButtonDisabled$ | async,
             resetButtonDisabled: resetButtonDisabled$ | async,
             selectedOntology: selectedOntology$ ? (selectedOntology$ | async) : undefined,
             selectedResourceClass: selectedResourceClass$ ? (selectedResourceClass$| async) : undefined,
@@ -44,40 +43,48 @@
       [selectedResourceClass]="asyncData.selectedResourceClass"
       (emitSelectedOntology)="handleSelectedOntology($event)"
       (emitSelectedResourceClass)="handleSelectedResourceClass($event)" />
-    <app-property-form
-      *ngFor="let propertyForm of asyncData.propertyFormList"
-      [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
-      [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
-      [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
-      [resourcesSearchResults]="asyncData.resourcesSearchResults"
-      [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
-      [propertyFormItem]="propertyForm"
-      [properties]="asyncData.filteredProperties"
-      [propertiesLoading]="asyncData.propertiesLoading"
-      [selectedProperty]="propertyForm.selectedProperty"
-      [selectedOperator]="propertyForm.selectedOperator"
-      (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-      (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
-      (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
-      (emitSelectedMatchPropertyResourceClassChanged)="handleSelectedMatchPropertyResourceClassChanged($event)"
-      (emitSearchValueChanged)="handleSearchValueChanged($event)"
-      (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
-      (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
-      (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
-      (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
-      (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
-      (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
-      (emitChildValueChanged)="handleChildValueChanged($event)" />
-    <div class="add-property-button">
-      <button
-        mat-icon-button
-        [disabled]="asyncData.addButtonDisabled"
-        (click)="handleAddPropertyForm()"
-        class="add-property-icon-button"
-        matTooltip="Add search criteria">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-    </div>
+    <ng-container *ngFor="let propertyForm of asyncData.propertyFormList; let isLast = last">
+      <app-property-form
+        [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
+        [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
+        [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
+        [resourcesSearchResults]="asyncData.resourcesSearchResults"
+        [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
+        [propertyFormItem]="propertyForm"
+        [properties]="asyncData.filteredProperties"
+        [propertiesLoading]="asyncData.propertiesLoading"
+        [selectedProperty]="propertyForm.selectedProperty"
+        [selectedOperator]="propertyForm.selectedOperator"
+        [isLastInDOM]="isLast"
+        (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
+        (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
+        (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
+        (emitSelectedMatchPropertyResourceClassChanged)="handleSelectedMatchPropertyResourceClassChanged($event)"
+        (emitSearchValueChanged)="handleSearchValueChanged($event)"
+        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+        (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
+        (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
+        (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
+        (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
+        (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
+        (emitChildValueChanged)="handleChildValueChanged($event)" />
+      
+      <!-- Subcriteria component -->
+      <app-property-form-subcriteria
+        [parentProperty]="propertyForm"
+        [childProperties]="getLinkMatchPropertyFormItems(propertyForm.searchValue) || []"
+        [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
+        [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
+        [resourcesSearchResults]="asyncData.resourcesSearchResults"
+        [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
+        (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
+        (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
+        (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
+        (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
+        (emitChildValueChanged)="handleChildValueChanged($event)"
+        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+        (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)" />
+    </ng-container>
     <app-order-by
       [orderByList]="asyncData.propertiesOrderByList"
       [orderByDisabled]="asyncData.orderByButtonDisabled"

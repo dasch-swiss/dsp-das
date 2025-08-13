@@ -45,7 +45,6 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     MatTooltipModule,
     PropertyFormValueComponent,
     PropertyFormLinkValueComponent,
-    PropertyFormLinkMatchPropertyComponent,
     PropertyFormListValueComponent,
   ],
   providers: [MatSelect],
@@ -76,6 +75,7 @@ export class PropertyFormComponent implements AfterViewInit {
 
   @Input() selectedProperty: PropertyData | null | undefined = undefined;
   @Input() selectedOperator: string | undefined = undefined;
+  @Input() isLastInDOM = false;
 
   @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
@@ -253,5 +253,14 @@ export class PropertyFormComponent implements AfterViewInit {
   // Type guard function to check if the value adheres to ApiData interface
   _isApiData(value: any): value is ApiData {
     return value && typeof value === 'object' && 'iri' in value && 'label' in value;
+  }
+
+  // Check if the property form has any selections made
+  hasSelections(): boolean {
+    return !!(
+      this.propertyFormItem.selectedProperty ||
+      this.propertyFormItem.selectedOperator ||
+      this.propertyFormItem.searchValue
+    );
   }
 }

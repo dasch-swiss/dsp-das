@@ -123,46 +123,11 @@
                   "
           (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
           (emitResourceSelected)="onValueChanged($event)" />
-        <app-property-form-link-match-property
-          *ngIf="
-                      !propertyFormItem.selectedProperty?.objectType?.includes(
-                          constants.KnoraApiV2
-                      ) &&
-                      propertyFormItem.selectedProperty?.objectType !==
-                          constants.Label &&
-                      propertyFormItem.selectedOperator === operators.Matches &&
-                      propertyFormItem.selectedMatchPropertyResourceClass
-                  "
-          [values]="
-                      getLinkMatchPropertyFormItems(propertyFormItem.searchValue)
-                  "
-          [properties]="propertyFormItem.childPropertiesList"
-          [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
-          [resourcesSearchResultsCount]="resourcesSearchResultsCount"
-          [resourcesSearchResults]="resourcesSearchResults"
-          [resourcesSearchNoResults]="resourcesSearchNoResults"
-          (emitAddPropertyForm)="onAddChildPropertyFormClicked()"
-          (emitRemovePropertyForm)="
-                      onRemoveChildPropertyFormClicked($event)
-                  "
-          (emitSelectedPropertyChanged)="
-                      onChildSelectedPropertyChanged($event)
-                  "
-          (emitSelectedOperatorChanged)="
-                      onChildSelectedOperatorChanged($event)
-                  "
-          (emitValueChanged)="onChildValueChanged($event)"
-          (emitResourceSearchValueChanged)="
-                      onChildResourceSearchValueChanged($event)
-                  "
-          (emitLoadMoreSearchResults)="
-                      onChildLoadMoreSearchResults($event)
-                  " />
       </div>
     </div>
 
     <!-- Remove button on the same line -->
-    <div class="remove-button-container">
+    <div class="remove-button-container" *ngIf="!isLastInDOM && hasSelections()">
       <button
         mat-icon-button
         (click)="onRemovePropertyFormClicked(propertyFormItem)"
