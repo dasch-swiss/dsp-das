@@ -129,49 +129,8 @@ jobs:
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
-      - name: Download latest API spec
-        run: curl -o /tmp/latest-spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml
-      - name: Smart compare specs (ignore metadata)
-        run: |
-          # Create cleaned versions ignoring noise (metadata, descriptions, examples)
-          yq eval '
-            del(.info.version, .info.title, .info.description, .info.contact) |
-            del(.servers) |
-            del(.. | .description?) |
-            del(.. | .summary?) |
-            del(.. | .examples?) |
-            del(.. | .example?) |
-            del(.. | .tags?)
-          ' libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml > /tmp/clean-current.yaml
-          
-          yq eval '
-            del(.info.version, .info.title, .info.description, .info.contact) |
-            del(.servers) |
-            del(.. | .description?) |
-            del(.. | .summary?) |
-            del(.. | .examples?) |
-            del(.. | .example?) |
-            del(.. | .tags?)
-          ' /tmp/latest-spec.yaml > /tmp/clean-latest.yaml
-          
-          # Compare cleaned versions
-          if ! diff -q /tmp/clean-current.yaml /tmp/clean-latest.yaml > /dev/null; then
-            echo "❌ API spec has meaningful changes!"
-            echo "Detected changes in API structure, endpoints, or schemas (ignoring metadata)."
-            echo ""
-            echo "Please update the spec file and regenerate OpenAPI code:"
-            echo "  npm run update-openapi"
-            echo ""
-            echo "Or manually:"
-            echo "  curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml"
-            echo "  npm run generate-openapi-module"
-            echo ""
-            echo "Meaningful changes detected:"
-            diff /tmp/clean-current.yaml /tmp/clean-latest.yaml | head -20
-            exit 1
-          else
-            echo "✅ OpenAPI spec is up-to-date (no meaningful API changes)"
-          fi
+      - name: Run OpenAPI sync check
+        run: ./scripts/check-openapi-sync.sh --verbose
 
   # publish on commit to main or tag
   publish:

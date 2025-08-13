@@ -37,8 +37,8 @@ git commit -m "update OpenAPI client for DSP-API changes"
 
 ### Available Scripts
 
-- `npm run check-openapi-sync` - Check if local spec matches remote API (simple diff)
-- `npm run update-openapi` - Update spec file and regenerate client (one command)
+- `npm run check-openapi-sync` - Smart diff check ignoring metadata (same logic as CI)
+- `npm run update-openapi` - Update spec file and regenerate client (one command)  
 - `npm run generate-openapi-module` - Generate client from existing spec file
 
 ### CI Integration
@@ -49,8 +49,11 @@ The GitHub Actions workflow includes a `check-openapi-sync` job that:
 - Only fails CI on meaningful changes (endpoints, schemas, parameters)
 - Provides clear instructions on how to update when changes are detected
 
-**Local vs CI checking:**
-- **Local**: `npm run check-openapi-sync` uses simple diff (may show false positives)
-- **CI**: Uses smart diff to avoid unnecessary failures from version bumps or doc changes
+**Smart Diff Logic:**
+Both local and CI use the same `scripts/check-openapi-sync.sh` script that:
+- Ignores metadata changes (versions, descriptions, examples, tags, servers)
+- Only detects meaningful API structure changes (endpoints, schemas, parameters)
+- Supports `--verbose` flag for detailed diff output locally
+- Provides consistent behavior between development and CI environments
 
-This ensures the generated client code stays in sync with actual API changes.
+This ensures the generated client code stays in sync with actual API changes while avoiding false positives from documentation updates.
