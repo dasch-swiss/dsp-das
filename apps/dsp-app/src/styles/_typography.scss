@@ -3,7 +3,6 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-@use '@angular/material' as mat;
-
-// For Angular Material 18, use default typography
-$dsp-typography-config: mat.define-typography-config();
+// Simple typography configuration for Angular Material 18
+// Using default Material typography without custom configuration for now
+$dsp-typography-config: null;

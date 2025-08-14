@@ -7,31 +7,30 @@
 @use "styles/layout";
 @use "styles/elements";
 @use "styles/search";
-// @use "styles/typography" as t;
+@use "styles/typography" as t;
 @use "styles/viewer";
 @use "styles/ontology";
 
 @include mat.core();
 
-// Include all typography configurations for the components (now separate from mat.core())
-@include mat.all-component-typographies();
+// Include default typography (Material 18 compatible)
+// Note: Custom typography configuration removed due to v18 API changes
 
-// Define a Material Design 3 theme
-$theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$blue-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  density: (
-    scale: 0
-  )
+// Define the color palettes for the theme (Material 18 compatible)
+$primary: mat.m2-define-palette(config.$blue_palette, 700, 500, 900);
+$accent: mat.m2-define-palette(config.$light_blue_palette, 900, 600, 900);
+
+// The warn palette is optional (defaults to red).
+$warn: mat.m2-define-palette(config.$velvet_red_palette, 700, 500, 900);
+
+// Define a theme.
+$theme: mat.m2-define-light-theme((
+  color: (primary: $primary, accent: $accent, warn: $warn),
+  density: 0
 ));
 
-// Include all theme styles for the components wrapped in html selector.
-html {
-  @include mat.all-component-themes($theme);
-}
+// Include all theme styles for the components.
+@include mat.all-component-themes($theme);
 
 
 body {
