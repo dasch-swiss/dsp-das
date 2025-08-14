@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
 import { PropertyInfo, PropToAdd, ResourceClassInfo } from '../../ontology.types';
@@ -39,11 +39,11 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
           <button
             mat-menu-item
             *ngFor="let prop of onto.properties; trackBy: trackByPropFn"
-            [matTooltip]="prop.propDef!.comment || ''"
+            [matTooltip]="prop.propDef!.comments | appStringifyStringLiteral"
             matTooltipPosition="after"
             (click)="assignExistingProperty(prop.propDef!.id)">
             <mat-icon>{{ prop.propType?.icon }}</mat-icon>
-            {{ prop.propDef!.label }}
+            {{ prop.propDef!.labels | appStringifyStringLiteral }}
           </button>
         </mat-menu>
       </ng-container>
@@ -51,13 +51,18 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 
     <mat-menu #newFromPropType="matMenu">
       <ng-container *ngFor="let type of defaultProperties; trackBy: trackByPropCategoryFn">
-        <button mat-menu-item [matMenuTriggerFor]="sub_menu" [attr.data-cy]="type.group">{{ type.group }}</button>
+        <button
+          mat-menu-item
+          [matMenuTriggerFor]="sub_menu"
+          [attr.data-cy]="type.group.replaceAll(' ', '').replace('/', '-')">
+          {{ type.group }}
+        </button>
         <mat-menu #sub_menu="matMenu" class="default-nested-sub-menu">
           <button
             mat-menu-item
             *ngFor="let ele of type.elements; trackBy: trackByDefaultPropertyFn"
             [value]="ele"
-            [attr.data-cy]="ele.label"
+            [attr.data-cy]="ele.label.replaceAll(' ', '').replace('/', '-')"
             [matTooltip]="ele.description"
             matTooltipPosition="after"
             (click)="addNewProperty(ele)">
@@ -78,17 +83,22 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddPropertyMenuComponent {
+export class AddPropertyMenuComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
-  @Output() updatePropertyAssignment = new EventEmitter<string>();
 
   private ngUnsubscribe = new Subject<void>();
+  private resourceClass$ = new BehaviorSubject<ResourceClassInfo | null>(null);
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;
 
-  availableProperties$: Observable<PropToAdd[]> = this._oes.currentProjectsProperties$.pipe(
+  availableProperties$: Observable<PropToAdd[]> = combineLatest([
+    this._oes.currentProjectsProperties$,
+    this.resourceClass$,
+  ]).pipe(
     takeUntil(this.ngUnsubscribe),
-    map(allProps => {
-      const usedByClass = new Set(this.resourceClass?.iHasProperties.map(p => p.propertyIndex));
+    map(([allProps, resourceClass]) => {
+      if (!resourceClass) return [];
+
+      const usedByClass = new Set(resourceClass.iHasProperties.map(p => p.propertyIndex));
       const groupedUnused = new Map<string, PropToAdd>();
 
       allProps.forEach(prop => {
@@ -112,6 +122,10 @@ export class AddPropertyMenuComponent {
     private _dialog: MatDialog,
     private _oes: OntologyEditService
   ) {}
+
+  ngOnChanges() {
+    this.resourceClass$.next(this.resourceClass);
+  }
 
   trackByPropToAddFn = (index: number, item: PropToAdd) => `${index}-${item.ontologyId}`;
 

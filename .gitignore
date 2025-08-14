@@ -55,7 +55,8 @@ Thumbs.db
 /site
 
 .angular
-/libs/jdnconvertiblecalendar/coverage/
+libs/jdnconvertiblecalendar/coverage/
+libs/vre/coverage/
 apps/dsp-app/coverage/
 apps/dsp-app/.nyc_output/
 
@@ -65,3 +66,9 @@ apps/dsp-app/cypress/screenshots
 
 # Sentry Config File
 .sentryclirc
+
+.envrc
+
+# OpenAPI generated files
+libs/vre/3rd-party-services/open-api/src/generated/
+
