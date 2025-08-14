@@ -1,9 +1,7 @@
 @use 'config' as *;
 @use 'mixins' as *;
 @use 'sass:math';
-@use '@material/snackbar' as snackbar;
-@use '@material/button' as button;
-@use '@material/menu-surface' as menu-surface;
+@use '@angular/material' as mat;
 
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
@@ -353,10 +351,10 @@ a,
 // file representation menu styling
 .representation-menu {
   --mat-menu-item-label-text-color: $white;
-
+  
   &.mdc-menu-surface {
-    @include menu-surface.fill-color($dark);
-    @include menu-surface.ink-color($white);
+    background-color: $dark;
+    color: $white;
   }
 }
 
@@ -555,7 +553,6 @@ $gc-small: $form-width - $gc-large - 4;
   position: fixed;
   inset: 0;
   z-index: 999;
-  background-color: rgba(0, 0, 0, 0.1);
   pointer-events: all; // catch all events, no interaction possible
 }
 
@@ -623,30 +620,30 @@ nav.mat-mdc-tab-nav-bar,
 
 .mat-mdc-snack-bar-container {
   &.success {
-    @include snackbar.fill-color(rgba($primary, 0.9));
-    @include snackbar.label-ink-color($primary_contrast);
+    background-color: rgba($primary, 0.9);
+    color: $primary_contrast;
 
     .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($primary_contrast);
+      color: $primary_contrast;
     }
   }
 
   &.failed,
   &.error {
-    @include snackbar.fill-color(rgba($red, 0.9));
-    @include snackbar.label-ink-color($red_contrast);
+    background-color: rgba($red, 0.9);
+    color: $red_contrast;
 
     .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($red_contrast);
+      color: $red_contrast;
     }
   }
 
   &.note {
-    @include snackbar.fill-color(rgba($yellow, 0.9));
-    @include snackbar.label-ink-color($yellow_contrast);
+    background-color: rgba($yellow, 0.9);
+    color: $yellow_contrast;
 
     .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($yellow_contrast);
+      color: $yellow_contrast;
     }
   }
 }
@@ -691,7 +688,7 @@ nav.mat-mdc-tab-nav-bar,
 // action bubble
 .action-bubble {
   position: absolute;
-  right: 8px;
+  right: 56px;
   top: 3px;
   border: 1px solid #e4e4e4;
   border-radius: 14px;
