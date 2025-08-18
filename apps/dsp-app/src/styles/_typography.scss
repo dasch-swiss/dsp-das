@@ -3,6 +3,10 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-// Simple typography configuration for Angular Material 18
-// Using default Material typography without custom configuration for now
-$dsp-typography-config: null;
+@use '@angular/material' as mat;
+
+// Angular Material 18 compatible typography - using M2 default config to match staging appearance
+// This produces the same visual result as the pre-upgrade version
+$dsp-typography-config: mat.m2-define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif'
+);
