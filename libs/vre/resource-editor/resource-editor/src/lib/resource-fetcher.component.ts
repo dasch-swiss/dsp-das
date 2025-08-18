@@ -14,7 +14,7 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <div class="content large middle">
+    <div class="content large middle" id="resource-fetcher-container">
       <app-resource-version-warning
         *ngIf="resourceVersion"
         [resourceVersion]="resourceVersion"

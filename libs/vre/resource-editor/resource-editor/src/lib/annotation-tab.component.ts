@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
@@ -39,6 +29,7 @@ import { Subscription } from 'rxjs';
                 style="width: 100%"
                 [resource]="annotation.res"
                 [parentResourceId]="resource.id"
+                [toolBarActive]="annotation.res.id === selectedRegion"
                 (click)="$event.stopPropagation()" />
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Constants, ReadColorValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -10,9 +11,18 @@ import { take } from 'rxjs';
   selector: 'app-annotation-toolbar',
   template: `
     <div class="actions">
-      <span class="color-value">
+      <span class="color-value" *ngIf="!toolBarActive">
         <app-color-viewer [value]="readColorValue" />
       </span>
+      <button
+        *ngIf="toolBarActive"
+        mat-icon-button
+        matTooltip="Highlight Region"
+        color="primary"
+        matTooltipPosition="above"
+        (click)="onPinPointClicked()">
+        <mat-icon>my_location</mat-icon>
+      </button>
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
@@ -86,6 +96,7 @@ import { take } from 'rxjs';
 export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) parentResourceId!: string;
+  @Input() toolBarActive = false;
 
   get readColorValue() {
     const colorValues: ReadColorValue[] = this.resource.properties[Constants.HasColor] as ReadColorValue[];
@@ -96,7 +107,8 @@ export class AnnotationToolbarComponent {
     protected notification: NotificationService,
     private _regionService: RegionService,
     private _resourceService: ResourceService,
-    public resourceFetcher: ResourceFetcherService
+    public resourceFetcher: ResourceFetcherService,
+    private _viewport: ViewportScroller
   ) {}
 
   onResourceUpdated() {
@@ -116,11 +128,12 @@ export class AnnotationToolbarComponent {
     );
   }
 
-  copyArkUrl() {
-    this.notification.openSnackBar('ARK URL copied to clipboard!');
-  }
-
-  copyInternalLink() {
-    this.notification.openSnackBar('Internal link copied to clipboard!');
+  onPinPointClicked() {
+    const element = document.getElementById('resource-fetcher-container');
+    element?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   }
 }
