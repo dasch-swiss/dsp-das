@@ -9,27 +9,21 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-properties-display',
   template: `
-    <div style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3">
+    <div
+      style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3"
+      *ngIf="!hideToolbar">
       <div style="display: flex; flex: 0 0 auto">
-        <app-properties-toolbar
-          [showToggleProperties]="true"
-          [showOnlyIcons]="displayLabel"
-          [numberOfComments]="numberOfComments"
-          style="flex-shrink: 0" />
-        <app-annotation-toolbar *ngIf="displayLabel" [resource]="resource.res" [parentResourceId]="parentResourceId" />
+        <app-properties-toolbar [numberOfComments]="numberOfComments" style="flex-shrink: 0" />
       </div>
 
       <h3
         style="margin: 0 16px; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
-        *ngIf="displayLabel"
         data-cy="property-header">
         {{ resource.res.label }}
       </h3>
     </div>
 
-    <div
-      class="infobar mat-caption"
-      *ngIf="displayLabel && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
+    <div class="infobar mat-caption" *ngIf="(resourceAttachedUser$ | async) !== undefined || resource.res.creationDate">
       Created
       <span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
         by
@@ -81,9 +75,9 @@ import { map } from 'rxjs';
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
-  @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
   @Input() parentResourceId = '';
+  @Input() hideToolbar = false;
 
   protected readonly cardinality = Cardinality;
 
@@ -99,7 +93,10 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   numberOfComments!: number;
 
-  constructor(private _store: Store) {}
+  constructor(
+    public propertiesDisplayService: PropertiesDisplayService,
+    private _store: Store
+  ) {}
 
   ngOnChanges() {
     this.editableProperties = this.resource.resProps.filter(
@@ -113,6 +110,10 @@ export class PropertiesDisplayComponent implements OnChanges {
       );
       return acc + valuesWithComments;
     }, 0);
+
+    if (this.hideToolbar) {
+      this.propertiesDisplayService.toggleShowProperties();
+    }
   }
 
   trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;

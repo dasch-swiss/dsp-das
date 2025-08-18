@@ -94,6 +94,7 @@ Multiple environment configurations available:
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
 - Self-closing tags for component selectors in templates
+- no usage of ::ng-deep
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
