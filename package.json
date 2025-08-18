@@ -16,6 +16,8 @@
     "start-stage": "nx run dsp-app:serve:stage-server",
     "start-rdu-19": "nx run dsp-app:serve:rdu-19-server",
     "generate-openapi-module": "cd libs/vre/3rd-party-services/open-api && rm -rf src/lib/generated && npx openapi-generator-cli generate",
+    "check-openapi-sync": "./scripts/check-openapi-sync.sh",
+    "update-openapi": "curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml && npm run generate-openapi-module",
     "e2e-local": "cd apps/dsp-app && npx cypress open --browser chrome --e2e",
     "e2e-coverage": "nx run dsp-app:e2e:coverage && node tools/lcov-parser.js",
     "e2e-ci-dev": "nx run dsp-app:e2e:development",
@@ -30,7 +32,8 @@
     "lint-local": "nx run dsp-app:lint --fix",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org dasch --project javascript-angular ./dist/apps/dsp-app && sentry-cli sourcemaps upload --org dasch --project javascript-angular ./dist/apps/dsp-app",
     "webdriver-update": "webdriver-manager update --standalone false --gecko",
-    "yalc-add-lib": "rm -rf .yalc/@dasch-swiss && yalc add @dasch-swiss/dsp-js && npm install"
+    "yalc-add-lib": "rm -rf .yalc/@dasch-swiss && yalc add @dasch-swiss/dsp-js && npm install",
+    "postinstall": "npm run generate-openapi-module"
   },
   "private": true,
   "dependencies": {
