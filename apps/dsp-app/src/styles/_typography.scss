@@ -6,7 +6,17 @@
 @use '@angular/material' as mat;
 
 // Angular Material 18 compatible typography - using M2 default config to match staging appearance
+
+// define the primary button typography level
+$dsp-primary-button-typography-level: mat.m2-define-typography-level(
+        $font-size: 16px,
+        $line-height: 36px,
+        $font-weight: 400,
+        $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+        $letter-spacing: normal
+);
+
 // This produces the same visual result as the pre-upgrade version
 $dsp-typography-config: mat.m2-define-typography-config(
-  $font-family: 'Roboto, "Helvetica Neue", sans-serif'
+  $button: $dsp-primary-button-typography-level
 );
