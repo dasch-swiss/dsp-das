@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
 
@@ -7,7 +8,7 @@ import { combineLatest, map } from 'rxjs';
   providedIn: 'root',
 })
 export class AllProjectsService {
-  allProjects$ = this._store.select(ProjectsSelectors.allProjects);
+  allProjects$ = this._projectApiService.list().pipe(map(response => response.projects));
   otherProjects$ = combineLatest([this._store.select(UserSelectors.userActiveProjects), this.allProjects$]).pipe(
     map(([userActiveProjects, projects]) => {
       return projects.filter(project => userActiveProjects.findIndex(userProj => userProj.id === project.id) === -1);
@@ -25,5 +26,8 @@ export class AllProjectsService {
     )
   );
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _projectApiService: ProjectApiService,
+    private _store: Store
+  ) {}
 }

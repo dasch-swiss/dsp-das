@@ -6,21 +6,13 @@ import { NgxsRouterPluginModule, RouterStateSerializer } from '@ngxs/router-plug
 import { NgxsModule, Store } from '@ngxs/store';
 import { CustomRouterStateSerializer } from './lib/router/router-state.serializer';
 import { DEVTOOLS_REDUX_CONFIG, LOGGER_CONFIG, OPTIONS_CONFIG } from './store.config';
-import {
-  ConfigState,
-  ListsState,
-  OntologiesState,
-  ProjectsState,
-  ResourceState,
-  SetConfigAction,
-  UserState,
-} from './index';
+import { ConfigState, ListsState, OntologiesState, ProjectsState, SetConfigAction, UserState } from './index';
 
 export function initializeConfigState(configService: AppConfigService, store: Store) {
   return () => store.dispatch(new SetConfigAction(configService));
 }
 
-const STATE_MODULES = [UserState, ProjectsState, OntologiesState, ListsState, ResourceState, ConfigState];
+const STATE_MODULES = [UserState, ProjectsState, OntologiesState, ListsState, ConfigState];
 
 @NgModule({
   exports: [NgxsModule],

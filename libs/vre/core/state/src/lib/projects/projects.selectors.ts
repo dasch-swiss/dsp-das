@@ -1,5 +1,5 @@
 import { Params } from '@angular/router';
-import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
@@ -8,10 +8,6 @@ import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
 
 export class ProjectsSelectors {
-  @Selector([ProjectsState])
-  static allProjects(state: ProjectsStateModel): StoredProject[] {
-    return state.allProjects;
-  }
   @Selector([ProjectsState, RouterSelectors.params])
   static currentProject(state: ProjectsStateModel, params: Params | undefined): ReadProject | undefined {
     if (!params) return undefined;
