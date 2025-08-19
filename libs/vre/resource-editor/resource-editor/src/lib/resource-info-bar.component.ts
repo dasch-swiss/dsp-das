@@ -1,12 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { filter, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-resource-info-bar',
@@ -44,31 +43,21 @@ export class ResourceInfoBarComponent implements OnChanges {
 
   resourceAttachedUser$ = this._resourceFetcherService.attachedUser$;
 
-  project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
-    filter(attachedProjects => attachedProjects[this.resource.id]?.value?.length > 0),
-    map(attachedProjects =>
-      attachedProjects[this.resource.id].value.find(u => u.id === this.resource.attachedToProject)
-    )
-  );
+  project$!: Observable<ReadProject>;
 
   constructor(
-    private _store: Store,
     private router: Router,
-    private _resourceFetcherService: ResourceFetcherService
+    private _resourceFetcherService: ResourceFetcherService,
+    private _projectApiService: ProjectApiService
   ) {}
 
   ngOnChanges() {
-    this._getResourceAttachedData(this.resource);
+    this.project$ = this._projectApiService
+      .get(this.resource.attachedToProject)
+      .pipe(map(response => response.project));
   }
 
   openProject(project: ReadProject) {
     this.router.navigate([RouteConstants.projectRelative, ProjectService.IriToUuid(project.id)]);
-  }
-
-  private _getResourceAttachedData(resource: ReadResource): void {
-    this._store.dispatch([
-      new GetAttachedUserAction(resource.id, resource.attachedToUser),
-      new GetAttachedProjectAction(resource.id, resource.attachedToProject),
-    ]);
   }
 }

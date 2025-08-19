@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { GetAttachedProjectAction, GetAttachedUserAction } from '@dasch-swiss/vre/core/state';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
@@ -73,10 +72,6 @@ export class CompoundService {
       incomingResource.systemProps =
         incomingResource.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
 
-      this._store.dispatch([
-        new GetAttachedUserAction(incomingResource.res.id, incomingResource.res.attachedToUser),
-        new GetAttachedProjectAction(incomingResource.res.id, incomingResource.res.attachedToProject),
-      ]);
       this._reloadViewer(incomingResource);
       this._regionService.initialize(incomingResource.res.id);
     });
