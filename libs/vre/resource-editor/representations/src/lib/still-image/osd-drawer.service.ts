@@ -342,6 +342,7 @@ export class OsdDrawerService implements OnDestroy {
       if (tooltip && this._currentTooltip === tooltip) {
         // Cancel any pending update
         if (this._tooltipUpdateFrame !== null) {
+          // don't update if already scheduled, makes it way smoother
           cancelAnimationFrame(this._tooltipUpdateFrame);
         }
 
