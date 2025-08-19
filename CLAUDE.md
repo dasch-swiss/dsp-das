@@ -39,6 +39,15 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 - `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
 - `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
 
+### OpenAPI Code Generation
+- `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
+- `npm run check-openapi-sync` - Smart diff check ignoring metadata (same logic as CI)
+- `npm run update-openapi` - Update spec file and regenerate client (one command)
+- Uses local spec file `libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml`
+- Smart diff via `scripts/check-openapi-sync.sh` ignores metadata changes
+- Only fails on meaningful changes (endpoints, schemas, parameters)
+- Script supports `--verbose` flag for detailed diff output
+
 ### Library Development
 - `nx run [library-name]:test` - Test specific library
 - `nx run [library-name]:lint` - Lint specific library
@@ -70,6 +79,7 @@ Uses **NGXS** for state management with domain-specific states:
 
 ### Key Patterns
 - **Barrel exports** via `*.components.ts` files
+- **exposing exported files** via `*.index.ts` files
 - **TypeScript path mapping** with `@dasch-swiss/vre/*` aliases
 - **Feature-based organization** by domain
 - **Reactive programming** with RxJS observables
@@ -92,6 +102,7 @@ Multiple environment configurations available:
 - Prettier for code formatting
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
+- Self-closing tags for component selectors in templates
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
