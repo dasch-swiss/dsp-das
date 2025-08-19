@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { OntologyMetadata } from '@dasch-swiss/dsp-js';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { existingNamesAsyncValidator, existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { Subject, take, takeUntil } from 'rxjs';
+import { map, Subject, take, takeUntil } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
@@ -39,19 +39,19 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     return this.data?.id ? OntologyService.getOntologyNameFromIri(this.data.id) : '';
   }
 
-  get existingOntologyNames(): string[] {
-    return this._store
-      .selectSnapshot(OntologiesSelectors.currentProjectOntologies)
-      .map(onto => OntologyService.getOntologyNameFromIri(onto.id));
-  }
-
   get blackListedNames() {
-    return [...this.forbiddenNames, ...this.existingOntologyNames];
+    return this._projectPageService.detailedOntologies$.pipe(
+      map(ontos => {
+        const existingOntologyNames = ontos.map(onto => OntologyService.getOntologyNameFromIri(onto.id));
+        return [...this.forbiddenNames, ...existingOntologyNames];
+      })
+    );
   }
 
   constructor(
     private _fb: FormBuilder,
     private _oes: OntologyEditService,
+    private _projectPageService: ProjectPageService,
     private _store: Store,
     @Inject(MAT_DIALOG_DATA) public data: UpdateOntologyData | undefined,
     public dialogRef: MatDialogRef<OntologyFormComponent, OntologyMetadata>
@@ -84,7 +84,7 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
             Validators.minLength(3),
             Validators.maxLength(16),
             Validators.pattern(CustomRegex.ID_NAME_REGEX),
-            existingNamesValidator(this.blackListedNames),
+            existingNamesAsyncValidator(this.blackListedNames),
           ],
         }
       ),

@@ -22,12 +22,7 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  ListsFacade,
-  OntologiesSelectors,
-  RemoveProjectOntologyAction,
-  ResetCurrentOntologyAction,
-} from '@dasch-swiss/vre/core/state';
+import { ListsFacade, RemoveProjectOntologyAction, ResetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -78,7 +73,7 @@ export class OntologyEditService {
 
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
-    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this._projectPageService.detailedOntologies$,
     this.getListsInProject$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
@@ -89,7 +84,7 @@ export class OntologyEditService {
   );
 
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
-    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this._projectPageService.detailedOntologies$,
     this.getListsInProject$,
   ]).pipe(
     map(([ontologies, allLists]) => {
@@ -210,16 +205,18 @@ export class OntologyEditService {
   initOntologyByLabel(label: string) {
     this._isTransacting.next(true);
     this._canDeletePropertyMap.clear();
-    const ontologies = this._store.selectSnapshot(OntologiesSelectors.currentProjectOntologies);
-    const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
-    if (ontologyFromStore) {
-      this._currentOntology.next(ontologyFromStore);
-      this._currentOntologyInfo.next(ontologyFromStore);
-      this._isTransacting.next(false);
-    } else {
-      this._loadOntologyByLabel(label);
-    }
+    this._projectPageService.detailedOntologies$.subscribe(ontologies => {
+      const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
+
+      if (ontologyFromStore) {
+        this._currentOntology.next(ontologyFromStore);
+        this._currentOntologyInfo.next(ontologyFromStore);
+        this._isTransacting.next(false);
+      } else {
+        this._loadOntologyByLabel(label);
+      }
+    });
   }
 
   private _loadOntologyByLabel(label: string) {

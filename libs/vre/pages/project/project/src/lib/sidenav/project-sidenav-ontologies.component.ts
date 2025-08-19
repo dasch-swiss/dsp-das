@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { ProjectPageService } from '../project-page.service';
 
 @Component({
   selector: 'app-projects-sidenav-ontologies',
@@ -30,9 +29,9 @@ import { Store } from '@ngxs/store';
   styleUrls: ['./project-sidenav-ontologies.component.scss'],
 })
 export class ProjectSidenavOntologiesComponent {
-  projectOntologies$ = this._store.select(OntologiesSelectors.currentProjectOntologies);
+  projectOntologies$ = this._projectPageService.detailedOntologies$;
 
-  constructor(private _store: Store) {}
+  constructor(private _projectPageService: ProjectPageService) {}
 
   compareElementHeights(elem: HTMLElement): boolean {
     return !(elem.scrollHeight > elem.clientHeight);

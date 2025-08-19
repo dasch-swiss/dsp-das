@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
@@ -36,7 +36,7 @@ export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
 
   ontologyClasses$ = combineLatest([
-    this._store.select(OntologiesSelectors.currentProjectOntologies),
+    this._projectPageService.detailedOntologies$,
     this._localizationService.currentLanguage$,
   ]).pipe(
     map(([response, lang]) => {
@@ -58,6 +58,7 @@ export class GuiAttrLinkComponent {
 
   constructor(
     private _store: Store,
+    private _projectPageService: ProjectPageService,
     private _sortingService: SortingService,
     private _localizationService: LocalizationService
   ) {}
