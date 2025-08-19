@@ -15,6 +15,9 @@ export class RegionService {
   private _regionsSubject = new BehaviorSubject<DspResource[]>([]);
   regions$ = this._regionsSubject.asObservable();
 
+  private _regionsLoading = new BehaviorSubject(false);
+  regionsLoading$ = this._regionsLoading.asObservable();
+
   private _showRegions = new BehaviorSubject(false);
   showRegions$ = this._showRegions.asObservable();
 
@@ -52,25 +55,28 @@ export class RegionService {
 
   private _getIncomingRegions(resourceId: string) {
     let offset = 0;
-
+    let accumulated: DspResource[] = [];
+    this._regionsLoading.next(true);
     return this._dspApi.v2.search.doSearchIncomingRegions(resourceId, offset).pipe(
       expand(response => {
+        const currentPageResources = response.resources.map(resource => {
+          const z = new DspResource(resource);
+          z.resProps = GenerateProperty.regionProperty(resource);
+          return z;
+        });
+
+        accumulated = [...accumulated, ...currentPageResources];
+        this._regionsSubject.next(accumulated);
+
         if (response.mayHaveMoreResults) {
           offset++;
           return this._dspApi.v2.search.doSearchIncomingRegions(resourceId, offset);
         } else {
+          this._regionsLoading.next(false);
           return EMPTY;
         }
       }),
-      concatMap(page => page.resources),
-      toArray(),
-      map(res =>
-        res.map(resource => {
-          const z = new DspResource(resource);
-          z.resProps = GenerateProperty.regionProperty(resource);
-          return z;
-        })
-      )
+      map(() => accumulated)
     );
   }
 }

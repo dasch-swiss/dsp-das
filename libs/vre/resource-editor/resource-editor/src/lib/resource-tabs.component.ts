@@ -21,9 +21,15 @@ import { CompoundService } from './compound/compound.service';
       <!-- image annotations -->
       <mat-tab label="Annotations" *ngIf="displayAnnotations">
         <ng-template matTabLabel>
-          {{ 'resourceEditor.labelAnnotations' | translate }}
-          <span *ngIf="regionsCount > 0" [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false">
+          <span>{{ 'resourceEditor.labelAnnotations' | translate }}</span>
+          <span
+            style="margin-left: 0.5em;"
+            *ngIf="regionsCount > 0"
+            [matBadge]="regionsCount"
+            matBadgeColor="primary"
+            matBadgeOverlap="false">
           </span>
+          <span [ngClass]="['dots-container', (regionService.regionsLoading$ | async) ? 'dots' : '']"> </span>
         </ng-template>
         <app-annotation-tab [resource]="resource.res" />
       </mat-tab>
@@ -39,16 +45,31 @@ import { CompoundService } from './compound/compound.service';
       </mat-tab>
     </mat-tab-group>
   `,
+
   styles: [
     `
-      :host ::ng-deep {
-        .mat-mdc-tab-body {
-          width: 100%;
-        }
-        .mat-mdc-tab-body.mat-mdc-tab-body-active,
-        .mat-mdc-tab-body-content,
-        .mat-mdc-tab-body-wrapper {
-          overflow: visible;
+      .dots-container {
+        margin-left: 1.5em;
+        min-width: 3ch;
+      }
+      .dots {
+        position: relative;
+        display: inline-block;
+        color: var(--primary);
+      }
+      .dots::after {
+        content: '...';
+        display: inline-block;
+        overflow: hidden;
+        width: 0;
+        vertical-align: bottom;
+
+        animation: dots 1s steps(3, end) infinite;
+      }
+
+      @keyframes dots {
+        to {
+          width: 3ch;
         }
       }
     `,
