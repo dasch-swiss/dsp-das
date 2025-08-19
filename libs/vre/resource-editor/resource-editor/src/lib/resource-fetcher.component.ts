@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
-import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
@@ -44,7 +42,7 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
   `,
   providers: [ResourceFetcherService],
 })
-export class ResourceFetcherComponent implements OnChanges, OnDestroy {
+export class ResourceFetcherComponent implements OnChanges {
   @Input({ required: true }) resourceIri!: string;
   @Input() resourceVersion?: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
@@ -58,8 +56,7 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
     private _resourceFetcherService: ResourceFetcherService,
     private _notification: NotificationService,
     private _router: Router,
-    private _translateService: TranslateService,
-    private _store: Store
+    private _translateService: TranslateService
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -122,10 +119,6 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
       .then(() => {
         this._resourceFetcherService.reload();
       });
-  }
-
-  ngOnDestroy() {
-    this._store.dispatch(new SetCurrentResourceAction(null));
   }
 
   private _reloadIfCurrentVersion(resourceVersion: string, lastModificationDate?: string) {

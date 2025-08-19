@@ -1,13 +1,9 @@
 import { Params } from '@angular/router';
-import { ReadProject, ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
-import { DspAppConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ReadProject, StoredProject } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Selector } from '@ngxs/store';
-import { ConfigState } from '../config.state';
-import { ResourceSelectors } from '../resource/resource.selectors';
 import { RouterSelectors } from '../router/router.selector';
-import { UserSelectors } from '../user/user.selectors';
 import { ProjectsState } from './projects.state';
 import { ProjectsStateModel } from './projects.state-model';
 
@@ -28,32 +24,5 @@ export class ProjectsSelectors {
   static currentProjectsUuid(state: ProjectsStateModel, params: Params | undefined): string | undefined {
     if (!params) return undefined;
     return params[`${RouteConstants.uuidParameter}`];
-  }
-
-  @Selector([
-    ProjectsState,
-    ResourceSelectors.resource,
-    UserSelectors.user,
-    UserSelectors.userProjectAdminGroups,
-    ConfigState.getConfig,
-    RouterSelectors.params,
-  ])
-  static isCurrentProjectAdminOrSysAdmin(
-    state: ProjectsStateModel,
-    resource: DspResource | null,
-    user: ReadUser | null,
-    userProjectGroups: string[],
-    dspApiConfig: DspAppConfig,
-    params: Params | undefined
-  ): boolean | undefined {
-    if (!user || !user.permissions || !params) return false;
-    const isMemberOfSystemAdminGroup = user.permissions.groupsPerProject
-      ? ProjectService.IsMemberOfSystemAdminGroup(user.permissions.groupsPerProject)
-      : false;
-    if (isMemberOfSystemAdminGroup) return true;
-    const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
-    if (!projectIri) return false;
-    const isProjectAdmin = ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri);
-    return isProjectAdmin;
   }
 }

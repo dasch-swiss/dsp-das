@@ -3,9 +3,7 @@ import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-s
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
 import { BehaviorSubject, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
@@ -26,8 +24,7 @@ export class ResourceFetcherService {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _adminProjectsApiService: AdminProjectsApiService,
-    private _userApiService: UserApiService,
-    private _store: Store
+    private _userApiService: UserApiService
   ) {}
 
   onInit(resourceIri: string, resourceVersion?: string) {
@@ -69,8 +66,6 @@ export class ResourceFetcherService {
         const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-        this._store.dispatch(new SetCurrentResourceAction(res));
         return res;
       })
     );
