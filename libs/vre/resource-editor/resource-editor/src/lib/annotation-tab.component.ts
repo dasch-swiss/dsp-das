@@ -3,7 +3,7 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-annotation-tab',
@@ -14,10 +14,11 @@ import { Subscription } from 'rxjs';
         *ngFor="let annotation of regionService.regions$ | async; trackBy: trackAnnotationByFn"
         [attr.data-annotation-resource]="annotation.res.id"
         [class.active]="annotation.res.id === selectedRegion"
-        [expanded]="annotation.res.id === selectedRegion"
-        (opened)="selectedRegion = annotation.res.id"
+        [expanded]="annotation.res.id === expandedRegion"
+        (closed)="onPanelClosed(annotation.res.id)"
+        (opened)="onPanelOpened(annotation.res.id)"
         data-cy="annotation-border">
-        <mat-expansion-panel-header (opened)="selectedRegion = annotation.res.id">
+        <mat-expansion-panel-header>
           <div style="width: 100%; display: flex; align-items: center; justify-content: space-between">
             <div>
               <h3 class="label" data-cy="property-header">
@@ -46,8 +47,9 @@ import { Subscription } from 'rxjs';
 export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;
   selectedRegion: string | null = null;
+  expandedRegion: string | null = null;
 
-  private _subscription!: Subscription;
+  private _destroy$ = new Subject<void>();
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -55,19 +57,33 @@ export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit() {
-    this._subscription = this.regionService.selectedRegion$.subscribe(region => {
+    this.regionService.selectedRegion$.pipe(takeUntil(this._destroy$)).subscribe(region => {
       this.selectedRegion = region;
-      this._scrollToRegion(region);
+      if (this.selectedRegion !== this.expandedRegion) {
+        this.expandedRegion = null;
+      }
       this._cdr.detectChanges();
     });
-  }
 
-  ngOnDestroy() {
-    this._subscription.unsubscribe();
+    this.regionService.highlightedRegionClicked$.pipe(takeUntil(this._destroy$)).subscribe(iri => {
+      this.expandedRegion = iri;
+      this._cdr.detectChanges();
+      this._scrollToRegion(iri);
+    });
   }
 
   trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
   protected readonly RouteConstants = RouteConstants;
+
+  onPanelOpened(iri: string) {
+    this.regionService.selectRegion(iri);
+  }
+
+  onPanelClosed(iri: string) {
+    if (this.selectedRegion === iri) {
+      this.regionService.selectRegion(null);
+    }
+  }
 
   private _scrollToRegion(iri: string | null) {
     const element = iri ? (document.querySelector(`[data-annotation-resource="${iri}"]`) as HTMLElement) : null;
@@ -75,5 +91,10 @@ export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
       behavior: 'smooth',
       block: 'center',
     });
+  }
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

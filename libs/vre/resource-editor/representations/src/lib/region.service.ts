@@ -24,6 +24,9 @@ export class RegionService {
   private _selectedRegion = new BehaviorSubject<string | null>(null);
   selectedRegion$ = this._selectedRegion.asObservable();
 
+  private _highlightedRegionClicked = new BehaviorSubject<string | null>(null);
+  highlightedRegionClicked$ = this._highlightedRegionClicked.asObservable();
+
   private _ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -49,8 +52,12 @@ export class RegionService {
     this._showRegions.next(value);
   }
 
-  selectRegion(regionIri: string) {
+  selectRegion(regionIri: string | null) {
     this._selectedRegion.next(regionIri);
+  }
+
+  setHighlightedRegionClicked(regionIri: string | null) {
+    this._highlightedRegionClicked.next(regionIri);
   }
 
   private _getIncomingRegions(resourceId: string) {

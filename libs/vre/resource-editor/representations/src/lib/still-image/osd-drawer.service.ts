@@ -48,15 +48,10 @@ export class OsdDrawerService implements OnDestroy {
     this._osd.viewer.addHandler('canvas-click', (event: any) => {
       const target = event.originalTarget as SVGElement;
       const regionIri = target.getAttribute('data-region-iri');
-
-      if (regionIri) {
-        this._regionService.selectRegion(regionIri);
+      if (regionIri === this._currentHighlightedRegion) {
+        this._regionService.setHighlightedRegionClicked(regionIri);
       } else {
-        if (!this._currentHighlightedRegion) {
-          return;
-        }
-        this._unhighlightRegion(this._currentHighlightedRegion);
-        this._currentHighlightedRegion = null;
+        this._regionService.selectRegion(regionIri);
       }
     });
   }
@@ -67,11 +62,6 @@ export class OsdDrawerService implements OnDestroy {
 
   private _subscribeToSelectedRegion() {
     this._regionService.selectedRegion$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(region => {
-      // Unhighlight current region if one is highlighted
-      if (this._currentHighlightedRegion) {
-        this._unhighlightRegion(this._currentHighlightedRegion);
-      }
-      this._currentHighlightedRegion = region;
       this._highlightRegion(region);
     });
   }
@@ -235,12 +225,13 @@ export class OsdDrawerService implements OnDestroy {
       element: svgElement,
       location: new OpenSeadragon.Rect(0, 0, 1, aspectRatio),
     });
-
     this._masterSvgOverlay = svgElement;
-    // this._cdr.detectChanges();
   }
 
   private _highlightRegion(regionIri: string | null) {
+    this._unhighlightSelectedRegion();
+    this._currentHighlightedRegion = regionIri;
+
     const rect = this._masterSvgOverlay?.querySelector(`rect[data-region-iri="${regionIri}"]`);
     const originalWidth = rect?.getAttribute('data-original-stroke-width') || '2';
 
@@ -253,31 +244,12 @@ export class OsdDrawerService implements OnDestroy {
     rect?.setAttribute('fill-opacity', '0.15');
   }
 
-  private _unhighlightRegion(regionIri: string) {
-    const rect = this._masterSvgOverlay?.querySelector(`rect[data-region-iri="${regionIri}"]`);
+  private _unhighlightSelectedRegion() {
+    const rect = this._masterSvgOverlay?.querySelector(`rect[data-region-iri="${this._currentHighlightedRegion}"]`);
     const originalWidth = rect?.getAttribute('data-original-stroke-width') || '2';
     rect?.setAttribute('stroke-width', originalWidth);
     rect?.setAttribute('fill', 'none');
     rect?.removeAttribute('fill-opacity');
-  }
-
-  // Keep this method for cases where we need to clear all highlights (like when overlays are removed)
-  private _unhighlightAllRegions() {
-    if (this._masterSvgOverlay) {
-      const regionGroups = this._masterSvgOverlay.querySelectorAll('[data-region-iri]');
-      regionGroups.forEach(group => {
-        group.setAttribute('class', 'region');
-        // Reset visual emphasis
-        const rect = group.querySelector('rect');
-        if (rect) {
-          const originalWidth = rect.getAttribute('data-original-stroke-width') || '2';
-          rect.setAttribute('stroke-width', originalWidth);
-          // Remove fill to return to outline-only state
-          rect.setAttribute('fill', 'none');
-          rect.removeAttribute('fill-opacity');
-        }
-      });
-    }
     this._currentHighlightedRegion = null;
   }
 
@@ -419,7 +391,7 @@ export class OsdDrawerService implements OnDestroy {
         }
       });
     }
-
+    this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
   }
 }

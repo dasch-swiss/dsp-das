@@ -107,8 +107,7 @@ export class AnnotationToolbarComponent {
     protected notification: NotificationService,
     private _regionService: RegionService,
     private _resourceService: ResourceService,
-    public resourceFetcher: ResourceFetcherService,
-    private _viewport: ViewportScroller
+    public resourceFetcher: ResourceFetcherService
   ) {}
 
   onResourceUpdated() {
