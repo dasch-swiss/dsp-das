@@ -72,7 +72,7 @@
       </ng-template>
     </span>
   </div>
-  <div class="action-bubble" *ngIf="(isAdmin$ | async) && (project$ | async)?.status && showActionBubble">
+  <div class="action-bubble" *ngIf="(hasProjectAdminRights$ | async) && (project$ | async)?.status && showActionBubble">
     <div class="button-container">
       <button
         [disabled]="!property.propDef!.isEditable"

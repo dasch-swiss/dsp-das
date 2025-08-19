@@ -30,7 +30,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
 
   project$ = this._projectPageService.currentProject$;
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   classHovered = false;
   menuOpen = false;

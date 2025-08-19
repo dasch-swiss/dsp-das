@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import {
   DefaultClass,
@@ -46,7 +45,7 @@ import { OntologyPageService } from './ontology-page.service';
           {{ (ops.expandClasses$ | async) ? 'Collapse all' : 'Expand all' }}
         </button>
         <button
-          *ngIf="isAdmin$ | async"
+          *ngIf="hasProjectAdminRights$ | async"
           [disabled]="!(project$ | async)?.status"
           mat-button
           data-cy="create-class-button"
@@ -70,7 +69,7 @@ import { OntologyPageService } from './ontology-page.service';
       <div *ngIf="rla2.isActive">
         <!-- Properties tab content -->
         <button
-          *ngIf="isAdmin$ | async"
+          *ngIf="hasProjectAdminRights$ | async"
           mat-button
           data-cy="create-property-button"
           [disabled]="!(project$ | async)?.status"
@@ -117,7 +116,7 @@ import { OntologyPageService } from './ontology-page.service';
 })
 export class OntologySidenavComponent {
   project$ = this._projectPageService.currentProject$;
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
   readonly defaultProperties: PropertyCategory[] = DefaultProperties.data;

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
@@ -22,7 +21,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   showActionBubble = false;
 

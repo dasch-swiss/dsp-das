@@ -14,7 +14,7 @@
             [matTooltip]="list.labels | appStringifyStringLiteral:true"
             matTooltipPosition="above"
             data-cy="label-title">
-            {{ list.labels | appStringifyStringLiteral}}
+            {{ list.labels | appStringifyStringLiteral }}
           </h3>
           <p
             class="mat-body"
@@ -25,7 +25,7 @@
           </p>
         </div>
         <span class="fill-remaining-space"></span>
-        <div *ngIf="(isAdmin$ | async) === true">
+        <div *ngIf="(hasProjectAdminRights$ | async) === true">
           <button
             color="primary"
             mat-button
@@ -54,7 +54,7 @@
       <app-list-item
         *ngIf="((isListsLoading$ | async) === false)"
         [node]="list"
-        [isAdmin]="(isAdmin$ | async) === true" />
+        [isAdmin]="(hasProjectAdminRights$ | async) === true" />
     </div>
   </ng-container>
 </div>

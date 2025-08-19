@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { filter, first, map, tap } from 'rxjs';
@@ -11,9 +10,11 @@ import { CollaborationPageService } from './collaboration-page.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration-page',
   template: `
-    <div *ngIf="isAdmin$ | async">
+    <div *ngIf="hasProjectAdminRights$ | async">
       <ng-container *ngIf="project$ | async as project">
-        <app-add-user *ngIf="project.status && (isAdmin$ | async) === true" [projectUuid]="projectUuid$ | async" />
+        <app-add-user
+          *ngIf="project.status && (hasProjectAdminRights$ | async) === true"
+          [projectUuid]="projectUuid$ | async" />
       </ng-container>
 
       <ng-container *ngIf="activeProjectMembers$ | async as activeProjectMembers">
@@ -33,14 +34,14 @@ import { CollaborationPageService } from './collaboration-page.service';
       </ng-container>
     </div>
 
-    <app-status [status]="403" *ngIf="(isAdmin$ | async) === false" />
+    <app-status [status]="403" *ngIf="(hasProjectAdminRights$ | async) === false" />
   `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
 })
 export class CollaborationPageComponent {
   project$ = this._projectPageService.currentProject$;
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   projectUuid$ = this.project$.pipe(
     tap(p => {

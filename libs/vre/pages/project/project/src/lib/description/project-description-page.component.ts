@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
@@ -23,7 +22,7 @@ export class ProjectDescriptionPageComponent {
 
   sortedDescriptions$ = this.readProject$.pipe(map(({ description }) => this._sortDescriptionsByLanguage(description)));
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   hasManualLicense?: string;
 

@@ -35,7 +35,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
     map(([lists, listIri]) => lists.find(i => i.id.includes(listIri!)))
   );
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
   project$ = this._projectPageService.currentProject$;
 
   isListsLoading$ = this._store.select(ListsSelectors.isListsLoading);

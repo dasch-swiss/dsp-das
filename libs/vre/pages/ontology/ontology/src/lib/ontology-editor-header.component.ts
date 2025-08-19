@@ -38,12 +38,12 @@ import { OntologyEditService } from './services/ontology-edit.service';
           </p>
         </div>
         <span class="fill-remaining-space"></span>
-        <div *ngIf="(isAdmin$ | async) === true">
+        <div *ngIf="(hasProjectAdminRights$ | async) === true">
           <button
             color="primary"
             data-cy="edit-ontology-button"
             mat-button
-            [matTooltip]="(isAdmin$ | async) ? 'Edit data model info' : ''"
+            [matTooltip]="(hasProjectAdminRights$ | async) ? 'Edit data model info' : ''"
             [disabled]="(project$ | async)?.status !== true"
             (click)="$event.stopPropagation(); editOntology(ontology)">
             <mat-icon>edit</mat-icon>
@@ -106,7 +106,7 @@ export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;
   currentOntologyCanBeDeleted$ = this._oes.currentOntologyCanBeDeleted$;
   project$ = this._projectPageService.currentProject$;
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   constructor(
     private _dialog: MatDialog,

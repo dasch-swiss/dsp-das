@@ -3,12 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  ListsSelectors,
-  LoadListsInProjectAction,
-  OntologiesSelectors,
-  ProjectsSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, LoadListsInProjectAction, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -26,7 +21,7 @@ export class DataModelsPageComponent {
   protected readonly RouteConstants = RouteConstants;
 
   ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
   constructor(

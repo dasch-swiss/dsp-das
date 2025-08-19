@@ -2,7 +2,6 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { filter, startWith, Subject, takeUntil } from 'rxjs';
@@ -35,7 +34,7 @@ import { ProjectPageService } from './project-page.service';
   providers: [ProjectPageService],
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
   sideNavOpened = true;
   currentOntologyName: undefined | string;
 

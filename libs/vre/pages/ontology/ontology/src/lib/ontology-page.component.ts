@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } f
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { Store } from '@ngxs/store';
 import { combineLatest, Subject, take } from 'rxjs';
 import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
@@ -40,7 +38,6 @@ import { OntologyEditService } from './services/ontology-edit.service';
 export class OntologyPageComponent implements OnInit, OnDestroy {
   project$ = this._projectPageService.currentProject$;
   ontology$ = this._oes.currentOntology$;
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   disableContent = false;
   isTransacting$ = this._oes.isTransacting$;
@@ -49,7 +46,6 @@ export class OntologyPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
-    private _store: Store,
     private _titleService: Title,
     private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService

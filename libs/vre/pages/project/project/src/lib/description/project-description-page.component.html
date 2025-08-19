@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: end">
     <button
       mat-button
-      *ngIf="(isAdmin$ | async) && project.status"
+      *ngIf="(hasProjectAdminRights$ | async) && project.status"
       class="right"
       [routerLink]="['..', routeConstants.settings, routeConstants.edit]"
       color="primary">

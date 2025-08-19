@@ -65,7 +65,7 @@ import { CanDeleteResource } from './can-delete-resource.interface';
       </button>
 
       <button
-        *ngIf="isAdmin$ | async"
+        *ngIf="hasProjectAdminRights$ | async"
         data-cy="resource-more-menu-erase-button"
         mat-menu-item
         [matTooltip]="
@@ -106,7 +106,7 @@ export class ResourceEditMoreMenuComponent {
   @Output() resourceErased = new EventEmitter<void>();
   @Output() resourceUpdated = new EventEmitter<void>();
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   resourceCanBeDeleted?: CanDeleteResource;
 
   constructor(
