@@ -32,7 +32,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
     <app-status *ngIf="disableContent" [status]="204" />
   `,
   styleUrls: ['./ontology-page.component.scss'],
-  providers: [OntologyPageService],
+  providers: [OntologyPageService, OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPageComponent implements OnInit, OnDestroy {

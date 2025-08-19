@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
+import { Inject, Injectable } from '@angular/core';
+import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { UserPermissions } from './user-permissions';
 
 @Injectable()
@@ -23,9 +25,17 @@ export class ProjectPageService {
     map(([currentProject, user]) => UserPermissions.hasProjectMemberRights(user, currentProject.id))
   );
 
+  ontologies$ = this.currentProject$.pipe(
+    switchMap(project => this._dspApiConnection.v2.onto.getOntologiesByProjectIri(project.id)),
+    map(response => response.ontologies)
+  );
+
   constructor(
     private projectApiService: ProjectApiService,
-    private _store: Store
+    private _store: Store,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _projectService: ProjectService // TODO remove
   ) {}
 
   setCurrentProject(projectUuid: string): void {
@@ -33,4 +43,20 @@ export class ProjectPageService {
       this._currentProjectSubject.next(response.project);
     });
   }
+
+  /** LOAD LIST IF THERE ARE IN PROJECT.
+          if (!ontoMeta.ontologies.length) {
+            ctx.dispatch(new LoadListsInProjectAction(projectIri));
+            return;
+          }
+            */
+  /**
+   * GET ontoMeta.ontologies
+   */
+  /**
+
+        .dispatch(
+              // dispatch all actions except the last one to keep the loading state
+                .map(onto => new LoadOntologyAction(onto.id, projectIri, false))
+*/
 }

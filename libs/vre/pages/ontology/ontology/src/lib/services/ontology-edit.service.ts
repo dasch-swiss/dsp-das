@@ -53,7 +53,7 @@ import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resourc
 import { ClassPropertyInfo, ClassShortInfo, PropertyInfo, ResourceClassInfo } from '../ontology.types';
 import { MakeOntologyFor, OntologyContext, ProjectContext } from './make-ontology-for';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class OntologyEditService {
   private _currentOntologyInfo = new BehaviorSubject<OntologyMetadata | ReadOntology | null>(null);
   currentOntologyInfo$ = this._currentOntologyInfo.asObservable();

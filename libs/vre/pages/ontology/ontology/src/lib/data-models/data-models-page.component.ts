@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, LoadListsInProjectAction, OntologiesSelectors } from '@dasch-swiss/vre/core/state';
+import { ListsSelectors, LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -20,7 +20,7 @@ import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.comp
 export class DataModelsPageComponent {
   protected readonly RouteConstants = RouteConstants;
 
-  ontologiesMetadata$ = this._store.select(OntologiesSelectors.currentProjectOntologyMetadata);
+  ontologiesMetadata$ = this._projectPageService.ontologies$;
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 
@@ -45,6 +45,7 @@ export class DataModelsPageComponent {
 
   navigateToOntology(id: string) {
     const ontoName = OntologyService.getOntologyNameFromIri(id);
+    console.log('ontoname', id, ontoName);
     this._router.navigate(
       [RouteConstants.ontology, encodeURIComponent(ontoName), RouteConstants.editor, RouteConstants.classes],
       {
