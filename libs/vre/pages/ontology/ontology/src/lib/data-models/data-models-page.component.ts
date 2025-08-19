@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ListNodeInfo, ListResponse, OntologyMetadata } from '@dasch-swiss/dsp-js';
+import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
   ListsSelectors,
@@ -10,9 +10,10 @@ import {
   ProjectsSelectors,
 } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
 
 @Component({
@@ -30,6 +31,7 @@ export class DataModelsPageComponent {
 
   constructor(
     private _dialog: MatDialog,
+    private _projectPageService: ProjectPageService,
     public _route: ActivatedRoute,
     private _router: Router,
     private _store: Store
@@ -68,17 +70,15 @@ export class DataModelsPageComponent {
   }
 
   createNewList() {
-    const dialogRef = this._dialog.open<ListInfoFormComponent, null>(
-      ListInfoFormComponent,
-      DspDialogConfig.dialogDrawerConfig(null, true)
-    );
-    dialogRef
-      .afterClosed()
-      .pipe(take(1))
-      .subscribe((response: ListResponse) => {
-        const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
-        this._store.dispatch(new LoadListsInProjectAction(projectIri!));
+    const dialog$ = this._dialog
+      .open<ListInfoFormComponent, null>(ListInfoFormComponent, DspDialogConfig.dialogDrawerConfig(null, true))
+      .afterClosed();
+
+    combineLatest([dialog$, this._projectPageService.currentProject$]).subscribe(
+      ([response, project]: [ListResponse, ReadProject]) => {
+        this._store.dispatch(new LoadListsInProjectAction(project.id));
         this.navigateToList(response.list.listinfo.id);
-      });
+      }
+    );
   }
 }

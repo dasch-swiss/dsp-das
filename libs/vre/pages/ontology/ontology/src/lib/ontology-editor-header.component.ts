@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs';
@@ -104,12 +105,13 @@ import { OntologyEditService } from './services/ontology-edit.service';
 export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;
   currentOntologyCanBeDeleted$ = this._oes.currentOntologyCanBeDeleted$;
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  project$ = this._projectPageService.currentProject$;
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   constructor(
     private _dialog: MatDialog,
     private _dialogService: DialogService,
+    private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService,
     private _router: Router,
     private _store: Store

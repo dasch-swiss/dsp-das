@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
+import { ProjectPageService } from '../../project-page.service';
 
 @Component({
   selector: 'app-project-members-row',
@@ -26,10 +25,10 @@ export class ProjectMembersRowComponent implements OnInit {
 
   project?: ReadProject;
 
-  constructor(private _store: Store) {}
+  constructor(private _projectPageService: ProjectPageService) {}
 
   ngOnInit() {
-    this._store.select(ProjectsSelectors.currentProject).subscribe(project => {
+    this._projectPageService.currentProject$.subscribe(project => {
       this.project = project;
     });
   }

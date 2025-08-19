@@ -4,6 +4,7 @@ import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { filter, first, map, tap } from 'rxjs';
+import { ProjectPageService } from '../../project-page.service';
 import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
@@ -38,7 +39,7 @@ import { CollaborationPageService } from './collaboration-page.service';
   providers: [CollaborationPageService],
 })
 export class CollaborationPageComponent {
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  project$ = this._projectPageService.currentProject$;
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   projectUuid$ = this.project$.pipe(
@@ -64,6 +65,7 @@ export class CollaborationPageComponent {
   constructor(
     private _store: Store,
     protected _titleService: Title,
-    public collaborationPageService: CollaborationPageService
+    public collaborationPageService: CollaborationPageService,
+    private _projectPageService: ProjectPageService
   ) {}
 }

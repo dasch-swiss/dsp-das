@@ -3,8 +3,9 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { Store } from '@ngxs/store';
-import { combineLatest, Subject, take, takeUntil } from 'rxjs';
+import { combineLatest, Subject, take } from 'rxjs';
 import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
@@ -37,7 +38,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPageComponent implements OnInit, OnDestroy {
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  project$ = this._projectPageService.currentProject$;
   ontology$ = this._oes.currentOntology$;
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
@@ -50,6 +51,7 @@ export class OntologyPageComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _store: Store,
     private _titleService: Title,
+    private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService
   ) {}
 
@@ -60,13 +62,8 @@ export class OntologyPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._setupPage();
 
-    this.project$.pipe(takeUntil(this._destroy)).subscribe(project => {
-      if (!project) {
-        return;
-      }
-      const ontoLabel = this._route.snapshot.params[RouteConstants.ontoParameter];
-      this._oes.initOntologyByLabel(ontoLabel);
-    });
+    const ontoLabel = this._route.snapshot.params[RouteConstants.ontoParameter];
+    this._oes.initOntologyByLabel(ontoLabel);
   }
 
   private _setupPage() {

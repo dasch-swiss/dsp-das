@@ -9,10 +9,12 @@ import {
   UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { LoadListsInProjectAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { Store } from '@ngxs/store';
+import { switchMap } from 'rxjs';
 import { ListInfoForm } from './list-info-form.type';
 
 @Component({
@@ -63,6 +65,7 @@ export class ListInfoFormComponent implements OnInit {
     private _fb: FormBuilder,
     private _listApiService: ListApiService,
     private _store: Store,
+    private _projectPageService: ProjectPageService,
     public dialogRef: MatDialogRef<ListInfoFormComponent, ListResponse | ListInfoResponse>
   ) {}
 
@@ -95,14 +98,16 @@ export class ListInfoFormComponent implements OnInit {
   }
 
   submitCreateList() {
-    const projectIri = this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
-
-    this._listApiService
-      .create({
-        projectIri,
-        labels: this.form.value.labels as StringLiteral[],
-        comments: this.form.value.comments as StringLiteral[],
-      })
+    this._projectPageService.currentProject$
+      .pipe(
+        switchMap(project =>
+          this._listApiService.create({
+            projectIri: project.id,
+            labels: this.form.value.labels as StringLiteral[],
+            comments: this.form.value.comments as StringLiteral[],
+          })
+        )
+      )
       .subscribe(response => {
         this.loading = false;
         this.dialogRef.close(response);

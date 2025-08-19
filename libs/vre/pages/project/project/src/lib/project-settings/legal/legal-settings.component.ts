@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ReadProject } from '@dasch-swiss/dsp-js';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import { ProjectPageService } from '../../project-page.service';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
@@ -63,11 +60,9 @@ import {
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
 
-  readonly project$ = this._reloadSubject.asObservable().pipe(
-    switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
-    filter(project => project !== undefined),
-    map(project => project as ReadProject)
-  );
+  readonly project$ = this._reloadSubject
+    .asObservable()
+    .pipe(switchMap(() => this._projectPageService.currentProject$));
 
   copyrightHolders$ = this.project$.pipe(
     switchMap(project => this._paginatedApi.getCopyrightHolders(project.shortcode))
@@ -78,20 +73,22 @@ export class LegalSettingsComponent {
   constructor(
     private _dialog: MatDialog,
     private _paginatedApi: PaginatedApiService,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   addCopyrightHolder() {
-    const currentProject = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (!currentProject) {
-      throw new AppError('No current project');
-    }
-    this._dialog
-      .open<CreateCopyrightHolderDialogComponent, CreateCopyrightHolderDialogProps, boolean>(
-        CreateCopyrightHolderDialogComponent,
-        { data: { projectShortcode: currentProject.shortcode } }
+    this._projectPageService.currentProject$
+      .pipe(
+        switchMap(currentProject =>
+          this._dialog
+            .open<
+              CreateCopyrightHolderDialogComponent,
+              CreateCopyrightHolderDialogProps,
+              boolean
+            >(CreateCopyrightHolderDialogComponent, { data: { projectShortcode: currentProject.shortcode } })
+            .afterClosed()
+        )
       )
-      .afterClosed()
       .subscribe(success => {
         if (success) {
           this._reloadSubject.next();

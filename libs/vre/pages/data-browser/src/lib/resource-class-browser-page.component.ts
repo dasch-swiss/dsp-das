@@ -2,10 +2,8 @@ import { Component, Inject, OnChanges } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import { combineLatest, map, switchMap } from 'rxjs';
 import { ResourceResultService } from './resource-result.service';
 
@@ -15,10 +13,7 @@ import { ResourceResultService } from './resource-result.service';
   providers: [ResourceResultService],
 })
 export class ResourceClassBrowserPageComponent implements OnChanges {
-  resources$ = combineLatest([
-    this._route.params,
-    this._store.select(ProjectsSelectors.currentProject).pipe(filterUndefined()),
-  ]).pipe(
+  resources$ = combineLatest([this._route.params, this._projectPageService.currentProject$]).pipe(
     switchMap(([params, project]) =>
       combineLatest([this._request$(params, project), this.countQuery$(params, project)])
     ),
@@ -38,9 +33,9 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     private _resourceResult: ResourceResultService,
     private _ontologyService: OntologyService,
     protected _router: Router,
-    protected _store: Store,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnChanges() {
