@@ -2,10 +2,9 @@ import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '
 import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -30,7 +29,11 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
             </div>
           </div>
         </div>
-        <a class="icon link" data-cy="add-class-instance" *ngIf="isMember$ | async" (click)="goToAddClassInstance()">
+        <a
+          class="icon link"
+          data-cy="add-class-instance"
+          *ngIf="hasProjectMemberRights$ | async"
+          (click)="goToAddClassInstance()">
           <mat-icon>add_circle_outline</mat-icon>
         </a>
       </div>
@@ -42,7 +45,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
   destroyed = new Subject<void>();
-  isMember$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember);
+  hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   classLink!: string;
   icon!: string;
   ontologiesLabel!: string;
@@ -62,10 +65,10 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _localizationService: LocalizationService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store,
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnInit(): void {

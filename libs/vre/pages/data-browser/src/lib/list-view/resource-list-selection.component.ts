@@ -1,9 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
@@ -35,10 +33,9 @@ export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];
 
   count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
-  showCreateLink$ = combineLatest([
-    this.count$,
-    this._store.select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember),
-  ]).pipe(map(([count, isAdminOrSysAdminOrMember]) => count > 1 && isAdminOrSysAdminOrMember === true));
+  showCreateLink$ = combineLatest([this.count$, this._projectPageService.hasProjectMemberRights$]).pipe(
+    map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
+  );
 
   allSelected$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => this.resources.every(resource => resources.includes(resource)))
@@ -47,8 +44,7 @@ export class ResourceListSelectionComponent {
   constructor(
     public multipleViewerService: MultipleViewerService,
     private _dialog: MatDialog,
-    private _route: ActivatedRoute,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   selectAll() {

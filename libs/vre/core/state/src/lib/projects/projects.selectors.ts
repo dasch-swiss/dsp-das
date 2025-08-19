@@ -38,29 +38,6 @@ export class ProjectsSelectors {
     ConfigState.getConfig,
     RouterSelectors.params,
   ])
-  static isCurrentProjectAdminSysAdminOrMember(
-    state: ProjectsStateModel,
-    resource: DspResource | null,
-    user: ReadUser | null,
-    userProjectGroups: string[],
-    dspApiConfig: DspAppConfig,
-    params: Params | undefined
-  ): boolean | undefined {
-    if (!user || !params) return false;
-    const projectIri = ProjectService.getProjectIri(params, dspApiConfig, resource);
-    if (!projectIri) return false;
-    const isMember = ProjectService.IsProjectMemberOrAdminOrSysAdmin(user, userProjectGroups, projectIri);
-    return isMember;
-  }
-
-  @Selector([
-    ProjectsState,
-    ResourceSelectors.resource,
-    UserSelectors.user,
-    UserSelectors.userProjectAdminGroups,
-    ConfigState.getConfig,
-    RouterSelectors.params,
-  ])
   static isCurrentProjectAdminOrSysAdmin(
     state: ProjectsStateModel,
     resource: DspResource | null,

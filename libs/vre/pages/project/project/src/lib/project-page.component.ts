@@ -69,6 +69,8 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       this._titleService.setTitle(project.shortname);
     });
 
+    this._projectPageService.hasProjectMemberRights$.subscribe();
+
     this._router.events
       .pipe(
         takeUntil(this.destroyed),
