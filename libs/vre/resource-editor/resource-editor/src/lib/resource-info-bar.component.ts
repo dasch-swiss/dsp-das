@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReadProject, ReadResource, ReadUser } from '@dasch-swiss/dsp-js';
+import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { GetAttachedProjectAction, GetAttachedUserAction, ResourceSelectors } from '@dasch-swiss/vre/core/state';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { filter, map, take } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-resource-info-bar',
@@ -14,7 +15,7 @@ import { filter, map, take } from 'rxjs';
       Resource of the project
       <a (click)="openProject(project)" class="link" [title]="project.longname">
         <strong>{{ project?.shortname }}</strong></a
-      ><span *ngIf="resourceAttachedUser || resource.creationDate"
+      ><span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
         >, created
         <span *ngIf="resourceAttachedUser"
           >by
@@ -41,7 +42,7 @@ import { filter, map, take } from 'rxjs';
 export class ResourceInfoBarComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;
 
-  resourceAttachedUser: ReadUser | undefined;
+  resourceAttachedUser$ = this._resourceFetcherService.attachedUser$;
 
   project$ = this._store.select(ResourceSelectors.attachedProjects).pipe(
     filter(attachedProjects => attachedProjects[this.resource.id]?.value?.length > 0),
@@ -52,8 +53,8 @@ export class ResourceInfoBarComponent implements OnChanges {
 
   constructor(
     private _store: Store,
-    private _actions$: Actions,
-    private router: Router
+    private router: Router,
+    private _resourceFetcherService: ResourceFetcherService
   ) {}
 
   ngOnChanges() {
@@ -65,13 +66,6 @@ export class ResourceInfoBarComponent implements OnChanges {
   }
 
   private _getResourceAttachedData(resource: ReadResource): void {
-    this._actions$
-      .pipe(ofActionSuccessful(GetAttachedUserAction))
-      .pipe(take(1))
-      .subscribe(() => {
-        const attachedUsers = this._store.selectSnapshot(ResourceSelectors.attachedUsers);
-        this.resourceAttachedUser = attachedUsers[resource.id].value.find(u => u.id === resource.attachedToUser);
-      });
     this._store.dispatch([
       new GetAttachedUserAction(resource.id, resource.attachedToUser),
       new GetAttachedProjectAction(resource.id, resource.attachedToProject),

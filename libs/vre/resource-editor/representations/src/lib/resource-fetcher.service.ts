@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
@@ -19,10 +20,13 @@ export class ResourceFetcherService {
   userCanDelete$!: Observable<boolean>;
   resourceVersion?: string;
 
+  attachedUser$!: Observable<ReadUser>;
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _adminProjectsApiService: AdminProjectsApiService,
+    private _userApiService: UserApiService,
     private _store: Store
   ) {}
 
@@ -30,6 +34,10 @@ export class ResourceFetcherService {
     this.resource$ = this._reloadSubject.asObservable().pipe(
       switchMap(() => this._getResource(resourceIri, resourceVersion)),
       shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+    this.attachedUser$ = this.resource$.pipe(
+      switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
     );
 
     this.projectShortcode$ = this.resource$.pipe(
