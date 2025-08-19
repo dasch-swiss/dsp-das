@@ -67,14 +67,14 @@ export class OntologyEditService {
     })
   );
 
-  getListsInProject$ = this._projectPageService.currentProject$.pipe(
+  private _getListsInProject$ = this._projectPageService.currentProject$.pipe(
     switchMap(project => this._lists.getListsInProject$(project))
   );
 
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
     this._projectPageService.detailedOntologies$,
-    this.getListsInProject$,
+    this._getListsInProject$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
       if (!currentOntology) return [];
@@ -85,7 +85,7 @@ export class OntologyEditService {
 
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
     this._projectPageService.detailedOntologies$,
-    this.getListsInProject$,
+    this._getListsInProject$,
   ]).pipe(
     map(([ontologies, allLists]) => {
       const allProps = ontologies.flatMap(o =>
@@ -207,9 +207,10 @@ export class OntologyEditService {
     this._canDeletePropertyMap.clear();
 
     this._projectPageService.detailedOntologies$.subscribe(ontologies => {
+      console.log('god it ontologies', ontologies);
       const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
-      if (ontologyFromStore) {
+      if (false && ontologyFromStore) {
         this._currentOntology.next(ontologyFromStore);
         this._currentOntologyInfo.next(ontologyFromStore);
         this._isTransacting.next(false);
@@ -219,17 +220,300 @@ export class OntologyEditService {
     });
   }
 
-  private _loadOntologyByLabel(label: string) {
-    this._projectPageService.currentProject$.subscribe(project => {
-      const iriBase = this._ontologyService.getIriBaseUrl();
-      const iri = `${iriBase}/${RouteConstants.ontology}/${project.shortcode}/${label}/v2`;
-      this._loadOntology(iri);
-    });
-  }
-
   unloadOntology() {
     this._canDeletePropertyMap.clear();
     this._currentOntology.next(null);
+  }
+
+  createOntology$({ name, label, comment }: CreateOntologyData) {
+    const createOntology = MakeOntologyFor.createOntology(this.projectCtx, name, label, comment);
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto.createOntology(createOntology).pipe(
+      tap(onto => {
+        this._loadOntology(onto.id);
+      })
+    );
+  }
+
+  updateOntology$({ label, comment }: UpdateOntologyData) {
+    const updateOntology = MakeOntologyFor.updateOntologyMetadata(this.ctx, label, comment);
+    this._isTransacting.next(true);
+
+    return this._dspApiConnection.v2.onto.updateOntology(updateOntology).pipe(
+      tap(onto => {
+        this._loadOntology(onto.id);
+      })
+    );
+  }
+
+  deleteOntology$(id: string) {
+    return this._dspApiConnection.v2.onto
+      .deleteOntology({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(() => {
+          this._currentOntology.next(null);
+          this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
+        })
+      );
+  }
+
+  createResourceClass$(classData: ResourceClassFormData, subClassOf: string) {
+    const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData, subClassOf);
+    this._isTransacting.next(true);
+
+    return this._dspApiConnection.v2.onto.createResourceClass(createOntology).pipe(
+      tap(resClass => {
+        this.lastModificationDate = resClass.lastModificationDate;
+        this._loadOntology(this.ontologyId, resClass.id);
+        const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
+        this._notification.openSnackBar(`Successfully created the class ${classLabel}.`);
+      })
+    );
+  }
+
+  /**
+   * Yes, there is not a route to update a class at once. We need to send two separate requests for the labels and
+   * comments.
+   */
+  updateResourceClass$(classData: UpdateResourceClassData) {
+    const updates: Observable<ResourceClassDefinitionWithAllLanguages | ApiResponseError>[] = [];
+
+    if (classData.labels !== undefined) {
+      updates.push(this._updateResourceClassLabels$(classData.id, classData.labels));
+    }
+
+    if (classData.comments !== undefined) {
+      updates.push(this._updateResourceClassComments$(classData.id, classData.comments));
+    }
+
+    if (updates.length === 0) {
+      return of();
+    }
+
+    this._isTransacting.next(true);
+    return concat(...updates).pipe(
+      last(),
+      tap(() => {
+        this._loadOntology(this.ontologyId, classData.id);
+      })
+    );
+  }
+
+  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
+    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
+  }
+
+  deleteResourceClass$(id: string) {
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto
+      .deleteResourceClass({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(deleteResponse => {
+          this.lastModificationDate = deleteResponse.lastModificationDate;
+          this._loadOntology(this.ontologyId);
+        })
+      );
+  }
+
+  createProperty$(propertyData: CreatePropertyData, assignToClass?: ClassDefinition) {
+    this._isTransacting.next(true);
+    return this._createProperty$(propertyData).pipe(
+      tap(propDef => {
+        this.lastModificationDate = propDef.lastModificationDate;
+        if (!assignToClass) {
+          this._loadOntology(this.ontologyId, propDef.id);
+        } else {
+          this.assignPropertyToClass(propDef.id, assignToClass);
+        }
+      })
+    );
+  }
+
+  assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition) {
+    this._isTransacting.next(true);
+
+    const guiOrder = Math.max(0, ...classDefinition.propertiesList.map(p => p.guiOrder ?? 0)) + 1;
+    const propCard: IHasProperty = {
+      propertyIndex: propertyId,
+      cardinality: 1, // default: not required, not multiple
+      guiOrder,
+    };
+
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classDefinition.id, [propCard]);
+    this._dspApiConnection.v2.onto
+      .addCardinalityToResourceClass(updateOntology)
+      .pipe(take(1))
+      .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
+        this._loadOntology(this.ontologyId, propertyId);
+      });
+  }
+
+  /**
+   * Yes, we need to pass an UpdateOntology<UpdateResourceClassCardinality> containing an array of the one property
+   * we like to remove to deleteCardinalityFromResourceClass in order to remove that property ...
+   */
+  removePropertyFromClass(property: IHasProperty, classId: string) {
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [property]);
+    this._isTransacting.next(true);
+    this._dspApiConnection.v2.onto
+      .deleteCardinalityFromResourceClass(updateOntology)
+      .pipe(take(1))
+      .subscribe(() => {
+        this._loadOntology(this.ontologyId, classId);
+      });
+  }
+
+  /**
+   * No, there is no way to update a whole property at once. We have to send two separate requests to one
+   * and the same endpoint
+   */
+  updateProperty$(propertyData: UpdatePropertyData) {
+    const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
+
+    if (propertyData.labels !== undefined) {
+      updates.push(this._updatePropertyLabels$(propertyData.id, propertyData.labels));
+    }
+
+    if (propertyData.comment !== undefined) {
+      updates.push(this._updatePropertyComments$(propertyData.id, propertyData.comment));
+    }
+
+    this._isTransacting.next(true);
+    return concat(...updates).pipe(
+      last(),
+      tap(() => {
+        this._loadOntology(this.ontologyId, propertyData.id);
+      })
+    );
+  }
+
+  canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
+    const canDo = this._canDeletePropertyMap.get(propertyId);
+    if (canDo) {
+      return of(canDo);
+    }
+
+    return this._dspApiConnection.v2.onto.canDeleteResourceProperty(propertyId).pipe(
+      tap((canDoRes: CanDoResponse) => {
+        this._canDeletePropertyMap.set(propertyId, canDoRes);
+      })
+    );
+  }
+
+  deleteProperty$(id: string) {
+    this._isTransacting.next(true);
+    return this._dspApiConnection.v2.onto
+      .deleteResourceProperty({
+        id,
+        lastModificationDate: this.lastModificationDate,
+      })
+      .pipe(
+        tap(deleteResponse => {
+          this.lastModificationDate = deleteResponse.lastModificationDate;
+          this._loadOntology(this.ontologyId);
+        })
+      );
+  }
+
+  /**
+   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, updateCardinalityOfResourceClass,
+   * but to another endpoint.
+   */
+  propertyCanBeRemovedFromClass$(propCard: IHasProperty, classId: string): Observable<CanDoResponse> {
+    if (propCard.isInherited) {
+      // no need to send a request to the server
+      return of({ canDo: false, cannotDoReason: 'The property is inherited from another class' } as CanDoResponse);
+    }
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [propCard]);
+    return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(updateOntology);
+  }
+
+  /**
+   * Yes, we are sending the same body as for canDeleteCardinalityFromResourceClass, updateCardinalityOfResourceClass,
+   * but to another endpoint.
+   */
+  updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
+    this._isTransacting.next(true);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
+    this._dspApiConnection.v2.onto
+      .replaceGuiOrderOfCardinalities(updateOntology)
+      .pipe(take(1))
+      .subscribe(() => {
+        this._loadOntology(this.ontologyId, classId);
+      });
+  }
+
+  /**
+   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, canDeleteCardinalityFromResourceClass,
+   * but to another endpoint.
+   */
+  updatePropertiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
+    this._isTransacting.next(true);
+    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
+    this._dspApiConnection.v2.onto
+      .replaceCardinalityOfResourceClass(updateOntology) // yes, someone called the properties "cardinalities" in the API
+      .pipe(take(1))
+      .subscribe(response => {
+        this._loadOntology(this.ontologyId, classId);
+      });
+  }
+
+  private _updateResourceClassLabels$(id: string, labels: StringLiteral[]) {
+    return defer(() => {
+      return this._updateResourceClass$(MakeOntologyFor.updateClassLabel(this.ctx, id, labels));
+    });
+  }
+
+  private _updateResourceClassComments$(id: string, comments: StringLiteral[]) {
+    return defer(() => {
+      return this._updateResourceClass$(MakeOntologyFor.updateClassComments(this.ctx, id, comments));
+    });
+  }
+
+  private _updateResourceClass$(updateOntology: UpdateOntology<UpdateResourceClassLabel | UpdateResourceClassComment>) {
+    return this._dspApiConnection.v2.onto.updateResourceClass(updateOntology).pipe(
+      tap(resClass => {
+        this.lastModificationDate = resClass.lastModificationDate;
+      })
+    );
+  }
+
+  private _updatePropertyLabels$(id: string, labels: StringLiteralV2[]) {
+    return defer(() => {
+      const upd = MakeOntologyFor.updatePropertyLabel(this.ctx, id, labels);
+      return this._updateProperty$(upd);
+    });
+  }
+
+  private _updatePropertyComments$(id: string, comments: StringLiteralV2[]) {
+    return defer(() => {
+      const upd = MakeOntologyFor.updatePropertyComment(this.ctx, id, comments);
+      return this._updateProperty$(upd);
+    });
+  }
+
+  private _updateProperty$(
+    updateOntology: UpdateOntology<
+      UpdateResourcePropertyGuiElement | UpdateResourcePropertyLabel | UpdateResourcePropertyComment
+    >
+  ): Observable<ResourcePropertyDefinitionWithAllLanguages> {
+    return this._dspApiConnection.v2.onto.updateResourceProperty(updateOntology).pipe(
+      tap(prop => {
+        this.lastModificationDate = prop?.lastModificationDate;
+      })
+    );
+  }
+
+  private _createProperty$(propertyData: CreatePropertyData) {
+    this._isTransacting.next(true);
+    const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
+    return this._dspApiConnection.v2.onto.createResourceProperty(onto);
   }
 
   private _loadOntology(iri: string, highLightItem?: string) {
@@ -355,294 +639,11 @@ export class OntologyEditService {
     };
   }
 
-  createOntology$({ name, label, comment }: CreateOntologyData) {
-    const createOntology = MakeOntologyFor.createOntology(this.projectCtx, name, label, comment);
-    this._isTransacting.next(true);
-    return this._dspApiConnection.v2.onto.createOntology(createOntology).pipe(
-      tap(onto => {
-        this._loadOntology(onto.id);
-      })
-    );
-  }
-
-  updateOntology$({ label, comment }: UpdateOntologyData) {
-    const updateOntology = MakeOntologyFor.updateOntologyMetadata(this.ctx, label, comment);
-    this._isTransacting.next(true);
-
-    return this._dspApiConnection.v2.onto.updateOntology(updateOntology).pipe(
-      tap(onto => {
-        this._loadOntology(onto.id);
-      })
-    );
-  }
-
-  deleteOntology$(id: string) {
-    return this._dspApiConnection.v2.onto
-      .deleteOntology({
-        id,
-        lastModificationDate: this.lastModificationDate,
-      })
-      .pipe(
-        tap(() => {
-          this._currentOntology.next(null);
-          this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
-        })
-      );
-  }
-
-  createResourceClass$(classData: ResourceClassFormData, subClassOf: string) {
-    const createOntology = MakeOntologyFor.createResourceClass(this.ctx, classData, subClassOf);
-    this._isTransacting.next(true);
-
-    return this._dspApiConnection.v2.onto.createResourceClass(createOntology).pipe(
-      tap(resClass => {
-        this.lastModificationDate = resClass.lastModificationDate;
-        this._loadOntology(this.ontologyId, resClass.id);
-        const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
-        this._notification.openSnackBar(`Successfully created the class ${classLabel}.`);
-      })
-    );
-  }
-
-  /**
-   * Yes, there is not a route to update a class at once. We need to send two separate requests for the labels and
-   * comments.
-   */
-  updateResourceClass$(classData: UpdateResourceClassData) {
-    const updates: Observable<ResourceClassDefinitionWithAllLanguages | ApiResponseError>[] = [];
-
-    if (classData.labels !== undefined) {
-      updates.push(this._updateResourceClassLabels$(classData.id, classData.labels));
-    }
-
-    if (classData.comments !== undefined) {
-      updates.push(this._updateResourceClassComments$(classData.id, classData.comments));
-    }
-
-    if (updates.length === 0) {
-      return of();
-    }
-
-    this._isTransacting.next(true);
-    return concat(...updates).pipe(
-      last(),
-      tap(() => {
-        this._loadOntology(this.ontologyId, classData.id);
-      })
-    );
-  }
-
-  private _updateResourceClassLabels$(id: string, labels: StringLiteral[]) {
-    return defer(() => {
-      return this._updateResourceClass$(MakeOntologyFor.updateClassLabel(this.ctx, id, labels));
+  private _loadOntologyByLabel(label: string) {
+    this._projectPageService.currentProject$.subscribe(project => {
+      const iriBase = this._ontologyService.getIriBaseUrl();
+      const iri = `${iriBase}/${RouteConstants.ontology}/${project.shortcode}/${label}/v2`;
+      this._loadOntology(iri);
     });
-  }
-
-  private _updateResourceClassComments$(id: string, comments: StringLiteral[]) {
-    return defer(() => {
-      return this._updateResourceClass$(MakeOntologyFor.updateClassComments(this.ctx, id, comments));
-    });
-  }
-
-  private _updateResourceClass$(updateOntology: UpdateOntology<UpdateResourceClassLabel | UpdateResourceClassComment>) {
-    return this._dspApiConnection.v2.onto.updateResourceClass(updateOntology).pipe(
-      tap(resClass => {
-        this.lastModificationDate = resClass.lastModificationDate;
-      })
-    );
-  }
-
-  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
-    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
-  }
-
-  deleteResourceClass$(id: string) {
-    this._isTransacting.next(true);
-    return this._dspApiConnection.v2.onto
-      .deleteResourceClass({
-        id,
-        lastModificationDate: this.lastModificationDate,
-      })
-      .pipe(
-        tap(deleteResponse => {
-          this.lastModificationDate = deleteResponse.lastModificationDate;
-          this._loadOntology(this.ontologyId);
-        })
-      );
-  }
-
-  createProperty$(propertyData: CreatePropertyData, assignToClass?: ClassDefinition) {
-    this._isTransacting.next(true);
-    return this._createProperty$(propertyData).pipe(
-      tap(propDef => {
-        this.lastModificationDate = propDef.lastModificationDate;
-        if (!assignToClass) {
-          this._loadOntology(this.ontologyId, propDef.id);
-        } else {
-          this.assignPropertyToClass(propDef.id, assignToClass);
-        }
-      })
-    );
-  }
-
-  assignPropertyToClass(propertyId: string, classDefinition: ClassDefinition) {
-    this._isTransacting.next(true);
-
-    const guiOrder = Math.max(0, ...classDefinition.propertiesList.map(p => p.guiOrder ?? 0)) + 1;
-    const propCard: IHasProperty = {
-      propertyIndex: propertyId,
-      cardinality: 1, // default: not required, not multiple
-      guiOrder,
-    };
-
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classDefinition.id, [propCard]);
-    this._dspApiConnection.v2.onto
-      .addCardinalityToResourceClass(updateOntology)
-      .pipe(take(1))
-      .subscribe((res: ResourceClassDefinitionWithAllLanguages) => {
-        this._loadOntology(this.ontologyId, propertyId);
-      });
-  }
-
-  /**
-   * Yes, we need to pass an UpdateOntology<UpdateResourceClassCardinality> containing an array of the one property
-   * we like to remove to deleteCardinalityFromResourceClass in order to remove that property ...
-   */
-  removePropertyFromClass(property: IHasProperty, classId: string) {
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [property]);
-    this._isTransacting.next(true);
-    this._dspApiConnection.v2.onto
-      .deleteCardinalityFromResourceClass(updateOntology)
-      .pipe(take(1))
-      .subscribe(() => {
-        this._loadOntology(this.ontologyId, classId);
-      });
-  }
-
-  /**
-   * No, there is no way to update a whole property at once. We have to send two separate requests to one
-   * and the same endpoint
-   */
-  updateProperty$(propertyData: UpdatePropertyData) {
-    const updates: Observable<ResourcePropertyDefinitionWithAllLanguages | ApiResponseError>[] = [];
-
-    if (propertyData.labels !== undefined) {
-      updates.push(this._updatePropertyLabels$(propertyData.id, propertyData.labels));
-    }
-
-    if (propertyData.comment !== undefined) {
-      updates.push(this._updatePropertyComments$(propertyData.id, propertyData.comment));
-    }
-
-    this._isTransacting.next(true);
-    return concat(...updates).pipe(
-      last(),
-      tap(() => {
-        this._loadOntology(this.ontologyId, propertyData.id);
-      })
-    );
-  }
-
-  private _updatePropertyLabels$(id: string, labels: StringLiteralV2[]) {
-    return defer(() => {
-      const upd = MakeOntologyFor.updatePropertyLabel(this.ctx, id, labels);
-      return this._updateProperty$(upd);
-    });
-  }
-
-  private _updatePropertyComments$(id: string, comments: StringLiteralV2[]) {
-    return defer(() => {
-      const upd = MakeOntologyFor.updatePropertyComment(this.ctx, id, comments);
-      return this._updateProperty$(upd);
-    });
-  }
-
-  private _updateProperty$(
-    updateOntology: UpdateOntology<
-      UpdateResourcePropertyGuiElement | UpdateResourcePropertyLabel | UpdateResourcePropertyComment
-    >
-  ): Observable<ResourcePropertyDefinitionWithAllLanguages> {
-    return this._dspApiConnection.v2.onto.updateResourceProperty(updateOntology).pipe(
-      tap(prop => {
-        this.lastModificationDate = prop?.lastModificationDate;
-      })
-    );
-  }
-
-  private _createProperty$(propertyData: CreatePropertyData) {
-    this._isTransacting.next(true);
-    const onto = MakeOntologyFor.createProperty(this.ctx, propertyData);
-    return this._dspApiConnection.v2.onto.createResourceProperty(onto);
-  }
-
-  canDeleteResourceProperty$(propertyId: string): Observable<CanDoResponse> {
-    const canDo = this._canDeletePropertyMap.get(propertyId);
-    if (canDo) {
-      return of(canDo);
-    }
-
-    return this._dspApiConnection.v2.onto.canDeleteResourceProperty(propertyId).pipe(
-      tap((canDoRes: CanDoResponse) => {
-        this._canDeletePropertyMap.set(propertyId, canDoRes);
-      })
-    );
-  }
-
-  deleteProperty$(id: string) {
-    this._isTransacting.next(true);
-    return this._dspApiConnection.v2.onto
-      .deleteResourceProperty({
-        id,
-        lastModificationDate: this.lastModificationDate,
-      })
-      .pipe(
-        tap(deleteResponse => {
-          this.lastModificationDate = deleteResponse.lastModificationDate;
-          this._loadOntology(this.ontologyId);
-        })
-      );
-  }
-
-  /**
-   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, updateCardinalityOfResourceClass,
-   * but to another endpoint.
-   */
-  propertyCanBeRemovedFromClass$(propCard: IHasProperty, classId: string): Observable<CanDoResponse> {
-    if (propCard.isInherited) {
-      // no need to send a request to the server
-      return of({ canDo: false, cannotDoReason: 'The property is inherited from another class' } as CanDoResponse);
-    }
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, [propCard]);
-    return this._dspApiConnection.v2.onto.canDeleteCardinalityFromResourceClass(updateOntology);
-  }
-
-  /**
-   * Yes, we are sending the same body as for canDeleteCardinalityFromResourceClass, updateCardinalityOfResourceClass,
-   * but to another endpoint.
-   */
-  updateGuiOrderOfClassProperties(classId: string, properties: IHasProperty[]) {
-    this._isTransacting.next(true);
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
-    this._dspApiConnection.v2.onto
-      .replaceGuiOrderOfCardinalities(updateOntology)
-      .pipe(take(1))
-      .subscribe(() => {
-        this._loadOntology(this.ontologyId, classId);
-      });
-  }
-
-  /**
-   * Yes, we are sending the same body as for replaceGuiOrderOfCardinalities, canDeleteCardinalityFromResourceClass,
-   * but to another endpoint.
-   */
-  updatePropertiesOfResourceClass(classId: string, properties: IHasProperty[] = []) {
-    this._isTransacting.next(true);
-    const updateOntology = MakeOntologyFor.updateCardinalityOfResourceClass(this.ctx, classId, properties);
-    this._dspApiConnection.v2.onto
-      .replaceCardinalityOfResourceClass(updateOntology) // yes, someone called the properties "cardinalities" in the API
-      .pipe(take(1))
-      .subscribe(response => {
-        this._loadOntology(this.ontologyId, classId);
-      });
   }
 }
