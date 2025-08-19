@@ -1,13 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReadProject } from '@dasch-swiss/dsp-js';
 import { ExportFormat, V2MetadataApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject, filter, finalize, Subject, switchMap, takeUntil } from 'rxjs';
+import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
+import { ProjectPageService } from '../../project-page.service';
 
 @Component({
   selector: 'app-resource-metadata',
@@ -19,8 +17,7 @@ export class ResourceMetadataComponent implements OnDestroy {
   private readonly _destroy$ = new Subject<void>();
 
   readonly project$ = this._reloadSubject.asObservable().pipe(
-    switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
-    filter((project): project is ReadProject => !!project),
+    switchMap(() => this._projectPageService.currentProject$),
     takeUntil(this._destroy$)
   );
 
@@ -31,7 +28,7 @@ export class ResourceMetadataComponent implements OnDestroy {
     private _cdr: ChangeDetectorRef,
     private _ms: V2MetadataApiService,
     private _snackBar: MatSnackBar,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnDestroy() {
@@ -40,10 +37,12 @@ export class ResourceMetadataComponent implements OnDestroy {
   }
 
   exportMetadata() {
-    const shortcode = this._store.selectSnapshot(ProjectsSelectors.currentProject)?.shortcode;
-    if (!shortcode) throw new AppError('Project shortcode is not available.');
+    this.project$.subscribe(project => {
+      const shortcode = project.shortcode;
+      if (!shortcode) throw new AppError('Project shortcode is not available.');
 
-    this._getResourceMetadata(shortcode, ExportFormat.Csv);
+      this._getResourceMetadata(shortcode, ExportFormat.Csv);
+    });
   }
 
   private _getResourceMetadata(shortcode: string, format: ExportFormat) {

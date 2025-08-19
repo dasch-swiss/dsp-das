@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ListNodeInfo } from '@dasch-swiss/dsp-js';
+import { ListNodeInfo, ReadProject } from '@dasch-swiss/dsp-js';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest, distinctUntilChanged, switchMap, tap } from 'rxjs';
-import { ProjectsSelectors } from '../projects/projects.selectors';
+import { combineLatest, distinctUntilChanged, Observable, switchMap, tap } from 'rxjs';
 import { LoadListsInProjectAction } from './lists.actions';
 import { ListsSelectors } from './lists.selectors';
 
@@ -10,19 +9,18 @@ import { ListsSelectors } from './lists.selectors';
 export class ListsFacade {
   constructor(private _store: Store) {}
 
-  getListsInProject$(): Observable<ListNodeInfo[]> {
+  getListsInProject$(project: ReadProject): Observable<ListNodeInfo[]> {
     return combineLatest([
-      this._store.select(ProjectsSelectors.currentProject),
       this._store.select(ListsSelectors.isListsLoaded),
       this._store.select(ListsSelectors.isListsLoading),
     ]).pipe(
       distinctUntilChanged(),
-      tap(([project, loaded, loading]) => {
-        if (project && !loaded && !loading) {
+      tap(([loaded, loading]) => {
+        if (!loaded && !loading) {
           this._store.dispatch(new LoadListsInProjectAction(project.id));
         }
       }),
-      switchMap(([project]) => this._store.select(ListsSelectors.listsInProject))
+      switchMap(() => this._store.select(ListsSelectors.listsInProject))
     );
   }
 }

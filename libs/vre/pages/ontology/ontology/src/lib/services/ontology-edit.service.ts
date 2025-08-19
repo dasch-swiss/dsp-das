@@ -9,6 +9,7 @@ import {
   ListNodeInfo,
   OntologyMetadata,
   ReadOntology,
+  ReadProject,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinitionWithAllLanguages,
   StringLiteral,
@@ -24,10 +25,10 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import {
   ListsFacade,
   OntologiesSelectors,
-  ProjectsSelectors,
   RemoveProjectOntologyAction,
   ResetCurrentOntologyAction,
 } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
@@ -36,15 +37,15 @@ import {
   combineLatest,
   concat,
   defer,
+  distinctUntilChanged,
+  filter,
+  last,
+  map,
   Observable,
   of,
-  filter,
-  map,
   switchMap,
   take,
   tap,
-  last,
-  distinctUntilChanged,
 } from 'rxjs';
 import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
@@ -71,10 +72,14 @@ export class OntologyEditService {
     })
   );
 
+  getListsInProject$ = this._projectPageService.currentProject$.pipe(
+    switchMap(project => this._lists.getListsInProject$(project))
+  );
+
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
     this._store.select(OntologiesSelectors.currentProjectOntologies),
-    this._lists.getListsInProject$(),
+    this.getListsInProject$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
       if (!currentOntology) return [];
@@ -85,7 +90,7 @@ export class OntologyEditService {
 
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
     this._store.select(OntologiesSelectors.currentProjectOntologies),
-    this._lists.getListsInProject$(),
+    this.getListsInProject$,
   ]).pipe(
     map(([ontologies, allLists]) => {
       const allProps = ontologies.flatMap(o =>
@@ -149,14 +154,15 @@ export class OntologyEditService {
 
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
+  project?: ReadProject;
   get projectId(): string {
-    return this._store.selectSnapshot(ProjectsSelectors.currentProject)!.id;
+    return this.project!.id;
   }
 
   get projectCtx(): ProjectContext {
     return {
       projectId: this.projectId,
-      projectShort: this._store.selectSnapshot(ProjectsSelectors.currentProject)!.shortname,
+      projectShort: this.project!.shortname,
     };
   }
 
@@ -193,8 +199,13 @@ export class OntologyEditService {
     private _localizationService: LocalizationService,
     private _ontologyService: OntologyService,
     private _sortingService: SortingService,
+    private _projectPageService: ProjectPageService,
     private _store: Store
-  ) {}
+  ) {
+    this._projectPageService.currentProject$.subscribe(project => {
+      this.project = project;
+    });
+  }
 
   initOntologyByLabel(label: string) {
     this._isTransacting.next(true);
@@ -212,10 +223,11 @@ export class OntologyEditService {
   }
 
   private _loadOntologyByLabel(label: string) {
-    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    const iriBase = this._ontologyService.getIriBaseUrl();
-    const iri = `${iriBase}/${RouteConstants.ontology}/${project?.shortcode}/${label}/v2`;
-    this._loadOntology(iri);
+    this._projectPageService.currentProject$.subscribe(project => {
+      const iriBase = this._ontologyService.getIriBaseUrl();
+      const iri = `${iriBase}/${RouteConstants.ontology}/${project.shortcode}/${label}/v2`;
+      this._loadOntology(iri);
+    });
   }
 
   unloadOntology() {

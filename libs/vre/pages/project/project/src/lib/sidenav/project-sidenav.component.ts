@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { ProjectPageService } from '../project-page.service';
 
 @Component({
   selector: 'app-project-sidenav',
@@ -32,7 +31,7 @@ import { Store } from '@ngxs/store';
   ],
 })
 export class ProjectSidenavComponent {
-  currentProject$ = this._store.select(ProjectsSelectors.currentProject);
+  currentProject$ = this._projectPageService.currentProject$;
 
-  constructor(private _store: Store) {}
+  constructor(private _projectPageService: ProjectPageService) {}
 }

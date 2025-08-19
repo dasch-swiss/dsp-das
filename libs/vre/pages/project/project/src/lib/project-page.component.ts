@@ -68,6 +68,10 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       this._projectPageService.setCurrentProject(this.projectService.uuidToIri(params[RouteConstants.uuidParameter]));
     });
 
+    this._projectPageService.currentProject$.subscribe(project => {
+      this._titleService.setTitle(project.shortname);
+    });
+
     this._router.events
       .pipe(
         takeUntil(this.destroyed),
@@ -81,15 +85,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     this.projectUuid$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(uuid => {
       this._loadProject(uuid);
     });
-
-    this._store
-      .select(ProjectsSelectors.currentProject)
-      .pipe(distinctUntilChanged(), takeUntil(this.destroyed))
-      .subscribe(project => {
-        if (project) {
-          this._titleService.setTitle(project.shortname);
-        }
-      });
   }
 
   private getParamFromRouteTree(param: string): string | undefined {

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ReadProject } from '@dasch-swiss/dsp-js';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject, filter, map, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, map, shareReplay, switchMap } from 'rxjs';
+import { ProjectPageService } from '../../project-page.service';
 
 @Component({
   selector: 'app-legal-settings-licenses',
@@ -31,11 +29,9 @@ import { BehaviorSubject, filter, map, shareReplay, switchMap } from 'rxjs';
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);
 
-  readonly project$ = this._reloadSubject.asObservable().pipe(
-    switchMap(() => this._store.select(ProjectsSelectors.currentProject)),
-    filter(project => project !== undefined),
-    map(project => project as ReadProject)
-  );
+  readonly project$ = this._reloadSubject
+    .asObservable()
+    .pipe(switchMap(() => this._projectPageService.currentProject$));
 
   licenses$ = this.project$.pipe(
     switchMap(project => this._paginatedApi.getLicenses(project.shortcode)),
@@ -47,7 +43,7 @@ export class LegalSettingsLicensesComponent {
 
   constructor(
     private _paginatedApi: PaginatedApiService,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   refresh() {

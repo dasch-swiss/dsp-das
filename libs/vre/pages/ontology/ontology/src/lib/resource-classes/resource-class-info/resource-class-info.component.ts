@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
@@ -27,7 +28,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
 
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  project$ = this._projectPageService.currentProject$;
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
@@ -48,7 +49,8 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _dialogService: DialogService,
     private _notification: NotificationService,
     private _oes: OntologyEditService,
-    private _store: Store
+    private _store: Store,
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnInit() {

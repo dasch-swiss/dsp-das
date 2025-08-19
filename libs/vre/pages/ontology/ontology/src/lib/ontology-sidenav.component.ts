@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import {
   DefaultClass,
   DefaultProperties,
@@ -115,7 +116,7 @@ import { OntologyPageService } from './ontology-page.service';
   ],
 })
 export class OntologySidenavComponent {
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  project$ = this._projectPageService.currentProject$;
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
   readonly defaultClasses: DefaultClass[] = DefaultResourceClasses.data;
@@ -123,6 +124,7 @@ export class OntologySidenavComponent {
 
   constructor(
     public ops: OntologyPageService,
+    private _projectPageService: ProjectPageService,
     private _dialog: MatDialog,
     private _store: Store
   ) {}
