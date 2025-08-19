@@ -2,13 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
-import {
-  ClearListsAction,
-  ClearOntologiesAction,
-  ClearProjectsAction,
-  LoadUserAction,
-  LogUserOutAction,
-} from '@dasch-swiss/vre/core/state';
+import { ClearListsAction, ClearOntologiesAction, LoadUserAction, LogUserOutAction } from '@dasch-swiss/vre/core/state';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -82,11 +76,6 @@ export class AuthService {
   }
 
   private clearState() {
-    return this.store.dispatch([
-      new LogUserOutAction(),
-      new ClearProjectsAction(),
-      new ClearListsAction(),
-      new ClearOntologiesAction(),
-    ]);
+    return this.store.dispatch([new LogUserOutAction(), new ClearListsAction(), new ClearOntologiesAction()]);
   }
 }

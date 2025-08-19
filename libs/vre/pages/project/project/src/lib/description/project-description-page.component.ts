@@ -25,8 +25,6 @@ export class ProjectDescriptionPageComponent {
 
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
 
-  isLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
-
   hasManualLicense?: string;
 
   constructor(

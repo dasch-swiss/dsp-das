@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService, UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { map, take } from 'rxjs';
 import { ProjectsSelectors } from '../projects/projects.selectors';
@@ -26,7 +27,8 @@ export class ResourceState {
   constructor(
     private store: Store,
     private _userApiService: UserApiService,
-    private _projectApiService: ProjectApiService
+    private _projectApiService: ProjectApiService,
+    private _allProjectsService: AllProjectsService
   ) {}
 
   @Action(GetAttachedUserAction)

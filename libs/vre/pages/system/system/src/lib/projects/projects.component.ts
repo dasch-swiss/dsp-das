@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 import { Title } from '@angular/platform-browser';
 import { StoredProject } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { LoadProjectsAction, LoadUserAction, ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
-import { Observable, Subject, combineLatest, map, takeUntil } from 'rxjs';
+import { combineLatest, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 /**
  * ProjectsComponent handles the list of projects.
@@ -15,7 +16,7 @@ import { Observable, Subject, combineLatest, map, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-projects',
   template: `
-    @if (isProjectsLoading$ | async) {
+    @if (loading) {
       <app-progress-indicator />
     } @else {
       <div class="app-projects">
@@ -59,21 +60,23 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   userActiveProjects$ = this._store.select(UserSelectors.userActiveProjects);
   userInactiveProjects$ = this._store.select(UserSelectors.userInactiveProjects);
-  allActiveProjects$ = this._store.select(ProjectsSelectors.allActiveProjects);
-  allInactiveProjects$ = this._store.select(ProjectsSelectors.allInactiveProjects);
-  isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
+  allActiveProjects$ = this._allProjectsService.allActiveProjects$.pipe(
+    tap(() => {
+      this.loading = false;
+    })
+  );
+  allInactiveProjects$ = this._allProjectsService.allInactiveProjects$;
+
+  loading = true;
 
   constructor(
     private _store: Store,
+    private _allProjectsService: AllProjectsService,
     private _titleService: Title
   ) {}
 
   ngOnInit() {
     this._titleService.setTitle(this.isUsersProjects ? 'Your projects' : 'All projects from DSP');
-
-    if (this._store.selectSnapshot(ProjectsSelectors.allProjects).length === 0) {
-      this.updateAndRefresh();
-    }
   }
 
   ngOnDestroy() {
@@ -82,7 +85,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   updateAndRefresh() {
-    this._store.dispatch(new LoadProjectsAction());
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     if (!currentUser) throw new AppError('Current user not found.');
     this._store.dispatch(new LoadUserAction(currentUser.username));

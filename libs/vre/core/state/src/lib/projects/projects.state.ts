@@ -3,10 +3,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Action, State, StateContext } from '@ngxs/store';
-import { produce } from 'immer';
-import { finalize, take, tap } from 'rxjs';
-import { ClearProjectsAction, LoadProjectAction, LoadProjectsAction, UpdateProjectAction } from './projects.actions';
+import { State } from '@ngxs/store';
 import { ProjectsStateModel } from './projects.state-model';
 
 const defaults: ProjectsStateModel = {
@@ -29,81 +26,4 @@ export class ProjectsState {
     private projectService: ProjectService,
     private projectApiService: ProjectApiService
   ) {}
-
-  @Action(LoadProjectsAction, { cancelUncompleted: true })
-  loadProjects(ctx: StateContext<ProjectsStateModel>) {
-    ctx.patchState({ isLoading: true });
-    return this.projectApiService.list().pipe(
-      tap({
-        next: response => {
-          ctx.setState({
-            ...ctx.getState(),
-            isLoading: false,
-            allProjects: response.projects,
-          });
-        },
-      }),
-      finalize(() => {
-        ctx.patchState({ isLoading: false });
-      })
-    );
-  }
-
-  @Action(LoadProjectAction, { cancelUncompleted: true })
-  loadProjectAction(ctx: StateContext<ProjectsStateModel>, { projectUuid, loadMembership }: LoadProjectAction) {
-    ctx.patchState({ isLoading: true });
-
-    const projectIri = this.projectService.uuidToIri(projectUuid);
-    // get current project data, project members and project groups
-    // and set the project state here
-    return this._dspApiConnection.admin.projectsEndpoint.getProjectByIri(projectIri).pipe(
-      take(1),
-      tap({
-        next: response => {
-          const project = response.body.project;
-
-          let state = ctx.getState();
-          if (!state.allProjects) {
-            state.allProjects = [];
-          }
-
-          state = produce(state, draft => {
-            const index = draft.allProjects.findIndex(p => p.id === project.id);
-            if (index > -1) {
-              draft.allProjects[index] = project;
-            } else {
-              draft.allProjects.push(project);
-            }
-            draft.isLoading = false;
-          });
-
-          ctx.patchState(state);
-          return project;
-        },
-      }),
-      finalize(() => {
-        ctx.patchState({ isLoading: false });
-      })
-    );
-  }
-
-  @Action(ClearProjectsAction)
-  clearProjects(ctx: StateContext<ProjectsStateModel>) {
-    ctx.patchState(defaults);
-  }
-
-  @Action(UpdateProjectAction)
-  updateProjectAction(ctx: StateContext<ProjectsStateModel>, { projectUuid, projectData }: UpdateProjectAction) {
-    ctx.patchState({ isLoading: true });
-    return this.projectApiService.update(this.projectService.uuidToIri(projectUuid), projectData).pipe(
-      tap({
-        next: response => {
-          ctx.dispatch(new LoadProjectsAction());
-        },
-      }),
-      finalize(() => {
-        ctx.patchState({ isLoading: false });
-      })
-    );
-  }
 }

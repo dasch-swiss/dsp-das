@@ -6,7 +6,6 @@ export * from './lib/user/user.selectors';
 
 export * from './lib/lists/lists.actions';
 export * from './lib/ontologies/ontologies.actions';
-export * from './lib/projects/projects.actions';
 export * from './lib/resource/resource.actions';
 export * from './lib/user/user.actions';
 

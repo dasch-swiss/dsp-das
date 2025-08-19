@@ -2,10 +2,10 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { LoadProjectOntologiesAction, LoadProjectsAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { distinctUntilChanged, filter, map, Observable, startWith, Subject, take, takeUntil, takeWhile } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { filter, startWith, Subject, takeUntil } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
@@ -35,8 +35,6 @@ import { ProjectPageService } from './project-page.service';
   providers: [ProjectPageService],
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
-  projectUuid$: Observable<string> = this._route.params.pipe(map(params => params[RouteConstants.uuidParameter]));
-  isProjectsLoading$ = this._store.select(ProjectsSelectors.isProjectsLoading);
   isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
   sideNavOpened = true;
   currentOntologyName: undefined | string;
@@ -46,7 +44,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   protected readonly RouteConstants = RouteConstants;
 
   constructor(
-    protected _actions$: Actions,
     private _router: Router,
     protected _store: Store,
     protected _route: ActivatedRoute,
@@ -81,10 +78,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.currentOntologyName = this.getParamFromRouteTree('onto');
       });
-
-    this.projectUuid$.pipe(distinctUntilChanged(), takeUntil(this.destroyed)).subscribe(uuid => {
-      this._loadProject(uuid);
-    });
   }
 
   private getParamFromRouteTree(param: string): string | undefined {
@@ -96,39 +89,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       route = route.firstChild!;
     }
     return undefined;
-  }
-
-  private _loadProject(projectUuid: string): void {
-    this.isProjectsLoading$
-      .pipe(takeWhile(isLoading => !isLoading && !!projectUuid))
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-          const projectIri = this.projectService.uuidToIri(projectUuid);
-          if (!project || project.id !== projectIri) {
-            // get current project data, project members and project groups
-            // and set the project state here
-            this._actions$
-              .pipe(ofActionSuccessful(LoadProjectsAction))
-              .pipe(take(1))
-              .subscribe(() => this.setProjectData());
-            this._store.dispatch([new LoadProjectsAction()]);
-          } else {
-            this._store.dispatch(new LoadProjectOntologiesAction(projectUuid));
-          }
-        },
-      });
-  }
-
-  private setProjectData(): void {
-    const project = this._store.selectSnapshot(ProjectsSelectors.currentProject);
-    if (!project) {
-      return;
-    }
-
-    this._titleService.setTitle(project.shortname);
-    this._store.dispatch(new LoadProjectOntologiesAction(project.id, this.currentOntologyName));
   }
 
   ngOnDestroy() {

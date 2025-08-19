@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { Store } from '@ngxs/store';
+import { map } from 'rxjs';
 import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
 
@@ -66,11 +66,15 @@ export class ReusableProjectFormComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _store: Store
+    private _allProjectsService: AllProjectsService
   ) {}
 
   ngOnInit() {
-    this._buildForm();
+    this._allProjectsService.allProjects$
+      .pipe(map(projects => projects.map(project => project.shortcode)))
+      .subscribe(shortcodes => {
+        this._buildForm(shortcodes);
+      });
     this.afterFormInit.emit(this.form);
   }
 
@@ -78,11 +82,7 @@ export class ReusableProjectFormComponent implements OnInit {
     return (control.value || '').trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
   }
 
-  private _buildForm() {
-    const existingShortcodes = this._store
-      .selectSnapshot(ProjectsSelectors.allProjects)
-      .map(project => project.shortcode);
-
+  private _buildForm(shortcodes: string[]) {
     this.form = this._fb.group({
       shortcode: [
         { value: this.formData.shortcode, disabled: this.formData.shortcode !== '' },
@@ -91,7 +91,7 @@ export class ReusableProjectFormComponent implements OnInit {
           Validators.minLength(4),
           Validators.maxLength(4),
           Validators.pattern(/^[0-9A-Fa-f]+$/),
-          shortcodeExistsValidator(existingShortcodes),
+          shortcodeExistsValidator(shortcodes),
         ],
       ],
       shortname: [
