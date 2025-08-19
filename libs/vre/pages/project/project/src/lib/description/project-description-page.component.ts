@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { Store } from '@ngxs/store';
 import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { LicenseCaptionsMapping } from './license-captions-mapping';
@@ -26,10 +25,7 @@ export class ProjectDescriptionPageComponent {
 
   hasManualLicense?: string;
 
-  constructor(
-    private _store: Store,
-    private _projectPageService: ProjectPageService
-  ) {}
+  constructor(private _projectPageService: ProjectPageService) {}
 
   private _sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
     const languageOrder = AvailableLanguages.map(l => l.language);
