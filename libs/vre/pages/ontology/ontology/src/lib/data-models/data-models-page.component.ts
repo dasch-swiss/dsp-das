@@ -9,7 +9,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { combineLatest, take } from 'rxjs';
-import { OntologyFormComponent } from '../forms/ontology-form/ontology-form.component';
+import { OntologyFormDialogComponent } from '../forms/ontology-form/ontology-form-dialog.component';
 
 @Component({
   selector: 'app-data-models-page',
@@ -54,8 +54,8 @@ export class DataModelsPageComponent {
   }
 
   createNewOntology() {
-    const dialogRef = this._dialog.open<OntologyFormComponent>(
-      OntologyFormComponent,
+    const dialogRef = this._dialog.open<OntologyFormDialogComponent>(
+      OntologyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(null, true)
     );
     dialogRef

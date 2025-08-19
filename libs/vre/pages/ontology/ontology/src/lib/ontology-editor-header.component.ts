@@ -8,7 +8,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs';
-import { OntologyFormComponent } from './forms/ontology-form/ontology-form.component';
+import { OntologyFormDialogComponent } from './forms/ontology-form/ontology-form-dialog.component';
 import { UpdateOntologyData } from './forms/ontology-form/ontology-form.type';
 import { OntologyEditService } from './services/ontology-edit.service';
 
@@ -123,8 +123,8 @@ export class OntologyEditorHeaderComponent {
       label: ontology.label,
       comment: ontology.comment || '',
     };
-    this._dialog.open<OntologyFormComponent, UpdateOntologyData>(
-      OntologyFormComponent,
+    this._dialog.open<OntologyFormDialogComponent, UpdateOntologyData>(
+      OntologyFormDialogComponent,
       DspDialogConfig.dialogDrawerConfig(data, true)
     );
   }

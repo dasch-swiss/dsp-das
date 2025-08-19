@@ -3,20 +3,19 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { OntologyMetadata } from '@dasch-swiss/dsp-js';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { existingNamesAsyncValidator, existingNamesValidator } from '@dasch-swiss/vre/pages/user-settings/user';
+import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import { map, Subject, take, takeUntil } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
-  selector: 'app-ontology-form',
-  templateUrl: './ontology-form.component.html',
+  selector: 'app-ontology-form-dialog',
+  templateUrl: './ontology-form-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyFormComponent implements OnInit, OnDestroy {
+export class OntologyFormDialogComponent implements OnInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();
 
   ontologyForm!: OntologyForm;
@@ -52,9 +51,8 @@ export class OntologyFormComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _oes: OntologyEditService,
     private _projectPageService: ProjectPageService,
-    private _store: Store,
     @Inject(MAT_DIALOG_DATA) public data: UpdateOntologyData | undefined,
-    public dialogRef: MatDialogRef<OntologyFormComponent, OntologyMetadata>
+    public dialogRef: MatDialogRef<OntologyFormDialogComponent, OntologyMetadata>
   ) {}
 
   ngOnInit() {

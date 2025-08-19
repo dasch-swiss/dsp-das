@@ -1,5 +1,5 @@
 import { DataModelsPageComponent } from './lib/data-models/data-models-page.component';
-import { OntologyFormComponent } from './lib/forms/ontology-form/ontology-form.component';
+import { OntologyFormDialogComponent } from './lib/forms/ontology-form/ontology-form-dialog.component';
 import { EditPropertyFormDialogComponent } from './lib/forms/property-form/edit-property-form-dialog.component';
 import { GuiAttrLinkComponent } from './lib/forms/property-form/gui-attr-link.component';
 import { GuiAttrListComponent } from './lib/forms/property-form/gui-attr-list.component';
@@ -29,7 +29,7 @@ export const OntologyComponents = [
   DataModelsPageComponent,
   CreateResourceClassDialogComponent,
   EditResourceClassDialogComponent,
-  OntologyFormComponent,
+  OntologyFormDialogComponent,
   OntologyPageComponent,
   OntologyEditorHeaderComponent,
   OntologyEditorClassesComponent,
