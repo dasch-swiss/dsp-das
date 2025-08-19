@@ -14,7 +14,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">ACCEPT</button>
     </div>
   </div>`,
-  styles: [``],
+  styleUrls: [`./cookie-banner.component.scss`],
 })
 export class CookieBannerComponent implements OnInit {
   showCookieBanner = true;
@@ -34,7 +34,7 @@ export class CookieBannerComponent implements OnInit {
   }
 
   closeCookieBanner() {
-    this.showCookieBanner = !this.showCookieBanner;
+    this.showCookieBanner = false;
     localStorage.setItem('cookieBanner', JSON.stringify(this.showCookieBanner));
   }
 }
