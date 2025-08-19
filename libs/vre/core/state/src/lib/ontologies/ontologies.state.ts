@@ -1,12 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { Constants, KnoraApiConnection, PropertyDefinition, ReadOntology } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import {
-  LocalizationService,
-  OntologyService,
-  ProjectService,
-  SortingService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Action, Actions, ofActionSuccessful, State, StateContext } from '@ngxs/store';
 import { map, of, switchMap, take, tap } from 'rxjs';
 import { LoadListsInProjectAction } from '../lists/lists.actions';
@@ -39,8 +34,6 @@ export class OntologiesState {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _localizationService: LocalizationService,
-    private _sortingService: SortingService,
     private _projectService: ProjectService,
     private _actions$: Actions
   ) {}
@@ -224,20 +217,5 @@ export class OntologiesState {
     }
 
     return 0;
-  }
-
-  private initOntoProperties(allOntoProperties: PropertyDefinition[]): PropertyDefinition[] {
-    // reset the ontology properties
-    const listOfProperties: PropertyDefinition[] = [];
-
-    // display only the properties which are not a subjectType of Standoff
-    allOntoProperties.forEach(resProp => {
-      const standoff = resProp.subjectType ? resProp.subjectType.includes('Standoff') : false;
-      if (resProp.objectType !== Constants.LinkValue && !standoff) {
-        listOfProperties.push(resProp);
-      }
-    });
-    const lang = this._localizationService.getCurrentLanguage();
-    return this._sortingService.sortByLabelsAlphabetically(listOfProperties, 'label', lang);
   }
 }
