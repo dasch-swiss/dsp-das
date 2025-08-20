@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
@@ -8,8 +8,8 @@ import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
-import { combineLatest, take } from 'rxjs';
-import { OntologyFormDialogComponent } from '../forms/ontology-form/ontology-form-dialog.component';
+import { combineLatest } from 'rxjs';
+import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create-ontology-form-dialog.component';
 
 @Component({
   selector: 'app-data-models-page',
@@ -27,6 +27,7 @@ export class DataModelsPageComponent {
   constructor(
     private _dialog: MatDialog,
     private _projectPageService: ProjectPageService,
+    private _viewContainerRef: ViewContainerRef,
     public _route: ActivatedRoute,
     private _router: Router,
     private _store: Store
@@ -54,14 +55,17 @@ export class DataModelsPageComponent {
   }
 
   createNewOntology() {
-    const dialogRef = this._dialog.open<OntologyFormDialogComponent>(
-      OntologyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(null, true)
-    );
-    dialogRef
+    this._dialog
+      .open<CreateOntologyFormDialogComponent>(CreateOntologyFormDialogComponent, {
+        ...DspDialogConfig.dialogDrawerConfig(null, true),
+        viewContainerRef: this._viewContainerRef,
+      })
       .afterClosed()
-      .pipe(take(1))
-      .subscribe(o => this.navigateToOntology(o.id));
+      .subscribe(o => {
+        if (o) {
+          this.navigateToOntology(o.id);
+        }
+      });
   }
 
   createNewList() {

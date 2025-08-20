@@ -1,5 +1,5 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { first, map, Observable, of } from 'rxjs';
+import { first, map, Observable, of, tap } from 'rxjs';
 
 export function existingNamesValidator(existingNames: string[], isCaseSensitive = false): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -23,6 +23,7 @@ export function existingNamesAsyncValidator(
 
     return existingNames$.pipe(
       first(),
+      tap(v => console.log('aaaa', v)),
       map(names => (names.includes(name) ? { existingName: { name } } : null))
     );
   };

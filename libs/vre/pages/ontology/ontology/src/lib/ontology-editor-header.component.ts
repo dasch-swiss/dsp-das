@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
@@ -8,7 +8,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs';
-import { OntologyFormDialogComponent } from './forms/ontology-form/ontology-form-dialog.component';
+import { EditOntologyFormDialogComponent } from './forms/ontology-form/edit-ontology-form-dialog.component';
 import { UpdateOntologyData } from './forms/ontology-form/ontology-form.type';
 import { OntologyEditService } from './services/ontology-edit.service';
 
@@ -114,7 +114,8 @@ export class OntologyEditorHeaderComponent {
     private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   editOntology(ontology: ReadOntology | OntologyMetadata) {
@@ -123,10 +124,10 @@ export class OntologyEditorHeaderComponent {
       label: ontology.label,
       comment: ontology.comment || '',
     };
-    this._dialog.open<OntologyFormDialogComponent, UpdateOntologyData>(
-      OntologyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(data, true)
-    );
+    this._dialog.open<EditOntologyFormDialogComponent, UpdateOntologyData>(EditOntologyFormDialogComponent, {
+      ...DspDialogConfig.dialogDrawerConfig(data, true),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   deleteOntology(ontologyId: string) {
