@@ -208,7 +208,7 @@ export class OntologyEditService {
     this._projectPageService.detailedOntologies$.subscribe(ontologies => {
       const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
-      if (false && ontologyFromStore) {
+      if (ontologyFromStore) {
         this._currentOntology.next(ontologyFromStore);
         this._currentOntologyInfo.next(ontologyFromStore);
         this._isTransacting.next(false);
