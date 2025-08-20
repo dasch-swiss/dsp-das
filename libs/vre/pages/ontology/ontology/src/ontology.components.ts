@@ -14,7 +14,7 @@ import { OntologyPageComponent } from './lib/ontology-page.component';
 import { OntologySidenavComponent } from './lib/ontology-sidenav.component';
 import { OntologyPropertiesComponent } from './lib/properties/ontology-properties.component';
 import { PropertyInfoComponent } from './lib/properties/property-info/property-info.component';
-import { OntologyEditorClassesComponent } from './lib/resource-classes/ontology-editor-classes.component';
+import { OntologyEditorPageComponent } from './lib/resource-classes/ontology-editor-page.component';
 import { AddPropertyMenuComponent } from './lib/resource-classes/resource-class-info/add-property-menu.component';
 import { CardinalityChangeDialogComponent } from './lib/resource-classes/resource-class-info/cardinality-component/cardinality-change-dialog.component';
 import { CardinalityComponent } from './lib/resource-classes/resource-class-info/cardinality-component/cardinality.component';
@@ -30,7 +30,7 @@ export const OntologyComponents = [
   OntologyFormComponent,
   OntologyPageComponent,
   OntologyEditorHeaderComponent,
-  OntologyEditorClassesComponent,
+  OntologyEditorPageComponent,
   OntologyPropertiesComponent,
   PropertyInfoComponent,
   ResourceClassFormComponent,

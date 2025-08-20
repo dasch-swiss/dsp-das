@@ -42,7 +42,7 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { CreateOntologyData, UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
+import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
 import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 import { ClassPropertyInfo, ClassShortInfo, PropertyInfo, ResourceClassInfo } from '../ontology.types';
@@ -219,21 +219,6 @@ export class OntologyEditService {
     });
   }
 
-  unloadOntology() {
-    this._canDeletePropertyMap.clear();
-    this._currentOntology.next(null);
-  }
-
-  createOntology$({ name, label, comment }: CreateOntologyData) {
-    const createOntology = MakeOntologyFor.createOntology(this.projectCtx, name, label, comment);
-    this._isTransacting.next(true);
-    return this._dspApiConnection.v2.onto.createOntology(createOntology).pipe(
-      tap(onto => {
-        this._loadOntology(onto.id);
-      })
-    );
-  }
-
   updateOntology$({ label, comment }: UpdateOntologyData) {
     const updateOntology = MakeOntologyFor.updateOntologyMetadata(this.ctx, label, comment);
     this._isTransacting.next(true);
@@ -299,10 +284,6 @@ export class OntologyEditService {
         this._loadOntology(this.ontologyId, classData.id);
       })
     );
-  }
-
-  canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
-    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
   }
 
   deleteResourceClass$(id: string) {
@@ -539,8 +520,7 @@ export class OntologyEditService {
     props: ResourcePropertyDefinitionWithAllLanguages[]
   ): PropertyInfo[] {
     const lang = this._localizationService.getCurrentLanguage();
-    return SortingHelper
-      .sortByLabelsAlphabetically(props, 'label', lang)
+    return SortingHelper.sortByLabelsAlphabetically(props, 'label', lang)
       .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
       .map((prop): PropertyInfo => {
         const propId = prop.id;

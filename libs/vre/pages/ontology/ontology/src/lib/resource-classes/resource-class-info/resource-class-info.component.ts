@@ -1,16 +1,16 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiResponseError, IHasProperty } from '@dasch-swiss/dsp-js';
-import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
-import { Subscription, switchMap, take } from 'rxjs';
+import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
@@ -50,7 +50,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _notification: NotificationService,
     private _oes: OntologyEditService,
     private _store: Store,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnInit() {
@@ -66,8 +68,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   }
 
   setCanBeDeleted() {
-    this._oes
-      .canDeleteResourceClass$(this.resourceClass.id)
+    this._canDeleteResourceClass$(this.resourceClass.id)
       .pipe(take(1))
       .subscribe(response => {
         if (response instanceof ApiResponseError) {
@@ -122,5 +123,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   copyResourceClassId() {
     this._clipboard.copy(this.resourceClass.id);
     this._notification.openSnackBar('Resource class ID copied to clipboard.');
+  }
+
+  private _canDeleteResourceClass$(classId: string): Observable<CanDoResponse | ApiResponseError> {
+    return this._dspApiConnection.v2.onto.canDeleteResourceClass(classId);
   }
 }

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { combineLatest, Subject, take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
@@ -35,14 +35,12 @@ import { OntologyEditService } from './services/ontology-edit.service';
   providers: [OntologyPageService, OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyPageComponent implements OnInit, OnDestroy {
+export class OntologyPageComponent implements OnInit {
   project$ = this._projectPageService.currentProject$;
   ontology$ = this._oes.currentOntology$;
 
   disableContent = false;
   isTransacting$ = this._oes.isTransacting$;
-
-  private _destroy = new Subject<void>();
 
   constructor(
     private _route: ActivatedRoute,
@@ -70,11 +68,5 @@ export class OntologyPageComponent implements OnInit, OnDestroy {
       .subscribe(([project, currentOntology]) => {
         this._titleService.setTitle(`Project ${project?.shortname} | Data model${currentOntology ? '' : 's'}`);
       });
-  }
-
-  ngOnDestroy() {
-    this._destroy.next();
-    this._destroy.complete();
-    this._oes.unloadOntology();
   }
 }

@@ -5,7 +5,7 @@ import { ResourceClassBrowserPageComponent } from '@dasch-swiss/vre/pages/data-b
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
   DataModelsPageComponent,
-  OntologyEditorClassesComponent,
+  OntologyEditorPageComponent,
   OntologyPageComponent,
   OntologyPropertiesComponent,
 } from '@dasch-swiss/vre/pages/ontology/ontology';
@@ -86,7 +86,7 @@ const routes: Routes = [
           },
           {
             path: RouteConstants.classes,
-            component: OntologyEditorClassesComponent,
+            component: OntologyEditorPageComponent,
           },
           {
             path: RouteConstants.properties,
