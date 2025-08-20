@@ -59,7 +59,7 @@
     "@ngxs/logger-plugin": "^18.1.0",
     "@ngxs/router-plugin": "^18.1.0",
     "@ngxs/store": "^18.1.0",
-    "@nx/angular": "19.8.9",
+    "@nx/angular": "21.4.0",
     "@sentry/angular": "^8.0.0",
     "@sentry/cli": "^2.52.0",
     "angular-imask": "^7.5.0",
