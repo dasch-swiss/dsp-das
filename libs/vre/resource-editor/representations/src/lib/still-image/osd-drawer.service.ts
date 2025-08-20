@@ -12,6 +12,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import * as OpenSeadragon from 'openseadragon';
 import { combineLatest, filter, map, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { AddRegionFormDialogComponent, AddRegionFormDialogProps } from '../add-region-form-dialog.component';
+import { Region } from '../region';
 import { RegionService } from '../region.service';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { PolygonsForRegion } from './polygons-for-region.interface';
@@ -72,12 +73,11 @@ export class OsdDrawerService implements OnDestroy {
       .subscribe(([showRegions, regions]) => {
         if (!showRegions) {
           this._removeOverlays();
+          return;
         }
 
-        if (showRegions) {
-          this._removeOverlays(regions.map(r => r.res));
-          this._renderRegions(regions.map(r => r.res));
-        }
+        // Incremental update: only add/remove what changed
+        this._updateRegionsIncrementally(regions.map(r => r.res));
       });
   }
 
@@ -137,14 +137,12 @@ export class OsdDrawerService implements OnDestroy {
 
   private _removeOverlays(keep: ReadResource[] = []): void {
     if (keep.length === 0) {
-      // Remove all overlays including master SVG
       this._osd.viewer.clearOverlays();
       this._masterSvgOverlay = null;
       this._paintedPolygons = {};
       this._currentHighlightedRegion = null;
       this._cdr.detectChanges();
     } else {
-      // Update master SVG to only show kept regions
       const elementsToRemove = this._getPolygonsToRemove(keep.map(r => r.id));
       elementsToRemove.forEach(regionId => {
         delete this._paintedPolygons[regionId];
@@ -161,6 +159,73 @@ export class OsdDrawerService implements OnDestroy {
       return Object.keys(this._paintedPolygons);
     }
     return Object.keys(this._paintedPolygons).filter(el => !keep.includes(el));
+  }
+
+  private _updateRegionsIncrementally(regions: ReadResource[]): void {
+    const currentRegionIds = Object.keys(this._paintedPolygons);
+    const newRegionIds = regions.map(r => r.id);
+
+    // Find regions to remove (exist in current but not in new)
+    const regionsToRemove = currentRegionIds.filter(id => !newRegionIds.includes(id));
+
+    // Find regions to add (exist in new but not in current)
+    const regionsToAdd = regions.filter(r => !currentRegionIds.includes(r.id));
+
+    // Remove deleted regions
+    regionsToRemove.forEach(regionId => {
+      delete this._paintedPolygons[regionId];
+      if (this._masterSvgOverlay) {
+        const regionElements = this._masterSvgOverlay.querySelectorAll(`[data-region-iri="${regionId}"]`);
+        regionElements.forEach(el => el.remove());
+        // Clean up tooltip
+        const tooltip = document.getElementById(`tooltip-${regionId}`);
+        tooltip?.remove();
+      }
+    });
+
+    // Add new regions
+    if (regionsToAdd.length > 0) {
+      this._addRegionsToMasterSVG(regionsToAdd);
+    }
+  }
+
+  private _addRegionsToMasterSVG(regions: ReadResource[]): void {
+    if (!this._masterSvgOverlay) {
+      // No master SVG exists, create it with all regions
+      this._renderRegions(regions);
+      return;
+    }
+
+    const stillImage = this.resource.properties[Constants.HasStillImageFileValue][0] as ReadStillImageFileValue;
+    const aspectRatio = stillImage.dimY / stillImage.dimX;
+
+    // Add only new regions to existing SVG
+    regions.forEach(region => {
+      const geom = new Region(region).getGeometries()[0];
+      if (!geom) return;
+
+      const colorValues: ReadColorValue[] = region.properties[Constants.HasColor] as ReadColorValue[];
+      if (colorValues && colorValues.length) {
+        geom.geometry.lineColor = colorValues[0].color;
+      }
+
+      const commentValue = region.properties[Constants.HasComment]
+        ? region.properties[Constants.HasComment][0].strval
+        : '';
+
+      const rectGroup = this._createSVGRectangle(
+        region.id,
+        geom.geometry,
+        aspectRatio,
+        region.label,
+        commentValue || ''
+      );
+
+      if (this._masterSvgOverlay) {
+        this._masterSvgOverlay.appendChild(rectGroup);
+      }
+      this._paintedPolygons[region.id] = [rectGroup];
+    });
   }
 
   private _renderRegions(regions: ReadResource[]): void {
@@ -307,7 +372,6 @@ export class OsdDrawerService implements OnDestroy {
     regionLabel: string,
     regionComment: string
   ): void {
-    // Create tooltip element outside SVG
     const tooltipId = `tooltip-${regionIri}`;
     let tooltip = document.getElementById(tooltipId);
     if (!tooltip) {
@@ -376,9 +440,7 @@ export class OsdDrawerService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // Hide any visible tooltip
     this._hideCurrentTooltip();
-
     // Clean up tooltips
     if (this._masterSvgOverlay) {
       const regionGroups = this._masterSvgOverlay.querySelectorAll('[data-region-iri]');
