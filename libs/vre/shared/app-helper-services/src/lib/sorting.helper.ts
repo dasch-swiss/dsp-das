@@ -1,14 +1,9 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
-export class SortingService {
+export class SortingHelper {
   /**
    * compares value by value and sorts in alphabetical order using the provided first key, in case the comparison
    * of the values results in zero the second key is used if provided.
    */
-  keySortByAlphabetical<T extends object>(value: Array<T>, firstSortKey: keyof T, secondSortKey?: keyof T): Array<T> {
+  static keySortByAlphabetical<T extends object>(value: Array<T>, firstSortKey: keyof T, secondSortKey?: keyof T): Array<T> {
     const sortedArray = value.slice();
     sortedArray.sort((a: T, b: T) => {
       if (String(a[firstSortKey]).toLowerCase() < String(b[firstSortKey]).toLowerCase()) {
@@ -30,14 +25,14 @@ export class SortingService {
     return sortedArray;
   }
 
-  sortByLabelsAlphabetically<T extends object>(value: Array<T>, sortKey: keyof T, language?: string): Array<T> {
+  static sortByLabelsAlphabetically<T extends object>(value: Array<T>, sortKey: keyof T, language?: string): Array<T> {
     const sortedArray = value.slice();
     sortedArray.sort((a: T, b: T) => {
       let rawLabelA = String(a[sortKey] ?? '');
       let rawLabelB = String(b[sortKey] ?? '');
       if (language !== undefined) {
-        rawLabelA = this.getLabelValue(a, sortKey, language);
-        rawLabelB = this.getLabelValue(b, sortKey, language);
+        rawLabelA = SortingHelper.getLabelValue(a, sortKey, language);
+        rawLabelB = SortingHelper.getLabelValue(b, sortKey, language);
       }
 
       const comparison = rawLabelA.localeCompare(rawLabelB, language, {
@@ -54,7 +49,7 @@ export class SortingService {
     return sortedArray;
   }
 
-  private getLabelValue<T>(item: T, sortKey: keyof T, language: string): string {
+  private static getLabelValue<T>(item: T, sortKey: keyof T, language: string): string {
     type Label = { language: string; value: string };
     type TWithLabels = T & { labels: Label[] };
 

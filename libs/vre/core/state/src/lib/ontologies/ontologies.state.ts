@@ -174,7 +174,7 @@ export class OntologiesState {
           }
 
           projectReadOntologies = projectReadOntologies.sort((o1, o2) => this._compareOntologies(o1, o2));
-          // this._sortingService.keySortByAlphabetical(projectReadOntologies, 'labels');
+          // SortingHelper.keySortByAlphabetical(projectReadOntologies, 'labels');
           projectOntologiesState[projectIri].readOntologies = projectReadOntologies;
 
           if (ontology.id === ctx.getState().currentOntology?.id) {

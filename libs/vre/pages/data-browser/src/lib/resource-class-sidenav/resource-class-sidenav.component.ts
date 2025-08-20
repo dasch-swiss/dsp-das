@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +18,6 @@ export class ResourceClassSidenavComponent implements OnChanges {
 
   constructor(
     private _localizationService: LocalizationService,
-    private _sortingService: SortingService
   ) {}
 
   ngOnChanges() {
@@ -29,7 +28,7 @@ export class ResourceClassSidenavComponent implements OnChanges {
       return !prefix.includes(Constants.StandoffOntology) && !suffix.includes('Standoff');
     });
     const lang = this._localizationService.getCurrentLanguage();
-    this.classesToDisplay = this._sortingService.sortByLabelsAlphabetically(filtered, 'label', lang);
+    this.classesToDisplay = SortingHelper.sortByLabelsAlphabetically(filtered, 'label', lang);
   }
 
   trackByFn = (index: number, item: ResourceClassDefinitionWithAllLanguages) => `${index}-${item.id}`;

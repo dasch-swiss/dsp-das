@@ -24,7 +24,7 @@ import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ListsFacade, RemoveProjectOntologyAction, ResetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { LocalizationService, OntologyService, SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import {
@@ -193,7 +193,6 @@ export class OntologyEditService {
     private _notification: NotificationService,
     private _localizationService: LocalizationService,
     private _ontologyService: OntologyService,
-    private _sortingService: SortingService,
     private _projectPageService: ProjectPageService,
     private _store: Store
   ) {
@@ -540,7 +539,7 @@ export class OntologyEditService {
     props: ResourcePropertyDefinitionWithAllLanguages[]
   ): PropertyInfo[] {
     const lang = this._localizationService.getCurrentLanguage();
-    return this._sortingService
+    return SortingHelper
       .sortByLabelsAlphabetically(props, 'label', lang)
       .filter(resProp => resProp.objectType !== Constants.LinkValue && !resProp.subjectType?.includes('Standoff'))
       .map((prop): PropertyInfo => {
@@ -620,7 +619,7 @@ export class OntologyEditService {
       }
     });
     const lang = this._localizationService.getCurrentLanguage();
-    return this._sortingService.sortByLabelsAlphabetically(ontoClasses, 'label', lang);
+    return SortingHelper.sortByLabelsAlphabetically(ontoClasses, 'label', lang);
   }
 
   private _getObjectLabelAndComment(

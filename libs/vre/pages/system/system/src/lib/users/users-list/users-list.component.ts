@@ -4,7 +4,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
@@ -50,7 +50,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
 export class UsersListComponent {
   _list!: ReadUser[];
   @Input() set list(value: ReadUser[]) {
-    this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
+    this._list = SortingHelper.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }
 
   get list(): ReadUser[] {
@@ -97,7 +97,6 @@ export class UsersListComponent {
 
   constructor(
     private readonly _matDialog: MatDialog,
-    private readonly _sortingService: SortingService,
     private readonly _store: Store,
     private readonly _ts: TranslateService,
     private _usersTabService: UsersTabService,
@@ -122,7 +121,7 @@ export class UsersListComponent {
 
   sortList(key: UserSortKey) {
     this.sortBy = key;
-    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy);
+    this.list = SortingHelper.keySortByAlphabetical(this.list, this.sortBy);
     localStorage.setItem('sortUsersBy', key);
   }
 }
