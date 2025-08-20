@@ -56,7 +56,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    console.log('prop', this.resourceClass);
     this.subscription = this.ops.expandClasses$.subscribe(expandClasses => {
       this.expandClasses = expandClasses;
       this._cd.detectChanges();

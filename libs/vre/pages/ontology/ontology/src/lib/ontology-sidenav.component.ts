@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -9,7 +9,6 @@ import {
   DefaultResourceClasses,
   PropertyCategory,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import { EditPropertyFormDialogComponent } from './forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from './forms/property-form/property-form.type';
 import { CreateResourceClassDialogComponent } from './forms/resource-class-form/create-resource-class-dialog.component';
@@ -125,14 +124,14 @@ export class OntologySidenavComponent {
     public ops: OntologyPageService,
     private _projectPageService: ProjectPageService,
     private _dialog: MatDialog,
-    private _store: Store
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   openCreateResourceClass(defaultClass: DefaultClass) {
-    this._dialog.open<CreateResourceClassDialogComponent, DefaultClass>(
-      CreateResourceClassDialogComponent,
-      DspDialogConfig.mediumDialog(defaultClass)
-    );
+    this._dialog.open<CreateResourceClassDialogComponent, DefaultClass>(CreateResourceClassDialogComponent, {
+      ...DspDialogConfig.mediumDialog(defaultClass),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   openCreateNewProperty(propType: DefaultProperty) {

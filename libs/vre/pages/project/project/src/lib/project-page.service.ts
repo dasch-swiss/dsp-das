@@ -31,7 +31,9 @@ export class ProjectPageService {
   );
 
   detailedOntologies$ = this.ontologies$.pipe(
-    switchMap(ontologies => combineLatest(ontologies.map(onto => this._dspApiConnection.v2.onto.getOntology(onto.id))))
+    switchMap(ontologies =>
+      combineLatest(ontologies.map(onto => this._dspApiConnection.v2.onto.getOntology(onto.id, true)))
+    )
   );
   constructor(
     private projectApiService: ProjectApiService,

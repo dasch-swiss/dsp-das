@@ -206,7 +206,6 @@ export class OntologyEditService {
     this._canDeletePropertyMap.clear();
 
     this._projectPageService.detailedOntologies$.subscribe(ontologies => {
-      console.log('god it ontologies', ontologies);
       const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
       if (false && ontologyFromStore) {
