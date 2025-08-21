@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { TranslateService } from '@ngx-translate/core';
-import { map, switchMap } from 'rxjs';
+import { map } from 'rxjs';
+import { ProjectPageService } from '../project-page.service';
 import { ProjectForm } from './project-form.type';
 
 @Component({
@@ -22,7 +19,6 @@ import { ProjectForm } from './project-form.type';
         mat-raised-button
         type="submit"
         color="primary"
-        [disabled]="form?.invalid"
         (click)="onSubmit()"
         appLoadingButton
         [isLoading]="loading"
@@ -33,13 +29,9 @@ import { ProjectForm } from './project-form.type';
   `,
 })
 export class EditProjectFormPageComponent {
-  form: ProjectForm;
+  form!: ProjectForm;
   loading = false;
-  formData$ = this._route.parent.parent.paramMap.pipe(
-    map(params => params.get(RouteConstants.uuidParameter)),
-    map(uuid => this._projectService.uuidToIri(uuid)),
-    switchMap(iri => this._projectApiService.get(iri)),
-    map(project => project.project),
+  formData$ = this._projectPageService.currentProject$.pipe(
     map(project => {
       return {
         shortcode: project.shortcode,
@@ -52,17 +44,13 @@ export class EditProjectFormPageComponent {
   );
 
   constructor(
-    private _notification: NotificationService,
-    private _projectApiService: ProjectApiService,
-    private _projectService: ProjectService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _ts: TranslateService
+    private _projectPageService: ProjectPageService,
+    private _router: Router
   ) {}
 
   onSubmit() {
-    const projectUuid = this._route.parent.parent.snapshot.paramMap.get(RouteConstants.uuidParameter);
-    this._notification.openSnackBar(this._ts.instant('pages.project.editProjectFormPage.editSuccess'));
-    this._router.navigate([`${RouteConstants.projectRelative}/${projectUuid}`]);
+    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
+      this._router.navigate([`${RouteConstants.projectRelative}/${projectUuid}`]);
+    });
   }
 }

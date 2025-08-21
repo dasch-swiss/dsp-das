@@ -46,7 +46,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
   `,
 })
 export class ReusableProjectFormComponent implements OnInit {
-  @Input() formData: {
+  @Input({ required: true }) formData!: {
     shortcode: string;
     shortname: string;
     longname: string;
@@ -74,8 +74,8 @@ export class ReusableProjectFormComponent implements OnInit {
       .pipe(map(projects => projects.map(project => project.shortcode)))
       .subscribe(shortcodes => {
         this._buildForm(shortcodes);
+        this.afterFormInit.emit(this.form);
       });
-    this.afterFormInit.emit(this.form);
   }
 
   public noWhitespaceValidator(control: FormControl) {
