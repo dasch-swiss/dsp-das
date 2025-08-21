@@ -2,7 +2,11 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
 
 export class UserPermissions {
   static hasSysAdminRights(user: ReadUser): boolean {
-    return user.systemAdmin === true;
+    return this._isPartOfProjectGroup(
+      user,
+      'http://www.knora.org/ontology/knora-admin#SystemProject',
+      'http://www.knora.org/ontology/knora-admin#SystemAdmin'
+    );
   }
 
   static hasProjectAdminRights(user: ReadUser, projectUuid: string): boolean {
