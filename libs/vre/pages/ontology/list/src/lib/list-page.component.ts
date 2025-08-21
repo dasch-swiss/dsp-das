@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
@@ -19,8 +19,6 @@ import { ListItemService } from './list-item/list-item.service';
   providers: [ListItemService],
 })
 export class ListPageComponent implements OnInit, OnDestroy {
-  disableContent = false;
-
   private readonly routeListIri$ = this._route.paramMap.pipe(
     take(1),
     map(params => params.get(RouteConstants.listParameter))
@@ -49,12 +47,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
     private _viewContainerRef: ViewContainerRef
   ) {}
 
-  @HostListener('window:resize', ['$event']) onWindowResize() {
-    this.disableContent = window.innerWidth <= 768;
-  }
-
   ngOnInit() {
-    this.disableContent = window.innerWidth <= 768;
     this.rootListNodeInfo$.pipe(takeUntil(this._destroy)).subscribe(list => {
       if (list && list.isRootNode && list.projectIri) {
         this._listItemService.setProjectInfos(list.projectIri, list.id);
@@ -68,14 +61,9 @@ export class ListPageComponent implements OnInit, OnDestroy {
         takeUntil(this._destroy)
       )
       .subscribe(project => {
-        this.navigateToDataModels();
+        this._navigateToDataModels();
         this._store.dispatch(new LoadListsInProjectAction(project.id));
       });
-  }
-
-  navigateToDataModels() {
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 
   editList(list: ListNodeInfo) {
@@ -88,11 +76,13 @@ export class ListPageComponent implements OnInit, OnDestroy {
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
       .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
-      .pipe(
-        take(1),
-        switchMap(() => this._store.dispatch(new DeleteListNodeAction(list.id)))
-      )
+      .pipe(switchMap(() => this._store.dispatch(new DeleteListNodeAction(list.id))))
       .subscribe();
+  }
+
+  private _navigateToDataModels() {
+    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
+    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 
   ngOnDestroy() {
