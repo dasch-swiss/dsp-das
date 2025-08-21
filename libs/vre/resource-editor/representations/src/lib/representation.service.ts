@@ -14,7 +14,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { map, take } from 'rxjs';
+import { take } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable({
@@ -53,15 +53,11 @@ export class RepresentationService {
       | ReadArchiveFileValue,
     resource: ReadResource
   ) {
-    this.getProject(resource).subscribe(attachedProject => {
+    this._projectApiService.get(resource.attachedToProject).subscribe(response => {
       const assetId = fileValue.filename.split('.')[0] || '';
-      const ingestFileUrl = this.getIngestFileUrl(attachedProject.shortcode, assetId);
+      const ingestFileUrl = this.getIngestFileUrl(response.project.shortcode, assetId);
       this.downloadFile(ingestFileUrl, this.userCanView(fileValue));
     });
-  }
-
-  getProject(resource: ReadResource) {
-    return this._projectApiService.get(resource.attachedToProject).pipe(map(response => response.project));
   }
 
   private downloadFile(url: string, userCanView = true) {
