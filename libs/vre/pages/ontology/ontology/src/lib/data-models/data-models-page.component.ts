@@ -70,7 +70,10 @@ export class DataModelsPageComponent {
 
   createNewList() {
     const dialog$ = this._dialog
-      .open<ListInfoFormComponent, null>(ListInfoFormComponent, DspDialogConfig.dialogDrawerConfig(null, true))
+      .open<
+        ListInfoFormComponent,
+        null
+      >(ListInfoFormComponent, { ...DspDialogConfig.dialogDrawerConfig(null, true), viewContainerRef: this._viewContainerRef })
       .afterClosed();
 
     combineLatest([dialog$, this._projectPageService.currentProject$]).subscribe(

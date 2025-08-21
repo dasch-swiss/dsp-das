@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
@@ -13,7 +13,7 @@ import { ListItemService } from './list-item/list-item.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-list',
+  selector: 'app-list-page',
   templateUrl: './list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
   providers: [ListItemService],
@@ -45,7 +45,8 @@ export class ListPageComponent implements OnInit, OnDestroy {
     private _projectPageService: ProjectPageService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   @HostListener('window:resize', ['$event']) onWindowResize() {
@@ -78,10 +79,10 @@ export class ListPageComponent implements OnInit, OnDestroy {
   }
 
   editList(list: ListNodeInfo) {
-    this._matDialog.open<ListInfoFormComponent, ListNodeInfo>(
-      ListInfoFormComponent,
-      DspDialogConfig.dialogDrawerConfig(list, true)
-    );
+    this._matDialog.open<ListInfoFormComponent, ListNodeInfo>(ListInfoFormComponent, {
+      ...DspDialogConfig.dialogDrawerConfig(list, true),
+      viewContainerRef: this._viewContainerRef,
+    });
   }
 
   askToDeleteList(list: ListNodeInfo): void {
