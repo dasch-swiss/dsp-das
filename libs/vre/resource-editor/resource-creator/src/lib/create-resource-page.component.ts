@@ -60,6 +60,7 @@ export class CreateResourcePageComponent implements OnDestroy {
 
   afterCreation(resourceIri: string) {
     const uuid = this._resourceService.getResourceUuid(resourceIri);
+    this._projectPageService.reloadProject();
     this._router.navigate(['..', uuid], { relativeTo: this._route });
   }
 

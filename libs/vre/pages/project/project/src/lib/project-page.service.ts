@@ -1,17 +1,26 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, tap } from 'rxjs';
 import { UserPermissions } from './user-permissions';
 
 @Injectable()
 export class ProjectPageService {
-  private _currentProjectSubject = new BehaviorSubject<ReadProject | null>(null);
-  currentProject$ = this._currentProjectSubject.asObservable().pipe(filterNull());
+  private _reloadProjectSubject = new BehaviorSubject<null>(null);
+  private _currentProjectUuidSubject = new ReplaySubject<string>(1);
+
+  currentProject$ = this._reloadProjectSubject.pipe(
+    tap(() => console.log('ProjectPageService: afterReloadSubject')),
+    switchMap(() => this._currentProjectUuidSubject),
+    tap(() => console.log('ProjectPageService: afterProjectUuidSubject')),
+    switchMap(projectUuid => this.projectApiService.get(projectUuid)),
+    map(response => response.project),
+    shareReplay(1)
+  );
 
   private _user$ = this._store.select(UserSelectors.user).pipe(filterNull());
   private _projectAndUser$ = combineLatest([this.currentProject$, this._user$]);
@@ -42,8 +51,11 @@ export class ProjectPageService {
   ) {}
 
   setCurrentProject(projectUuid: string): void {
-    this.projectApiService.get(projectUuid).subscribe(response => {
-      this._currentProjectSubject.next(response.project);
-    });
+    this._currentProjectUuidSubject.next(projectUuid);
+  }
+
+  reloadProject() {
+    console.log('reloading project');
+    this._reloadProjectSubject.next(null);
   }
 }
