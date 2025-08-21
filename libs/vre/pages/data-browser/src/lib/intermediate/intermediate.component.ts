@@ -70,7 +70,7 @@ import {
         }
       </div>
     }
-    `,
+  `,
   styleUrls: ['./intermediate.component.scss'],
 })
 export class IntermediateComponent {

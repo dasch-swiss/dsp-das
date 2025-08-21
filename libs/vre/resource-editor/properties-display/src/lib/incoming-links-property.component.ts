@@ -28,7 +28,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
         <app-progress-indicator />
       }
     </app-property-row>
-    `,
+  `,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

@@ -1,33 +1,21 @@
 <app-dialog-header [title]="title" [subtitle]="'Link resources'" />
 
 <mat-dialog-content>
-  @if (
-    ((isSysAdmin$ | async) === true) ||
-    (
-    (usersProjects$ | async)?.length &&
-    (
-    ((isCurrentProjectAdminOrSysAdmin$ | async) === true) ||
-    ((isCurrentProjectMember$ | async) === true) ||
-    (isProjectMember === true)
-    )
-    )) {
-    <form
-      [formGroup]="form"
-      >
-      <app-common-input [control]="form.controls.label" label="Collection labels" />
-      <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
-      <div class="resource-container">
-        <p>The following resources will be connected:</p>
-        <ul>
-          @for (res of data.resources.resInfo; track trackByFn($index, res)) {
-            <li>{{ res.label }}</li>
-          }
-        </ul>
-      </div>
-    </form>
-  } @else {
-    You have to be a member in at least one project to link the selected resources.
-  }
+  @if ( ((isSysAdmin$ | async) === true) || ( (usersProjects$ | async)?.length && ( ((isCurrentProjectAdminOrSysAdmin$ |
+  async) === true) || ((isCurrentProjectMember$ | async) === true) || (isProjectMember === true) ) )) {
+  <form [formGroup]="form">
+    <app-common-input [control]="form.controls.label" label="Collection labels" />
+    <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
+    <div class="resource-container">
+      <p>The following resources will be connected:</p>
+      <ul>
+        @for (res of data.resources.resInfo; track trackByFn($index, res)) {
+        <li>{{ res.label }}</li>
+        }
+      </ul>
+    </div>
+  </form>
+  } @else { You have to be a member in at least one project to link the selected resources. }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button type="button" (click)="dialogRef.close()">{{ 'ui.form.action.cancel' | translate }}</button>
@@ -43,4 +31,3 @@
     {{ 'ui.form.action.submit' | translate }}
   </button>
 </mat-dialog-actions>
-

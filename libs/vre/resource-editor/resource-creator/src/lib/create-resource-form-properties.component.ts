@@ -10,10 +10,10 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
     @for (prop of myProperties; track prop) {
       <div style="border-top: 1px solid rgba(51, 103, 144, .1); padding: 16px 0">
         <app-create-resource-form-row
-        [label]="
-          prop.propDef.label +
-          (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
-        "
+          [label]="
+            prop.propDef.label +
+            (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
+          "
           [tooltip]="prop.propDef.comment">
           <app-property-values-creator
             [myProperty]="prop"
@@ -23,7 +23,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
         </app-create-resource-form-row>
       </div>
     }
-    `,
+  `,
   styles: [
     `
       app-create-resource-form-row {

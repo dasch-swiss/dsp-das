@@ -10,13 +10,12 @@ import { MatChipInputEvent } from '@angular/material/chips';
       <mat-label>{{ 'ui.chipListInput.keywords' | translate }}</mat-label>
       <mat-chip-grid #chipList [required]="formArray.hasValidator(Validators.required)">
         @for (tag of formArray.value; track trackByFn(index, tag); let index = $index) {
-          <mat-chip-row
-            (removed)="removeKeyword(index)">
+          <mat-chip-row (removed)="removeKeyword(index)">
             {{ tag }}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip-row>
         }
-    
+
         <input
           [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
@@ -30,7 +29,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
     @if (addChipFormError) {
       <mat-error>New value: {{ addChipFormError | humanReadableError }}</mat-error>
     }
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipListInputComponent {

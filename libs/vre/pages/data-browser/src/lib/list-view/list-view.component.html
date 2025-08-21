@@ -1,22 +1,21 @@
 <!-- header / toolbar to select view and pagination -->
 @if (search?.mode === 'gravsearch' && !loading && resources.length && search.projectUuid) {
-  <div
-    class="list-view-header">
-    <div class="back">
-      <button mat-button class="back-button" (click)="handleBackButtonClicked()">
-        <span>Go Back to Search Form</span>
-        <mat-icon iconPositionEnd>chevron_right</mat-icon>
-      </button>
-    </div>
+<div class="list-view-header">
+  <div class="back">
+    <button mat-button class="back-button" (click)="handleBackButtonClicked()">
+      <span>Go Back to Search Form</span>
+      <mat-icon iconPositionEnd>chevron_right</mat-icon>
+    </button>
   </div>
+</div>
 }
 <!-- container with search results -->
 @if (numberOfAllResults) {
-  <app-pager (pageIndexChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults" />
+<app-pager (pageIndexChanged)="doSearch($event)" [numberOfAllResults]="numberOfAllResults" />
 }
 <div class="loader-container">
   @if (loading) {
-    <mat-progress-bar mode="indeterminate" />
+  <mat-progress-bar mode="indeterminate" />
   }
 </div>
 <app-resource-list
@@ -26,54 +25,54 @@
   (resourcesSelected)="emitSelectedResources($event)" />
 <!-- In case of 0 result -->
 @if (!loading && !resources.length) {
-  <div data-cy="list-view-no-results" class="list-view no-results">
-    <!-- Case A: user did a fulltext search -->
-    @if (search?.mode === 'fulltext') {
-      <div>
-        <p>Your search - <strong> {{ search.query }}</strong> - did not match any documents.</p>
-        <p>Suggestions:</p>
-        <ul>
-          @if (numberOfAllResults > 0) {
-            <li>Make sure that you are logged in and you have all the needed permissions.</li>
-          }
-          <li>Make sure that all words are spelled correctly.</li>
-          <li>Try different keywords.</li>
-          <li>Try more general keywords.</li>
-          <li>Try fewer keywords.</li>
-        </ul>
-        <mat-divider />
-        <app-hint />
-      </div>
+<div data-cy="list-view-no-results" class="list-view no-results">
+  <!-- Case A: user did a fulltext search -->
+  @if (search?.mode === 'fulltext') {
+  <div>
+    <p>Your search - <strong> {{ search.query }}</strong> - did not match any documents.</p>
+    <p>Suggestions:</p>
+    <ul>
+      @if (numberOfAllResults > 0) {
+      <li>Make sure that you are logged in and you have all the needed permissions.</li>
+      }
+      <li>Make sure that all words are spelled correctly.</li>
+      <li>Try different keywords.</li>
+      <li>Try more general keywords.</li>
+      <li>Try fewer keywords.</li>
+    </ul>
+    <mat-divider />
+    <app-hint />
+  </div>
+  }
+  <!-- Case B: user clicked on the class item -->
+  @if (search?.mode !== 'fulltext') {
+  <div>
+    @if (search.mode === 'gravsearch' && search.projectUuid) {
+    <div class="back">
+      <button mat-button class="back-button" (click)="handleBackButtonClicked()">
+        <span>Go Back to Search Form</span>
+        <mat-icon iconPositionEnd>chevron_right</mat-icon>
+      </button>
+    </div>
     }
-    <!-- Case B: user clicked on the class item -->
-    @if (search?.mode !== 'fulltext') {
+    <!-- Case B1: there is no resources created-->
+    @if (numberOfAllResults === 0) {
+    <div class="no-results-container">
+      <mat-icon>warning</mat-icon>
+      <div>No results were found for your query.</div>
+    </div>
+    }
+    <!-- Case B2: no permission-->
+    @if (numberOfAllResults > 0) {
+    <div class="no-results-container">
+      <mat-icon>warning</mat-icon>
       <div>
-        @if (search.mode === 'gravsearch' && search.projectUuid) {
-          <div class="back">
-            <button mat-button class="back-button" (click)="handleBackButtonClicked()">
-              <span>Go Back to Search Form</span>
-              <mat-icon iconPositionEnd>chevron_right</mat-icon>
-            </button>
-          </div>
-        }
-        <!-- Case B1: there is no resources created-->
-        @if (numberOfAllResults === 0) {
-          <div class="no-results-container">
-            <mat-icon>warning</mat-icon>
-            <div>No results were found for your query.</div>
-          </div>
-        }
-        <!-- Case B2: no permission-->
-        @if (numberOfAllResults > 0) {
-          <div class="no-results-container">
-            <mat-icon>warning</mat-icon>
-            <div>
-              It seems like you don’t have the necessary permissions.<br />
-              Check with a project admin if you have the necessary permission or if you are logged in.
-            </div>
-          </div>
-        }
+        It seems like you don’t have the necessary permissions.<br />
+        Check with a project admin if you have the necessary permission or if you are logged in.
       </div>
+    </div>
     }
   </div>
+  }
+</div>
 }

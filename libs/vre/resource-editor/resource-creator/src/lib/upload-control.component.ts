@@ -20,8 +20,7 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
         [projectShortcode]="projectShortcode"
         (removeFile)="control.setValue('')" />
     }
-    
-    `,
+  `,
 })
 export class UploadControlComponent implements ControlValueAccessor {
   @Input({ required: true }) representation!: FileRepresentationType;

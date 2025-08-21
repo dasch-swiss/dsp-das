@@ -11,32 +11,28 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       [myPropertyDefinition]="myProperty.propDef"
       [resourceClassIri]="resourceClassIri"
       (templateFound)="templateFound($event)" />
-    
+
     @for (control of formArray.controls; track control; let index = $index) {
       <app-property-value-creator
         [myProperty]="myProperty"
         [formGroup]="control"
         [template]="template"
-      [canRemoveValue]="
-        (myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n) &&
-        formArray.length > 1
-      "
+        [canRemoveValue]="
+          (myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n) &&
+          formArray.length > 1
+        "
         (removeValue)="removeValue(index)" />
     }
-    
+
     @if (
       (myProperty.guiDef.cardinality === Cardinality._0_n || myProperty.guiDef.cardinality === Cardinality._1_n) &&
       formArray.controls[formArray.controls.length - 1].value.item !== null
-      ) {
-      <button
-        mat-icon-button
-        type="button"
-        (click)="addEntry()"
-        [matTooltip]="'Add new value'">
+    ) {
+      <button mat-icon-button type="button" (click)="addEntry()" [matTooltip]="'Add new value'">
         <mat-icon>add_circle</mat-icon>
       </button>
     }
-    `,
+  `,
   // TODO do not change detection strategy until ng18 is on with formControls touchedChanged to manage common-inputs change event
 })
 export class PropertyValuesCreatorComponent {

@@ -72,7 +72,7 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, ta
         </button>
       </div>
     }
-    `,
+  `,
   styleUrls: ['./membership.component.scss'],
 })
 export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges {

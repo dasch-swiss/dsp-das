@@ -1,4 +1,3 @@
-
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,8 +23,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     FormsModule,
     ReactiveFormsModule,
     NgxsStoreModule,
-    HumanReadableErrorPipe
-],
+    HumanReadableErrorPipe,
+  ],
   template: `
     <div style="display: flex; flex-direction: row-reverse">
       <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
@@ -39,7 +38,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [ngModel]="formService.inputValue"
           (blur)="formService.formArray.markAsTouched()"
           (ngModelChange)="formService.onInputChange($event)"
-        [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
+          [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
       </mat-form-field>
       <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
         @for (lang of formService.availableLanguages; track lang; let index = $index) {
@@ -66,7 +65,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         </mat-error>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       :host {

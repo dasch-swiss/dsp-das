@@ -34,7 +34,7 @@ import { SplitSize } from '../split-size.interface';
         }
       </as-split>
     </div>
-    `,
+  `,
   styles: [
     `
       .content {

@@ -34,7 +34,7 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
         }
       }
     </mat-menu>
-    `,
+  `,
   styles: [
     `
       .list-item-button {

@@ -15,7 +15,7 @@ import { CompoundService } from './compound/compound.service';
           <app-properties-display [resource]="resource" />
         }
       </mat-tab>
-    
+
       @if (incomingResource) {
         <mat-tab #matTabIncoming [label]="resourceClassLabel(incomingResource.res)">
           <app-properties-display
@@ -24,21 +24,20 @@ import { CompoundService } from './compound/compound.service';
             [parentResourceId]="resource.res.id" />
         </mat-tab>
       }
-    
+
       <!-- image annotations -->
       @if (displayAnnotations) {
         <mat-tab label="Annotations">
           <ng-template matTabLabel>
             {{ 'resourceEditor.labelAnnotations' | translate }}
             @if (regionsCount > 0) {
-              <span [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false">
-              </span>
+              <span [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false"> </span>
             }
           </ng-template>
           <app-annotation-tab [resource]="resource.res" />
         </mat-tab>
       }
-    
+
       <!-- audio & video annotations -->
       @if (segmentsService.segments.length > 0) {
         <mat-tab label="Segments">
@@ -51,7 +50,7 @@ import { CompoundService } from './compound/compound.service';
         </mat-tab>
       }
     </mat-tab-group>
-    `,
+  `,
   styles: [
     `
       :host ::ng-deep {

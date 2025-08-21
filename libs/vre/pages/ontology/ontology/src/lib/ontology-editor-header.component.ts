@@ -53,11 +53,11 @@ import { OntologyEditService } from './services/ontology-edit.service';
               <button
                 color="warn"
                 mat-button
-            [matTooltip]="
-              (currentOntologyCanBeDeleted$ | async)
-                ? 'Delete data model'
-                : 'This data model cant be deleted because it is in use!'
-            "
+                [matTooltip]="
+                  (currentOntologyCanBeDeleted$ | async)
+                    ? 'Delete data model'
+                    : 'This data model cant be deleted because it is in use!'
+                "
                 [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
                 (click)="deleteOntology(ontology.id)">
                 <mat-icon>delete</mat-icon>
@@ -68,7 +68,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
         </mat-toolbar-row>
       </mat-toolbar>
     }
-    `,
+  `,
   styles: `
     .ontology-editor-header {
       margin-top: 0.5em;

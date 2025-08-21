@@ -11,7 +11,7 @@ import { LocalizationService, SortingService } from '@dasch-swiss/vre/shared/app
         <app-resource-class-sidenav-item [resClass]="classToDisplay" />
       </div>
     }
-    `,
+  `,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;

@@ -8,27 +8,27 @@ import { BehaviorSubject, filter, map, shareReplay, switchMap } from 'rxjs';
 @Component({
   selector: 'app-legal-settings-licenses',
   template: ` @if (project$ | async; as project) {
-   @if (recommendedLicenses$ | async; as recommendedLicenses) {
-     <div style="margin-bottom: 24px">
-       @if (recommendedLicenses.length > 0) {
-         <app-licenses-enabled-table
-           [licenses]="recommendedLicenses"
-           [project]="project"
-           [label]="'pages.project.legalSettings.recommended' | translate"
-           (refresh)="refresh()" />
-       }
-     </div>
-   }
-   @if (nonRecommendedLicenses$ | async; as nonRecommendedLicenses) {
-     @if (nonRecommendedLicenses.length > 0) {
-       <app-licenses-enabled-table
-         [licenses]="nonRecommendedLicenses"
-         [project]="project"
-         [label]="'pages.project.legalSettings.notRecommended' | translate"
-         (refresh)="refresh()" />
-     }
-   }
- }`,
+    @if (recommendedLicenses$ | async; as recommendedLicenses) {
+      <div style="margin-bottom: 24px">
+        @if (recommendedLicenses.length > 0) {
+          <app-licenses-enabled-table
+            [licenses]="recommendedLicenses"
+            [project]="project"
+            [label]="'pages.project.legalSettings.recommended' | translate"
+            (refresh)="refresh()" />
+        }
+      </div>
+    }
+    @if (nonRecommendedLicenses$ | async; as nonRecommendedLicenses) {
+      @if (nonRecommendedLicenses.length > 0) {
+        <app-licenses-enabled-table
+          [licenses]="nonRecommendedLicenses"
+          [project]="project"
+          [label]="'pages.project.legalSettings.notRecommended' | translate"
+          (refresh)="refresh()" />
+      }
+    }
+  }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LegalSettingsLicensesComponent {

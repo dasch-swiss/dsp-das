@@ -12,13 +12,10 @@ import { CompoundService } from './compound.service';
         <app-resource-legal [fileValue]="fileValue" />
       }
       @if (incomingResource.res.properties[HasStillImageFileValue]) {
-        <app-still-image
-          class="dsp-representation"
-          [resource]="incomingResource.res"
-          [compoundMode]="true" />
+        <app-still-image class="dsp-representation" [resource]="incomingResource.res" [compoundMode]="true" />
       }
     }
-    `,
+  `,
 })
 export class CompoundViewerComponent {
   HasStillImageFileValue = Constants.HasStillImageFileValue;

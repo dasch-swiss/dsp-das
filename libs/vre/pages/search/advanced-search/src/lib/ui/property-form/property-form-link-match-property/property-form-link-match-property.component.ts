@@ -1,4 +1,3 @@
-
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -40,8 +39,8 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
     MatSelectModule,
     PropertyFormValueComponent,
     PropertyFormListValueComponent,
-    PropertyFormLinkValueComponent
-],
+    PropertyFormLinkValueComponent,
+  ],
   templateUrl: './property-form-link-match-property.component.html',
   styleUrls: ['./property-form-link-match-property.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

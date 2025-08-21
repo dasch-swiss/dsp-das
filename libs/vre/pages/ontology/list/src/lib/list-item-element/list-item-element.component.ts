@@ -9,7 +9,7 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
       <button type="button" color="primary" mat-icon-button (click)="showChildren = !showChildren">
         <mat-icon>{{ showChildren ? 'expand_more' : 'chevron_right' }}</mat-icon>
       </button>
-    
+
       <div style="flex: 1">
         <div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" style="position: relative">
           <app-multi-language-input
@@ -18,18 +18,18 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
             [formArray]="readOnlyFormArray"
             [validators]="[]"
             [isRequired]="true" />
-    
+
           @if (showActionBubble) {
             <app-action-bubble [position]="position" [length]="length" [node]="node" />
           }
         </div>
-    
+
         @if (showChildren) {
           <app-list-item [node]="node" [isAdmin]="isAdmin" />
         }
       </div>
     </div>
-    `,
+  `,
   styles: [':host ::ng-deep app-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
 })
 export class ListItemElementComponent implements OnChanges {

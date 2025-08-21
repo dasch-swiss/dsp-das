@@ -29,18 +29,14 @@ import { MediaPlayerService } from '../video/media-player.service';
       <div data-cy="player-time">{{ parseTime(mediaPlayer.currentTime()) }} / {{ durationString }}</div>
       <div>
         @if (resourceFetcherService.userCanEdit$ | async) {
-          <button
-            data-cy="timeline-button"
-            mat-icon-button
-            (click)="createAudioSegment()"
-            >
+          <button data-cy="timeline-button" mat-icon-button (click)="createAudioSegment()">
             <mat-icon svgIcon="draw_region_icon" />
           </button>
         }
         <app-audio-more-button [parentResource]="parentResource" />
       </div>
     </mat-toolbar-row>
-    `,
+  `,
 })
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;

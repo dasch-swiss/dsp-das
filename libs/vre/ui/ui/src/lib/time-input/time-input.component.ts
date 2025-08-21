@@ -21,7 +21,7 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
         </mat-error>
       }
     </mat-form-field>
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimeInputComponent implements OnInit {

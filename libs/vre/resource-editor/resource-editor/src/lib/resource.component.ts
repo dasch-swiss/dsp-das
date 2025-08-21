@@ -23,7 +23,7 @@ import { CompoundService } from './compound/compound.service';
       <app-compound-viewer />
     }
     <app-resource-tabs [resource]="resource" />
-    `,
+  `,
   providers: [CompoundService, RegionService, SegmentsService],
 })
 export class ResourceComponent implements OnChanges {

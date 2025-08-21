@@ -21,10 +21,10 @@ import { CollaborationPageService } from './collaboration-page.service';
           @if (inactiveProjectMembers$ | async; as inactiveProjectMembers) {
             <div style="display: flex; justify-content: center; margin: 16px 0">
               <app-double-chip-selector
-              [options]="[
-                'Active users (' + activeProjectMembers.length + ')',
-                'Inactive users (' + inactiveProjectMembers.length + ')',
-              ]"
+                [options]="[
+                  'Active users (' + activeProjectMembers.length + ')',
+                  'Inactive users (' + inactiveProjectMembers.length + ')',
+                ]"
                 [(value)]="showActiveUsers" />
             </div>
             @if (showActiveUsers) {
@@ -37,13 +37,13 @@ import { CollaborationPageService } from './collaboration-page.service';
         }
       </div>
     }
-    
+
     @if ((isAdmin$ | async) === false) {
       <div class="content large middle">
         <app-status [status]="403" />
       </div>
     }
-    `,
+  `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
 })

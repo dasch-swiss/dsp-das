@@ -22,7 +22,7 @@ import { finalize } from 'rxjs/operators';
           </mat-chip-row>
         }
       </mat-chip-grid>
-    
+
       <input
         placeholder="New authorship..."
         data-cy="authorship-chips"
@@ -38,23 +38,21 @@ import { finalize } from 'rxjs/operators';
             {{ option }}
           </mat-option>
         }
-    
+
         @if (
           filteredAuthorship.length === 0 && autocompleteFormControl.value && autocompleteFormControl.value.length > 0
-          ) {
-          <mat-option
-            >Press Enter or Tab to add an item.
-          </mat-option>
+        ) {
+          <mat-option>Press Enter or Tab to add an item. </mat-option>
         }
       </mat-autocomplete>
-    
+
       @if (control.invalid && control.touched && control.errors![0]; as error) {
         <mat-error>
           {{ error | humanReadableError }}
         </mat-error>
       }
     </mat-form-field>
-    `,
+  `,
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   @Input() control!: FormControl<string[] | null>;

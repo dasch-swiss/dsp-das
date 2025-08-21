@@ -12,16 +12,12 @@ import { PropertyValueService } from './property-value.service';
       <div class="button-container d-flex">
         @if (date) {
           @if (infoTooltip$ | async; as infoTooltip) {
-            <button
-              mat-button
-              class="edit"
-              [matTooltip]="infoTooltip"
-              (click)="$event.stopPropagation()">
+            <button mat-button class="edit" [matTooltip]="infoTooltip" (click)="$event.stopPropagation()">
               <mat-icon>info</mat-icon>
             </button>
           }
         }
-    
+
         <span matTooltip="edit">
           @if (userHasPermission('edit')) {
             <button
@@ -33,7 +29,7 @@ import { PropertyValueService } from './property-value.service';
             </button>
           }
         </span>
-    
+
         <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
           @if (userHasPermission('delete')) {
             <button
@@ -47,7 +43,7 @@ import { PropertyValueService } from './property-value.service';
         </span>
       </div>
     </div>
-    `,
+  `,
   animations: [
     trigger('simpleFadeAnimation', [
       state('in', style({ opacity: 1 })),

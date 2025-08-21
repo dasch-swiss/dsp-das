@@ -33,8 +33,7 @@ import { Store } from '@ngxs/store';
         </div>
       }
     </div>
-    
-    `,
+  `,
   styleUrls: ['./system-page.component.scss'],
 })
 export class SystemPageComponent {

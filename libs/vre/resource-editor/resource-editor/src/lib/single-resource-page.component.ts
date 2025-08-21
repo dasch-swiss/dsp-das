@@ -6,10 +6,8 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-single-resource-page',
   template: ` @if (resourceIri$ | async; as resourceIri) {
-  <app-resource-fetcher
-    [resourceIri]="resourceIri"
-    [resourceVersion]="resourceVersion$ | async" />
-}`,
+    <app-resource-fetcher [resourceIri]="resourceIri" [resourceVersion]="resourceVersion$ | async" />
+  }`,
 })
 export class SingleResourcePageComponent {
   resourceIri$ = this._route.params.pipe(

@@ -28,15 +28,11 @@ import { SplitSize } from './split-size.interface';
                 }
                 <!-- intermediate view -->
                 @case ('intermediate') {
-                  <app-intermediate
-                    [resources]="selectedResources"
-                    (action)="viewMode = $event" />
+                  <app-intermediate [resources]="selectedResources" (action)="viewMode = $event" />
                 }
                 <!-- multiple resources view / comparison viewer -->
                 @case ('compare') {
-                  <app-comparison
-                    [resources]="selectedResources?.resInfo"
-                    [splitSizeChanged]="splitSizeChanged" />
+                  <app-comparison [resources]="selectedResources?.resInfo" [splitSizeChanged]="splitSizeChanged" />
                 }
               }
             </div>
@@ -44,7 +40,7 @@ import { SplitSize } from './split-size.interface';
         }
       </as-split>
     </div>
-    `,
+  `,
   styleUrls: ['./multiple-viewer.component.scss'],
 })
 export class MultipleViewerComponent {

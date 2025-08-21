@@ -11,42 +11,33 @@
   </div>
 
   @if (((userHasProjects$ | async) === true && (isSysAdmin$ | async) === false)) {
-    <div>
-      <div class="project-overview-subtitle">
-        <h3>{{ 'pages.landingPage.usersProjects' | translate }}</h3>
-      </div>
-      <div class="project-grid">
-        @for (project of usersActiveProjects$ | async; track trackByFn(index, project); let index = $index) {
-          <app-project-card
-            [project]="project"
-            [index]="index" />
-        }
-      </div>
-      <div class="project-overview-subtitle">
-        <h3>{{ 'pages.landingPage.notUsersProjects' | translate }}</h3>
-      </div>
-      <div class="project-grid">
-        @for (project of notUsersActiveProjects$ | async; track trackByFn(index, project); let index = $index) {
-          <app-project-card
-            [project]="project"
-            [index]="index" />
-        }
-      </div>
+  <div>
+    <div class="project-overview-subtitle">
+      <h3>{{ 'pages.landingPage.usersProjects' | translate }}</h3>
     </div>
-  } @else {
     <div class="project-grid">
-      @for (project of activeProjects$ | async; track trackByFn(index, project); let index = $index) {
-        <app-project-card
-          [project]="project"
-          [index]="index" />
+      @for (project of usersActiveProjects$ | async; track trackByFn(index, project); let index = $index) {
+      <app-project-card [project]="project" [index]="index" />
       }
     </div>
-  }
-
-  @if ((loading$ | async)) {
-    <div>
-      <app-progress-indicator />
+    <div class="project-overview-subtitle">
+      <h3>{{ 'pages.landingPage.notUsersProjects' | translate }}</h3>
     </div>
+    <div class="project-grid">
+      @for (project of notUsersActiveProjects$ | async; track trackByFn(index, project); let index = $index) {
+      <app-project-card [project]="project" [index]="index" />
+      }
+    </div>
+  </div>
+  } @else {
+  <div class="project-grid">
+    @for (project of activeProjects$ | async; track trackByFn(index, project); let index = $index) {
+    <app-project-card [project]="project" [index]="index" />
+    }
+  </div>
+  } @if ((loading$ | async)) {
+  <div>
+    <app-progress-indicator />
+  </div>
   }
 </div>
-

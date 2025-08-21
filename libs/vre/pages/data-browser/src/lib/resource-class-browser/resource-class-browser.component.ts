@@ -20,15 +20,13 @@ import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'r
     @if (searchParams$ | async; as searchParams) {
       <app-multiple-viewer [searchParams]="searchParams" />
     }
-    
+
     @if ((instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance) {
-      <div
-        class="single-instance"
-        >
+      <div class="single-instance">
         <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
       </div>
     }
-    `,
+  `,
 })
 export class ResourceClassBrowserComponent implements OnDestroy {
   @Select(OntologiesSelectors.projectOntologies)

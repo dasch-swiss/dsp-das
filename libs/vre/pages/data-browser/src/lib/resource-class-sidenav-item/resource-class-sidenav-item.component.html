@@ -13,25 +13,22 @@
       <div class="entry-container">
         <mat-icon>{{ icon }}</mat-icon>
         @if ((results$ | async) === undefined) {
-          <ngx-skeleton-loader
-            count="1"
-            appearance="line"
+        <ngx-skeleton-loader
+          count="1"
+          appearance="line"
           [theme]="{
                         'margin-bottom': 0,
                         'vertical-align': 'middle'
                     }" />
-        }
-        @if ((results$ | async) !== undefined) {
-          <div class="entry">
-            {{ results$ | async | i18nPlural: itemPluralMapping['entry'] }}
-          </div>
+        } @if ((results$ | async) !== undefined) {
+        <div class="entry">{{ results$ | async | i18nPlural: itemPluralMapping['entry'] }}</div>
         }
       </div>
     </div>
     @if (isMember$ | async) {
-      <a class="icon link" data-cy="add-class-instance" (click)="goToAddClassInstance()">
-        <mat-icon>add_circle_outline</mat-icon>
-      </a>
+    <a class="icon link" data-cy="add-class-instance" (click)="goToAddClassInstance()">
+      <mat-icon>add_circle_outline</mat-icon>
+    </a>
     }
   </div>
 </div>

@@ -27,95 +27,93 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 @Component({
   selector: 'app-property-item',
   template: ` <div
-        cdkDrag
-        [cdkDragDisabled]="(isAdmin$ | async) !== true"
-        (mouseenter)="isHovered = true"
-        (mouseleave)="isHovered = false">
-        <mat-list-item class="drag-n-drop-placeholder" *cdkDragPlaceholder></mat-list-item>
-        <mat-list-item
-          class="property-item"
-          [class.admin]="(isAdmin$ | async) === true"
-          matRipple
-          #propertyCardRipple="matRipple">
-          <div cdkDragHandle matListItemIcon class="list-icon">
-            @if ((isAdmin$ | async) === true && isHovered) {
-              <mat-icon class="drag-n-drop-handle"
-                >drag_indicator
-              </mat-icon>
-            }
-            @if (!isHovered || (isAdmin$ | async) !== true) {
-              <mat-icon
-            [matTooltip]="
-              classProp.propType?.group +
-              ': ' +
-              classProp.propType?.label +
-              ' (' +
-              classProp.propDef?.id?.split('#')[1] +
-              ')'
-            "
-                matTooltipPosition="above"
-                >{{ classProp.propType?.icon }}
-              </mat-icon>
-            }
-          </div>
-          <div class="property-item-content-container">
-            <div>
-              <div class="upper-prop-container">
-                <span class="label" data-cy="property-label"
-                  >{{ classProp.propDef.labels | appStringifyStringLiteral }}
-                </span>
-                @if (classProp.objectLabels && classProp.objectLabels.length > 0) {
-                  <span
-                    data-cy="property-object-label"
-                    class="additional-info"
+      cdkDrag
+      [cdkDragDisabled]="(isAdmin$ | async) !== true"
+      (mouseenter)="isHovered = true"
+      (mouseleave)="isHovered = false">
+      <mat-list-item class="drag-n-drop-placeholder" *cdkDragPlaceholder></mat-list-item>
+      <mat-list-item
+        class="property-item"
+        [class.admin]="(isAdmin$ | async) === true"
+        matRipple
+        #propertyCardRipple="matRipple">
+        <div cdkDragHandle matListItemIcon class="list-icon">
+          @if ((isAdmin$ | async) === true && isHovered) {
+            <mat-icon class="drag-n-drop-handle">drag_indicator </mat-icon>
+          }
+          @if (!isHovered || (isAdmin$ | async) !== true) {
+            <mat-icon
+              [matTooltip]="
+                classProp.propType?.group +
+                ': ' +
+                classProp.propType?.label +
+                ' (' +
+                classProp.propDef?.id?.split('#')[1] +
+                ')'
+              "
+              matTooltipPosition="above"
+              >{{ classProp.propType?.icon }}
+            </mat-icon>
+          }
+        </div>
+        <div class="property-item-content-container">
+          <div>
+            <div class="upper-prop-container">
+              <span class="label" data-cy="property-label"
+                >{{ classProp.propDef.labels | appStringifyStringLiteral }}
+              </span>
+              @if (classProp.objectLabels && classProp.objectLabels.length > 0) {
+                <span
+                  data-cy="property-object-label"
+                  class="additional-info"
                   [innerHTML]="'&rarr;&nbsp;' + (classProp.objectLabels | appStringifyStringLiteral)"></span>
-                }
-              </div>
-              <div mat-line class="lower-prop-container">
-                <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
-                @if (isHovered && classProp.propDef.comments?.length) {
-                  <mat-icon
-                    [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
-                    matTooltipPosition="above"
-                    class="info-icon">
-                    info
-                  </mat-icon>
-                }
-              </div>
-            </div>
-            <app-cardinality
-              [disabled]="(isAdmin$ | async) !== true"
-              [classProp]="classProp"
-              (cardinalityChange)="updateCardinality($event)" />
-          </div>
-          <div class="edit-menu">
-            @if ((isHovered || menuOpen) && (isAdmin$ | async) === true) {
-              <mat-icon
-                (menuOpened)="menuOpen = true"
-                (menuClosed)="menuOpen = false"
-                [matMenuTriggerFor]="classInfoMenu"
-                class="menu-icon-button"
-                (click)="canBeRemovedFromClass()"
-                >more_vert</mat-icon
-                >
               }
             </div>
-          </mat-list-item>
+            <div mat-line class="lower-prop-container">
+              <span class="mat-caption"> {{ classProp.propDef.id | split: '#' : 1 }} </span>
+              @if (isHovered && classProp.propDef.comments?.length) {
+                <mat-icon
+                  [matTooltip]="classProp.propDef.comments | appStringifyStringLiteral"
+                  matTooltipPosition="above"
+                  class="info-icon">
+                  info
+                </mat-icon>
+              }
+            </div>
+          </div>
+          <app-cardinality
+            [disabled]="(isAdmin$ | async) !== true"
+            [classProp]="classProp"
+            (cardinalityChange)="updateCardinality($event)" />
         </div>
-        <mat-menu #classInfoMenu="matMenu">
-          <button mat-menu-item (click)="openEditProperty()">
-            <mat-icon>edit</mat-icon>
-            <span>Edit property</span>
-          </button>
-          <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
-            <mat-icon>link_off</mat-icon>
-            <span>remove property from class</span>
-          </button>
-          <button mat-menu-item (click)="copyPropertyId()">
-            <mat-icon>content_copy</mat-icon>
-            Copy property id
-          </button>
-        </mat-menu>`,
+        <div class="edit-menu">
+          @if ((isHovered || menuOpen) && (isAdmin$ | async) === true) {
+            <mat-icon
+              (menuOpened)="menuOpen = true"
+              (menuClosed)="menuOpen = false"
+              [matMenuTriggerFor]="classInfoMenu"
+              class="menu-icon-button"
+              (click)="canBeRemovedFromClass()"
+              >more_vert</mat-icon
+            >
+          }
+        </div>
+      </mat-list-item>
+    </div>
+    <mat-menu #classInfoMenu="matMenu">
+      <button mat-menu-item (click)="openEditProperty()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit property</span>
+      </button>
+      <button mat-menu-item [disabled]="!propCanBeRemovedFromClass" (click)="removePropertyFromClass()">
+        <mat-icon>link_off</mat-icon>
+        <span>remove property from class</span>
+      </button>
+      <button mat-menu-item (click)="copyPropertyId()">
+        <mat-icon>content_copy</mat-icon>
+        Copy property id
+      </button>
+    </mat-menu>`,
   styles: [
     `
       @use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;

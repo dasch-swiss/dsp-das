@@ -41,7 +41,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
           [validators]="keywordsValidators" />
       </form>
     }
-    `,
+  `,
 })
 export class ReusableProjectFormComponent implements OnInit {
   @Input() formData: {

@@ -19,8 +19,8 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
     MatIconModule,
     MatListModule,
     MatTooltipModule,
-    OverlayModule
-],
+    OverlayModule,
+  ],
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

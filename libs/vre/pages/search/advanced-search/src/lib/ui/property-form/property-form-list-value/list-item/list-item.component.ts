@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';

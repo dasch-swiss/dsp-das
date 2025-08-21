@@ -14,10 +14,10 @@
 
     <!-- expert search button: if expert === true -->
     @if (expert) {
-      <button mat-flat-button [class.active]="showExpert" (click)="openPanelWithBackdrop('expert')">
-        <mat-icon matPrefix>school</mat-icon>
-        <span class="desktop-only">expert</span>
-      </button>
+    <button mat-flat-button [class.active]="showExpert" (click)="openPanelWithBackdrop('expert')">
+      <mat-icon matPrefix>school</mat-icon>
+      <span class="desktop-only">expert</span>
+    </button>
     }
   </div>
 </div>
@@ -28,17 +28,13 @@
     <div class="app-menu-header">
       <span class="app-menu-title">
         <h4>
-          @switch (true) {
-            @case (showAdvanced) {
-              <span>{{ 'pages.search.searchPanel.advancedSearch' | translate }}</span>
-            }
-            @case (showExpert) {
-              <span>{{ 'pages.search.searchPanel.expertSearch' | translate }}</span>
-            }
-            @case (showHint) {
-              <span>{{ 'pages.search.searchPanel.howToSearch' | translate }}</span>
-            }
-          }
+          @switch (true) { @case (showAdvanced) {
+          <span>{{ 'pages.search.searchPanel.advancedSearch' | translate }}</span>
+          } @case (showExpert) {
+          <span>{{ 'pages.search.searchPanel.expertSearch' | translate }}</span>
+          } @case (showHint) {
+          <span>{{ 'pages.search.searchPanel.howToSearch' | translate }}</span>
+          } }
         </h4>
       </span>
       <span class="fill-remaining-space"></span>
@@ -49,14 +45,11 @@
       </span>
     </div>
     <div class="app-menu-content">
-      @switch (true) {
-        @case (showExpert) {
-          <app-expert-search (search)="emitSearch($event)" />
-        }
-        @case (showHint) {
-          <app-hint />
-        }
-      }
+      @switch (true) { @case (showExpert) {
+      <app-expert-search (search)="emitSearch($event)" />
+      } @case (showHint) {
+      <app-hint />
+      } }
     </div>
   </div>
 </ng-template>

@@ -12,20 +12,10 @@ import { FormControl } from '@angular/forms';
         <mat-icon matIconPrefix>{{ prefixIcon }}</mat-icon>
       }
       @if (type === 'text') {
-        <input
-          matInput
-          data-cy="common-input-text"
-          [placeholder]="label"
-          [formControl]="control"
-          />
+        <input matInput data-cy="common-input-text" [placeholder]="label" [formControl]="control" />
       }
       @if (type === 'number') {
-        <input
-          matInput
-          data-cy="common-input-number"
-          [placeholder]="label"
-          [formControl]="control"
-          type="number" />
+        <input matInput data-cy="common-input-number" [placeholder]="label" [formControl]="control" type="number" />
       }
       @if (control.errors; as errors) {
         <mat-error>
@@ -33,7 +23,7 @@ import { FormControl } from '@angular/forms';
         </mat-error>
       }
     </mat-form-field>
-    `,
+  `,
   styles: [':host { display: block;}'],
   /** TODO can't mark as OnPush because it does not detect touched / pristine changes.
    This should be fixed with angular 18 form touchedChangedEvent. * */

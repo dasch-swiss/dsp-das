@@ -5,11 +5,10 @@ import { OntologyEditService } from '../services/ontology-edit.service';
 @Component({
   selector: 'app-ontology-editor-classes',
   template: `<div class="ontology-editor-grid classes drag-drop-stop">
-      @for (resClass of oes.currentOntologyClasses$ | async; track trackByClassDefinitionFn($index, resClass)) {
-        <app-resource-class-info
-          [resourceClass]="resClass" />
-      }
-    </div>`,
+    @for (resClass of oes.currentOntologyClasses$ | async; track trackByClassDefinitionFn($index, resClass)) {
+      <app-resource-class-info [resourceClass]="resClass" />
+    }
+  </div>`,
   styles: `
     .ontology-editor-grid {
       display: grid;

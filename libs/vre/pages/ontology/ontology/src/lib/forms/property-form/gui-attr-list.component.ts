@@ -25,7 +25,7 @@ import { PropertyForm } from './property-form.type';
         </mat-error>
       }
     </mat-form-field>
-    `,
+  `,
   styles: ['.large-field {width: 100%}'],
 })
 export class GuiAttrListComponent {

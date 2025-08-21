@@ -1,73 +1,62 @@
 <div appDisableContextMenu>
   @if (videoError) {
-    <app-status [comment]="videoError" [url]="src.fileUrl" [representation]="'video'" />
+  <app-status [comment]="videoError" [url]="src.fileUrl" [representation]="'video'" />
   }
 
   <div style="margin-bottom: -4px">
     @if (video) {
-      <video
-        style="width: 100%"
-        #videoElement
-        id="video"
-        [src]="video"
-        type="video/mp4"
-        preload="auto"
-        [muted]="false"
-        (canplay)="onVideoPlayerReady()"
-        (click)="videoPlayer.togglePlay()"
+    <video
+      style="width: 100%"
+      #videoElement
+      id="video"
+      [src]="video"
+      type="video/mp4"
+      preload="auto"
+      [muted]="false"
+      (canplay)="onVideoPlayerReady()"
+      (click)="videoPlayer.togglePlay()"
       (error)="handleVideoError($event)"></video>
     } @else {
-      <app-progress-indicator />
-    }
-    @if (false) {
-      <app-video-overlay />
+    <app-progress-indicator />
+    } @if (false) {
+    <app-video-overlay />
     }
   </div>
 
   <div #preview>
     @if (false) {
-      <app-video-preview
-        [src]="src"
-        [time]="previewTime"
-        [fileInfo]="fileInfo"
-        (loaded)="displayPreview(!$event)" />
+    <app-video-preview [src]="src" [time]="previewTime" [fileInfo]="fileInfo" (loaded)="displayPreview(!$event)" />
     }
   </div>
 
   @if (false) {
-    <mat-toolbar>
-      <mat-toolbar-row>
-        <app-av-timeline
-          [value]="0"
-          [min]="0"
-          [max]="duration"
-          [resized]="isFullscreen"
-          (move)="updatePreview($event)"
-          (mouseenter)="displayPreview(true)"
-          (dimension)="timelineDimension = $event"
-          (mouseleave)="displayPreview(false)"
-          (changed)="videoPlayer.navigate($event)"
-          [disabled]="!isPlayerReady" />
-      </mat-toolbar-row>
-    </mat-toolbar>
-  }
-  @if (isPlayerReady) {
-    <app-media-slider
-      [max]="videoPlayer.duration()"
-      [currentTime]="myCurrentTime"
-      (afterNavigation)="videoPlayer.navigate($event)" />
-  }
-  @if (segmentsService.segments.length > 0 && duration > 0) {
-    <app-segments-display
-      [segments]="segmentsService.segments"
-      [videoLengthSecs]="duration" />
-  }
-  @if (fileInfo && isPlayerReady) {
-    <app-video-toolbar
-      [src]="src"
-      [parentResource]="parentResource"
-      [fileInfo]="fileInfo"
-      (toggleCinemaMode)="toggleCinemaMode()" />
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <app-av-timeline
+        [value]="0"
+        [min]="0"
+        [max]="duration"
+        [resized]="isFullscreen"
+        (move)="updatePreview($event)"
+        (mouseenter)="displayPreview(true)"
+        (dimension)="timelineDimension = $event"
+        (mouseleave)="displayPreview(false)"
+        (changed)="videoPlayer.navigate($event)"
+        [disabled]="!isPlayerReady" />
+    </mat-toolbar-row>
+  </mat-toolbar>
+  } @if (isPlayerReady) {
+  <app-media-slider
+    [max]="videoPlayer.duration()"
+    [currentTime]="myCurrentTime"
+    (afterNavigation)="videoPlayer.navigate($event)" />
+  } @if (segmentsService.segments.length > 0 && duration > 0) {
+  <app-segments-display [segments]="segmentsService.segments" [videoLengthSecs]="duration" />
+  } @if (fileInfo && isPlayerReady) {
+  <app-video-toolbar
+    [src]="src"
+    [parentResource]="parentResource"
+    [fileInfo]="fileInfo"
+    (toggleCinemaMode)="toggleCinemaMode()" />
   }
 </div>
-

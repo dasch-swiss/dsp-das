@@ -19,7 +19,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
       <mat-form-field style="flex: 1">
         <mat-label>{{ 'pages.project.addUser.select' | translate }}</mat-label>
         <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
-    
+
         <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
           @if (loading) {
             <mat-option [disabled]="true">
@@ -38,12 +38,12 @@ import { CollaborationPageService } from '../collaboration-page.service';
           }
         </mat-autocomplete>
       </mat-form-field>
-    
+
       <button mat-raised-button color="primary" class="add-new create-user-btn" (click)="createUser()">
         {{ 'pages.project.addUser.newUser' | translate }}
       </button>
     </div>
-    `,
+  `,
   styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent {

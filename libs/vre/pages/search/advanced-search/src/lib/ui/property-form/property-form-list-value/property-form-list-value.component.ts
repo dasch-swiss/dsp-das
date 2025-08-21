@@ -40,7 +40,7 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
         @for (node of filteredList$ | async; track trackByFn($index, node)) {
           <ng-container *ngTemplateOutlet="renderNode; context: { node: node, depth: 0 }" />
         }
-    
+
         <ng-template #renderNode let-node="node" let-depth="depth">
           <mat-option [value]="node">
             <span [style.padding-left.px]="depth * 15">{{ node.label }}</span>
@@ -53,7 +53,7 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
         </ng-template>
       </mat-autocomplete>
     </mat-form-field>
-    `,
+  `,
   styleUrls: ['./property-form-list-value.component.scss'],
 })
 export class PropertyFormListValueComponent implements OnInit, AfterViewInit, OnDestroy {
