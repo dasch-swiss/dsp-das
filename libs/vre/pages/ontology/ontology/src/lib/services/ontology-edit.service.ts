@@ -73,7 +73,7 @@ export class OntologyEditService {
 
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
     this.currentOntology$,
-    this._projectPageService.detailedOntologies$,
+    this._projectPageService.ontologies$,
     this._getListsInProject$,
   ]).pipe(
     map(([currentOntology, allOntologies, allLists]) => {
@@ -84,7 +84,7 @@ export class OntologyEditService {
   );
 
   currentProjectsProperties$: Observable<PropertyInfo[]> = combineLatest([
-    this._projectPageService.detailedOntologies$,
+    this._projectPageService.ontologies$,
     this._getListsInProject$,
   ]).pipe(
     map(([ontologies, allLists]) => {
@@ -204,7 +204,7 @@ export class OntologyEditService {
     this._isTransacting.next(true);
     this._canDeletePropertyMap.clear();
 
-    this._projectPageService.detailedOntologies$.subscribe(ontologies => {
+    this._projectPageService.ontologies$.subscribe(ontologies => {
       const ontologyFromStore = ontologies.find(onto => OntologyService.getOntologyNameFromIri(onto.id) == label);
 
       if (ontologyFromStore) {

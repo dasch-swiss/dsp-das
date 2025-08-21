@@ -29,7 +29,7 @@ import { ProjectPageService } from '../project-page.service';
   styleUrls: ['./project-sidenav-ontologies.component.scss'],
 })
 export class ProjectSidenavOntologiesComponent {
-  projectOntologies$ = this._projectPageService.detailedOntologies$;
+  projectOntologies$ = this._projectPageService.ontologies$;
 
   constructor(private _projectPageService: ProjectPageService) {}
 

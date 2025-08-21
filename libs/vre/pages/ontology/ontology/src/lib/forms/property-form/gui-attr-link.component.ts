@@ -36,7 +36,7 @@ export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
 
   ontologyClasses$ = combineLatest([
-    this._projectPageService.detailedOntologies$,
+    this._projectPageService.ontologies$,
     this._localizationService.currentLanguage$,
   ]).pipe(
     map(([response, lang]) => {

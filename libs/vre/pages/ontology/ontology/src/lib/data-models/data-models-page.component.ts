@@ -20,7 +20,7 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
 export class DataModelsPageComponent {
   protected readonly RouteConstants = RouteConstants;
 
-  ontologiesMetadata$ = this._projectPageService.ontologies$;
+  ontologiesMetadata$ = this._projectPageService.ontologiesMetadata$;
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
   listsInProject$ = this._store.select(ListsSelectors.listsInProject);
 

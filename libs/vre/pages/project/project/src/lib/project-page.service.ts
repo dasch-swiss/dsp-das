@@ -4,7 +4,6 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { UserPermissions } from './user-permissions';
@@ -25,12 +24,12 @@ export class ProjectPageService {
     map(([currentProject, user]) => UserPermissions.hasProjectMemberRights(user, currentProject.id))
   );
 
-  ontologies$ = this.currentProject$.pipe(
+  ontologiesMetadata$ = this.currentProject$.pipe(
     switchMap(project => this._dspApiConnection.v2.onto.getOntologiesByProjectIri(project.id)),
     map(response => response.ontologies)
   );
 
-  detailedOntologies$ = this.ontologies$.pipe(
+  ontologies$ = this.ontologiesMetadata$.pipe(
     switchMap(ontologies =>
       combineLatest(ontologies.map(onto => this._dspApiConnection.v2.onto.getOntology(onto.id, true)))
     )
@@ -39,8 +38,7 @@ export class ProjectPageService {
     private projectApiService: ProjectApiService,
     private _store: Store,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _projectService: ProjectService // TODO remove
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
   setCurrentProject(projectUuid: string): void {
@@ -48,20 +46,4 @@ export class ProjectPageService {
       this._currentProjectSubject.next(response.project);
     });
   }
-
-  /** LOAD LIST IF THERE ARE IN PROJECT.
-          if (!ontoMeta.ontologies.length) {
-            ctx.dispatch(new LoadListsInProjectAction(projectIri));
-            return;
-          }
-            */
-  /**
-   * GET ontoMeta.ontologies
-   */
-  /**
-
-        .dispatch(
-              // dispatch all actions except the last one to keep the loading state
-                .map(onto => new LoadOntologyAction(onto.id, projectIri, false))
-*/
 }

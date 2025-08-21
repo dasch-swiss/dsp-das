@@ -57,7 +57,7 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
   };
 
   get blackListedNames() {
-    return this._projectPageService.detailedOntologies$.pipe(
+    return this._projectPageService.ontologies$.pipe(
       map(ontos => {
         const existingOntologyNames = ontos.map(onto => OntologyService.getOntologyNameFromIri(onto.id));
         return [...this.forbiddenNames, ...existingOntologyNames];
