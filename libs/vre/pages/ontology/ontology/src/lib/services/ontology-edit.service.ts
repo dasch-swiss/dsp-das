@@ -1,46 +1,46 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-  ApiResponseError,
-  CanDoResponse,
-  ClassDefinition,
-  Constants,
-  IHasProperty,
-  KnoraApiConnection,
-  ListNodeInfo,
-  OntologyMetadata,
-  ReadOntology,
-  ReadProject,
-  ResourceClassDefinitionWithAllLanguages,
-  ResourcePropertyDefinitionWithAllLanguages,
-  StringLiteral,
-  UpdateOntology,
-  UpdateResourceClassComment,
-  UpdateResourceClassLabel,
-  UpdateResourcePropertyComment,
-  UpdateResourcePropertyGuiElement,
-  UpdateResourcePropertyLabel,
+    ApiResponseError,
+    CanDoResponse,
+    ClassDefinition,
+    Constants,
+    IHasProperty,
+    KnoraApiConnection,
+    ListNodeInfo,
+    OntologyMetadata,
+    ReadOntology,
+    ReadProject,
+    ResourceClassDefinitionWithAllLanguages,
+    ResourcePropertyDefinitionWithAllLanguages,
+    StringLiteral,
+    UpdateOntology,
+    UpdateResourceClassComment,
+    UpdateResourceClassLabel,
+    UpdateResourcePropertyComment,
+    UpdateResourcePropertyGuiElement,
+    UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsFacade, RemoveProjectOntologyAction, ResetCurrentOntologyAction } from '@dasch-swiss/vre/core/state';
+import { ListsFacade } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Store } from '@ngxs/store';
 import {
-  BehaviorSubject,
-  combineLatest,
-  concat,
-  defer,
-  distinctUntilChanged,
-  filter,
-  last,
-  map,
-  Observable,
-  of,
-  switchMap,
-  take,
-  tap,
+    BehaviorSubject,
+    combineLatest,
+    concat,
+    defer,
+    distinctUntilChanged,
+    filter,
+    last,
+    map,
+    Observable,
+    of,
+    switchMap,
+    take,
+    tap,
 } from 'rxjs';
 import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
@@ -176,7 +176,6 @@ export class OntologyEditService {
     }
     currentOntology.lastModificationDate = date;
     this._currentOntology.next(currentOntology);
-    this._store.dispatch(new ResetCurrentOntologyAction(currentOntology, this.projectId));
   }
 
   get ctx(): OntologyContext {
@@ -238,7 +237,6 @@ export class OntologyEditService {
       .pipe(
         tap(() => {
           this._currentOntology.next(null);
-          this._store.dispatch(new RemoveProjectOntologyAction(id, this.projectId));
         })
       );
   }
@@ -509,7 +507,6 @@ export class OntologyEditService {
     this._currentOntology.next(onto);
     this._canDeletePropertyMap.clear();
     this._isTransacting.next(false);
-    this._store.dispatch(new ResetCurrentOntologyAction(onto, this.projectId));
     this.latestChangedItem.next(highLightItem);
   }
 
