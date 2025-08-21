@@ -12,23 +12,29 @@ import { SplitSize } from '../split-size.interface';
       <as-split direction="vertical">
         <as-split-area>
           <!-- note: This part is repeating twice (not added as component) because angular-split
-                                                                                                                          library does not support addition div inside as-split -->
+          library does not support addition div inside as-split -->
           <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
-            <as-split-area *ngFor="let res of topRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
-            </as-split-area>
+            @for (res of topRow; track res) {
+              <as-split-area>
+                <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+              </as-split-area>
+            }
           </as-split>
         </as-split-area>
-        <as-split-area *ngIf="resourcesNumber > 3">
-          <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
-            <as-split-area *ngFor="let res of bottomRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
-            </as-split-area>
-          </as-split>
-        </as-split-area>
+        @if (resourcesNumber > 3) {
+          <as-split-area>
+            <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+              @for (res of bottomRow; track res) {
+                <as-split-area>
+                  <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+                </as-split-area>
+              }
+            </as-split>
+          </as-split-area>
+        }
       </as-split>
     </div>
-  `,
+    `,
   styles: [
     `
       .content {

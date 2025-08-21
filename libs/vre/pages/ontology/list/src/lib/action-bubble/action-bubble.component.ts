@@ -20,38 +20,40 @@ import {
 @Component({
   selector: 'app-action-bubble',
   template: ` <div class="action-bubble" [@simpleFadeAnimation]="'in'">
-    <div class="button-container d-flex">
-      <button
-        mat-button
-        *ngIf="position > 0"
-        matTooltip="move up"
-        (click)="$event.stopPropagation(); repositionNode('up')"
-        class="reposition up">
-        <mat-icon>arrow_upward</mat-icon>
-      </button>
-      <button
-        mat-button
-        *ngIf="position < length - 1"
-        matTooltip="move down"
-        (click)="$event.stopPropagation(); repositionNode('down')"
-        class="reposition down">
-        <mat-icon>arrow_downward</mat-icon>
-      </button>
-      <button
-        mat-button
-        matTooltip="insert new child above"
-        (click)="$event.stopPropagation(); askToInsertNode()"
-        class="insert">
-        <mat-icon>vertical_align_top</mat-icon>
-      </button>
-      <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); askToEditNode()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-button class="delete" matTooltip="delete" (click)="$event.stopPropagation(); askToDeleteListNode()">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-  </div>`,
+      <div class="button-container d-flex">
+        @if (position > 0) {
+          <button
+            mat-button
+            matTooltip="move up"
+            (click)="$event.stopPropagation(); repositionNode('up')"
+            class="reposition up">
+            <mat-icon>arrow_upward</mat-icon>
+          </button>
+        }
+        @if (position < length - 1) {
+          <button
+            mat-button
+            matTooltip="move down"
+            (click)="$event.stopPropagation(); repositionNode('down')"
+            class="reposition down">
+            <mat-icon>arrow_downward</mat-icon>
+          </button>
+        }
+        <button
+          mat-button
+          matTooltip="insert new child above"
+          (click)="$event.stopPropagation(); askToInsertNode()"
+          class="insert">
+          <mat-icon>vertical_align_top</mat-icon>
+        </button>
+        <button mat-button class="edit" matTooltip="edit" (click)="$event.stopPropagation(); askToEditNode()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-button class="delete" matTooltip="delete" (click)="$event.stopPropagation(); askToDeleteListNode()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>`,
   animations: [
     // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
     trigger('simpleFadeAnimation', [

@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-resource-restriction',
-  template: ` <div *ngIf="showRestrictedMessage">
+  template: ` @if (showRestrictedMessage) {
+  <div>
     <app-alert-info>
       <p>
         {{ 'resourceEditor.restricted' | translate }}
@@ -11,7 +12,8 @@ import { Component } from '@angular/core';
         >clear
       </mat-icon>
     </app-alert-info>
-  </div>`,
+  </div>
+}`,
 })
 export class ResourceRestrictionComponent {
   showRestrictedMessage = true;

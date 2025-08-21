@@ -17,14 +17,18 @@ import { combineLatest, map, Observable, Subject, takeUntil, takeWhile } from 'r
 @Component({
   selector: 'app-resource-class-browser',
   template: `
-    <app-multiple-viewer *ngIf="searchParams$ | async as searchParams" [searchParams]="searchParams" />
-
-    <div
-      class="single-instance"
-      *ngIf="(instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance">
-      <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
-    </div>
-  `,
+    @if (searchParams$ | async; as searchParams) {
+      <app-multiple-viewer [searchParams]="searchParams" />
+    }
+    
+    @if ((instanceId$ | async) && (instanceId$ | async) !== routeConstants.addClassInstance) {
+      <div
+        class="single-instance"
+        >
+        <app-resource-fetcher [resourceIri]="resourceIri$ | async" />
+      </div>
+    }
+    `,
 })
 export class ResourceClassBrowserComponent implements OnDestroy {
   @Select(OntologiesSelectors.projectOntologies)

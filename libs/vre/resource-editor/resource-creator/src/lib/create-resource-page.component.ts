@@ -12,14 +12,15 @@ import { Subject, takeUntil } from 'rxjs';
   template: `
     <app-centered-layout>
       <h2 data-cy="create-resource-title">Create new resource of type: {{ classLabel }}</h2>
-      <app-create-resource-form
-        *ngIf="resourceClassIri && projectShortcode"
-        [resourceClassIri]="resourceClassIri"
-        [projectIri]="projectIri"
-        [projectShortcode]="projectShortcode"
-        (createdResourceIri)="afterCreation($event)" />
+      @if (resourceClassIri && projectShortcode) {
+        <app-create-resource-form
+          [resourceClassIri]="resourceClassIri"
+          [projectIri]="projectIri"
+          [projectShortcode]="projectShortcode"
+          (createdResourceIri)="afterCreation($event)" />
+      }
     </app-centered-layout>
-  `,
+    `,
 })
 export class CreateResourcePageComponent implements OnDestroy {
   private _destroy = new Subject<void>();

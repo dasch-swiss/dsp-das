@@ -9,7 +9,7 @@ import { filter, map } from 'rxjs';
 @Component({
   selector: 'app-resource-page',
   template:
-    '<app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" (afterResourceDeleted)="updateResourceCount($event)" />',
+    '@if (resourceIri$ | async; as resourceIri) {<app-resource-fetcher [resourceIri]="resourceIri" (afterResourceDeleted)="updateResourceCount($event)" />}',
 })
 export class ResourcePageComponent {
   constructor(

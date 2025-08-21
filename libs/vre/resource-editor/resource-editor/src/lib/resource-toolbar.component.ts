@@ -26,11 +26,13 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
-
+    
       <app-permission-info [resource]="resource" />
-      <app-resource-edit-more-menu *ngIf="userCanDelete$ | async" [resource]="resource" />
+      @if (userCanDelete$ | async) {
+        <app-resource-edit-more-menu [resource]="resource" />
+      }
     </span>
-
+    
     <mat-menu #share="matMenu" class="res-share-menu">
       <button
         mat-menu-item
@@ -53,7 +55,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
         Copy internal link to clipboard
       </button>
     </mat-menu>
-  `,
+    `,
   styles: [
     `
       .action {

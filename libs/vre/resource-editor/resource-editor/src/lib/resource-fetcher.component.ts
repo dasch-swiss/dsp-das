@@ -15,33 +15,40 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
   selector: 'app-resource-fetcher',
   template: `
     <div class="content large middle">
-      <app-resource-version-warning
-        *ngIf="resourceVersion"
-        [resourceVersion]="resourceVersion"
-        (navigateToCurrentVersion)="navigateToCurrentVersion()" />
-
-      <ng-container *ngIf="!hideStatus; else hideTpl">
-        <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
-      </ng-container>
-    </div>
-
-    <ng-template #hideTpl>
-      <div style="display: flex; justify-content: center; padding: 16px">
-        <h3 *ngIf="hideStatus === 'NotFound'">{{ 'resourceEditor.notFound' | translate }}</h3>
-
-        <h3 *ngIf="hideStatus === 'Unauthorized'">{{ 'resourceEditor.unauthorized' | translate }}</h3>
-
-        <div *ngIf="hideStatus === 'Deleted'" style="text-align: center">
-          <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
-          <h4 *ngIf="resource?.res.deleteComment as comment">"{{ comment }}"</h4>
+      @if (resourceVersion) {
+        <app-resource-version-warning
+          [resourceVersion]="resourceVersion"
+          (navigateToCurrentVersion)="navigateToCurrentVersion()" />
+      }
+    
+      @if (!hideStatus) {
+        @if (resource) {
+          <app-resource [resource]="resource" />
+        } @else {
+          <app-progress-indicator />
+        }
+      } @else {
+        <div style="display: flex; justify-content: center; padding: 16px">
+          @if (hideStatus === 'NotFound') {
+            <h3>{{ 'resourceEditor.notFound' | translate }}</h3>
+          }
+          @if (hideStatus === 'Unauthorized') {
+            <h3>{{ 'resourceEditor.unauthorized' | translate }}</h3>
+          }
+          @if (hideStatus === 'Deleted') {
+            <div style="text-align: center">
+              <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
+              @if (resource?.res.deleteComment; as comment) {
+                <h4>"{{ comment }}"</h4>
+              }
+            </div>
+          }
         </div>
-      </div>
-    </ng-template>
-
-    <ng-template #loadingTpl>
-      <app-progress-indicator />
-    </ng-template>
-  `,
+      }
+    </div>
+    
+    
+    `,
   providers: [ResourceFetcherService],
 })
 export class ResourceFetcherComponent implements OnChanges, OnDestroy {

@@ -10,32 +10,40 @@ import { CollaborationPageService } from './collaboration-page.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-collaboration-page',
   template: `
-    <div *ngIf="isAdmin$ | async" class="content large middle">
-      <ng-container *ngIf="project$ | async as project">
-        <app-add-user *ngIf="project.status && (isAdmin$ | async) === true" [projectUuid]="projectUuid$ | async" />
-      </ng-container>
-
-      <ng-container *ngIf="activeProjectMembers$ | async as activeProjectMembers">
-        <ng-container *ngIf="inactiveProjectMembers$ | async as inactiveProjectMembers">
-          <div style="display: flex; justify-content: center; margin: 16px 0">
-            <app-double-chip-selector
+    @if (isAdmin$ | async) {
+      <div class="content large middle">
+        @if (project$ | async; as project) {
+          @if (project.status && (isAdmin$ | async) === true) {
+            <app-add-user [projectUuid]="projectUuid$ | async" />
+          }
+        }
+        @if (activeProjectMembers$ | async; as activeProjectMembers) {
+          @if (inactiveProjectMembers$ | async; as inactiveProjectMembers) {
+            <div style="display: flex; justify-content: center; margin: 16px 0">
+              <app-double-chip-selector
               [options]="[
                 'Active users (' + activeProjectMembers.length + ')',
                 'Inactive users (' + inactiveProjectMembers.length + ')',
               ]"
-              [(value)]="showActiveUsers" />
-          </div>
-
-          <app-project-members *ngIf="showActiveUsers" [users]="activeProjectMembers" />
-          <app-project-members *ngIf="!showActiveUsers" [users]="inactiveProjectMembers" />
-        </ng-container>
-      </ng-container>
-    </div>
-
-    <div *ngIf="(isAdmin$ | async) === false" class="content large middle">
-      <app-status [status]="403" />
-    </div>
-  `,
+                [(value)]="showActiveUsers" />
+            </div>
+            @if (showActiveUsers) {
+              <app-project-members [users]="activeProjectMembers" />
+            }
+            @if (!showActiveUsers) {
+              <app-project-members [users]="inactiveProjectMembers" />
+            }
+          }
+        }
+      </div>
+    }
+    
+    @if ((isAdmin$ | async) === false) {
+      <div class="content large middle">
+        <app-status [status]="403" />
+      </div>
+    }
+    `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
 })

@@ -30,15 +30,16 @@ import { take } from 'rxjs';
         <mat-icon>share</mat-icon>
       </button>
       <app-permission-info [resource]="resource" />
-      <app-resource-edit-more-menu
-        *ngIf="!!(resourceFetcher.userCanEdit$ | async) || !!(resourceFetcher.userCanDelete$ | async)"
-        [resource]="resource"
-        [showEditLabel]="true"
-        (resourceDeleted)="onResourceDeleted()"
-        (resourceErased)="onResourceDeleted()"
-        (resourceUpdated)="onResourceUpdated()" />
+      @if (!!(resourceFetcher.userCanEdit$ | async) || !!(resourceFetcher.userCanDelete$ | async)) {
+        <app-resource-edit-more-menu
+          [resource]="resource"
+          [showEditLabel]="true"
+          (resourceDeleted)="onResourceDeleted()"
+          (resourceErased)="onResourceDeleted()"
+          (resourceUpdated)="onResourceUpdated()" />
+      }
     </span>
-
+    
     <mat-menu #share="matMenu" class="res-share-menu">
       <button
         mat-menu-item
@@ -61,7 +62,7 @@ import { take } from 'rxjs';
         Copy internal link to clipboard
       </button>
     </mat-menu>
-  `,
+    `,
   styles: [
     `
       .action {

@@ -10,7 +10,7 @@ import { finalize } from 'rxjs';
   selector: 'app-erase-resource-dialog',
   template: `
     <app-dialog-header title="Do you want to erase this resource forever?" [subtitle]="'Erase resource instance'" />
-
+    
     <mat-dialog-content>
       <div style="margin-bottom: 8px">WARNING: This action cannot be undone, so use it with care.</div>
       <mat-form-field style="width: 100%">
@@ -19,11 +19,13 @@ import { finalize } from 'rxjs';
           matInput
           rows="4"
           data-cy="app-erase-resource-dialog-comment"
-          [formControl]="eraseForm.controls.comment"></textarea>
-        <mat-error *ngIf="eraseForm.controls.comment.errors as errors"> {{ errors | humanReadableError }} </mat-error>
+        [formControl]="eraseForm.controls.comment"></textarea>
+        @if (eraseForm.controls.comment.errors; as errors) {
+          <mat-error> {{ errors | humanReadableError }} </mat-error>
+        }
       </mat-form-field>
     </mat-dialog-content>
-
+    
     <mat-dialog-actions>
       <button mat-button color="primary" mat-dialog-close class="cancel-button center">No, keep it</button>
       <span class="fill-remaining-space"></span>
@@ -40,7 +42,7 @@ import { finalize } from 'rxjs';
         Yes, erase
       </button>
     </mat-dialog-actions>
-  `,
+    `,
 })
 export class EraseResourceDialogComponent {
   eraseForm = new FormGroup({

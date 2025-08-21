@@ -8,8 +8,8 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-annotation-tab',
-  template: ` <div
-    *ngFor="let annotation of regionService.regions$ | async; trackBy: trackAnnotationByFn"
+  template: ` @for (annotation of regionService.regions$ | async; track trackAnnotationByFn($index, annotation)) {
+  <div
     [attr.data-annotation-resource]="annotation.res.id"
     [class.active]="annotation.res.id === selectedRegion"
     #annotationElement
@@ -25,7 +25,8 @@ import { Subscription } from 'rxjs';
         '=' +
         annotation.res.id
       " />
-  </div>`,
+  </div>
+}`,
   styles: ['.active {border: 1px solid}'],
 })
 export class AnnotationTabComponent implements AfterViewInit, OnDestroy {

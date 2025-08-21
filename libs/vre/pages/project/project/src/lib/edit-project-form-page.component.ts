@@ -15,25 +15,26 @@ import { ProjectForm } from './reusable-project-form/project-form.type';
 @Component({
   selector: 'app-edit-project-form-page',
   template: ` <app-centered-layout>
-    <app-reusable-project-form
-      *ngIf="formData$ | async as formData"
-      [formData]="formData"
-      (afterFormInit)="form = $event" />
-
-    <div style="display: flex; justify-content: space-between">
-      <button
-        mat-raised-button
-        type="submit"
-        color="primary"
-        [disabled]="form?.invalid"
-        (click)="onSubmit()"
-        appLoadingButton
-        [isLoading]="loading"
-        data-cy="submit-button">
-        {{ 'ui.form.action.submit' | translate }}
-      </button>
-    </div>
-  </app-centered-layout>`,
+      @if (formData$ | async; as formData) {
+        <app-reusable-project-form
+          [formData]="formData"
+          (afterFormInit)="form = $event" />
+      }
+    
+      <div style="display: flex; justify-content: space-between">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          [disabled]="form?.invalid"
+          (click)="onSubmit()"
+          appLoadingButton
+          [isLoading]="loading"
+          data-cy="submit-button">
+          {{ 'ui.form.action.submit' | translate }}
+        </button>
+      </div>
+    </app-centered-layout>`,
 })
 export class EditProjectFormPageComponent {
   form: ProjectForm;

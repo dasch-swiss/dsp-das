@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,6 @@ import { MultiLanguageFormService } from './multi-language-form.service';
   standalone: true,
   providers: [MultiLanguageFormService],
   imports: [
-    CommonModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
@@ -25,8 +24,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     FormsModule,
     ReactiveFormsModule,
     NgxsStoreModule,
-    HumanReadableErrorPipe,
-  ],
+    HumanReadableErrorPipe
+],
   template: `
     <div style="display: flex; flex-direction: row-reverse">
       <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
@@ -40,31 +39,34 @@ import { MultiLanguageFormService } from './multi-language-form.service';
           [ngModel]="formService.inputValue"
           (blur)="formService.formArray.markAsTouched()"
           (ngModelChange)="formService.onInputChange($event)"
-          [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
+        [disabled]="formService.selectedFormControl?.disabled ?? false"></textarea>
       </mat-form-field>
       <mat-button-toggle-group matPrefix #group="matButtonToggleGroup" vertical>
-        <mat-button-toggle
-          *ngFor="let lang of formService.availableLanguages; let index = index"
-          tabIndex="-1"
-          (click)="formService.changeLanguage(index); textInput.focus()"
-          [checked]="index === formService.selectedLanguageIndex"
-          [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">
-          <span>{{ lang }}</span>
-        </mat-button-toggle>
+        @for (lang of formService.availableLanguages; track lang; let index = $index) {
+          <mat-button-toggle
+            tabIndex="-1"
+            (click)="formService.changeLanguage(index); textInput.focus()"
+            [checked]="index === formService.selectedLanguageIndex"
+            [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">
+            <span>{{ lang }}</span>
+          </mat-button-toggle>
+        }
       </mat-button-toggle-group>
     </div>
     <div class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align ng-tns-c1205077789-8">
-      <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
-        <ng-container *ngIf="formService.invalidErrors?.language"
-          >Language {{ formService.invalidErrors.language }}:
-          {{ formService.invalidErrors.error | humanReadableError }}
-        </ng-container>
-        <ng-container *ngIf="!formService.invalidErrors?.language"
-          >{{ formService.invalidErrors.error | humanReadableError }}
-        </ng-container>
-      </mat-error>
+      @if (formService.formArray.invalid && formService.formArray.touched) {
+        <mat-error>
+          @if (formService.invalidErrors?.language) {
+            Language {{ formService.invalidErrors.language }}:
+            {{ formService.invalidErrors.error | humanReadableError }}
+          }
+          @if (!formService.invalidErrors?.language) {
+            {{ formService.invalidErrors.error | humanReadableError }}
+          }
+        </mat-error>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       :host {

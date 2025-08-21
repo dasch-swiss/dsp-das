@@ -13,14 +13,16 @@ import { finalize } from 'rxjs/operators';
     <mat-form-field style="width: 100%">
       <mat-label>Authorship</mat-label>
       <mat-chip-grid #chipGrid aria-label="Authorship">
-        <mat-chip-row *ngFor="let authorship of selectedItems" (removed)="removeItem(authorship)">
-          {{ authorship }}
-          <button matChipRemove [attr.aria-label]="'remove ' + authorship">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
+        @for (authorship of selectedItems; track authorship) {
+          <mat-chip-row (removed)="removeItem(authorship)">
+            {{ authorship }}
+            <button matChipRemove [attr.aria-label]="'remove ' + authorship">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
       </mat-chip-grid>
-
+    
       <input
         placeholder="New authorship..."
         data-cy="authorship-chips"
@@ -31,23 +33,28 @@ import { finalize } from 'rxjs/operators';
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addItemFromMaterial($event)" />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItem($event)">
-        <mat-option *ngFor="let option of filteredAuthorship" [value]="option">
-          {{ option }}
-        </mat-option>
-
-        <mat-option
-          *ngIf="
-            filteredAuthorship.length === 0 && autocompleteFormControl.value && autocompleteFormControl.value.length > 0
-          "
-          >Press Enter or Tab to add an item.
-        </mat-option>
+        @for (option of filteredAuthorship; track option) {
+          <mat-option [value]="option">
+            {{ option }}
+          </mat-option>
+        }
+    
+        @if (
+          filteredAuthorship.length === 0 && autocompleteFormControl.value && autocompleteFormControl.value.length > 0
+          ) {
+          <mat-option
+            >Press Enter or Tab to add an item.
+          </mat-option>
+        }
       </mat-autocomplete>
-
-      <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
-        {{ error | humanReadableError }}
-      </mat-error>
+    
+      @if (control.invalid && control.touched && control.errors![0]; as error) {
+        <mat-error>
+          {{ error | humanReadableError }}
+        </mat-error>
+      }
     </mat-form-field>
-  `,
+    `,
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   @Input() control!: FormControl<string[] | null>;

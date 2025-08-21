@@ -16,30 +16,35 @@ import { SplitSize } from './split-size.interface';
             [withMultipleSelection]="true"
             (selectedResources)="openSelectedResources($event)" />
         </as-split-area>
-        <as-split-area [size]="60" *ngIf="selectedResources?.count > 0" cdkScrollable>
-          <div [ngSwitch]="viewMode">
-            <!-- single resource view -->
-            <app-resource-fetcher
-              *ngSwitchCase="'single'"
-              [resourceIri]="selectedResources.resInfo[0].id"
-              (afterResourceDeleted)="updateResourceCount($event)" />
-
-            <!-- intermediate view -->
-            <app-intermediate
-              *ngSwitchCase="'intermediate'"
-              [resources]="selectedResources"
-              (action)="viewMode = $event" />
-
-            <!-- multiple resources view / comparison viewer -->
-            <app-comparison
-              *ngSwitchCase="'compare'"
-              [resources]="selectedResources?.resInfo"
-              [splitSizeChanged]="splitSizeChanged" />
-          </div>
-        </as-split-area>
+        @if (selectedResources?.count > 0) {
+          <as-split-area [size]="60" cdkScrollable>
+            <div>
+              @switch (viewMode) {
+                <!-- single resource view -->
+                @case ('single') {
+                  <app-resource-fetcher
+                    [resourceIri]="selectedResources.resInfo[0].id"
+                    (afterResourceDeleted)="updateResourceCount($event)" />
+                }
+                <!-- intermediate view -->
+                @case ('intermediate') {
+                  <app-intermediate
+                    [resources]="selectedResources"
+                    (action)="viewMode = $event" />
+                }
+                <!-- multiple resources view / comparison viewer -->
+                @case ('compare') {
+                  <app-comparison
+                    [resources]="selectedResources?.resInfo"
+                    [splitSizeChanged]="splitSizeChanged" />
+                }
+              }
+            </div>
+          </as-split-area>
+        }
       </as-split>
     </div>
-  `,
+    `,
   styleUrls: ['./multiple-viewer.component.scss'],
 })
 export class MultipleViewerComponent {

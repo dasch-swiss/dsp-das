@@ -9,30 +9,32 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 @Component({
   selector: 'app-resource-header',
   template: ` <div class="resource-header">
-    <div class="resource-class-header">
-      <h3
-        [class.label-info]="resourceClassType?.comment"
-        [matTooltip]="resourceClassType?.comment"
-        matTooltipClass="header-tooltip"
-        matTooltipPosition="above">
-        {{ resourceClassType?.label }}
-      </h3>
-      <app-resource-toolbar [resource]="resource.res" />
-    </div>
-    <div class="resource-label" style="display: flex; justify-content: space-between">
-      <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>
-      <button
-        mat-icon-button
-        data-cy="edit-label-button"
-        color="primary"
-        matTooltip="Edit label"
-        (click)="openEditLabelDialog()"
-        *ngIf="resourceFetcherService.userCanEdit$ | async">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </div>
-    <app-resource-info-bar [resource]="resource.res" />
-  </div>`,
+      <div class="resource-class-header">
+        <h3
+          [class.label-info]="resourceClassType?.comment"
+          [matTooltip]="resourceClassType?.comment"
+          matTooltipClass="header-tooltip"
+          matTooltipPosition="above">
+          {{ resourceClassType?.label }}
+        </h3>
+        <app-resource-toolbar [resource]="resource.res" />
+      </div>
+      <div class="resource-label" style="display: flex; justify-content: space-between">
+        <h4 data-cy="resource-header-label">{{ resource.res.label }}</h4>
+        @if (resourceFetcherService.userCanEdit$ | async) {
+          <button
+            mat-icon-button
+            data-cy="edit-label-button"
+            color="primary"
+            matTooltip="Edit label"
+            (click)="openEditLabelDialog()"
+            >
+            <mat-icon>edit</mat-icon>
+          </button>
+        }
+      </div>
+      <app-resource-info-bar [resource]="resource.res" />
+    </div>`,
   styles: [
     `
       .resource-header {

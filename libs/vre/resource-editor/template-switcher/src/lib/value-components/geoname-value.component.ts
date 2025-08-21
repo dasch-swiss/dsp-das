@@ -6,22 +6,28 @@ import { GeonameService, SearchPlace } from '../geoname.service';
 @Component({
   selector: 'app-geoname-value',
   template: ` <mat-form-field style="width: 100%">
-    <input
-      matInput
-      [formControl]="control"
-      type="text"
-      [placeholder]="'e.g. Basel'"
-      aria-label="geoname"
-      data-cy="geoname-autocomplete"
-      [matAutocomplete]="auto" />
-    <mat-progress-spinner *ngIf="loading" matSuffix mode="indeterminate" diameter="20" style="margin-right: 16px;" />
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
-      <mat-option *ngFor="let place of places" [value]="place.id"> {{ place?.displayName }}</mat-option>
-    </mat-autocomplete>
-    <mat-error *ngIf="control.errors as errors">
-      {{ errors | humanReadableError }}
-    </mat-error>
-  </mat-form-field>`,
+      <input
+        matInput
+        [formControl]="control"
+        type="text"
+        [placeholder]="'e.g. Basel'"
+        aria-label="geoname"
+        data-cy="geoname-autocomplete"
+        [matAutocomplete]="auto" />
+      @if (loading) {
+        <mat-progress-spinner matSuffix mode="indeterminate" diameter="20" style="margin-right: 16px;" />
+      }
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPlaceInSearch.bind(this)">
+        @for (place of places; track place) {
+          <mat-option [value]="place.id"> {{ place?.displayName }}</mat-option>
+        }
+      </mat-autocomplete>
+      @if (control.errors; as errors) {
+        <mat-error>
+          {{ errors | humanReadableError }}
+        </mat-error>
+      }
+    </mat-form-field>`,
 })
 export class GeonameValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string>;
