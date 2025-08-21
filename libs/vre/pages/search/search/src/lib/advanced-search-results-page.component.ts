@@ -38,7 +38,6 @@ export class AdvancedSearchResultsPageComponent {
   }
 
   private _performGravSearch(params: Params, index: number) {
-    console.log(params, 'aa');
     let query = this._getQuery(params);
     query = `${query}OFFSET ${index}`;
 
