@@ -5,7 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
 import { UserPermissions } from './user-permissions';
 
 @Injectable()
@@ -16,9 +16,7 @@ export class ProjectPageService {
   currentProjectUuid$ = this._currentProjectUuidSubject.pipe(take(1));
 
   currentProject$ = this._reloadProjectSubject.pipe(
-    tap(() => console.log('ProjectPageService: afterReloadSubject')),
     switchMap(() => this._currentProjectUuidSubject),
-    tap(() => console.log('ProjectPageService: afterProjectUuidSubject')),
     switchMap(projectUuid => this.projectApiService.get(projectUuid)),
     map(response => response.project),
     shareReplay(1)
