@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { filter, first, map, tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 import { CollaborationPageService } from './collaboration-page.service';
 
@@ -13,8 +11,8 @@ import { CollaborationPageService } from './collaboration-page.service';
     <div *ngIf="hasProjectAdminRights$ | async">
       <ng-container *ngIf="project$ | async as project">
         <app-add-user
-          *ngIf="project.status && (hasProjectAdminRights$ | async) === true"
-          [projectUuid]="projectUuid$ | async" />
+          *ngIf="project.status && (hasProjectAdminRights$ | async) && (projectUuid$ | async) as projectUuid"
+          [projectUuid]="projectUuid" />
       </ng-container>
 
       <ng-container *ngIf="activeProjectMembers$ | async as activeProjectMembers">
@@ -40,19 +38,14 @@ import { CollaborationPageService } from './collaboration-page.service';
   providers: [CollaborationPageService],
 })
 export class CollaborationPageComponent {
-  project$ = this._projectPageService.currentProject$;
+  project$ = this._projectPageService.currentProject$.pipe(
+    tap(project => {
+      this._titleService.setTitle(`Project ${project.shortname} | Collaboration`);
+    })
+  );
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
-  projectUuid$ = this.project$.pipe(
-    tap(p => {
-      this._titleService.setTitle(`Project ${p?.shortname} | Collaboration`);
-    }),
-    map(p => {
-      return ProjectService.IriToUuid(p?.id || '');
-    }),
-    filter(uuid => !!uuid),
-    first()
-  );
+  projectUuid$ = this._projectPageService.currentProjectUuid$;
 
   showActiveUsers = true;
 
@@ -64,7 +57,6 @@ export class CollaborationPageComponent {
   );
 
   constructor(
-    private _store: Store,
     protected _titleService: Title,
     public collaborationPageService: CollaborationPageService,
     private _projectPageService: ProjectPageService
