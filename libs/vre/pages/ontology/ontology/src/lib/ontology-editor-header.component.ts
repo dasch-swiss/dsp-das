@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Store } from '@ngxs/store';
 import { switchMap, take } from 'rxjs';
 import { EditOntologyFormDialogComponent } from './forms/ontology-form/edit-ontology-form-dialog.component';
 import { UpdateOntologyData } from './forms/ontology-form/ontology-form.type';
@@ -114,7 +112,7 @@ export class OntologyEditorHeaderComponent {
     private _projectPageService: ProjectPageService,
     private _oes: OntologyEditService,
     private _router: Router,
-    private _store: Store,
+    private _route: ActivatedRoute,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
@@ -143,7 +141,7 @@ export class OntologyEditorHeaderComponent {
   }
 
   navigateToDataModels() {
-    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
+    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
     this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 }

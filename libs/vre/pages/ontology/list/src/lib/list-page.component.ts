@@ -3,12 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  DeleteListNodeAction,
-  ListsSelectors,
-  LoadListsInProjectAction,
-  ProjectsSelectors,
-} from '@dasch-swiss/vre/core/state';
+import { DeleteListNodeAction, ListsSelectors, LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
@@ -78,7 +73,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
   }
 
   navigateToDataModels() {
-    const projectUuid = this._store.selectSnapshot(ProjectsSelectors.currentProjectsUuid);
+    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
     this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
   }
 
