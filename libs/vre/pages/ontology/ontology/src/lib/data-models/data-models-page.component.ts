@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, ViewContainerRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
+import { ListNodeInfo, OntologyMetadata } from '@dasch-swiss/dsp-js';
+import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsSelectors, LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
 import { ListInfoFormComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { combineLatest } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create-ontology-form-dialog.component';
 
 @Component({
@@ -17,31 +16,29 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
   styleUrls: ['./data-models-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataModelsPageComponent implements OnInit {
+export class DataModelsPageComponent {
   protected readonly RouteConstants = RouteConstants;
 
   ontologiesMetadata$ = this._projectPageService.ontologiesMetadata$;
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
-  listsInProject$ = this._store.select(ListsSelectors.listsInProject);
+  listsInProject$ = this._projectPageService.currentProject$.pipe(
+    switchMap(project => this._listApiService.listInProject(project.id)),
+    map(response => response.lists)
+  );
 
   constructor(
     private _dialog: MatDialog,
     private _projectPageService: ProjectPageService,
+    private _listApiService: ListApiService,
     private _viewContainerRef: ViewContainerRef,
     public _route: ActivatedRoute,
-    private _router: Router,
-    private _store: Store
+    private _router: Router
   ) {}
 
   trackByFn = (index: number, item: ListNodeInfo) => `${index}-${item.id}`;
 
   trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
 
-  ngOnInit() {
-    this._projectPageService.currentProject$.subscribe(project => {
-      this._store.dispatch(new LoadListsInProjectAction(project.id));
-    });
-  }
   navigateToList(id: string) {
     const listName = id.split('/').pop();
     this._router.navigate([RouteConstants.list, encodeURIComponent(listName)], {
@@ -74,18 +71,14 @@ export class DataModelsPageComponent implements OnInit {
   }
 
   createNewList() {
-    const dialog$ = this._dialog
-      .open<
-        ListInfoFormComponent,
-        null
-      >(ListInfoFormComponent, { ...DspDialogConfig.dialogDrawerConfig(null, true), viewContainerRef: this._viewContainerRef })
-      .afterClosed();
-
-    combineLatest([dialog$, this._projectPageService.currentProject$]).subscribe(
-      ([response, project]: [ListResponse, ReadProject]) => {
-        this._store.dispatch(new LoadListsInProjectAction(project.id));
+    this._dialog
+      .open<ListInfoFormComponent, null>(ListInfoFormComponent, {
+        ...DspDialogConfig.dialogDrawerConfig(null, true),
+        viewContainerRef: this._viewContainerRef,
+      })
+      .afterClosed()
+      .subscribe(response => {
         this.navigateToList(response.list.listinfo.id);
-      }
-    );
+      });
   }
 }

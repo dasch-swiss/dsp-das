@@ -9,7 +9,6 @@ import {
   UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { LoadListsInProjectAction } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
@@ -122,7 +121,6 @@ export class ListInfoFormComponent implements OnInit {
     listInfoUpdateData.comments = this.form.value.comments as StringLiteral[];
 
     this._listApiService.updateInfo(listInfoUpdateData.listIri, listInfoUpdateData).subscribe(response => {
-      this._store.dispatch(new LoadListsInProjectAction(this.data!.projectIri!));
       this.loading = false;
       this.dialogRef.close(response);
     });

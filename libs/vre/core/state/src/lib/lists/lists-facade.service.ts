@@ -1,26 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ListNodeInfo, ReadProject } from '@dasch-swiss/dsp-js';
-import { Store } from '@ngxs/store';
-import { combineLatest, distinctUntilChanged, Observable, switchMap, tap } from 'rxjs';
-import { LoadListsInProjectAction } from './lists.actions';
-import { ListsSelectors } from './lists.selectors';
+import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ListsFacade {
-  constructor(private _store: Store) {}
+  constructor(private _listApiService: ListApiService) {}
 
   getListsInProject$(project: ReadProject): Observable<ListNodeInfo[]> {
-    return combineLatest([
-      this._store.select(ListsSelectors.isListsLoaded),
-      this._store.select(ListsSelectors.isListsLoading),
-    ]).pipe(
-      distinctUntilChanged(),
-      tap(([loaded, loading]) => {
-        if (!loaded && !loading) {
-          this._store.dispatch(new LoadListsInProjectAction(project.id));
-        }
-      }),
-      switchMap(() => this._store.select(ListsSelectors.listsInProject))
-    );
+    return this._listApiService.listInProject(project.id).pipe(map(response => response.lists));
   }
 }

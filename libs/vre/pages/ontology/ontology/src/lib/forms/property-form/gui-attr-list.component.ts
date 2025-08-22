@@ -1,9 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ListNodeInfo } from '@dasch-swiss/dsp-js';
-import { ListsSelectors } from '@dasch-swiss/vre/core/state';
-import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
-import { combineLatest, map, tap } from 'rxjs';
+import { ListsFacade } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { switchMap } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
 @Component({
@@ -26,7 +24,12 @@ import { PropertyForm } from './property-form.type';
 })
 export class GuiAttrListComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];
-  lists$ = this._store.select(ListsSelectors.listsInProject);
+  lists$ = this._projectPageService.currentProject$.pipe(
+    switchMap(project => this._listFacadeService.getListsInProject$(project))
+  );
 
-  constructor(private _store: Store) {}
+  constructor(
+    private _projectPageService: ProjectPageService,
+    private _listFacadeService: ListsFacade
+  ) {}
 }
