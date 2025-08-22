@@ -53,7 +53,8 @@
         <span class="v-align-middle">Create New</span>
       </a>
     </div>
-    <div class="list" *ngIf="(listsInProject$ | async)?.length > 0">
+
+    <div class="list">
       <div
         class="list-item"
         *ngFor="let list of (listsInProject$ | async); trackBy: trackByFn"

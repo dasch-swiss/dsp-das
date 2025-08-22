@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListNodeInfo, ListResponse, OntologyMetadata, ReadProject } from '@dasch-swiss/dsp-js';
@@ -17,7 +17,7 @@ import { CreateOntologyFormDialogComponent } from '../forms/ontology-form/create
   styleUrls: ['./data-models-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataModelsPageComponent {
+export class DataModelsPageComponent implements OnInit {
   protected readonly RouteConstants = RouteConstants;
 
   ontologiesMetadata$ = this._projectPageService.ontologiesMetadata$;
@@ -37,6 +37,11 @@ export class DataModelsPageComponent {
 
   trackByOntologyMetaFn = (index: number, item: OntologyMetadata) => `${index}-${item.id}`;
 
+  ngOnInit() {
+    this._projectPageService.currentProject$.subscribe(project => {
+      this._store.dispatch(new LoadListsInProjectAction(project.id));
+    });
+  }
   navigateToList(id: string) {
     const listName = id.split('/').pop();
     this._router.navigate([RouteConstants.list, encodeURIComponent(listName)], {
