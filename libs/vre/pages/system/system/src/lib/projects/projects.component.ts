@@ -4,7 +4,7 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { Store } from '@ngxs/store';
-import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 /**
  * ProjectsComponent handles the list of projects.
@@ -35,32 +35,41 @@ import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
   `,
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
-  private _ngUnsubscribe = new Subject<void>();
-
   @Input() isUsersProjects = false;
 
-  userActiveProjects$ = this._store.select(UserSelectors.userActiveProjects);
-  userInactiveProjects$ = this._store.select(UserSelectors.userInactiveProjects);
-  allActiveProjects$ = this._allProjectsService.allActiveProjects$.pipe(
+  loading = true;
+
+  private _ngUnsubscribe = new Subject<void>();
+  private _reloadProjectsSubject = new BehaviorSubject<null>(null);
+
+  private _allActiveProjects$ = this._reloadProjectsSubject.pipe(
+    switchMap(() => this._allProjectsService.allActiveProjects$),
     tap(() => {
       this.loading = false;
     })
   );
-  allInactiveProjects$ = this._allProjectsService.allInactiveProjects$;
+  private _allInactiveProjects$ = this._reloadProjectsSubject.pipe(
+    switchMap(() => this._allProjectsService.allInactiveProjects$)
+  );
 
-  inactiveProjects$ = combineLatest([this.userInactiveProjects$, this.allInactiveProjects$]).pipe(
+  inactiveProjects$ = combineLatest([
+    this._store.select(UserSelectors.userInactiveProjects),
+    this._allInactiveProjects$,
+  ]).pipe(
     takeUntil(this._ngUnsubscribe),
     map(([userInactiveProjects, allInactiveProjects]) =>
       this.isUsersProjects ? userInactiveProjects : allInactiveProjects
     )
   );
 
-  activeProjects$ = combineLatest([this.userActiveProjects$, this.allActiveProjects$]).pipe(
+  activeProjects$ = combineLatest([
+    this._store.select(UserSelectors.userActiveProjects),
+    this._allActiveProjects$,
+  ]).pipe(
+    tap(data => console.log('active projects', data)),
     takeUntil(this._ngUnsubscribe),
     map(([userActiveProjects, allActiveProjects]) => (this.isUsersProjects ? userActiveProjects : allActiveProjects))
   );
-
-  loading = true;
 
   constructor(
     private _store: Store,
@@ -80,6 +89,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   updateAndRefresh() {
     const currentUser = this._store.selectSnapshot(UserSelectors.user);
     if (!currentUser) throw new AppError('Current user not found.');
+    this._reloadProjects();
     this._store.dispatch(new LoadUserAction(currentUser.username));
+  }
+
+  private _reloadProjects() {
+    this._reloadProjectsSubject.next(null);
   }
 }
