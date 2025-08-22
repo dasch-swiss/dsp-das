@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { ProjectForm } from './project-form.type';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 
 @Component({
   selector: 'app-edit-project-form-page',
@@ -45,10 +46,12 @@ export class EditProjectFormPageComponent {
 
   constructor(
     private _projectPageService: ProjectPageService,
+    private _projectApiService: ProjectApiService,
     private _router: Router
   ) {}
 
   onSubmit() {
+    return this._projectApiService.update(, projectData).pipe(
     this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
       this._router.navigate([`${RouteConstants.projectRelative}/${projectUuid}`]);
     });
