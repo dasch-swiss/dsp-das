@@ -20,13 +20,12 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
+import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ListsFacade } from '@dasch-swiss/vre/core/state';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Store } from '@ngxs/store';
 import {
   BehaviorSubject,
   combineLatest,
@@ -46,7 +45,7 @@ import { UpdateOntologyData } from '../forms/ontology-form/ontology-form.type';
 import { CreatePropertyData, UpdatePropertyData } from '../forms/property-form/property-form.type';
 import { ResourceClassFormData, UpdateResourceClassData } from '../forms/resource-class-form/resource-class-form.type';
 import { ClassPropertyInfo, ClassShortInfo, PropertyInfo, ResourceClassInfo } from '../ontology.types';
-import { MakeOntologyFor, OntologyContext, ProjectContext } from './make-ontology-for';
+import { MakeOntologyFor, OntologyContext } from './make-ontology-for';
 
 @Injectable()
 export class OntologyEditService {
@@ -68,7 +67,8 @@ export class OntologyEditService {
   );
 
   private _getListsInProject$ = this._projectPageService.currentProject$.pipe(
-    switchMap(project => this._lists.getListsInProject$(project))
+    switchMap(project => this._listApiService.listInProject(project.id)),
+    map(response => response.lists)
   );
 
   currentOntologyProperties$: Observable<PropertyInfo[]> = combineLatest([
@@ -150,16 +150,6 @@ export class OntologyEditService {
   private _canDeletePropertyMap = new Map<string, CanDoResponse>();
 
   project?: ReadProject;
-  get projectId(): string {
-    return this.project!.id;
-  }
-
-  get projectCtx(): ProjectContext {
-    return {
-      projectId: this.projectId,
-      projectShort: this.project!.shortname,
-    };
-  }
 
   get ontologyId(): string {
     return this._currentOntology.value?.id || '';
@@ -188,12 +178,11 @@ export class OntologyEditService {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _lists: ListsFacade,
     private _notification: NotificationService,
     private _localizationService: LocalizationService,
     private _ontologyService: OntologyService,
     private _projectPageService: ProjectPageService,
-    private _store: Store
+    private _listApiService: ListApiService
   ) {
     this._projectPageService.currentProject$.subscribe(project => {
       this.project = project;
