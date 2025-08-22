@@ -6,9 +6,9 @@
 
 This monorepo hosts various libraries of the DaSCH Service Platform and it is built on:
 
-- Nx `v19.0.8`
-- Angular `v17.3.0`
-- Node.js `v20.9.0`
+- Nx `v19.8.9`
+- Angular `v18.2.9`
+- Node.js `v20.11.1` (stored in [.nvmrc](https://github.com/dasch-swiss/dsp-das/blob/main/.nvmrc) file)
 
 # Install libraries
 
