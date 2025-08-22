@@ -9,7 +9,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Observable, Subscription, switchMap, take } from 'rxjs';
+import { Observable, Subscription, switchMap, take, tap } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
   EditResourceClassDialogProps,
@@ -27,7 +27,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;
 
-  project$ = this._projectPageService.currentProject$;
+  project$ = this._projectPageService.currentProject$.pipe(tap(v => console.log('got it', v)));
 
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
