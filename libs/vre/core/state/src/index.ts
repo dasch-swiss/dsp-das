@@ -12,7 +12,5 @@ export * from './lib/user/user.state';
 
 export * from './lib/lists/lists-facade.service';
 
-export * from './lib/config.state';
-
 export * from './lib/model-interfaces';
 export * from './store.module';
