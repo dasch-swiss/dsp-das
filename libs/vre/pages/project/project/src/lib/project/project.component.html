@@ -1,7 +1,9 @@
-<div *ngIf="(hasLoadingErrors$ | async) === false; else StatusMsg">
+@if ((hasLoadingErrors$ | async) === false) {
+<div>
   <mat-sidenav-container class="project-view">
     <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" class="project-nav">
-      <div *ngIf="sideNavOpened" class="sidenav-collapse-btn">
+      @if (sideNavOpened) {
+      <div class="sidenav-collapse-btn">
         <button
           mat-icon-button
           color="primary"
@@ -14,9 +16,11 @@
           <mat-icon>chevron_left</mat-icon>
         </button>
       </div>
+      }
       <div class="main-content">
         <!-- Project label -->
-        <div *ngIf="(currentProject$ | async) !== undefined" class="project-title">
+        @if ((currentProject$ | async) !== undefined) {
+        <div class="project-title">
           <p
             #projectTitle
             matTooltip="{{(currentProject$ | async)?.longname}}"
@@ -26,6 +30,7 @@
             {{ (currentProject$ | async)?.longname }}
           </p>
         </div>
+        }
         <mat-list class="main-list">
           <mat-divider />
           <a
@@ -38,7 +43,6 @@
               <p>Advanced Search</p>
             </span>
           </a>
-
           <a
             mat-list-item
             class="section-title"
@@ -49,19 +53,14 @@
               <p>Project Description</p>
             </span>
           </a>
-
-          <a
-            *ngIf="isAdmin$ | async"
-            mat-list-item
-            class="section-title"
-            [routerLink]="[routeConstants.settings]"
-            routerLinkActive="active">
+          @if (isAdmin$ | async) {
+          <a mat-list-item class="section-title" [routerLink]="[routeConstants.settings]" routerLinkActive="active">
             <span matListItemTitle class="section-label">
               <mat-icon class="sidenav-prefix-icon">settings</mat-icon>
               <p>Project Settings</p>
             </span>
           </a>
-
+          }
           <a
             mat-list-item
             class="section-title"
@@ -73,12 +72,9 @@
             </span>
           </a>
           <mat-divider />
-
           <!-- Project Ontologies -->
-          <mat-accordion
-            *ngFor="let onto of projectOntologies$ | async; trackBy: trackByFn; let first = first"
-            multi
-            [displayMode]="'flat'">
+          @for (onto of projectOntologies$ | async; track trackByFn($index, onto); let first = $first) {
+          <mat-accordion multi [displayMode]="'flat'">
             <mat-expansion-panel [expanded]="first">
               <mat-expansion-panel-header>
                 <div class="sidenav-panel-header">
@@ -99,11 +95,13 @@
             </mat-expansion-panel>
             <mat-divider />
           </mat-accordion>
+          }
         </mat-list>
       </div>
     </mat-sidenav>
     <mat-sidenav-content>
-      <div *ngIf="!sideNavOpened" class="sidenav-expand-btn">
+      @if (!sideNavOpened) {
+      <div class="sidenav-expand-btn">
         <button
           mat-icon-button
           color="primary"
@@ -115,15 +113,17 @@
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
+      }
       <div class="main-content">
         <router-outlet />
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
-
-<ng-template #StatusMsg>
-  <div class="content large middle">
-    <app-status *ngIf="hasLoadingErrors$ | async" [status]="404" />
-  </div>
-</ng-template>
+} @else {
+<div class="content large middle">
+  @if (hasLoadingErrors$ | async) {
+  <app-status [status]="404" />
+  }
+</div>
+}

@@ -8,7 +8,8 @@
   </div>
 
   <!-- cookie information banner -->
-  <div class="cookie-banner" *ngIf="showCookieBanner">
+  @if (showCookieBanner) {
+  <div class="cookie-banner">
     <p class="note">
       This web-application uses cookies to provide you with a greater user experience. By using the application you
       accept our
@@ -18,4 +19,5 @@
       <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">ACCEPT</button>
     </div>
   </div>
+  }
 </div>

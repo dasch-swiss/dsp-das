@@ -1,14 +1,7 @@
 <!-- When withMultipleSelection is false and user can select only one resource at a time to view -->
 <mat-list class="resource-list">
-  <div
-    class="link"
-    [class.selected-resource]="selectedResourceIdx.indexOf(i) > -1"
-    [class.border-bottom]="!last"
-    *ngFor="
-            let resource of resources;
-            let i = index;
-            let last = last
-        ">
+  @for ( resource of resources; track resource; let i = $index; let last = $last) {
+  <div class="link" [class.selected-resource]="selectedResourceIdx.indexOf(i) > -1" [class.border-bottom]="!last">
     <mat-list-item>
       <div matListItemTitle class="res-list-item-container">
         <div
@@ -29,21 +22,25 @@
               {{ resource.entityInfo.classes[resource.type].label }}
             </p>
             <h3 matLine class="res-class-value shorten-multiline-text">{{ resource.label }}</h3>
-            <div matLine *ngFor="let prop of resource.properties | keyvalue">
-              <div matLine *ngFor="let val of prop.value; let i = index">
+            @for (prop of resource.properties | keyvalue; track prop) {
+            <div matLine>
+              @for (val of prop.value; track val; let i = $index) {
+              <div matLine>
                 <span class="res-prop-label shorten-long-text">
                   {{ resource.entityInfo.properties[val.property].label }}
                 </span>
                 <div class="shorten-long-text" [innerHtml]="val.strval | internalLinkReplacer | addTargetBlank"></div>
               </div>
+              }
             </div>
+            }
           </div>
         </div>
         <!-- if withMultipleSelection is true, we display checkbox -->
         <div class="res-checkbox">
+          @if (withMultipleSelection) {
           <mat-checkbox
             #ckbox
-            *ngIf="withMultipleSelection"
             id="{{ i }}"
             (change)="
                             selectResource({
@@ -54,8 +51,10 @@
                                 isCheckbox: true
                             })
                         " />
+          }
         </div>
       </div>
     </mat-list-item>
   </div>
+  }
 </mat-list>

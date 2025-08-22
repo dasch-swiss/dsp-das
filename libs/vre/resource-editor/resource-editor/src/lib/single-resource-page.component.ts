@@ -5,10 +5,9 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'app-single-resource-page',
-  template: ` <app-resource-fetcher
-    *ngIf="resourceIri$ | async as resourceIri"
-    [resourceIri]="resourceIri"
-    [resourceVersion]="resourceVersion$ | async" />`,
+  template: ` @if (resourceIri$ | async; as resourceIri) {
+    <app-resource-fetcher [resourceIri]="resourceIri" [resourceVersion]="resourceVersion$ | async" />
+  }`,
 })
 export class SingleResourcePageComponent {
   resourceIri$ = this._route.params.pipe(
