@@ -4,6 +4,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
 import { UserPermissions } from './user-permissions';
@@ -17,7 +18,7 @@ export class ProjectPageService {
 
   currentProject$ = this._reloadProjectSubject.pipe(
     switchMap(() => this._currentProjectUuidSubject),
-    switchMap(projectUuid => this.projectApiService.get(projectUuid)),
+    switchMap(projectUuid => this.projectApiService.get(this._projectService.uuidToIri(projectUuid))),
     map(response => response.project),
     shareReplay(1)
   );
@@ -47,7 +48,8 @@ export class ProjectPageService {
     private projectApiService: ProjectApiService,
     private _store: Store,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection
+    private _dspApiConnection: KnoraApiConnection,
+    private _projectService: ProjectService
   ) {}
 
   setCurrentProjectUuid(projectUuid: string): void {

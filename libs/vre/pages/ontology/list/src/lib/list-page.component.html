@@ -4,7 +4,7 @@
 <ng-container *ngIf="(isListsLoading$ | async) === false && (rootListNodeInfo$ | async) as list">
   <mat-toolbar class="sticky-header">
     <mat-toolbar-row class="list-editor-header">
-      <a class="back-button" mat-button [routerLink]="['..', '..', 'data-models']" matTooltip="Back to data models">
+      <a class="back-button" mat-button (click)="navigateToDataModels()" matTooltip="Back to data models">
         <mat-icon class="centered-icon">chevron_left</mat-icon>
       </a>
       <div class="list-info">

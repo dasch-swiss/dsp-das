@@ -61,9 +61,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._route.params.subscribe(params => {
-      this._projectPageService.setCurrentProjectUuid(
-        this.projectService.uuidToIri(params[RouteConstants.uuidParameter])
-      );
+      this._projectPageService.setCurrentProjectUuid(params[RouteConstants.uuidParameter]);
     });
 
     this._projectPageService.currentProject$.subscribe(project => {

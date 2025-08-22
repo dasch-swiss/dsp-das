@@ -61,7 +61,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
         takeUntil(this._destroy)
       )
       .subscribe(project => {
-        this._navigateToDataModels();
+        this.navigateToDataModels();
         this._store.dispatch(new LoadListsInProjectAction(project.id));
       });
   }
@@ -80,9 +80,10 @@ export class ListPageComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  private _navigateToDataModels() {
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-    this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
+  navigateToDataModels() {
+    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
+      this._router.navigate([RouteConstants.project, projectUuid, RouteConstants.dataModels]);
+    });
   }
 
   ngOnDestroy() {
