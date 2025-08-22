@@ -18,11 +18,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ApiResponseError, Constants, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
-import {
-  ComponentCommunicationEventService,
-  Events,
-  SortingHelper,
-} from '@dasch-swiss/vre/shared/app-helper-services';
+import { ComponentCommunicationEventService, Events, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subscription, tap } from 'rxjs';
 

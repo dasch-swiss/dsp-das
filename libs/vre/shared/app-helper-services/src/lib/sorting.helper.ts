@@ -3,7 +3,11 @@ export class SortingHelper {
    * compares value by value and sorts in alphabetical order using the provided first key, in case the comparison
    * of the values results in zero the second key is used if provided.
    */
-  static keySortByAlphabetical<T extends object>(value: Array<T>, firstSortKey: keyof T, secondSortKey?: keyof T): Array<T> {
+  static keySortByAlphabetical<T extends object>(
+    value: Array<T>,
+    firstSortKey: keyof T,
+    secondSortKey?: keyof T
+  ): Array<T> {
     const sortedArray = value.slice();
     sortedArray.sort((a: T, b: T) => {
       if (String(a[firstSortKey]).toLowerCase() < String(b[firstSortKey]).toLowerCase()) {
