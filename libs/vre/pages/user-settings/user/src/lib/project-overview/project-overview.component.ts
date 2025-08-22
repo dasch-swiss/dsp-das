@@ -26,7 +26,8 @@ export class ProjectOverviewComponent implements AfterViewInit {
   );
 
   notUsersActiveProjects$ = combineLatest([this._allProjectsService.otherProjects$, this._filter$]).pipe(
-    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm))), tap(() => {
+    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm))),
+    tap(() => {
       this.loading = false;
     })
   );
