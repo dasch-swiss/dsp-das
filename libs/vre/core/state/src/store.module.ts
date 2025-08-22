@@ -2,9 +2,8 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { NgxsRouterPluginModule, RouterStateSerializer } from '@ngxs/router-plugin';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
-import { CustomRouterStateSerializer } from './lib/router/router-state.serializer';
 import { DEVTOOLS_REDUX_CONFIG, LOGGER_CONFIG, OPTIONS_CONFIG } from './store.config';
 import { ConfigState, ListsState, SetConfigAction, UserState } from './index';
 
@@ -23,7 +22,6 @@ const STATE_MODULES = [UserState, ListsState, ConfigState];
     NgxsRouterPluginModule.forRoot(),
   ],
   providers: [
-    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     {
       provide: APP_INITIALIZER,
       useFactory: initializeConfigState,
