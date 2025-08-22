@@ -17,14 +17,16 @@ import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
   template: `
     <div class="app-projects">
       <app-projects-list
-        [projectsList]="activeProjects$ | async"
+        *ngIf="activeProjects$ | async as projectsList"
+        [projectsList]="projectsList"
         [isUserActive]="true"
         (refreshParent)="updateAndRefresh()"
         [createNewButtonEnabled]="true"
         [isUsersProjects]="isUsersProjects"
         data-cy="active-projects-section" />
       <app-projects-list
-        [projectsList]="inactiveProjects$ | async"
+        *ngIf="inactiveProjects$ | async as inactiveProjects"
+        [projectsList]="inactiveProjects"
         [isUserActive]="false"
         [isUsersProjects]="isUsersProjects"
         (refreshParent)="updateAndRefresh()"
