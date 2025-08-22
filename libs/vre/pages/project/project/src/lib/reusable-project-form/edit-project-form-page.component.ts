@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { UpdateProjectRequest } from '@dasch-swiss/dsp-js';
+import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
-import { map, tap } from 'rxjs';
+import { map, switchMap, take } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { ProjectForm } from './project-form.type';
-import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 
 @Component({
   selector: 'app-edit-project-form-page',
@@ -47,13 +47,24 @@ export class EditProjectFormPageComponent {
   constructor(
     private _projectPageService: ProjectPageService,
     private _projectApiService: ProjectApiService,
-    private _router: Router
+    private _notification: NotificationService
   ) {}
 
   onSubmit() {
-    return this._projectApiService.update(, projectData).pipe(
-    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
-      this._router.navigate([`${RouteConstants.projectRelative}/${projectUuid}`]);
-    });
+    const projectData: UpdateProjectRequest = {
+      longname: this.form.value.longname,
+      description: this.form.getRawValue().description,
+      keywords: this.form.value.keywords,
+    };
+
+    this._projectPageService.currentProject$
+      .pipe(
+        take(1),
+        switchMap(project => this._projectApiService.update(project.id, projectData))
+      )
+      .subscribe(() => {
+        this._projectPageService.reloadProject();
+        this._notification.openSnackBar('Project updated');
+      });
   }
 }
