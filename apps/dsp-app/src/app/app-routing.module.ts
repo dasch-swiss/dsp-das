@@ -95,7 +95,6 @@ const routes: Routes = [
         ],
       },
       {
-        canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
         component: ResourceClassBrowserPageComponent,
       },
