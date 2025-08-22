@@ -50,12 +50,11 @@ export class ProjectPageService {
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  setCurrentProject(projectUuid: string): void {
+  setCurrentProjectUuid(projectUuid: string): void {
     this._currentProjectUuidSubject.next(projectUuid);
   }
 
   reloadProject() {
-    console.log('reloading project');
     this._reloadProjectSubject.next(null);
   }
 }
