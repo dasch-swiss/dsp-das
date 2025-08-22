@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
@@ -93,14 +92,12 @@ export class UsersListComponent {
 
   sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  project$ = this._projectPageService.currentProject$;
 
   constructor(
     private readonly _matDialog: MatDialog,
     private readonly _store: Store,
     private readonly _ts: TranslateService,
-    private _usersTabService: UsersTabService,
-    private _projectPageService: ProjectPageService
+    private _usersTabService: UsersTabService
   ) {}
 
   trackByFn = (index: number, item: ReadUser) => `${index}-${item.id}`;
