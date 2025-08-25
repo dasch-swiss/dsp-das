@@ -16,7 +16,7 @@ Only proceed with changes after receiving clear approval from the user.
 
 ## Project Overview
 
-This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 17.3.0, NX 19.0.8, and Node.js 20.9.0.
+This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 18.2.9, NX 19.8.9, and Node.js 20.11.1.
 
 The main application is **DSP-APP** - a user interface for the Swiss National Data and Service Center for the Humanities (DaSCH) research data repository, connecting to DSP-API backend and implementing DSP-JS client library.
 
@@ -38,6 +38,15 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 - `npm run build-prod` or `nx run dsp-app:build:production` - Build for production
 - `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
 - `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
+
+### OpenAPI Code Generation
+- `npm run generate-openapi-module` - Generate TypeScript client from OpenAPI spec
+- `npm run check-openapi-sync` - Smart diff check ignoring metadata (same logic as CI)
+- `npm run update-openapi` - Update spec file and regenerate client (one command)
+- Uses local spec file `libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml`
+- Smart diff via `scripts/check-openapi-sync.sh` ignores metadata changes
+- Only fails on meaningful changes (endpoints, schemas, parameters)
+- Script supports `--verbose` flag for detailed diff output
 
 ### Library Development
 - `nx run [library-name]:test` - Test specific library
