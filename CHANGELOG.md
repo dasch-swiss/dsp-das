@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.41.1](https://github.com/dasch-swiss/dsp-das/compare/v11.41.0...v11.41.1) (2025-08-25)
+
+
+### Maintenances
+
+* remove CODEOWNERS ([#2490](https://github.com/dasch-swiss/dsp-das/issues/2490)) ([f31e0f0](https://github.com/dasch-swiss/dsp-das/commit/f31e0f01e1ad6d25e5ee48b6f816aae578ecbb57))
+
 ## [11.41.0](https://github.com/dasch-swiss/dsp-das/compare/v11.40.0...v11.41.0) (2025-08-25)
 
 
