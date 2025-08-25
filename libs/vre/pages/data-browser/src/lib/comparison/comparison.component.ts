@@ -1,60 +1,58 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { LoadResourceClassItemsCountAction } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
-import { ShortResInfo } from '../list-view/list-view.component';
-import { SplitSize } from '../split-size.interface';
 
 @Component({
   selector: 'app-comparison',
   template: `
-    <div class="content">
+    <div class="content" [ngClass]="{ fixedHeight: resourceIds.length > 0 }">
       <as-split direction="vertical">
         <as-split-area>
           <!-- note: This part is repeating twice (not added as component) because angular-split
                                                                                                                           library does not support addition div inside as-split -->
-          <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+          <as-split direction="horizontal">
             <as-split-area *ngFor="let res of topRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+              <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
             </as-split-area>
           </as-split>
         </as-split-area>
         <as-split-area *ngIf="resourcesNumber > 3">
-          <as-split direction="horizontal" (dragEnd)="splitSizeChanged = $event">
+          <as-split direction="horizontal">
             <as-split-area *ngFor="let res of bottomRow">
-              <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+              <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
             </as-split-area>
           </as-split>
         </as-split-area>
       </as-split>
     </div>
+
+    <ng-template #resourceTemplate let-res="res">
+      <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+    </ng-template>
   `,
   styles: [
     `
       .content {
         width: 100%;
+      }
+      .fixedHeight {
+        // fixed height makes split-area works.
         height: 1400px;
       }
     `,
   ],
 })
 export class ComparisonComponent implements OnChanges {
-  @Input() resources?: ShortResInfo[];
-
-  // parent (or own) split size changed
-  @Input() splitSizeChanged: SplitSize;
+  @Input({ required: true }) resourceIds!: string[];
 
   topRow: string[] = [];
   bottomRow: string[] = [];
 
   get resourcesNumber() {
-    return this.resources.length;
+    return this.resourceIds.length;
   }
 
-  constructor(private _store: Store) {}
-
   ngOnChanges(): void {
-    const resourceIds = this.resources.map(res => res.id);
+    const resourceIds = this.resourceIds;
 
     if (this.resourcesNumber < 4) {
       this.topRow = resourceIds;
@@ -65,6 +63,6 @@ export class ComparisonComponent implements OnChanges {
   }
 
   updateResourceCount(resource: ReadResource) {
-    this._store.dispatch(new LoadResourceClassItemsCountAction(resource));
+    // TODO
   }
 }

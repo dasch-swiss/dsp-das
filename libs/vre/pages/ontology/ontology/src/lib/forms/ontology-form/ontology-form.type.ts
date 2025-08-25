@@ -13,7 +13,7 @@ export interface UpdateOntologyData {
 }
 
 export type OntologyForm = FormGroup<{
-  name: FormControl<string>;
+  name?: FormControl<string>;
   label: FormControl<string>;
   comment: FormControl<string>;
 }>;

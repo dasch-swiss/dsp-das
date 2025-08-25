@@ -4,20 +4,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
-  OnInit,
-  ViewChild,
-  OnDestroy,
-  Output,
   EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Cardinality, IHasProperty } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { Store } from '@ngxs/store';
 import { Subject, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -205,7 +204,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('propertyCardRipple') propertyCardRipple!: MatRipple;
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  isAdmin$ = this._projectPageService.hasProjectAdminRights$;
 
   isHovered = false;
   menuOpen = false;
@@ -220,7 +219,7 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private _dialog: MatDialog,
     private _notification: NotificationService,
     private _oes: OntologyEditService,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnInit() {
