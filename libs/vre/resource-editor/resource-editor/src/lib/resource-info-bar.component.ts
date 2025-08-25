@@ -14,8 +14,8 @@ import { map, Observable } from 'rxjs';
       Resource of the project
       <a (click)="openProject(project)" class="link" [title]="project.longname">
         <strong>{{ project?.shortname }}</strong></a
-      ><span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
-        >, created
+      >,<span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
+        created
         <span *ngIf="resourceAttachedUser"
           >by
           {{
