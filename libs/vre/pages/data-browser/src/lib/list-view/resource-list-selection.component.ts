@@ -8,27 +8,17 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
 @Component({
   selector: 'app-resource-list-selection',
   template: `
-    <div style="background: #ebebeb; padding: 16px; display: flex; justify-content: space-between">
-      <div style="display: flex; justify-content: space-between; flex: 1; align-items: center">
-        <div>
-          <div>{{ count$ | async }} resources selected</div>
-          <button
-            mat-button
-            *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
-            (click)="openCreateLinkDialog(selectedResources)">
-            <mat-icon>link</mat-icon>
-            Create a link object
-          </button>
-        </div>
-
-        <button mat-button *ngIf="allSelected$ | async; else selectAllTpl" (click)="unselectAll()">Unselect all</button>
-      </div>
+    <div style="background: #336790; color: white; padding: 16px; display: flex; gap: 8px; align-items: center">
+      <div style="flex: 1">{{ count$ | async }} resources selected</div>
+      <button
+        mat-flat-button
+        *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
+        (click)="openCreateLinkDialog(selectedResources)">
+        Create a link object
+      </button>
+      <button mat-flat-button (click)="selectAll()">Select all</button>
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
-
-    <ng-template #selectAllTpl>
-      <button mat-button (click)="selectAll()">Select all</button>
-    </ng-template>
   `,
 })
 export class ResourceListSelectionComponent {
@@ -37,10 +27,6 @@ export class ResourceListSelectionComponent {
   count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
   showCreateLink$ = combineLatest([this.count$, this.multipleViewerService.hasRightsToShowCreateLinkObject$]).pipe(
     map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
-  );
-
-  allSelected$ = this.multipleViewerService.selectedResources$.pipe(
-    map(resources => this.resources.every(resource => resources.includes(resource)))
   );
 
   constructor(
