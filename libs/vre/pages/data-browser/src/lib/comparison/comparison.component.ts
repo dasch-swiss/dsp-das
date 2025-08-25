@@ -4,7 +4,7 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 @Component({
   selector: 'app-comparison',
   template: `
-    <div class="content">
+    <div class="content" [ngClass]="{ fixedHeight: resourceIds.length > 0 }">
       <as-split direction="vertical">
         <as-split-area>
           <!-- note: This part is repeating twice (not added as component) because angular-split
@@ -33,6 +33,9 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
     `
       .content {
         width: 100%;
+      }
+      .fixedHeight {
+        // fixed height makes split-area works.
         height: 1400px;
       }
     `,
