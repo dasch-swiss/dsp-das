@@ -26,7 +26,6 @@ import {
   PropertyFormItem,
   SearchItem,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
@@ -193,56 +192,6 @@ export class PropertyFormComponent implements AfterViewInit {
         value: searchValue,
         objectType: propFormItem.selectedProperty?.objectType,
       });
-    }
-  }
-
-  onChildLoadMoreSearchResults(searchItem: SearchItem): void {
-    this.emitLoadMoreSearchResults.emit(searchItem);
-  }
-
-  onAddChildPropertyFormClicked(): void {
-    const propFormItem = this.propertyFormItem;
-    this.emitAddChildPropertyForm.emit(propFormItem);
-  }
-
-  onRemoveChildPropertyFormClicked(childProperty: PropertyFormItem) {
-    this.emitRemoveChildPropertyForm.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedPropertyChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedPropertyChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedOperatorChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedOperatorChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildValueChanged(childProperty: PropertyFormItem): void {
-    this.emitChildValueChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildResourceSearchValueChanged(searchValue: SearchItem) {
-    this.emitResourceSearchValueChanged.emit(searchValue);
-  }
-
-  // get the list of child properties of a linked resource
-  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
-    if (Array.isArray(value)) {
-      return value;
-    } else {
-      return undefined;
     }
   }
 
