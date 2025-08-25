@@ -6,7 +6,7 @@ import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { combineLatest, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
 import { ListItemService } from './list-item/list-item.service';
 
@@ -23,8 +23,10 @@ export class ListPageComponent implements OnInit, OnDestroy {
     map(params => params.get(RouteConstants.listParameter))
   );
 
-  rootListNodeInfo$ = this.routeListIri$.pipe(
-    switchMap(listIri => this._listApiService.get(listIri!)),
+  rootListNodeInfo$ = combineLatest([this.routeListIri$, this._projectPageService.currentProject$]).pipe(
+    switchMap(([listIri, project]) =>
+      this._listApiService.get(`http://rdfh.ch/lists/${project.shortcode}/${listIri!}`)
+    ),
     map(res => (res as ListResponse).list.listinfo)
   );
 
