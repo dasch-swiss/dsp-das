@@ -9,6 +9,8 @@ export class MultipleViewerService {
 
   selectMode = false;
 
+  searchKeyword?: string;
+
   addResources(resources: ReadResource[]) {
     const currentResources = this._selectedResourcesSubject.getValue();
     if (!this.selectMode && currentResources.length === 1) {

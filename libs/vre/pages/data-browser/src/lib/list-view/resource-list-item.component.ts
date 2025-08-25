@@ -8,7 +8,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   selector: 'app-resource-list-item',
   template: `
     <mat-list-item
-      [lines]="3"
+      [lines]="multipleViewerService.searchKeyword ? 3 : 2"
       [ngStyle]="{
         'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
       }"
@@ -22,9 +22,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div matLine>
             {{ resource.label }}
           </div>
-          <div matLine *ngIf="hasSearchResult" class="shorten">
-            Search result LOREM LOREM LOREM LOREM LOREM LOREM LOREM LOREM LOREM LOREM
-          </div>
+          <div matLine *ngIf="multipleViewerService.searchKeyword" class="shorten">Search result</div>
         </div>
 
         <mat-checkbox

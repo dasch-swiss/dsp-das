@@ -19,6 +19,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
 })
 export class MultipleViewerGatewayComponent implements OnInit {
   @Input({ required: true }) resources!: ReadResource[];
+  @Input() searchKeyword?: string;
 
   constructor(private _multipleViewerService: MultipleViewerService) {}
 
@@ -26,5 +27,7 @@ export class MultipleViewerGatewayComponent implements OnInit {
     if (this.resources.length > 0) {
       this._multipleViewerService.selectOneResource(this.resources[0]);
     }
+
+    this._multipleViewerService.searchKeyword = this.searchKeyword;
   }
 }
