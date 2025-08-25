@@ -1,36 +1,37 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, EventType, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { filter, map, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
   selector: 'app-projects-sidenav-links',
   template: `
-    <mat-list>
+    <mat-list *ngIf="link$ | async as link">
       <app-projects-sidenav-links-item
         [link]="[routeConstants.advancedSearch]"
         [label]="'Advanced Search'"
         [icon]="'search'"
-        [active]="true" />
+        [active]="link === 'advanced-search'" />
 
       <app-projects-sidenav-links-item
         [link]="[routeConstants.projectDescription]"
         [label]="'Project Description'"
         [icon]="'description'"
-        [active]="true" />
+        [active]="link === 'description'" />
 
       <app-projects-sidenav-links-item
         *ngIf="hasProjectAdminRights$ | async"
         [link]="[routeConstants.settings]"
         [label]="'Project Settings'"
         [icon]="'settings'"
-        [active]="true" />
+        [active]="link === 'settings'" />
 
       <app-projects-sidenav-links-item
         [link]="[routeConstants.dataModels]"
         [label]="'Data Model'"
         [icon]="'bubble_chart'"
-        [active]="false" />
-      <!-- TODO -->
+        [active]="link === 'data-models'" />
     </mat-list>
   `,
   styles: [
@@ -46,5 +47,16 @@ export class ProjectSidenavLinksComponent {
 
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
-  constructor(private _projectPageService: ProjectPageService) {}
+  link$ = this._router.events.pipe(
+    filter(v => v.type === EventType.NavigationEnd),
+    startWith(null),
+    switchMap(() => this._route.firstChild!.url),
+    map(url => url[0].path)
+  );
+
+  constructor(
+    private _projectPageService: ProjectPageService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) {}
 }
