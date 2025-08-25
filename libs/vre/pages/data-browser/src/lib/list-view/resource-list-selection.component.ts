@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
@@ -36,7 +35,7 @@ export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];
 
   count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
-  showCreateLink$ = combineLatest([this.count$, this._projectPageService.hasProjectMemberRights$]).pipe(
+  showCreateLink$ = combineLatest([this.count$, this.multipleViewerService.hasRightsToShowCreateLinkObject$]).pipe(
     map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
   );
 
@@ -46,8 +45,7 @@ export class ResourceListSelectionComponent {
 
   constructor(
     public multipleViewerService: MultipleViewerService,
-    private _dialog: MatDialog,
-    private _projectPageService: ProjectPageService
+    private _dialog: MatDialog
   ) {}
 
   selectAll() {

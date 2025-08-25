@@ -9,11 +9,16 @@ import { ResourceResultService } from './resource-result.service';
 
 @Component({
   selector: 'app-resource-class-browser-page',
-  template: ` <app-multiple-viewer-gateway *ngIf="resources$ | async as resources" [resources]="resources" /> `,
+  template: `
+    <app-multiple-viewer-gateway
+      *ngIf="resources$ | async as resources"
+      [resources]="resources"
+      [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
+  `,
   providers: [ResourceResultService],
 })
 export class ResourceClassBrowserPageComponent implements OnChanges {
-  resources$ = combineLatest([this._projectPageService.currentProject$, this._route.params]).pipe(
+  resources$ = combineLatest([this.projectPageService.currentProject$, this._route.params]).pipe(
     switchMap(([project, params]) => {
       const ontologyLabel = params[RouteConstants.ontoParameter];
       const classLabel = params[RouteConstants.classParameter];
@@ -41,7 +46,7 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     protected _router: Router,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _projectPageService: ProjectPageService
+    public projectPageService: ProjectPageService
   ) {}
 
   ngOnChanges() {

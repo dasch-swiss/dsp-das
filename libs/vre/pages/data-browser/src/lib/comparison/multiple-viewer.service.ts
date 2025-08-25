@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class MultipleViewerService {
   private _selectedResourcesSubject = new BehaviorSubject<ReadResource[]>([]);
   selectedResources$ = this._selectedResourcesSubject.asObservable();
 
+  hasRightsToShowCreateLinkObject$!: Observable<boolean>;
   selectMode = false;
 
   searchKeyword?: string;
+
+  onInit(hasRightsToCreateLinkObject$: Observable<boolean>) {
+    this.hasRightsToShowCreateLinkObject$ = hasRightsToCreateLinkObject$;
+  }
 
   addResources(resources: ReadResource[]) {
     const currentResources = this._selectedResourcesSubject.getValue();
