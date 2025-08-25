@@ -7,8 +7,8 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 @Component({
   selector: 'app-resource-list-item',
   template: `
-    <mat-list-item
-      [lines]="multipleViewerService.searchKeyword ? 3 : 2"
+    <div
+      style="padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #ebebeb"
       [ngStyle]="{
         'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
       }"
@@ -16,13 +16,17 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
       (click)="multipleViewerService.selectOneResource(resource)">
-      <div style="display: flex">
+      <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          <div class="mat-caption" matLine>{{ resource.resourceClassLabel }}</div>
-          <div matLine>
+          <div
+            style="    color: #979797;
+    font-size: 12px">
+            {{ resource.resourceClassLabel }}
+          </div>
+          <div style="color: black">
             {{ resource.label }}
           </div>
-          <div matLine *ngIf="multipleViewerService.searchKeyword" class="shorten">Search result</div>
+          <div *ngIf="multipleViewerService.searchKeyword" class="shorten">Found in: description, page, title</div>
         </div>
 
         <mat-checkbox
@@ -31,7 +35,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           (change)="onCheckboxChanged($event)"
           (click)="$event.stopPropagation()" />
       </div>
-    </mat-list-item>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
