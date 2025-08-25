@@ -7,10 +7,14 @@ import { MultipleViewerService } from './multiple-viewer.service';
   template: `
     <ng-container *ngIf="selectedResourceIds$ | async as selectedResourceIds">
       <app-comparison *ngIf="selectedResourceIds.length <= MAX_RESOURCES" [resourceIds]="selectedResourceIds" />
-      <div
-        *ngIf="selectedResourceIds.length > MAX_RESOURCES"
-        style="height: 100%; display: flex; align-items: center; justify-content: center">
-        Too many resources are selected to be displayed.
+      <div style="height: 100%; display: flex; align-items: center; justify-content: center">
+        <ng-container *ngIf="selectedResourceIds.length > MAX_RESOURCES">
+          Too many resources are selected to be displayed.
+        </ng-container>
+
+        <ng-container *ngIf="selectedResourceIds.length === 0">
+          Select a resource on the left panel to display.
+        </ng-container>
       </div>
     </ng-container>
   `,

@@ -46,4 +46,9 @@ export class MultipleViewerService {
     this._selectedResourcesSubject.next([resource]);
     this.selectMode = false;
   }
+
+  reset() {
+    this.selectMode = false;
+    this._selectedResourcesSubject.next([]);
+  }
 }

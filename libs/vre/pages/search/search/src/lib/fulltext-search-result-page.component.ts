@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 import { combineLatest, map, switchMap } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
 })
 export class FulltextSearchResultPageComponent {
   readonly resources$ = this._route.params.pipe(
-    map(params => params['q']),
+    map(params => params[RouteConstants.qParameter]),
     switchMap(query =>
       combineLatest([
         this._resourceResultService.pageIndex$.pipe(

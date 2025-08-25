@@ -10,18 +10,21 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   selector: 'app-resource-list-selection',
   template: `
     <div style="background: #ebebeb; padding: 16px; display: flex; justify-content: space-between">
-      <div>
-        <div>{{ count$ | async }} resources selected</div>
-        <button
-          mat-button
-          *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
-          (click)="openCreateLinkDialog(selectedResources)">
-          <mat-icon>link</mat-icon>
-          Create a link object
-        </button>
-      </div>
+      <div style="display: flex; justify-content: space-between; flex: 1; align-items: center">
+        <div>
+          <div>{{ count$ | async }} resources selected</div>
+          <button
+            mat-button
+            *ngIf="(showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async) as selectedResources"
+            (click)="openCreateLinkDialog(selectedResources)">
+            <mat-icon>link</mat-icon>
+            Create a link object
+          </button>
+        </div>
 
-      <button mat-button *ngIf="allSelected$ | async; else selectAllTpl" (click)="unselectAll()">Unselect all</button>
+        <button mat-button *ngIf="allSelected$ | async; else selectAllTpl" (click)="unselectAll()">Unselect all</button>
+      </div>
+      <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
 
     <ng-template #selectAllTpl>
@@ -53,6 +56,10 @@ export class ResourceListSelectionComponent {
 
   unselectAll() {
     this.multipleViewerService.removeResources(this.resources);
+  }
+
+  reset() {
+    this.multipleViewerService.reset();
   }
 
   openCreateLinkDialog(resources: ReadResource[]): void {
