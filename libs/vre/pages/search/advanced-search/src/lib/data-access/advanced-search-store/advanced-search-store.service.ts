@@ -130,7 +130,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
       // Filter out completely empty property forms (no property selected)
       const nonEmptyPropertyForms = propertyFormList.filter(prop => prop.selectedProperty);
-      
+
       // Check if there are any invalid non-empty property forms
       const hasInvalidPropertyForms = nonEmptyPropertyForms.some(prop => this.isPropertyFormItemListInvalid(prop));
 
@@ -139,7 +139,6 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
 
       // If no ontology is selected, disable search
       if (isOntologyUndefined) return true;
-
       // If there are valid non-empty property forms, enable search
       if (nonEmptyPropertyForms.length > 0) return false;
 
@@ -855,6 +854,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
         }
 
         if (!resourceClass) {
+          console.log('No resource class selected, loading all properties from the ontology');
           // No resource class selected - load all properties from the ontology
           return this._advancedSearchService.propertiesList(ontology.iri).pipe(
             tap({

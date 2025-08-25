@@ -97,66 +97,12 @@
       width: 100%;
 
       .label {
-        margin-block-end: 0%;
         font-size: 14px;
       }
-
-      mat-form-field {
-        width: 90%;
-        &.operator {
-          width: 40%;
-          min-width: 260px;
-        }
-      }
     }
   }
 }
 
-.action-buttons {
-  padding: 20px 0px;
-
-  &.right-margin {
-    margin-right: 4%;
-  }
-
-  button {
-    border-radius: 6px;
-    min-width: 132px;
-    height: 50px;
-
-    &:first-child {
-      margin-right: 20px;
-    }
-  }
-
-  button:disabled {
-    border: 1px solid #bdbfc1;
-
-    &.reset-button {
-      color: #bdbfc1;
-    }
-
-    &.search-button,
-    &.previous-search-button {
-      background-color: #bdbfc1;
-      color: white;
-    }
-  }
-
-  button:not(:disabled) {
-    border: 1px solid #336790;
-
-    &.reset-button {
-      color: #336790;
-    }
-
-    &.search-button,
-    &.previous-search-button {
-      background-color: #336790;
-      color: white;
-    }
-  }
-}
 
 .add-property-button {
   display: flex;

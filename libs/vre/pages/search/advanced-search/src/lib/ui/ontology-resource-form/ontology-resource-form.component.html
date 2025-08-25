@@ -1,42 +1,22 @@
-<div class="parent-property-container">
-  <div class="form-fields-container">
-    <div class="dropdown-container">
-      <div class="content">
-        <mat-form-field>
-          <mat-label>Data model</mat-label>
-          <mat-select
-            #ontologiesList
-            (selectionChange)="onSelectedOntologyChanged()"
-            name="ontologies"
-            appearance="fill"
-            [compareWith]="compareApiDataObjects">
-            <mat-option *ngIf="ontologiesLoading" disabled="true">Loading...</mat-option>
-            <ng-container *ngIf="!ontologiesLoading">
-              <mat-option *ngFor="let onto of ontologies" [value]="onto"> {{ onto.label }} </mat-option>
-            </ng-container>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="dropdown-container">
-      <div class="content">
-        <mat-form-field>
-          <mat-label>Resource class (optional)</mat-label>
-          <mat-select
-            #resourceClassesList
-            (selectionChange)="onSelectedResourceClassChanged()"
-            name="resourceClass"
-            appearance="fill"
-            [compareWith]="compareApiDataObjects">
-            <mat-option *ngIf="resourceClassesLoading" disabled="true">Loading...</mat-option>
-            <ng-container *ngIf="!resourceClassesLoading">
-              <mat-option>None</mat-option>
-              <mat-option *ngFor="let class of resourceClasses" [value]="class"> {{ class.label }} </mat-option>
-            </ng-container>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-  <div class="side-container"></div>
-</div>
+<mat-form-field style="width: 100%">
+  <mat-label>Data model</mat-label>
+  <mat-select #ontologiesList (selectionChange)="onSelectedOntologyChanged()" [compareWith]="compareApiDataObjects">
+    <mat-option *ngIf="ontologiesLoading" disabled="true">Loading...</mat-option>
+    <ng-container *ngIf="!ontologiesLoading">
+      <mat-option *ngFor="let onto of ontologies" [value]="onto"> {{ onto.label }} </mat-option>
+    </ng-container>
+  </mat-select>
+</mat-form-field>
+<mat-form-field style="width: 100%">
+  <mat-label>Resource class</mat-label>
+  <mat-select
+    #resourceClassesList
+    (selectionChange)="onSelectedResourceClassChanged()"
+    [compareWith]="compareApiDataObjects">
+    <mat-option *ngIf="resourceClassesLoading" disabled="true">Loading...</mat-option>
+    <ng-container *ngIf="!resourceClassesLoading">
+      <mat-option [value]="searchAllResourceClassesOption">{{ searchAllResourceClassesOption.label }}</mat-option>
+      <mat-option *ngFor="let resClass of resourceClasses" [value]="resClass"> {{ resClass.label }} </mat-option>
+    </ng-container>
+  </mat-select>
+</mat-form-field>

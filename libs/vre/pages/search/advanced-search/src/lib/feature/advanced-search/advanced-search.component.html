@@ -1,17 +1,9 @@
 <div class="advanced-search-container">
-  <div class="header">
-    <div class="title">
-      <p>{{ 'pages.search.advancedSearch.title' | translate }}</p>
-    </div>
-    <div class="action-buttons right-margin">
-      <button
-        class="previous-search-button"
-        [disabled]="!previousSearchObject"
-        mat-button
-        (click)="loadPreviousSearch()">
-        {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
-      </button>
-    </div>
+  <div class="advanced-search-header">
+    <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
+    <button [disabled]="!previousSearchObject" mat-stroked-button color="primary" (click)="loadPreviousSearch()">
+      {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
+    </button>
   </div>
   <div
     *ngIf="{
@@ -33,7 +25,8 @@
             resourcesSearchResults: resourcesSearchResults$ | async,
             resourcesSearchNoResults: resourcesSearchNoResults$ | async,
             orderByButtonDisabled: orderByButtonDisabled$ | async,
-        } as asyncData">
+        } as asyncData"
+    class="advanced-search-item">
     <app-ontology-resource-form
       [ontologies]="asyncData.ontologies"
       [ontologiesLoading]="asyncData.ontologiesLoading"
@@ -43,34 +36,45 @@
       [selectedResourceClass]="asyncData.selectedResourceClass"
       (emitSelectedOntology)="handleSelectedOntology($event)"
       (emitSelectedResourceClass)="handleSelectedResourceClass($event)" />
+
     <ng-container *ngFor="let propertyForm of asyncData.propertyFormList; let isLast = last">
-      <app-property-form
-        [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
-        [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
-        [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
-        [resourcesSearchResults]="asyncData.resourcesSearchResults"
-        [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
-        [propertyFormItem]="propertyForm"
-        [properties]="asyncData.filteredProperties"
-        [propertiesLoading]="asyncData.propertiesLoading"
-        [selectedProperty]="propertyForm.selectedProperty"
-        [selectedOperator]="propertyForm.selectedOperator"
-        [isLastInDOM]="isLast"
-        (emitRemovePropertyForm)="handleRemovePropertyForm($event)"
-        (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
-        (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
-        (emitSelectedMatchPropertyResourceClassChanged)="handleSelectedMatchPropertyResourceClassChanged($event)"
-        (emitSearchValueChanged)="handleSearchValueChanged($event)"
-        (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
-        (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
-        (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
-        (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
-        (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
-        (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
-        (emitChildValueChanged)="handleChildValueChanged($event)" />
-      
+      <div style="display: flex; width: 100%; padding-left: 2em">
+        <app-property-form
+          class="advanced-search-item"
+          [matchResourceClassesLoading]="asyncData.matchResourceClassesLoading"
+          [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
+          [resourcesSearchResultsCount]="asyncData.resourcesSearchResultsCount"
+          [resourcesSearchResults]="asyncData.resourcesSearchResults"
+          [resourcesSearchNoResults]="asyncData.resourcesSearchNoResults"
+          [propertyFormItem]="propertyForm"
+          [properties]="asyncData.filteredProperties"
+          [propertiesLoading]="asyncData.propertiesLoading"
+          [selectedProperty]="propertyForm.selectedProperty"
+          [selectedOperator]="propertyForm.selectedOperator"
+          (emitSelectedPropertyChanged)="handleSelectedPropertyChanged($event)"
+          (emitSelectedOperatorChanged)="handleSelectedOperatorChanged($event)"
+          (emitSelectedMatchPropertyResourceClassChanged)="handleSelectedMatchPropertyResourceClassChanged($event)"
+          (emitSearchValueChanged)="handleSearchValueChanged($event)"
+          (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
+          (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)"
+          (emitAddChildPropertyForm)="handleAddChildPropertyForm($event)"
+          (emitRemoveChildPropertyForm)="handleRemoveChildPropertyForm($event)"
+          (emitChildSelectedPropertyChanged)="handleChildSelectedPropertyChanged($event)"
+          (emitChildSelectedOperatorChanged)="handleChildSelectedOperatorChanged($event)"
+          (emitChildValueChanged)="handleChildValueChanged($event)" />
+        <div class="remove-button-container" *ngIf="!isLast && propertyForm.selectedProperty">
+          <button
+            mat-icon-button
+            (click)="handleRemovePropertyForm(propertyForm)"
+            class="remove-property-button"
+            matTooltip="Remove search criteria">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+      </div>
       <!-- Subcriteria component -->
       <app-property-form-subcriteria
+        class="advanced-search-item"
         [parentProperty]="propertyForm"
         [childProperties]="getLinkMatchPropertyFormItems(propertyForm.searchValue) || []"
         [resourcesSearchResultsLoading]="asyncData.resourcesSearchResultsLoading"
@@ -85,6 +89,7 @@
         (emitResourceSearchValueChanged)="handleResourceSearchValueChanged($event)"
         (emitLoadMoreSearchResults)="handleLoadMoreSearchResults($event)" />
     </ng-container>
+
     <app-order-by
       [orderByList]="asyncData.propertiesOrderByList"
       [orderByDisabled]="asyncData.orderByButtonDisabled"

@@ -76,7 +76,6 @@ export class PropertyFormComponent implements AfterViewInit {
   @Input() selectedOperator: string | undefined = undefined;
   @Input() isLastInDOM = false;
 
-  @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedMatchPropertyResourceClassChanged = new EventEmitter<PropertyFormItem>();
@@ -112,12 +111,6 @@ export class PropertyFormComponent implements AfterViewInit {
 
     if (this.resourceClassList && this.propertyFormItem.selectedMatchPropertyResourceClass) {
       this.resourceClassList.value = this.propertyFormItem.selectedMatchPropertyResourceClass;
-    }
-  }
-
-  onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
-    if (propFormItem) {
-      this.emitRemovePropertyForm.emit(propFormItem);
     }
   }
 

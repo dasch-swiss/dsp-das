@@ -1,8 +1,18 @@
 <div class="action-buttons">
-  <button mat-button class="reset-button" [disabled]="resetButtonDisabled" (click)="onResetButtonClicked()">
+  <button
+    mat-button
+    mat-stroked-button
+    color="primary"
+    [disabled]="resetButtonDisabled"
+    (click)="onResetButtonClicked()">
     Reset
   </button>
-  <button mat-button class="search-button" [disabled]="searchButtonDisabled" (click)="onSearchButtonClicked()">
+  <button
+    mat-button
+    mat-raised-button
+    color="primary"
+    [disabled]="searchButtonDisabled"
+    (click)="onSearchButtonClicked()">
     Search
   </button>
 </div>

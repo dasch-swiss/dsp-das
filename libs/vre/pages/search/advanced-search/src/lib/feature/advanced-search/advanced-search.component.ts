@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
@@ -11,7 +11,11 @@ import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { ApiData, PropertyData, ResourceLabelObject } from '../../data-access/advanced-search-service/advanced-search.service';
+import {
+  ApiData,
+  PropertyData,
+  ResourceLabelObject,
+} from '../../data-access/advanced-search-service/advanced-search.service';
 import {
   AdvancedSearchStateSnapshot,
   AdvancedSearchStoreService,
@@ -24,11 +28,11 @@ import {
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';
-import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
-import { PropertyFormValueComponent } from '../../ui/property-form/property-form-value/property-form-value.component';
-import { PropertyFormListValueComponent } from '../../ui/property-form/property-form-list-value/property-form-list-value.component';
 import { PropertyFormLinkValueComponent } from '../../ui/property-form/property-form-link-value/property-form-link-value.component';
+import { PropertyFormListValueComponent } from '../../ui/property-form/property-form-list-value/property-form-list-value.component';
 import { PropertyFormSubcriteriaComponent } from '../../ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
+import { PropertyFormValueComponent } from '../../ui/property-form/property-form-value/property-form-value.component';
+import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 
 export interface QueryObject {
   query: string;
@@ -43,9 +47,6 @@ export interface QueryObject {
     OrderByComponent,
     OntologyResourceFormComponent,
     PropertyFormComponent,
-    PropertyFormValueComponent,
-    PropertyFormListValueComponent,
-    PropertyFormLinkValueComponent,
     PropertyFormSubcriteriaComponent,
     FormActionsComponent,
     MatButtonModule,
@@ -188,7 +189,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.propertyFormList$.pipe(take(1)).subscribe(propertyFormList => {
       // Filter out empty property forms (forms without a selected property)
       const nonEmptyProperties = propertyFormList.filter(prop => prop.selectedProperty);
-      
+
       const queryObject: QueryObject = {
         query: this.store.onSearch(),
         properties: nonEmptyProperties,
@@ -261,5 +262,4 @@ export class AdvancedSearchComponent implements OnInit {
       return undefined;
     }
   }
-
 }
