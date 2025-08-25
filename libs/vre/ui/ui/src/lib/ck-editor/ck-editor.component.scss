@@ -1,15 +1,4 @@
 :host ::ng-deep {
-  // Fix CKEditor sticky panel z-index issues in Material dialogs
-  :root {
-    --ck-z-default: 100;
-    --ck-z-panel: 1400;
-  }
-
-  // Additional z-index fixes for CKEditor components in dialogs
-  .ck.ck-balloon-panel {
-    z-index: 1400 !important;
-  }
-
   // Fix sticky panel positioning issue - disable sticky behavior
   .ck.ck-sticky-panel__content {
     position: static !important;
