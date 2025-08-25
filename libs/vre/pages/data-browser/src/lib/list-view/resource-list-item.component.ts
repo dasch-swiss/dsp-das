@@ -77,24 +77,29 @@ export class ResourceListItemComponent implements OnInit {
 
   ngOnInit() {
     if (this.multipleViewerService.searchKeyword) {
-      Object.values(this.resource.properties).forEach(values => {
-        values.forEach(value => {
-          if (
-            value.strval &&
-            value.strval.toLowerCase().includes(this.multipleViewerService.searchKeyword) &&
-            !this.foundIn.includes(value.propertyLabel!)
-          ) {
-            this.foundIn.push(value.propertyLabel!);
-          }
-        });
-      });
+      this._searchInResource(this.multipleViewerService.searchKeyword);
     }
   }
+
   onCheckboxChanged(event: MatCheckboxChange) {
     if (event.checked) {
       this.multipleViewerService.addResources([this.resource]);
     } else {
       this.multipleViewerService.removeResources([this.resource]);
     }
+  }
+
+  private _searchInResource(keyword: string) {
+    Object.values(this.resource.properties).forEach(values => {
+      values.forEach(value => {
+        if (
+          value.strval &&
+          value.strval.toLowerCase().includes(keyword) &&
+          !this.foundIn.includes(value.propertyLabel!)
+        ) {
+          this.foundIn.push(value.propertyLabel!);
+        }
+      });
+    });
   }
 }

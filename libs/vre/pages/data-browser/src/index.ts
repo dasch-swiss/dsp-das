@@ -16,5 +16,4 @@ export * from './lib/list-view/resource-list-item.component';
 export * from './lib/comparison/multiple-viewer.service';
 export * from './lib/list-view/resource-list-selection.component';
 
-export * from './lib/list-view-search/list-view-search.component';
 export * from './lib/resource-result.service';
