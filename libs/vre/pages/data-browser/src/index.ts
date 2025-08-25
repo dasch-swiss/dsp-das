@@ -11,7 +11,6 @@ export * from './lib/list-view/resource-link-dialog.component';
 export * from './lib/list-view/list-view-normal.component';
 export * from './lib/comparison/multiple-viewer.component';
 export * from './lib/comparison/multiple-viewer-gateway.component';
-export * from './lib/comparison/multiple-viewer-gateway-search.component';
 export * from './lib/list-view/resource-list.component';
 export * from './lib/list-view/resource-list-item.component';
 export * from './lib/comparison/multiple-viewer.service';

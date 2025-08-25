@@ -1,5 +1,4 @@
 import { ComparisonComponent } from './lib/comparison/comparison.component';
-import { MultipleViewerGatewaySearchComponent } from './lib/comparison/multiple-viewer-gateway-search.component';
 import { MultipleViewerGatewayComponent } from './lib/comparison/multiple-viewer-gateway.component';
 import { MultipleViewerComponent } from './lib/comparison/multiple-viewer.component';
 import { ListViewNormalComponent } from './lib/list-view/list-view-normal.component';
@@ -22,7 +21,6 @@ export const DataBrowserComponents = [
   ListViewSearchComponent,
   MultipleViewerComponent,
   MultipleViewerGatewayComponent,
-  MultipleViewerGatewaySearchComponent,
   ResourceListComponent,
   ResourceListItemComponent,
   ResourceListSelectionComponent,

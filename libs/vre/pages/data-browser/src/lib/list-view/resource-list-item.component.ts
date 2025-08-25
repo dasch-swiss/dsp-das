@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { map } from 'rxjs';
@@ -26,7 +26,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          <div *ngIf="multipleViewerService.searchKeyword" class="shorten">Found in: description, page, title</div>
+          <div *ngIf="foundIn.length > 0" class="found-in">Found in: {{ foundIn.concat(', ').slice(0, -1) }}</div>
         </div>
 
         <mat-checkbox
@@ -43,25 +43,22 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
       }
-      :host ::ng-deep {
-        .mat-line {
-          overflow: hidden;
-        }
-      }
 
-      .shorten {
+      .found-in {
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin-top: 8px;
+        font-size: 12px;
       }
     `,
   ],
 })
-export class ResourceListItemComponent {
+export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
 
   showCheckbox = false;
+  foundIn: string[] = [];
 
-  hasSearchResult = true;
   isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
       if (this.multipleViewerService.selectMode) {
@@ -78,6 +75,21 @@ export class ResourceListItemComponent {
 
   constructor(public multipleViewerService: MultipleViewerService) {}
 
+  ngOnInit() {
+    if (this.multipleViewerService.searchKeyword) {
+      Object.values(this.resource.properties).forEach(values => {
+        values.forEach(value => {
+          if (
+            value.strval &&
+            value.strval.toLowerCase().includes(this.multipleViewerService.searchKeyword) &&
+            !this.foundIn.includes(value.propertyLabel!)
+          ) {
+            this.foundIn.push(value.propertyLabel!);
+          }
+        });
+      });
+    }
+  }
   onCheckboxChanged(event: MatCheckboxChange) {
     if (event.checked) {
       this.multipleViewerService.addResources([this.resource]);
