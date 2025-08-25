@@ -1,2 +1,12 @@
 @use '../styles/advanced-search.scss' as *;
 
+.adv-property-form-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.adv-property-form {
+  width: 100%;
+}

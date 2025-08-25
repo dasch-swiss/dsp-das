@@ -55,7 +55,6 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
   @Input() resourcesSearchResults: ApiData[] | null = [];
   @Input() resourcesSearchNoResults: boolean | null = false;
 
-  @Output() emitAddPropertyForm = new EventEmitter<void>();
   @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
@@ -88,11 +87,6 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
     }
   }
 
-  onAddPropertyFormClicked(): void {
-    if (this.values) {
-      this.emitAddPropertyForm.emit();
-    }
-  }
 
   onRemovePropertyFormClicked(propFormItem: PropertyFormItem): void {
     if (propFormItem) {

@@ -1,14 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import {
+  ApiData,
+  PropertyData,
+  ResourceLabelObject,
+} from '../../data-access/advanced-search-service/advanced-search.service';
 import {
   AdvancedSearchStateSnapshot,
   AdvancedSearchStoreService,
@@ -21,6 +28,10 @@ import {
 import { FormActionsComponent } from '../../ui/form-actions/form-actions.component';
 import { OntologyResourceFormComponent } from '../../ui/ontology-resource-form/ontology-resource-form.component';
 import { OrderByComponent } from '../../ui/order-by/order-by.component';
+import { PropertyFormLinkValueComponent } from '../../ui/property-form/property-form-link-value/property-form-link-value.component';
+import { PropertyFormListValueComponent } from '../../ui/property-form/property-form-list-value/property-form-list-value.component';
+import { PropertyFormSubcriteriaComponent } from '../../ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
+import { PropertyFormValueComponent } from '../../ui/property-form/property-form-value/property-form-value.component';
 import { PropertyFormComponent } from '../../ui/property-form/property-form.component';
 
 export interface QueryObject {
@@ -36,9 +47,13 @@ export interface QueryObject {
     OrderByComponent,
     OntologyResourceFormComponent,
     PropertyFormComponent,
+    PropertyFormSubcriteriaComponent,
     FormActionsComponent,
     MatButtonModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatSelectModule,
+    MatTooltipModule,
     TranslateModule,
   ],
   providers: [AdvancedSearchStoreService],
@@ -69,7 +84,6 @@ export class AdvancedSearchComponent implements OnInit {
   propertiesLoading$ = this.store.propertiesLoading$;
   filteredProperties$ = this.store.filteredProperties$;
   searchButtonDisabled$ = this.store.searchButtonDisabled$;
-  addButtonDisabled$ = this.store.addButtonDisabled$;
   resetButtonDisabled$ = this.store.resetButtonDisabled$;
   matchResourceClassesLoading$ = this.store.matchResourceClassesLoading$;
   resourcesSearchResultsLoading$ = this.store.resourcesSearchResultsLoading$;
@@ -80,6 +94,7 @@ export class AdvancedSearchComponent implements OnInit {
   orderByButtonDisabled$ = this.store.orderByButtonDisabled$;
 
   constants = Constants;
+  resourceLabelObj = ResourceLabelObject;
   previousSearchObject: AdvancedSearchStateSnapshot | null = null;
 
   constructor(private _dialogService: DialogService) {}
@@ -94,7 +109,7 @@ export class AdvancedSearchComponent implements OnInit {
       selectedProject: this.uuid ? projectIri : undefined,
       selectedOntology: undefined,
       selectedResourceClass: undefined,
-      propertyFormList: [],
+      propertyFormList: [this.store.createEmptyPropertyFormItem()],
       properties: [],
       propertiesLoading: false,
       propertiesOrderByList: [],
@@ -113,7 +128,7 @@ export class AdvancedSearchComponent implements OnInit {
 
     this.store.propertiesList(this.selectedOntology$);
 
-    this.store.filteredPropertiesList(this.selectedResourceClass$);
+    this.store.filteredPropertiesList();
 
     const searchStored = localStorage.getItem('advanced-search-previous-search');
     if (searchStored) {
@@ -129,19 +144,6 @@ export class AdvancedSearchComponent implements OnInit {
   // pass-through method to notify the store to update the state of the selected resource class
   handleSelectedResourceClass(resourceClass: ApiData): void {
     this.store.updateSelectedResourceClass(resourceClass);
-  }
-
-  handleAddPropertyForm(): void {
-    const uuid = uuidv4();
-
-    this.store.updatePropertyFormList(PropertyFormListOperations.Add, {
-      id: uuid,
-      selectedProperty: undefined,
-      selectedOperator: undefined,
-      searchValue: undefined,
-      operators: [],
-      list: undefined,
-    });
   }
 
   handleRemovePropertyForm(property: PropertyFormItem): void {
@@ -185,9 +187,12 @@ export class AdvancedSearchComponent implements OnInit {
 
   handleSearchButtonClicked(): void {
     this.propertyFormList$.pipe(take(1)).subscribe(propertyFormList => {
+      // Filter out empty property forms (forms without a selected property)
+      const nonEmptyProperties = propertyFormList.filter(prop => prop.selectedProperty);
+
       const queryObject: QueryObject = {
         query: this.store.onSearch(),
-        properties: propertyFormList,
+        properties: nonEmptyProperties,
       };
 
       this.emitGravesearchQuery.emit(queryObject);
@@ -247,5 +252,14 @@ export class AdvancedSearchComponent implements OnInit {
       resourcesSearchResultsPageNumber: 0,
       resourcesSearchResults: [],
     });
+  }
+
+  // Get the list of child properties of a linked resource
+  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
+    if (Array.isArray(value)) {
+      return value;
+    } else {
+      return undefined;
+    }
   }
 }

@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   ApiData,
@@ -25,7 +26,6 @@ import {
   PropertyFormItem,
   SearchItem,
 } from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
@@ -41,9 +41,9 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatTooltipModule,
     PropertyFormValueComponent,
     PropertyFormLinkValueComponent,
-    PropertyFormLinkMatchPropertyComponent,
     PropertyFormListValueComponent,
   ],
   providers: [MatSelect],
@@ -74,8 +74,8 @@ export class PropertyFormComponent implements AfterViewInit {
 
   @Input() selectedProperty: PropertyData | null | undefined = undefined;
   @Input() selectedOperator: string | undefined = undefined;
+  @Input() isLastInDOM = false;
 
-  @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
   @Output() emitSelectedMatchPropertyResourceClassChanged = new EventEmitter<PropertyFormItem>();
@@ -111,12 +111,6 @@ export class PropertyFormComponent implements AfterViewInit {
 
     if (this.resourceClassList && this.propertyFormItem.selectedMatchPropertyResourceClass) {
       this.resourceClassList.value = this.propertyFormItem.selectedMatchPropertyResourceClass;
-    }
-  }
-
-  onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
-    if (propFormItem) {
-      this.emitRemovePropertyForm.emit(propFormItem);
     }
   }
 
@@ -194,56 +188,6 @@ export class PropertyFormComponent implements AfterViewInit {
     }
   }
 
-  onChildLoadMoreSearchResults(searchItem: SearchItem): void {
-    this.emitLoadMoreSearchResults.emit(searchItem);
-  }
-
-  onAddChildPropertyFormClicked(): void {
-    const propFormItem = this.propertyFormItem;
-    this.emitAddChildPropertyForm.emit(propFormItem);
-  }
-
-  onRemoveChildPropertyFormClicked(childProperty: PropertyFormItem) {
-    this.emitRemoveChildPropertyForm.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedPropertyChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedPropertyChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedOperatorChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedOperatorChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildValueChanged(childProperty: PropertyFormItem): void {
-    this.emitChildValueChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildResourceSearchValueChanged(searchValue: SearchItem) {
-    this.emitResourceSearchValueChanged.emit(searchValue);
-  }
-
-  // get the list of child properties of a linked resource
-  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
-    if (Array.isArray(value)) {
-      return value;
-    } else {
-      return undefined;
-    }
-  }
-
   compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {
     return object1 && object2 && object1.iri == object2.iri;
   }
@@ -251,5 +195,14 @@ export class PropertyFormComponent implements AfterViewInit {
   // Type guard function to check if the value adheres to ApiData interface
   _isApiData(value: any): value is ApiData {
     return value && typeof value === 'object' && 'iri' in value && 'label' in value;
+  }
+
+  // Check if the property form has any selections made
+  hasSelections(): boolean {
+    return !!(
+      this.propertyFormItem.selectedProperty ||
+      this.propertyFormItem.selectedOperator ||
+      this.propertyFormItem.searchValue
+    );
   }
 }

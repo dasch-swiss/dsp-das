@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { ComponentStore } from '@ngrx/component-store';
-import { catchError, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
+import { catchError, combineLatest, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,
@@ -117,9 +117,9 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   /** combined selectors */
 
   // search button is disabled if:
-  // no ontology and no resource class is selected OR
-  // an ontology is selected and the list of property forms is empty OR
-  // at least one PropertyFormItem is invalid
+  // no ontology is selected AND no resource class is selected OR
+  // there are invalid property forms (incomplete property definitions) OR
+  // all property forms are empty and no resource class is selected
   searchButtonDisabled$: Observable<boolean> = this.select(
     this.selectedOntology$,
     this.selectedResourceClass$,
@@ -127,37 +127,36 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     (ontology, resourceClass, propertyFormList) => {
       const isOntologyUndefined = !ontology;
       const isResourceClassUndefined = !resourceClass;
-      const isPropertyFormListEmpty = !propertyFormList.length;
 
-      const areSomePropertyFormItemsInvalid = propertyFormList.some(prop => this.isPropertyFormItemListInvalid(prop));
+      // Filter out completely empty property forms (no property selected)
+      const nonEmptyPropertyForms = propertyFormList.filter(prop => prop.selectedProperty);
 
-      if (!isPropertyFormListEmpty) {
-        // list not empty
-        // at least one PropertyFormItem is invalid or onto is undefined
-        if (areSomePropertyFormItemsInvalid || isOntologyUndefined) return true;
+      // Check if there are any invalid non-empty property forms
+      const hasInvalidPropertyForms = nonEmptyPropertyForms.some(prop => this.isPropertyFormItemListInvalid(prop));
 
-        // onto is defined, list not empty and all PropertyFormItems are valid
-        return false;
-      } else {
-        // list empty
-        // no onto or resclass selected
-        if (isOntologyUndefined || isResourceClassUndefined) return true;
+      // If there are invalid property forms, disable search
+      if (hasInvalidPropertyForms) return true;
 
-        // onto and resclass are selected
-        return false;
-      }
+      // If no ontology is selected, disable search
+      if (isOntologyUndefined) return true;
+      // If there are valid non-empty property forms, enable search
+      if (nonEmptyPropertyForms.length > 0) return false;
+
+      // If no property forms are filled but resource class is selected, enable search
+      if (!isResourceClassUndefined) return false;
+
+      // Otherwise disable search
+      return true;
     }
   );
 
   // order by button is disabled if:
-  // no resource class is selected OR
   // orderByList is empty OR
   // propertyFormList is empty
   orderByButtonDisabled$: Observable<boolean> = this.select(
-    this.selectedResourceClass$,
     this.propertyFormList$,
     this.propertiesOrderByList$,
-    (resourceClass, propertyFormList, orderBylist) => !resourceClass || !orderBylist.length || !propertyFormList.length
+    (propertyFormList, orderBylist) => !orderBylist.length || !propertyFormList.length
   );
 
   // add button is disabled if:
@@ -187,6 +186,17 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     super();
   }
 
+  createEmptyPropertyFormItem(): PropertyFormItem {
+    return {
+      id: uuidv4(),
+      selectedProperty: undefined,
+      selectedOperator: undefined,
+      searchValue: undefined,
+      operators: [],
+      list: undefined,
+    };
+  }
+
   isPropertyFormItemListInvalid(prop: PropertyFormItem): boolean {
     // no property selected
     if (!prop.selectedProperty) return true;
@@ -210,20 +220,19 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   updateSelectedOntology(ontology: ApiData): void {
     this.patchState({ selectedOntology: ontology });
     this.patchState({ selectedResourceClass: undefined });
-    this.patchState({ filteredProperties: [] });
-    this.patchState({ propertyFormList: [] });
+    this.patchState({ propertyFormList: [this.createEmptyPropertyFormItem()] });
+    this.patchState({ propertiesOrderByList: [] });
   }
 
   updateSelectedResourceClass(resourceClass: ApiData | undefined): void {
     if (resourceClass) {
       this.patchState({ selectedResourceClass: resourceClass });
     } else {
-      // 'none' was selected
+      // 'none' was selected or no resource class is selected at all
       this.patchState({ selectedResourceClass: undefined });
-      this.patchState({ filteredProperties: [] });
     }
 
-    this.patchState({ propertyFormList: [] });
+    this.patchState({ propertyFormList: [this.createEmptyPropertyFormItem()] });
     this.patchState({ propertiesOrderByList: [] });
   }
 
@@ -238,6 +247,11 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     } else {
       updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
       updatedOrderByList = currentOrderByList.filter(item => item.id !== property.id);
+
+      // Ensure at least one empty property form remains
+      if (updatedPropertyFormList.length === 0) {
+        updatedPropertyFormList = [this.createEmptyPropertyFormItem()];
+      }
 
       this.patchState({ propertiesOrderByList: updatedOrderByList });
     }
@@ -314,13 +328,22 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
       property.selectedOperator = undefined;
       property.searchValue = undefined;
 
+      // Check if this is the last property form and it's now being used
+      const isLastPropertyForm = indexInPropertyFormList === currentPropertyFormList.length - 1;
+      let updatedPropertyFormList = currentPropertyFormList;
+
+      if (isLastPropertyForm) {
+        // Add a new empty property form at the end
+        updatedPropertyFormList = [...currentPropertyFormList, this.createEmptyPropertyFormItem()];
+      }
+
       if (property.selectedProperty?.listIri) {
         this._advancedSearchService.getList(property.selectedProperty.listIri).subscribe(list => {
           property.list = list;
-          this.updatePropertyFormListItem(currentPropertyFormList, property, indexInPropertyFormList);
+          this.updatePropertyFormListItem(updatedPropertyFormList, property, indexInPropertyFormList);
         });
       } else {
-        this.updatePropertyFormListItem(currentPropertyFormList, property, indexInPropertyFormList);
+        this.updatePropertyFormListItem(updatedPropertyFormList, property, indexInPropertyFormList);
       }
     }
 
@@ -665,13 +688,16 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     const orderByList = this.get(state => state.propertiesOrderByList);
     const resourceClasses = this.get(state => state.resourceClasses).map(resClass => resClass.iri);
 
+    // Filter out empty property forms (forms without a selected property)
+    const nonEmptyPropertyFormList = propertyFormList.filter(prop => prop.selectedProperty);
+
     this._storeSnapshotInLocalStorage();
 
     return this._gravsearchService.generateGravSearchQuery(
       ontoIri,
       resourceClasses,
       selectedResourceClass?.iri,
-      propertyFormList,
+      nonEmptyPropertyFormList,
       orderByList
     );
   }
@@ -679,7 +705,7 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   onReset() {
     this.patchState({ selectedOntology: this.defaultOntology });
     this.patchState({ selectedResourceClass: undefined });
-    this.patchState({ propertyFormList: [] });
+    this.patchState({ propertyFormList: [this.createEmptyPropertyFormItem()] });
     this.patchState({ propertiesOrderByList: [] });
   }
 
@@ -814,16 +840,45 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
     )
   );
 
-  // load list of filtered properties, limited to a resource class
-  readonly filteredPropertiesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
-    resourceClass$.pipe(
-      switchMap(resClass => {
+  // load list of filtered properties, limited to a resource class or all properties if no class selected
+  readonly filteredPropertiesList = this.effect(() =>
+    combineLatest([this.selectedOntology$, this.selectedResourceClass$]).pipe(
+      switchMap(([ontology, resourceClass]) => {
         this.patchState({ propertiesLoading: true });
-        if (!resClass) {
+
+        if (!ontology) {
+          // No ontology selected - clear filtered properties
+          this.patchState({ filteredProperties: [] });
           this.patchState({ propertiesLoading: false });
           return EMPTY;
         }
-        return this._advancedSearchService.filteredPropertiesList(resClass.iri).pipe(
+
+        if (!resourceClass) {
+          console.log('No resource class selected, loading all properties from the ontology');
+          // No resource class selected - load all properties from the ontology
+          return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+            tap({
+              next: response => {
+                this.patchState({
+                  filteredProperties: response,
+                  properties: response, // Also update the properties state
+                });
+                this.patchState({ propertiesLoading: false });
+              },
+              error: error => {
+                this.patchState({ error });
+                this.patchState({ propertiesLoading: false });
+              },
+            }),
+            catchError(() => {
+              this.patchState({ propertiesLoading: false });
+              return EMPTY;
+            })
+          );
+        }
+
+        // Resource class is selected - use filtered properties
+        return this._advancedSearchService.filteredPropertiesList(resourceClass.iri).pipe(
           tap({
             next: response => {
               this.patchState({
