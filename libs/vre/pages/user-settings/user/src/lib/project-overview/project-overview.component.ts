@@ -18,7 +18,10 @@ export class ProjectOverviewComponent implements AfterViewInit {
   private _filter$ = new BehaviorSubject<string>('');
 
   activeProjects$ = combineLatest([this._allProjectsService.allActiveProjects$, this._filter$]).pipe(
-    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
+    map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm))),
+    tap(() => {
+      this.loading = false;
+    })
   );
 
   usersActiveProjects$ = combineLatest([this._store.select(UserSelectors.userActiveProjects), this._filter$]).pipe(
