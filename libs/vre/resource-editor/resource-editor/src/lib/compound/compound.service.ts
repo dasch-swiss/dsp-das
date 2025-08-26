@@ -4,7 +4,6 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspCompoundPosition, DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 
 /**
@@ -22,8 +21,7 @@ export class CompoundService {
   constructor(
     private _cd: ChangeDetectorRef,
     @Inject(DspApiConnectionToken) private _dspApi: KnoraApiConnection,
-    private _regionService: RegionService,
-    private _store: Store
+    private _regionService: RegionService
   ) {}
 
   onInit(_compound: DspCompoundPosition, resource: DspResource) {

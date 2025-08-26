@@ -5,7 +5,6 @@ import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DefaultProperty } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Store } from '@ngxs/store';
 import { BehaviorSubject, map, startWith, switchMap } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { EditPropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -39,8 +38,7 @@ export class PropertyInfoComponent {
     private _dialog: MatDialog,
     private _oes: OntologyEditService,
     private _dialogService: DialogService,
-    private _projectPageService: ProjectPageService,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
