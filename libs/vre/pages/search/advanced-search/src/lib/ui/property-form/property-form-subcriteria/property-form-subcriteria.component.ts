@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,14 +7,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   ApiData,
-  PropertyData,
-  ResourceLabelObject,
-} from '../../../data-access/advanced-search-service/advanced-search.service';
-import {
   ParentChildPropertyPair,
+  PropertyData,
   PropertyFormItem,
+  ResourceLabelObject,
   SearchItem,
-} from '../../../data-access/advanced-search-store/advanced-search-store.service';
+} from '../../../model';
+import { SearchStateService } from '../../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
@@ -39,32 +38,28 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
 export class PropertyFormSubcriteriaComponent {
   @Input() parentProperty: PropertyFormItem | null = null;
   @Input() childProperties: PropertyFormItem[] = [];
-  @Input() resourcesSearchResultsLoading: boolean | null = false;
-  @Input() resourcesSearchResultsCount: number | null = 0;
-  @Input() resourcesSearchResults: ApiData[] | null = [];
-  @Input() resourcesSearchNoResults: boolean | null = false;
 
-  @Output() emitAddChildPropertyForm = new EventEmitter<PropertyFormItem>();
-  @Output() emitRemoveChildPropertyForm = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildSelectedPropertyChanged = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildSelectedOperatorChanged = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildValueChanged = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
-  @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
+  // Inject SearchStateService for direct access to observables and methods
+  private searchService = inject(SearchStateService);
+
+  // Access observables directly from service
+  resourcesSearchResultsLoading$ = this.searchService.resourcesSearchResultsLoading$;
+  resourcesSearchResultsCount$ = this.searchService.resourcesSearchResultsCount$;
+  resourcesSearchResults$ = this.searchService.resourcesSearchResults$;
+  resourcesSearchNoResults$ = this.searchService.resourcesSearchNoResults$;
 
   constants = Constants;
   resourceLabelObj = ResourceLabelObject;
 
   onAddSubcriteria(): void {
     if (this.parentProperty) {
-      console.log(this.parentProperty);
-      this.emitAddChildPropertyForm.emit(this.parentProperty);
+      this.searchService.addChildPropertyFormList(this.parentProperty);
     }
   }
 
   onRemoveSubcriteria(childProperty: PropertyFormItem): void {
     if (this.parentProperty) {
-      this.emitRemoveChildPropertyForm.emit({
+      this.searchService.deleteChildPropertyFormList({
         parentProperty: this.parentProperty,
         childProperty,
       });
@@ -74,7 +69,7 @@ export class PropertyFormSubcriteriaComponent {
   onChildPropertySelectionChange(childProperty: PropertyFormItem, selectedProperty: PropertyData): void {
     if (this.parentProperty) {
       const updatedChildProperty = { ...childProperty, selectedProperty };
-      this.emitChildSelectedPropertyChanged.emit({
+      this.searchService.updateChildSelectedProperty({
         parentProperty: this.parentProperty,
         childProperty: updatedChildProperty,
       });
@@ -84,7 +79,7 @@ export class PropertyFormSubcriteriaComponent {
   onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: string): void {
     if (this.parentProperty) {
       const updatedChildProperty = { ...childProperty, selectedOperator };
-      this.emitChildSelectedOperatorChanged.emit({
+      this.searchService.updateChildSelectedOperator({
         parentProperty: this.parentProperty,
         childProperty: updatedChildProperty,
       });
@@ -107,7 +102,7 @@ export class PropertyFormSubcriteriaComponent {
         updatedChildProperty = { ...childProperty, searchValue };
       }
 
-      this.emitChildValueChanged.emit({
+      this.searchService.updateChildSearchValue({
         parentProperty: this.parentProperty,
         childProperty: updatedChildProperty,
       });
@@ -115,11 +110,11 @@ export class PropertyFormSubcriteriaComponent {
   }
 
   onResourceSearchValueChanged(searchItem: SearchItem): void {
-    this.emitResourceSearchValueChanged.emit(searchItem);
+    this.searchService.updateResourcesSearchResults(searchItem);
   }
 
   onLoadMoreSearchResults(searchItem: SearchItem): void {
-    this.emitLoadMoreSearchResults.emit(searchItem);
+    this.searchService.loadMoreResourcesSearchResults(searchItem);
   }
 
   compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {

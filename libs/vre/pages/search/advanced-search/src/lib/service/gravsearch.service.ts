@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { GravsearchPropertyString, ResourceLabel } from '../advanced-search-service/advanced-search.service';
-import { Operators, OrderByItem, PropertyFormItem } from '../advanced-search-store/advanced-search-store.service';
+import { GravsearchPropertyString, OrderByItem, PropertyFormItem, ResourceLabel } from '../model';
+import { Operators } from './operators.config';
 
 @Injectable({
   providedIn: 'root',
@@ -16,12 +16,12 @@ export class GravsearchService {
   ): string {
     // class restriction for the resource searched for
     let restrictToResourceClass = '';
-    
+
     // Safety check for ontoIri
     if (!ontoIri || typeof ontoIri !== 'string') {
       throw new Error('Invalid ontology IRI provided');
     }
-    
+
     const ontoShortCodeMatch = ontoIri.match(/\/([^/]+)\/v2$/);
     if (!ontoShortCodeMatch) {
       throw new Error(`Invalid ontology IRI format: ${ontoIri}`);

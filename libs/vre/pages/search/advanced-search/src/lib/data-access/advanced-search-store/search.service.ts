@@ -1,7 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
-import { ComponentStore } from '@ngrx/component-store';
-import { catchError, combineLatest, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AdvancedSearchService,
@@ -95,86 +107,93 @@ export enum PropertyFormListOperations {
 }
 
 @Injectable()
-export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchState> {
-  ontologies$: Observable<ApiData[]> = this.select(state => state.ontologies);
-  ontologiesLoading$: Observable<boolean> = this.select(state => state.ontologiesLoading);
-  resourceClasses$: Observable<ApiData[]> = this.select(state => state.resourceClasses);
-  resourceClassesLoading$: Observable<boolean> = this.select(state => state.resourceClassesLoading);
-  selectedProject$: Observable<string | undefined> = this.select(state => state.selectedProject);
-  selectedOntology$: Observable<ApiData | undefined> = this.select(state => state.selectedOntology);
-  selectedResourceClass$: Observable<ApiData | undefined> = this.select(state => state.selectedResourceClass);
-  propertyFormList$: Observable<PropertyFormItem[]> = this.select(state => state.propertyFormList);
-  propertiesOrderByList$: Observable<OrderByItem[]> = this.select(state => state.propertiesOrderByList);
-  propertiesLoading$: Observable<boolean> = this.select(state => state.propertiesLoading);
-  filteredProperties$: Observable<PropertyData[]> = this.select(state => state.filteredProperties);
-  matchResourceClassesLoading$: Observable<boolean> = this.select(state => state.matchResourceClassesLoading);
-  resourcesSearchResultsLoading$: Observable<boolean> = this.select(state => state.resourcesSearchResultsLoading);
-  resourcesSearchResultsCount$: Observable<number> = this.select(state => state.resourcesSearchResultsCount);
-  resourcesSearchNoResults$: Observable<boolean> = this.select(state => state.resourcesSearchNoResults);
-  resourcesSearchResultsPageNumber$: Observable<number> = this.select(state => state.resourcesSearchResultsPageNumber);
-  resourcesSearchResults$: Observable<ApiData[]> = this.select(state => state.resourcesSearchResults);
+export class AdvancedSearchStoreService {
+  // Private BehaviorSubject for state management
+  private _searchFormsState = new BehaviorSubject<AdvancedSearchState>(this.getInitialState());
 
-  /** combined selectors */
-
-  // search button is disabled if:
-  // no ontology is selected AND no resource class is selected OR
-  // there are invalid property forms (incomplete property definitions) OR
-  // all property forms are empty and no resource class is selected
-  searchButtonDisabled$: Observable<boolean> = this.select(
-    this.selectedOntology$,
-    this.selectedResourceClass$,
-    this.propertyFormList$,
-    (ontology, resourceClass, propertyFormList) => {
-      const isOntologyUndefined = !ontology;
-      const isResourceClassUndefined = !resourceClass;
-
-      // Filter out completely empty property forms (no property selected)
-      const nonEmptyPropertyForms = propertyFormList.filter(prop => prop.selectedProperty);
-
-      // Check if there are any invalid non-empty property forms
-      const hasInvalidPropertyForms = nonEmptyPropertyForms.some(prop => this.isPropertyFormItemListInvalid(prop));
-
-      // If there are invalid property forms, disable search
-      if (hasInvalidPropertyForms) return true;
-
-      // If no ontology is selected, disable search
-      if (isOntologyUndefined) return true;
-      // If there are valid non-empty property forms, enable search
-      if (nonEmptyPropertyForms.length > 0) return false;
-
-      // If no property forms are filled but resource class is selected, enable search
-      if (!isResourceClassUndefined) return false;
-
-      // Otherwise disable search
-      return true;
-    }
+  // Public observables derived from the state
+  ontologies$: Observable<ApiData[]> = this._searchFormsState.pipe(
+    map(state => state.ontologies),
+    distinctUntilChanged()
+  );
+  ontologiesLoading$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.ontologiesLoading),
+    distinctUntilChanged()
+  );
+  resourceClasses$: Observable<ApiData[]> = this._searchFormsState.pipe(
+    map(state => state.resourceClasses),
+    distinctUntilChanged()
+  );
+  resourceClassesLoading$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.resourceClassesLoading),
+    distinctUntilChanged()
+  );
+  selectedProject$: Observable<string | undefined> = this._searchFormsState.pipe(
+    map(state => state.selectedProject),
+    distinctUntilChanged()
+  );
+  selectedOntology$: Observable<ApiData | undefined> = this._searchFormsState.pipe(
+    map(state => state.selectedOntology),
+    distinctUntilChanged()
+  );
+  selectedResourceClass$: Observable<ApiData | undefined> = this._searchFormsState.pipe(
+    map(state => state.selectedResourceClass),
+    distinctUntilChanged()
+  );
+  propertyFormList$: Observable<PropertyFormItem[]> = this._searchFormsState.pipe(
+    map(state => state.propertyFormList),
+    distinctUntilChanged()
+  );
+  propertiesOrderByList$: Observable<OrderByItem[]> = this._searchFormsState.pipe(
+    map(state => state.propertiesOrderByList),
+    distinctUntilChanged()
+  );
+  propertiesLoading$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.propertiesLoading),
+    distinctUntilChanged()
+  );
+  filteredProperties$: Observable<PropertyData[]> = this._searchFormsState.pipe(
+    map(state => state.filteredProperties),
+    distinctUntilChanged()
+  );
+  matchResourceClassesLoading$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.matchResourceClassesLoading),
+    distinctUntilChanged()
+  );
+  resourcesSearchResultsLoading$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.resourcesSearchResultsLoading),
+    distinctUntilChanged()
+  );
+  resourcesSearchResultsCount$: Observable<number> = this._searchFormsState.pipe(
+    map(state => state.resourcesSearchResultsCount),
+    distinctUntilChanged()
+  );
+  resourcesSearchNoResults$: Observable<boolean> = this._searchFormsState.pipe(
+    map(state => state.resourcesSearchNoResults),
+    distinctUntilChanged()
   );
 
-  // order by button is disabled if:
-  // orderByList is empty OR
-  // propertyFormList is empty
-  orderByButtonDisabled$: Observable<boolean> = this.select(
+  resourcesSearchResults$: Observable<ApiData[]> = this._searchFormsState.pipe(
+    map(state => state.resourcesSearchResults),
+    distinctUntilChanged()
+  );
+
+  searchButtonDisabled$: Observable<boolean> = this.propertyFormList$.pipe(
+    map(propertyFormList => {
+      const nonEmptyPropertyForms = propertyFormList.filter(propertyFormItem => propertyFormItem.selectedProperty);
+      const hasInvalidPropertyForms = nonEmptyPropertyForms.some(prop => this.isPropertyFormItemListInvalid(prop));
+      return hasInvalidPropertyForms || nonEmptyPropertyForms.length === 0;
+    }),
+    startWith(true),
+    distinctUntilChanged()
+  );
+
+  orderByButtonDisabled$: Observable<boolean> = combineLatest([
     this.propertyFormList$,
     this.propertiesOrderByList$,
-    (propertyFormList, orderBylist) => !orderBylist.length || !propertyFormList.length
-  );
-
-  // add button is disabled if:
-  // no ontology is selected
-  addButtonDisabled$: Observable<boolean> = this.select(
-    this.selectedOntology$,
-    ontology => !ontology || ontology.iri === ''
-  );
-
-  // reset button is disabled if:
-  // no ontology is selected AND
-  // no resource class is selected AND
-  // the list of property forms is empty
-  resetButtonDisabled$: Observable<boolean> = this.select(
-    this.selectedOntology$,
-    this.selectedResourceClass$,
-    this.propertyFormList$,
-    (ontology, resourceClass, propertyFormList) => !(ontology || resourceClass || propertyFormList.length)
+  ]).pipe(
+    map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
+    distinctUntilChanged()
   );
 
   defaultOntology: ApiData | undefined;
@@ -182,8 +201,42 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   constructor(
     private _advancedSearchService: AdvancedSearchService,
     private _gravsearchService: GravsearchService
-  ) {
-    super();
+  ) {}
+
+  private getInitialState(): AdvancedSearchState {
+    return {
+      ontologies: [],
+      ontologiesLoading: false,
+      resourceClasses: [],
+      resourceClassesLoading: false,
+      selectedProject: undefined,
+      selectedOntology: undefined,
+      selectedResourceClass: undefined,
+      propertyFormList: [this.createEmptyPropertyFormItem()],
+      properties: [],
+      propertiesLoading: false,
+      propertiesOrderByList: [],
+      filteredProperties: [],
+      matchResourceClassesLoading: false,
+      resourcesSearchResultsLoading: false,
+      resourcesSearchResultsCount: 0,
+      resourcesSearchNoResults: false,
+      resourcesSearchResultsPageNumber: 0,
+      resourcesSearchResults: [],
+    };
+  }
+
+  // Methods to replace ComponentStore functionality
+  setState(state: Partial<AdvancedSearchState>): void {
+    this._searchFormsState.next({ ...this._searchFormsState.value, ...state });
+  }
+
+  patchState(partialState: Partial<AdvancedSearchState>): void {
+    this._searchFormsState.next({ ...this._searchFormsState.value, ...partialState });
+  }
+
+  get<T>(selector: (state: AdvancedSearchState) => T): T {
+    return selector(this._searchFormsState.value);
   }
 
   createEmptyPropertyFormItem(): PropertyFormItem {
@@ -710,18 +763,47 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
   }
 
   // load list of ontologies
-  readonly ontologiesList = this.effect((ontologyIri$: Observable<string | undefined>) =>
-    ontologyIri$.pipe(
-      switchMap(iri => {
-        this.patchState({ ontologiesLoading: true });
-        if (!iri) {
-          // no project iri, get all ontologies
-          return this._advancedSearchService.allOntologiesList().pipe(
+  ontologiesList(ontologyIri$: Observable<string | undefined>): void {
+    ontologyIri$
+      .pipe(
+        switchMap(iri => {
+          this.patchState({ ontologiesLoading: true });
+          if (!iri) {
+            // no project iri, get all ontologies
+            return this._advancedSearchService.allOntologiesList().pipe(
+              tap({
+                next: response => {
+                  this.patchState({
+                    ontologies: response,
+                  });
+                  this.patchState({
+                    ontologiesLoading: false,
+                  });
+                },
+                error: error => {
+                  this.patchState({ error });
+                  this.patchState({
+                    ontologiesLoading: false,
+                  });
+                },
+              }),
+              catchError(() => {
+                this.patchState({
+                  ontologiesLoading: false,
+                });
+                return EMPTY;
+              })
+            );
+          }
+          // project iri, get ontologies in project
+          return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
             tap({
               next: response => {
+                this.patchState({ ontologies: response });
                 this.patchState({
-                  ontologies: response,
+                  selectedOntology: response[0],
                 });
+                this.defaultOntology = response[0];
                 this.patchState({
                   ontologiesLoading: false,
                 });
@@ -734,140 +816,77 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
               },
             }),
             catchError(() => {
+              this.patchState({ ontologiesLoading: false });
+              return EMPTY;
+            })
+          );
+        })
+      )
+      .subscribe();
+  }
+
+  // load list of resource classes
+  resourceClassesList(resourceClass$: Observable<ApiData | undefined>): void {
+    resourceClass$
+      .pipe(
+        switchMap(resClass => {
+          this.patchState({ resourceClassesLoading: true });
+          if (!resClass) {
+            this.patchState({ resourceClassesLoading: false });
+            return EMPTY;
+          }
+          return this._advancedSearchService.resourceClassesList(resClass.iri).pipe(
+            tap({
+              next: response => {
+                this.patchState({
+                  resourceClasses: response,
+                });
+                this.patchState({
+                  resourceClassesLoading: false,
+                });
+              },
+              error: error => {
+                this.patchState({ error });
+                this.patchState({
+                  resourceClassesLoading: false,
+                });
+              },
+            }),
+            catchError(() => {
               this.patchState({
-                ontologiesLoading: false,
+                resourceClassesLoading: false,
               });
               return EMPTY;
             })
           );
-        }
-        // project iri, get ontologies in project
-        return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
-          tap({
-            next: response => {
-              this.patchState({ ontologies: response });
-              this.patchState({
-                selectedOntology: response[0],
-              });
-              this.defaultOntology = response[0];
-              this.patchState({
-                ontologiesLoading: false,
-              });
-            },
-            error: error => {
-              this.patchState({ error });
-              this.patchState({
-                ontologiesLoading: false,
-              });
-            },
-          }),
-          catchError(() => {
-            this.patchState({ ontologiesLoading: false });
-            return EMPTY;
-          })
-        );
-      })
-    )
-  );
-
-  // load list of resource classes
-  readonly resourceClassesList = this.effect((resourceClass$: Observable<ApiData | undefined>) =>
-    resourceClass$.pipe(
-      switchMap(resClass => {
-        this.patchState({ resourceClassesLoading: true });
-        if (!resClass) {
-          this.patchState({ resourceClassesLoading: false });
-          return EMPTY;
-        }
-        return this._advancedSearchService.resourceClassesList(resClass.iri).pipe(
-          tap({
-            next: response => {
-              this.patchState({
-                resourceClasses: response,
-              });
-              this.patchState({
-                resourceClassesLoading: false,
-              });
-            },
-            error: error => {
-              this.patchState({ error });
-              this.patchState({
-                resourceClassesLoading: false,
-              });
-            },
-          }),
-          catchError(() => {
-            this.patchState({
-              resourceClassesLoading: false,
-            });
-            return EMPTY;
-          })
-        );
-      })
-    )
-  );
+        })
+      )
+      .subscribe();
+  }
 
   // load list of all properties
-  readonly propertiesList = this.effect((ontology$: Observable<ApiData | undefined>) =>
-    ontology$.pipe(
-      switchMap(onto => {
-        this.patchState({ propertiesLoading: true });
-        if (!onto) {
-          this.patchState({ propertiesLoading: false });
-          return EMPTY;
-        }
-        return this._advancedSearchService.propertiesList(onto.iri).pipe(
-          tap({
-            next: response => {
-              this.patchState({ properties: response });
-              this.patchState({
-                propertiesLoading: false,
-              });
-            },
-            error: error => {
-              this.patchState({ error });
-              this.patchState({
-                propertiesLoading: false,
-              });
-            },
-          }),
-          catchError(() => {
+  propertiesList(ontology$: Observable<ApiData | undefined>): void {
+    ontology$
+      .pipe(
+        switchMap(onto => {
+          this.patchState({ propertiesLoading: true });
+          if (!onto) {
             this.patchState({ propertiesLoading: false });
             return EMPTY;
-          })
-        );
-      })
-    )
-  );
-
-  // load list of filtered properties, limited to a resource class or all properties if no class selected
-  readonly filteredPropertiesList = this.effect(() =>
-    combineLatest([this.selectedOntology$, this.selectedResourceClass$]).pipe(
-      switchMap(([ontology, resourceClass]) => {
-        this.patchState({ propertiesLoading: true });
-
-        if (!ontology) {
-          // No ontology selected - clear filtered properties
-          this.patchState({ filteredProperties: [] });
-          this.patchState({ propertiesLoading: false });
-          return EMPTY;
-        }
-
-        if (!resourceClass) {
-          console.log('No resource class selected, loading all properties from the ontology');
-          // No resource class selected - load all properties from the ontology
-          return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+          }
+          return this._advancedSearchService.propertiesList(onto.iri).pipe(
             tap({
               next: response => {
+                this.patchState({ properties: response });
                 this.patchState({
-                  filteredProperties: response,
-                  properties: response, // Also update the properties state
+                  propertiesLoading: false,
                 });
-                this.patchState({ propertiesLoading: false });
               },
               error: error => {
                 this.patchState({ error });
-                this.patchState({ propertiesLoading: false });
+                this.patchState({
+                  propertiesLoading: false,
+                });
               },
             }),
             catchError(() => {
@@ -875,34 +894,76 @@ export class AdvancedSearchStoreService extends ComponentStore<AdvancedSearchSta
               return EMPTY;
             })
           );
-        }
+        })
+      )
+      .subscribe();
+  }
 
-        // Resource class is selected - use filtered properties
-        return this._advancedSearchService.filteredPropertiesList(resourceClass.iri).pipe(
-          tap({
-            next: response => {
-              this.patchState({
-                filteredProperties: response,
-              });
-              this.patchState({
-                propertiesLoading: false,
-              });
-            },
-            error: error => {
-              this.patchState({ error });
-              this.patchState({
-                propertiesLoading: false,
-              });
-            },
-          }),
-          catchError(() => {
+  // load list of filtered properties, limited to a resource class or all properties if no class selected
+  filteredPropertiesList(): void {
+    combineLatest([this.selectedOntology$, this.selectedResourceClass$])
+      .pipe(
+        switchMap(([ontology, resourceClass]) => {
+          this.patchState({ propertiesLoading: true });
+
+          if (!ontology) {
+            // No ontology selected - clear filtered properties
+            this.patchState({ filteredProperties: [] });
             this.patchState({ propertiesLoading: false });
             return EMPTY;
-          })
-        );
-      })
-    )
-  );
+          }
+
+          if (!resourceClass) {
+            console.log('No resource class selected, loading all properties from the ontology');
+            // No resource class selected - load all properties from the ontology
+            return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+              tap({
+                next: response => {
+                  this.patchState({
+                    filteredProperties: response,
+                    properties: response, // Also update the properties state
+                  });
+                  this.patchState({ propertiesLoading: false });
+                },
+                error: error => {
+                  this.patchState({ error });
+                  this.patchState({ propertiesLoading: false });
+                },
+              }),
+              catchError(() => {
+                this.patchState({ propertiesLoading: false });
+                return EMPTY;
+              })
+            );
+          }
+
+          // Resource class is selected - use filtered properties
+          return this._advancedSearchService.filteredPropertiesList(resourceClass.iri).pipe(
+            tap({
+              next: response => {
+                this.patchState({
+                  filteredProperties: response,
+                });
+                this.patchState({
+                  propertiesLoading: false,
+                });
+              },
+              error: error => {
+                this.patchState({ error });
+                this.patchState({
+                  propertiesLoading: false,
+                });
+              },
+            }),
+            catchError(() => {
+              this.patchState({ propertiesLoading: false });
+              return EMPTY;
+            })
+          );
+        })
+      )
+      .subscribe();
+  }
 
   private _isOrderByItemDisabled(data: PropertyData | undefined): boolean {
     if (!data) {

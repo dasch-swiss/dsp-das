@@ -11,7 +11,7 @@ import { PropertyFormItem, QueryObject } from '@dasch-swiss/vre/pages/search/adv
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchContainerComponent implements OnInit {
-  uuid: string;
+  uuid: string | null = null;
 
   constructor(
     private _router: Router,
@@ -20,7 +20,7 @@ export class AdvancedSearchContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.uuid = this._route.parent.snapshot.params.uuid;
+    this.uuid = this._route.parent?.snapshot?.params['uuid'];
   }
 
   onSearch(queryObject: QueryObject): void {

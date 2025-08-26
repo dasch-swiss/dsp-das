@@ -15,16 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
-import {
-  ApiData,
-  PropertyData,
-  ResourceLabelObject,
-} from '../../../data-access/advanced-search-service/advanced-search.service';
-import {
-  Operators,
-  PropertyFormItem,
-  SearchItem,
-} from '../../../data-access/advanced-search-store/advanced-search-store.service';
+import { ApiData, PropertyData, PropertyFormItem, ResourceLabelObject, SearchItem } from '../../../model';
+import { Operators } from '../../../service/operators.config';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
@@ -86,7 +78,6 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
       });
     }
   }
-
 
   onRemovePropertyFormClicked(propFormItem: PropertyFormItem): void {
     if (propFormItem) {

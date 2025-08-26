@@ -18,10 +18,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { of } from 'rxjs';
-import { AdvancedSearchService } from './advanced-search.service';
+import { AdvancedSearchApiService } from '../advanced-search-api.service';
 
-describe('AdvancedSearchService', () => {
-  let service: AdvancedSearchService;
+describe('AdvancedSearchApiService', () => {
+  let service: AdvancedSearchApiService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -36,7 +36,7 @@ describe('AdvancedSearchService', () => {
         },
       ],
     });
-    service = TestBed.inject(AdvancedSearchService);
+    service = TestBed.inject(AdvancedSearchApiService);
   });
 
   it('should be created', () => {

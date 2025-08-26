@@ -2,15 +2,11 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Constants, KnoraApiConnection, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { Observable, of, take } from 'rxjs';
-import { AdvancedSearchService, ApiData, PropertyData } from '../advanced-search-service/advanced-search.service';
-import { GravsearchService } from '../gravsearch-service/gravsearch.service';
-import {
-  AdvancedSearchStoreService,
-  Operators,
-  ParentChildPropertyPair,
-  PropertyFormItem,
-  PropertyFormListOperations,
-} from './advanced-search-store.service';
+import { ApiData, PropertyData, ParentChildPropertyPair, PropertyFormItem } from '../../model';
+import { AdvancedSearchApiService } from '../advanced-search-api.service';
+import { GravsearchService } from '../gravsearch.service';
+import { Operators } from '../operators.config';
+import { SearchStateService } from '../search-state.service';
 
 export const DspApiConnectionToken = new InjectionToken<KnoraApiConnection>('DspApiConnectionToken');
 
@@ -67,8 +63,8 @@ export class MockAdvancedSearchService {
 export class MockGravsearchService {}
 
 describe('AdvancedSearchStoreService', () => {
-  let service: AdvancedSearchStoreService;
-  let advancedSearchService: AdvancedSearchService;
+  let service: SearchStateService;
+  let advancedSearchService: AdvancedSearchApiService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -79,18 +75,18 @@ describe('AdvancedSearchStoreService', () => {
           useValue: new MockKnoraApiConnection(),
         },
         {
-          provide: AdvancedSearchService,
+          provide: AdvancedSearchApiService,
           useClass: MockAdvancedSearchService,
         },
         {
           provide: GravsearchService,
           useClass: MockGravsearchService,
         },
-        AdvancedSearchStoreService,
+        SearchStateService,
       ],
     });
-    service = TestBed.inject(AdvancedSearchStoreService);
-    advancedSearchService = TestBed.inject(AdvancedSearchService);
+    service = TestBed.inject(SearchStateService);
+    advancedSearchService = TestBed.inject(AdvancedSearchApiService);
 
     expect(service).toBeTruthy();
     service.setState({
@@ -394,8 +390,8 @@ describe('AdvancedSearchStoreService', () => {
     });
   });
 
-  describe('updatePropertyFormList', () => {
-    it('should add a property form item to the list', () => {
+  describe('property form management', () => {
+    it('should handle property form item operations', () => {
       const propertyFormItem = {
         id: '1',
         selectedProperty: undefined,
@@ -405,64 +401,9 @@ describe('AdvancedSearchStoreService', () => {
         list: undefined,
       };
 
-      service.updatePropertyFormList(PropertyFormListOperations.Add, propertyFormItem);
-
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      // Test initial state
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
-        if (pfl) {
-          expect(pfl.length).toEqual(1);
-        }
-      });
-    });
-
-    it('should delete a property form item from the list', () => {
-      const propertyFormItem = {
-        id: '1',
-        selectedProperty: undefined,
-        selectedOperator: undefined,
-        searchValue: undefined,
-        operators: [],
-        list: undefined,
-      };
-
-      service.updatePropertyFormList(PropertyFormListOperations.Add, propertyFormItem);
-
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
-        expect(pfl).not.toBeUndefined();
-        if (pfl) {
-          expect(pfl.length).toEqual(1);
-        }
-      });
-
-      const orderByItem = {
-        id: '1',
-        label: 'test',
-        orderBy: false,
-      };
-
-      service.patchState({ propertiesOrderByList: [orderByItem] });
-
-      service.propertiesOrderByList$.pipe(take(1)).subscribe(pol => {
-        expect(pol).not.toBeUndefined();
-        if (pol) {
-          expect(pol.length).toEqual(1);
-        }
-      });
-
-      service.updatePropertyFormList(PropertyFormListOperations.Delete, propertyFormItem);
-
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
-        expect(pfl).not.toBeUndefined();
-        if (pfl) {
-          expect(pfl.length).toEqual(0);
-        }
-      });
-
-      service.propertiesOrderByList$.pipe(take(1)).subscribe(pol => {
-        expect(pol).not.toBeUndefined();
-        if (pol) {
-          expect(pol.length).toEqual(0);
-        }
       });
     });
   });
@@ -478,9 +419,9 @@ describe('AdvancedSearchStoreService', () => {
         list: undefined,
       };
 
-      service.updatePropertyFormList(PropertyFormListOperations.Add, propertyFormItem);
+      service.patchState({ propertyFormList: [propertyFormItem] });
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         if (pfl) {
           expect(pfl.length).toEqual(1);
@@ -489,7 +430,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.addChildPropertyFormList(propertyFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         if (pfl) {
           // searchValue should be an array with one item
@@ -511,13 +452,13 @@ describe('AdvancedSearchStoreService', () => {
         list: undefined,
       };
 
-      service.updatePropertyFormList(PropertyFormListOperations.Add, propertyFormItem);
+      service.patchState({ propertyFormList: [propertyFormItem] });
 
       service.addChildPropertyFormList(propertyFormItem);
 
       let childProp: PropertyFormItem | undefined;
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
           childProp = pfl[0].searchValue[0];
@@ -536,7 +477,7 @@ describe('AdvancedSearchStoreService', () => {
 
         service.deleteChildPropertyFormList(parentChildPair);
 
-        service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+        service.propertyForms$.pipe(take(1)).subscribe(pfl => {
           expect(pfl).not.toBeUndefined();
           if (pfl) {
             // searchValue should be an array with no items
@@ -579,7 +520,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateSelectedProperty(propFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         if (pfl) {
           expect(pfl[0].selectedProperty).toEqual(newSelectedProp);
@@ -624,7 +565,7 @@ describe('AdvancedSearchStoreService', () => {
 
       expect(getList).toHaveBeenCalledWith(newSelectedProp.listIri);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         if (pfl) {
           expect(pfl[0].list).not.toBeUndefined();
         }
@@ -672,7 +613,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateChildSelectedProperty(parentChildPair);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
@@ -723,7 +664,7 @@ describe('AdvancedSearchStoreService', () => {
 
       expect(getList).toHaveBeenCalledWith(childPropFormItem.selectedProperty.listIri);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
@@ -750,7 +691,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateSelectedOperator(propFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(pfl[0].selectedOperator).toEqual(Operators.Equals);
       });
@@ -772,7 +713,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateSelectedOperator(propFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
         expect(pfl[0].searchValue).toBeUndefined();
@@ -807,7 +748,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateSelectedOperator(propFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
         expect(pfl[0].searchValue).toBeUndefined();
@@ -846,7 +787,7 @@ describe('AdvancedSearchStoreService', () => {
       expect(resourceClassesList).toHaveBeenCalledWith('ontoIri', 'linkedResourceIri');
 
       // fix this
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
         expect(pfl[0].searchValue).toHaveLength(0);
@@ -925,7 +866,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateChildSelectedProperty(parentChildPair);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
@@ -966,7 +907,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateChildSelectedProperty(parentChildPair);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
@@ -993,7 +934,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateSearchValue(propFormItem);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(pfl[0].searchValue).toEqual('test');
       });
@@ -1033,7 +974,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.updateChildSearchValue(parentChildPair);
 
-      service.propertyFormList$.pipe(take(1)).subscribe(pfl => {
+      service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {

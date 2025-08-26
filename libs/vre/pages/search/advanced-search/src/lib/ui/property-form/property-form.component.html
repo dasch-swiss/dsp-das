@@ -6,12 +6,12 @@
       (selectionChange)="onSelectedPropertyChanged($event)"
       data-cy="property-select"
       [compareWith]="compareObjects">
-      <mat-option *ngIf="propertiesLoading" disabled="true">Loading...</mat-option>
-      <ng-container *ngIf="!propertiesLoading">
+      <mat-option *ngIf="propertiesLoading$ | async" disabled="true">Loading...</mat-option>
+      <ng-container *ngIf="!(propertiesLoading$ | async)">
         <mat-option [value]="resourceLabelObj" [attr.data-cy]="resourceLabelObj.label">
           {{ resourceLabelObj.label }}
         </mat-option>
-        <mat-option *ngFor="let prop of properties" [value]="prop" [attr.data-cy]="prop.label">
+        <mat-option *ngFor="let prop of filteredProperties$ | async" [value]="prop" [attr.data-cy]="prop.label">
           {{ prop.label }}
         </mat-option>
       </ng-container>
@@ -42,8 +42,8 @@
           (selectionChange)="onSelectedMatchPropertyResourceClassChanged($event)"
           data-cy="resource-class-select"
           [compareWith]="compareObjects">
-          <mat-option *ngIf="matchResourceClassesLoading" disabled="true">Loading...</mat-option>
-          <ng-container *ngIf="!matchResourceClassesLoading">
+          <mat-option *ngIf="matchResourceClassesLoading$ | async" disabled="true">Loading...</mat-option>
+          <ng-container *ngIf="!(matchResourceClassesLoading$ | async)">
             <mat-option
               *ngFor="let resClass of propertyFormItem?.matchPropertyResourceClasses"
               [attr.data-cy]="resClass.label"
@@ -85,10 +85,10 @@
           propertyFormItem.selectedOperator !== operators.Matches"
         [value]="propertyFormItem.searchValue"
         [label]="propertyFormItem.searchValueLabel"
-        [resourcesSearchResultsLoading]="resourcesSearchResultsLoading"
-        [resourcesSearchResultsCount]="resourcesSearchResultsCount"
-        [resourcesSearchResults]="resourcesSearchResults"
-        [resourcesSearchNoResults]="resourcesSearchNoResults"
+        [resourcesSearchResultsLoading]="resourcesSearchResultsLoading$ | async"
+        [resourcesSearchResultsCount]="resourcesSearchResultsCount$ | async"
+        [resourcesSearchResults]="resourcesSearchResults$ | async"
+        [resourcesSearchNoResults]="resourcesSearchNoResults$ | async"
         (emitResourceSearchValueChanged)="onResourceSearchValueChanged($event)"
         (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
         (emitResourceSelected)="onValueChanged($event)" />
