@@ -10,7 +10,9 @@ describe('MultipleViewerService - Updated Version', () => {
   let mockResource3: ReadResource;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [MultipleViewerService],
+    });
     service = TestBed.inject(MultipleViewerService);
 
     // Create mock ReadResource objects
