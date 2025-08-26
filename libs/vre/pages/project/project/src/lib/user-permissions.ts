@@ -22,7 +22,7 @@ export class UserPermissions {
       return true;
     }
 
-    return this._isPartOfProjectGroup(user, projectUuid, 'http://www.knora.org/ontology/knora-admin#ProjectMemmber');
+    return this._isPartOfProjectGroup(user, projectUuid, 'http://www.knora.org/ontology/knora-admin#ProjectMember');
   }
 
   private static _isPartOfProjectGroup(user: ReadUser, projectUuid: string, projectGroup: string): boolean {
