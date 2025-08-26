@@ -171,7 +171,6 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   }
 
   sortList(key: any) {
-    console.log('aaa', this.projectsList);
     if (!this.projectsList) {
       throw new AppError('List is not defined.');
     }

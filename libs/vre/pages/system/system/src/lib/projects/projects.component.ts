@@ -66,7 +66,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._store.select(UserSelectors.userActiveProjects),
     this._allActiveProjects$,
   ]).pipe(
-    tap(data => console.log('active projects', data)),
     takeUntil(this._ngUnsubscribe),
     map(([userActiveProjects, allActiveProjects]) => (this.isUsersProjects ? userActiveProjects : allActiveProjects))
   );
