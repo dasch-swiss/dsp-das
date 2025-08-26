@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.41.2](https://github.com/dasch-swiss/dsp-das/compare/v11.41.1...v11.41.2) (2025-08-26)
+
+
+### Bug Fixes
+
+* advanced search select property without resource class (DEV-5259) ([#2489](https://github.com/dasch-swiss/dsp-das/issues/2489)) ([b4eba90](https://github.com/dasch-swiss/dsp-das/commit/b4eba90d9cd97ff60d2fd33110c28828aa879582))
+
 ## [11.41.1](https://github.com/dasch-swiss/dsp-das/compare/v11.41.0...v11.41.1) (2025-08-26)
 
 
