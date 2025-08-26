@@ -7,14 +7,19 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-fulltext-search-result-page',
-  template: ` <app-multiple-viewer-gateway
-    *ngIf="resources$ | async as resources"
-    [resources]="resources"
-    [searchKeyword]="query" />`,
+  template: `
+    <app-progress-indicator *ngIf="loading" />
+    <ng-container *ngIf="resources$ | async as resources">
+      <h2 *ngIf="resources.length === 0" style="text-align: center;margin-top: 50px;">There is no result.</h2>
+      <app-multiple-viewer-gateway *ngIf="resources.length > 0" [resources]="resources" [searchKeyword]="query" />
+    </ng-container>
+  `,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FulltextSearchResultPageComponent {
+  loading = true;
+
   query!: string;
   readonly resources$ = this._route.params.pipe(
     map(params => params[RouteConstants.qParameter]),
@@ -30,6 +35,7 @@ export class FulltextSearchResultPageComponent {
       ])
     ),
     map(([resourceResponse, countResponse]) => {
+      this.loading = false;
       this._resourceResultService.numberOfResults = countResponse.numberOfResults;
       return resourceResponse.resources;
     })
