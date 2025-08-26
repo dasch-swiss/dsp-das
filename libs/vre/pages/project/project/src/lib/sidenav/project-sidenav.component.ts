@@ -19,13 +19,8 @@ import { ProjectPageService } from '../project-page.service';
 
       .project-title {
         padding: 20px 16px 20px 16px;
-
         font-size: 24px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        margin: 0px;
+        margin: 0;
       }
     `,
   ],
