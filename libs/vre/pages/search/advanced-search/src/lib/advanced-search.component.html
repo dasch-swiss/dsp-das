@@ -1,0 +1,36 @@
+<div class="advanced-search-container">
+  <div class="advanced-search-header">
+    <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
+    <button [disabled]="!previousSearchObject" mat-stroked-button color="primary" (click)="loadPreviousSearch()">
+      {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
+    </button>
+  </div>
+  <div class="advanced-search-item">
+    <app-ontology-resource-form />
+
+    <ng-container *ngFor="let propertyForm of propertyFormList$ | async; let isLast = last">
+      <div style="display: flex; width: 100%; padding-left: 2em">
+        <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
+        <div class="remove-button-container" *ngIf="!isLast && propertyForm.selectedProperty">
+          <button
+            mat-icon-button
+            (click)="handleRemovePropertyForm(propertyForm)"
+            class="remove-property-button"
+            matTooltip="Remove search criteria">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Subcriteria component -->
+      <app-property-form-subcriteria
+        class="advanced-search-item"
+        [parentProperty]="propertyForm"
+        [childProperties]="getLinkMatchPropertyFormItems(propertyForm.searchValue) || []" />
+    </ng-container>
+
+    <app-order-by />
+    <app-form-actions
+      (emitResetButtonClicked)="handleResetButtonClicked()"
+      (emitSearchButtonClicked)="handleSearchButtonClicked()" />
+  </div>
+</div>

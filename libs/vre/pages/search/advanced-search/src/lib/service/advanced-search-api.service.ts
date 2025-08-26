@@ -8,64 +8,23 @@ import {
   ResourceClassDefinition,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
-import { OntologyV2ApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { catchError, map, Observable, of, Subject, takeUntil } from 'rxjs';
-
-export interface ApiData {
-  iri: string;
-  label: string;
-}
-
-export interface PropertyData {
-  iri: string;
-  label: string;
-  objectType: string;
-  isLinkedResourceProperty: boolean;
-  listIri?: string; // only for list values
-}
-
-export interface GravsearchPropertyString {
-  constructString: string;
-  whereString: string;
-}
-
-export const ResourceLabel = `${Constants.KnoraApiV2 + Constants.HashDelimiter}ResourceLabel`;
-
-// objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
-export const ResourceLabelObject = {
-  iri: 'resourceLabel',
-  label: 'Resource Label',
-  objectType: ResourceLabel,
-};
+import { ApiData, PropertyData } from '../model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AdvancedSearchService {
+export class AdvancedSearchApiService {
   // subjects to handle canceling of previous search requests when searching for a linked resource
   private cancelPreviousCountRequest$ = new Subject<void>();
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
   constructor(
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _ontologyV2Api: OntologyV2ApiService
+    private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  // API call to get the list of ontologies
-  allOntologiesList = (): Observable<ApiData[]> =>
-    this._ontologyV2Api
-      .getMetadata()
-      .pipe(
-        map(response =>
-          response['@graph']
-            .filter(onto => onto['knora-api:attachedToProject'] !== Constants.SystemProjectIRI)
-            .map(onto => ({ iri: onto['@id'], label: onto['rdfs:label'] }))
-        )
-      );
-
-  // API call to get the list of ontologies within the specified project iri
   ontologiesInProjectList = (projectIri: string): Observable<ApiData[]> =>
     this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
       map(response => {
