@@ -4,6 +4,7 @@ import { ExpertSearchComponent } from './lib/expert-search/expert-search.compone
 import { FulltextSearchComponent } from './lib/fulltext-search/fulltext-search.component';
 import { FulltextSearchResultPageComponent } from './lib/fulltext-search-result-page.component';
 import { SearchPanelComponent } from './lib/search-panel/search-panel.component';
+import { SearchProjectResultsPageComponent } from './lib/search-project-results-page.component';
 
 export const SearchComponents = [
   AdvancedSearchPageComponent,
@@ -12,4 +13,5 @@ export const SearchComponents = [
   SearchPanelComponent,
   AdvancedSearchResultsPageComponent,
   FulltextSearchResultPageComponent,
+  SearchProjectResultsPageComponent,
 ];
