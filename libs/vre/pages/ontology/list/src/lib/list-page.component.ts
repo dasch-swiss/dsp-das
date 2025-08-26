@@ -6,7 +6,7 @@ import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { combineLatest, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
 import { ListItemService } from './list-item/list-item.service';
 
@@ -18,8 +18,9 @@ import { ListItemService } from './list-item/list-item.service';
   providers: [ListItemService],
 })
 export class ListPageComponent implements OnInit, OnDestroy {
-  private readonly routeListIri$ = this._route.paramMap.pipe(
-    take(1),
+  private _reloadMainListSubject = new BehaviorSubject<null>(null);
+  private readonly routeListIri$ = this._reloadMainListSubject.pipe(
+    switchMap(() => this._route.paramMap),
     map(params => params.get(RouteConstants.listParameter))
   );
 
@@ -57,16 +58,23 @@ export class ListPageComponent implements OnInit, OnDestroy {
   }
 
   editList(list: ListNodeInfo) {
-    this._matDialog.open<ListInfoFormComponent, ListNodeInfo>(ListInfoFormComponent, {
-      ...DspDialogConfig.dialogDrawerConfig(list, true),
-      viewContainerRef: this._viewContainerRef,
-    });
+    this._matDialog
+      .open<ListInfoFormComponent, ListNodeInfo>(ListInfoFormComponent, {
+        ...DspDialogConfig.dialogDrawerConfig(list, true),
+        viewContainerRef: this._viewContainerRef,
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this._reloadMainList();
+      });
   }
 
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
       .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
-      .subscribe(() => {});
+      .subscribe(() => {
+        this._reloadMainList();
+      });
   }
 
   navigateToDataModels() {
@@ -78,5 +86,9 @@ export class ListPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._destroy.next();
     this._destroy.complete();
+  }
+
+  private _reloadMainList() {
+    this._reloadMainListSubject.next(null);
   }
 }
