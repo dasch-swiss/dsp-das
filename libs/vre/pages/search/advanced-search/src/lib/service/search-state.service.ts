@@ -28,7 +28,7 @@ import { PropertyFormManager } from './property-form.manager';
 
 @Injectable()
 export class SearchStateService {
-  private _advancedSearchService = inject(AdvancedSearchApiService);
+  private _advApiService = inject(AdvancedSearchApiService);
   private _formManager = inject(PropertyFormManager);
   private _gravsearchService = inject(GravsearchService);
 
@@ -271,7 +271,7 @@ export class SearchStateService {
 
         this.patchState({ matchResourceClassesLoading: true });
 
-        this._advancedSearchService
+        this._advApiService
           .resourceClassesList(currentOntology.iri, property.selectedProperty.objectType)
           .pipe(
             take(1),
@@ -297,7 +297,7 @@ export class SearchStateService {
     const index = currentPropertyFormList.indexOf(property);
 
     if (index > -1 && property.selectedMatchPropertyResourceClass) {
-      this._advancedSearchService
+      this._advApiService
         .filteredPropertiesList(property.selectedMatchPropertyResourceClass.iri)
         .pipe(
           take(1),
@@ -374,7 +374,7 @@ export class SearchStateService {
       resourcesSearchResultsPageNumber: 0,
     });
 
-    this._advancedSearchService
+    this._advApiService
       .getResourcesListCount(searchItem.value, searchItem.objectType)
       .pipe(
         take(1),
@@ -382,7 +382,7 @@ export class SearchStateService {
           this.patchState({ resourcesSearchResultsCount: count });
 
           if (count > 0) {
-            return this._advancedSearchService.getResourcesList(searchItem.value, searchItem.objectType, 0).pipe(
+            return this._advApiService.getResourcesList(searchItem.value, searchItem.objectType, 0).pipe(
               take(1),
               tap(resources => {
                 this.patchState({
@@ -416,7 +416,7 @@ export class SearchStateService {
       const nextPageNumber = this.get(state => state.resourcesSearchResultsPageNumber) + 1;
       this.patchState({ resourcesSearchResultsLoading: true });
 
-      this._advancedSearchService
+      this._advApiService
         .getResourcesList(searchItem.value, searchItem.objectType, nextPageNumber)
         .pipe(
           take(1),
@@ -472,7 +472,7 @@ export class SearchStateService {
             return EMPTY;
           }
           this.patchState({ ontologiesLoading: true });
-          return this._advancedSearchService.ontologiesInProjectList(iri).pipe(
+          return this._advApiService.ontologiesInProjectList(iri).pipe(
             take(1),
             tap(data => {
               this.patchState({
@@ -500,7 +500,7 @@ export class SearchStateService {
             return EMPTY;
           }
           this.patchState({ resourceClassesLoading: true });
-          return this._advancedSearchService.resourceClassesList(resClass.iri).pipe(
+          return this._advApiService.resourceClassesList(resClass.iri).pipe(
             take(1),
             tap(data => this.patchState({ resourceClasses: data, resourceClassesLoading: false })),
             catchError(error => {
@@ -522,7 +522,7 @@ export class SearchStateService {
             return EMPTY;
           }
           this.patchState({ propertiesLoading: true });
-          return this._advancedSearchService.propertiesList(onto.iri).pipe(
+          return this._advApiService.propertiesList(onto.iri).pipe(
             take(1),
             tap(data => this.patchState({ properties: data, propertiesLoading: false })),
             catchError(error => {
@@ -547,7 +547,7 @@ export class SearchStateService {
           this.patchState({ propertiesLoading: true });
 
           if (!resourceClass) {
-            return this._advancedSearchService.propertiesList(ontology.iri).pipe(
+            return this._advApiService.propertiesList(ontology.iri).pipe(
               take(1),
               tap(data => this.patchState({ filteredProperties: data, properties: data, propertiesLoading: false })),
               catchError(error => {
@@ -557,7 +557,7 @@ export class SearchStateService {
             );
           }
 
-          return this._advancedSearchService.filteredPropertiesList(resourceClass.iri).pipe(
+          return this._advApiService.filteredPropertiesList(resourceClass.iri).pipe(
             take(1),
             tap(data => this.patchState({ filteredProperties: data, propertiesLoading: false })),
             catchError(error => {
