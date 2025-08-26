@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-resource-page',
   template:
-    '<app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" (afterResourceDeleted)="updateResourceCount($event)" />',
+    '<app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" (afterResourceDeleted)="updateResourceCount()" />',
 })
 export class ResourcePageComponent {
   constructor(
@@ -23,7 +23,7 @@ export class ResourcePageComponent {
     map(project => `${this._acs.dspAppConfig.iriBase}/${project.shortcode}/${this.instanceId}`)
   );
 
-  updateResourceCount(event: any): void {
-    // TODO
+  updateResourceCount(): void {
+    this._projectPageService.reloadProject();
   }
 }

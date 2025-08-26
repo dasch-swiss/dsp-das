@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { ReadResource } from '@dasch-swiss/dsp-js';
+import { Component, Input, OnChanges, Optional } from '@angular/core';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 
 @Component({
   selector: 'app-comparison',
@@ -26,7 +26,7 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
     </div>
 
     <ng-template #resourceTemplate let-res="res">
-      <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount($event)" />
+      <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
     </ng-template>
   `,
   styles: [
@@ -51,6 +51,8 @@ export class ComparisonComponent implements OnChanges {
     return this.resourceIds.length;
   }
 
+  constructor(@Optional() private _projectPageService: ProjectPageService) {}
+
   ngOnChanges(): void {
     const resourceIds = this.resourceIds;
 
@@ -62,7 +64,7 @@ export class ComparisonComponent implements OnChanges {
     }
   }
 
-  updateResourceCount(resource: ReadResource) {
-    // TODO
+  updateResourceCount() {
+    this._projectPageService?.reloadProject();
   }
 }
