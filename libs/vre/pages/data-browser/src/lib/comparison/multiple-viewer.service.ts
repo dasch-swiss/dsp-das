@@ -56,6 +56,11 @@ export class MultipleViewerService {
 
   reset() {
     this.selectMode = false;
-    this._selectedResourcesSubject.next([]);
+
+    if (this._selectedResourcesSubject.getValue().length >= 1) {
+      this._selectedResourcesSubject.next([this._selectedResourcesSubject.getValue()[0]]);
+    } else {
+      this._selectedResourcesSubject.next([]);
+    }
   }
 }
