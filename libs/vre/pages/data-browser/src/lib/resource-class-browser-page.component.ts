@@ -52,8 +52,9 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     })
   );
 
-  classParamChanged$ = this._route.params.pipe(
-    map(params => params[RouteConstants.classParameter]),
+  classParam$ = this._route.params.pipe(map(params => params[RouteConstants.classParameter]));
+
+  classParamChanged$ = this.classParam$.pipe(
     startWith(null),
     pairwise(),
     map(([prev, curr]) => !prev || prev !== curr)
