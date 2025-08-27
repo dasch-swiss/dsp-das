@@ -4,7 +4,7 @@ import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, map, pairwise, startWith, switchMap } from 'rxjs';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
@@ -50,6 +50,13 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
       this._resourceResult.numberOfResults = numberOfResults;
       return resources;
     })
+  );
+
+  classParamChanged$ = this._route.params.pipe(
+    map(params => params[RouteConstants.classParameter]),
+    startWith(null),
+    pairwise(),
+    map(([prev, curr]) => !prev || prev !== curr)
   );
 
   countQuery$ = (project: ReadProject, ontologyLabel: string, classLabel: string) =>
