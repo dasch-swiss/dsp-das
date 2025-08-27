@@ -13,7 +13,7 @@ import { ResourceResultService } from './resource-result.service';
     <ng-container *ngIf="resources$ | async as resources">
       <ng-container *ngIf="userCanViewResources; else noAccessTpl">
         <app-multiple-viewer-gateway
-          [resources]="resources"
+          [data]="{ resources: resources, selectFirstResource: true }"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       </ng-container>
     </ng-container>

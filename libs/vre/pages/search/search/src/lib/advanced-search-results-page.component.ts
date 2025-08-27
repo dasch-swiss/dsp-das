@@ -12,7 +12,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
   template: `
     <app-multiple-viewer-gateway
       *ngIf="resources$ | async as resources"
-      [resources]="resources"
+      [data]="{ resources: resources, selectFirstResource: true }"
       [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
   `,
   providers: [ResourceResultService],

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { Observable, of } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
@@ -8,7 +8,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
   template: ` <div class="multiple-instances">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
-        <app-list-view-normal [resources]="resources" />
+        <app-list-view-normal [resources]="data.resources" />
       </as-split-area>
       <as-split-area [size]="60" cdkScrollable>
         <app-multiple-viewer />
@@ -18,20 +18,20 @@ import { MultipleViewerService } from './multiple-viewer.service';
   styleUrls: ['./multiple-viewer-gateway.component.scss'],
   providers: [MultipleViewerService],
 })
-export class MultipleViewerGatewayComponent implements OnInit {
-  @Input({ required: true }) resources!: ReadResource[];
+export class MultipleViewerGatewayComponent implements OnInit, OnChanges {
+  @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
   @Input() hasRightsToShowCreateLinkObject$?: Observable<boolean>;
   @Input() searchKeyword?: string;
 
   constructor(private _multipleViewerService: MultipleViewerService) {}
 
   ngOnInit() {
-    this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$ ?? of(true));
-
-    if (this.resources.length > 0) {
-      this._multipleViewerService.selectOneResource(this.resources[0]);
-    }
-
     this._multipleViewerService.searchKeyword = this.searchKeyword;
+    this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$ ?? of(true));
+  }
+  ngOnChanges() {
+    if (this.data.selectFirstResource && this.data.resources.length > 0) {
+      this._multipleViewerService.selectOneResource(this.data.resources[0]);
+    }
   }
 }
