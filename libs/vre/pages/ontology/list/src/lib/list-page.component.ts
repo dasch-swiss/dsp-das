@@ -72,8 +72,9 @@ export class ListPageComponent implements OnInit, OnDestroy {
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
       .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
+      .pipe(switchMap(() => this._listApiService.deleteListNode(list.id)))
       .subscribe(() => {
-        this._reloadMainList();
+        this.navigateToDataModels();
       });
   }
 

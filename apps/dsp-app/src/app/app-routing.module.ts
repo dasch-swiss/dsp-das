@@ -4,33 +4,33 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceClassBrowserPageComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
-    DataModelsPageComponent,
-    OntologyEditorPageComponent,
-    OntologyPageComponent,
-    OntologyPropertiesComponent,
+  DataModelsPageComponent,
+  OntologyEditorPageComponent,
+  OntologyPageComponent,
+  OntologyPropertiesComponent,
 } from '@dasch-swiss/vre/pages/ontology/ontology';
 import {
-    CollaborationPageComponent,
-    CreateProjectFormPageComponent,
-    EditProjectFormPageComponent,
-    ImageSettingsComponent,
-    LegalSettingsComponent,
-    ProjectDescriptionPageComponent,
-    ProjectPageComponent,
-    ResourceMetadataComponent,
-    SettingsPageComponent,
+  CollaborationPageComponent,
+  CreateProjectFormPageComponent,
+  EditProjectFormPageComponent,
+  ImageSettingsComponent,
+  LegalSettingsComponent,
+  ProjectDescriptionPageComponent,
+  ProjectPageComponent,
+  ResourceMetadataComponent,
+  SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import {
-    AdvancedSearchPageComponent,
-    AdvancedSearchResultsPageComponent,
-    FulltextSearchResultPageComponent,
-    SearchProjectResultsPageComponent,
+  AdvancedSearchPageComponent,
+  AdvancedSearchResultsPageComponent,
+  FulltextSearchResultPageComponent,
+  SearchProjectResultsPageComponent,
 } from '@dasch-swiss/vre/pages/search/search';
 import {
-    CookiePolicyComponent,
-    ProjectsComponent,
-    SystemPageComponent,
-    UsersTabComponent,
+  CookiePolicyComponent,
+  ProjectsComponent,
+  SystemPageComponent,
+  UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-creator';
