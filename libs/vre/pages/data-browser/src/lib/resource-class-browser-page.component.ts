@@ -10,14 +10,26 @@ import { ResourceResultService } from './resource-result.service';
 @Component({
   selector: 'app-resource-class-browser-page',
   template: `
-    <app-multiple-viewer-gateway
-      *ngIf="resources$ | async as resources"
-      [resources]="resources"
-      [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
+    <ng-container *ngIf="resources$ | async as resources">
+      <ng-container *ngIf="userCanViewResources; else noAccessTpl">
+        <app-multiple-viewer-gateway
+          [resources]="resources"
+          [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noAccessTpl>
+      <div style="margin-top: 80px; align-items: center; text-align: center">
+        <h3>It seems like you don’t have the necessary permissions.</h3>
+        <p>Check with a project admin if you have the necessary permission or if you are logged in.</p>
+      </div>
+    </ng-template>
   `,
   providers: [ResourceResultService],
 })
 export class ResourceClassBrowserPageComponent implements OnChanges {
+  userCanViewResources = true;
+
   resources$ = combineLatest([this.projectPageService.currentProject$, this._route.params]).pipe(
     switchMap(([project, params]) => {
       const ontologyLabel = params[RouteConstants.ontoParameter];
@@ -28,16 +40,24 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
         this.countQuery$(project, ontologyLabel, classLabel),
       ]);
     }),
-    map(([resourceResponse, countResponse]) => {
-      this._resourceResult.numberOfResults = countResponse.numberOfResults;
-      return resourceResponse.resources;
+    map(([{ resources, pageIndex }, numberOfResults]) => {
+      if (pageIndex === 0 && resources.length === 0 && numberOfResults > 0) {
+        this.userCanViewResources = false;
+      } else {
+        this.userCanViewResources = true;
+      }
+
+      this._resourceResult.numberOfResults = numberOfResults;
+      return resources;
     })
   );
 
   countQuery$ = (project: ReadProject, ontologyLabel: string, classLabel: string) =>
-    this._dspApiConnection.v2.search.doExtendedSearchCountQuery(
-      this._setGravsearch(this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel))
-    );
+    this._dspApiConnection.v2.search
+      .doExtendedSearchCountQuery(
+        this._setGravsearch(this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel))
+      )
+      .pipe(map(response => response.numberOfResults));
 
   constructor(
     protected _route: ActivatedRoute,
@@ -59,7 +79,7 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
         this._performGravSearch(
           this._setGravsearch(this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel)),
           pageIndex
-        )
+        ).pipe(map(response => ({ resources: response.resources, pageIndex })))
       )
     );
 
