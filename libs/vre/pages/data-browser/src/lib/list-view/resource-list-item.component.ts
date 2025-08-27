@@ -26,7 +26,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          <div *ngIf="foundIn.length > 0" class="found-in">Found in: {{ foundIn.concat(', ').slice(0, -1) }}</div>
+          <div *ngIf="foundIn.length > 0" class="found-in">Found in: {{ foundIn.join(', ') }}</div>
         </div>
 
         <mat-checkbox
