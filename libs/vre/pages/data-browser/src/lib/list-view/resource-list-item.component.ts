@@ -62,9 +62,9 @@ export class ResourceListItemComponent implements OnInit {
   isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
       if (this.multipleViewerService.selectMode) {
-        return resources.includes(this.resource);
+        return resources.map(r => r.id).includes(this.resource.id);
       } else {
-        return resources.length > 0 && resources[0] === this.resource;
+        return resources.length > 0 && resources[0].id === this.resource.id;
       }
     })
   );

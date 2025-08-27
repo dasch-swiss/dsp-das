@@ -33,5 +33,6 @@ export class MultipleViewerGatewayComponent implements OnInit, OnChanges {
     if (this.data.selectFirstResource && this.data.resources.length > 0) {
       this._multipleViewerService.selectOneResource(this.data.resources[0]);
     }
+    console.log('aaa', this);
   }
 }
