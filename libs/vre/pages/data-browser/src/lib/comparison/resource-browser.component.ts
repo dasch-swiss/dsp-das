@@ -5,7 +5,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-browser',
-  template: ` <div class="multiple-instances">
+  template: ` <div class="whole-height">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
         <app-list-view-normal [resources]="data.resources" />

@@ -1,5 +1,5 @@
 @use '../../../../../../../apps/dsp-app/src/styles/config' as *;
 
-.multiple-instances {
+.whole-height {
   height: calc(100vh - #{$header-height});
 }
