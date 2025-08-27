@@ -1,7 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, OnDestroy } from '@angular/core';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   distinctUntilChanged,
   map,
@@ -10,6 +9,8 @@ import {
   catchError,
   EMPTY,
   take,
+  takeUntil,
+  Subject,
 } from 'rxjs';
 import {
   PropertyFormItem,
@@ -27,12 +28,14 @@ import { Operators } from './operators.config';
 import { PropertyFormManager } from './property-form.manager';
 
 @Injectable()
-export class SearchStateService {
+export class SearchStateService implements OnDestroy {
   private _advApiService = inject(AdvancedSearchApiService);
   private _formManager = inject(PropertyFormManager);
   private _gravsearchService = inject(GravsearchService);
 
   private _state = new BehaviorSubject<SearchFormsState>(INITIAL_FORMS_STATE);
+
+  private _destroy$ = new Subject<void>();
 
   ontologies$ = this._state.pipe(
     map(state => state.ontologies),
@@ -42,10 +45,7 @@ export class SearchStateService {
     map(state => state.resourceClasses),
     distinctUntilChanged()
   );
-  selectedProject$ = this._state.pipe(
-    map(state => state.selectedProject),
-    distinctUntilChanged()
-  );
+
   selectedOntology$ = this._state.pipe(
     map(state => state.selectedOntology),
     distinctUntilChanged()
@@ -58,8 +58,8 @@ export class SearchStateService {
     map(state => state.propertyFormList),
     distinctUntilChanged()
   );
-  propertiesOrderByList$ = this._state.pipe(
-    map(state => state.propertiesOrderByList),
+  propertiesOrderBy$ = this._state.pipe(
+    map(state => state.propertiesOrderBy),
     distinctUntilChanged()
   );
   propertiesLoading$ = this._state.pipe(
@@ -91,6 +91,134 @@ export class SearchStateService {
     distinctUntilChanged()
   );
 
+  isFormValid$ = this.propertyForms$.pipe(
+    map(propertyFormList => {
+      const hasInvalidPropertyForms = propertyFormList.some(prop => !this.isPropertyFormItemValid(prop));
+      return !hasInvalidPropertyForms && propertyFormList.some(prop => prop.selectedProperty);
+    }),
+    distinctUntilChanged()
+  );
+
+  constructor() {
+    this.selectedOntology$
+      .pipe(
+        takeUntil(this._destroy$),
+        distinctUntilChanged(),
+        switchMap(ontology => {
+          if (!ontology) {
+            return EMPTY;
+          }
+
+          return combineLatest([
+            this._advApiService.resourceClassesList(ontology.iri),
+            this._advApiService.propertiesList(ontology.iri),
+          ]).pipe(
+            take(1),
+            tap(([resourceClasses, properties]) => {
+              this.patchState({
+                resourceClasses: resourceClasses || [],
+                resourceClassesLoading: false,
+                properties: properties || [],
+                filteredProperties: properties || [],
+                propertiesLoading: false,
+              });
+            })
+          );
+        })
+      )
+      .subscribe();
+
+    this.selectedResourceClass$
+      .pipe(
+        takeUntil(this._destroy$),
+        distinctUntilChanged(),
+        switchMap(resourceClass => {
+          const ontology = this._state.value.selectedOntology;
+          if (!ontology) {
+            return EMPTY;
+          }
+
+          if (!resourceClass) {
+            return this._advApiService.propertiesList(ontology.iri).pipe(
+              take(1),
+              tap(properties => {
+                this.patchState({
+                  filteredProperties: properties || [],
+                  propertiesLoading: false,
+                });
+              })
+            );
+          }
+
+          return this._advApiService.filteredPropertiesList(resourceClass.iri).pipe(
+            take(1),
+            tap(properties => {
+              this.patchState({
+                filteredProperties: properties || [],
+                propertiesLoading: false,
+              });
+            })
+          );
+        })
+      )
+      .subscribe();
+
+    // Automatically update propertiesOrderBy when propertyFormList changes
+    this.propertyForms$
+      .pipe(
+        takeUntil(this._destroy$),
+        distinctUntilChanged(),
+        map(propertyFormList => {
+          const validOrderByItems = this._state.value.propertiesOrderBy.filter(orderByItem =>
+            propertyFormList.some(form => form.id === orderByItem.id)
+          );
+
+          const newOrderByItems = propertyFormList
+            .filter(
+              form => form.selectedProperty && !validOrderByItems.some(item => item.id === form.selectedProperty?.iri)
+            )
+            .map(form => ({
+              id: form.selectedProperty?.iri,
+              label: form.selectedProperty!.label,
+              orderBy: false,
+              disabled: false,
+            }));
+
+          return [...validOrderByItems, ...newOrderByItems];
+        }),
+        tap(updatedOrderByList => {
+          // Only update if the order by list actually changed
+          const currentOrderByList = this._state.value.propertiesOrderBy;
+          console.log('Updated Order By List:', currentOrderByList, updatedOrderByList);
+          if (JSON.stringify(currentOrderByList) !== JSON.stringify(updatedOrderByList)) {
+            this.patchState({ propertiesOrderBy: updatedOrderByList });
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  initWithProject(projectIri: string): void {
+    this.patchState({
+      ...INITIAL_FORMS_STATE,
+      selectedProject: projectIri,
+    });
+
+    this._advApiService
+      .ontologiesInProjectList(projectIri)
+      .pipe(take(1))
+      .subscribe(ontologies => {
+        if (!ontologies?.length) {
+          return;
+        }
+        this.patchState({
+          ontologies,
+          ontologiesLoading: false,
+          selectedOntology: ontologies[0],
+        });
+      });
+  }
+
   setState(state: Partial<SearchFormsState>): void {
     this._state.next({ ...this._state.value, ...state });
   }
@@ -103,23 +231,26 @@ export class SearchStateService {
     return selector(this._state.value);
   }
 
-  // All the existing methods remain the same but use the new services internally
   updateSelectedOntology(ontology: ApiData): void {
-    this.patchState({ selectedOntology: ontology });
-    this.patchState({ selectedResourceClass: undefined });
-    this.patchState({ propertyFormList: [EMPTY_PROPERTY_FORM_ITEM] });
-    this.patchState({ propertiesOrderByList: [] });
+    this.patchState({
+      selectedOntology: ontology,
+      selectedResourceClass: undefined,
+      propertyFormList: [EMPTY_PROPERTY_FORM_ITEM],
+      propertiesOrderBy: [],
+    });
   }
 
-  updateSelectedResourceClass(resourceClass: ApiData | undefined): void {
-    this.patchState({ selectedResourceClass: resourceClass });
-    this.patchState({ propertyFormList: [EMPTY_PROPERTY_FORM_ITEM] });
-    this.patchState({ propertiesOrderByList: [] });
+  updateSelectedResourceClass(resourceClass: ApiData): void {
+    this.patchState({
+      selectedResourceClass: resourceClass,
+      propertyFormList: [EMPTY_PROPERTY_FORM_ITEM],
+      propertiesOrderBy: [],
+    });
   }
 
   deletePropertyForm(property: PropertyFormItem): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
-    const currentOrderByList = this.get(state => state.propertiesOrderByList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
+    const currentOrderByList = this._state.value.propertiesOrderBy;
 
     const updatedPropertyFormList = currentPropertyFormList.filter(item => item !== property);
     const updatedOrderByList = currentOrderByList.filter(item => item.id !== property.id);
@@ -131,12 +262,12 @@ export class SearchStateService {
 
     this.patchState({
       propertyFormList: updatedPropertyFormList,
-      propertiesOrderByList: updatedOrderByList,
+      propertiesOrderBy: updatedOrderByList,
     });
   }
 
   updateSelectedProperty(property: PropertyFormItem): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property);
     if (indexInPropertyFormList > -1 && property.selectedProperty) {
       const updatedForm = this._formManager.updateSelectedProperty(
@@ -165,9 +296,7 @@ export class SearchStateService {
       this.updatePropertyFormListItem(updatedPropertyFormList, updatedForm, indexInPropertyFormList);
     }
 
-    this.patchState({
-      propertiesOrderByList: this.getPropertiesOrderByList(property),
-    });
+    // propertiesOrderBy will be updated automatically by the reactive subscription
   }
 
   updatePropertyFormListItem(propertyFormList: PropertyFormItem[], property: PropertyFormItem, index: number): void {
@@ -181,12 +310,12 @@ export class SearchStateService {
   }
 
   updatePropertyOrderBy(orderByList: OrderByItem[]): void {
-    this.patchState({ propertiesOrderByList: orderByList });
+    this.patchState({ propertiesOrderBy: orderByList });
   }
 
   // Child property form methods that were in the original service
   addChildPropertyFormList(property: PropertyFormItem): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property);
 
     const currentSearchValue =
@@ -204,7 +333,7 @@ export class SearchStateService {
   }
 
   deleteChildPropertyFormList(property: ParentChildPropertyPair): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property.parentProperty);
 
     const currentSearchValue =
@@ -218,7 +347,7 @@ export class SearchStateService {
   }
 
   updateChildSelectedProperty(property: ParentChildPropertyPair): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property.parentProperty);
 
     const currentSearchValue =
@@ -259,8 +388,8 @@ export class SearchStateService {
   }
 
   updateSelectedOperator(property: PropertyFormItem): void {
-    const currentOntology = this.get(state => state.selectedOntology);
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentOntology = this._state.value.selectedOntology;
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const index = currentPropertyFormList.indexOf(property);
 
     if (index > -1) {
@@ -293,7 +422,7 @@ export class SearchStateService {
   }
 
   updateSelectedMatchPropertyResourceClass(property: PropertyFormItem): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const index = currentPropertyFormList.indexOf(property);
 
     if (index > -1 && property.selectedMatchPropertyResourceClass) {
@@ -316,7 +445,7 @@ export class SearchStateService {
   }
 
   updateChildSelectedOperator(property: ParentChildPropertyPair): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property.parentProperty);
 
     const currentSearchValue =
@@ -340,7 +469,7 @@ export class SearchStateService {
   }
 
   updateSearchValue(property: PropertyFormItem): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const index = currentPropertyFormList.indexOf(property);
 
     if (index > -1) {
@@ -349,7 +478,7 @@ export class SearchStateService {
   }
 
   updateChildSearchValue(property: ParentChildPropertyPair): void {
-    const currentPropertyFormList = this.get(state => state.propertyFormList);
+    const currentPropertyFormList = this._state.value.propertyFormList;
     const indexInPropertyFormList = currentPropertyFormList.indexOf(property.parentProperty);
 
     const currentSearchValue =
@@ -409,11 +538,11 @@ export class SearchStateService {
   }
 
   loadMoreResourcesSearchResults(searchItem: SearchItem): void {
-    const count = this.get(state => state.resourcesSearchResultsCount);
-    const results = this.get(state => state.resourcesSearchResults);
+    const count = this._state.value.resourcesSearchResultsCount;
+    const results = this._state.value.resourcesSearchResults;
 
     if (count > results.length) {
-      const nextPageNumber = this.get(state => state.resourcesSearchResultsPageNumber) + 1;
+      const nextPageNumber = this._state.value.resourcesSearchResultsPageNumber + 1;
       this.patchState({ resourcesSearchResultsLoading: true });
 
       this._advApiService
@@ -437,11 +566,11 @@ export class SearchStateService {
   }
 
   onSearch(): string {
-    const ontoIri = this.get(state => state.selectedOntology)!.iri;
-    const selectedResourceClass = this.get(state => state.selectedResourceClass);
-    const propertyFormList = this.get(state => state.propertyFormList);
-    const orderByList = this.get(state => state.propertiesOrderByList);
-    const resourceClasses = this.get(state => state.resourceClasses).map(resClass => resClass.iri);
+    const ontoIri = this._state.value.selectedOntology?.iri;
+    const selectedResourceClass = this._state.value.selectedResourceClass;
+    const propertyFormList = this._state.value.propertyFormList;
+    const orderByList = this._state.value.propertiesOrderBy;
+    const resourceClasses = this._state.value.resourceClasses.map(resClass => resClass.iri);
 
     const nonEmptyPropertyFormList = propertyFormList.filter(prop => prop.selectedProperty);
 
@@ -457,117 +586,10 @@ export class SearchStateService {
   }
 
   reset() {
-    this.patchState({ selectedOntology: this.get(state => state.ontologies[0]) });
+    this.patchState({ selectedOntology: this._state.value.ontologies[0] });
     this.patchState({ selectedResourceClass: undefined });
     this.patchState({ propertyFormList: [EMPTY_PROPERTY_FORM_ITEM] });
-    this.patchState({ propertiesOrderByList: [] });
-  }
-
-  // Simplified API call methods using the new API service
-  ontologiesList(ontologyIri$: Observable<string | undefined>): void {
-    ontologyIri$
-      .pipe(
-        switchMap(iri => {
-          if (!iri) {
-            return EMPTY;
-          }
-          this.patchState({ ontologiesLoading: true });
-          return this._advApiService.ontologiesInProjectList(iri).pipe(
-            take(1),
-            tap(data => {
-              this.patchState({
-                ontologies: data,
-                ontologiesLoading: false,
-                selectedOntology: data[0],
-              });
-            }),
-            catchError(error => {
-              this.patchState({ error, ontologiesLoading: false });
-              return EMPTY;
-            })
-          );
-        })
-      )
-      .subscribe();
-  }
-
-  resourceClassesList(resourceClass$: Observable<ApiData | undefined>): void {
-    resourceClass$
-      .pipe(
-        switchMap(resClass => {
-          if (!resClass) {
-            this.patchState({ resourceClassesLoading: false });
-            return EMPTY;
-          }
-          this.patchState({ resourceClassesLoading: true });
-          return this._advApiService.resourceClassesList(resClass.iri).pipe(
-            take(1),
-            tap(data => this.patchState({ resourceClasses: data, resourceClassesLoading: false })),
-            catchError(error => {
-              this.patchState({ error, resourceClassesLoading: false });
-              return EMPTY;
-            })
-          );
-        })
-      )
-      .subscribe();
-  }
-
-  propertiesList(ontology$: Observable<ApiData | undefined>): void {
-    ontology$
-      .pipe(
-        switchMap(onto => {
-          if (!onto) {
-            this.patchState({ propertiesLoading: false });
-            return EMPTY;
-          }
-          this.patchState({ propertiesLoading: true });
-          return this._advApiService.propertiesList(onto.iri).pipe(
-            take(1),
-            tap(data => this.patchState({ properties: data, propertiesLoading: false })),
-            catchError(error => {
-              this.patchState({ error, propertiesLoading: false });
-              return EMPTY;
-            })
-          );
-        })
-      )
-      .subscribe();
-  }
-
-  filteredPropertiesList(): void {
-    combineLatest([this.selectedOntology$, this.selectedResourceClass$])
-      .pipe(
-        switchMap(([ontology, resourceClass]) => {
-          if (!ontology) {
-            this.patchState({ filteredProperties: [], propertiesLoading: false });
-            return EMPTY;
-          }
-
-          this.patchState({ propertiesLoading: true });
-
-          if (!resourceClass) {
-            return this._advApiService.propertiesList(ontology.iri).pipe(
-              take(1),
-              tap(data => this.patchState({ filteredProperties: data, properties: data, propertiesLoading: false })),
-              catchError(error => {
-                this.patchState({ error, propertiesLoading: false });
-                return EMPTY;
-              })
-            );
-          }
-
-          return this._advApiService.filteredPropertiesList(resourceClass.iri).pipe(
-            take(1),
-            tap(data => this.patchState({ filteredProperties: data, propertiesLoading: false })),
-            catchError(error => {
-              this.patchState({ error, propertiesLoading: false });
-              return EMPTY;
-            })
-          );
-        })
-      )
-      .subscribe();
+    this.patchState({ propertiesOrderBy: [] });
   }
 
   private _storeSnapshotInLocalStorage(): void {
@@ -580,7 +602,7 @@ export class SearchStateService {
       selectedResourceClass: state.selectedResourceClass,
       propertyFormList: state.propertyFormList,
       properties: state.properties,
-      propertiesOrderByList: state.propertiesOrderByList,
+      propertiesOrderBy: state.propertiesOrderBy,
       filteredProperties: state.filteredProperties,
     };
 
@@ -593,8 +615,14 @@ export class SearchStateService {
     localStorage.setItem('advanced-search-previous-search', JSON.stringify(projectPreviousSearch));
   }
 
-  private getPropertiesOrderByList(property: PropertyFormItem): OrderByItem[] {
-    const currentOrderByList = this.get(state => state.propertiesOrderByList);
-    return this._formManager.updateOrderByList(currentOrderByList, property);
+  isPropertyFormItemValid(prop: PropertyFormItem): boolean {
+    return (
+      prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists || !!prop.searchValue
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

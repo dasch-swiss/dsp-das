@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, tap, catchError, EMPTY, take, map, startWith, distinctUntilChanged } from 'rxjs';
+import { tap, catchError, EMPTY, take, map, startWith, distinctUntilChanged } from 'rxjs';
 import { PropertyFormItem, PropertyData, OrderByItem } from '../model';
 import { updateOrderByList, EMPTY_CHILD_PROPERTY_FORM_ITEM } from '../util';
 import { AdvancedSearchApiService } from './advanced-search-api.service';
 import { Operators, getOperatorsForObjectType, getDefaultLinkedResourceOperators } from './operators.config';
-import { SearchStateService } from './search-state.service';
 
 /**
  * Service responsible for managing property form operations.
@@ -15,16 +14,6 @@ import { SearchStateService } from './search-state.service';
 })
 export class PropertyFormManager {
   private advancedSearchService = inject(AdvancedSearchApiService);
-  private searchService = inject(SearchStateService);
-
-  isFormValid$ = this.searchService.propertyForms$.pipe(
-    map(propertyFormList => {
-      const hasInvalidPropertyForms = propertyFormList.some(prop => !this.isPropertyFormItemValid(prop));
-      return !hasInvalidPropertyForms && propertyFormList.some(prop => prop.selectedProperty);
-    }),
-    startWith(true),
-    distinctUntilChanged()
-  );
 
   updateSelectedProperty(
     form: PropertyFormItem,
@@ -148,9 +137,6 @@ export class PropertyFormManager {
     };
   }
 
-  /**
-   * Updates the order by list when a property form changes
-   */
   updateOrderByList(currentOrderBy: OrderByItem[], form: PropertyFormItem): OrderByItem[] {
     return updateOrderByList(currentOrderBy, form);
   }
@@ -159,5 +145,25 @@ export class PropertyFormManager {
     return (
       prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists || !!prop.searchValue
     );
+  }
+
+  updateOrderByListFromFormList(currentOrderBy: OrderByItem[], propertyFormList: PropertyFormItem[]): OrderByItem[] {
+    // Filter out order by items that no longer have corresponding properties
+    console.log('Current Order By:', currentOrderBy);
+    const validOrderByItems = currentOrderBy.filter(orderByItem =>
+      propertyFormList.some(form => form.id === orderByItem.id)
+    );
+    console.log('Valid Order By Items:', validOrderByItems);
+
+    const newOrderByItems = propertyFormList
+      .filter(form => form.selectedProperty && !validOrderByItems.some(item => item.id === form.id))
+      .map(form => ({
+        id: form.id,
+        label: form.selectedProperty!.label,
+        orderBy: false,
+        disabled: false,
+      }));
+
+    return [...validOrderByItems, ...newOrderByItems];
   }
 }

@@ -100,7 +100,7 @@ describe('AdvancedSearchStoreService', () => {
       propertyFormList: [],
       properties: [],
       propertiesLoading: false,
-      propertiesOrderByList: [],
+      propertiesOrderBy: [],
       filteredProperties: [],
       matchResourceClassesLoading: false,
       resourcesSearchResultsLoading: false,
@@ -308,7 +308,7 @@ describe('AdvancedSearchStoreService', () => {
       const testOrderByList = [testOrderByItem];
 
       service.patchState({ filteredProperties: testProperties });
-      service.patchState({ propertiesOrderByList: testOrderByList });
+      service.patchState({ propertiesOrderBy: testOrderByList });
 
       service.filteredProperties$.pipe(take(1)).subscribe(fp => {
         expect(fp).not.toBeUndefined();
@@ -507,7 +507,7 @@ describe('AdvancedSearchStoreService', () => {
         orderBy: false,
       };
 
-      service.patchState({ propertiesOrderByList: [orderByItem] });
+      service.patchState({ propertiesOrderBy: [orderByItem] });
 
       const newSelectedProp = {
         iri: 'testIri',
@@ -546,7 +546,7 @@ describe('AdvancedSearchStoreService', () => {
         orderBy: false,
       };
 
-      service.patchState({ propertiesOrderByList: [orderByItem] });
+      service.patchState({ propertiesOrderBy: [orderByItem] });
 
       const newSelectedProp = {
         iri: 'testIri',

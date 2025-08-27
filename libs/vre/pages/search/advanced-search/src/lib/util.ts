@@ -22,19 +22,14 @@ export function isPropertyFormItemInvalid(prop: PropertyFormItem): boolean {
   return false;
 }
 
-export function isOrderByItemDisabled(data: PropertyData | undefined): boolean {
-  if (!data) {
-    return true;
-  }
-  return !(data.objectType === ResourceLabel || data.objectType?.includes(Constants.KnoraApiV2));
-}
-
 export function createOrderByItem(property: PropertyFormItem): OrderByItem {
   return {
     id: property.id,
     label: property.selectedProperty?.label || '',
     orderBy: false,
-    disabled: isOrderByItemDisabled(property.selectedProperty),
+    disabled:
+      property.selectedProperty?.objectType === ResourceLabel ||
+      property.selectedProperty?.objectType?.includes(Constants.KnoraApiV2),
   };
 }
 
@@ -95,7 +90,7 @@ export const INITIAL_FORMS_STATE: SearchFormsState = {
   ],
   properties: [],
   propertiesLoading: false,
-  propertiesOrderByList: [],
+  propertiesOrderBy: [],
   filteredProperties: [],
   matchResourceClassesLoading: false,
   resourcesSearchResultsLoading: false,

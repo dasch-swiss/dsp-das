@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, tap } from 'rxjs';
 import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 
@@ -32,38 +32,30 @@ export class OrderByComponent {
   private searchService = inject(SearchStateService);
   private _propertyFormManager = inject(PropertyFormManager);
 
-  orderByList$ = this.searchService.propertyForms$.pipe(
-    map(propertyFormList => {
-      const nonEmptyPropertyForms = propertyFormList.filter(propertyFormItem => propertyFormItem.selectedProperty);
-      return nonEmptyPropertyForms.filter(prop => {
-        return this._propertyFormManager.isPropertyFormItemValid(prop);
-      });
-    }),
-    distinctUntilChanged()
-  );
-
-  orderByDisabled$ = combineLatest([this.searchService.propertyForms$, this.searchService.propertiesOrderByList$]).pipe(
-    map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
-    distinctUntilChanged()
-  );
+  readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
   @ViewChild('sortOrderSelectionList')
   sortOrderSelectionList!: MatSelectionList;
 
+  orderByList$ = this.searchService.propertiesOrderBy$.pipe(distinctUntilChanged());
+
+  orderByDisabled$ = combineLatest([this.searchService.propertyForms$, this.searchService.propertiesOrderBy$]).pipe(
+    map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
+    distinctUntilChanged()
+  );
+
   isOpen = false;
-  tooltipText = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
   drop(event: CdkDragDrop<string[]>) {
-    const currentOrderByList = this.searchService.get(state => state.propertiesOrderByList);
+    const currentOrderByList = this.searchService.get(state => state.propertiesOrderBy);
     if (!currentOrderByList) return;
 
     moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
-
     this.searchService.updatePropertyOrderBy(currentOrderByList);
   }
 
   onSelectionChange(event: MatSelectionListChange) {
-    const currentOrderByList = this.searchService.get(state => state.propertiesOrderByList);
+    const currentOrderByList = this.searchService.get(state => state.propertiesOrderBy);
     if (!currentOrderByList) return;
 
     event.options.forEach(option => {
@@ -72,7 +64,6 @@ export class OrderByComponent {
         selectedItem.orderBy = option.selected;
       }
     });
-
     this.searchService.updatePropertyOrderBy(currentOrderByList);
   }
 }

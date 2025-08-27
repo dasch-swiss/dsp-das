@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 
 @Component({
@@ -16,7 +15,7 @@ import { SearchStateService } from '../../service/search-state.service';
         mat-button
         mat-raised-button
         color="primary"
-        [disabled]="(propertyFormManager.isFormValid$ | async) === false"
+        [disabled]="(searchStateService.isFormValid$ | async) === false"
         (click)="emitSearchButtonClicked.emit()">
         Search
       </button>
@@ -26,7 +25,7 @@ import { SearchStateService } from '../../service/search-state.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormActionsComponent {
-  propertyFormManager = inject(PropertyFormManager);
+  searchStateService = inject(SearchStateService);
 
   @Output() emitResetButtonClicked = new EventEmitter<void>();
   @Output() emitSearchButtonClicked = new EventEmitter<void>();

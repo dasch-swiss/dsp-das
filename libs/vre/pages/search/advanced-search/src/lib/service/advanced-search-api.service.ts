@@ -32,9 +32,6 @@ export class AdvancedSearchApiService {
           iri: onto.id,
           label: onto.label,
         }));
-      }),
-      catchError(err => {
-        return []; // return an empty array on error
       })
     );
 

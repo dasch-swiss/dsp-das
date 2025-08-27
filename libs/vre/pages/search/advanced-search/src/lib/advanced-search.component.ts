@@ -11,14 +11,13 @@ import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { AdvancedSearchStateSnapshot, PropertyFormItem, QueryObject } from './model';
-import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { FormActionsComponent } from './ui/form-actions/form-actions.component';
 import { OntologyResourceFormComponent } from './ui/ontology-resource-form/ontology-resource-form.component';
 import { OrderByComponent } from './ui/order-by/order-by.component';
 import { PropertyFormSubcriteriaComponent } from './ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
 import { PropertyFormComponent } from './ui/property-form/property-form.component';
-import { EMPTY_PROPERTY_FORM_ITEM } from './util';
+import { INITIAL_FORMS_STATE } from './util';
 
 @Component({
   selector: 'app-advanced-search',
@@ -37,23 +36,20 @@ import { EMPTY_PROPERTY_FORM_ITEM } from './util';
     MatTooltipModule,
     TranslateModule,
   ],
-  providers: [SearchStateService],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchComponent implements OnInit {
-  // either the uuid of the project or the shortcode
-  // new projects use uuid, old projects use shortcode
-  @Input() uuid: string | undefined = undefined;
+  // either the projectUuid of the project or the shortcode
+  // new projects use projectUuid, old projects use shortcode
+  @Input({ required: true }) projectUuid!: string;
 
   @Output() emitGravesearchQuery = new EventEmitter<QueryObject>();
 
   private _searchState: SearchStateService = inject(SearchStateService);
   route: ActivatedRoute = inject(ActivatedRoute);
-  private _formManager = inject(PropertyFormManager);
 
-  selectedProject$ = this._searchState.selectedProject$;
   propertyFormList$ = this._searchState.propertyForms$;
 
   constants = Constants;
@@ -62,39 +58,15 @@ export class AdvancedSearchComponent implements OnInit {
   constructor(private _dialogService: DialogService) {}
 
   ngOnInit(): void {
-    const projectIri = `http://rdfh.ch/projects/${this.uuid}`;
-    this._searchState.setState({
-      ontologies: [],
-      ontologiesLoading: false,
-      resourceClasses: [],
-      resourceClassesLoading: false,
-      selectedProject: this.uuid ? projectIri : undefined,
-      selectedOntology: undefined,
-      selectedResourceClass: undefined,
-      propertyFormList: [EMPTY_PROPERTY_FORM_ITEM],
-      properties: [],
-      propertiesLoading: false,
-      propertiesOrderByList: [],
-      filteredProperties: [],
-      matchResourceClassesLoading: false,
-      resourcesSearchResultsLoading: false,
-      resourcesSearchResultsCount: 0,
-      resourcesSearchNoResults: false,
-      resourcesSearchResultsPageNumber: 0,
-      resourcesSearchResults: [],
-    });
+    const projectIri = `http://rdfh.ch/projects/${this.projectUuid}`;
+    this._searchState.initWithProject(projectIri);
 
-    this._searchState.ontologiesList(this.selectedProject$);
-
-    this._searchState.resourceClassesList(this._searchState.selectedOntology$);
-
-    this._searchState.propertiesList(this._searchState.selectedOntology$);
-
-    this._searchState.filteredPropertiesList();
-
-    const searchStored = localStorage.getItem('advanced-search-previous-search');
-    if (searchStored) {
-      this.previousSearchObject = JSON.parse(searchStored)[projectIri];
+    // Load previous search if available
+    if (projectIri) {
+      const searchStored = localStorage.getItem('advanced-search-previous-search');
+      if (searchStored) {
+        this.previousSearchObject = JSON.parse(searchStored)[projectIri];
+      }
     }
   }
 
@@ -121,29 +93,12 @@ export class AdvancedSearchComponent implements OnInit {
       this._searchState.reset();
     });
   }
-
   loadPreviousSearch(): void {
     if (!this.previousSearchObject) return;
 
     this._searchState.setState({
-      ontologies: this.previousSearchObject.ontologies,
-      ontologiesLoading: false,
-      resourceClasses: this.previousSearchObject.resourceClasses,
-      resourceClassesLoading: false,
-      selectedProject: this.previousSearchObject.selectedProject,
-      selectedOntology: this.previousSearchObject.selectedOntology,
-      selectedResourceClass: this.previousSearchObject.selectedResourceClass,
-      propertyFormList: this.previousSearchObject.propertyFormList,
-      properties: this.previousSearchObject.properties,
-      propertiesLoading: false,
-      propertiesOrderByList: this.previousSearchObject.propertiesOrderByList,
-      filteredProperties: this.previousSearchObject.filteredProperties,
-      matchResourceClassesLoading: false,
-      resourcesSearchResultsLoading: false,
-      resourcesSearchResultsCount: 0,
-      resourcesSearchNoResults: false,
-      resourcesSearchResultsPageNumber: 0,
-      resourcesSearchResults: [],
+      ...INITIAL_FORMS_STATE,
+      ...this.previousSearchObject,
     });
   }
 
