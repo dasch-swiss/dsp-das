@@ -1,5 +1,6 @@
+import { ViewportScroller } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ReadResource } from '@dasch-swiss/dsp-js';
+import { Constants, ReadColorValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { RegionService, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
@@ -9,7 +10,19 @@ import { take } from 'rxjs';
 @Component({
   selector: 'app-annotation-toolbar',
   template: `
-    <span class="action">
+    <div class="actions">
+      <span class="color-value" *ngIf="!toolBarActive">
+        <app-color-viewer [value]="readColorValue" />
+      </span>
+      <button
+        *ngIf="toolBarActive"
+        mat-icon-button
+        matTooltip="Highlight Region"
+        color="primary"
+        matTooltipPosition="above"
+        (click)="onPinPointClicked()">
+        <mat-icon>my_location</mat-icon>
+      </button>
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
@@ -37,7 +50,7 @@ import { take } from 'rxjs';
         (resourceDeleted)="onResourceDeleted()"
         (resourceErased)="onResourceDeleted()"
         (resourceUpdated)="onResourceUpdated()" />
-    </span>
+    </div>
 
     <mat-menu #share="matMenu" class="res-share-menu">
       <button
@@ -64,8 +77,14 @@ import { take } from 'rxjs';
   `,
   styles: [
     `
-      .action {
-        display: inline-flex;
+      .actions {
+        display: flex;
+        align-items: center;
+
+        .color-value {
+          display: flex;
+          align-items: center;
+        }
 
         button {
           border-radius: 0;
@@ -77,6 +96,12 @@ import { take } from 'rxjs';
 export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
   @Input({ required: true }) parentResourceId!: string;
+  @Input() toolBarActive = false;
+
+  get readColorValue() {
+    const colorValues: ReadColorValue[] = this.resource.properties[Constants.HasColor] as ReadColorValue[];
+    return colorValues && colorValues.length ? colorValues[0] : null;
+  }
 
   constructor(
     protected notification: NotificationService,
@@ -100,5 +125,14 @@ export class AnnotationToolbarComponent {
       `/${RouteConstants.resource}${resPath}?${RouteConstants.annotationQueryParam}=${annotationId}`,
       '_blank'
     );
+  }
+
+  onPinPointClicked() {
+    const element = document.getElementById('resource-fetcher-container');
+    element?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   }
 }
