@@ -1,19 +1,19 @@
 import { Component, Inject, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, pairwise, startWith, switchMap } from 'rxjs';
+import { combineLatest, map, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
   selector: 'app-resource-class-browser-page',
   template: `
-    <ng-container *ngIf="resources$ | async as resources">
+    <ng-container *ngIf="data$ | async as data">
       <ng-container *ngIf="userCanViewResources; else noAccessTpl">
         <app-multiple-viewer-gateway
-          [data]="{ resources: resources, selectFirstResource: true }"
+          [data]="data"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       </ng-container>
     </ng-container>
@@ -30,7 +30,7 @@ import { ResourceResultService } from './resource-result.service';
 export class ResourceClassBrowserPageComponent implements OnChanges {
   userCanViewResources = true;
 
-  resources$ = combineLatest([this.projectPageService.currentProject$, this._route.params]).pipe(
+  private readonly _resources$ = combineLatest([this.projectPageService.currentProject$, this._route.params]).pipe(
     switchMap(([project, params]) => {
       const ontologyLabel = params[RouteConstants.ontoParameter];
       const classLabel = params[RouteConstants.classParameter];
@@ -52,12 +52,16 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     })
   );
 
-  classParam$ = this._route.params.pipe(map(params => params[RouteConstants.classParameter]));
+  private readonly _classParam$ = this._route.params.pipe(map(params => params[RouteConstants.classParameter]));
 
-  classParamChanged$ = this.classParam$.pipe(
-    startWith(null),
+  data$ = this._resources$.pipe(
+    withLatestFrom(this._classParam$),
+    startWith([null, [] as ReadResource[]]),
     pairwise(),
-    map(([prev, curr]) => !prev || prev !== curr)
+    map(([[prevResources, prevClass], [currResources, currClass]]) => {
+      const classParamChanged = prevClass !== currClass;
+      return { resources: currResources!, selectFirstResource: classParamChanged };
+    })
   );
 
   countQuery$ = (project: ReadProject, ontologyLabel: string, classLabel: string) =>
