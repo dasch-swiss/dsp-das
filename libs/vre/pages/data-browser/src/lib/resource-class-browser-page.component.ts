@@ -1,4 +1,4 @@
-import { Component, Inject, OnChanges } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -27,7 +27,7 @@ import { ResourceResultService } from './resource-result.service';
   `,
   providers: [ResourceResultService],
 })
-export class ResourceClassBrowserPageComponent implements OnChanges {
+export class ResourceClassBrowserPageComponent implements OnInit {
   userCanViewResources = true;
 
   private readonly _resources$ = combineLatest([this.projectPageService.currentProject$, this._route.params]).pipe(
@@ -52,7 +52,9 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     })
   );
 
-  private readonly _classParam$ = this._route.params.pipe(map(params => params[RouteConstants.classParameter]));
+  private readonly _classParam$ = this._route.params.pipe(
+    map(params => params[RouteConstants.classParameter] as string)
+  );
 
   data$ = this._resources$.pipe(
     withLatestFrom(this._classParam$),
@@ -81,8 +83,12 @@ export class ResourceClassBrowserPageComponent implements OnChanges {
     public projectPageService: ProjectPageService
   ) {}
 
-  ngOnChanges() {
-    this._resourceResult.updatePageIndex(0);
+  ngOnInit() {
+    this._classParam$.pipe(startWith(null), pairwise()).subscribe(([prev, current]) => {
+      if (prev && prev !== current) {
+        this._resourceResult.updatePageIndex(0);
+      }
+    });
   }
 
   private _request$ = (project: ReadProject, ontologyLabel: string, classLabel: string) =>

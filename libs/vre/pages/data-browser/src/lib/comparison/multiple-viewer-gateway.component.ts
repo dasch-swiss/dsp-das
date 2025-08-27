@@ -30,9 +30,8 @@ export class MultipleViewerGatewayComponent implements OnInit, OnChanges {
     this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$ ?? of(true));
   }
   ngOnChanges() {
-    if (this.data.selectFirstResource && this.data.resources.length > 0) {
+    if (!this._multipleViewerService.selectMode && this.data.selectFirstResource && this.data.resources.length > 0) {
       this._multipleViewerService.selectOneResource(this.data.resources[0]);
     }
-    console.log('aaa', this);
   }
 }
