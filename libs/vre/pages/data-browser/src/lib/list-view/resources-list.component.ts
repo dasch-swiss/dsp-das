@@ -4,14 +4,14 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
 @Component({
-  selector: 'app-list-view-normal',
+  selector: 'app-resources-list',
   template: ` <app-pager
       (pageIndexChanged)="updatePageIndex($event)"
       [numberOfAllResults]="resourceResultService.numberOfResults" />
     <app-resource-list-selection *ngIf="multipleViewerService.selectMode" [resources]="resources" />
     <app-resource-list [resources]="resources" />`,
 })
-export class ListViewNormalComponent {
+export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
 
   constructor(

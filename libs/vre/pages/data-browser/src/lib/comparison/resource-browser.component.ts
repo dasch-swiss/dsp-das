@@ -8,7 +8,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
   template: ` <div class="whole-height">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
-        <app-list-view-normal [resources]="data.resources" />
+        <app-resources-list [resources]="data.resources" />
       </as-split-area>
       <as-split-area [size]="60" cdkScrollable>
         <app-multiple-viewer />

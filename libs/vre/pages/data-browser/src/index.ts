@@ -8,7 +8,7 @@ export * from './lib/comparison/comparison.component';
 
 export * from './lib/list-view/resource-link-dialog.component';
 
-export * from './lib/list-view/list-view-normal.component';
+export * from './lib/list-view/resources-list.component';
 export * from './lib/comparison/multiple-viewer.component';
 export * from './lib/comparison/resource-browser.component';
 export * from './lib/list-view/resource-list.component';
