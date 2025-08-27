@@ -26,7 +26,9 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
     </div>
 
     <ng-template #resourceTemplate let-res="res">
-      <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
+      <div style="max-width: 960px; margin: auto; margin-top: 32px; margin-bottom: 32px; padding: 0 16px">
+        <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
+      </div>
     </ng-template>
   `,
   styles: [
