@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
-  selector: 'app-multiple-viewer-gateway',
+  selector: 'app-resource-browser',
   template: ` <div class="multiple-instances">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
@@ -15,10 +15,10 @@ import { MultipleViewerService } from './multiple-viewer.service';
       </as-split-area>
     </as-split>
   </div>`,
-  styleUrls: ['./multiple-viewer-gateway.component.scss'],
+  styleUrls: ['./resource-browser.component.scss'],
   providers: [MultipleViewerService],
 })
-export class MultipleViewerGatewayComponent implements OnInit, OnChanges {
+export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
   @Input() hasRightsToShowCreateLinkObject$?: Observable<boolean>;
   @Input() searchKeyword?: string;

@@ -12,7 +12,7 @@ import { ResourceResultService } from './resource-result.service';
   template: `
     <ng-container *ngIf="data$ | async as data">
       <ng-container *ngIf="userCanViewResources; else noAccessTpl">
-        <app-multiple-viewer-gateway
+        <app-resource-browser
           [data]="data"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       </ng-container>

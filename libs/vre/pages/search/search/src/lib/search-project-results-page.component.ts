@@ -10,7 +10,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
   template: ` <app-progress-indicator *ngIf="loading" />
     <ng-container *ngIf="resources$ | async as resources">
       <h2 *ngIf="resources.length === 0" style="text-align: center;margin-top: 50px;">There is no result.</h2>
-      <app-multiple-viewer-gateway
+      <app-resource-browser
         *ngIf="resources.length > 0"
         [data]="{ resources: resources, selectFirstResource: true }"
         [searchKeyword]="query" />

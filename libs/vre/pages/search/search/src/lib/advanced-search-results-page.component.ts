@@ -10,7 +10,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
 @Component({
   selector: 'app-advanced-search-results-page',
   template: `
-    <app-multiple-viewer-gateway
+    <app-resource-browser
       *ngIf="resources$ | async as resources"
       [data]="{ resources: resources, selectFirstResource: true }"
       [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
