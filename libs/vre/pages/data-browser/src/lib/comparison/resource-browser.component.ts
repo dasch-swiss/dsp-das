@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -20,14 +20,14 @@ import { MultipleViewerService } from './multiple-viewer.service';
 })
 export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
-  @Input() hasRightsToShowCreateLinkObject$?: Observable<boolean>;
+  @Input({ required: true }) hasRightsToShowCreateLinkObject$!: Observable<boolean>;
   @Input() searchKeyword?: string;
 
   constructor(private _multipleViewerService: MultipleViewerService) {}
 
   ngOnInit() {
     this._multipleViewerService.searchKeyword = this.searchKeyword;
-    this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$ ?? of(true));
+    this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$);
   }
   ngOnChanges() {
     if (!this._multipleViewerService.selectMode && this.data.selectFirstResource && this.data.resources.length > 0) {

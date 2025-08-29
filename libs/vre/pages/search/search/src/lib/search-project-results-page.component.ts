@@ -2,7 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { Store } from '@ngxs/store';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -13,6 +15,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
       <app-resource-browser
         *ngIf="resources.length > 0"
         [data]="{ resources: resources, selectFirstResource: true }"
+        [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
         [searchKeyword]="query" />
     </ng-container>`,
   providers: [ResourceResultService],
@@ -20,6 +23,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
 export class SearchProjectResultsPageComponent {
   query?: string;
   loading = true;
+  userIsSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
 
   readonly resources$ = this._route.params.pipe(
     map(params => ({
@@ -54,6 +58,7 @@ export class SearchProjectResultsPageComponent {
     private _route: ActivatedRoute,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceResultService: ResourceResultService
+    private _resourceResultService: ResourceResultService,
+    private _store: Store
   ) {}
 }
