@@ -5,7 +5,10 @@ import { ResourceResultService } from '../resource-result.service';
 
 @Component({
   selector: 'app-resources-list',
-  template: ` <app-pager
+  template: `<div style="padding: 16px; display: flex; flex-direction: row-reverse">
+      <a mat-stroked-button [routerLink]="['..', '..']"><mat-icon>chevron_left</mat-icon>Back to search form</a>
+    </div>
+    <app-pager
       (pageIndexChanged)="updatePageIndex($event)"
       [numberOfAllResults]="resourceResultService.numberOfResults" />
     <app-resource-list-selection *ngIf="multipleViewerService.selectMode" [resources]="resources" />
