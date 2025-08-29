@@ -8,7 +8,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
   template: ` <div class="whole-height">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
-        <app-resources-list [resources]="data.resources" />
+        <app-resources-list [resources]="data.resources" [showBackToFormButton]="showBackToFormButton" />
       </as-split-area>
       <as-split-area [size]="60" cdkScrollable>
         <app-multiple-viewer />
@@ -21,6 +21,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
 export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
   @Input({ required: true }) hasRightsToShowCreateLinkObject$!: Observable<boolean>;
+  @Input() showBackToFormButton = false;
   @Input() searchKeyword?: string;
 
   constructor(private _multipleViewerService: MultipleViewerService) {}

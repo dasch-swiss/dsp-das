@@ -13,6 +13,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
     <app-resource-browser
       *ngIf="resources$ | async as resources"
       [data]="{ resources: resources, selectFirstResource: true }"
+      [showBackToFormButton]="true"
       [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
   `,
   providers: [ResourceResultService],
