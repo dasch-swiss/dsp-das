@@ -1,5 +1,6 @@
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { StoredProject } from '@dasch-swiss/dsp-js/src/models/admin/stored-project';
+import { UserPermissions } from '@dasch-swiss/vre/pages/project/project';
 import { Selector } from '@ngxs/store';
 import { UserState } from './user.state';
 import { UserStateModel } from './user.state-model';
@@ -17,11 +18,7 @@ export class UserSelectors {
 
   @Selector([UserState])
   static isSysAdmin(state: UserStateModel): boolean {
-    return state.isMemberOfSystemAdminGroup === true
-      ? true
-      : state.user && state.user.systemAdmin
-        ? state.user.systemAdmin
-        : false;
+    return UserPermissions.hasSysAdminRights(state.user);
   }
 
   @Selector([UserState])
