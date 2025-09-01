@@ -6,7 +6,6 @@ import { UserService } from '@dasch-swiss/vre/core/session';
 import { filterNull } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
-import { UserPermissions } from './user-permissions';
 
 @Injectable()
 export class ProjectPageService {
