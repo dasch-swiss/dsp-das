@@ -98,6 +98,10 @@ regression-micro env="dev":
     @echo "🔬 Running micro-benchmark store performance tests on {{env}}"
     just run store-refactor-regression-micro {{env}}
 
+regression-statistical env="dev":
+    @echo "📊 Running statistical regression tests with multiple iterations on {{env}}"
+    just run store-refactor-regression-statistical {{env}}
+
 # Compare regression tests between any two environments
 regression-compare env1="stage" env2="dev02":
     @echo "🔬 Store Regression Comparison: {{env1}} vs {{env2}}"

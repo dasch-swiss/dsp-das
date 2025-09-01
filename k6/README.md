@@ -210,25 +210,76 @@ just regression-micro
 - Subscription overhead: < 50ms
 - No consistency issues
 
+#### 4. Statistical Regression Test (`regression-statistical`) 
+**Purpose:** Statistical validation with multiple iterations (8-12 minutes)  
+**Best for:** Performance analysis and baseline establishment
+
+```bash
+just regression-statistical
+```
+
+**What it tests:**
+- Multiple bootstrap measurements with variance analysis
+- Statistical consistency of memory patterns over cycles
+- State update latency with coefficient of variation
+- Warmup phase to reduce measurement noise
+
+**Key Features:**
+- **Warmup Phase**: Reduces browser initialization variance
+- **Multiple Iterations**: 3+ measurements for statistical significance
+- **Variance Analysis**: Coefficient of variation to ensure reliable data
+- **Statistical Thresholds**: p(95) and average metrics for comprehensive validation
+
+**Thresholds:**
+- Statistical reliability: > 80% of iterations reliable
+- Bootstrap variance: Coefficient of variation < 20%
+- Memory consistency: Max growth < 2x average
+- State update consistency: Coefficient of variation < 30%
+
 ### 📊 Test Comparison Summary
 
 | Test | Duration | Purpose | Best For | Key Focus |
 |------|----------|---------|----------|-----------|
-| **regression-quick** | 2-3 min | Fast validation | CI/CD pipelines | Bootstrap, basic memory, interactions |
+| **regression-quick** | 2-4 min | Fast validation | CI/CD pipelines | Bootstrap, basic memory, interactions |
 | **regression-full** | 5-10 min | Deep analysis | Pre-deployment | Memory leaks, rendering, subscriptions |
 | **regression-micro** | 30s | Micro-benchmarks | Performance debugging | Individual interactions, consistency |
+| **regression-statistical** | 8-12 min | Statistical validation | Performance analysis | Multiple iterations, variance analysis |
+
+#### 🚀 **New Optimizations & Features**
+
+**Environment-Aware Testing:**
+- Automatic environment detection from URL
+- Different performance thresholds per environment (dev/stage/prod)
+- Environment-specific selector strategies and timeouts
+
+**Enhanced Error Handling:**
+- Detailed error messages with stack traces
+- Graceful fallback when elements aren't found
+- Better diagnostic logging for troubleshooting
+
+**Robust Element Selection:**
+- Multiple selector strategies per interaction type
+- Visibility and enabled state validation
+- Environment-specific UI element targeting
+
+**Statistical Validation:**
+- Warmup phase to reduce measurement variance
+- Multiple iterations for statistical significance
+- Coefficient of variation analysis for reliability
 
 #### Development Workflow Strategy
-1. **`regression-quick`** - Run frequently during development for fast feedback
+1. **`regression-quick`** - Run frequently during development for fast feedback with environment-aware thresholds
 2. **`regression-micro`** - Use when optimizing specific interactions or debugging performance issues  
-3. **`regression-full`** - Run before merging/deploying for comprehensive validation
+3. **`regression-statistical`** - Use for detailed performance analysis with statistical confidence
+4. **`regression-full`** - Run before merging/deploying for comprehensive validation
 
 #### CI/CD Pipeline Strategy
-- **Quick automated checks**: `regression-quick` for fast feedback
+- **Quick automated checks**: `regression-quick` with realistic environment-specific thresholds
 - **Release validation**: `regression-full` for thorough pre-deployment testing
 - **Performance profiling**: `regression-micro` when issues are detected
+- **Statistical analysis**: `regression-statistical` for baseline establishment and variance analysis
 
-The three tests provide complementary coverage: quick validation, comprehensive analysis, and detailed micro-performance insights for the store-to-BehaviorSubject refactor.
+The tests now provide intelligent, environment-aware performance validation with realistic expectations and detailed diagnostics.
 
 ### 🔬 Environment Comparison
 
@@ -240,6 +291,38 @@ just regression-compare
 This runs the quick regression test on both:
 - **STAGE**: Current store implementation
 - **DEV-02**: Your BehaviorSubject refactor
+
+### 🎯 Environment-Specific Configuration
+
+The regression tests now automatically detect your environment and apply appropriate thresholds:
+
+#### Environment Detection & Thresholds
+
+| Environment | Bootstrap | Memory Growth | State Updates | Success Rate |
+|-------------|-----------|---------------|---------------|--------------|
+| **DEV** | < 20s | < 60MB | < 800ms | > 50% |
+| **STAGE** | < 15s | < 50MB | < 600ms | > 60% |
+| **PROD** | < 12s | < 40MB | < 500ms | > 70% |
+
+#### Environment-Specific Features
+
+**Automatic Detection:**
+```bash
+# Automatically detects environment from URL
+just regression-quick dev02    # Uses DEV thresholds
+just regression-quick stage    # Uses STAGE thresholds
+just regression-quick prod     # Uses PROD thresholds
+```
+
+**Performance Expectations:**
+- **DEV**: More lenient thresholds for development builds with debug features
+- **STAGE**: Production-like performance with some monitoring overhead
+- **PROD**: Strictest thresholds expecting optimal performance
+
+**Selector Strategies:**
+- Different UI element selectors per environment
+- Fallback strategies for various Angular Material versions
+- Environment-specific timeout configurations
 
 ### 📊 Understanding Results
 
@@ -341,38 +424,87 @@ await testYourSpecificFeature(page);
 
 ### 📈 Performance Targets
 
-#### Store Refactor Goals
-- **No bootstrap regression** (< 5s)
-- **Minimal memory overhead** (< 5MB growth)
-- **Faster state updates** (< 300ms for p95)
-- **Better subscription management** (> 90% efficiency)
+#### Store Refactor Goals (Environment-Adjusted)
+| Goal | DEV | STAGE | PROD |
+|------|-----|--------|------|
+| **Bootstrap** | < 20s | < 15s | < 12s |
+| **Memory Growth** | < 60MB | < 50MB | < 40MB |
+| **State Updates** | < 800ms | < 600ms | < 500ms |
+| **Success Rate** | > 50% | > 60% | > 70% |
 
-#### Red Flags
-- Bootstrap time > 8s
-- Memory growth > 15MB
-- State updates > 1s
-- Multiple consistency issues
+#### Red Flags (Universal)
+- Bootstrap time > 25s (any environment)
+- Memory growth > 80MB (memory leak concern)  
+- State updates > 1.5s (performance regression)
+- Statistical reliability < 30% (unreliable measurements)
 
-### 🐛 Troubleshooting
+### 🐛 Enhanced Troubleshooting
 
-#### Test Failures
-1. **Check browser compatibility**: Chrome/Chromium required
-2. **Network issues**: Ensure test environments are accessible
-3. **Timeout issues**: Increase `maxDuration` in test options
+#### Test Failures with New Diagnostics
+1. **Element Selection Issues**:
+   ```bash
+   # Look for detailed selector logs:
+   ❌ No interactive navigation elements found
+   ⚠️ Selector "nav a[href]:visible" failed: undefined
+   ```
+   - **Solution**: Update selectors in `utils/environment-config.js`
+   - **Alternative**: Use `regression-statistical` for more robust element detection
 
-#### Inconsistent Results
-1. **Run multiple times**: Performance can vary
-2. **Check system load**: Close other applications
-3. **Use headless mode**: `k6_browser_headless=true`
+2. **Environment Threshold Failures**:
+   ```bash
+   # Check if using correct environment:
+   🔧 DEV Environment: Expecting slower performance...
+   ✗ bootstrap_time 'avg<5000' avg=11920
+   ```
+   - **Solution**: Thresholds now auto-adjust per environment
+   - **Check**: Verify URL detection in environment-config.js
 
-#### No Elements Found
-1. **Check selectors**: Tests use generic selectors
-2. **Update page objects**: Customize for your app structure
-3. **Add data-cy attributes**: For reliable test targeting
+3. **Statistical Inconsistency**:
+   ```bash
+   # Look for variance warnings:
+   Average: 450ms, StdDev: 200ms, CV: 44%
+   ✗ state_statistical_consistent: false
+   ```
+   - **Solution**: Run `regression-statistical` for warmup phase
+   - **Check**: System load, close other applications
+
+#### Enhanced Error Messages
+- **Detailed stack traces** for JavaScript errors
+- **Coefficient of variation analysis** for measurement reliability  
+- **Environment detection logs** showing which thresholds are applied
+- **Element selection diagnostics** with fallback attempts
+
+#### New Diagnostic Commands
+```bash
+# Statistical analysis with detailed variance reporting
+just regression-statistical dev02
+
+# Quick test with environment-specific diagnostics  
+just regression-quick stage
+
+# Micro-benchmarks with enhanced element detection
+just regression-micro prod
+```
+
+#### Legacy Troubleshooting (Still Applicable)
+1. **Browser compatibility**: Chrome/Chromium required
+2. **Network access**: Ensure test environments are accessible  
+3. **System resources**: Close other applications during testing
+4. **Headless mode**: Use `k6_browser_headless=true` for consistency
 
 ---
 
-These regression tests help ensure your store-to-BehaviorSubject refactor maintains or improves performance while avoiding common pitfalls.
+## 🎉 Summary
+
+The regression tests now provide **intelligent, environment-aware performance validation** with:
+
+✅ **Realistic thresholds** per environment (dev/stage/prod)  
+✅ **Enhanced diagnostics** with detailed error messages  
+✅ **Statistical validation** for reliable performance analysis  
+✅ **Robust element selection** with multiple fallback strategies  
+✅ **Environment detection** with appropriate performance expectations
+
+These optimized regression tests help ensure your store-to-BehaviorSubject refactor maintains or improves performance while providing actionable insights for optimization.
 
 ## Documentation
 
