@@ -23,7 +23,7 @@ import { UsersTabService } from '../users-tab.service';
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
       <button
         mat-menu-item
-        *ngIf="user.username !== (username$ | async)"
+        *ngIf="user.username !== (user$ | async)?.username"
         (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
         {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
       </button>
@@ -45,7 +45,7 @@ export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;
 
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  username$ = this._store.select(UserSelectors.username);
+  user$ = this._store.select(UserSelectors.user);
 
   constructor(
     private _matDialog: MatDialog,
@@ -76,7 +76,8 @@ export class UsersListRowMenuComponent {
       .pipe(take(1))
       .subscribe(response => {
         this._store.dispatch(new SetUserAction(response.user));
-        if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
+        const currentUser = this._store.selectSnapshot(UserSelectors.user);
+        if (currentUser?.username !== user.username) {
           this._reloadUserList();
         }
       });
