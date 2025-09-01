@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -79,7 +79,7 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe({
         next: resource => {
-          if (resource?.res.type === 'http://api.knora.org/ontology/knora-api/v2#DeletedResource') {
+          if (resource?.res.type === Constants.DeletedResource) {
             this.hideStatus = 'Deleted';
             this.resource = resource;
             this.afterResourceDeleted.emit(resource.res);
