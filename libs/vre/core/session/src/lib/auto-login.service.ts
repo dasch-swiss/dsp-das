@@ -3,7 +3,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { BehaviorSubject, finalize, switchMap, take } from 'rxjs';
+import { BehaviorSubject, finalize, switchMap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
@@ -53,7 +53,6 @@ export class AutoLoginService {
           }
 
           return this._userService.loadUser(userIri, 'iri').pipe(
-            take(1),
             switchMap(user => {
               this._localizationsService.setLanguage(user.lang);
               return [user];

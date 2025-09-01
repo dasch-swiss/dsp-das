@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
-import { StoredProject } from '@dasch-swiss/dsp-js/src/models/admin/stored-project';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
-import { BehaviorSubject, map, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,21 +13,14 @@ export class UserService {
   private _isMemberOfSystemAdminGroup$ = new BehaviorSubject<boolean>(false);
 
   // Public observables
-  user$: Observable<ReadUser | null> = this._user$.asObservable();
-  isLoggedIn$: Observable<boolean> = this._user$.pipe(map(user => user !== null));
-  isSysAdmin$: Observable<boolean> = this._user$.pipe(map(user => user ? UserPermissions.hasSysAdminRights(user) : false));
-  userActiveProjects$: Observable<StoredProject[]> = this._user$.pipe(
-    map(user => user ? user.projects.filter(project => project.status) : [])
-  );
-  userInactiveProjects$: Observable<StoredProject[]> = this._user$.pipe(
-    map(user => user ? user.projects.filter(project => !project.status) : [])
-  );
+  user$ = this._user$.asObservable();
+  isLoggedIn$ = this._user$.pipe(map(user => user !== null));
+  isSysAdmin$ = this._user$.pipe(map(user => (user ? UserPermissions.hasSysAdminRights(user) : false)));
+  userActiveProjects$ = this._user$.pipe(map(user => (user ? user.projects.filter(project => project.status) : [])));
+  userInactiveProjects$ = this._user$.pipe(map(user => (user ? user.projects.filter(project => !project.status) : [])));
 
   constructor(private _userApiService: UserApiService) {}
 
-  /**
-   * Get current user value synchronously
-   */
   get currentUser(): ReadUser | null {
     return this._user$.value;
   }
@@ -38,7 +30,6 @@ export class UserService {
    */
   loadUser(identifier: string, idType: 'iri' | 'email' | 'username'): Observable<ReadUser> {
     return this._userApiService.get(identifier, idType).pipe(
-      take(1),
       tap(response => {
         this._user$.next(response.user);
         this._setUserProjectGroups(response.user);
@@ -57,7 +48,7 @@ export class UserService {
     if (currentUser && currentUser.id === user.id) {
       this._user$.next(user);
     }
-    
+
     this._setUserProjectGroups(user);
   }
 
