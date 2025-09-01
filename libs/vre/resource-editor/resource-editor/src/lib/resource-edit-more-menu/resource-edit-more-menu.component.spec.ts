@@ -24,11 +24,6 @@ jest.mock('@dasch-swiss/vre/core/config', () => ({
   DspApiConnectionToken: 'DspApiConnectionToken',
 }));
 
-jest.mock('@dasch-swiss/vre/core/state', () => ({
-  ProjectsSelectors: {
-    isCurrentProjectAdminOrSysAdmin: 'ProjectsSelectors.isCurrentProjectAdminOrSysAdmin',
-  },
-}));
 
 jest.mock('@dasch-swiss/vre/resource-editor/properties-display', () => ({
   DeleteResourceDialogComponent: class MockDeleteResourceDialogComponent {},
