@@ -1,5 +1,31 @@
 # Changelog
 
+## [11.42.0](https://github.com/dasch-swiss/dsp-das/compare/v11.41.1...v11.42.0) (2025-09-01)
+
+
+### Enhancements
+
+* improve the project view with better selection ([#2479](https://github.com/dasch-swiss/dsp-das/issues/2479)) ([d18f525](https://github.com/dasch-swiss/dsp-das/commit/d18f525622831b50692c8bf0539c32205bf5de80))
+
+
+### Bug Fixes
+
+* advanced search select property without resource class (DEV-5259) ([#2489](https://github.com/dasch-swiss/dsp-das/issues/2489)) ([b4eba90](https://github.com/dasch-swiss/dsp-das/commit/b4eba90d9cd97ff60d2fd33110c28828aa879582))
+
+## [11.41.1](https://github.com/dasch-swiss/dsp-das/compare/v11.41.0...v11.41.1) (2025-08-26)
+
+
+### Bug Fixes
+
+* add line break to paragraph viewer ([#2492](https://github.com/dasch-swiss/dsp-das/issues/2492)) ([dba0e33](https://github.com/dasch-swiss/dsp-das/commit/dba0e33b750de1987f99473093f8c91391ac66b2))
+* html values are displayed correctly ([#2493](https://github.com/dasch-swiss/dsp-das/issues/2493)) ([d9e8781](https://github.com/dasch-swiss/dsp-das/commit/d9e8781ede42b0adc0aaeab636d8ec457a71dd01))
+
+
+### Maintenances
+
+* **CI:** update Node.js to v20.11.1 ([#2494](https://github.com/dasch-swiss/dsp-das/issues/2494)) ([af72c6c](https://github.com/dasch-swiss/dsp-das/commit/af72c6c15c1d9f8aca95ec2f25928143b19ea296))
+* remove CODEOWNERS ([#2490](https://github.com/dasch-swiss/dsp-das/issues/2490)) ([f31e0f0](https://github.com/dasch-swiss/dsp-das/commit/f31e0f01e1ad6d25e5ee48b6f816aae578ecbb57))
+
 ## [11.41.0](https://github.com/dasch-swiss/dsp-das/compare/v11.40.0...v11.41.0) (2025-08-25)
 
 
