@@ -81,7 +81,6 @@ describe('ResourceEditMoreMenuComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MatDialog, useValue: mockDialog },
-        { provide: Store, useValue: mockStore },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: ResourceFetcherService, useValue: mockResourceFetcher },
         { provide: ViewContainerRef, useValue: {} },
