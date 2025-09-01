@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
 import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject, filter, map, switchMap, take } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap, take, Observable, shareReplay } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
@@ -15,12 +14,6 @@ export class ResourceFetcherService {
 
   resourceVersion?: string;
 
-  projectShortcode$ = this.resource$.pipe(
-    filter(resource => resource !== undefined),
-    switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource!.res.attachedToProject)),
-    map(v => v.project.shortcode as unknown as string)
-  );
-
   userCanEdit$ = this.resource$.pipe(
     map(resource => resource && this.resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
   );
@@ -29,11 +22,23 @@ export class ResourceFetcherService {
     map(resource => resource && this.resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
   );
 
+  attachedUser$ = this.resource$.pipe(
+    filter(resource => resource !== undefined),
+    switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
+  );
+
+  projectShortcode$ = this.resource$.pipe(
+    filter(resource => resource !== undefined),
+    switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)),
+    map(v => v.project.shortcode as unknown as string),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _adminProjectsApiService: AdminProjectsApiService,
-    private _store: Store
+    private _userApiService: UserApiService
   ) {}
 
   loadResource(resourceIri: string, resourceVersion?: string) {
@@ -58,8 +63,6 @@ export class ResourceFetcherService {
         const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-        this._store.dispatch(new SetCurrentResourceAction(res));
         return res;
       })
     );
