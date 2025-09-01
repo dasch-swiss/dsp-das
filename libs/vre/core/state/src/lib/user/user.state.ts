@@ -8,7 +8,6 @@ import { UserStateModel } from './user.state-model';
 
 const defaults = <UserStateModel>{
   user: null, // the currently logged in user
-  userProjectAdminGroups: [], // users permission groups
   userProjectGroups: [], // users project groups
   isMemberOfSystemAdminGroup: false, // current user is system admin
   usersLoading: false, // loading state for all users
@@ -59,7 +58,6 @@ export class UserState {
   setUserProjectGroupsData(ctx: StateContext<UserStateModel>, { user }: SetUserProjectGroupsAction) {
     let isMemberOfSystemAdminGroup = false;
     const userProjectGroups: string[] = [];
-    const userProjectAdminGroups: string[] = [];
 
     // get permission information: a) is user sysadmin? b) get list of project iri's where user is project admin
     const groupsPerProject = user.permissions.groupsPerProject;
@@ -75,7 +73,6 @@ export class UserState {
 
         if (groupsPerProject[key].indexOf(Constants.ProjectAdminGroupIRI) > -1) {
           // projectAdmin + projectMember
-          userProjectAdminGroups.push(key);
           userProjectGroups.push(key);
         } else {
           // projectMember
@@ -86,7 +83,6 @@ export class UserState {
 
     const state = ctx.getState();
     if (state.user?.username === user.username) {
-      state.userProjectAdminGroups = userProjectAdminGroups;
       state.userProjectGroups = userProjectGroups;
       state.isMemberOfSystemAdminGroup = isMemberOfSystemAdminGroup;
     }

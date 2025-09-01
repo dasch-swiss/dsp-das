@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { StoredProject } from '@dasch-swiss/dsp-js';
+import { ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AutoLoginService } from '@dasch-swiss/vre/core/session';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
@@ -13,7 +13,7 @@ import { combineLatest, Observable, filter, map, switchMap } from 'rxjs';
 })
 export class OntologyClassInstanceGuard implements CanActivate {
   @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.userProjects) userProjects$: Observable<StoredProject[]>;
+  @Select(UserSelectors.user) user$: Observable<ReadUser | null>;
 
   constructor(
     private _store: Store,
@@ -30,9 +30,9 @@ export class OntologyClassInstanceGuard implements CanActivate {
         switchMap(() => this._store.select(UserSelectors.isLoggedIn))
       ),
       this.isSysAdmin$,
-      this.userProjects$,
+      this.user$,
     ]).pipe(
-      map(([isLoggedIn, isSysAdmin, userProjects]) => {
+      map(([isLoggedIn, isSysAdmin, user]) => {
         const projectUuid = activatedRoute.parent.params[RouteConstants.uuidParameter];
 
         if (!isLoggedIn && isAddInstance) {
@@ -40,6 +40,7 @@ export class OntologyClassInstanceGuard implements CanActivate {
           return false;
         }
 
+        const userProjects = user ? user.projects : [];
         const isProjectMember = userProjects?.some(p => p.id === this.projectService.uuidToIri(projectUuid));
         return !isAddInstance || isProjectMember || isSysAdmin;
       })
