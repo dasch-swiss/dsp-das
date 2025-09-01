@@ -24,7 +24,7 @@ import {
 import { EMPTY_PROPERTY_FORM_ITEM, INITIAL_FORMS_STATE } from '../util';
 import { AdvancedSearchApiService } from './advanced-search-api.service';
 import { GravsearchService } from './gravsearch.service';
-import { Operators } from './operators.config';
+import { OPERATORS } from './operators.config';
 import { PropertyFormManager } from './property-form.manager';
 
 @Injectable()
@@ -395,7 +395,7 @@ export class SearchStateService implements OnDestroy {
     if (index > -1) {
       const updatedForm = this._formManager.updateSelectedOperator(property, property.selectedOperator!);
 
-      if (property.selectedOperator === Operators.Matches && property.selectedProperty?.isLinkedResourceProperty) {
+      if (property.selectedOperator === OPERATORS.Matches && property.selectedProperty?.isLinkedResourceProperty) {
         if (!currentOntology?.iri) return;
 
         this.patchState({ matchResourceClassesLoading: true });
@@ -617,7 +617,7 @@ export class SearchStateService implements OnDestroy {
 
   isPropertyFormItemValid(prop: PropertyFormItem): boolean {
     return (
-      prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists || !!prop.searchValue
+      prop.selectedOperator === OPERATORS.Exists || prop.selectedOperator === OPERATORS.NotExists || !!prop.searchValue
     );
   }
 

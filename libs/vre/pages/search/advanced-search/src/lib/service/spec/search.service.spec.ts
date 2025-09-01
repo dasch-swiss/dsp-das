@@ -5,7 +5,7 @@ import { Observable, of, take } from 'rxjs';
 import { ApiData, PropertyData, ParentChildPropertyPair, PropertyFormItem } from '../../model';
 import { AdvancedSearchApiService } from '../advanced-search-api.service';
 import { GravsearchService } from '../gravsearch.service';
-import { Operators } from '../operators.config';
+import { OPERATORS } from '../operators.config';
 import { SearchStateService } from '../search-state.service';
 
 export const DspApiConnectionToken = new InjectionToken<KnoraApiConnection>('DspApiConnectionToken');
@@ -116,7 +116,7 @@ describe('AdvancedSearchStoreService', () => {
       const propertyFormItem = {
         id: '1',
         selectedProperty: undefined,
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: 'test',
         operators: [],
         list: undefined,
@@ -134,7 +134,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: Constants.IntValue,
           isLinkedResourceProperty: false,
         },
-        selectedOperator: Operators.Exists,
+        selectedOperator: OPERATORS.Exists,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -142,7 +142,7 @@ describe('AdvancedSearchStoreService', () => {
 
       expect(service.isPropertyFormItemListInvalid(propertyFormItem)).toBeFalsy();
 
-      propertyFormItem.selectedOperator = Operators.NotExists;
+      propertyFormItem.selectedOperator = OPERATORS.NotExists;
 
       expect(service.isPropertyFormItemListInvalid(propertyFormItem)).toBeFalsy();
     });
@@ -156,7 +156,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test',
           isLinkedResourceProperty: true,
         },
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: [],
         operators: [],
         list: undefined,
@@ -174,7 +174,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test',
           isLinkedResourceProperty: true,
         },
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: [
           {
             id: '2',
@@ -184,7 +184,7 @@ describe('AdvancedSearchStoreService', () => {
               objectType: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
               isLinkedResourceProperty: false,
             },
-            selectedOperator: Operators.Equals,
+            selectedOperator: OPERATORS.Equals,
             searchValue: undefined, // this is invalid as it should be a string
             operators: [],
             list: undefined,
@@ -206,7 +206,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test',
           isLinkedResourceProperty: true,
         },
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: [
           {
             id: '2',
@@ -216,7 +216,7 @@ describe('AdvancedSearchStoreService', () => {
               objectType: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
               isLinkedResourceProperty: false,
             },
-            selectedOperator: Operators.Equals,
+            selectedOperator: OPERATORS.Equals,
             searchValue: 'eric',
             operators: [],
             list: undefined,
@@ -238,7 +238,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           isLinkedResourceProperty: false,
         },
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: undefined as string | undefined,
         operators: [],
         list: undefined,
@@ -260,7 +260,7 @@ describe('AdvancedSearchStoreService', () => {
           objectType: 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           isLinkedResourceProperty: false,
         },
-        selectedOperator: Operators.Equals,
+        selectedOperator: OPERATORS.Equals,
         searchValue: 'eric',
         operators: [],
         list: undefined,
@@ -679,7 +679,7 @@ describe('AdvancedSearchStoreService', () => {
       const propFormItem = {
         id: '1',
         selectedProperty: undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -687,13 +687,13 @@ describe('AdvancedSearchStoreService', () => {
 
       service.patchState({ propertyFormList: [propFormItem] });
 
-      propFormItem.selectedOperator = Operators.Equals;
+      propFormItem.selectedOperator = OPERATORS.Equals;
 
       service.updateSelectedOperator(propFormItem);
 
       service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
-        expect(pfl[0].selectedOperator).toEqual(Operators.Equals);
+        expect(pfl[0].selectedOperator).toEqual(OPERATORS.Equals);
       });
     });
 
@@ -701,7 +701,7 @@ describe('AdvancedSearchStoreService', () => {
       const propFormItem = {
         id: '1',
         selectedProperty: undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: 'test',
         operators: [],
         list: undefined,
@@ -709,13 +709,13 @@ describe('AdvancedSearchStoreService', () => {
 
       service.patchState({ propertyFormList: [propFormItem] });
 
-      propFormItem.selectedOperator = Operators.Exists;
+      propFormItem.selectedOperator = OPERATORS.Exists;
 
       service.updateSelectedOperator(propFormItem);
 
       service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
-        expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
+        expect(pfl[0].selectedOperator).toEqual(OPERATORS.Exists);
         expect(pfl[0].searchValue).toBeUndefined();
       });
     });
@@ -724,7 +724,7 @@ describe('AdvancedSearchStoreService', () => {
       const propFormItem = {
         id: '1',
         selectedProperty: undefined as PropertyData | undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -744,13 +744,13 @@ describe('AdvancedSearchStoreService', () => {
 
       expect(filteredPropertiesList).not.toHaveBeenCalled();
 
-      propFormItem.selectedOperator = Operators.Matches;
+      propFormItem.selectedOperator = OPERATORS.Matches;
 
       service.updateSelectedOperator(propFormItem);
 
       service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
-        expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
+        expect(pfl[0].selectedOperator).toEqual(OPERATORS.Exists);
         expect(pfl[0].searchValue).toBeUndefined();
       });
     });
@@ -759,7 +759,7 @@ describe('AdvancedSearchStoreService', () => {
       const propFormItem = {
         id: '1',
         selectedProperty: undefined as PropertyData | undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -777,7 +777,7 @@ describe('AdvancedSearchStoreService', () => {
         selectedOntology: { iri: 'ontoIri', label: 'ontoLabel' },
       });
 
-      propFormItem.selectedOperator = Operators.Matches;
+      propFormItem.selectedOperator = OPERATORS.Matches;
 
       // spy on the resourceClassesList method
       const resourceClassesList = jest.spyOn(advancedSearchService, 'resourceClassesList');
@@ -789,7 +789,7 @@ describe('AdvancedSearchStoreService', () => {
       // fix this
       service.propertyForms$.pipe(take(1)).subscribe(pfl => {
         expect(pfl).not.toBeUndefined();
-        expect(pfl[0].selectedOperator).toEqual(Operators.Exists);
+        expect(pfl[0].selectedOperator).toEqual(OPERATORS.Exists);
         expect(pfl[0].searchValue).toHaveLength(0);
         expect(pfl[0].childPropertiesList).toHaveLength(1);
       });
@@ -801,7 +801,7 @@ describe('AdvancedSearchStoreService', () => {
       const propFormItem = {
         id: '1',
         selectedProperty: undefined as PropertyData | undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -815,7 +815,7 @@ describe('AdvancedSearchStoreService', () => {
         isLinkedResourceProperty: true,
       };
 
-      propFormItem.selectedOperator = Operators.Matches;
+      propFormItem.selectedOperator = OPERATORS.Matches;
 
       service.patchState({ propertyFormList: [propFormItem] });
 
@@ -839,7 +839,7 @@ describe('AdvancedSearchStoreService', () => {
       const childPropFormItem = {
         id: '2',
         selectedProperty: undefined as PropertyData | undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: undefined,
         operators: [],
         list: undefined,
@@ -857,7 +857,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.patchState({ propertyFormList: [propFormItem] });
 
-      childPropFormItem.selectedOperator = Operators.Equals;
+      childPropFormItem.selectedOperator = OPERATORS.Equals;
 
       const parentChildPair: ParentChildPropertyPair = {
         parentProperty: propFormItem,
@@ -870,7 +870,7 @@ describe('AdvancedSearchStoreService', () => {
         expect(pfl).not.toBeUndefined();
         expect(Array.isArray(pfl[0].searchValue)).toBeTruthy();
         if (pfl && Array.isArray(pfl[0].searchValue)) {
-          expect(pfl[0].searchValue[0].selectedOperator).toEqual(Operators.Equals);
+          expect(pfl[0].searchValue[0].selectedOperator).toEqual(OPERATORS.Equals);
         }
       });
     });
@@ -880,7 +880,7 @@ describe('AdvancedSearchStoreService', () => {
       const childPropFormItem = {
         id: '2',
         selectedProperty: undefined as PropertyData | undefined,
-        selectedOperator: undefined as Operators | undefined,
+        selectedOperator: undefined as OPERATORS | undefined,
         searchValue: 'test',
         operators: [],
         list: undefined,
@@ -898,7 +898,7 @@ describe('AdvancedSearchStoreService', () => {
 
       service.patchState({ propertyFormList: [propFormItem] });
 
-      childPropFormItem.selectedOperator = Operators.Exists;
+      childPropFormItem.selectedOperator = OPERATORS.Exists;
 
       const parentChildPair: ParentChildPropertyPair = {
         parentProperty: propFormItem,

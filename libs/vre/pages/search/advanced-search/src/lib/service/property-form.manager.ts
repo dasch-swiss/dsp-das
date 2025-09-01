@@ -3,7 +3,7 @@ import { tap, catchError, EMPTY, take, map, startWith, distinctUntilChanged } fr
 import { PropertyFormItem, PropertyData, OrderByItem } from '../model';
 import { updateOrderByList, EMPTY_CHILD_PROPERTY_FORM_ITEM } from '../util';
 import { AdvancedSearchApiService } from './advanced-search-api.service';
-import { Operators, getOperatorsForObjectType, getDefaultLinkedResourceOperators } from './operators.config';
+import { OPERATORS, getOperatorsForObjectType, getDefaultLinkedResourceOperators } from './operators.config';
 
 /**
  * Service responsible for managing property form operations.
@@ -71,7 +71,7 @@ export class PropertyFormManager {
     updatedForm.selectedOperator = operator;
 
     // Reset search value if operator is 'exists' or 'does not exist'
-    if (operator === Operators.Exists || operator === Operators.NotExists) {
+    if (operator === OPERATORS.Exists || operator === OPERATORS.NotExists) {
       updatedForm.searchValue = undefined;
     }
 
@@ -143,7 +143,7 @@ export class PropertyFormManager {
 
   isPropertyFormItemValid(prop: PropertyFormItem): boolean {
     return (
-      prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists || !!prop.searchValue
+      prop.selectedOperator === OPERATORS.Exists || prop.selectedOperator === OPERATORS.NotExists || !!prop.searchValue
     );
   }
 

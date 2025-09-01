@@ -8,7 +8,7 @@ import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/s
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem, ResourceLabelObject } from '../../model';
-import { Operators } from '../../service/operators.config';
+import { OPERATORS } from '../../service/operators.config';
 import { SearchStateService } from '../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
@@ -62,7 +62,7 @@ export class PropertyFormComponent implements AfterViewInit {
   @ViewChild('propertyFormValue')
   propertyFormValueComponent!: PropertyFormValueComponent;
 
-  operators = Operators; // in order to use it in the template
+  operators = OPERATORS; // in order to use it in the template
   constants = Constants;
 
   // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later

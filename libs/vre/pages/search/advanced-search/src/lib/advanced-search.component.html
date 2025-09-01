@@ -5,21 +5,20 @@
       {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
     </button>
   </div>
-  <div class="advanced-search-item">
-    <app-ontology-resource-form />
+  <div class="advanced-search-content">
+    <app-ontology-resource-form class="advanced-search-item" />
 
     <ng-container *ngFor="let propertyForm of propertyFormList$ | async; let isLast = last">
-      <div style="display: flex; width: 100%; padding-left: 2em">
+      <div style="display: flex; width: 100%">
         <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
-        <div class="remove-button-container" *ngIf="!isLast && propertyForm.selectedProperty">
-          <button
-            mat-icon-button
-            (click)="handleRemovePropertyForm(propertyForm)"
-            class="remove-property-button"
-            matTooltip="Remove search criteria">
-            <mat-icon>remove_circle</mat-icon>
-          </button>
-        </div>
+        <button
+          *ngIf="!isLast && propertyForm.selectedProperty"
+          mat-icon-button
+          (click)="handleRemovePropertyForm(propertyForm)"
+          class="remove-property-button"
+          matTooltip="Remove search criteria">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
       </div>
       <!-- Subcriteria component -->
       <app-property-form-subcriteria

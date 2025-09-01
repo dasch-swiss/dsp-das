@@ -7,7 +7,7 @@ describe('test to fix', () => {
 import { TestBed } from '@angular/core/testing';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ResourceLabel } from '../advanced-search-service/advanced-search.service';
-import { Operators } from '../advanced-search-store/advanced-search-store.service';
+import { OPERATORS } from '../advanced-search-store/advanced-search-store.service';
 import { GravsearchService } from '../gravsearch.service';
 
 describe('GravsearchService', () => {
@@ -26,7 +26,7 @@ describe('GravsearchService', () => {
         [
           {
             id: 'd708083b-d670-46d8-a4ea-5c106ffa49b4',
-            operators: [Operators.Equals, Operators.NotEquals, Operators.IsLike, Operators.Matches],
+            operators: [OPERATORS.Equals, OPERATORS.NotEquals, OPERATORS.IsLike, OPERATORS.Matches],
             selectedOperator: 'equals',
             selectedProperty: {
               iri: 'resourceLabel',
@@ -40,16 +40,16 @@ describe('GravsearchService', () => {
           {
             id: '555303d5-fd4f-4b71-8361-6d6abb8c9387',
             operators: [
-              Operators.Equals,
-              Operators.NotEquals,
-              Operators.Exists,
-              Operators.NotExists,
-              Operators.GreaterThan,
-              Operators.GreaterThanEquals,
-              Operators.LessThan,
-              Operators.LessThanEquals,
+              OPERATORS.Equals,
+              OPERATORS.NotEquals,
+              OPERATORS.Exists,
+              OPERATORS.NotExists,
+              OPERATORS.GreaterThan,
+              OPERATORS.GreaterThanEquals,
+              OPERATORS.LessThan,
+              OPERATORS.LessThanEquals,
             ],
-            selectedOperator: Operators.Exists,
+            selectedOperator: OPERATORS.Exists,
             selectedProperty: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
               label: 'int',
@@ -62,16 +62,16 @@ describe('GravsearchService', () => {
           {
             id: '852c1fb3-2ed2-404c-9fe4-5ada9f97578f',
             operators: [
-              Operators.Equals,
-              Operators.NotEquals,
-              Operators.Exists,
-              Operators.NotExists,
-              Operators.GreaterThan,
-              Operators.GreaterThanEquals,
-              Operators.LessThan,
-              Operators.LessThanEquals,
+              OPERATORS.Equals,
+              OPERATORS.NotEquals,
+              OPERATORS.Exists,
+              OPERATORS.NotExists,
+              OPERATORS.GreaterThan,
+              OPERATORS.GreaterThanEquals,
+              OPERATORS.LessThan,
+              OPERATORS.LessThanEquals,
             ],
-            selectedOperator: Operators.LessThan,
+            selectedOperator: OPERATORS.LessThan,
             selectedProperty: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
               label: 'dectest',
@@ -116,11 +116,11 @@ OFFSET 0`
             id: 'cbeca516-1a49-4a44-8435-c7d26d6198a9',
             list: undefined,
             operators: [
-              Operators.Equals,
-              Operators.NotEquals,
-              Operators.Exists,
-              Operators.NotExists,
-              Operators.Matches,
+              OPERATORS.Equals,
+              OPERATORS.NotEquals,
+              OPERATORS.Exists,
+              OPERATORS.NotExists,
+              OPERATORS.Matches,
             ],
             searchValue: [
               {
@@ -128,17 +128,17 @@ OFFSET 0`
                 isChildProperty: true,
                 list: undefined,
                 operators: [
-                  Operators.Equals,
-                  Operators.NotEquals,
-                  Operators.Exists,
-                  Operators.NotExists,
-                  Operators.GreaterThan,
-                  Operators.GreaterThanEquals,
-                  Operators.LessThan,
-                  Operators.LessThanEquals,
+                  OPERATORS.Equals,
+                  OPERATORS.NotEquals,
+                  OPERATORS.Exists,
+                  OPERATORS.NotExists,
+                  OPERATORS.GreaterThan,
+                  OPERATORS.GreaterThanEquals,
+                  OPERATORS.LessThan,
+                  OPERATORS.LessThanEquals,
                 ],
                 searchValue: undefined,
-                selectedOperator: Operators.Exists,
+                selectedOperator: OPERATORS.Exists,
                 selectedProperty: {
                   iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
                   isLinkedResourceProperty: false,
@@ -151,17 +151,17 @@ OFFSET 0`
                 isChildProperty: true,
                 list: undefined,
                 operators: [
-                  Operators.Equals,
-                  Operators.NotEquals,
-                  Operators.Exists,
-                  Operators.NotExists,
-                  Operators.GreaterThan,
-                  Operators.GreaterThanEquals,
-                  Operators.LessThan,
-                  Operators.LessThanEquals,
+                  OPERATORS.Equals,
+                  OPERATORS.NotEquals,
+                  OPERATORS.Exists,
+                  OPERATORS.NotExists,
+                  OPERATORS.GreaterThan,
+                  OPERATORS.GreaterThanEquals,
+                  OPERATORS.LessThan,
+                  OPERATORS.LessThanEquals,
                 ],
                 searchValue: '1',
-                selectedOperator: Operators.LessThan,
+                selectedOperator: OPERATORS.LessThan,
                 selectedProperty: {
                   iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
                   isLinkedResourceProperty: false,
@@ -170,7 +170,7 @@ OFFSET 0`
                 },
               },
             ],
-            selectedOperator: Operators.Matches,
+            selectedOperator: OPERATORS.Matches,
             selectedProperty: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#linkToTest',
               label: 'Link to Test',
@@ -211,7 +211,7 @@ OFFSET 0`
         [
           {
             id: '83fa06a4-a7bf-4e23-bcda-30c70777d761',
-            operators: [Operators.Equals, Operators.NotEquals, Operators.IsLike, Operators.Matches],
+            operators: [OPERATORS.Equals, OPERATORS.NotEquals, OPERATORS.IsLike, OPERATORS.Matches],
             selectedOperator: 'equals',
             selectedProperty: {
               iri: 'resourceLabel',
@@ -225,16 +225,16 @@ OFFSET 0`
           {
             id: '8d0299df-e50d-498d-8988-93075309362f',
             operators: [
-              Operators.Equals,
-              Operators.NotEquals,
-              Operators.Exists,
-              Operators.NotExists,
-              Operators.GreaterThan,
-              Operators.GreaterThanEquals,
-              Operators.LessThan,
-              Operators.LessThanEquals,
+              OPERATORS.Equals,
+              OPERATORS.NotEquals,
+              OPERATORS.Exists,
+              OPERATORS.NotExists,
+              OPERATORS.GreaterThan,
+              OPERATORS.GreaterThanEquals,
+              OPERATORS.LessThan,
+              OPERATORS.LessThanEquals,
             ],
-            selectedOperator: Operators.Exists,
+            selectedOperator: OPERATORS.Exists,
             selectedProperty: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
               label: 'int',
@@ -247,16 +247,16 @@ OFFSET 0`
           {
             id: '82adaab4-dec0-46f5-900d-e97bec78a0c3',
             operators: [
-              Operators.Equals,
-              Operators.NotEquals,
-              Operators.Exists,
-              Operators.NotExists,
-              Operators.GreaterThan,
-              Operators.GreaterThanEquals,
-              Operators.LessThan,
-              Operators.LessThanEquals,
+              OPERATORS.Equals,
+              OPERATORS.NotEquals,
+              OPERATORS.Exists,
+              OPERATORS.NotExists,
+              OPERATORS.GreaterThan,
+              OPERATORS.GreaterThanEquals,
+              OPERATORS.LessThan,
+              OPERATORS.LessThanEquals,
             ],
-            selectedOperator: Operators.LessThan,
+            selectedOperator: OPERATORS.LessThan,
             selectedProperty: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
               label: 'dectest',

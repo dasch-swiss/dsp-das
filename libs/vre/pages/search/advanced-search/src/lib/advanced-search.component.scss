@@ -15,11 +15,20 @@
     justify-content: space-between;
     align-items: center;
   }
-  .advanced-search-item {
+
+  .advanced-search-content {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .resource-form {
-    margin-bottom: 1em;
+  .remove-property-button {
+    margin-left: auto; // Push to the right side
+    width: 10%;
+  }
+
+  .advanced-search-item {
+    width: 90%;
   }
 }

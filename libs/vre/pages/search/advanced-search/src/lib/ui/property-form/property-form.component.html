@@ -17,7 +17,7 @@
       </ng-container>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="adv-property-form">
+  <mat-form-field class="adv-property-form right-hand-form">
     <mat-label>Comparison Operator</mat-label>
     <mat-select
       #operatorsList
@@ -28,32 +28,29 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <div>
-    <div
+  <div class="adv-property-form right-hand-form">
+    <mat-form-field
       *ngIf="
         !propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2) &&
         propertyFormItem.selectedOperator === operators.Matches
-      "
-      class="adv-property-form">
-      <mat-form-field>
-        <mat-label>Resource Class</mat-label>
-        <mat-select
-          #resourceClassList
-          (selectionChange)="onSelectedMatchPropertyResourceClassChanged($event)"
-          data-cy="resource-class-select"
-          [compareWith]="compareObjects">
-          <mat-option *ngIf="matchResourceClassesLoading$ | async" disabled="true">Loading...</mat-option>
-          <ng-container *ngIf="!(matchResourceClassesLoading$ | async)">
-            <mat-option
-              *ngFor="let resClass of propertyFormItem?.matchPropertyResourceClasses"
-              [attr.data-cy]="resClass.label"
-              [value]="resClass">
-              {{ resClass.label }}
-            </mat-option>
-          </ng-container>
-        </mat-select>
-      </mat-form-field>
-    </div>
+      ">
+      <mat-label>Resource Class</mat-label>
+      <mat-select
+        #resourceClassList
+        (selectionChange)="onSelectedMatchPropertyResourceClassChanged($event)"
+        data-cy="resource-class-select"
+        [compareWith]="compareObjects">
+        <mat-option *ngIf="matchResourceClassesLoading$ | async" disabled="true">Loading...</mat-option>
+        <ng-container *ngIf="!(matchResourceClassesLoading$ | async)">
+          <mat-option
+            *ngFor="let resClass of propertyFormItem?.matchPropertyResourceClasses"
+            [attr.data-cy]="resClass.label"
+            [value]="resClass">
+            {{ resClass.label }}
+          </mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
 
     <!-- Value forms -->
     <div

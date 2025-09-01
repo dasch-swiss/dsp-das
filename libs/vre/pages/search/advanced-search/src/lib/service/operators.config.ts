@@ -1,22 +1,26 @@
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ResourceLabel } from '../model';
 
-export enum Operators {
-  Equals = 'equals',
-  NotEquals = 'does not equal',
-  Exists = 'exists',
-  NotExists = 'does not exist',
-  GreaterThan = 'greater than',
-  GreaterThanEquals = 'greater than or equal to',
-  LessThan = 'less than',
-  LessThanEquals = 'less than or equal to',
-  IsLike = 'is like',
-  Matches = 'matches',
-}
+// 1) Define operators as const literals
+export const OPERATORS = {
+  Equals: 'equals',
+  NotEquals: 'does not equal',
+  Exists: 'exists',
+  NotExists: 'does not exist',
+  GreaterThan: 'greater than',
+  GreaterThanEquals: 'greater than or equal to',
+  LessThan: 'less than',
+  LessThanEquals: 'less than or equal to',
+  IsLike: 'is like',
+  Matches: 'matches',
+} as const;
 
-export const OPERATORS_MAP = new Map<string, string[]>([
+export type Operator = keyof typeof OPERATORS;
+export type OperatorLabel = Operator[keyof Operator];
+
+export const OPERATORS_MAP = new Map<string, OperatorLabel[]>([
   [
-    Operators.Equals,
+    OPERATORS.Equals,
     [
       ResourceLabel,
       Constants.TextValue,
@@ -29,7 +33,7 @@ export const OPERATORS_MAP = new Map<string, string[]>([
     ],
   ],
   [
-    Operators.NotEquals,
+    OPERATORS.NotEquals,
     [
       ResourceLabel,
       Constants.TextValue,
@@ -41,7 +45,7 @@ export const OPERATORS_MAP = new Map<string, string[]>([
     ],
   ],
   [
-    Operators.Exists,
+    OPERATORS.Exists,
     [
       Constants.TextValue,
       Constants.IntValue,
@@ -64,7 +68,7 @@ export const OPERATORS_MAP = new Map<string, string[]>([
     ],
   ],
   [
-    Operators.NotExists,
+    OPERATORS.NotExists,
     [
       Constants.TextValue,
       Constants.IntValue,
@@ -86,12 +90,12 @@ export const OPERATORS_MAP = new Map<string, string[]>([
       Constants.TimeValue,
     ],
   ],
-  [Operators.GreaterThan, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
-  [Operators.GreaterThanEquals, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
-  [Operators.LessThan, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
-  [Operators.LessThanEquals, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
-  [Operators.IsLike, [ResourceLabel, Constants.TextValue]],
-  [Operators.Matches, [ResourceLabel, Constants.TextValue]],
+  [OPERATORS.GreaterThan, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
+  [OPERATORS.GreaterThanEquals, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
+  [OPERATORS.LessThan, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
+  [OPERATORS.LessThanEquals, [Constants.IntValue, Constants.DecimalValue, Constants.DateValue]],
+  [OPERATORS.IsLike, [ResourceLabel, Constants.TextValue]],
+  [OPERATORS.Matches, [ResourceLabel, Constants.TextValue]],
 ]);
 
 export function getOperatorsForObjectType(objectType: string): string[] {
@@ -101,5 +105,5 @@ export function getOperatorsForObjectType(objectType: string): string[] {
 }
 
 export function getDefaultLinkedResourceOperators(): string[] {
-  return [Operators.Equals, Operators.NotEquals, Operators.Exists, Operators.NotExists, Operators.Matches];
+  return [OPERATORS.Equals, OPERATORS.NotEquals, OPERATORS.Exists, OPERATORS.NotExists, OPERATORS.Matches];
 }
