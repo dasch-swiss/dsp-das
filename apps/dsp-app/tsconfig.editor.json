@@ -3,5 +3,16 @@
   "include": ["src/**/*.ts"],
   "compilerOptions": {
     "types": ["node"]
-  }
+  },
+  "exclude": [
+    "jest.config.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "cypress/**/*",
+    "cypress.config.ts",
+    "**/*.cy.ts",
+    "**/*.cy.js",
+    "**/*.cy.tsx",
+    "**/*.cy.jsx"
+  ]
 }
