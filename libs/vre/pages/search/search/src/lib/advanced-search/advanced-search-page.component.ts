@@ -6,7 +6,7 @@ import { QueryObject, SearchStateService } from '@dasch-swiss/vre/pages/search/a
 @Component({
   selector: 'app-advanced-search-page',
   template: ` <app-centered-layout>
-    <app-advanced-search [uuid]="uuid" (emitGravesearchQuery)="onSearch($event)" />
+    <app-advanced-search [projectUuid]="uuid" (emitGravesearchQuery)="onSearch($event)" />
   </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SearchStateService],

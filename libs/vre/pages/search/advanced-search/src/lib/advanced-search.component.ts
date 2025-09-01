@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { AppConfigService, DspAppConfig } from '@dasch-swiss/vre/core/config';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
@@ -41,11 +42,11 @@ import { INITIAL_FORMS_STATE } from './util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchComponent implements OnInit {
-  // either the projectUuid of the project or the shortcode
-  // new projects use projectUuid, old projects use shortcode
   @Input({ required: true }) projectUuid!: string;
 
   @Output() emitGravesearchQuery = new EventEmitter<QueryObject>();
+
+  private readonly IRI_BASE = 'http://rdfh.ch/projects/';
 
   private _searchState: SearchStateService = inject(SearchStateService);
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -58,16 +59,10 @@ export class AdvancedSearchComponent implements OnInit {
   constructor(private _dialogService: DialogService) {}
 
   ngOnInit(): void {
-    const projectIri = `http://rdfh.ch/projects/${this.projectUuid}`;
+    const projectIri = `${this.IRI_BASE}${this.projectUuid}`;
     this._searchState.initWithProject(projectIri);
-
-    // Load previous search if available
-    if (projectIri) {
-      const searchStored = localStorage.getItem('advanced-search-previous-search');
-      if (searchStored) {
-        this.previousSearchObject = JSON.parse(searchStored)[projectIri];
-      }
-    }
+    const searchStored = localStorage.getItem('advanced-search-previous-search') || '{}';
+    this.previousSearchObject = JSON.parse(searchStored)[projectIri];
   }
 
   handleRemovePropertyForm(property: PropertyFormItem): void {
@@ -103,11 +98,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   // Get the list of child properties of a linked resource
-  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
-    if (Array.isArray(value)) {
-      return value;
-    } else {
-      return undefined;
-    }
+  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[]): PropertyFormItem[] {
+    return Array.isArray(value) ? value : [];
   }
 }
