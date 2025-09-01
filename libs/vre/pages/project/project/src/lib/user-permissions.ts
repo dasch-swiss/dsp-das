@@ -1,12 +1,8 @@
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 
 export class UserPermissions {
   static hasSysAdminRights(user: ReadUser): boolean {
-    return this._isPartOfProjectGroup(
-      user,
-      'http://www.knora.org/ontology/knora-admin#SystemProject',
-      'http://www.knora.org/ontology/knora-admin#SystemAdmin'
-    );
+    return this._isPartOfProjectGroup(user, Constants.SystemProjectIRI, Constants.SystemAdminGroupIRI);
   }
 
   static hasProjectAdminRights(user: ReadUser, projectUuid: string): boolean {
@@ -14,7 +10,7 @@ export class UserPermissions {
       return true;
     }
 
-    return this._isPartOfProjectGroup(user, projectUuid, 'http://www.knora.org/ontology/knora-admin#ProjectAdmin');
+    return this._isPartOfProjectGroup(user, projectUuid, Constants.ProjectAdminGroupIRI);
   }
 
   static hasProjectMemberRights(user: ReadUser, projectUuid: string): boolean {
@@ -22,20 +18,10 @@ export class UserPermissions {
       return true;
     }
 
-    return this._isPartOfProjectGroup(user, projectUuid, 'http://www.knora.org/ontology/knora-admin#ProjectMember');
+    return this._isPartOfProjectGroup(user, projectUuid, Constants.ProjectMemberGroupIRI);
   }
 
   private static _isPartOfProjectGroup(user: ReadUser, projectUuid: string, projectGroup: string): boolean {
-    if (!user.permissions.groupsPerProject) {
-      return false;
-    }
-
-    const projectFound = user.permissions.groupsPerProject[projectUuid];
-
-    if (projectFound === undefined) {
-      return false;
-    }
-
-    return projectFound.includes(projectGroup);
+    return user.permissions.groupsPerProject?.[projectUuid]?.includes(projectGroup) ?? false;
   }
 }
