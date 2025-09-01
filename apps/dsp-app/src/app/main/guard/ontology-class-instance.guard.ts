@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AutoLoginService, UserService } from '@dasch-swiss/vre/core/session';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, Observable, filter, map, switchMap } from 'rxjs';
+import { combineLatest, filter, map, Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

@@ -8,7 +8,6 @@ import {
   Events as CommsEvents,
   LocalizationService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { take } from 'rxjs';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { UserService } from './user.service';
@@ -26,7 +25,6 @@ export class AuthService {
 
   isCredentialsValid$() {
     return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-      take(1),
       map(() => true),
       catchError(() => {
         return of(false);
@@ -65,13 +63,11 @@ export class AuthService {
   }
 
   logout() {
-    this._dspApiConnection.v2.auth
-      .logout()
-      .pipe(tap(() => this._userService.logout()))
-      .subscribe(() => {
-        this._accessTokenService.removeTokens();
-        this._dspApiConnection.v2.jsonWebToken = '';
-        window.location.reload();
-      });
+    this._dspApiConnection.v2.auth.logout().subscribe(() => {
+      this._userService.logout();
+      this._accessTokenService.removeTokens();
+      this._dspApiConnection.v2.jsonWebToken = '';
+      window.location.reload();
+    });
   }
 }
