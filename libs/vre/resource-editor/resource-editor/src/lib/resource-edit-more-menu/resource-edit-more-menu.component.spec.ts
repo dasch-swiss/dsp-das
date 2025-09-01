@@ -1,10 +1,10 @@
-import { ViewContainerRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { Store } from '@ngxs/store';
-import { of, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu.component';
 
 // Mock everything at the module level
@@ -23,7 +23,6 @@ jest.mock('@angular/material/dialog', () => ({
 jest.mock('@dasch-swiss/vre/core/config', () => ({
   DspApiConnectionToken: 'DspApiConnectionToken',
 }));
-
 
 jest.mock('@dasch-swiss/vre/resource-editor/properties-display', () => ({
   DeleteResourceDialogComponent: class MockDeleteResourceDialogComponent {},

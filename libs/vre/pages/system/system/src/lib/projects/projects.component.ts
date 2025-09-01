@@ -51,20 +51,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     switchMap(() => this._allProjectsService.allInactiveProjects$)
   );
 
-  inactiveProjects$ = combineLatest([
-    this._userService.userInactiveProjects$,
-    this._allInactiveProjects$,
-  ]).pipe(
+  inactiveProjects$ = combineLatest([this._userService.userInactiveProjects$, this._allInactiveProjects$]).pipe(
     takeUntil(this._ngUnsubscribe),
     map(([userInactiveProjects, allInactiveProjects]) =>
       this.isUsersProjects ? userInactiveProjects : allInactiveProjects
     )
   );
 
-  activeProjects$ = combineLatest([
-    this._userService.userActiveProjects$,
-    this._allActiveProjects$,
-  ]).pipe(
+  activeProjects$ = combineLatest([this._userService.userActiveProjects$, this._allActiveProjects$]).pipe(
     takeUntil(this._ngUnsubscribe),
     map(([userActiveProjects, allActiveProjects]) => (this.isUsersProjects ? userActiveProjects : allActiveProjects))
   );
