@@ -3,11 +3,10 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } 
 import { ApiResponseError, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-password-form',
@@ -77,11 +76,11 @@ export class PasswordFormComponent implements OnInit {
     private _notification: NotificationService,
     private _ts: TranslateService,
     private _userApiService: UserApiService,
-    private store: Store
+    private _userService: UserService
   ) {}
 
   ngOnInit() {
-    const userFromState = this.store.selectSnapshot(UserSelectors.user);
+    const userFromState = this._userService.currentUser;
     if (this.user) {
       // edit mode
       if (userFromState?.username === this.user.username) {
@@ -203,7 +202,7 @@ export class PasswordFormComponent implements OnInit {
     this.loading = true;
 
     // submit requester password with logged-in username
-    const loggedInUser = this.store.selectSnapshot(UserSelectors.user);
+    const loggedInUser = this._userService.currentUser;
     this._dspApiConnection.v2.auth
       .login('username', loggedInUser?.username, this.confirmForm.controls.requesterPassword.value)
       .subscribe(

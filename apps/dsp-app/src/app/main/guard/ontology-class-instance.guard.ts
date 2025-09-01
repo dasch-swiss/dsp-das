@@ -2,21 +2,16 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { ReadUser, StoredProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { AutoLoginService } from '@dasch-swiss/vre/core/session';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { AutoLoginService, UserService } from '@dasch-swiss/vre/core/session';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Select, Store } from '@ngxs/store';
 import { combineLatest, Observable, filter, map, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OntologyClassInstanceGuard implements CanActivate {
-  @Select(UserSelectors.isSysAdmin) isSysAdmin$: Observable<boolean>;
-  @Select(UserSelectors.user) user$: Observable<ReadUser | null>;
-
   constructor(
-    private _store: Store,
+    private _userService: UserService,
     private projectService: ProjectService,
     private router: Router,
     private _autoLoginService: AutoLoginService
@@ -27,10 +22,10 @@ export class OntologyClassInstanceGuard implements CanActivate {
     return combineLatest([
       this._autoLoginService.hasCheckedCredentials$.pipe(
         filter(hasChecked => hasChecked === true),
-        switchMap(() => this._store.select(UserSelectors.isLoggedIn))
+        switchMap(() => this._userService.isLoggedIn$)
       ),
-      this.isSysAdmin$,
-      this.user$,
+      this._userService.isSysAdmin$,
+      this._userService.user$,
     ]).pipe(
       map(([isLoggedIn, isSysAdmin, user]) => {
         const projectUuid = activatedRoute.parent.params[RouteConstants.uuidParameter];

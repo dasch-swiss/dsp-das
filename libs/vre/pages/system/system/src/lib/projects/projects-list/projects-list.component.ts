@@ -5,13 +5,12 @@ import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { UserPermissions } from '@dasch-swiss/vre/pages/project/project';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { SortProp } from '../../sort-button/sort-button.component';
 import {
@@ -63,8 +62,8 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   sortBy = 'longname';
 
-  user$ = this._store.select(UserSelectors.user);
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  user$ = this._userService.user$;
+  isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
     private _appConfigService: AppConfigService,
@@ -73,7 +72,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     private _notification: NotificationService,
     private _projectApiService: ProjectApiService,
     private _router: Router,
-    private _store: Store,
+    private _userService: UserService,
     private _translateService: TranslateService,
     private _projectService: ProjectService
   ) {}

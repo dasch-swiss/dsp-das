@@ -4,9 +4,8 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { DEVTOOLS_REDUX_CONFIG, LOGGER_CONFIG, OPTIONS_CONFIG } from './store.config';
-import { UserState } from './index';
 
-const STATE_MODULES = [UserState];
+const STATE_MODULES = [];
 
 @NgModule({
   exports: [NgxsModule],
