@@ -6,7 +6,7 @@ import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { UserPermissions } from '@dasch-swiss/vre/pages/project/project';
+import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';

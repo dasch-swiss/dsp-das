@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { StoredProject } from '@dasch-swiss/dsp-js/src/models/admin/stored-project';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { UserPermissions } from '@dasch-swiss/vre/pages/project/project';
+import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { BehaviorSubject, map, Observable, take, tap } from 'rxjs';
 
 @Injectable({
