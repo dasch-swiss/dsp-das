@@ -3,7 +3,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { filterNull } from '@dasch-swiss/vre/shared/app-common';
+import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { BehaviorSubject, combineLatest, map, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
 
