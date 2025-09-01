@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { Store } from '@ngxs/store';
 import { BehaviorSubject, of } from 'rxjs';
 import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu.component';
 
