@@ -118,8 +118,8 @@ export class MultiLanguageFormService {
       .map(v => v.language)
       .filter(language => this.availableLanguages.includes(language));
 
-    const userFavoriteLanguage =
-      (this._store.selectSnapshot(UserSelectors.language) as string) || navigator.language.substring(0, 2);
+    const user = this._store.selectSnapshot(UserSelectors.user);
+    const userFavoriteLanguage = user?.lang || navigator.language.substring(0, 2);
 
     if (responseLanguages.length === 0) {
       if (!isDaschLanguage(userFavoriteLanguage)) {

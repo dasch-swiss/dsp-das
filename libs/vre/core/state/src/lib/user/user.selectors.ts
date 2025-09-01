@@ -19,10 +19,6 @@ export class UserSelectors {
   static user(state: UserStateModel): ReadUser | null {
     return state.user;
   }
-  @Selector([UserState])
-  static language(state: UserStateModel): string | null | undefined {
-    return state.user?.lang;
-  }
 
   @Selector([UserState])
   static userProjectAdminGroups(state: UserStateModel): string[] {
