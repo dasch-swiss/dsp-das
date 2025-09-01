@@ -16,11 +16,6 @@ export class UserSelectors {
   }
 
   @Selector([UserState])
-  static userProjectAdminGroups(state: UserStateModel): string[] {
-    return state.userProjectAdminGroups;
-  }
-
-  @Selector([UserState])
   static isSysAdmin(state: UserStateModel): boolean {
     return state.isMemberOfSystemAdminGroup === true
       ? true
