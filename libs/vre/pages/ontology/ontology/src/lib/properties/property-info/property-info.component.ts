@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
@@ -38,7 +38,8 @@ export class PropertyInfoComponent {
     private _dialog: MatDialog,
     private _oes: OntologyEditService,
     private _dialogService: DialogService,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   openEditProperty(propDef: ResourcePropertyDefinitionWithAllLanguages, propType: DefaultProperty) {
@@ -52,10 +53,10 @@ export class PropertyInfoComponent {
       guiAttribute: propDef.guiAttributes[0],
       objectType: propDef.objectType,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(
-      EditPropertyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(propertyData)
-    );
+    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(EditPropertyFormDialogComponent, {
+      viewContainerRef: this._viewContainerRef,
+      ...DspDialogConfig.dialogDrawerConfig(propertyData),
+    });
   }
 
   openDeleteProperty(id: string) {

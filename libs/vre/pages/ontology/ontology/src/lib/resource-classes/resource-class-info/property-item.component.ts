@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -219,7 +220,8 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private _dialog: MatDialog,
     private _notification: NotificationService,
     private _oes: OntologyEditService,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
@@ -271,10 +273,10 @@ export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
       guiAttribute: this.classProp.propDef.guiAttributes[0],
       objectType: this.classProp.propDef.objectType,
     };
-    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(
-      EditPropertyFormDialogComponent,
-      DspDialogConfig.dialogDrawerConfig(propertyData)
-    );
+    this._dialog.open<EditPropertyFormDialogComponent, EditPropertyDialogData>(EditPropertyFormDialogComponent, {
+      viewContainerRef: this._viewContainerRef,
+      ...DspDialogConfig.dialogDrawerConfig(propertyData),
+    });
   }
 
   copyPropertyId() {

@@ -137,6 +137,7 @@ export class OntologySidenavComponent {
   openCreateNewProperty(propType: DefaultProperty) {
     this._dialog.open<EditPropertyFormDialogComponent, CreatePropertyDialogData>(EditPropertyFormDialogComponent, {
       data: { propType },
+      viewContainerRef: this._viewContainerRef,
     });
   }
 
