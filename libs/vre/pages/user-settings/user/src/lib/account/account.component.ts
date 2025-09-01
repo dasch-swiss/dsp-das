@@ -16,7 +16,6 @@ import { apiConnectionTokenProvider } from './api-connection-token.provider';
 })
 export class AccountComponent {
   user$ = this._store.select(UserSelectors.user);
-  isLoading$ = this._store.select(UserSelectors.isLoading);
 
   constructor(
     private _userApiService: UserApiService,

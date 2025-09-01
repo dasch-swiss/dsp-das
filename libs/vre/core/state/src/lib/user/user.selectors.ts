@@ -6,13 +6,8 @@ import { UserStateModel } from './user.state-model';
 
 export class UserSelectors {
   @Selector([UserState])
-  static isLoading(state: UserStateModel): boolean | undefined {
-    return state.isLoading;
-  }
-
-  @Selector([UserState])
   static isLoggedIn(state: UserStateModel) {
-    return !state.isLoading && state.user !== null;
+    return state.user !== null;
   }
 
   @Selector([UserState])

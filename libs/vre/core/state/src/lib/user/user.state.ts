@@ -7,7 +7,6 @@ import { LoadUserAction, LogUserOutAction, SetUserAction, SetUserProjectGroupsAc
 import { UserStateModel } from './user.state-model';
 
 const defaults = <UserStateModel>{
-  isLoading: false, // loading state
   user: null, // the currently logged in user
   userProjectAdminGroups: [], // users permission groups
   userProjectGroups: [], // users project groups
@@ -29,13 +28,11 @@ export class UserState {
 
   @Action(LoadUserAction)
   loadUser(ctx: StateContext<UserStateModel>, { identifier, idType }: LoadUserAction) {
-    ctx.patchState({ isLoading: true });
     return this._userApiService.get(identifier, idType).pipe(
       take(1),
       map(response => {
         ctx.setState({
           ...ctx.getState(),
-          isLoading: false,
           user: response.user,
         });
         ctx.dispatch(new SetUserProjectGroupsAction(response.user));
@@ -54,7 +51,7 @@ export class UserState {
       state.user = user;
     }
 
-    ctx.setState({ ...state, isLoading: false });
+    ctx.setState({ ...state });
     ctx.dispatch([new SetUserProjectGroupsAction(user)]);
   }
 

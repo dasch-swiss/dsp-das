@@ -19,7 +19,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
   user$ = this._store.select(UserSelectors.user);
-  isLoading$ = this._store.select(UserSelectors.isLoading);
 
   constructor(
     private _dialog: MatDialog,
