@@ -56,5 +56,5 @@ export default defineConfig({
       return config;
     },
   },
-  component: nxComponentTestingPreset(__filename),
+  component: { ...nxComponentTestingPreset(__filename), specPattern: ['../../libs/**/*.cy.ts'] },
 });
