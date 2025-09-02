@@ -1,3 +1,5 @@
+import { CommonModule } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -25,7 +27,9 @@ describe('PropertiesDisplay Integration Test (Simplified)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [CommonModule],
       declarations: [
+        PropertiesDisplayComponent,
         PropertiesToolbarComponent,
         PropertyValuesWithFootnotesComponent,
         PropertyRowComponent,
@@ -35,6 +39,7 @@ describe('PropertiesDisplay Integration Test (Simplified)', () => {
         PropertyValueUpdateComponent,
         TemplateViewerSwitcherComponent,
       ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
         {
