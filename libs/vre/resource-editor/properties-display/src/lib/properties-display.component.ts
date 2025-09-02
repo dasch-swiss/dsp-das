@@ -92,7 +92,6 @@ export class PropertiesDisplayComponent implements OnChanges {
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnChanges() {
-    console.log('PropertiesDisplayComponent - ngOnChanges', this.resource);
     this.editableProperties = this.resource.resProps.filter(
       prop => (prop.propDef as ResourcePropertyDefinition).isEditable
     );
