@@ -49,13 +49,13 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
 export class LoginFormComponent implements OnInit, OnDestroy {
   loading = false;
   form = this._fb.group({
-    username: ['', Validators.required],
+    username: this._fb.control('', { validators: [Validators.required], nonNullable: true }),
     password: ['', Validators.required],
   });
-  isLoginError: boolean;
-  returnUrl: string;
+  isLoginError!: boolean;
+  returnUrl!: string;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(
     private _fb: FormBuilder,
@@ -82,7 +82,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.isLoginError = false;
 
     this.subscription = this._authService
-      .login$(this.form.get('username').value, this.form.get('password').value)
+      .login$(this.form.controls.username.value!, this.form.controls.password.value!)
       .pipe(
         takeLast(1),
         tap({

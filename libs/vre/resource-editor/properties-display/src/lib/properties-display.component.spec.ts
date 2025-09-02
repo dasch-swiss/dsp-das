@@ -2,21 +2,21 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import {
-    PropertiesDisplayComponent,
-    PropertiesToolbarComponent,
+  PropertiesDisplayComponent,
+  PropertiesToolbarComponent,
 } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { of } from 'rxjs';
-import mockResource from './mock-resource';
 import {
-    PropertyRowComponent,
-    PropertyValueComponent,
-    PropertyValueDisplayComponent,
-    PropertyValuesComponent,
-    PropertyValuesWithFootnotesComponent,
-    PropertyValueUpdateComponent,
+  PropertyRowComponent,
+  PropertyValueComponent,
+  PropertyValueDisplayComponent,
+  PropertyValuesComponent,
+  PropertyValuesWithFootnotesComponent,
+  PropertyValueUpdateComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { of } from 'rxjs';
 import { TemplateViewerSwitcherComponent } from 'template-switcher';
+import mockResource from './mock-resource';
 
 describe('PropertiesDisplay Integration Test (Simplified)', () => {
   const mockResourceFetcherService = {

@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { User } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { TranslateService } from '@ngx-translate/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subject, takeUntil } from 'rxjs';
 import { MenuItem } from '../menu-item';
 
 @Component({
@@ -15,11 +14,11 @@ import { MenuItem } from '../menu-item';
   styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
-  @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger) menuTrigger!: MatMenuTrigger;
 
   destroyed: Subject<void> = new Subject<void>();
 
-  navigation: MenuItem[];
+  navigation!: MenuItem[];
   isLoggedIn$ = this._store.select(UserSelectors.isLoggedIn);
 
   readonly systemLink = RouteConstants.system;
