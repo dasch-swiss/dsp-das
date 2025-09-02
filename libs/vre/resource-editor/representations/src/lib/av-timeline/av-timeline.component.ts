@@ -26,19 +26,19 @@ export interface PointerValue {
 })
 export class AvTimelineComponent implements OnChanges {
   // current time value
-  @Input() value: number;
+  @Input({ required: true }) value!: number;
 
   // start time value
-  @Input() min? = 0;
+  @Input({ required: true }) min!: number;
 
   // end time value: Normally this is the duration
-  @Input() max: number;
+  @Input({ required: true }) max!: number;
 
   // in case parent resized: Will be used in video player when switching between cinema and default view
-  @Input() resized: boolean;
+  @Input({ required: true }) resized!: boolean;
 
   // disable in case of missing file
-  @Input() disabled: boolean;
+  @Input({ required: true }) disabled!: boolean;
 
   // send click position to parent
   @Output() changed = new EventEmitter<number>();
@@ -50,13 +50,13 @@ export class AvTimelineComponent implements OnChanges {
   @Output() dimension = new EventEmitter<DOMRect>();
 
   // timeline element: main container
-  @ViewChild('timeline') timelineEle: ElementRef;
+  @ViewChild('timeline') timelineEle!: ElementRef;
 
   // progress element: thin bar line
-  @ViewChild('progress') progressEle: ElementRef;
+  @ViewChild('progress') progressEle!: ElementRef;
 
   // thumb element: current postion pointer
-  @ViewChild('thumb') thumbEle: ElementRef;
+  @ViewChild('thumb') thumbEle!: ElementRef;
 
   // in case of draging the thumb element
   dragging = false;
@@ -85,7 +85,7 @@ export class AvTimelineComponent implements OnChanges {
       return;
     }
 
-    if (changes.splitSizeChanged) {
+    if (changes['splitSizeChanged']) {
       // reset the timeline dimension
       this.timelineDimension = this._getResizedTimelineDimensions();
     }
@@ -93,13 +93,13 @@ export class AvTimelineComponent implements OnChanges {
     if (!this.timelineDimension) {
       // calculate timeline dimension if it doesn't exist
       this.timelineDimension = this._getTimelineDimensions();
-    } else if (changes.resized) {
+    } else if (changes['resized']) {
       // recalculate timeline dimension because resized parameter has changed
       this.timelineDimension = this._getResizedTimelineDimensions();
     }
 
     // emit the dimension to the parent
-    this.dimension.emit(this.timelineDimension);
+    this.dimension.emit(this.timelineDimension ?? undefined);
 
     // update pointer position from time
     this.updatePositionFromTime(this.value);
@@ -113,7 +113,7 @@ export class AvTimelineComponent implements OnChanges {
     // calc position on the x axis from time value
     const percent: number = time / this.max;
 
-    const pos: number = this.timelineDimension.width * percent;
+    const pos: number = this.timelineDimension!.width * percent;
 
     this.updatePosition(pos);
   }
@@ -124,7 +124,7 @@ export class AvTimelineComponent implements OnChanges {
    */
   updatePosition(pos: number) {
     // already played time: fill with red background color
-    const fillPos = pos / this.timelineDimension.width;
+    const fillPos = pos / this.timelineDimension!.width;
 
     // background (timeline fill) start position
     const bgPos = 1 - fillPos;
@@ -151,7 +151,7 @@ export class AvTimelineComponent implements OnChanges {
    * @param ev
    */
   dragAction(ev: CdkDragMove) {
-    const pos: number = ev.pointerPosition.x - this.timelineDimension.left;
+    const pos: number = ev.pointerPosition.x - this.timelineDimension!.left;
     this.updatePosition(pos);
   }
 
@@ -166,9 +166,9 @@ export class AvTimelineComponent implements OnChanges {
    * mouse moves on timeline
    */
   private _onMousemove(ev: MouseEvent) {
-    const pos: number = ev.clientX - this.timelineDimension.left;
+    const pos: number = ev.clientX - this.timelineDimension!.left;
 
-    const percent: number = pos / this.timelineDimension.width;
+    const percent: number = pos / this.timelineDimension!.width;
 
     let time: number = percent * this.max;
 
@@ -187,11 +187,11 @@ export class AvTimelineComponent implements OnChanges {
    */
   private _onMouseup(ev: MouseEvent) {
     if (!this.disabled) {
-      const pos: number = ev.clientX - this.timelineDimension.left;
+      const pos: number = ev.clientX - this.timelineDimension!.left;
 
       this.updatePosition(pos);
 
-      const percentage: number = pos / this.timelineDimension.width;
+      const percentage: number = pos / this.timelineDimension!.width;
 
       // calc time value to submit to parent
       const time: number = percentage * this.max;
@@ -206,7 +206,7 @@ export class AvTimelineComponent implements OnChanges {
   private _onWindowResize() {
     this.timelineDimension = this._getResizedTimelineDimensions();
     this.updatePositionFromTime(this.value);
-    this.dimension.emit(this.timelineDimension);
+    this.dimension.emit(this.timelineDimension ?? undefined);
   }
 
   /**
@@ -224,10 +224,11 @@ export class AvTimelineComponent implements OnChanges {
    */
   private _getResizedTimelineDimensions(): DOMRect | null {
     // recalculate timeline dimension
-    const newDimension: DOMRect = this._getTimelineDimensions();
+    const newDimension: DOMRect = this._getTimelineDimensions()!;
 
     if (this.timelineDimension?.width !== newDimension.width) {
       return newDimension;
     }
+    return null;
   }
 }
