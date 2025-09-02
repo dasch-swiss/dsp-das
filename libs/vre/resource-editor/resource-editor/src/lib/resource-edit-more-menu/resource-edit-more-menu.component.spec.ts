@@ -36,10 +36,6 @@ jest.mock('@dasch-swiss/vre/resource-editor/resource-properties', () => ({
   EraseResourceDialogComponent: class MockEraseResourceDialogComponent {},
 }));
 
-jest.mock('@ngxs/store', () => ({
-  Store: class MockStore {},
-}));
-
 describe('ResourceEditMoreMenuComponent', () => {
   let component: ResourceEditMoreMenuComponent;
   let fixture: ComponentFixture<ResourceEditMoreMenuComponent>;
