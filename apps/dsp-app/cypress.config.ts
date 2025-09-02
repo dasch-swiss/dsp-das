@@ -1,4 +1,3 @@
-import { nxComponentTestingPreset } from '@nx/angular/plugins/component-testing';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { nxE2EPreset } from '@nx/cypress/plugins/cypress-preset';
 import { defineConfig } from 'cypress';
@@ -56,5 +55,4 @@ export default defineConfig({
       return config;
     },
   },
-  component: { ...nxComponentTestingPreset(__filename), specPattern: ['../../libs/**/*.cy.ts'] },
 });
