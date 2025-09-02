@@ -6,7 +6,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
 
 @Component({
   selector: 'app-properties-display',
-  template: `
+  template: `<h1>BG</h1>
     <div style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3">
       <div style="display: flex; flex: 0 0 auto">
         <app-properties-toolbar
@@ -65,8 +65,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
       <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">
         <div>This resource has no defined properties.</div>
       </app-property-row>
-    </ng-template>
-  `,
+    </ng-template> `,
   styles: [
     `
       .infobar {
@@ -93,6 +92,7 @@ export class PropertiesDisplayComponent implements OnChanges {
   constructor(private _resourceFetcherService: ResourceFetcherService) {}
 
   ngOnChanges() {
+    console.log('PropertiesDisplayComponent - ngOnChanges', this.resource);
     this.editableProperties = this.resource.resProps.filter(
       prop => (prop.propDef as ResourcePropertyDefinition).isEditable
     );
