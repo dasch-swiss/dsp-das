@@ -92,10 +92,10 @@ import { MultiLanguageFormService } from './multi-language-form.service';
   ],
 })
 export class MutiLanguageInputComponent implements OnInit, OnChanges {
-  @Input({ required: true }) formArray!: MultiLanguageFormArray;
-  @Input({ required: true }) placeholder!: string;
+  @Input() formArray: MultiLanguageFormArray;
   @Input() editable = true;
-  @Input() validators: ValidatorFn[] = [];
+  @Input() placeholder: string;
+  @Input() validators: ValidatorFn[];
   @Input({ required: true }) isRequired!: boolean;
 
   constructor(public formService: MultiLanguageFormService) {}
