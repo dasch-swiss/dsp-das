@@ -1,5 +1,5 @@
 export function unescapeHtml(str: string) {
-  const unescapeMap: Record<string, string> = {
+  const unescapeMap = {
     '&amp;': '&',
     '&lt;': '<',
     '&gt;': '>',
