@@ -108,6 +108,7 @@ export class TemplateViewerSwitcherComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log('TemplateViewerSwitcherComponent', this);
     this.templateFound.emit(this._getDisplayTemplate());
   }
 
