@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ReadUser, User } from '@dasch-swiss/dsp-js';
+import { User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
 
 @Component({
   selector: 'app-create-user-dialog',
   template: `
-    <app-user-form [user]="user" (afterFormInit)="form = $event" />
+    <app-user-form [data]="data" (afterFormInit)="form = $event" />
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
@@ -24,7 +24,7 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
   `,
 })
 export class CreateUserDialogComponent {
-  user = new ReadUser();
+  data = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
   form!: UserForm;
   isLoading = false;
 
@@ -41,7 +41,7 @@ export class CreateUserDialogComponent {
     user.givenName = this.form.controls.givenName.value;
     user.email = this.form.controls.email.value;
     user.username = this.form.controls.username.value;
-    user.password = this.form.controls.password.value;
+    user.password = ''; // this.form.controls.password.value;
     user.lang = this.form.controls.lang.value;
     user.systemAdmin = this.form.controls.systemAdmin.value;
     user.status = true;
