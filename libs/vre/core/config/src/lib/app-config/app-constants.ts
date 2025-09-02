@@ -1,4 +1,4 @@
-import { DaschLanguage } from '@dasch-swiss/vre/ui/string-literal';
+export type DaschLanguage = 'en' | 'de' | 'fr' | 'it' | 'rm';
 
 export const AvailableLanguages: { language: DaschLanguage; value: string }[] = [
   {

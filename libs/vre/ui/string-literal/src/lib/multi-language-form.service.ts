@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { FormBuilder, ValidatorFn } from '@angular/forms';
-import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
+import { AvailableLanguages, DaschLanguage } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { DaschLanguage, isDaschLanguage } from './dash-language.type';
+import { isDaschLanguage } from './dash-language.type';
+
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 
 /** Component Provider used in combination with
