@@ -5,6 +5,8 @@ import { ProfileComponent } from './lib/profile/profile.component';
 import { ProjectImageCoverComponent } from './lib/project-image-cover.component';
 import { ProjectCardComponent } from './lib/project-overview/project-card.component';
 import { ProjectOverviewComponent } from './lib/project-overview/project-overview.component';
+import { PasswordForm2Component } from './lib/user-form/password-form/password-form-2.component';
+import { PasswordFormFieldComponent } from './lib/user-form/password-form/password-form-field.component';
 import { PasswordFormComponent } from './lib/user-form/password-form/password-form.component';
 import { UserFormComponent } from './lib/user-form/user-form.component';
 import { UserMenuComponent } from './lib/user-menu/user-menu.component';
@@ -19,6 +21,8 @@ export const UserComponents = [
   UserMenuComponent,
   UserComponent,
   PasswordFormComponent,
+  PasswordForm2Component,
+  PasswordFormFieldComponent,
   LoginFormComponent,
   ProjectCardComponent,
   ProjectImageCoverComponent,
