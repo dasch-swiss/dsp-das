@@ -15,7 +15,7 @@ export interface EditUserDialogProps {
 @Component({
   selector: 'app-edit-user-dialog',
   template: `
-    <app-user-form *ngIf="data.user" [data]="data.user" (afterFormInit)="form = $event" />
+    <app-user-form *ngIf="data.user" [data]="data.user" (afterFormInit)="afterFormInit($event)" />
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
@@ -41,6 +41,12 @@ export class EditUserDialogComponent {
     private _translateService: TranslateService,
     private _userApiService: UserApiService
   ) {}
+
+  afterFormInit(form: UserForm) {
+    this.form = form;
+    this.form.controls.username.disable();
+    this.form.controls.email.disable();
+  }
 
   protected updateUser(): void {
     const userUpdate: UpdateUserRequest = {
