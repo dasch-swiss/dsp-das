@@ -28,3 +28,4 @@ export * from './lib/paginated-api.service';
 export * from './lib/date-time-timestamp';
 export * from './lib/JsLibPotentialError';
 export * from './lib/with-breaks.pipe';
+export * from './lib/property-value.service';
