@@ -1,14 +1,42 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { PropertiesDisplayComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
+import {
+    PropertiesDisplayComponent,
+    PropertiesToolbarComponent,
+} from '@dasch-swiss/vre/resource-editor/properties-display';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { of } from 'rxjs';
 import mockResource from './mock-resource';
+import {
+    PropertyRowComponent,
+    PropertyValueComponent,
+    PropertyValueDisplayComponent,
+    PropertyValuesComponent,
+    PropertyValuesWithFootnotesComponent,
+    PropertyValueUpdateComponent,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TemplateViewerSwitcherComponent } from 'template-switcher';
 
 describe('PropertiesDisplay Integration Test (Simplified)', () => {
+  const mockResourceFetcherService = {
+    attachedUser$: of({ username: 'testuser', givenName: 'Test', familyName: 'User' }),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PropertiesDisplayComponent],
+      declarations: [
+        PropertiesToolbarComponent,
+        PropertyValuesWithFootnotesComponent,
+        PropertyRowComponent,
+        PropertyValuesComponent,
+        PropertyValueComponent,
+        PropertyValueDisplayComponent,
+        PropertyValueUpdateComponent,
+        TemplateViewerSwitcherComponent,
+      ],
       providers: [
+        { provide: ResourceFetcherService, useValue: mockResourceFetcherService },
         {
           provide: ActivatedRoute,
           useValue: {
