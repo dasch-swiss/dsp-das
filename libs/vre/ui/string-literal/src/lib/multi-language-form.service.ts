@@ -3,8 +3,8 @@ import { FormBuilder, ValidatorFn } from '@angular/forms';
 import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
-import { isDaschLanguage } from './dash-language.type';
-import { MultiLanguageFormArray, MultiLanguageFormControl } from './multi-language-form-array.type';
+import { DaschLanguage, isDaschLanguage } from './dash-language.type';
+import { MultiLanguageFormArray } from './multi-language-form-array.type';
 
 /** Component Provider used in combination with
  * MultiLanguageInputComponent and MultiLanguageTextareaComponent.
@@ -12,7 +12,7 @@ import { MultiLanguageFormArray, MultiLanguageFormControl } from './multi-langua
  */
 @Injectable()
 export class MultiLanguageFormService {
-  readonly availableLanguages: string[] = AvailableLanguages.map(lang => lang.language!);
+  readonly availableLanguages = AvailableLanguages.map(lang => lang.language);
   selectedLanguageIndex!: number;
   formArray!: MultiLanguageFormArray;
   validators!: ValidatorFn[];
@@ -81,7 +81,7 @@ export class MultiLanguageFormService {
         this._fb.nonNullable.group({
           language: this.availableLanguages[this.selectedLanguageIndex],
           value: [newText, this.validators],
-        }) as MultiLanguageFormControl
+        })
       );
     }
 
@@ -118,8 +118,8 @@ export class MultiLanguageFormService {
       .map(v => v.language)
       .filter(language => this.availableLanguages.includes(language!));
 
-    const userFavoriteLanguage =
-      (this._store.selectSnapshot(UserSelectors.language) as string) || navigator.language.substring(0, 2);
+    const userFavoriteLanguage = ((this._store.selectSnapshot(UserSelectors.language) as string) ||
+      navigator.language.substring(0, 2)) as DaschLanguage;
 
     if (responseLanguages.length === 0) {
       if (!isDaschLanguage(userFavoriteLanguage)) {
@@ -145,6 +145,6 @@ export class MultiLanguageFormService {
       return this.availableLanguages.indexOf(userFavoriteLanguage);
     }
 
-    return this.availableLanguages.indexOf(responseLanguages[0]!);
+    return this.availableLanguages.indexOf(responseLanguages[0]);
   }
 }

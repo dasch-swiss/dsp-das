@@ -4,4 +4,4 @@ export function isDaschLanguage(value: string): boolean {
   return AvailableLanguages.some(lang => lang.language === value);
 }
 
-export type DaschLanguage = (typeof AvailableLanguages)[number]['language'];
+export type DaschLanguage = 'en' | 'de' | 'fr' | 'it' | 'rm';
