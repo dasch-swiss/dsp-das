@@ -20,16 +20,18 @@ export class HumanReadableErrorPipe implements PipeTransform {
     if (error.hasOwnProperty('minlength')) {
       return `The length must be greater than or equal to ${
         (
-          error['minlength'] as {
-            requiredLength: number;
+          error as {
+            minLength: {
+              requiredLength: number;
+            };
           }
-        ).requiredLength
+        ).minLength.requiredLength
       }`;
     }
 
     if (error.hasOwnProperty('maxlength')) {
       return `The length must be less than or equal to ${
-        (error['maxlength'] as { requiredLength: number }).requiredLength
+        (error as { maxLength: { requiredLength: number } }).maxLength.requiredLength
       }`;
     }
 
@@ -37,10 +39,12 @@ export class HumanReadableErrorPipe implements PipeTransform {
       console.log(error);
       return `The value must be greater than or equal to ${
         (
-          error['min'] as {
-            min: number;
+          error as {
+            min: {
+              min: number;
+            };
           }
-        ).min
+        ).min.min
       }`;
     }
 
@@ -48,10 +52,12 @@ export class HumanReadableErrorPipe implements PipeTransform {
       console.log(error);
       return `The value must be less than or equal to ${
         (
-          error['max'] as {
-            max: number;
+          error as {
+            max: {
+              max: number;
+            };
           }
-        ).max
+        ).max.max
       }`;
     }
 

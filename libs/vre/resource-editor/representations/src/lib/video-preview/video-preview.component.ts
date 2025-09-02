@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { ReadMovingImageFileValue } from '@dasch-swiss/dsp-js';
-import { fromEvent, map, merge, Observable, take, tap } from 'rxjs';
+import { fromEvent, map, merge, Observable, tap } from 'rxjs';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 
 export interface Dimension {
@@ -17,10 +17,10 @@ export class VideoPreviewComponent implements OnChanges {
   @Input({ required: true }) src!: ReadMovingImageFileValue;
 
   @Input({ required: true }) time!: number;
-  @Input() fileInfo?: MovingImageSidecar;
+  @Input({ required: true }) fileInfo!: MovingImageSidecar;
   @Output() loaded = new EventEmitter<boolean>();
 
-  @ViewChild('frame') frame: ElementRef;
+  @ViewChild('frame') frame!: ElementRef;
 
   focusOnPreview = false;
 
@@ -28,26 +28,26 @@ export class VideoPreviewComponent implements OnChanges {
   // we need the last number of those files and the number of lines from the last matrix file
   // we need the number of these files and the number of lines of the last matrix file
   // 1. matrix file name
-  matrix: string;
+  matrix!: string;
   // 2. matrix dimension
-  matrixWidth: number;
-  matrixHeight: number;
+  matrixWidth!: number;
+  matrixHeight!: number;
   // 3. number of matrixes and number of lines of last file and number of last possible frame
-  lastMatrixNr: number;
-  lastMatrixFrameNr: number;
+  lastMatrixNr!: number;
+  lastMatrixFrameNr!: number;
   // 4. dimension of one frame inside the matrix
-  matrixFrameWidth: number;
-  matrixFrameHeight: number;
+  matrixFrameWidth!: number;
+  matrixFrameHeight!: number;
 
   previewError = false;
 
   // size of frame to be displayed; corresponds to dimension of parent container
-  frameWidth: number;
-  frameHeight: number;
+  frameWidth!: number;
+  frameHeight!: number;
 
   // proportion between matrix frame size and parent container size
   // to calculate matrix background size
-  proportion: number;
+  proportion!: number;
 
   constructor(private _host: ElementRef) {}
 
@@ -107,7 +107,8 @@ export class VideoPreviewComponent implements OnChanges {
     const parentFrameHeight: number = this._host.nativeElement.offsetHeight;
 
     this._getMatrixDimension(image).subscribe(
-      (dim: Dimension) => {
+      response => {
+        const dim = response as Dimension;
         // we got a dimension. There's no error
         this.previewError = false;
 
@@ -247,14 +248,12 @@ export class VideoPreviewComponent implements OnChanges {
    * @returns matrix dimension or error event
    */
   private _getMatrixDimension(matrix: string): Observable<Dimension | Event> {
-    const mapLoadedImage = (event): Dimension => ({
-      width: event.target.width,
-      height: event.target.height,
-    });
-
     const image = new Image();
 
-    const imageComplete = fromEvent(image, 'load').pipe(take(1), map(mapLoadedImage));
+    const imageComplete = fromEvent(image, 'load').pipe(
+      map(v => v as { target: { width: number; height: number } | null }),
+      map(v => ({ width: v.target!.width, height: v.target!.height }))
+    );
     const imageError = fromEvent(image, 'error').pipe(
       tap(() => {
         this.previewError = true;

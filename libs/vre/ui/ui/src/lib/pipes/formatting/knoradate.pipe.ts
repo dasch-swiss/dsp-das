@@ -11,10 +11,10 @@ export class KnoraDatePipe implements PipeTransform {
       return '';
     }
 
-    const formattedString = this.getFormattedString(date, format);
+    const formattedString = this.getFormattedString(date, format!);
 
     if (displayOptions) {
-      return this.addDisplayOptions(date, formattedString, displayOptions);
+      return this.addDisplayOptions(date, formattedString, displayOptions)!;
     } else {
       return formattedString;
     }
@@ -25,12 +25,12 @@ export class KnoraDatePipe implements PipeTransform {
     if (value !== undefined) {
       return `0${value}`.slice(-2);
     } else {
-      return null;
+      return '';
     }
   }
 
   // add the era, calendar, or both to the result returned by the pipe
-  addDisplayOptions(date: KnoraDate, value: string, options: string): string {
+  addDisplayOptions(date: KnoraDate, value: string, options: string) {
     switch (options) {
       case 'era':
         // displays date with era; era only in case of BCE
@@ -46,6 +46,8 @@ export class KnoraDatePipe implements PipeTransform {
         return `${value + (date.era === 'noEra' ? '' : date.era === 'BCE' ? ` ${date.era}` : '')} ${this._titleCase(
           date.calendar
         )}`;
+      default:
+        return null;
     }
   }
 
@@ -53,33 +55,33 @@ export class KnoraDatePipe implements PipeTransform {
     switch (format) {
       case 'dd.MM.YYYY':
         if (date.precision === 2) {
-          return `${this.leftPadding(date.day)}.${this.leftPadding(date.month)}.${date.year}`;
+          return `${this.leftPadding(date.day!)}.${this.leftPadding(date.month!)}.${date.year}`;
         } else if (date.precision === 1) {
-          return `${this.leftPadding(date.month)}.${date.year}`;
+          return `${this.leftPadding(date.month!)}.${date.year}`;
         } else {
           return `${date.year}`;
         }
       case 'dd-MM-YYYY':
         if (date.precision === 2) {
-          return `${this.leftPadding(date.day)}-${this.leftPadding(date.month)}-${date.year}`;
+          return `${this.leftPadding(date.day!)}-${this.leftPadding(date.month!)}-${date.year}`;
         } else if (date.precision === 1) {
-          return `${this.leftPadding(date.month)}-${date.year}`;
+          return `${this.leftPadding(date.month!)}-${date.year}`;
         } else {
           return `${date.year}`;
         }
       case 'MM/dd/YYYY':
         if (date.precision === 2) {
-          return `${this.leftPadding(date.month)}/${this.leftPadding(date.day)}/${date.year}`;
+          return `${this.leftPadding(date.month!)}/${this.leftPadding(date.day!)}/${date.year}`;
         } else if (date.precision === 1) {
-          return `${this.leftPadding(date.month)}/${date.year}`;
+          return `${this.leftPadding(date.month!)}/${date.year}`;
         } else {
           return `${date.year}`;
         }
       default:
         if (date.precision === 2) {
-          return `${this.leftPadding(date.day)}.${this.leftPadding(date.month)}.${date.year}`;
+          return `${this.leftPadding(date.day!)}.${this.leftPadding(date.month!)}.${date.year}`;
         } else if (date.precision === 1) {
-          return `${this.leftPadding(date.month)}.${date.year}`;
+          return `${this.leftPadding(date.month!)}.${date.year}`;
         } else {
           return `${date.year}`;
         }

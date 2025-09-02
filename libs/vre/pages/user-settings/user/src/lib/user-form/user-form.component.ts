@@ -7,8 +7,8 @@ import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { Select, Store } from '@ngxs/store';
-import { map, Observable, shareReplay } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { map, shareReplay } from 'rxjs';
 import { existingNamesAsyncValidator } from '../existing-names.validator';
 import { UserForm } from './user-form.type';
 
@@ -18,7 +18,7 @@ import { UserForm } from './user-form.type';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
-  @Input() user: ReadUser;
+  @Input({ required: true }) user!: ReadUser;
 
   @Output() afterFormInit = new EventEmitter<UserForm>();
 
@@ -47,9 +47,9 @@ export class UserFormComponent implements OnInit {
     message: this._ts.instant('pages.userSettings.userForm.usernameHint'),
   };
 
-  editExistingUser: boolean;
+  editExistingUser!: boolean;
 
-  userForm: UserForm;
+  userForm!: UserForm;
 
   constructor(
     private _fb: FormBuilder,
@@ -84,7 +84,7 @@ export class UserFormComponent implements OnInit {
       ),
       password: [{ value: '', disabled: this.editExistingUser }, Validators.required],
       lang: [this.user.lang || 'en'],
-      systemAdmin: [ProjectService.IsMemberOfSystemAdminGroup(this.user.permissions.groupsPerProject)],
-    });
+      systemAdmin: [ProjectService.IsMemberOfSystemAdminGroup(this.user.permissions.groupsPerProject!)],
+    }) as UserForm;
   }
 }

@@ -16,7 +16,7 @@ import { Store } from '@ngxs/store';
 })
 export class PasswordFormComponent implements OnInit {
   // update password for:
-  @Input() user: ReadUser;
+  @Input({ required: true }) user!: ReadUser;
 
   // output to close dialog
   @Output() closeDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -25,22 +25,22 @@ export class PasswordFormComponent implements OnInit {
   @Output() password: EventEmitter<string> = new EventEmitter<string>();
 
   // progress indicator and error status
-  loading: boolean;
-  error: boolean;
+  loading!: boolean;
+  error!: boolean;
 
   // update own password?
-  updateOwn: boolean;
+  updateOwn!: boolean;
 
   // depending on updateOwn: showPasswordForm or showConfirmForm
-  showPasswordForm: boolean;
+  showPasswordForm!: boolean;
 
   // password form
-  form: UntypedFormGroup;
+  form!: UntypedFormGroup;
 
   matchingPasswords = false;
 
   // in case of change not own password, we need a sys admin confirm password form
-  confirmForm: UntypedFormGroup;
+  confirmForm!: UntypedFormGroup;
 
   // error checking on the following fields
   formErrors = {
@@ -128,7 +128,7 @@ export class PasswordFormComponent implements OnInit {
 
   buildForm() {
     const requesterPassword =
-      this.updateOwn || !this.confirmForm ? '' : this.confirmForm.controls.requesterPassword.value;
+      this.updateOwn || !this.confirmForm ? '' : this.confirmForm.controls['requesterPassword'].value;
 
     const name = this.user?.username ? this.user.username : '';
 
@@ -164,8 +164,8 @@ export class PasswordFormComponent implements OnInit {
       this.onValueChanged(this.form);
 
       // compare passwords here
-      if (this.form.controls.password.dirty && this.form.controls.confirmPassword.dirty) {
-        this.matchingPasswords = this.form.controls.password.value === this.form.controls.confirmPassword.value;
+      if (this.form.controls['password'].dirty && this.form.controls['confirmPassword'].dirty) {
+        this.matchingPasswords = this.form.controls['password'].value === this.form.controls['confirmPassword'].value;
 
         this.formErrors['confirmPassword'] += this.matchingPasswords
           ? ''
@@ -173,7 +173,7 @@ export class PasswordFormComponent implements OnInit {
       }
 
       if (this.matchingPasswords && !this.formErrors['password'] && !this.formErrors['confirmPassword']) {
-        this.password.emit(this.form.controls.password.value);
+        this.password.emit(this.form.controls['password'].value);
       } else {
         this.password.emit('');
       }
@@ -188,12 +188,13 @@ export class PasswordFormComponent implements OnInit {
     // const form = this.userPasswordForm;
 
     Object.keys(this.formErrors).forEach(field => {
-      this.formErrors[field] = '';
+      this.formErrors[field as 'requesterPassword' | 'password' | 'confirmPassword'] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid) {
-        const messages = this.validationMessages[field];
-        Object.keys(control.errors).forEach(key => {
-          this.formErrors[field] += `${messages[key]} `;
+        const messages = this.validationMessages[field as 'requesterPassword' | 'password' | 'confirmPassword'];
+        Object.keys(control.errors as any).forEach(key => {
+          this.formErrors[field as 'requesterPassword' | 'password' | 'confirmPassword'] +=
+            `${messages[key as 'required'] as string} `;
         });
       }
     });
@@ -207,8 +208,8 @@ export class PasswordFormComponent implements OnInit {
     this._dspApiConnection.v2.auth
       .login(
         'username',
-        this.store.selectSnapshot(UserSelectors.username),
-        this.confirmForm.controls.requesterPassword.value
+        this.store.selectSnapshot(UserSelectors.username)!,
+        this.confirmForm.controls['requesterPassword'].value
       )
       .subscribe(
         () => {
@@ -219,7 +220,7 @@ export class PasswordFormComponent implements OnInit {
           this.loading = false;
         },
         () => {
-          this.confirmForm.controls.requesterPassword.setErrors({
+          this.confirmForm.controls['requesterPassword'].setErrors({
             incorrectPassword: true,
           });
           this.loading = false;
@@ -232,31 +233,34 @@ export class PasswordFormComponent implements OnInit {
     this.loading = true;
 
     const requesterPassword = this.updateOwn
-      ? this.form.controls.requesterPassword.value
-      : this.confirmForm.controls.requesterPassword.value;
+      ? this.form.controls['requesterPassword'].value
+      : this.confirmForm.controls['requesterPassword'].value;
 
-    this._userApiService.updatePassword(this.user.id, requesterPassword, this.form.controls.password.value).subscribe(
-      () => {
-        const successResponse = this._ts.instant(
-          this.updateOwn
-            ? 'pages.userSettings.passwordForm.ownPasswordSuccess'
-            : 'pages.userSettings.passwordForm.userPasswordSuccess'
-        );
-        this._notification.openSnackBar(successResponse);
-        this.closeDialog.emit();
-        this.form.reset();
-        this.loading = false;
-      },
-      error => {
-        if (error instanceof ApiResponseError && error.status === 403) {
-          // incorrect old password
-          this.form.controls.requesterPassword.setErrors({
-            incorrectPassword: true,
-          });
+    this._userApiService
+      .updatePassword(this.user.id, requesterPassword, this.form.controls['password'].value)
+      .subscribe(
+        () => {
+          const successResponse = this._ts.instant(
+            this.updateOwn
+              ? 'pages.userSettings.passwordForm.ownPasswordSuccess'
+              : 'pages.userSettings.passwordForm.userPasswordSuccess'
+          );
+          this._notification.openSnackBar(successResponse);
+          this.closeDialog.emit();
+          this.form.reset();
+          this.loading = false;
+        },
+        error => {
+          if (error instanceof ApiResponseError && error.status === 403) {
+            // incorrect old password
+            // incorrect old password
+            this.form.controls['requesterPassword'].setErrors({
+              incorrectPassword: true,
+            });
+          }
+          this.loading = false;
+          this.error = true;
         }
-        this.loading = false;
-        this.error = true;
-      }
-    );
+      );
   }
 }

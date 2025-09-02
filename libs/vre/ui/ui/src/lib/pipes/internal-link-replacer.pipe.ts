@@ -13,7 +13,10 @@ export class InternalLinkReplacerPipe implements PipeTransform {
     }
 
     // Convert SafeHtml back to string if needed
-    const htmlString = typeof value === 'string' ? value : value['changingThisBreaksApplicationSecurity'];
+    const htmlString =
+      typeof value === 'string'
+        ? value
+        : (value as { changingThisBreaksApplicationSecurity: string })['changingThisBreaksApplicationSecurity'];
 
     // Create a temporary div element to parse and manipulate the HTML
     const div = document.createElement('div');

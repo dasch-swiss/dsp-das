@@ -64,20 +64,20 @@ export class ColorPickerComponent
 {
   static nextId = 0;
 
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input({ required: true }) override errorStateMatcher!: ErrorStateMatcher;
 
   @HostBinding() id = `app-color-picker-${ColorPickerComponent.nextId++}`;
 
   @HostBinding('attr.aria-describedby') describedBy = '';
   colorForm: UntypedFormGroup;
   focused = false;
-  errorState = false;
+  override errorState = false;
   controlType = 'app-color-picker';
   matcher = new ColorPickerErrorStateMatcher();
 
   private _required = false;
   private _disabled = false;
-  private _placeholder: string;
+  private _placeholder!: string;
 
   @Input()
   get placeholder() {
@@ -150,7 +150,7 @@ export class ColorPickerComponent
   // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor(
     fb: UntypedFormBuilder,
-    @Optional() @Self() public ngControl: NgControl,
+    @Optional() @Self() public override ngControl: NgControl,
     private _stateChanges: Subject<void>,
     private _fm: FocusMonitor,
     private _elRef: ElementRef<HTMLElement>,
@@ -194,7 +194,7 @@ export class ColorPickerComponent
 
   onContainerClick(event: MouseEvent) {
     if ((event.target as Element).tagName.toLowerCase() !== 'input') {
-      this._elRef.nativeElement.querySelector('input').focus();
+      this._elRef.nativeElement.querySelector('input')!.focus();
     }
   }
 
