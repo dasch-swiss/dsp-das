@@ -103,15 +103,20 @@ export class UserFormComponent implements OnInit {
     this.userForm = this._fb.group({
       givenName: [this.data.givenName, Validators.required],
       familyName: [this.data.familyName, Validators.required],
-      email: this._fb.control(this.data.email, {
-        validators: [Validators.required, Validators.pattern(CustomRegex.EMAIL_REGEX)],
-        asyncValidators: [existingNamesAsyncValidator(this._existingUserEmails$)],
-      }),
-      username: this._fb.control(this.data.username, {
-        validators: [Validators.required, Validators.minLength(4), Validators.pattern(CustomRegex.USERNAME_REGEX)],
-        asyncValidators: [existingNamesAsyncValidator(this._existingUserNames$)],
-      }),
-      // password: [{ value: '', disabled: this.editExistingUser }, Validators.required],
+      email: [
+        this.data.email,
+        {
+          validators: [Validators.required, Validators.pattern(CustomRegex.EMAIL_REGEX)],
+          asyncValidators: [existingNamesAsyncValidator(this._existingUserEmails$)],
+        },
+      ],
+      username: [
+        this.data.username,
+        {
+          validators: [Validators.required, Validators.minLength(4), Validators.pattern(CustomRegex.USERNAME_REGEX)],
+          asyncValidators: [existingNamesAsyncValidator(this._existingUserNames$)],
+        },
+      ],
       lang: [this.data.lang],
       systemAdmin: [this.data.isSystemAdmin],
     });

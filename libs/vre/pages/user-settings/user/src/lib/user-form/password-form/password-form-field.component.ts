@@ -8,8 +8,8 @@ import { FormControl } from '@angular/forms';
       matInput
       [type]="showPassword ? 'text' : 'password'"
       [formControl]="control"
-      autocomplete="current-password"
-      [placeholder]="placeholder" />
+      autocomplete="current-password" />
+    <mat-label>{{ placeholder }}</mat-label>
 
     <button type="button" matSuffix mat-icon-button class="input-icon" (click)="showPassword = !showPassword">
       <mat-icon> {{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>

@@ -1,34 +1,27 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
-import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
   selector: 'app-create-user-dialog',
   template: `
     <app-dialog-header [title]="'Create a new user'" />
-    <app-user-form [data]="data" (afterFormInit)="afterFormInit($event)" />
-    <app-password-form-2 [control]="form.controls.password" />
+    <app-user-form [data]="data" (afterFormInit)="afterUserFormInit($event)" />
+    <app-password-form-2 (afterFormInit)="afterPasswordFormInit($event)" />
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
-      <button
-        mat-raised-button
-        color="primary"
-        appLoadingButton
-        [isLoading]="isLoading"
-        [disabled]="!form?.valid || isLoading"
-        (click)="createUser()">
+      <button mat-raised-button color="primary" appLoadingButton [isLoading]="isLoading" (click)="createUser()">
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>
   `,
 })
 export class CreateUserDialogComponent {
-  form!: FormGroup<{ user: UserForm; password: FormControl<string> }>;
+  form = this._fb.group({} as { user: UserForm; password: FormControl<string | null> });
   isLoading = false;
 
   readonly data = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
@@ -39,14 +32,19 @@ export class CreateUserDialogComponent {
     private _fb: FormBuilder
   ) {}
 
-  afterFormInit(form: UserForm): void {
-    this.form = this._fb.nonNullable.group({
-      user: form,
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(CustomRegex.PASSWORD_REGEX)]],
-    });
+  afterUserFormInit(form: UserForm): void {
+    this.form.addControl('user', form);
+  }
+
+  afterPasswordFormInit(form: FormControl<string | null>): void {
+    this.form.addControl('password', form);
   }
 
   createUser(): void {
+    this.form.markAllAsTouched();
+    if (!this.form.valid) {
+      return;
+    }
     this.isLoading = true;
 
     const userFormControls = this.form.controls.user.controls;

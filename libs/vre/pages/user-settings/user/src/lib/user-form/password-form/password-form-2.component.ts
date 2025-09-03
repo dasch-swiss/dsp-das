@@ -1,12 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-password-form-2',
   template: `
     <app-password-form-field
-      [control]="control"
+      [control]="formControl"
       [placeholder]="'pages.userSettings.passwordForm.oldPassword' | translate" />
 
     <app-password-form-field
@@ -16,16 +17,25 @@ import { Subscription } from 'rxjs';
   `,
 })
 export class PasswordForm2Component implements OnInit, OnDestroy {
-  @Input({ required: true }) control!: FormControl<string | null>;
+  @Output() afterFormInit = new EventEmitter<FormControl<string | null>>();
 
-  confirmPasswordControl = new FormControl<string | null>(null);
+  formControl = this._fb.control('', [
+    Validators.required,
+    Validators.minLength(8),
+    Validators.pattern(CustomRegex.PASSWORD_REGEX),
+  ]);
+
+  confirmPasswordControl = this._fb.control('', [Validators.required]);
   passwordValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match' }];
   subscription!: Subscription;
 
-  ngOnInit(): void {
-    this.confirmPasswordControl.setValidators([this.passwordMatchValidator()]);
+  constructor(private _fb: FormBuilder) {}
 
-    this.subscription = this.control.valueChanges.subscribe(() => {
+  ngOnInit(): void {
+    this.afterFormInit.emit(this.formControl);
+    this.confirmPasswordControl.addValidators([this.passwordMatchValidator()]);
+
+    this.subscription = this.formControl.valueChanges.subscribe(() => {
       this.confirmPasswordControl.updateValueAndValidity();
     });
   }
@@ -37,7 +47,7 @@ export class PasswordForm2Component implements OnInit, OnDestroy {
   private passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const confirmPassword = control.value;
-      const password = this.control?.value;
+      const password = this.formControl.value;
 
       if (!confirmPassword || !password) {
         return null;
