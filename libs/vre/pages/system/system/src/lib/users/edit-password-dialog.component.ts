@@ -20,7 +20,7 @@ export interface EditPasswordDialogProps {
 
     <mat-stepper orientation="vertical" linear #stepper>
       <mat-step
-        [label]="'For security reasons, please enter your admin password'"
+        [label]="'For security reasons, please enter your password'"
         [stepControl]="adminPasswordControl"
         [editable]="false">
         <app-password-form-field
@@ -86,7 +86,6 @@ export class EditPasswordDialogComponent {
   }
 
   updateNewPassword() {
-    console.log(this.newPasswordControl);
     this.newPasswordControl.markAllAsTouched();
 
     if (!this.newPasswordControl.valid) {
