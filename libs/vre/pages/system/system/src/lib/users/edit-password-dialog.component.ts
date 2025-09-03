@@ -20,19 +20,19 @@ export interface EditPasswordDialogProps {
 
     <mat-stepper orientation="vertical" linear #stepper>
       <mat-step
-        [label]="'For security reasons, please enter your password'"
+        [label]="'For security reasons, please enter your current password'"
         [stepControl]="adminPasswordControl"
         [editable]="false">
         <app-password-form-field
           [control]="adminPasswordControl"
-          [placeholder]="'Your admin password'"
+          [placeholder]="'Your current password'"
           [showToggleVisibility]="true"
           [validatorErrors]="[{ errorKey: 'incorrect', message: 'The password entered is incorrect' }]" />
 
         <button mat-button color="primary" (click)="checkAdminPassword()">Next</button>
       </mat-step>
 
-      <mat-step [label]="'Enter the new user password'" [stepControl]="newPasswordControl">
+      <mat-step [label]="'Enter the new password'" [stepControl]="newPasswordControl">
         <app-password-confirm-form (afterFormInit)="newPasswordControl = $event" />
 
         <button
