@@ -8,25 +8,25 @@ import { Subscription } from 'rxjs';
   template: `
     <app-password-form-field
       [control]="formControl"
-      [placeholder]="'pages.userSettings.passwordForm.oldPassword' | translate" />
+      [placeholder]="'pages.userSettings.passwordForm.newPassword' | translate" />
 
     <app-password-form-field
       [control]="confirmPasswordControl"
-      [placeholder]="'pages.userSettings.passwordForm.newPassword' | translate"
+      [placeholder]="'pages.userSettings.passwordForm.confirmPassword' | translate"
       [validatorErrors]="passwordValidatorErrors" />
   `,
 })
 export class PasswordForm2Component implements OnInit, OnDestroy {
-  @Output() afterFormInit = new EventEmitter<FormControl<string | null>>();
+  @Output() afterFormInit = new EventEmitter<FormControl<string>>();
 
-  formControl = this._fb.control('', [
+  formControl = this._fb.nonNullable.control('', [
     Validators.required,
     Validators.minLength(8),
     Validators.pattern(CustomRegex.PASSWORD_REGEX),
   ]);
 
   confirmPasswordControl = this._fb.control('', [Validators.required]);
-  passwordValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match' }];
+  passwordValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match.' }];
   subscription!: Subscription;
 
   constructor(private _fb: FormBuilder) {}
