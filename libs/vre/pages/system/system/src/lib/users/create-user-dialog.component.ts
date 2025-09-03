@@ -56,7 +56,7 @@ export class CreateUserDialogComponent {
     user.username = userFormControls.username.value;
     user.password = this.form.controls.password.value;
     user.lang = userFormControls.lang.value;
-    user.systemAdmin = userFormControls.systemAdmin.value;
+    user.systemAdmin = false;
     user.status = true;
 
     this._userApiService.create(user).subscribe(response => {

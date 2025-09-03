@@ -3,7 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
@@ -30,20 +29,12 @@ import { UserForm } from './user-form.type';
         [control]="userForm.controls.familyName"
         [label]="'pages.userSettings.userForm.familyName' | translate" />
 
-      <!--<app-password-form *ngIf="!editExistingUser" (password)="this.userForm.controls.password.setValue($event)" />-->
       <mat-form-field style="width: 100%">
         <mat-label>{{ 'pages.userSettings.userForm.language' | translate }}</mat-label>
         <mat-select [formControl]="userForm.controls.lang">
           <mat-option *ngFor="let lang of languagesList" [value]="lang.language"> {{ lang.value }}</mat-option>
         </mat-select>
       </mat-form-field>
-
-      <mat-slide-toggle
-        *ngIf="loggedInUserIsSysAdmin$ | async"
-        [checked]="userForm.controls.systemAdmin.value"
-        (change)="userForm.controls.systemAdmin.setValue(!userForm.controls.systemAdmin.value)">
-        {{ 'pages.userSettings.userForm.sysAdmin' | translate }}
-      </mat-slide-toggle>
     </form>
   `,
 })
@@ -54,13 +45,10 @@ export class UserFormComponent implements OnInit {
     email: string;
     username: string;
     lang: string;
-    isSystemAdmin: boolean;
   };
   @Output() afterFormInit = new EventEmitter<UserForm>();
 
   userForm!: UserForm;
-
-  readonly loggedInUserIsSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
 
   readonly allUsers$ = this._userApiService.list().pipe(
     map(response => response.users),
@@ -118,7 +106,6 @@ export class UserFormComponent implements OnInit {
         },
       ],
       lang: [this.data.lang],
-      systemAdmin: [this.data.isSystemAdmin],
     });
   }
 }
