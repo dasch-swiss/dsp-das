@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { Store } from '@ngxs/store';
@@ -19,7 +18,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isLoading$ = this._store.select(UserSelectors.isLoading);
 
   constructor(
-    private _dialog: MatDialog,
     private _store: Store,
     private _titleService: Title
   ) {}
