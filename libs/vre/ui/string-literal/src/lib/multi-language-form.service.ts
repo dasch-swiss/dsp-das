@@ -11,10 +11,10 @@ import { MultiLanguageFormArray } from './multi-language-form-array.type';
  */
 @Injectable()
 export class MultiLanguageFormService {
-  readonly availableLanguages: string[] = AvailableLanguages.map(lang => lang.language!);
-  selectedLanguageIndex: number;
-  formArray: MultiLanguageFormArray;
-  validators: ValidatorFn[];
+  readonly availableLanguages = AvailableLanguages.map(lang => lang.language);
+  selectedLanguageIndex!: number;
+  formArray!: MultiLanguageFormArray;
+  validators!: ValidatorFn[];
 
   inputValue: string | null = null;
 
