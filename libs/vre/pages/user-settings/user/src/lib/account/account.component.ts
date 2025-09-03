@@ -9,6 +9,7 @@ import { UserSelectors } from '@dasch-swiss/vre/core/state';
 import { EditPasswordDialogComponent, EditPasswordDialogProps } from '@dasch-swiss/vre/pages/system/system';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
+import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
 @Component({
   selector: 'app-account',
@@ -16,7 +17,7 @@ import { Store } from '@ngxs/store';
     <div *ngIf="user$ | async as user">
       <mat-card appearance="outlined" style="margin: 16px 0">
         <mat-list style="padding: 0">
-          <mat-list-item (click)="onEditProfile()" class="selectable">
+          <mat-list-item (click)="onEditProfile(user)" class="selectable">
             <mat-icon matListItemIcon>person</mat-icon>
             <div matLine>Edit my profile</div>
           </mat-list-item>
@@ -67,7 +68,13 @@ export class AccountComponent {
     this._titleService.setTitle('Your account');
   }
 
-  onEditProfile() {}
+  onEditProfile(user: ReadUser) {
+    this._matDialog.open<EditUserDialogComponent, EditUserDialogProps>(
+      EditUserDialogComponent,
+      DspDialogConfig.dialogDrawerConfig({ user }, true)
+    );
+  }
+
   onEditPassword(user: ReadUser) {
     this._matDialog
       .open<
