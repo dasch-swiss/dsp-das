@@ -11,12 +11,6 @@ export class HumanReadableErrorPipe implements PipeTransform {
       return 'This field is required';
     }
 
-    if (params) {
-      for (const { errorKey, message } of params) {
-        if (error.hasOwnProperty(errorKey)) return message;
-      }
-    }
-
     if (error.hasOwnProperty('minlength')) {
       return `The length must be greater than or equal to ${
         (
@@ -45,7 +39,6 @@ export class HumanReadableErrorPipe implements PipeTransform {
     }
 
     if (error.hasOwnProperty('max')) {
-      console.log(error);
       return `The value must be less than or equal to ${
         (
           error['max'] as {
@@ -61,6 +54,12 @@ export class HumanReadableErrorPipe implements PipeTransform {
 
     if (error.hasOwnProperty('whitespace')) {
       return 'This field should not contain whitespace';
+    }
+
+    if (params) {
+      for (const { errorKey, message } of params) {
+        if (error.hasOwnProperty(errorKey)) return message;
+      }
     }
 
     throw Error(`Form control error "${Object.keys(error)[0]}" is not handled`);

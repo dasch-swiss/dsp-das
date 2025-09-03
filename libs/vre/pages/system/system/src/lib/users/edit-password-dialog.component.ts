@@ -1,8 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { MatStepper } from '@angular/material/stepper';
+import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { Store } from '@ngxs/store';
 import { finalize } from 'rxjs';
 
 export interface EditPasswordDialogProps {
@@ -14,14 +18,23 @@ export interface EditPasswordDialogProps {
   template: `
     <app-dialog-header [title]="data.user.username" [subtitle]="'pages.system.users.changePassword' | translate" />
 
-    <mat-stepper orientation="vertical" linear>
-      <mat-step [label]="'For security reasons, please enter your admin password'" [stepControl]="adminPasswordControl">
-        <app-password-form-field [control]="adminPasswordControl" [placeholder]="'Your admin password'" />
-        <button mat-button color="primary" matStepperNext>Next</button>
+    <mat-stepper orientation="vertical" linear #stepper>
+      <mat-step
+        [label]="'For security reasons, please enter your admin password'"
+        [stepControl]="adminPasswordControl"
+        [editable]="false">
+        <app-password-form-field
+          [control]="adminPasswordControl"
+          [placeholder]="'Your admin password'"
+          [showToggleVisibility]="true"
+          [validatorErrors]="[{ errorKey: 'incorrect', message: 'The password entered is incorrect' }]" />
+
+        <button mat-button color="primary" (click)="checkAdminPassword()">Next</button>
       </mat-step>
 
       <mat-step [label]="'Enter the new user password'" [stepControl]="newPasswordControl">
         <app-password-confirm-form (afterFormInit)="newPasswordControl = $event" />
+
         <button
           mat-raised-button
           color="primary"
@@ -43,6 +56,8 @@ export interface EditPasswordDialogProps {
   ],
 })
 export class EditPasswordDialogComponent {
+  @ViewChild('stepper') stepper!: MatStepper;
+
   adminPasswordControl = this._fb.nonNullable.control('', [Validators.required]);
   newPasswordControl!: FormControl<string>;
 
@@ -51,10 +66,33 @@ export class EditPasswordDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: EditPasswordDialogProps,
     public dialogRef: MatDialogRef<EditPasswordDialogComponent>,
     private _userApiService: UserApiService,
-    private _fb: FormBuilder
+    @Inject(DspApiConnectionToken)
+    private _dspApiConnection: KnoraApiConnection,
+    private _fb: FormBuilder,
+    private _store: Store
   ) {}
 
+  checkAdminPassword() {
+    this._dspApiConnection.v2.auth
+      .login('username', this._store.selectSnapshot(UserSelectors.username)!, this.adminPasswordControl.value)
+      .subscribe(
+        () => {
+          this.stepper.next();
+        },
+        e => {
+          this.adminPasswordControl.setErrors({ incorrect: true });
+        }
+      );
+  }
+
   updateNewPassword() {
+    console.log(this.newPasswordControl);
+    this.newPasswordControl.markAllAsTouched();
+
+    if (!this.newPasswordControl.valid) {
+      return;
+    }
+
     this.updateLoading = true;
 
     this._userApiService

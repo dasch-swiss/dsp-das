@@ -7,35 +7,44 @@ import { Subscription } from 'rxjs';
   selector: 'app-password-confirm-form',
   template: `
     <app-password-form-field
-      [control]="formControl"
-      [placeholder]="'pages.userSettings.passwordForm.newPassword' | translate" />
+      [control]="passwordControl"
+      [placeholder]="'pages.userSettings.passwordForm.newPassword' | translate"
+      [validatorErrors]="passwordValidatorErrors"
+      [showToggleVisibility]="true" />
 
     <app-password-form-field
       [control]="confirmPasswordControl"
       [placeholder]="'pages.userSettings.passwordForm.confirmPassword' | translate"
-      [validatorErrors]="passwordValidatorErrors" />
+      [validatorErrors]="passwordConfirmValidatorErrors"
+      [showToggleVisibility]="true" />
   `,
 })
 export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   @Output() afterFormInit = new EventEmitter<FormControl<string>>();
 
-  formControl = this._fb.nonNullable.control('', [
+  passwordControl = this._fb.nonNullable.control('', [
     Validators.required,
     Validators.minLength(8),
     Validators.pattern(CustomRegex.PASSWORD_REGEX),
   ]);
+  passwordValidatorErrors = [
+    {
+      errorKey: 'pattern',
+      message: 'Password must contain at least one letter and one number.',
+    },
+  ];
 
   confirmPasswordControl = this._fb.control('', [Validators.required]);
-  passwordValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match.' }];
+  passwordConfirmValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match.' }];
   subscription!: Subscription;
 
   constructor(private _fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.afterFormInit.emit(this.formControl);
-    this.confirmPasswordControl.addValidators([this.passwordMatchValidator()]);
+    this.afterFormInit.emit(this.passwordControl);
+    this.confirmPasswordControl.addValidators([this._passwordMatchValidator()]);
 
-    this.subscription = this.formControl.valueChanges.subscribe(() => {
+    this.subscription = this.passwordControl.valueChanges.subscribe(() => {
       this.confirmPasswordControl.updateValueAndValidity();
     });
   }
@@ -44,10 +53,10 @@ export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private passwordMatchValidator(): ValidatorFn {
+  private _passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const confirmPassword = control.value;
-      const password = this.formControl.value;
+      const password = this.passwordControl.value;
 
       if (!confirmPassword || !password) {
         return null;

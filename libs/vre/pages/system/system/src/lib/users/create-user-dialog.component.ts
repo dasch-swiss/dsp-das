@@ -21,7 +21,7 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
   `,
 })
 export class CreateUserDialogComponent {
-  form = this._fb.group({} as { user: UserForm; password: FormControl<string | null> });
+  form = this._fb.group({} as { user: UserForm; password: FormControl<string> });
   isLoading = false;
 
   readonly data = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
@@ -36,7 +36,7 @@ export class CreateUserDialogComponent {
     this.form.addControl('user', form);
   }
 
-  afterPasswordFormInit(form: FormControl<string | null>): void {
+  afterPasswordFormInit(form: FormControl<string>): void {
     this.form.addControl('password', form);
   }
 
