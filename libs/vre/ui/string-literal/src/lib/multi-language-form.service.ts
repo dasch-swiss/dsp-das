@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { FormBuilder, ValidatorFn } from '@angular/forms';
-import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
+import { AvailableLanguages, DaschLanguage } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { isDaschLanguage } from './dash-language.type';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
@@ -118,7 +118,7 @@ export class MultiLanguageFormService {
       .filter(language => this.availableLanguages.includes(language));
 
     const user = this._userService.currentUser;
-    const userFavoriteLanguage = user?.lang || navigator.language.substring(0, 2);
+    const userFavoriteLanguage = (user?.lang || navigator.language.substring(0, 2)) as DaschLanguage;
 
     if (responseLanguages.length === 0) {
       if (!isDaschLanguage(userFavoriteLanguage)) {
