@@ -29,10 +29,10 @@ export interface EditPasswordDialogProps {
           [showToggleVisibility]="true"
           [validatorErrors]="[{ errorKey: 'incorrect', message: 'The password entered is incorrect' }]" />
 
-        <button mat-button color="primary" (click)="checkAdminPassword()">Next</button>
+        <button mat-raised-button color="primary" (click)="checkAdminPassword()">Next</button>
       </mat-step>
 
-      <mat-step [label]="'Enter the new password'" [stepControl]="newPasswordControl">
+      <mat-step [label]="'Enter the new password'">
         <app-password-confirm-form (afterFormInit)="newPasswordControl = $event" />
 
         <button
@@ -46,6 +46,8 @@ export interface EditPasswordDialogProps {
         </button>
       </mat-step>
     </mat-stepper>
+
+    <div mat-dialog-actions align="end"><button mat-button matDialogClose>Cancel</button></div>
   `,
   styles: [
     `
