@@ -8,7 +8,6 @@ export * from './lib/still-image/still-image.component';
 export * from './lib/still-image/still-image-toolbar.component';
 export * from './lib/text/text.component';
 export * from './lib/video/video.component';
-export * from './lib/video-preview/video-preview.component';
 export * from './lib/representation.service';
 export * from './lib/representation-constants';
 export * from './lib/file-representation.type';

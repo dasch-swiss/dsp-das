@@ -15,7 +15,6 @@ import { VideoMoreButtonComponent } from './lib/video/video-more-button.componen
 import { VideoOverlayComponent } from './lib/video/video-overlay.component';
 import { VideoToolbarComponent } from './lib/video/video-toolbar.component';
 import { VideoComponent } from './lib/video/video.component';
-import { VideoPreviewComponent } from './lib/video-preview/video-preview.component';
 
 export const RepresentationsComponents = [
   AddRegionFormDialogComponent,
@@ -30,7 +29,6 @@ export const RepresentationsComponents = [
   StillImageToolbarComponent,
   TextComponent,
   VideoComponent,
-  VideoPreviewComponent,
   VideoMoreButtonComponent,
   VideoToolbarComponent,
   VideoOverlayComponent,
