@@ -15,6 +15,7 @@ export interface EditUserDialogProps {
 @Component({
   selector: 'app-edit-user-dialog',
   template: `
+    <app-dialog-header [title]="'Edit user'" />
     <app-user-form *ngIf="data.user" [data]="data.user" (afterFormInit)="afterFormInit($event)" />
 
     <div mat-dialog-actions align="end">

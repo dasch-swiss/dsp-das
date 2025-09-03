@@ -9,6 +9,7 @@ import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 @Component({
   selector: 'app-create-user-dialog',
   template: `
+    <app-dialog-header [title]="'Create a new user'" />
     <app-user-form [data]="data" (afterFormInit)="afterFormInit($event)" />
     <app-password-form-2 [control]="form.controls.password" />
 
