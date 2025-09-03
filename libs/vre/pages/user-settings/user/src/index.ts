@@ -8,7 +8,7 @@ export * from './lib/project-overview/project-card.component';
 export * from './lib/profile/profile.component';
 export * from './lib/user-form/user-form.component';
 export * from './lib/user-form/password-form/password-form.component';
-export * from './lib/user-form/password-form/password-form-2.component';
+export * from './lib/user-form/password-form/password-confirm-form.component';
 export * from './lib/user-menu/user-menu.component';
 export * from './lib/menu-item';
 export * from './lib/existing-names.validator';

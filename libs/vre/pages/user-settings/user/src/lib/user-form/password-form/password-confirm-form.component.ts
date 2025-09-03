@@ -4,7 +4,7 @@ import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-password-form-2',
+  selector: 'app-password-confirm-form',
   template: `
     <app-password-form-field
       [control]="formControl"
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
       [validatorErrors]="passwordValidatorErrors" />
   `,
 })
-export class PasswordForm2Component implements OnInit, OnDestroy {
+export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   @Output() afterFormInit = new EventEmitter<FormControl<string>>();
 
   formControl = this._fb.nonNullable.control('', [

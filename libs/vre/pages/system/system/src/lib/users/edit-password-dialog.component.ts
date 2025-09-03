@@ -21,7 +21,7 @@ export interface EditPasswordDialogProps {
       </mat-step>
 
       <mat-step [label]="'Enter the new user password'" [stepControl]="newPasswordControl">
-        <app-password-form-2 (afterFormInit)="newPasswordControl = $event" />
+        <app-password-confirm-form (afterFormInit)="newPasswordControl = $event" />
         <button
           mat-raised-button
           color="primary"

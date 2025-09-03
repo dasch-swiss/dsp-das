@@ -10,7 +10,7 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
   template: `
     <app-dialog-header [title]="'Create a new user'" />
     <app-user-form [data]="data" (afterFormInit)="afterUserFormInit($event)" />
-    <app-password-form-2 (afterFormInit)="afterPasswordFormInit($event)" />
+    <app-password-confirm-form (afterFormInit)="afterPasswordFormInit($event)" />
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
