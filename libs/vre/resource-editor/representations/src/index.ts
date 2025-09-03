@@ -2,7 +2,6 @@ export * from './representations.components';
 export * from './lib/add-region-form-dialog.component';
 export * from './lib/archive/archive.component';
 export * from './lib/audio/audio.component';
-export * from './lib/av-timeline/av-timeline.component';
 export * from './lib/document/document.component';
 export * from './lib/replace-file-dialog/replace-file-dialog.component';
 export * from './lib/still-image/still-image.component';
