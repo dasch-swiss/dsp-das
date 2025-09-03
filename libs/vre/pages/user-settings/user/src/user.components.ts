@@ -1,4 +1,5 @@
 import { AccountComponent } from './lib/account/account.component';
+import { EditPasswordDialogComponent } from './lib/edit-password-dialog.component';
 import { EditUserDialogComponent } from './lib/edit-user-page/edit-user-dialog.component';
 import { LoginFormComponent } from './lib/login-form/login-form.component';
 import { ProfileComponent } from './lib/profile/profile.component';
@@ -24,4 +25,5 @@ export const UserComponents = [
   LoginFormComponent,
   ProjectCardComponent,
   ProjectImageCoverComponent,
+  EditPasswordDialogComponent,
 ];

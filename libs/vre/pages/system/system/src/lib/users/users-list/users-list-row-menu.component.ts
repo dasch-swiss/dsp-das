@@ -5,11 +5,15 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/pages/user-settings/user';
+import {
+  EditUserDialogComponent,
+  EditUserDialogProps,
+  EditPasswordDialogComponent,
+  EditPasswordDialogProps,
+} from '@dasch-swiss/vre/pages/user-settings/user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs/operators';
-import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { UsersTabService } from '../users-tab.service';
 

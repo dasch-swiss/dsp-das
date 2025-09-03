@@ -16,3 +16,4 @@ export * from './lib/user-form/user-form.type';
 export * from './lib/project-image-cover.component';
 export * from './lib/project-overview/all-projects.service';
 export * from './lib/user-form/password-form/password-form-field.component';
+export * from './lib/edit-password-dialog.component';
