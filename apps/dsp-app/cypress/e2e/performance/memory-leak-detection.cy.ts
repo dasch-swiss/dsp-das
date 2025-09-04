@@ -34,8 +34,7 @@ describe('Memory Leak Detection - User Service Refactor', () => {
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_login`);
     }
     
-    const finalAuthMemory = perfTest.takeMemorySnapshot('auth_test_end');
-    perfTest.saveMemoryAnalysis(initialMemory, finalAuthMemory, 'authentication_memory_patterns');
+    perfTest.takeMemorySnapshot('auth_test_end');
   });
 
   it('should test user service observable subscription cleanup', () => {
@@ -44,6 +43,6 @@ describe('Memory Leak Detection - User Service Refactor', () => {
   });
 
   afterEach(() => {
-    perfTest.cleanup();
+    // No cleanup needed - just log results
   });
 });

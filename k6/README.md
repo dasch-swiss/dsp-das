@@ -196,7 +196,7 @@ Compare NGXS → UserService performance impact with K6 browser tests + Cypress 
 ```bash
 just run user-state-login-performance stage    # NGXS
 just run user-state-login-performance dev02    # UserService  
-node k6/scripts/compare-user-service-results.js results-ngxs.json results-userservice.json
+# Compare results via K6 metrics output
 ```
 
 ### 🔍 Cypress Tests

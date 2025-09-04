@@ -36,8 +36,7 @@ describe('Change Detection Performance - User Service Refactor', () => {
         const totalTime = profileEnd - profileStart;
         
         // Record performance data using shared utility
-        const measurement = perfTest.recordMeasurement('project_navigation_with_user_permissions', totalTime);
-        perfTest.saveMeasurement(measurement, 'cd');
+        perfTest.recordMeasurement('project_navigation_with_user_permissions', totalTime);
       });
     });
   });
@@ -67,8 +66,7 @@ describe('Change Detection Performance - User Service Refactor', () => {
       const endTime = performance.now();
       const propagationTime = endTime - startTime;
       
-      const measurement = perfTest.recordMeasurement('user_state_propagation', propagationTime);
-      perfTest.saveMeasurement(measurement, 'propagation');
+      perfTest.recordMeasurement('user_state_propagation', propagationTime);
     });
   });
 
@@ -90,17 +88,15 @@ describe('Change Detection Performance - User Service Refactor', () => {
         const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
         const memoryIncrease = finalMemory - initialMemory;
         
-        const measurement = perfTest.recordMeasurement('user_navigation_memory_usage', memoryIncrease, {
+        perfTest.recordMeasurement('user_navigation_memory_usage', memoryIncrease, {
           initialMemory,
           finalMemory
         });
-        
-        perfTest.saveMeasurement(measurement, 'memory');
       });
     });
   });
 
   afterEach(() => {
-    perfTest.cleanup();
+    // No cleanup needed - just log results
   });
 });
