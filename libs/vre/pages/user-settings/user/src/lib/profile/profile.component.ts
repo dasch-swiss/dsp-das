@@ -51,11 +51,11 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
         display: flex;
         align-items: center;
         gap: 4px;
-        padding: 8px 12px;
+        padding: 4px 8px;
 
         border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
+        font-size: 0.8rem;
+        font-weight: 400;
         border: 1px solid;
         color: #495057;
       }
