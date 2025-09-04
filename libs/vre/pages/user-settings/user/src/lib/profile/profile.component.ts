@@ -26,16 +26,16 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
       </div>
 
       <div
-        style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <mat-icon style="color: #666; font-size: 20px;">language</mat-icon>
-          <span style="font-size: 1rem; color: #333;">{{ user.lang }}</span>
+        style="display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #f8f9fa; border-radius: 20px; border: 1px solid #e9ecef;">
+          <mat-icon style="color: #495057; font-size: 18px;">language</mat-icon>
+          <span style="font-size: 0.9rem; color: #495057; font-weight: 500;">{{ user.lang }}</span>
         </div>
         <div
           *ngIf="isSysAdmin$ | async"
-          style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
-          <mat-icon style="color: #856404; font-size: 20px;">verified_user</mat-icon>
-          <span style="color: #856404; font-weight: 500;">{{
+          style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: linear-gradient(135deg, #ffc107, #ffca2c); border-radius: 20px; box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);">
+          <mat-icon style="color: #856404; font-size: 18px;">verified_user</mat-icon>
+          <span style="color: #856404; font-weight: 600; font-size: 0.9rem;">{{
             'pages.userSettings.profile.systemAdmin' | translate
           }}</span>
         </div>
