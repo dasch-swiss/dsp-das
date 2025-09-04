@@ -129,9 +129,8 @@ export class StoreRegressionTestBase extends K6TestBase {
    * Standard options for regression tests with environment-aware configuration
    */
   getRegressionOptions(vus = 1, customThresholds = {}) {
-    const { getThresholds, getTestConfig, getBrowserConfig } = require('../utils/environment-config.js');
-    const testConfig = getTestConfig(this.appUrl);
-    const browserConfig = getBrowserConfig(this.appUrl);
+    // Import at top level - these imports should be available if called from test files
+    const { getThresholds, getTestConfig, getBrowserConfig } = this.getConfigFunctions();
 
     return {
       scenarios: {
@@ -143,7 +142,7 @@ export class StoreRegressionTestBase extends K6TestBase {
           options: {
             browser: {
               type: 'chromium',
-              headless: browserConfig.headless,
+              headless: getBrowserConfig(this.appUrl).headless,
             },
           },
         },
@@ -152,6 +151,18 @@ export class StoreRegressionTestBase extends K6TestBase {
         ...getThresholds(this.appUrl),
         ...customThresholds
       }
+    };
+  }
+
+  /**
+   * Helper to get config functions - should be overridden by importing files
+   */
+  getConfigFunctions() {
+    // This will be overridden by the actual test files that import the config functions
+    return {
+      getThresholds: (url) => ({}),
+      getTestConfig: (url) => ({ iterations: this.iterations, maxDuration: this.duration }),
+      getBrowserConfig: (url) => ({ headless: true })
     };
   }
 
@@ -270,13 +281,11 @@ export class StoreRegressionTestBase extends K6TestBase {
    * Test state update latency with common patterns
    */
   async testStateUpdates(page, metrics) {
-    const { getEnvironmentSelectors } = require('../utils/environment-config.js');
-    const selectors = getEnvironmentSelectors(this.appUrl);
-
+    // Use simple, universal selectors to avoid runtime require() calls
     const stateTests = [
       { selector: 'button, [role="button"]', action: 'click', name: 'button_interaction' },
       { selector: 'input[type="text"], input[type="search"]', action: 'type', name: 'input_interaction' },
-      { selector: selectors.navigation, action: 'click', name: 'navigation_interaction' }
+      { selector: 'nav a, [routerLink], .mat-tab', action: 'click', name: 'navigation_interaction' }
     ];
 
     for (const test of stateTests) {
