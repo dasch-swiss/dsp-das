@@ -22,15 +22,15 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
             <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
               {{ user.givenName }} {{ user.familyName }}
             </h1>
-            <ng-content *ngTemplateOutlet="profile"></ng-content>
+            <p style="margin: 0; color: #666; font-size: 1rem;">({{ user.username }})</p>
           </div>
-          <p style="margin: 0; color: #666; font-size: 1rem;">{{ user.username }}</p>
+          <ng-content *ngTemplateOutlet="profile"></ng-content>
         </div>
       </div>
     </div>
 
     <ng-template #profile>
-      <div style="display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap;">
         <div
           class="badge"
           style="background: #f8f9fa;
