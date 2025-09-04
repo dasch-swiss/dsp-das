@@ -18,30 +18,54 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
           alt="user profile"
           style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
         <div style="display: flex; flex-direction: column; gap: 4px;">
-          <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
-            {{ user.givenName }} {{ user.familyName }}
-          </h1>
+          <div style="display: flex; flex-direction: row; gap: 8px; align-items: center;">
+            <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
+              {{ user.givenName }} {{ user.familyName }}
+            </h1>
+            <ng-content *ngTemplateOutlet="profile"></ng-content>
+          </div>
           <p style="margin: 0; color: #666; font-size: 1rem;">{{ user.username }}</p>
         </div>
       </div>
+    </div>
 
-      <div
-        style="display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #f8f9fa; border-radius: 20px; border: 1px solid #e9ecef;">
-          <mat-icon style="color: #495057; font-size: 18px;">language</mat-icon>
-          <span style="font-size: 0.9rem; color: #495057; font-weight: 500;">{{ user.lang }}</span>
-        </div>
+    <ng-template #profile>
+      <div style="display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
         <div
-          *ngIf="isSysAdmin$ | async"
-          style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: linear-gradient(135deg, #ffc107, #ffca2c); border-radius: 20px; box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);">
-          <mat-icon style="color: #856404; font-size: 18px;">verified_user</mat-icon>
-          <span style="color: #856404; font-weight: 600; font-size: 0.9rem;">{{
-            'pages.userSettings.profile.systemAdmin' | translate
-          }}</span>
+          class="badge"
+          style="background: #f8f9fa;
+        border-color: #e9ecef">
+          <mat-icon class="icon" style="color: #495057">language</mat-icon>
+          <span>{{ 'en' }}</span>
+        </div>
+        <div *ngIf="isSysAdmin$ | async" class="badge" style="background: #f8f9fa; border-color: #e9ecef">
+          <mat-icon class="icon" style="color: #856404">verified_user</mat-icon>
+          <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
         </div>
       </div>
-    </div>
+    </ng-template>
   `,
+  styles: [
+    `
+      .badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid;
+        color: #495057;
+      }
+      .icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    `,
+  ],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
