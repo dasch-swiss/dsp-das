@@ -69,7 +69,7 @@ export class AccountComponent {
   onEditProfile(user: ReadUser) {
     this._matDialog.open<EditUserDialogComponent, EditUserDialogProps>(
       EditUserDialogComponent,
-      DspDialogConfig.dialogDrawerConfig({ user }, true)
+      DspDialogConfig.dialogDrawerConfig({ user, isOwnAccount: true }, true)
     );
   }
 

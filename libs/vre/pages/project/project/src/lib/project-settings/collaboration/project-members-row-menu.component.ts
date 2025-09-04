@@ -108,7 +108,7 @@ export class ProjectMembersRowMenuComponent {
     this._matDialog
       .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
         EditUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig<EditUserDialogProps>({ user }, true)
+        DspDialogConfig.dialogDrawerConfig<EditUserDialogProps>({ user, isOwnAccount: false }, true)
       )
       .afterClosed()
       .subscribe(success => {

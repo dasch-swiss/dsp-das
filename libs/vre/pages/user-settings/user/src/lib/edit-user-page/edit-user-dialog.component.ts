@@ -10,12 +10,13 @@ import { UserForm } from '../user-form/user-form.type';
 
 export interface EditUserDialogProps {
   user: ReadUser;
+  isOwnAccount: boolean;
 }
 
 @Component({
   selector: 'app-edit-user-dialog',
   template: `
-    <app-dialog-header [title]="'Edit user'" />
+    <app-dialog-header [title]="data.isOwnAccount ? 'Edit my profile' : 'Edit user'" />
     <app-user-form *ngIf="data.user" [data]="data.user" (afterFormInit)="afterFormInit($event)" />
 
     <div mat-dialog-actions align="end">
