@@ -1,114 +1,67 @@
 import { browser } from 'k6/browser';
-import { Trend, Rate } from 'k6/metrics';
-import { getBrowserConfig, getPerformanceExpectations } from '../utils/environment-config.js';
+import { K6TestBase, createUserServiceMetrics, USER_SERVICE_THRESHOLDS } from '../utils/test-base.js';
 import { HomePage } from '../pages/home-page.js';
-import { ENVIRONMENTS } from '../options/constants.js';
 
-// Custom metrics for NGXS vs UserService comparison
-const loginDuration = new Trend('login_duration', true);
-const userMenuAppearance = new Trend('user_menu_appearance', true);
-const authFlowSuccess = new Rate('auth_flow_success');
-const userStateUpdate = new Trend('user_state_update', true);
-
-const APP_URL = __ENV.APP_URL || ENVIRONMENTS.DEV;
-const VERSION_TAG = __ENV.VERSION || 'unknown';
+// Initialize test base and metrics
+const testBase = new K6TestBase('login_performance_test', '30s');
+const metrics = createUserServiceMetrics();
 
 export const options = {
-  scenarios: {
-    login_performance_test: {
-      executor: 'constant-vus',
-      vus: 1,
-      duration: '30s',
-      options: {
-        browser: {
-          type: 'chromium',
-          ...getBrowserConfig(APP_URL)
-        }
-      }
-    }
-  },
+  ...testBase.getBaseOptions(),
   thresholds: {
-    'login_duration': ['avg<2000', 'p(95)<3000'],
-    'user_menu_appearance': ['avg<1000', 'p(95)<2000'],
-    'auth_flow_success': ['rate>0.9'],
-    'user_state_update': ['avg<3000', 'p(95)<5000'],
+    'login_duration': USER_SERVICE_THRESHOLDS['login_duration'],
+    'user_menu_appearance': USER_SERVICE_THRESHOLDS['user_menu_appearance'],
+    'auth_flow_success': USER_SERVICE_THRESHOLDS['auth_flow_success'],
+    'user_state_update': USER_SERVICE_THRESHOLDS['user_state_update']
   }
 };
 
-export function setup() {
-  console.log(`🔍 Running User Service login performance test for version: ${VERSION_TAG}`);
-  console.log(getPerformanceExpectations(APP_URL));
-  return { version: VERSION_TAG, url: APP_URL };
-}
+export const setup = () => testBase.setup();
 
 export default async function(data) {
   const page = await browser.newPage();
   const homePage = new HomePage(page);
   
-  try {
+  await testBase.runTestWithCleanup(page, async () => {
     console.log(`🚀 Testing login performance - Version: ${data.version}`);
-    
-    // Measure complete authentication flow timing
-    const authFlowStart = performance.now();
     
     // Step 1: Navigate to homepage
     await homePage.goto();
     
     // Step 2: Measure login process (NGXS vs UserService impact)
-    const loginStart = performance.now();
+    const { duration: loginTime } = await testBase.measureAsync(async () => {
+      await homePage.loginButton.click();
+      await homePage.usernameInput.fill(__ENV.DSP_APP_USERNAME);
+      await homePage.passwordInput.fill(__ENV.DSP_APP_PASSWORD);
+      await homePage.submitButton.click();
+    });
     
-    await homePage.loginButton.click();
-    await homePage.usernameInput.fill(__ENV.DSP_APP_USERNAME);
-    await homePage.passwordInput.fill(__ENV.DSP_APP_PASSWORD);
-    await homePage.submitButton.click();
-    
-    const loginEnd = performance.now();
-    const loginTime = loginEnd - loginStart;
-    
-    // Step 3: Wait for user state to propagate to UI (UserService vs NGXS)
-    const userStateStart = performance.now();
-    
-    try {
-      await homePage.userMenu.waitFor({ state: 'visible', timeout: 5000 });
-      const userStateEnd = performance.now();
-      const userStateTime = userStateEnd - userStateStart;
-      
-      // Step 4: Verify user menu shows correct info (state propagation test)
-      const isUserMenuVisible = await homePage.userMenu.isVisible();
-      
-      if (isUserMenuVisible) {
-        const totalAuthTime = performance.now() - authFlowStart;
-        
-        // Record metrics with version tags for comparison
-        loginDuration.add(loginTime, { version: data.version });
-        userMenuAppearance.add(userStateTime, { version: data.version });
-        userStateUpdate.add(totalAuthTime, { version: data.version });
-        authFlowSuccess.add(1, { version: data.version });
-        
-        console.log(`✅ Auth success - Version: ${data.version}, Total: ${totalAuthTime.toFixed(0)}ms, Login: ${loginTime.toFixed(0)}ms, UserState: ${userStateTime.toFixed(0)}ms`);
-        
-        // Additional user state validation - check if user info loaded properly
-        await page.waitForTimeout(500); // Allow any additional state updates
-        
-      } else {
-        console.log(`❌ User menu not visible - Version: ${data.version}`);
-        authFlowSuccess.add(0, { version: data.version });
+    // Step 3: Measure user state propagation timing
+    const { duration: userStateTime, result: isUserMenuVisible } = await testBase.measureAsync(async () => {
+      try {
+        await homePage.userMenu.waitFor({ state: 'visible', timeout: 5000 });
+        return await homePage.userMenu.isVisible();
+      } catch (error) {
+        testBase.logResult('Login timeout', 0, false, data.version);
+        return false;
       }
-      
-    } catch (error) {
-      console.log(`❌ Login timeout or failed - Version: ${data.version}, Error: ${error.message}`);
-      authFlowSuccess.add(0, { version: data.version });
-    }
+    });
     
-  } catch (error) {
-    console.log(`❌ Test failed - Version: ${data.version}, Error: ${error.message}`);
-    authFlowSuccess.add(0, { version: data.version });
-  } finally {
-    await page.screenshot({ path: `screenshots/login-performance-${data.version}-${Date.now()}.png` });
-    await page.close();
-  }
+    // Record metrics and results
+    const totalAuthTime = loginTime + userStateTime;
+    const success = isUserMenuVisible;
+    
+    metrics.loginDuration.add(loginTime, { version: data.version });
+    metrics.userMenuAppearance.add(userStateTime, { version: data.version });
+    metrics.userStateUpdate.add(totalAuthTime, { version: data.version });
+    metrics.authFlowSuccess.add(success ? 1 : 0, { version: data.version });
+    
+    testBase.logResult(`Auth (Total: ${totalAuthTime.toFixed(0)}ms, Login: ${loginTime.toFixed(0)}ms, State: ${userStateTime.toFixed(0)}ms)`, totalAuthTime, success, data.version);
+    
+    if (success) {
+      await page.waitForTimeout(500); // Allow additional state updates
+    }
+  });
 }
 
-export function teardown(data) {
-  console.log(`✅ Completed User Service login performance test for version: ${data.version}`);
-}
+export const teardown = (data) => testBase.teardown(data);

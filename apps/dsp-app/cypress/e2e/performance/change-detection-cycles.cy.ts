@@ -1,15 +1,10 @@
+import { PerformanceTestBase } from '../../support/utils/performance-test-base';
+
 describe('Change Detection Performance - User Service Refactor', () => {
-  const version = Cypress.env('VERSION') || 'unknown';
-  let performanceData: any[] = [];
+  const perfTest = new PerformanceTestBase();
 
   beforeEach(() => {
-    // Skip database reset for remote environments (DEV/STAGE)
-    const baseUrl = Cypress.config('baseUrl');
-    if (baseUrl && (baseUrl.includes('localhost') || baseUrl.includes('0.0.0.0'))) {
-      cy.resetDatabase();
-    }
-    
-    cy.loginAdmin();
+    perfTest.setupTest();
     cy.visit('/');
   });
 
@@ -39,21 +34,9 @@ describe('Change Detection Performance - User Service Refactor', () => {
         const profileEnd = performance.now();
         const totalTime = profileEnd - profileStart;
         
-        // Record performance data
-        const measurement = {
-          version: version,
-          operation: 'project_navigation_with_user_permissions',
-          duration: totalTime,
-          timestamp: new Date().toISOString()
-        };
-        
-        performanceData.push(measurement);
-        
-        // Log for comparison analysis
-        cy.log(`CD Performance - Version: ${version}, Duration: ${totalTime}ms`);
-        
-        // Write to file for later comparison
-        cy.writeFile(`cypress/performance-results/cd-${version}-${Date.now()}.json`, measurement);
+        // Record performance data using shared utility
+        const measurement = perfTest.recordMeasurement('project_navigation_with_user_permissions', totalTime);
+        perfTest.saveMeasurement(measurement, 'cd');
       });
     });
   });
@@ -76,15 +59,8 @@ describe('Change Detection Performance - User Service Refactor', () => {
       const endTime = performance.now();
       const propagationTime = endTime - startTime;
       
-      const measurement = {
-        version: version,
-        operation: 'user_state_propagation',
-        duration: propagationTime,
-        timestamp: new Date().toISOString()
-      };
-      
-      cy.log(`State Propagation - Version: ${version}, Duration: ${propagationTime}ms`);
-      cy.writeFile(`cypress/performance-results/propagation-${version}-${Date.now()}.json`, measurement);
+      const measurement = perfTest.recordMeasurement('user_state_propagation', propagationTime);
+      perfTest.saveMeasurement(measurement, 'propagation');
     });
   });
 
@@ -106,25 +82,17 @@ describe('Change Detection Performance - User Service Refactor', () => {
         const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
         const memoryIncrease = finalMemory - initialMemory;
         
-        const measurement = {
-          version: version,
-          operation: 'user_navigation_memory_usage',
-          initialMemory: initialMemory,
-          finalMemory: finalMemory,
-          memoryIncrease: memoryIncrease,
-          timestamp: new Date().toISOString()
-        };
+        const measurement = perfTest.recordMeasurement('user_navigation_memory_usage', memoryIncrease, {
+          initialMemory,
+          finalMemory
+        });
         
-        cy.log(`Memory Usage - Version: ${version}, Increase: ${memoryIncrease} bytes`);
-        cy.writeFile(`cypress/performance-results/memory-${version}-${Date.now()}.json`, measurement);
+        perfTest.saveMeasurement(measurement, 'memory');
       });
     });
   });
 
-  after(() => {
-    // Aggregate performance data for analysis
-    if (performanceData.length > 0) {
-      cy.writeFile(`cypress/performance-results/aggregate-${version}.json`, performanceData);
-    }
+  afterEach(() => {
+    perfTest.cleanup();
   });
 });

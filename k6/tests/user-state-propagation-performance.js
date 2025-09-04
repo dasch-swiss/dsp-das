@@ -1,46 +1,23 @@
 import { browser } from 'k6/browser';
-import { Trend, Rate } from 'k6/metrics';
-import { getBrowserConfig, getPerformanceExpectations } from '../utils/environment-config.js';
+import { K6TestBase, createUserServiceMetrics, USER_SERVICE_THRESHOLDS } from '../utils/test-base.js';
 import { HomePage } from '../pages/home-page.js';
 import { ProjectOverviewPage } from '../pages/project-overview-page.js';
-import { ENVIRONMENTS } from '../options/constants.js';
 
-// Custom metrics for user state propagation across pages
-const statePropagationDuration = new Trend('state_propagation_duration', true);
-const projectNavigationTime = new Trend('project_navigation_time', true);
-const userMenuPersistence = new Trend('user_menu_persistence', true);
-const pageTransitionSuccess = new Rate('page_transition_success');
-
-const APP_URL = __ENV.APP_URL || ENVIRONMENTS.DEV;
-const VERSION_TAG = __ENV.VERSION || 'unknown';
+// Initialize test base and metrics
+const testBase = new K6TestBase('user_state_propagation', '45s');
+const metrics = createUserServiceMetrics();
 
 export const options = {
-  scenarios: {
-    user_state_propagation: {
-      executor: 'constant-vus',
-      vus: 1,
-      duration: '45s',
-      options: {
-        browser: {
-          type: 'chromium',
-          ...getBrowserConfig(APP_URL)
-        }
-      }
-    }
-  },
+  ...testBase.getBaseOptions(),
   thresholds: {
-    'state_propagation_duration': ['avg<1000', 'p(95)<2000'],
-    'project_navigation_time': ['avg<1500', 'p(95)<3000'],
-    'user_menu_persistence': ['avg<500', 'p(95)<1000'],
-    'page_transition_success': ['rate>0.85'],
+    'state_propagation_duration': USER_SERVICE_THRESHOLDS['state_propagation_duration'],
+    'project_navigation_time': USER_SERVICE_THRESHOLDS['project_navigation_time'],
+    'user_menu_persistence': USER_SERVICE_THRESHOLDS['user_menu_persistence'],
+    'page_transition_success': USER_SERVICE_THRESHOLDS['page_transition_success']
   }
 };
 
-export function setup() {
-  console.log(`🔍 Running User State propagation test for version: ${VERSION_TAG}`);
-  console.log(getPerformanceExpectations(APP_URL));
-  return { version: VERSION_TAG, url: APP_URL };
-}
+export const setup = () => testBase.setup();
 
 export default async function(data) {
   const page = await browser.newPage();
@@ -136,10 +113,10 @@ export default async function(data) {
         
         // Record metrics
         if (test.name === 'project_overview') {
-          projectNavigationTime.add(result.navigationTime, { version: data.version });
-          userMenuPersistence.add(result.userMenuTime, { version: data.version });
+          metrics.projectNavigationTime.add(result.navigationTime, { version: data.version });
+          metrics.userMenuPersistence.add(result.userMenuTime, { version: data.version });
         } else {
-          statePropagationDuration.add(result.navigationTime, { version: data.version });
+          metrics.statePropagationDuration.add(result.navigationTime, { version: data.version });
         }
         
         if (!result.success) {
@@ -162,19 +139,17 @@ export default async function(data) {
     const totalPropagationTime = totalPropagationEnd - totalPropagationStart;
     
     // Record overall success rate
-    pageTransitionSuccess.add(allTestsSuccessful ? 1 : 0, { version: data.version });
+    metrics.pageTransitionSuccess.add(allTestsSuccessful ? 1 : 0, { version: data.version });
     
     console.log(`🏁 State propagation complete - Version: ${data.version}, Total: ${totalPropagationTime.toFixed(0)}ms, Success: ${allTestsSuccessful}`);
     
   } catch (error) {
     console.log(`❌ Test suite failed - Version: ${data.version}, Error: ${error.message}`);
-    pageTransitionSuccess.add(0, { version: data.version });
+    metrics.pageTransitionSuccess.add(0, { version: data.version });
   } finally {
     await page.screenshot({ path: `screenshots/state-propagation-${data.version}-${Date.now()}.png` });
     await page.close();
   }
 }
 
-export function teardown(data) {
-  console.log(`✅ Completed User State propagation test for version: ${data.version}`);
-}
+export const teardown = (data) => testBase.teardown(data);
