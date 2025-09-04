@@ -6,7 +6,30 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
+  template: `
+    <div class="user-profile" *ngIf="user$ | async as user">
+      <img appAdminImage [image]="user.email" [type]="'user'" alt="user profile" class="user-profile-image" />
+      <div class="user-profile-headline">
+        <!-- user names -->
+        <h2 class="mat-headline-6">{{ user.givenName }} <br />{{ user.familyName }}</h2>
+        <h3 class="mat-body subtitle">{{ user.username }}</h3>
+
+        <mat-divider />
+
+        <ul class="user-profile-info">
+          <br />
+          <li>
+            <mat-icon>language</mat-icon>
+            {{ user.lang }}
+          </li>
+          <li class="status warning text-only" *ngIf="isSysAdmin$ | async">
+            <mat-icon>verified_user</mat-icon>
+            <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  `,
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {

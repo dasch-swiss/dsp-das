@@ -15,7 +15,7 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
     <div *ngIf="user$ | async as user">
       <mat-card appearance="outlined" style="margin: 16px 0">
         <mat-list style="padding: 0">
-          <mat-list-item (click)="onEditProfile(user)" class="selectable">
+          <mat-list-item (click)="onEditProfile(user)">
             <mat-icon matListItemIcon>person</mat-icon>
             <div matLine>Edit my profile</div>
           </mat-list-item>
@@ -31,7 +31,7 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
 
       <mat-card appearance="outlined">
         <mat-list style="padding: 0">
-          <mat-list-item (click)="onDeleteOwnAccount(user)" class="selectable">
+          <mat-list-item (click)="onDeleteOwnAccount(user)">
             <mat-icon matListItemIcon>warning</mat-icon>
             <div matLine>{{ 'pages.userSettings.account.deleteButton' | translate }}</div>
           </mat-list-item>
@@ -42,11 +42,11 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
   styles: [
     `
       .mat-mdc-list-item {
-        cursor: pointer;
         border-radius: 8px;
         transition: background-color 0.2s;
         &:hover {
-          background-color: rgba(0, 0, 0, 0.04); // Material hover color
+          cursor: pointer;
+          background-color: rgba(0, 0, 0, 0.04);
         }
       }
     `,
