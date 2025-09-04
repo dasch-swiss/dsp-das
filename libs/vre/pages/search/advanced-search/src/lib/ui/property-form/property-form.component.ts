@@ -1,31 +1,15 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
-import {
-  ApiData,
-  PropertyData,
-  ResourceLabelObject,
-} from '../../data-access/advanced-search-service/advanced-search.service';
-import {
-  Operators,
-  ParentChildPropertyPair,
-  PropertyFormItem,
-  SearchItem,
-} from '../../data-access/advanced-search-store/advanced-search-store.service';
-import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
+import { ApiData, PropertyData, PropertyFormItem, ResourceLabelObject } from '../../model';
+import { OPERATORS } from '../../service/operators.config';
+import { SearchStateService } from '../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
@@ -41,9 +25,9 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatTooltipModule,
     PropertyFormValueComponent,
     PropertyFormLinkValueComponent,
-    PropertyFormLinkMatchPropertyComponent,
     PropertyFormListValueComponent,
   ],
   providers: [MatSelect],
@@ -52,6 +36,8 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent implements AfterViewInit {
+  private searchService = inject(SearchStateService);
+
   @Input() propertyFormItem: PropertyFormItem = {
     id: '',
     selectedProperty: undefined,
@@ -60,33 +46,15 @@ export class PropertyFormComponent implements AfterViewInit {
     operators: [],
     list: undefined,
   };
-  @Input() matchResourceClassesLoading: boolean | null = false;
-  @Input() resourcesSearchResultsLoading: boolean | null = false;
-  @Input() resourcesSearchResultsCount: number | null = 0;
-  @Input() resourcesSearchResults: ApiData[] | null = [];
-  @Input() resourcesSearchNoResults: boolean | null = false;
 
-  // this can contain either a list of all properties of an ontology
-  // OR
-  // a list of properties filtered by a resource class
-  @Input() properties: PropertyData[] | null = [];
-  @Input() propertiesLoading: boolean | null = false;
-
-  @Input() selectedProperty: PropertyData | null | undefined = undefined;
-  @Input() selectedOperator: string | undefined = undefined;
-
-  @Output() emitRemovePropertyForm = new EventEmitter<PropertyFormItem>();
-  @Output() emitSelectedPropertyChanged = new EventEmitter<PropertyFormItem>();
-  @Output() emitSelectedOperatorChanged = new EventEmitter<PropertyFormItem>();
-  @Output() emitSelectedMatchPropertyResourceClassChanged = new EventEmitter<PropertyFormItem>();
-  @Output() emitSearchValueChanged = new EventEmitter<PropertyFormItem>();
-  @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
-  @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
-  @Output() emitAddChildPropertyForm = new EventEmitter<PropertyFormItem>();
-  @Output() emitRemoveChildPropertyForm = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildSelectedPropertyChanged = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildSelectedOperatorChanged = new EventEmitter<ParentChildPropertyPair>();
-  @Output() emitChildValueChanged = new EventEmitter<ParentChildPropertyPair>();
+  // Observables from the service
+  filteredProperties$ = this.searchService.filteredProperties$;
+  propertiesLoading$ = this.searchService.propertiesLoading$;
+  matchResourceClassesLoading$ = this.searchService.matchResourceClassesLoading$;
+  resourcesSearchResultsLoading$ = this.searchService.resourcesSearchResultsLoading$;
+  resourcesSearchResultsCount$ = this.searchService.resourcesSearchResultsCount$;
+  resourcesSearchResults$ = this.searchService.resourcesSearchResults$;
+  resourcesSearchNoResults$ = this.searchService.resourcesSearchNoResults$;
 
   @ViewChild('propertiesList') propertiesList!: MatSelect;
   @ViewChild('operatorsList') operatorsList!: MatSelect;
@@ -94,7 +62,7 @@ export class PropertyFormComponent implements AfterViewInit {
   @ViewChild('propertyFormValue')
   propertyFormValueComponent!: PropertyFormValueComponent;
 
-  operators = Operators; // in order to use it in the template
+  operators = OPERATORS; // in order to use it in the template
   constants = Constants;
 
   // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
@@ -111,12 +79,6 @@ export class PropertyFormComponent implements AfterViewInit {
 
     if (this.resourceClassList && this.propertyFormItem.selectedMatchPropertyResourceClass) {
       this.resourceClassList.value = this.propertyFormItem.selectedMatchPropertyResourceClass;
-    }
-  }
-
-  onRemovePropertyFormClicked(propFormItem: PropertyFormItem | null): void {
-    if (propFormItem) {
-      this.emitRemovePropertyForm.emit(propFormItem);
     }
   }
 
@@ -138,7 +100,7 @@ export class PropertyFormComponent implements AfterViewInit {
         this.operatorsList.value = undefined;
       }
 
-      this.emitSelectedPropertyChanged.emit(propFormItem);
+      this.searchService.updateSelectedProperty(propFormItem);
     }
   }
 
@@ -146,7 +108,7 @@ export class PropertyFormComponent implements AfterViewInit {
     const propFormItem = this.propertyFormItem;
     if (propFormItem) {
       propFormItem.selectedOperator = event.value;
-      this.emitSelectedOperatorChanged.emit(propFormItem);
+      this.searchService.updateSelectedOperator(propFormItem);
     }
   }
 
@@ -154,7 +116,7 @@ export class PropertyFormComponent implements AfterViewInit {
     const propFormItem = this.propertyFormItem;
     if (propFormItem) {
       propFormItem.selectedMatchPropertyResourceClass = event.value;
-      this.emitSelectedMatchPropertyResourceClassChanged.emit(propFormItem);
+      this.searchService.updateSelectedMatchPropertyResourceClass(propFormItem);
     }
   }
 
@@ -170,14 +132,14 @@ export class PropertyFormComponent implements AfterViewInit {
       } else {
         propFormItem.searchValue = value;
       }
-      this.emitSearchValueChanged.emit(propFormItem);
+      this.searchService.updateSearchValue(propFormItem);
     }
   }
 
   onResourceSearchValueChanged(searchValue: string) {
     const propFormItem = this.propertyFormItem;
     if (propFormItem && propFormItem.selectedProperty) {
-      this.emitResourceSearchValueChanged.emit({
+      this.searchService.updateResourcesSearchResults({
         value: searchValue,
         objectType: propFormItem.selectedProperty?.objectType,
       });
@@ -187,60 +149,10 @@ export class PropertyFormComponent implements AfterViewInit {
   onLoadMoreSearchResults(searchValue: string) {
     const propFormItem = this.propertyFormItem;
     if (propFormItem && propFormItem.selectedProperty) {
-      this.emitLoadMoreSearchResults.emit({
+      this.searchService.loadMoreResourcesSearchResults({
         value: searchValue,
         objectType: propFormItem.selectedProperty?.objectType,
       });
-    }
-  }
-
-  onChildLoadMoreSearchResults(searchItem: SearchItem): void {
-    this.emitLoadMoreSearchResults.emit(searchItem);
-  }
-
-  onAddChildPropertyFormClicked(): void {
-    const propFormItem = this.propertyFormItem;
-    this.emitAddChildPropertyForm.emit(propFormItem);
-  }
-
-  onRemoveChildPropertyFormClicked(childProperty: PropertyFormItem) {
-    this.emitRemoveChildPropertyForm.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedPropertyChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedPropertyChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildSelectedOperatorChanged(childProperty: PropertyFormItem): void {
-    this.emitChildSelectedOperatorChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildValueChanged(childProperty: PropertyFormItem): void {
-    this.emitChildValueChanged.emit({
-      parentProperty: this.propertyFormItem,
-      childProperty,
-    });
-  }
-
-  onChildResourceSearchValueChanged(searchValue: SearchItem) {
-    this.emitResourceSearchValueChanged.emit(searchValue);
-  }
-
-  // get the list of child properties of a linked resource
-  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[] | undefined): PropertyFormItem[] | undefined {
-    if (Array.isArray(value)) {
-      return value;
-    } else {
-      return undefined;
     }
   }
 

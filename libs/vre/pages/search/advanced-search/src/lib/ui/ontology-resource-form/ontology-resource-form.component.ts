@@ -1,55 +1,60 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
+import { ApiData } from '../../model';
+import { SearchStateService } from '../../service/search-state.service';
+import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../../util';
 
 @Component({
   selector: 'app-ontology-resource-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSelectModule],
-  templateUrl: './ontology-resource-form.component.html',
-  styleUrls: ['./ontology-resource-form.component.scss'],
+  template: `<mat-form-field style="width: 100%">
+      <mat-label>Data model</mat-label>
+      <mat-select
+        #ontologiesList
+        (selectionChange)="onSelectedOntologyChanged($event.value)"
+        [compareWith]="compareApiDataObjects"
+        [value]="selectedOntology$ | async">
+        <mat-option *ngFor="let onto of ontologies$ | async" [value]="onto"> {{ onto.label }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+      <mat-label>Resource class</mat-label>
+      <mat-select
+        #resourceClassesList
+        (selectionChange)="onSelectedResourceClassChanged($event.value)"
+        [compareWith]="compareApiDataObjects"
+        [value]="(selectedResourceClass$ | async) || searchAllResourceClassesOption">
+        <mat-option [value]="searchAllResourceClassesOption">{{ searchAllResourceClassesOption.label }}</mat-option>
+        <mat-option *ngFor="let resClass of resourceClasses$ | async" [value]="resClass">
+          {{ resClass.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>`,
+  styleUrls: ['../advanced-search.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyResourceFormComponent {
-  @Input() ontologies: ApiData[] | null = []; // todo: handle null case in html
-  @Input() ontologiesLoading: boolean | null = false;
-  @Input() resourceClasses: ApiData[] | null = [];
-  @Input() resourceClassesLoading: boolean | null = false;
+  private searchService = inject(SearchStateService);
 
-  @Input() set selectedOntology(ontology: ApiData | null | undefined) {
-    if (!this.ontologiesList) return;
-    if (ontology) {
-      this.ontologiesList.value = ontology;
-    } else {
-      this.ontologiesList.value = '';
-    }
-  }
+  ontologies$ = this.searchService.ontologies$;
+  resourceClasses$ = this.searchService.resourceClasses$;
+  selectedOntology$ = this.searchService.selectedOntology$;
+  selectedResourceClass$ = this.searchService.selectedResourceClass$;
 
-  @Input() set selectedResourceClass(resourceClass: ApiData | null | undefined) {
-    if (!this.resourceClassesList) return;
-    if (resourceClass) {
-      this.resourceClassesList.value = resourceClass;
-    } else {
-      this.resourceClassesList.value = '';
-    }
-  }
-
-  @Output() emitSelectedOntology = new EventEmitter<ApiData>();
-  @Output() emitSelectedResourceClass = new EventEmitter<ApiData>();
+  searchAllResourceClassesOption = SEARCH_ALL_RESOURCE_CLASSES_OPTION;
 
   @ViewChild('ontologiesList') ontologiesList!: MatSelect;
   @ViewChild('resourceClassesList') resourceClassesList!: MatSelect;
 
-  onSelectedOntologyChanged(): void {
-    const selectedOntology = this.ontologiesList.value;
-    this.emitSelectedOntology.emit(selectedOntology);
+  onSelectedOntologyChanged(selected: ApiData): void {
+    this.searchService.updateSelectedOntology(selected);
   }
 
-  onSelectedResourceClassChanged(): void {
-    const selectedResourceClass = this.resourceClassesList.value;
-    this.emitSelectedResourceClass.emit(selectedResourceClass);
+  onSelectedResourceClassChanged(selected: ApiData = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
+    this.searchService.updateSelectedResourceClass(selected);
   }
 
   compareApiDataObjects(object1: ApiData, object2: ApiData) {
