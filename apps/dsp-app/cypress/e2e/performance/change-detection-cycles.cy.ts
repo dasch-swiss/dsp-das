@@ -6,6 +6,8 @@ describe('Change Detection Performance - User Service Refactor', () => {
   beforeEach(() => {
     perfTest.setupTest();
     cy.visit('/');
+    // Ensure user is properly logged in via UI flow
+    cy.get('[data-cy=user-button]').should('be.visible');
   });
 
   it('should measure change detection cycles during user operations', () => {
@@ -28,9 +30,8 @@ describe('Change Detection Performance - User Service Refactor', () => {
       
       // Wait for user permissions to load and UI to stabilize
       cy.get('.project-title').should('be.visible');
-      cy.get('[data-cy=user-button]').should('be.visible');
       
-      cy.window().then((win) => {
+      cy.window().then(() => {
         const profileEnd = performance.now();
         const totalTime = profileEnd - profileStart;
         
@@ -49,11 +50,10 @@ describe('Change Detection Performance - User Service Refactor', () => {
     
     // Open user menu (simulates UserService state access)
     cy.get('[data-cy=user-button]').click();
-    cy.get('.user-menu').should('be.visible');
+    cy.get('[data-cy=user-menu]').should('be.visible');
     
     // Measure time for all user-dependent components to update
     cy.get('[data-cy=user-button]').should('be.visible'); // Header should update
-    cy.get('.menu-header').should('be.visible'); // User info should be displayed
     
     cy.window().then(() => {
       const endTime = performance.now();

@@ -21,13 +21,14 @@ describe('Memory Leak Detection - User Service Refactor', () => {
       
       // Logout
       cy.get('[data-cy=user-button]').click();
-      cy.get('.user-menu a').contains('Sign out').click();
+      cy.get('[data-cy=user-menu] a').contains('Sign out').click();
       cy.wait(500);
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_logout`);
       
-      // Login again
+      // Login again  
       cy.loginAdmin();
       cy.visit('/');
+      // Wait for authenticated state to load
       cy.get('[data-cy=user-button]').should('be.visible');
       cy.wait(500);
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_login`);
