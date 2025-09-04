@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { User } from '@dasch-swiss/dsp-js';
+import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import {
   PasswordConfirmFormComponent,
@@ -28,12 +28,17 @@ import { CreateUserDialogComponent } from './create-user-dialog.component';
 describe('CreateUserDialogComponent', () => {
   let component: CreateUserDialogComponent;
   let fixture: ComponentFixture<CreateUserDialogComponent>;
-  let mockDialogRef: jasmine.SpyObj<MatDialogRef<CreateUserDialogComponent>>;
-  let mockUserApiService: jasmine.SpyObj<UserApiService>;
+  let mockDialogRef: jest.Mocked<MatDialogRef<CreateUserDialogComponent>>;
+  let mockUserApiService: jest.Mocked<UserApiService>;
 
   beforeEach(async () => {
-    const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
-    const userApiServiceSpy = jasmine.createSpyObj('UserApiService', ['create']);
+    const dialogRefSpy = {
+      close: jest.fn(),
+    };
+
+    const userApiServiceSpy = {
+      create: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [
@@ -66,8 +71,8 @@ describe('CreateUserDialogComponent', () => {
 
     fixture = TestBed.createComponent(CreateUserDialogComponent);
     component = fixture.componentInstance;
-    mockDialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<MatDialogRef<CreateUserDialogComponent>>;
-    mockUserApiService = TestBed.inject(UserApiService) as jasmine.SpyObj<UserApiService>;
+    mockDialogRef = TestBed.inject(MatDialogRef) as any;
+    mockUserApiService = TestBed.inject(UserApiService) as any;
   });
 
   it('should create', () => {
@@ -83,7 +88,7 @@ describe('CreateUserDialogComponent', () => {
       lang: 'en',
       isSystemAdmin: false,
     });
-    expect(component.isLoading).toBeFalse();
+    expect(component.isLoading).toBe(false);
   });
 
   it('should add controls to form when child components initialize', () => {
@@ -95,7 +100,7 @@ describe('CreateUserDialogComponent', () => {
       lang: ['en'],
     }) as UserForm;
 
-    const mockPasswordControl = new FormControl('');
+    const mockPasswordControl = new FormControl<string>('', { nonNullable: true });
 
     component.afterUserFormInit(mockUserForm);
     component.afterPasswordFormInit(mockPasswordControl);
@@ -108,7 +113,7 @@ describe('CreateUserDialogComponent', () => {
     component.createUser();
 
     expect(mockUserApiService.create).not.toHaveBeenCalled();
-    expect(component.isLoading).toBeFalse();
+    expect(component.isLoading).toBe(false);
   });
 
   it('should create user successfully when form is valid', () => {
@@ -120,16 +125,16 @@ describe('CreateUserDialogComponent', () => {
       lang: ['en'],
     }) as UserForm;
 
-    const mockPasswordControl = new FormControl('validPassword123');
-    const mockResponse = { user: { id: 'user123' } };
+    const mockPasswordControl = new FormControl<string>('validPassword123', { nonNullable: true });
+    const mockResponse = { user: { id: 'user123' } as ReadUser };
 
     component.afterUserFormInit(mockUserForm);
     component.afterPasswordFormInit(mockPasswordControl);
-    mockUserApiService.create.and.returnValue(of(mockResponse));
+    mockUserApiService.create.mockReturnValue(of(mockResponse));
 
     component.createUser();
 
-    expect(mockUserApiService.create).toHaveBeenCalledWith(jasmine.any(User));
+    expect(mockUserApiService.create).toHaveBeenCalledWith(expect.any(User));
     expect(mockDialogRef.close).toHaveBeenCalledWith('user123');
   });
 });
