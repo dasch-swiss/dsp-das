@@ -28,7 +28,7 @@ export class UserService {
     return this._userApiService.get(identifier, idType).pipe(
       catchError(error => {
         this.logout();
-        throw error;
+        throw new AppError(`User could not be loaded: ${idType}: ${identifier}: ${JSON.stringify(error)}`);
       }),
       tap(response => {
         this._user$.next(response.user);
