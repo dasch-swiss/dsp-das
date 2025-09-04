@@ -112,16 +112,16 @@ export class ResourceEditMoreMenuComponent {
   resourceCanBeDeleted?: CanDeleteResource;
 
   constructor(
-    public resourceFetcher: ResourceFetcherService,
-    private _store: Store,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
+    public resourceFetcher: ResourceFetcherService,
+    private _store: Store,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
   checkResourceCanBeDeleted() {
-    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically(this.resource)])
+    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically$(this.resource)])
       .pipe(
         take(1),
         map(([userCanDelete, technicalCheck]) => {
@@ -147,7 +147,7 @@ export class ResourceEditMoreMenuComponent {
       });
   }
 
-  private _resourceCanBeDeletedTechnically(resource: ReadResource) {
+  private _resourceCanBeDeletedTechnically$(resource: ReadResource) {
     if (resource.incomingReferences.length > 0) {
       return of({
         canDo: false,

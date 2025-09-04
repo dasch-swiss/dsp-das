@@ -7,10 +7,7 @@ import { map } from 'rxjs';
   selector: 'app-single-resource-page',
   template: `
     <app-centered-layout>
-      <app-resource-fetcher
-        *ngIf="resourceIri$ | async as resourceIri"
-        [resourceIri]="resourceIri"
-        [resourceVersion]="resourceVersion$ | async" />
+      <app-resource-fetcher *ngIf="resourceIri$ | async as resourceIri" [resourceIri]="resourceIri" />
     </app-centered-layout>
   `,
 })
@@ -25,8 +22,6 @@ export class SingleResourcePageComponent {
       return undefined;
     })
   );
-
-  resourceVersion$ = this._route.queryParams.pipe(map(params => params['version']));
 
   constructor(
     private _route: ActivatedRoute,
