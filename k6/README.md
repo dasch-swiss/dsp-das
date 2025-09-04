@@ -147,156 +147,18 @@ just run-grafana <test_name>
 
 ## Store Refactor Regression Tests
 
-The store refactor regression tests measure the performance impact of replacing stores with BehaviorSubject services. These tests are specifically designed to validate that the refactoring maintains or improves performance while avoiding common pitfalls.
+Performance tests for store → BehaviorSubject refactor validation.
 
-### 🎯 Test Types
+### Test Types
 
-#### 1. Quick Regression Test (`regression-quick`)
-**Purpose:** Fast regression check (2-3 minutes)  
-**Best for:** CI/CD pipelines, quick validation
+| Test | Duration | Purpose | Command |
+|------|----------|---------|---------|
+| `regression-quick` | 2-4 min | Fast validation (CI/CD) | `just regression-quick` |
+| `regression-full` | 5-10 min | Deep analysis (pre-deploy) | `just regression-full` |
+| `regression-micro` | 30s | Micro-benchmarks (debugging) | `just regression-micro` |
+| `regression-statistical` | 8-12 min | Statistical validation | `just regression-statistical` |
 
-```bash
-just regression-quick
-```
-
-**What it tests:**
-- Bootstrap performance (app startup time)
-- Basic memory patterns 
-- UI interaction responsiveness
-
-**Thresholds:**
-- Bootstrap: < 5s
-- Memory growth: < 5MB
-- State updates: < 1s
-
-#### 2. Comprehensive Regression Test (`regression-full`)
-**Purpose:** Deep performance analysis (5-10 minutes)  
-**Best for:** Thorough pre-deployment validation
-
-```bash
-just regression-full
-```
-
-**What it tests:**
-- Memory leak detection over navigation cycles
-- State update latency across multiple interaction types
-- Component rendering performance
-- Subscription management efficiency
-- App bootstrap performance
-
-**Thresholds:**
-- Memory growth: < 10MB
-- State updates: < 500ms
-- Component renders: < 200ms
-- Subscription efficiency: > 80%
-
-#### 3. Micro-benchmark Test (`regression-micro`)
-**Purpose:** Detailed performance profiling (2-3 minutes)  
-**Best for:** Understanding specific performance characteristics
-
-```bash
-just regression-micro
-```
-
-**What it tests:**
-- Individual interaction latencies
-- Memory efficiency per operation
-- Subscription overhead
-- State consistency
-
-**Thresholds:**
-- Interaction latency: p(95) < 300ms
-- Memory per operation: < 1MB
-- Subscription overhead: < 50ms
-- No consistency issues
-
-#### 4. Statistical Regression Test (`regression-statistical`) 
-**Purpose:** Statistical validation with multiple iterations (8-12 minutes)  
-**Best for:** Performance analysis and baseline establishment
-
-```bash
-just regression-statistical
-```
-
-**What it tests:**
-- Multiple bootstrap measurements with variance analysis
-- Statistical consistency of memory patterns over cycles
-- State update latency with coefficient of variation
-- Warmup phase to reduce measurement noise
-
-**Key Features:**
-- **Warmup Phase**: Reduces browser initialization variance
-- **Multiple Iterations**: 3+ measurements for statistical significance
-- **Variance Analysis**: Coefficient of variation to ensure reliable data
-- **Statistical Thresholds**: p(95) and average metrics for comprehensive validation
-
-**Thresholds:**
-- Statistical reliability: > 80% of iterations reliable
-- Bootstrap variance: Coefficient of variation < 20%
-- Memory consistency: Max growth < 2x average
-- State update consistency: Coefficient of variation < 30%
-
-### 📊 Test Comparison Summary
-
-| Test | Duration | Purpose | Best For | Key Focus |
-|------|----------|---------|----------|-----------|
-| **regression-quick** | 2-4 min | Fast validation | CI/CD pipelines | Bootstrap, basic memory, interactions |
-| **regression-full** | 5-10 min | Deep analysis | Pre-deployment | Memory leaks, rendering, subscriptions |
-| **regression-micro** | 30s | Micro-benchmarks | Performance debugging | Individual interactions, consistency |
-| **regression-statistical** | 8-12 min | Statistical validation | Performance analysis | Multiple iterations, variance analysis |
-
-#### 🚀 **New Optimizations & Features**
-
-**Environment-Aware Testing:**
-- Automatic environment detection from URL
-- Different performance thresholds per environment (dev/stage/prod)
-- Environment-specific selector strategies and timeouts
-
-**Enhanced Error Handling:**
-- Detailed error messages with stack traces
-- Graceful fallback when elements aren't found
-- Better diagnostic logging for troubleshooting
-
-**Robust Element Selection:**
-- Multiple selector strategies per interaction type
-- Visibility and enabled state validation
-- Environment-specific UI element targeting
-
-**Statistical Validation:**
-- Warmup phase to reduce measurement variance
-- Multiple iterations for statistical significance
-- Coefficient of variation analysis for reliability
-
-#### Development Workflow Strategy
-1. **`regression-quick`** - Run frequently during development for fast feedback with environment-aware thresholds
-2. **`regression-micro`** - Use when optimizing specific interactions or debugging performance issues  
-3. **`regression-statistical`** - Use for detailed performance analysis with statistical confidence
-4. **`regression-full`** - Run before merging/deploying for comprehensive validation
-
-#### CI/CD Pipeline Strategy
-- **Quick automated checks**: `regression-quick` with realistic environment-specific thresholds
-- **Release validation**: `regression-full` for thorough pre-deployment testing
-- **Performance profiling**: `regression-micro` when issues are detected
-- **Statistical analysis**: `regression-statistical` for baseline establishment and variance analysis
-
-The tests now provide intelligent, environment-aware performance validation with realistic expectations and detailed diagnostics.
-
-### 🔬 Environment Comparison
-
-#### Compare Store vs BehaviorSubject
-```bash
-just regression-compare
-```
-
-This runs the quick regression test on both:
-- **STAGE**: Current store implementation
-- **DEV-02**: Your BehaviorSubject refactor
-
-### 🎯 Environment-Specific Configuration
-
-The regression tests now automatically detect your environment and apply appropriate thresholds:
-
-#### Environment Detection & Thresholds
+### Environment-Aware Thresholds
 
 | Environment | Bootstrap | Memory Growth | State Updates | Success Rate |
 |-------------|-----------|---------------|---------------|--------------|
@@ -304,401 +166,60 @@ The regression tests now automatically detect your environment and apply appropr
 | **STAGE** | < 15s | < 50MB | < 600ms | > 60% |
 | **PROD** | < 12s | < 40MB | < 500ms | > 70% |
 
-#### Environment-Specific Features
+### Usage
 
-**Automatic Detection:**
+**Compare versions:**
 ```bash
-# Automatically detects environment from URL
-just regression-quick dev02    # Uses DEV thresholds
-just regression-quick stage    # Uses STAGE thresholds
-just regression-quick prod     # Uses PROD thresholds
+just regression-compare    # STAGE vs DEV-02
+just regression-quick dev02    # Auto-detects environment thresholds
 ```
 
-**Performance Expectations:**
-- **DEV**: More lenient thresholds for development builds with debug features
-- **STAGE**: Production-like performance with some monitoring overhead
-- **PROD**: Strictest thresholds expecting optimal performance
-
-**Selector Strategies:**
-- Different UI element selectors per environment
-- Fallback strategies for various Angular Material versions
-- Environment-specific timeout configurations
-
-### 📊 Understanding Results
-
-#### ✅ Good Results
-```
-✓ bootstrap_under_3s........: 100.00% ✓ 1
-✓ memory_growth_under_5mb...: 100.00% ✓ 1  
-✓ interactions_under_500ms..: 100.00% ✓ 3
-```
-
-#### ⚠️ Warning Signs
-```
-✗ memory_growth_under_5mb...: 0.00% ✗ 0 / ✓ 1
-  Memory growth: 8MB (Warning: potential memory leak)
-```
-
-#### ❌ Regression Detected
-```
-✗ bootstrap_under_3s........: 0.00% ✗ 0 / ✓ 1
-  Bootstrap time: 6500ms (Regression: 3.5s slower)
-```
-
-### 🎯 Key Metrics to Watch
-
-#### Performance Improvements (Expected with BehaviorSubjects)
-- **Faster state updates**: Direct observable subscriptions
-- **Better memory management**: Automatic cleanup
-- **Lower subscription overhead**: More efficient observable patterns
-
-#### Potential Regressions (Watch for)
-- **Slower bootstrap**: Larger bundle size
-- **Memory leaks**: Improper subscription cleanup
-- **Inconsistent state**: Race conditions in async operations
-
-### 🚀 Usage Workflow
-
-#### Pre-Deployment Validation
-1. **Run baseline on STAGE**: `just run stage store-refactor-regression-quick`
-2. **Run test on DEV-02**: `just run dev02 store-refactor-regression-quick`
-3. **Compare results** and look for regressions
-4. **If regressions found**: Run full tests for detailed analysis
-
-#### CI/CD Integration
-Add to your pipeline:
+**CI/CD integration:**
 ```bash
-# Quick regression check
-just regression-quick
-
-# Fail build if thresholds not met
-if [ $? -ne 0 ]; then
-  echo "❌ Store refactor regression detected"
-  exit 1
-fi
+just regression-quick && echo "✅ No regressions" || echo "❌ Regression detected"
 ```
 
-#### Local Development
-```bash
-# Quick check during development
-just regression-quick
-
-# Detailed analysis when optimizing
-just regression-full
-
-# Micro-optimizations
-just regression-micro
-```
-
-### 🔧 Customizing Tests
-
-#### Adjust Thresholds
-Edit the `thresholds` object in test files:
-
-```javascript
-// More strict thresholds
-thresholds: {
-  'state_update_latency': ['avg<200'], // Stricter: 200ms vs 500ms
-  'memory_growth': ['value<2097152'], // Stricter: 2MB vs 5MB
-}
-```
-
-#### Add Custom Metrics
-```javascript
-// In your test file
-import { Trend } from 'k6/metrics';
-const customMetric = new Trend('my_custom_metric');
-
-// Later in test
-customMetric.add(measurementValue);
-```
-
-#### Focus on Specific Features
-Modify the test scenarios to focus on your specific refactored components:
-
-```javascript
-// Test specific routes that use your refactored stores
-await page.goto('/your-refactored-feature');
-await testYourSpecificFeature(page);
-```
-
-### 📈 Performance Targets
-
-#### Store Refactor Goals (Environment-Adjusted)
-| Goal | DEV | STAGE | PROD |
-|------|-----|--------|------|
-| **Bootstrap** | < 20s | < 15s | < 12s |
-| **Memory Growth** | < 60MB | < 50MB | < 40MB |
-| **State Updates** | < 800ms | < 600ms | < 500ms |
-| **Success Rate** | > 50% | > 60% | > 70% |
-
-#### Red Flags (Universal)
-- Bootstrap time > 25s (any environment)
-- Memory growth > 80MB (memory leak concern)  
-- State updates > 1.5s (performance regression)
-- Statistical reliability < 30% (unreliable measurements)
-
-### 🐛 Enhanced Troubleshooting
-
-#### Test Failures with New Diagnostics
-1. **Element Selection Issues**:
-   ```bash
-   # Look for detailed selector logs:
-   ❌ No interactive navigation elements found
-   ⚠️ Selector "nav a[href]:visible" failed: undefined
-   ```
-   - **Solution**: Update selectors in `utils/environment-config.js`
-   - **Alternative**: Use `regression-statistical` for more robust element detection
-
-2. **Environment Threshold Failures**:
-   ```bash
-   # Check if using correct environment:
-   🔧 DEV Environment: Expecting slower performance...
-   ✗ bootstrap_time 'avg<5000' avg=11920
-   ```
-   - **Solution**: Thresholds now auto-adjust per environment
-   - **Check**: Verify URL detection in environment-config.js
-
-3. **Statistical Inconsistency**:
-   ```bash
-   # Look for variance warnings:
-   Average: 450ms, StdDev: 200ms, CV: 44%
-   ✗ state_statistical_consistent: false
-   ```
-   - **Solution**: Run `regression-statistical` for warmup phase
-   - **Check**: System load, close other applications
-
-#### Enhanced Error Messages
-- **Detailed stack traces** for JavaScript errors
-- **Coefficient of variation analysis** for measurement reliability  
-- **Environment detection logs** showing which thresholds are applied
-- **Element selection diagnostics** with fallback attempts
-
-#### New Diagnostic Commands
-```bash
-# Statistical analysis with detailed variance reporting
-just regression-statistical dev02
-
-# Quick test with environment-specific diagnostics  
-just regression-quick stage
-
-# Micro-benchmarks with enhanced element detection
-just regression-micro prod
-```
-
-#### Legacy Troubleshooting (Still Applicable)
-1. **Browser compatibility**: Chrome/Chromium required
-2. **Network access**: Ensure test environments are accessible  
-3. **System resources**: Close other applications during testing
-4. **Headless mode**: Use `k6_browser_headless=true` for consistency
+**Expected improvements with BehaviorSubject:** Faster state updates, better memory cleanup, lower subscription overhead.
 
 ## User Service Refactor Performance Tests
 
-Performance tests specifically designed to compare NGXS → UserService refactoring impact. These tests measure the performance differences between the old NGXS state management and the new reactive UserService pattern.
+Compare NGXS → UserService performance impact with K6 browser tests + Cypress frontend tests.
 
-### 🎯 Available Tests
+### 🎯 K6 Tests
 
-#### 1. Login Performance Comparison (`user-state-login-performance`)
-**Purpose:** Compare authentication flow performance between NGXS and UserService  
-**Duration:** ~3 minutes  
-**Best for:** Measuring state management impact on authentication
+| Test | Purpose | Command |
+|------|---------|---------|
+| `user-state-login-performance` | Auth flow timing | `just run user-state-login-performance stage` |
+| `user-state-propagation-performance` | Cross-page state updates | `just run user-state-propagation-performance` |
 
+**Compare versions:**
 ```bash
-# Test current version (NGXS)
-just run user-state-login-performance stage
-
-# Test refactored version (UserService)  
-just run user-state-login-performance dev02
-```
-
-**What it measures:**
-- Login request duration
-- User profile loading time
-- Complete authentication flow timing
-- Success rate of auth operations
-
-#### 2. User State Propagation (`user-state-propagation-performance`)
-**Purpose:** Measure how quickly user state changes propagate across the application  
-**Duration:** ~2 minutes  
-**Best for:** Testing reactive state update performance
-
-```bash
-just run user-state-propagation-performance
-```
-
-**What it measures:**
-- User profile loading speed
-- Project membership propagation
-- Permission check latency
-- Cross-component state updates
-
-### 📊 Version Comparison Workflow
-
-#### Quick Comparison
-```bash
-# Run both versions and compare
-just run user-state-login-performance stage    # NGXS version
-just run user-state-login-performance dev02    # UserService version
-
-# Analyze results with comparison script
+just run user-state-login-performance stage    # NGXS
+just run user-state-login-performance dev02    # UserService  
 node k6/scripts/compare-user-service-results.js results-ngxs.json results-userservice.json
 ```
 
-#### Expected Improvements with UserService
-- **Login Flow**: 10-20% faster due to simpler state management
-- **State Propagation**: Reduced latency from direct observable subscriptions
-- **Memory Usage**: Lower baseline consumption without NGXS overhead
-- **Bundle Size**: ~50KB reduction from removed NGXS dependencies
+### 🔍 Cypress Tests
 
-### 🔧 Environment-Aware Testing
+| Test | Purpose |
+|------|---------|
+| `change-detection-cycles.cy.ts` | Angular change detection + memory |
+| `memory-leak-detection.cy.ts` | Subscription cleanup + leaks |
 
-These tests automatically use the existing environment configuration:
-
-| Environment | Auth Threshold | State Update Threshold | Expected Performance |
-|-------------|----------------|------------------------|---------------------|
-| **DEV** | < 800ms | < 600ms | Development build with debug features |
-| **STAGE** | < 600ms | < 500ms | Production-like performance |
-| **PROD** | < 500ms | < 400ms | Optimal performance expectations |
-
-### 📈 Interpreting Results
-
-#### ✅ Good UserService Results
-```
-✓ login_duration (UserService): avg=450ms vs NGXS avg=580ms (22% improvement)
-✓ state_propagation: avg=220ms vs NGXS avg=340ms (35% improvement)  
-✓ auth_flow_success: 100% vs NGXS 98% (improved reliability)
-```
-
-#### ⚠️ Potential Concerns
-```
-⚠️ login_duration: UserService 680ms vs NGXS 520ms (regression detected)
-⚠️ memory_growth: Higher subscription overhead detected
-```
-
-#### 🚨 Red Flags
-```
-❌ auth_flow_success: UserService 85% vs NGXS 98% (reliability regression)
-❌ state_propagation: Significant latency increase detected
-```
-
-### 🛠️ Integration with Existing Infrastructure
-
-These tests leverage your existing k6 framework:
-
-- **Environment Detection**: Automatic threshold adjustment per environment
-- **Statistical Analysis**: Multiple iterations for reliable measurements  
-- **Grafana Integration**: Use `just run-grafana user-state-login-performance`
-- **Cloud Testing**: Use `just run-cloud user-state-login-performance`
-
-### 🎯 Usage in Development Workflow
-
-#### Pre-Merge Validation
+**Usage:**
 ```bash
-# 1. Baseline measurement (current NGXS)
-git checkout main  
-just run user-state-login-performance stage
+# Local
+npm run e2e-ci -- --spec="cypress/e2e/performance/**/*.cy.ts" --env VERSION=ngxs
 
-# 2. Test refactored version
-git checkout feature/user-service-refactor
-just run user-state-login-performance dev02  
-
-# 3. Compare and validate no regressions
-```
-
-#### CI/CD Integration
-```bash
-# Add to pipeline for automated validation
-just run user-state-login-performance
-if [ $? -ne 0 ]; then
-  echo "❌ User service refactor performance regression detected"
-  exit 1
-fi
-```
-
-### 🔍 Complementary Cypress Performance Tests
-
-In addition to the k6 browser automation tests, there are specialized Cypress tests for frontend-specific performance analysis:
-
-#### Available Cypress Performance Tests
-
-**Location**: `apps/dsp-app/cypress/e2e/performance/`
-
-1. **Change Detection Cycles** (`change-detection-cycles.cy.ts`)
-   - Measures Angular change detection frequency
-   - Tests user state propagation timing
-   - Memory usage during navigation
-
-2. **Memory Leak Detection** (`memory-leak-detection.cy.ts`)
-   - Detects subscription memory leaks
-   - Tests authentication memory patterns
-   - Observable subscription cleanup validation
-
-#### Running Cypress Performance Tests
-
-**Against Local Environment (default)**:
-```bash
-# Run change detection performance test
-npm run e2e-ci -- --spec="cypress/e2e/performance/change-detection-cycles.cy.ts" --env VERSION=ngxs
-
-# Run memory leak detection test  
-npm run e2e-ci -- --spec="cypress/e2e/performance/memory-leak-detection.cy.ts" --env VERSION=userservice
-
-# Run all performance tests
-npm run e2e-ci -- --spec="cypress/e2e/performance/**/*.cy.ts" --env VERSION=comparison
-```
-
-**Against DEV Environment**:
-```bash
-# Set credentials (same as k6 tests)
-export DSP_APP_USERNAME='your-dev-username'
-export DSP_APP_PASSWORD='your-dev-password'
-
-# Run against DEV server
+# Remote (DEV/STAGE)
+export DSP_APP_USERNAME='username' DSP_APP_PASSWORD='password'
 cd apps/dsp-app && npx cypress run \
   --spec "cypress/e2e/performance/**/*.cy.ts" \
   --config baseUrl=https://app.dev.dasch.swiss \
   --env VERSION=dev,skipDatabaseCleanup=true,apiUrl=https://api.dev.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
 ```
 
-**Against STAGE Environment**:
-```bash
-# Set credentials for STAGE
-export DSP_APP_USERNAME='your-stage-username'
-export DSP_APP_PASSWORD='your-stage-password'
-
-# Run against STAGE server
-cd apps/dsp-app && npx cypress run \
-  --spec "cypress/e2e/performance/**/*.cy.ts" \
-  --config baseUrl=https://app.stage.dasch.swiss \
-  --env VERSION=stage,skipDatabaseCleanup=true,apiUrl=https://api.stage.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
-```
-
-#### Performance Results Analysis
-
-Cypress tests write results to:
-- `cypress/performance-results/cd-{version}-{timestamp}.json`
-- `cypress/performance-results/memory-{version}-{timestamp}.json`
-- `cypress/performance-results/aggregate-{version}.json`
-
-**Key Metrics**:
-- **Change Detection**: Component update timings
-- **Memory Growth**: Heap usage patterns over navigation cycles
-- **State Propagation**: UserService vs NGXS update speeds
-
----
-
-## 🎉 Summary
-
-The regression tests now provide **intelligent, environment-aware performance validation** with:
-
-✅ **Realistic thresholds** per environment (dev/stage/prod)  
-✅ **Enhanced diagnostics** with detailed error messages  
-✅ **Statistical validation** for reliable performance analysis  
-✅ **Robust element selection** with multiple fallback strategies  
-✅ **Environment detection** with appropriate performance expectations  
-✅ **User Service refactor validation** with comparative analysis
-
-These optimized regression tests help ensure your store-to-BehaviorSubject refactor maintains or improves performance while providing actionable insights for optimization.
+**Expected UserService improvements:** 10-20% faster login, ~50KB bundle reduction, lower memory usage.
 
 ## Documentation
 
