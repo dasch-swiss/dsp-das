@@ -7,30 +7,31 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-profile',
   template: `
-    <div class="user-profile" *ngIf="user$ | async as user">
-      <img appAdminImage [image]="user.email" [type]="'user'" alt="user profile" class="user-profile-image" />
-      <div class="user-profile-headline">
-        <!-- user names -->
-        <h2 class="mat-headline-6">{{ user.givenName }} <br />{{ user.familyName }}</h2>
-        <h3 class="mat-body subtitle">{{ user.username }}</h3>
-
-        <mat-divider />
-
-        <ul class="user-profile-info">
-          <br />
-          <li>
-            <mat-icon>language</mat-icon>
-            {{ user.lang }}
-          </li>
-          <li class="status warning text-only" *ngIf="isSysAdmin$ | async">
-            <mat-icon>verified_user</mat-icon>
-            <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
-          </li>
-        </ul>
+    <div *ngIf="user$ | async as user" style="display: flex; flex-direction: column; gap: 24px; padding: 24px; max-width: 600px;">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <img appAdminImage [image]="user.email" [type]="'user'" alt="user profile" 
+             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
+            {{ user.givenName }} {{ user.familyName }}
+          </h1>
+          <p style="margin: 0; color: #666; font-size: 1rem;">{{ user.username }}</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <mat-icon style="color: #666; font-size: 20px;">language</mat-icon>
+          <span style="font-size: 1rem; color: #333;">{{ user.lang }}</span>
+        </div>
+        <div *ngIf="isSysAdmin$ | async" 
+             style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
+          <mat-icon style="color: #856404; font-size: 20px;">verified_user</mat-icon>
+          <span style="color: #856404; font-weight: 500;">{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
+        </div>
       </div>
     </div>
   `,
-  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
