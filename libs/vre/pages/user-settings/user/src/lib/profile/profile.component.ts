@@ -1,11 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ReadUser } from '@dasch-swiss/dsp-js';
-import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { Subject, takeUntil, takeWhile } from 'rxjs';
-import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,12 +33,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  editProfile(user: ReadUser) {
-    this._dialog.open<EditUserDialogComponent, EditUserDialogProps>(
-      EditUserDialogComponent,
-      DspDialogConfig.dialogDrawerConfig({ user }, true)
-    );
   }
 }

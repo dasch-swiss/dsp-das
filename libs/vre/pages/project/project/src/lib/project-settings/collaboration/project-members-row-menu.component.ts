@@ -7,8 +7,11 @@ import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { EditPasswordDialogComponent } from '@dasch-swiss/vre/pages/system/system';
-import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/pages/user-settings/user';
+import {
+  EditPasswordDialogComponent,
+  EditUserDialogComponent,
+  EditUserDialogProps,
+} from '@dasch-swiss/vre/pages/user-settings/user';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { switchMap } from 'rxjs';
