@@ -7,7 +7,7 @@ describe('Change Detection Performance - User Service Refactor', () => {
     perfTest.setupTest();
     cy.visit('/');
     // Ensure user is properly logged in via UI flow
-    cy.get('[data-cy=user-button]').should('be.visible');
+    cy.get('[data-cy="user-button"]').should('be.visible');
   });
 
   it('should measure change detection cycles during user operations', () => {
@@ -48,12 +48,20 @@ describe('Change Detection Performance - User Service Refactor', () => {
     
     const startTime = performance.now();
     
+    // Ensure any existing overlays are dismissed
+    cy.get('body').click(0, 0);
+    cy.wait(100);
+    
     // Open user menu (simulates UserService state access)
-    cy.get('[data-cy=user-button]').click();
-    cy.get('[data-cy=user-menu]').should('be.visible');
+    cy.get('[data-cy="user-button"]').should('be.visible').click();
+    cy.get('.cdk-overlay-pane .user-menu').should('be.visible');
+    
+    // Close menu by clicking outside to test state propagation
+    cy.get('body').click(0, 0);
+    cy.get('.cdk-overlay-pane .user-menu').should('not.exist');
     
     // Measure time for all user-dependent components to update
-    cy.get('[data-cy=user-button]').should('be.visible'); // Header should update
+    cy.get('[data-cy="user-button"]').should('be.visible'); // Header should update
     
     cy.window().then(() => {
       const endTime = performance.now();
@@ -65,7 +73,7 @@ describe('Change Detection Performance - User Service Refactor', () => {
   });
 
   it('should measure memory usage during user operations', () => {
-    cy.window().then((win) => {
+    cy.window().then(() => {
       // Baseline memory measurement
       const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
       
