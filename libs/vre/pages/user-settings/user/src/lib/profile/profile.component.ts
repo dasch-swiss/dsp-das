@@ -17,33 +17,31 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
           [type]="'user'"
           alt="user profile"
           style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+
         <div style="display: flex; flex-direction: column; gap: 4px;">
-          <div style="display: flex; flex-direction: row; gap: 8px; align-items: center;">
+          <div style="display: flex; gap: 8px; align-items: center;">
             <h1 style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #1a1a1a;">
               {{ user.givenName }} {{ user.familyName }}
             </h1>
-            <p style="margin: 0; color: #666; font-size: 1rem;">({{ user.username }})</p>
+            <p style="margin: 0; color: #666">({{ user.username }})</p>
           </div>
-          <ng-content *ngTemplateOutlet="profile"></ng-content>
+
+          <div style="display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <div
+              class="badge"
+              style="background: #f8f9fa;
+        border-color: #e9ecef">
+              <mat-icon class="icon" style="color: #495057">language</mat-icon>
+              <span>{{ user.lang }}</span>
+            </div>
+            <div *ngIf="isSysAdmin$ | async" class="badge" style="background: #f8f9fa; border-color: #e9ecef">
+              <mat-icon class="icon" style="color: #856404">verified_user</mat-icon>
+              <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <ng-template #profile>
-      <div style="display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap;">
-        <div
-          class="badge"
-          style="background: #f8f9fa;
-        border-color: #e9ecef">
-          <mat-icon class="icon" style="color: #495057">language</mat-icon>
-          <span>{{ 'en' }}</span>
-        </div>
-        <div *ngIf="isSysAdmin$ | async" class="badge" style="background: #f8f9fa; border-color: #e9ecef">
-          <mat-icon class="icon" style="color: #856404">verified_user</mat-icon>
-          <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
-        </div>
-      </div>
-    </ng-template>
   `,
   styles: [
     `
