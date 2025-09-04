@@ -16,7 +16,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user$ = this._userService.user$;
 
   constructor(
-    private _dialog: MatDialog,
     private _userService: UserService,
     private _titleService: Title
   ) {}
