@@ -1,4 +1,4 @@
-<div class="content large middle">
+<app-centered-layout>
   <div class="content-sidebar user-data">
     <app-profile />
   </div>
@@ -15,16 +15,6 @@
           [active]="rla.isActive">
           <mat-icon class="tab-icon">{{ link.icon }}</mat-icon>
           {{ link.label }}
-        </a>
-        <!-- mobile version -->
-        <a
-          mat-tab-link
-          class="nav-link-mobile"
-          [routerLink]="link.route"
-          routerLinkActive="active-tab"
-          #rla="routerLinkActive"
-          [active]="rla.isActive">
-          {{ link.shortLabel }}
         </a>
       </span>
     </nav>
@@ -49,4 +39,4 @@
       </div>
     </mat-tab-nav-panel>
   </div>
-</div>
+</app-centered-layout>
