@@ -65,10 +65,10 @@ export class ProjectMembersRowMenuComponent {
     if (!currentUser) return;
 
     this._userApiService.removeFromProjectMembership(id, this.project.id, true).subscribe(response => {
-      if (currentUser.username !== response.user.username) {
+      if (currentUser.id !== response.user.id) {
         this._refresh();
       } else {
-        this._userService.loadUser(currentUser.username, 'username').subscribe(() => {
+        this._userService.reloadUser().subscribe(() => {
           const isSysAdmin = ProjectService.IsMemberOfSystemAdminGroup(currentUser.permissions?.groupsPerProject || {});
           if (isSysAdmin) {
             this._refresh();
@@ -94,9 +94,7 @@ export class ProjectMembersRowMenuComponent {
       if (currentUser.username !== response.user.username) {
         this._refresh();
       } else {
-        // the logged-in user (system admin) added himself as project admin
-        // update the application state of logged-in user and the session
-        this._userService.loadUser(currentUser.username, 'username').subscribe(() => {
+        this._userService.reloadUser().subscribe(() => {
           this._refresh();
         });
       }

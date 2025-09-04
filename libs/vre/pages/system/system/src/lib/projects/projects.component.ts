@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
@@ -79,10 +78,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   updateAndRefresh() {
-    const currentUser = this._userService.currentUser;
-    if (!currentUser) throw new AppError('Current user not found.');
     this._reloadProjects();
-    this._userService.loadUser(currentUser.username, 'username').subscribe();
+    this._userService.reloadUser().subscribe();
   }
 
   private _reloadProjects() {

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +26,23 @@ export class UserService {
 
   loadUser(identifier: string, idType: 'iri' | 'email' | 'username'): Observable<ReadUser> {
     return this._userApiService.get(identifier, idType).pipe(
+      catchError(error => {
+        this.logout();
+        throw error;
+      }),
       tap(response => {
         this._user$.next(response.user);
       }),
       map(response => response.user)
     );
+  }
+
+  reloadUser(): Observable<ReadUser> {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      throw new AppError('No user is currently logged in.');
+    }
+    return this.loadUser(currentUser.id, 'iri');
   }
 
   logout(): void {
