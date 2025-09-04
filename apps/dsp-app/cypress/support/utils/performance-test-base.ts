@@ -76,11 +76,11 @@ export class PerformanceTestBase {
   }
 
   /**
-   * Save measurement to file with consistent naming
+   * Save measurement to file with consistent naming - DISABLED
    */
   saveMeasurement(measurement: PerformanceMeasurement, prefix: string) {
-    const filename = `cypress/performance-results/${prefix}-${this.version}-${Date.now()}.json`;
-    cy.writeFile(filename, measurement);
+    // File saving disabled - just log the measurement
+    cy.log(`Performance measurement saved: ${prefix}`, measurement);
   }
 
   /**
@@ -104,8 +104,8 @@ export class PerformanceTestBase {
     
     cy.log(`Memory Analysis - ${testType}: Growth ${(memoryGrowth / 1024 / 1024).toFixed(2)}MB (${growthPercentage.toFixed(2)}%)`);
     
-    const filename = `cypress/performance-results/${testType.replace(/\s+/g, '-').toLowerCase()}-${this.version}-${Date.now()}.json`;
-    cy.writeFile(filename, analysis);
+    // File saving disabled - just log the analysis
+    cy.log(`Memory analysis completed: ${testType}`, analysis);
     
     return analysis;
   }
@@ -157,19 +157,16 @@ export class PerformanceTestBase {
   }
 
   /**
-   * Clean up performance data (called in afterEach)
+   * Clean up performance data (called in afterEach) - DISABLED
    */
   cleanup() {
-    // Save raw snapshots if any were taken
+    // File saving disabled - just log summary
     if (this.memorySnapshots.length > 0) {
-      const filename = `cypress/performance-results/raw-snapshots-${this.version}-${Date.now()}.json`;
-      cy.writeFile(filename, this.memorySnapshots);
+      cy.log(`Memory snapshots taken: ${this.memorySnapshots.length}`);
     }
     
-    // Save aggregate performance data
     if (this.performanceData.length > 0) {
-      const filename = `cypress/performance-results/aggregate-${this.version}-${Date.now()}.json`;
-      cy.writeFile(filename, this.performanceData);
+      cy.log(`Performance measurements taken: ${this.performanceData.length}`);
     }
   }
 }

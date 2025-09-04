@@ -5,6 +5,9 @@ describe('Memory Leak Detection - User Service Refactor', () => {
 
   beforeEach(() => {
     perfTest.setupTest();
+    cy.visit('/');
+    // Ensure user is properly logged in
+    cy.get('[data-cy="user-button"]').should('be.visible');
   });
 
   it('should detect memory leaks in user subscription patterns', () => {
@@ -14,14 +17,13 @@ describe('Memory Leak Detection - User Service Refactor', () => {
 
   it('should monitor user authentication memory patterns', () => {
     // Test memory usage during repeated login/logout cycles
-    const initialMemory = perfTest.takeMemorySnapshot('auth_test_start');
+    perfTest.takeMemorySnapshot('auth_test_start');
     
     for (let authCycle = 1; authCycle <= 5; authCycle++) {
       cy.log(`Auth memory test cycle ${authCycle}/5`);
       
-      // Logout
-      cy.get('[data-cy="user-button"]').click();
-      cy.get('.user-menu button').contains('logout').click();
+      // Logout using dedicated command
+      cy.logout();
       cy.wait(500);
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_logout`);
       
