@@ -492,6 +492,199 @@ just regression-micro prod
 3. **System resources**: Close other applications during testing
 4. **Headless mode**: Use `k6_browser_headless=true` for consistency
 
+## User Service Refactor Performance Tests
+
+Performance tests specifically designed to compare NGXS → UserService refactoring impact. These tests measure the performance differences between the old NGXS state management and the new reactive UserService pattern.
+
+### 🎯 Available Tests
+
+#### 1. Login Performance Comparison (`user-state-login-performance`)
+**Purpose:** Compare authentication flow performance between NGXS and UserService  
+**Duration:** ~3 minutes  
+**Best for:** Measuring state management impact on authentication
+
+```bash
+# Test current version (NGXS)
+just run user-state-login-performance stage
+
+# Test refactored version (UserService)  
+just run user-state-login-performance dev02
+```
+
+**What it measures:**
+- Login request duration
+- User profile loading time
+- Complete authentication flow timing
+- Success rate of auth operations
+
+#### 2. User State Propagation (`user-state-propagation-performance`)
+**Purpose:** Measure how quickly user state changes propagate across the application  
+**Duration:** ~2 minutes  
+**Best for:** Testing reactive state update performance
+
+```bash
+just run user-state-propagation-performance
+```
+
+**What it measures:**
+- User profile loading speed
+- Project membership propagation
+- Permission check latency
+- Cross-component state updates
+
+### 📊 Version Comparison Workflow
+
+#### Quick Comparison
+```bash
+# Run both versions and compare
+just run user-state-login-performance stage    # NGXS version
+just run user-state-login-performance dev02    # UserService version
+
+# Analyze results with comparison script
+node k6/scripts/compare-user-service-results.js results-ngxs.json results-userservice.json
+```
+
+#### Expected Improvements with UserService
+- **Login Flow**: 10-20% faster due to simpler state management
+- **State Propagation**: Reduced latency from direct observable subscriptions
+- **Memory Usage**: Lower baseline consumption without NGXS overhead
+- **Bundle Size**: ~50KB reduction from removed NGXS dependencies
+
+### 🔧 Environment-Aware Testing
+
+These tests automatically use the existing environment configuration:
+
+| Environment | Auth Threshold | State Update Threshold | Expected Performance |
+|-------------|----------------|------------------------|---------------------|
+| **DEV** | < 800ms | < 600ms | Development build with debug features |
+| **STAGE** | < 600ms | < 500ms | Production-like performance |
+| **PROD** | < 500ms | < 400ms | Optimal performance expectations |
+
+### 📈 Interpreting Results
+
+#### ✅ Good UserService Results
+```
+✓ login_duration (UserService): avg=450ms vs NGXS avg=580ms (22% improvement)
+✓ state_propagation: avg=220ms vs NGXS avg=340ms (35% improvement)  
+✓ auth_flow_success: 100% vs NGXS 98% (improved reliability)
+```
+
+#### ⚠️ Potential Concerns
+```
+⚠️ login_duration: UserService 680ms vs NGXS 520ms (regression detected)
+⚠️ memory_growth: Higher subscription overhead detected
+```
+
+#### 🚨 Red Flags
+```
+❌ auth_flow_success: UserService 85% vs NGXS 98% (reliability regression)
+❌ state_propagation: Significant latency increase detected
+```
+
+### 🛠️ Integration with Existing Infrastructure
+
+These tests leverage your existing k6 framework:
+
+- **Environment Detection**: Automatic threshold adjustment per environment
+- **Statistical Analysis**: Multiple iterations for reliable measurements  
+- **Grafana Integration**: Use `just run-grafana user-state-login-performance`
+- **Cloud Testing**: Use `just run-cloud user-state-login-performance`
+
+### 🎯 Usage in Development Workflow
+
+#### Pre-Merge Validation
+```bash
+# 1. Baseline measurement (current NGXS)
+git checkout main  
+just run user-state-login-performance stage
+
+# 2. Test refactored version
+git checkout feature/user-service-refactor
+just run user-state-login-performance dev02  
+
+# 3. Compare and validate no regressions
+```
+
+#### CI/CD Integration
+```bash
+# Add to pipeline for automated validation
+just run user-state-login-performance
+if [ $? -ne 0 ]; then
+  echo "❌ User service refactor performance regression detected"
+  exit 1
+fi
+```
+
+### 🔍 Complementary Cypress Performance Tests
+
+In addition to the k6 browser automation tests, there are specialized Cypress tests for frontend-specific performance analysis:
+
+#### Available Cypress Performance Tests
+
+**Location**: `apps/dsp-app/cypress/e2e/performance/`
+
+1. **Change Detection Cycles** (`change-detection-cycles.cy.ts`)
+   - Measures Angular change detection frequency
+   - Tests user state propagation timing
+   - Memory usage during navigation
+
+2. **Memory Leak Detection** (`memory-leak-detection.cy.ts`)
+   - Detects subscription memory leaks
+   - Tests authentication memory patterns
+   - Observable subscription cleanup validation
+
+#### Running Cypress Performance Tests
+
+**Against Local Environment (default)**:
+```bash
+# Run change detection performance test
+npm run e2e-ci -- --spec="cypress/e2e/performance/change-detection-cycles.cy.ts" --env VERSION=ngxs
+
+# Run memory leak detection test  
+npm run e2e-ci -- --spec="cypress/e2e/performance/memory-leak-detection.cy.ts" --env VERSION=userservice
+
+# Run all performance tests
+npm run e2e-ci -- --spec="cypress/e2e/performance/**/*.cy.ts" --env VERSION=comparison
+```
+
+**Against DEV Environment**:
+```bash
+# Set credentials (same as k6 tests)
+export DSP_APP_USERNAME='your-dev-username'
+export DSP_APP_PASSWORD='your-dev-password'
+
+# Run against DEV server
+cd apps/dsp-app && npx cypress run \
+  --spec "cypress/e2e/performance/**/*.cy.ts" \
+  --config baseUrl=https://app.dev.dasch.swiss \
+  --env VERSION=dev,skipDatabaseCleanup=true,apiUrl=https://api.dev.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
+```
+
+**Against STAGE Environment**:
+```bash
+# Set credentials for STAGE
+export DSP_APP_USERNAME='your-stage-username'
+export DSP_APP_PASSWORD='your-stage-password'
+
+# Run against STAGE server
+cd apps/dsp-app && npx cypress run \
+  --spec "cypress/e2e/performance/**/*.cy.ts" \
+  --config baseUrl=https://app.stage.dasch.swiss \
+  --env VERSION=stage,skipDatabaseCleanup=true,apiUrl=https://api.stage.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
+```
+
+#### Performance Results Analysis
+
+Cypress tests write results to:
+- `cypress/performance-results/cd-{version}-{timestamp}.json`
+- `cypress/performance-results/memory-{version}-{timestamp}.json`
+- `cypress/performance-results/aggregate-{version}.json`
+
+**Key Metrics**:
+- **Change Detection**: Component update timings
+- **Memory Growth**: Heap usage patterns over navigation cycles
+- **State Propagation**: UserService vs NGXS update speeds
+
 ---
 
 ## 🎉 Summary
@@ -502,7 +695,8 @@ The regression tests now provide **intelligent, environment-aware performance va
 ✅ **Enhanced diagnostics** with detailed error messages  
 ✅ **Statistical validation** for reliable performance analysis  
 ✅ **Robust element selection** with multiple fallback strategies  
-✅ **Environment detection** with appropriate performance expectations
+✅ **Environment detection** with appropriate performance expectations  
+✅ **User Service refactor validation** with comparative analysis
 
 These optimized regression tests help ensure your store-to-BehaviorSubject refactor maintains or improves performance while providing actionable insights for optimization.
 

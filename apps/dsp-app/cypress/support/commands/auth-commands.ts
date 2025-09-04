@@ -51,11 +51,23 @@ Cypress.Commands.add('logout', () => {
   );
 });
 
-Cypress.Commands.add('loginAdmin', () =>
-  cy.readFile('cypress/fixtures/user_profiles.json').then((users: UserProfiles) =>
+Cypress.Commands.add('loginAdmin', () => {
+  // Use environment variables if available (for remote environments)
+  const envUsername = Cypress.env('DSP_APP_USERNAME');
+  const envPassword = Cypress.env('DSP_APP_PASSWORD');
+  
+  if (envUsername && envPassword) {
     cy.login({
-      username: users.systemAdmin_username_root,
-      password: users.systemAdmin_password_root,
-    })
-  )
-);
+      username: envUsername,
+      password: envPassword,
+    });
+  } else {
+    // Fallback to user_profiles.json for local testing
+    cy.readFile('cypress/fixtures/user_profiles.json').then((users: UserProfiles) =>
+      cy.login({
+        username: users.systemAdmin_username_root,
+        password: users.systemAdmin_password_root,
+      })
+    );
+  }
+});
