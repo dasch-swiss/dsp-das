@@ -6,7 +6,7 @@ import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { map, shareReplay } from 'rxjs';
+import { map, Observable, shareReplay } from 'rxjs';
 import { existingNamesAsyncValidator } from '../existing-names.validator';
 import { UserForm } from './user-form.type';
 
@@ -78,7 +78,6 @@ export class UserFormComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _ts: TranslateService,
-    private _store: Store,
     private _userApiService: UserApiService
   ) {}
 

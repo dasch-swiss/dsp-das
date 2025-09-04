@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { Subject, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
@@ -13,12 +12,12 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  user$ = this._store.select(UserSelectors.user);
-  isLoading$ = this._store.select(UserSelectors.isLoading);
+  isSysAdmin$ = this._userService.isSysAdmin$;
+  user$ = this._userService.user$;
 
   constructor(
-    private _store: Store,
+    private _dialog: MatDialog,
+    private _userService: UserService,
     private _titleService: Title
   ) {}
 
