@@ -87,12 +87,24 @@ Cypress.Commands.add('loginAdmin', () => {
       password: envPassword,
     });
   } else {
-    // Fallback to user_profiles.json for local testing
-    cy.readFile('cypress/fixtures/user_profiles.json').then((users: UserProfiles) =>
-      cy.login({
-        username: users.systemAdmin_username_root,
-        password: users.systemAdmin_password_root,
-      })
-    );
+    // Try different admin accounts based on environment
+    const baseUrl = Cypress.config('baseUrl');
+    const isRemote = baseUrl && (baseUrl.includes('dasch.swiss') || baseUrl.includes('stage') || baseUrl.includes('dev-'));
+    
+    cy.readFile('cypress/fixtures/user_profiles.json').then((users: UserProfiles) => {
+      if (isRemote) {
+        // Try system admin first for remote environments
+        cy.login({
+          username: users.systemAdmin_username,
+          password: users.systemAdmin_password,
+        });
+      } else {
+        // Use root for local testing
+        cy.login({
+          username: users.systemAdmin_username_root,
+          password: users.systemAdmin_password_root,
+        });
+      }
+    });
   }
 });
