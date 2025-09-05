@@ -58,6 +58,9 @@ export default async function(data) {
     
     testBase.logResult(`Auth (Total: ${totalAuthTime.toFixed(0)}ms, Login: ${loginTime.toFixed(0)}ms, State: ${userStateTime.toFixed(0)}ms)`, totalAuthTime, success, data.version);
     
+    // Count API requests made during the test
+    await testBase.countApiRequests(page, metrics, data.version);
+    
     if (success) {
       await page.waitForTimeout(500); // Allow additional state updates
     }

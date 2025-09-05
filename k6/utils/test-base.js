@@ -66,6 +66,52 @@ export class K6TestBase {
   }
 
   /**
+   * Count API requests by type from browser performance entries
+   */
+  async countApiRequests(page, metrics, version) {
+    const apiRequests = await page.evaluate(() => {
+      const resources = performance.getEntriesByType('resource');
+      const apiCounts = {
+        auth: 0,
+        projects: 0,
+        ontologies: 0,
+        resources: 0,
+        total: 0
+      };
+
+      resources.forEach(resource => {
+        const url = resource.name;
+        if (url.includes('/v2/authentication') || url.includes('/admin/users') || url.includes('/admin/permissions')) {
+          apiCounts.auth++;
+        } else if (url.includes('/admin/projects') || url.includes('/v2/projects')) {
+          apiCounts.projects++;
+        } else if (url.includes('/v2/ontologies')) {
+          apiCounts.ontologies++;
+        } else if (url.includes('/v2/resources') || url.includes('/v2/search')) {
+          apiCounts.resources++;
+        }
+        
+        if (url.includes('/v2/') || url.includes('/admin/')) {
+          apiCounts.total++;
+        }
+      });
+
+      return apiCounts;
+    });
+
+    // Record API request metrics
+    metrics.authApiCalls.add(apiRequests.auth, { version });
+    metrics.projectApiCalls.add(apiRequests.projects, { version });
+    metrics.ontologyApiCalls.add(apiRequests.ontologies, { version });
+    metrics.resourceApiCalls.add(apiRequests.resources, { version });
+    metrics.totalApiCalls.add(apiRequests.total, { version });
+
+    console.log(`📊 API Requests - Auth: ${apiRequests.auth}, Projects: ${apiRequests.projects}, Ontologies: ${apiRequests.ontologies}, Resources: ${apiRequests.resources}, Total: ${apiRequests.total}`);
+    
+    return apiRequests;
+  }
+
+  /**
    * Measures execution time of an async function
    * Uses K6-compatible timing instead of performance.now()
    */
@@ -89,7 +135,7 @@ export class K6TestBase {
  * Common metrics for user service performance tests
  */
 export function createUserServiceMetrics() {
-  const { Trend, Rate } = require('k6/metrics');
+  const { Trend, Rate, Counter } = require('k6/metrics');
   
   return {
     loginDuration: new Trend('login_duration', true),
@@ -99,7 +145,13 @@ export function createUserServiceMetrics() {
     statePropagationDuration: new Trend('state_propagation_duration', true),
     projectNavigationTime: new Trend('project_navigation_time', true),
     userMenuPersistence: new Trend('user_menu_persistence', true),
-    pageTransitionSuccess: new Rate('page_transition_success')
+    pageTransitionSuccess: new Rate('page_transition_success'),
+    // API request counters
+    authApiCalls: new Counter('api_auth_requests'),
+    projectApiCalls: new Counter('api_project_requests'),
+    ontologyApiCalls: new Counter('api_ontology_requests'),
+    resourceApiCalls: new Counter('api_resource_requests'),
+    totalApiCalls: new Counter('api_total_requests')
   };
 }
 
