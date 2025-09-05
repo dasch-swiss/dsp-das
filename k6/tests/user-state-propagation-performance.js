@@ -39,18 +39,18 @@ export default async function(data) {
       {
         name: 'project_overview',
         action: async () => {
-          const navStart = performance.now();
+          const navStart = Date.now();
           await projectPage.goto();
           
           // Wait for page to load and user state to be available
           await page.waitForLoadState('networkidle');
           
           // Check if user menu persists (indicates user state propagated)
-          const userMenuStart = performance.now();
+          const userMenuStart = Date.now();
           const userMenuVisible = await page.locator('[data-cy=user-button]').isVisible();
-          const userMenuEnd = performance.now();
+          const userMenuEnd = Date.now();
           
-          const navEnd = performance.now();
+          const navEnd = Date.now();
           
           return {
             navigationTime: navEnd - navStart,
@@ -62,7 +62,7 @@ export default async function(data) {
       {
         name: 'user_settings_navigation',
         action: async () => {
-          const navStart = performance.now();
+          const navStart = Date.now();
           
           // Navigate to user settings (highly user-state dependent)
           await page.locator('[data-cy=user-button]').click();
@@ -71,7 +71,7 @@ export default async function(data) {
           const userMenuOptions = page.locator('[data-cy=user-menu] a');
           await userMenuOptions.first().waitFor({ state: 'visible', timeout: 3000 });
           
-          const navEnd = performance.now();
+          const navEnd = Date.now();
           const menuItemCount = await userMenuOptions.count();
           
           return {
@@ -83,7 +83,7 @@ export default async function(data) {
       {
         name: 'home_navigation_return',
         action: async () => {
-          const navStart = performance.now();
+          const navStart = Date.now();
           
           // Return to home and check if user state is still consistent
           await homePage.goto();
@@ -91,7 +91,7 @@ export default async function(data) {
           
           // Verify user menu is still visible and responsive
           const userMenuVisible = await homePage.userMenu.isVisible();
-          const userMenuEnd = performance.now();
+          const userMenuEnd = Date.now();
           
           return {
             navigationTime: userMenuEnd - navStart,
@@ -103,7 +103,7 @@ export default async function(data) {
     
     // Execute all propagation tests
     let allTestsSuccessful = true;
-    const totalPropagationStart = performance.now();
+    const totalPropagationStart = Date.now();
     
     for (const test of propagationTests) {
       try {
@@ -135,7 +135,7 @@ export default async function(data) {
       }
     }
     
-    const totalPropagationEnd = performance.now();
+    const totalPropagationEnd = Date.now();
     const totalPropagationTime = totalPropagationEnd - totalPropagationStart;
     
     // Record overall success rate

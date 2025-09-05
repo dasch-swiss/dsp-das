@@ -125,7 +125,7 @@ async function testSubscriptionOverhead(page) {
       const overhead = await page.evaluate(() => {
         if (!window.performanceMetrics) return 0;
         
-        const startTime = performance.now();
+        const startTime = Date.now();
         
         // Simulate observable subscription overhead
         const observers = [];
@@ -133,11 +133,11 @@ async function testSubscriptionOverhead(page) {
           observers.push({
             id: j,
             callback: () => {},
-            created: performance.now()
+            created: Date.now()
           });
         }
         
-        return performance.now() - startTime;
+        return Date.now() - startTime;
       });
       
       subscriptionTests.push(overhead);

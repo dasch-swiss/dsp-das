@@ -60,18 +60,19 @@ export class K6TestBase {
       console.log(`❌ Test failed - Version: ${this.versionTag}, Error: ${error.message}`);
       throw error;
     } finally {
-      await page.screenshot({ path: `screenshots/${this.testName}-${this.versionTag}-${Date.now()}.png` });
+      await page.screenshot({ path: `k6/screenshots/${this.testName}-${this.versionTag}-${Date.now()}.png` });
       await page.close();
     }
   }
 
   /**
    * Measures execution time of an async function
+   * Uses K6-compatible timing instead of performance.now()
    */
   async measureAsync(fn) {
-    const start = performance.now();
+    const start = Date.now();
     const result = await fn();
-    const duration = performance.now() - start;
+    const duration = Date.now() - start;
     return { result, duration };
   }
 

@@ -30,10 +30,14 @@ export class PerformanceTestBase {
    * Standard beforeEach setup for performance tests
    */
   setupTest() {
-    // Skip database reset for remote environments (DEV/STAGE)
+    // Only reset database for local environments
     const baseUrl = Cypress.config('baseUrl');
-    if (baseUrl && (baseUrl.includes('localhost') || baseUrl.includes('0.0.0.0'))) {
+    const isLocal = !baseUrl || baseUrl.includes('localhost') || baseUrl.includes('0.0.0.0') || baseUrl.includes('4200');
+    
+    if (isLocal) {
       cy.resetDatabase();
+    } else {
+      cy.log('Skipping database reset for remote environment:', baseUrl);
     }
     
     cy.loginAdmin();
