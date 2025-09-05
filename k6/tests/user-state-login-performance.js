@@ -21,13 +21,13 @@ export const setup = () => testBase.setup();
 export default async function(data) {
   const page = await browser.newPage();
   const homePage = new HomePage(page);
-  
+
   await testBase.runTestWithCleanup(page, async () => {
     console.log(`🚀 Testing login performance - Version: ${data.version}`);
-    
+
     // Step 1: Navigate to homepage
     await homePage.goto();
-    
+
     // Step 2: Measure login process (NGXS vs UserService impact)
     const { duration: loginTime } = await testBase.measureAsync(async () => {
       await homePage.loginButton.click();
@@ -35,7 +35,7 @@ export default async function(data) {
       await homePage.passwordInput.fill(__ENV.DSP_APP_PASSWORD);
       await homePage.submitButton.click();
     });
-    
+
     // Step 3: Measure user state propagation timing
     const { duration: userStateTime, result: isUserMenuVisible } = await testBase.measureAsync(async () => {
       try {
@@ -46,21 +46,21 @@ export default async function(data) {
         return false;
       }
     });
-    
+
     // Record metrics and results
     const totalAuthTime = loginTime + userStateTime;
     const success = isUserMenuVisible;
-    
+
     metrics.loginDuration.add(loginTime, { version: data.version });
     metrics.userMenuAppearance.add(userStateTime, { version: data.version });
     metrics.userStateUpdate.add(totalAuthTime, { version: data.version });
     metrics.authFlowSuccess.add(success ? 1 : 0, { version: data.version });
-    
+
     testBase.logResult(`Auth (Total: ${totalAuthTime.toFixed(0)}ms, Login: ${loginTime.toFixed(0)}ms, State: ${userStateTime.toFixed(0)}ms)`, totalAuthTime, success, data.version);
-    
+
     // Count API requests made during the test
     await testBase.countApiRequests(page, metrics, data.version);
-    
+
     if (success) {
       await page.waitForTimeout(500); // Allow additional state updates
     }

@@ -39,8 +39,6 @@ export default async function quickRegressionTest() {
   });
 }
 
-// testBootstrap function removed - using shared testBase.testBootstrap
-
 async function testMemoryBasic(page) {
   const operations = [
     async () => {

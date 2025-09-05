@@ -32,7 +32,7 @@ run testToRun=testToRun env="dev" k6_browser_headless=k6_browser_headless:
         "prod") url="{{prodUrl}}" ;;
         *) url="{{env}}" ;;  # Allow custom URLs
     esac
-    K6_BROWSER_HEADLESS={{k6_browser_headless}} APP_URL="$url" k6 run tests/{{testToRun}}.js
+    K6_BROWSER_HEADLESS={{k6_browser_headless}} APP_URL="$url" k6 run tests/{{testToRun}}.js --out json=results/{{testToRun}}-{{env}}.json
 
 # Run all tests locally
 run-all:
@@ -130,3 +130,23 @@ environments:
     @echo "  prod   - {{prodUrl}}"
     @echo ""
     @echo "You can also pass custom URLs directly as the env parameter"
+
+# User Service performance tests with API request analysis
+user-login-performance env="dev":
+    @echo "🚀 Testing UserService login performance on {{env}}"
+    just run user-state-login-performance {{env}}
+
+user-propagation-performance env="dev":
+    @echo "🔄 Testing UserService state propagation on {{env}}"
+    just run user-state-propagation-performance {{env}}
+
+# Compare UserService performance between environments
+user-performance-compare env1="stage" env2="dev":
+    @echo "🔬 UserService Performance: {{env1}} vs {{env2}}"
+    @echo "============================================="
+    just user-login-performance {{env1}}
+    just user-propagation-performance {{env1}}
+    @echo ""
+    just user-login-performance {{env2}}
+    just user-propagation-performance {{env2}}
+    @echo "✅ Results include API request metrics in results/ directory"

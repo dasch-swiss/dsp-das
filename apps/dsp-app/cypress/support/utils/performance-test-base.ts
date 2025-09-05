@@ -33,13 +33,13 @@ export class PerformanceTestBase {
     // Only reset database for local environments
     const baseUrl = Cypress.config('baseUrl');
     const isLocal = !baseUrl || baseUrl.includes('localhost') || baseUrl.includes('0.0.0.0') || baseUrl.includes('4200');
-    
+
     if (isLocal) {
       cy.resetDatabase();
     } else {
       cy.log('Skipping database reset for remote environment:', baseUrl);
     }
-    
+
     cy.loginAdmin();
     this.performanceData = [];
     this.memorySnapshots = [];
@@ -56,7 +56,7 @@ export class PerformanceTestBase {
       timestamp: Date.now(),
       version: this.version
     };
-    
+
     this.memorySnapshots.push(snapshot);
     cy.log(`Memory Snapshot - ${label}: ${(memory / 1024 / 1024).toFixed(2)}MB`);
     return memory;
@@ -73,7 +73,7 @@ export class PerformanceTestBase {
       timestamp: new Date().toISOString(),
       ...additionalData
     };
-    
+
     this.performanceData.push(measurement);
     cy.log(`Performance - ${operation}: ${duration.toFixed(0)}ms (Version: ${this.version})`);
     return measurement;
@@ -83,7 +83,6 @@ export class PerformanceTestBase {
    * Save measurement to file with consistent naming - DISABLED
    */
   saveMeasurement(measurement: PerformanceMeasurement, prefix: string) {
-    // File saving disabled - just log the measurement
     cy.log(`Performance measurement saved: ${prefix}`, measurement);
   }
 
@@ -93,7 +92,7 @@ export class PerformanceTestBase {
   saveMemoryAnalysis(baselineMemory: number, finalMemory: number, testType: string, additionalData: any = {}) {
     const memoryGrowth = finalMemory - baselineMemory;
     const growthPercentage = ((memoryGrowth / baselineMemory) * 100);
-    
+
     const analysis = {
       version: this.version,
       testType,
@@ -105,12 +104,10 @@ export class PerformanceTestBase {
       timestamp: new Date().toISOString(),
       ...additionalData
     };
-    
+
     cy.log(`Memory Analysis - ${testType}: Growth ${(memoryGrowth / 1024 / 1024).toFixed(2)}MB (${growthPercentage.toFixed(2)}%)`);
-    
-    // File saving disabled - just log the analysis
     cy.log(`Memory analysis completed: ${testType}`, analysis);
-    
+
     return analysis;
   }
 
@@ -120,27 +117,27 @@ export class PerformanceTestBase {
   runMemoryLeakTest(pages: string[], cycles: number = 3) {
     cy.visit('/');
     const baselineMemory = this.takeMemorySnapshot('baseline');
-    
+
     for (let cycle = 1; cycle <= cycles; cycle++) {
       cy.log(`Memory test cycle ${cycle}/${cycles}`);
-      
+
       pages.forEach((page, index) => {
         cy.visit(page);
         cy.wait(200);
         this.takeMemorySnapshot(`cycle_${cycle}_page_${index}_${page.replace(/\//g, '_')}`);
       });
-      
+
       // Force garbage collection if available
       cy.window().then((win) => {
         if ((win as any).gc) {
           (win as any).gc();
         }
       });
-      
+
       cy.wait(100);
       this.takeMemorySnapshot(`cycle_${cycle}_after_gc`);
     }
-    
+
     const finalMemory = this.takeMemorySnapshot('final');
     return this.saveMemoryAnalysis(baselineMemory, finalMemory, 'memory_leak_detection', {
       pages,
@@ -156,7 +153,7 @@ export class PerformanceTestBase {
     fn();
     const end = performance.now();
     const duration = end - start;
-    
+
     return this.recordMeasurement(operation, duration, additionalData);
   }
 
@@ -164,11 +161,9 @@ export class PerformanceTestBase {
    * Clean up performance data (called in afterEach) - DISABLED
    */
   cleanup() {
-    // File saving disabled - just log summary
     if (this.memorySnapshots.length > 0) {
       cy.log(`Memory snapshots taken: ${this.memorySnapshots.length}`);
     }
-    
     if (this.performanceData.length > 0) {
       cy.log(`Performance measurements taken: ${this.performanceData.length}`);
     }
@@ -178,7 +173,7 @@ export class PerformanceTestBase {
 // Common pages used in user service tests
 export const USER_SERVICE_TEST_PAGES = [
   '/projects',
-  '/account', 
+  '/account',
   '/system/projects',
   '/system/users'
 ];

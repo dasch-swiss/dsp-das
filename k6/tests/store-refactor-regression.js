@@ -30,7 +30,7 @@ export default async function storeRegressionTest() {
     // Use shared test methods
     await testBase.testBootstrap(page, homepage, metrics);
     await testBase.testStateUpdates(page, metrics);
-    
+
     const memoryOperations = [
       async () => await page.reload(),
       async () => await page.waitForTimeout(1000)

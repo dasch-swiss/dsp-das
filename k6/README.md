@@ -179,8 +179,6 @@ just regression-quick dev02    # Auto-detects environment thresholds
 just regression-quick && echo "✅ No regressions" || echo "❌ Regression detected"
 ```
 
-**Expected improvements with BehaviorSubject:** Faster state updates, better memory cleanup, lower subscription overhead.
-
 ## User Service Refactor Performance Tests
 
 Compare NGXS → UserService performance impact with K6 browser tests + Cypress frontend tests.
@@ -189,15 +187,16 @@ Compare NGXS → UserService performance impact with K6 browser tests + Cypress 
 
 | Test | Purpose | Command |
 |------|---------|---------|
-| `user-state-login-performance` | Auth flow timing | `just run user-state-login-performance stage` |
-| `user-state-propagation-performance` | Cross-page state updates | `just run user-state-propagation-performance` |
+| `user-state-login-performance` | Auth flow timing + API requests | `just run user-state-login-performance stage` |
+| `user-state-propagation-performance` | Cross-page state updates + API analysis | `just run user-state-propagation-performance` |
 
 **Compare versions:**
 ```bash
-just run user-state-login-performance stage    # NGXS
-just run user-state-login-performance dev02    # UserService  
-# Compare results via K6 metrics output
+k6 run k6/tests/user-state-login-performance.js --out json=k6/results/stage-login.json
+# Results include: login_duration, auth_flow_success, api_auth_requests, api_total_requests
 ```
+
+**API Request Metrics:** Tests now track authentication, project, ontology, and resource API calls to detect request pattern changes.
 
 ### 🔍 Cypress Tests
 
@@ -218,8 +217,6 @@ cd apps/dsp-app && npx cypress run \
   --config baseUrl=https://app.dev.dasch.swiss \
   --env VERSION=dev,skipDatabaseCleanup=true,apiUrl=https://api.dev.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
 ```
-
-**Expected UserService improvements:** 10-20% faster login, ~50KB bundle reduction, lower memory usage.
 
 ## Documentation
 

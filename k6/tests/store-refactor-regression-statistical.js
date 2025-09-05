@@ -37,17 +37,17 @@ async function performMainTest(page, homepage) {
   try {
     // Bootstrap test
     await testBase.testBootstrap(page, homepage, metrics);
-    
+
     // Memory test
     const operations = [
       async () => await page.reload(),
       async () => await page.waitForLoadState('networkidle')
     ];
     await testBase.testMemoryPattern(page, operations, metrics);
-    
+
     // State update test
     await testBase.testStateUpdates(page, metrics);
-    
+
     return true;
   } catch (e) {
     console.log(`❌ Test iteration failed: ${e.message}`);
