@@ -59,6 +59,41 @@ You can run the tests _locally_ using the following command:
 just run <test_name>
 ```
 
+### Flexible Environment Testing
+
+Run tests against any environment using the `env` parameter:
+
+```sh
+# Run against specific environments
+just run <test_name> dev      # DEV environment (default)
+just run <test_name> dev02    # DEV-02 environment  
+just run <test_name> stage    # STAGE environment
+just run <test_name> prod     # PRODUCTION environment
+
+# Use custom URLs
+just run <test_name> "https://my-custom-url.com"
+
+# List available environments
+just environments
+```
+
+### Environment Comparison
+
+Compare performance between any two environments:
+
+```sh
+# Flexible comparison (default: stage vs dev02)
+just compare <test_name>                    # STAGE vs DEV-02
+just compare <test_name> dev stage          # DEV vs STAGE
+just compare <test_name> prod dev02         # PROD vs DEV-02
+
+# Convenience aliases
+just compare-stage-dev02 <test_name>        # Quick STAGE vs DEV-02
+just compare-dev-stage <test_name>          # Quick DEV vs STAGE
+```
+
+Environment URLs are defined in the `justfile` and fallback to constants in `options/constants.js`.
+
 You can run the tests _in the [k6 cloud](https://k6.io/docs/cloud/)_ using the following command:
 
 ```sh
@@ -108,6 +143,79 @@ We have a `just` command that sets this variable for you:
 
 ```sh
 just run-grafana <test_name>
+```
+
+## Store Refactor Regression Tests
+
+Performance tests for store → BehaviorSubject refactor validation.
+
+### Test Types
+
+| Test | Duration | Purpose | Command |
+|------|----------|---------|---------|
+| `regression-quick` | 2-4 min | Fast validation (CI/CD) | `just regression-quick` |
+| `regression-full` | 5-10 min | Deep analysis (pre-deploy) | `just regression-full` |
+| `regression-micro` | 30s | Micro-benchmarks (debugging) | `just regression-micro` |
+| `regression-statistical` | 8-12 min | Statistical validation | `just regression-statistical` |
+
+### Environment-Aware Thresholds
+
+| Environment | Bootstrap | Memory Growth | State Updates | Success Rate |
+|-------------|-----------|---------------|---------------|--------------|
+| **DEV** | < 20s | < 60MB | < 800ms | > 50% |
+| **STAGE** | < 15s | < 50MB | < 600ms | > 60% |
+| **PROD** | < 12s | < 40MB | < 500ms | > 70% |
+
+### Usage
+
+**Compare versions:**
+```bash
+just regression-compare    # STAGE vs DEV-02
+just regression-quick dev02    # Auto-detects environment thresholds
+```
+
+**CI/CD integration:**
+```bash
+just regression-quick && echo "✅ No regressions" || echo "❌ Regression detected"
+```
+
+## User Service Refactor Performance Tests
+
+Compare NGXS → UserService performance impact with K6 browser tests + Cypress frontend tests.
+
+### 🎯 K6 Tests
+
+| Test | Purpose | Command |
+|------|---------|---------|
+| `user-state-login-performance` | Auth flow timing + API requests | `just run user-state-login-performance stage` |
+| `user-state-propagation-performance` | Cross-page state updates + API analysis | `just run user-state-propagation-performance` |
+
+**Compare versions:**
+```bash
+k6 run k6/tests/user-state-login-performance.js --out json=k6/results/stage-login.json
+# Results include: login_duration, auth_flow_success, api_auth_requests, api_total_requests
+```
+
+**API Request Metrics:** Tests now track authentication, project, ontology, and resource API calls to detect request pattern changes.
+
+### 🔍 Cypress Tests
+
+| Test | Purpose |
+|------|---------|
+| `change-detection-cycles.cy.ts` | Angular change detection + memory |
+| `memory-leak-detection.cy.ts` | Subscription cleanup + leaks |
+
+**Usage:**
+```bash
+# Local
+npm run e2e-ci -- --spec="cypress/e2e/performance/**/*.cy.ts" --env VERSION=ngxs
+
+# Remote (DEV/STAGE)
+export DSP_APP_USERNAME='username' DSP_APP_PASSWORD='password'
+cd apps/dsp-app && npx cypress run \
+  --spec "cypress/e2e/performance/**/*.cy.ts" \
+  --config baseUrl=https://app.dev.dasch.swiss \
+  --env VERSION=dev,skipDatabaseCleanup=true,apiUrl=https://api.dev.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
 ```
 
 ## Documentation
