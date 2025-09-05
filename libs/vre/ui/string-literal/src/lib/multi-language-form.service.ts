@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { FormBuilder, ValidatorFn } from '@angular/forms';
-import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { AvailableLanguages, DaschLanguage } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { isDaschLanguage } from './dash-language.type';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 
@@ -12,10 +11,10 @@ import { MultiLanguageFormArray } from './multi-language-form-array.type';
  */
 @Injectable()
 export class MultiLanguageFormService {
-  readonly availableLanguages: string[] = AvailableLanguages.map(lang => lang.language!);
-  selectedLanguageIndex: number;
-  formArray: MultiLanguageFormArray;
-  validators: ValidatorFn[];
+  readonly availableLanguages = AvailableLanguages.map(lang => lang.language);
+  selectedLanguageIndex!: number;
+  formArray!: MultiLanguageFormArray;
+  validators!: ValidatorFn[];
 
   inputValue: string | null = null;
 
@@ -43,7 +42,7 @@ export class MultiLanguageFormService {
   }
 
   constructor(
-    private _store: Store,
+    private _userService: UserService,
     private _fb: FormBuilder,
     private _cd: ChangeDetectorRef
   ) {}
@@ -118,8 +117,8 @@ export class MultiLanguageFormService {
       .map(v => v.language)
       .filter(language => this.availableLanguages.includes(language));
 
-    const userFavoriteLanguage =
-      (this._store.selectSnapshot(UserSelectors.language) as string) || navigator.language.substring(0, 2);
+    const user = this._userService.currentUser;
+    const userFavoriteLanguage = (user?.lang || navigator.language.substring(0, 2)) as DaschLanguage;
 
     if (responseLanguages.length === 0) {
       if (!isDaschLanguage(userFavoriteLanguage)) {

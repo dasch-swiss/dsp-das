@@ -6,7 +6,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { HumanReadableErrorPipe } from './human-readable-error.pipe';
 import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
@@ -24,7 +23,6 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     MatMenuModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxsStoreModule,
     HumanReadableErrorPipe,
   ],
   template: `
@@ -92,10 +90,10 @@ import { MultiLanguageFormService } from './multi-language-form.service';
   ],
 })
 export class MutiLanguageInputComponent implements OnInit, OnChanges {
-  @Input() formArray: MultiLanguageFormArray;
+  @Input({ required: true }) formArray!: MultiLanguageFormArray;
+  @Input({ required: true }) placeholder!: string;
   @Input() editable = true;
-  @Input() placeholder: string;
-  @Input() validators: ValidatorFn[];
+  @Input() validators: ValidatorFn[] = [];
   @Input({ required: true }) isRequired!: boolean;
 
   constructor(public formService: MultiLanguageFormService) {}
