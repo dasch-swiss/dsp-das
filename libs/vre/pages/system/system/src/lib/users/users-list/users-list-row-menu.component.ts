@@ -12,6 +12,7 @@ import {
   EditUserDialogProps,
 } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { switchMap } from 'rxjs';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { UsersTabService } from '../users-tab.service';
 
@@ -27,7 +28,7 @@ import { UsersTabService } from '../users-tab.service';
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
-        <button mat-menu-item (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
+        <button mat-menu-item (click)="askToUpdateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
           <mat-icon>verified_user</mat-icon>
           {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
         </button>
@@ -72,13 +73,18 @@ export class UsersListRowMenuComponent {
     });
   }
 
-  updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
-    this._userApiService.updateSystemAdminMembership(user.id, systemAdmin).subscribe(() => {
-      const currentUser = this._userService.currentUser;
-      if (currentUser?.username !== user.username) {
-        this._reloadUserList();
-      }
-    });
+  askToUpdateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
+    this._dialog
+      .afterConfirmation(
+        `Do you want to have user ${user.username} ${systemAdmin ? 'added' : 'removed'} as system admin?`
+      )
+      .pipe(switchMap(() => this._userApiService.updateSystemAdminMembership(user.id, systemAdmin)))
+      .subscribe(() => {
+        const currentUser = this._userService.currentUser;
+        if (currentUser?.username !== user.username) {
+          this._reloadUserList();
+        }
+      });
   }
 
   askToActivateUser(username: string, id: string) {
