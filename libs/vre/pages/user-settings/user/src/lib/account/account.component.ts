@@ -83,8 +83,6 @@ export class AccountComponent {
       .afterClosed()
       .subscribe();
   }
-  onDeleteAccount() {}
-
   onDeleteOwnAccount(user: ReadUser) {
     this._dialog.afterConfirmation(`Do you want to suspend your own account?`).subscribe(() => {
       this._userApiService.delete(user.id).subscribe(() => {
