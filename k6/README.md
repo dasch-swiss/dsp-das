@@ -179,7 +179,7 @@ just state-quick dev02            # Auto-detects environment thresholds
 just state-quick && echo "✅ Performance OK" || echo "❌ Performance issues detected"
 ```
 
-## User Service Refactor Performance Tests
+## User Service Performance Tests
 
 Compare NGXS → UserService performance impact with K6 browser tests + Cypress frontend tests.
 
