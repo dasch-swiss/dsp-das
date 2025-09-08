@@ -40,7 +40,7 @@ export class CreateUserDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form.addControl('isSystemAdmin', this._fb.control(false));
+    this.form.addControl('isSystemAdmin', this._fb.control(false, { nonNullable: true }));
   }
 
   afterUserFormInit(form: UserForm): void {

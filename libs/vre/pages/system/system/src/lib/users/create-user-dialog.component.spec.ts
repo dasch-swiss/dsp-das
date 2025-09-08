@@ -135,6 +135,7 @@ describe('CreateUserDialogComponent', () => {
     const mockPasswordControl = new FormControl<string>('validPassword123', { nonNullable: true });
     const mockResponse = { user: { id: 'user123' } as ReadUser };
 
+    component.ngOnInit();
     component.afterUserFormInit(mockUserForm);
     component.afterPasswordFormInit(mockPasswordControl);
     mockUserApiService.create.mockReturnValue(of(mockResponse));
