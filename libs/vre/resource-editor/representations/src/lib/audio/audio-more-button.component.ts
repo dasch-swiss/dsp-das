@@ -13,16 +13,18 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 @Component({
   selector: 'app-audio-more-button',
   template: ` <button mat-icon-button [matMenuTriggerFor]="more">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #more="matMenu" class="representation-menu">
-      <button mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
-      <button mat-menu-item [cdkCopyToClipboard]="fileValue.fileUrl">Copy audio URL to clipboard</button>
-      <button mat-menu-item (click)="download()">Download audio</button>
-      <button mat-menu-item *ngIf="resourceFetcherService.userCanEdit$ | async" (click)="openReplaceFileDialog()">
-        Replace file
+        <mat-icon>more_vert</mat-icon>
       </button>
-    </mat-menu>`,
+      <mat-menu #more="matMenu" class="representation-menu">
+        <button mat-menu-item (click)="openIIIFnewTab()">Open audio in new tab</button>
+        <button mat-menu-item [cdkCopyToClipboard]="fileValue.fileUrl">Copy audio URL to clipboard</button>
+        <button mat-menu-item (click)="download()">Download audio</button>
+        @if (resourceFetcherService.userCanEdit$ | async) {
+          <button mat-menu-item (click)="openReplaceFileDialog()">
+            Replace file
+          </button>
+        }
+      </mat-menu>`,
 })
 export class AudioMoreButtonComponent {
   @Input({ required: true }) parentResource!: ReadResource;

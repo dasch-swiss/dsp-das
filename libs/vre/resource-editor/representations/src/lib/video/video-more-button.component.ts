@@ -14,28 +14,29 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 @Component({
   selector: 'app-video-more-button',
   template: ` <button mat-icon-button [matMenuTriggerFor]="more">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #more="matMenu" class="representation-menu">
-      <button mat-menu-item class="menu-content" (click)="openVideoInNewTab(this.src.fileUrl)">
-        Open video in new tab
+        <mat-icon>more_vert</mat-icon>
       </button>
-      <button
-        mat-menu-item
-        class="menu-content"
-        [cdkCopyToClipboard]="this.src.fileUrl"
-        (click)="openSnackBar('URL copied to clipboard!')">
-        Copy video URL to clipboard
-      </button>
-      <button mat-menu-item class="menu-content" (click)="downloadVideo()">Download video</button>
-      <button
-        *ngIf="resourceFetcherService.userCanEdit$ | async"
-        mat-menu-item
-        class="menu-content"
-        (click)="openReplaceFileDialog()">
-        Replace file
-      </button>
-    </mat-menu>`,
+      <mat-menu #more="matMenu" class="representation-menu">
+        <button mat-menu-item class="menu-content" (click)="openVideoInNewTab(this.src.fileUrl)">
+          Open video in new tab
+        </button>
+        <button
+          mat-menu-item
+          class="menu-content"
+          [cdkCopyToClipboard]="this.src.fileUrl"
+          (click)="openSnackBar('URL copied to clipboard!')">
+          Copy video URL to clipboard
+        </button>
+        <button mat-menu-item class="menu-content" (click)="downloadVideo()">Download video</button>
+        @if (resourceFetcherService.userCanEdit$ | async) {
+          <button
+            mat-menu-item
+            class="menu-content"
+            (click)="openReplaceFileDialog()">
+            Replace file
+          </button>
+        }
+      </mat-menu>`,
 })
 export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

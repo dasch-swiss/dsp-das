@@ -15,28 +15,29 @@ import { OntologyForm } from './ontology-form.type';
   selector: 'app-create-ontology-form-dialog',
   template: ` <app-dialog-header [title]="'pages.ontology.ontologyForm.create' | translate" />
 
-    <form>
-      <app-common-input
-        *ngIf="form"
-        [control]="form.controls.name"
-        [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
-        [label]="'pages.ontology.ontologyForm.name' | translate"
-        data-cy="name-input" />
+<form>
+  @if (form) {
+    <app-common-input
+      [control]="form.controls.name"
+      [validatorErrors]="[ontoNamePatternErrorMsg, ontoNameExistsErrorMsg]"
+      [label]="'pages.ontology.ontologyForm.name' | translate"
+      data-cy="name-input" />
+  }
 
-      <app-ontology-form mode="create" (afterFormInit)="afterFormInit($event)" />
-    </form>
-    <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
-      <button
-        mat-raised-button
-        color="primary"
-        appLoadingButton
-        [isLoading]="loading"
-        data-cy="submit-button"
-        (click)="onSubmit()">
-        {{ 'ui.form.action.submit' | translate }}
-      </button>
-    </div>`,
+  <app-ontology-form mode="create" (afterFormInit)="afterFormInit($event)" />
+</form>
+<div mat-dialog-actions align="end">
+  <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+  <button
+    mat-raised-button
+    color="primary"
+    appLoadingButton
+    [isLoading]="loading"
+    data-cy="submit-button"
+    (click)="onSubmit()">
+    {{ 'ui.form.action.submit' | translate }}
+  </button>
+</div>`,
 })
 export class CreateOntologyFormDialogComponent implements OnDestroy {
   private _destroy$ = new Subject<void>();

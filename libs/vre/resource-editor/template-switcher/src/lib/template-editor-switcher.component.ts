@@ -15,37 +15,41 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
         <input matInput [formControl]="item" type="number" data-cy="int-input" [placeholder]="'e.g. 42'" />
-        <mat-error *ngIf="item.errors as errors">
-          {{ errors | humanReadableError }}
-        </mat-error>
+        @if (item.errors; as errors) {
+          <mat-error>
+            {{ errors | humanReadableError }}
+          </mat-error>
+        }
       </mat-form-field>
     </ng-template>
-
+    
     <ng-template #decimalEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
         <input matInput [formControl]="item" type="number" step="0.05" placeholder="e.g. 3.14" />
       </mat-form-field>
-      <mat-error *ngIf="item.touched && item.errors as errors">
-        {{ errors | humanReadableError }}
-      </mat-error>
+      @if (item.touched && item.errors; as errors) {
+        <mat-error>
+          {{ errors | humanReadableError }}
+        </mat-error>
+      }
     </ng-template>
-
+    
     <ng-template #booleanEditorTpl let-item="item">
       <app-boolean-value [control]="item" />
     </ng-template>
-
+    
     <ng-template #listEditorTpl let-item="item">
       <app-list-value [control]="item" [propertyDef]="propertyDefinition" />
     </ng-template>
-
+    
     <ng-template #colorEditorTpl let-control="item">
       <app-color-value [control]="control" />
     </ng-template>
-
+    
     <ng-template #richTextEditorTpl let-item="item">
       <app-ck-editor [control]="item" />
     </ng-template>
-
+    
     <ng-template #textEditorTpl let-item="item">
       <app-common-input
         [control]="item"
@@ -54,35 +58,39 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         data-cy="text-input"
         [label]="'e.g. Lorem ipsum ...'" />
     </ng-template>
-
+    
     <ng-template #textHtmlEditorTpl>This value cannot be edited.</ng-template>
-
+    
     <ng-template #paragraphEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
         <textarea matInput [formControl]="item" rows="9" [placeholder]="'e.g. Lorem ipsum ...'"></textarea>
       </mat-form-field>
-      <mat-error *ngIf="item.touched && item.errors as errors">
-        {{ errors | humanReadableError }}
-      </mat-error>
+      @if (item.touched && item.errors; as errors) {
+        <mat-error>
+          {{ errors | humanReadableError }}
+        </mat-error>
+      }
     </ng-template>
-
+    
     <ng-template #dateEditorTpl let-control="item">
       <app-date-value-handler [formControl]="control" />
-      <mat-error *ngIf="control.touched && control.errors as errors">{{ errors | humanReadableError }}</mat-error>
+      @if (control.touched && control.errors; as errors) {
+        <mat-error>{{ errors | humanReadableError }}</mat-error>
+      }
     </ng-template>
-
+    
     <ng-template #timeEditorTpl let-item="item">
       <app-time-value [control]="item" />
     </ng-template>
-
+    
     <ng-template #intervalEditorTpl let-item="item">
       <app-interval-value [control]="item" />
     </ng-template>
-
+    
     <ng-template #geoNameEditorTpl let-item="item">
       <app-geoname-value [control]="item" />
     </ng-template>
-
+    
     <ng-template #linkEditorTpl let-item="item">
       <app-link-value
         [control]="item"
@@ -90,7 +98,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         [propIri]="myPropertyDefinition.id"
         [resourceClassIri]="resourceClassIri" />
     </ng-template>
-
+    
     <ng-template #uriEditorTpl let-item="item">
       <app-common-input
         [control]="item"
@@ -98,7 +106,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         [label]="'e.g. https://en.wikipedia.org'"
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>
-  `,
+    `,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;

@@ -9,16 +9,22 @@ import { ProjectPageService } from '../../project-page.service';
   template: `
     <div style="display: flex; align-items: center; gap: 16px; padding: 16px 0">
       <app-user-description [user]="user" style="flex: 1" />
-
+    
       <mat-chip-listbox>
-        <mat-chip class="admin-chip" *ngIf="isProjectAdmin(user.permissions)">Admin</mat-chip>
+        @if (isProjectAdmin(user.permissions)) {
+          <mat-chip class="admin-chip">Admin</mat-chip>
+        }
       </mat-chip-listbox>
-
-      <app-select-group *ngIf="project" [projectId]="project.id" [user]="user" />
-
-      <app-project-members-row-menu [user]="user" *ngIf="project" [project]="project" />
+    
+      @if (project) {
+        <app-select-group [projectId]="project.id" [user]="user" />
+      }
+    
+      @if (project) {
+        <app-project-members-row-menu [user]="user" [project]="project" />
+      }
     </div>
-  `,
+    `,
 })
 export class ProjectMembersRowComponent implements OnInit {
   @Input({ required: true }) user!: ReadUser;

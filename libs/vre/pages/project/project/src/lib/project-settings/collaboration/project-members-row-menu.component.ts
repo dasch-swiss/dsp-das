@@ -20,21 +20,25 @@ import { CollaborationPageService } from './collaboration-page.service';
     <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
       <mat-icon>more_horiz</mat-icon>
     </button>
-
+    
     <mat-menu #projectUserMenu="matMenu" xPosition="before" class="menu">
-      <button mat-menu-item *ngIf="!isProjectAdmin(user.permissions)" (click)="addProjectAdminMembership()">
-        Add as project admin
-      </button>
-      <button mat-menu-item *ngIf="isProjectAdmin(user.permissions)" (click)="removeProjectAdminMembership()">
-        Remove as project admin
-      </button>
+      @if (!isProjectAdmin(user.permissions)) {
+        <button mat-menu-item (click)="addProjectAdminMembership()">
+          Add as project admin
+        </button>
+      }
+      @if (isProjectAdmin(user.permissions)) {
+        <button mat-menu-item (click)="removeProjectAdminMembership()">
+          Remove as project admin
+        </button>
+      }
       <button mat-menu-item (click)="editUser(user)">Edit member</button>
       <button mat-menu-item (click)="openEditPasswordDialog(user)">Change member's password</button>
       <button mat-menu-item (click)="askToRemoveFromProject(user)" data-cy="remove-member-button">
         Remove member from project
       </button>
     </mat-menu>
-  `,
+    `,
 })
 export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

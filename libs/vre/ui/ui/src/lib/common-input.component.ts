@@ -5,26 +5,35 @@ import { FormControl } from '@angular/forms';
   selector: 'app-common-input',
   template: `
     <mat-form-field style="width: 100%">
-      <mat-label data-cy="common-input-label" *ngIf="withLabel">{{ label }}</mat-label>
-      <mat-icon matIconPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
-      <input
-        matInput
-        data-cy="common-input-text"
-        [placeholder]="label"
-        [formControl]="control"
-        *ngIf="type === 'text'" />
-      <input
-        matInput
-        data-cy="common-input-number"
-        [placeholder]="label"
-        [formControl]="control"
-        *ngIf="type === 'number'"
-        type="number" />
-      <mat-error *ngIf="control.errors as errors">
-        {{ errors | humanReadableError: validatorErrors }}
-      </mat-error>
+      @if (withLabel) {
+        <mat-label data-cy="common-input-label">{{ label }}</mat-label>
+      }
+      @if (prefixIcon) {
+        <mat-icon matIconPrefix>{{ prefixIcon }}</mat-icon>
+      }
+      @if (type === 'text') {
+        <input
+          matInput
+          data-cy="common-input-text"
+          [placeholder]="label"
+          [formControl]="control"
+          />
+      }
+      @if (type === 'number') {
+        <input
+          matInput
+          data-cy="common-input-number"
+          [placeholder]="label"
+          [formControl]="control"
+          type="number" />
+      }
+      @if (control.errors; as errors) {
+        <mat-error>
+          {{ errors | humanReadableError: validatorErrors }}
+        </mat-error>
+      }
     </mat-form-field>
-  `,
+    `,
   styles: [':host { display: block;}'],
   /** TODO can't mark as OnPush because it does not detect touched / pristine changes.
    This should be fixed with angular 18 form touchedChangedEvent. * */

@@ -1,39 +1,46 @@
 <div appDisableContextMenu>
-  <app-status [comment]="videoError" [url]="src.fileUrl" [representation]="'video'" *ngIf="videoError" />
+  @if (videoError) {
+    <app-status [comment]="videoError" [url]="src.fileUrl" [representation]="'video'" />
+  }
 
   <div style="margin-bottom: -4px">
-    <video
-      style="width: 100%"
-      #videoElement
-      id="video"
-      *ngIf="video; else loading"
-      [src]="video"
-      type="video/mp4"
-      preload="auto"
-      [muted]="false"
-      (canplay)="onVideoPlayerReady()"
-      (click)="videoPlayer.togglePlay()"
+    @if (video) {
+      <video
+        style="width: 100%"
+        #videoElement
+        id="video"
+        [src]="video"
+        type="video/mp4"
+        preload="auto"
+        [muted]="false"
+        (canplay)="onVideoPlayerReady()"
+        (click)="videoPlayer.togglePlay()"
       (error)="handleVideoError($event)"></video>
-    <app-video-overlay *ngIf="false" />
+    } @else {
+      <app-progress-indicator />
+    }
+    @if (false) {
+      <app-video-overlay />
+    }
   </div>
 
-  <app-media-slider
-    *ngIf="isPlayerReady"
-    [max]="videoPlayer.duration()"
-    [currentTime]="myCurrentTime"
-    (afterNavigation)="videoPlayer.navigate($event)" />
-  <app-segments-display
-    *ngIf="segmentsService.segments.length > 0 && duration > 0"
-    [segments]="segmentsService.segments"
-    [videoLengthSecs]="duration" />
-  <app-video-toolbar
-    *ngIf="fileInfo && isPlayerReady"
-    [src]="src"
-    [parentResource]="parentResource"
-    [fileInfo]="fileInfo"
-    (toggleCinemaMode)="toggleCinemaMode()" />
+  @if (isPlayerReady) {
+    <app-media-slider
+      [max]="videoPlayer.duration()"
+      [currentTime]="myCurrentTime"
+      (afterNavigation)="videoPlayer.navigate($event)" />
+  }
+  @if (segmentsService.segments.length > 0 && duration > 0) {
+    <app-segments-display
+      [segments]="segmentsService.segments"
+      [videoLengthSecs]="duration" />
+  }
+  @if (fileInfo && isPlayerReady) {
+    <app-video-toolbar
+      [src]="src"
+      [parentResource]="parentResource"
+      [fileInfo]="fileInfo"
+      (toggleCinemaMode)="toggleCinemaMode()" />
+  }
 </div>
 
-<ng-template #loading>
-  <app-progress-indicator />
-</ng-template>

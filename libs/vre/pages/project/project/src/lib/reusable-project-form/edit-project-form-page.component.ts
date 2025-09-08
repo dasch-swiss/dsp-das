@@ -10,11 +10,12 @@ import { ProjectForm } from './project-form.type';
 @Component({
   selector: 'app-edit-project-form-page',
   template: `
-    <app-reusable-project-form
-      *ngIf="formData$ | async as formData"
-      [formData]="formData"
-      (afterFormInit)="form = $event" />
-
+    @if (formData$ | async; as formData) {
+      <app-reusable-project-form
+        [formData]="formData"
+        (afterFormInit)="form = $event" />
+    }
+    
     <div style="display: flex; justify-content: space-between">
       <button
         mat-raised-button
@@ -27,7 +28,7 @@ import { ProjectForm } from './project-form.type';
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>
-  `,
+    `,
 })
 export class EditProjectFormPageComponent {
   form!: ProjectForm;

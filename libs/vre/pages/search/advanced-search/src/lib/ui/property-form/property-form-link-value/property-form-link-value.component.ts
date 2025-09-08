@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -13,14 +13,13 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
   selector: 'app-property-form-link-value',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatAutocompleteModule,
     MatAutocompleteOptionsScrollDirective,
-    AppProgressIndicatorComponent,
-  ],
+    AppProgressIndicatorComponent
+],
   templateUrl: './property-form-link-value.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

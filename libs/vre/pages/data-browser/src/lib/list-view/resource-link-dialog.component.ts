@@ -25,24 +25,26 @@ export interface ResourceLinkDialogProps {
   selector: 'app-resource-link-dialog',
   template: `
     <app-dialog-header [title]="title" [subtitle]="'Link resources'" />
-
+    
     <mat-dialog-content>
       <form [formGroup]="form">
         <app-common-input [control]="form.controls.label" label="Collection labels" />
-
+    
         <app-ck-editor-control [control]="form.controls.comment" [label]="'Comment'" />
-
+    
         <div class="resource-container">
           <p>The following resources will be connected:</p>
           <ul>
-            <li *ngFor="let res of data.resources">{{ res.label }}</li>
+            @for (res of data.resources; track res) {
+              <li>{{ res.label }}</li>
+            }
           </ul>
         </div>
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="dialogRef.close()">{{ 'ui.form.action.cancel' | translate }}</button>
-
+    
       <button
         mat-raised-button
         color="primary"
@@ -54,7 +56,7 @@ export interface ResourceLinkDialogProps {
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </mat-dialog-actions>
-  `,
+    `,
 })
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();

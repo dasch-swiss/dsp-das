@@ -21,21 +21,26 @@ import { StillImageHelper } from './still-image-helper';
 @Component({
   selector: 'app-still-image',
   template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
-      <div *ngIf="compoundMode">
-        <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
-        <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
+        @if (compoundMode) {
+          <div>
+            <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
+            <app-compound-arrow-navigation [forwardNavigation]="true" class="arrow" />
+          </div>
+        }
       </div>
-    </div>
-    <div class="toolbar">
-      <app-compound-slider *ngIf="compoundMode" />
-
-      <app-still-image-toolbar
-        *ngIf="isViewInitialized"
-        [resource]="resource"
-        [compoundMode]="compoundMode"
-        [isPng]="isPng"
-        (imageIsPng)="afterFormatChange($event)" />
-    </div>`,
+      <div class="toolbar">
+        @if (compoundMode) {
+          <app-compound-slider />
+        }
+      
+        @if (isViewInitialized) {
+          <app-still-image-toolbar
+            [resource]="resource"
+            [compoundMode]="compoundMode"
+            [isPng]="isPng"
+            (imageIsPng)="afterFormatChange($event)" />
+        }
+      </div>`,
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService, OpenSeaDragonService],

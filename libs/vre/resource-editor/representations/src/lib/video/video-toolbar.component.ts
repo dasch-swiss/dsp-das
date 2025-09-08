@@ -16,51 +16,53 @@ import { MediaPlayerService } from './media-player.service';
 @Component({
   selector: 'app-video-toolbar',
   template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
-    <div>
-      <button
-        mat-icon-button
-        data-cy="play-pause-button"
-        (click)="mediaPlayer.togglePlay()"
-        [matTooltip]="play ? 'Pause' : 'Play'"
-        [matTooltipPosition]="matTooltipPos">
-        <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
-      </button>
-
-      <button
-        mat-icon-button
-        data-cy="go-to-start-button"
-        (click)="goToStart()"
-        matTooltip="Stop and go to start"
-        [matTooltipPosition]="matTooltipPos">
-        <mat-icon>skip_previous</mat-icon>
-      </button>
-      <!-- TODO reached the end button "replay" -->
-    </div>
-
-    <div data-cy="player-time">{{ mediaPlayer.currentTime() | appTime }}/ {{ mediaPlayer.duration() | appTime }}</div>
-
-    <div>
-      <app-video-more-button [parentResource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
-
-      <button
-        mat-icon-button
-        data-cy="timeline-button"
-        (click)="createVideoSegment()"
-        [matTooltip]="'resourceEditor.representations.video.createAnnotation' | translate"
-        *ngIf="resourceFetcherService.userCanEdit$ | async">
-        <mat-icon svgIcon="draw_region_icon" />
-      </button>
-
-      <button
-        mat-icon-button
-        data-cy="cinema-mode-button"
-        (click)="toggleCinemaMode.emit()"
-        [matTooltip]="isFullscreen ? 'Default view' : 'Cinema mode'"
-        [matTooltipPosition]="matTooltipPos">
-        <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
-      </button>
-    </div>
-  </mat-toolbar-row>`,
+      <div>
+        <button
+          mat-icon-button
+          data-cy="play-pause-button"
+          (click)="mediaPlayer.togglePlay()"
+          [matTooltip]="play ? 'Pause' : 'Play'"
+          [matTooltipPosition]="matTooltipPos">
+          <mat-icon>{{ mediaPlayer.isPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+        </button>
+    
+        <button
+          mat-icon-button
+          data-cy="go-to-start-button"
+          (click)="goToStart()"
+          matTooltip="Stop and go to start"
+          [matTooltipPosition]="matTooltipPos">
+          <mat-icon>skip_previous</mat-icon>
+        </button>
+        <!-- TODO reached the end button "replay" -->
+      </div>
+    
+      <div data-cy="player-time">{{ mediaPlayer.currentTime() | appTime }}/ {{ mediaPlayer.duration() | appTime }}</div>
+    
+      <div>
+        <app-video-more-button [parentResource]="parentResource" [src]="src" [fileInfo]="fileInfo" />
+    
+        @if (resourceFetcherService.userCanEdit$ | async) {
+          <button
+            mat-icon-button
+            data-cy="timeline-button"
+            (click)="createVideoSegment()"
+            [matTooltip]="'resourceEditor.representations.video.createAnnotation' | translate"
+            >
+            <mat-icon svgIcon="draw_region_icon" />
+          </button>
+        }
+    
+        <button
+          mat-icon-button
+          data-cy="cinema-mode-button"
+          (click)="toggleCinemaMode.emit()"
+          [matTooltip]="isFullscreen ? 'Default view' : 'Cinema mode'"
+          [matTooltipPosition]="matTooltipPos">
+          <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar-row>`,
 })
 export class VideoToolbarComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

@@ -7,10 +7,12 @@ import { startWith } from 'rxjs/operators';
   template: `
     <app-time-input label="Start" [control]="startControl" data-cy="start-input" />
     <app-time-input label="End" [control]="endControl" data-cy="end-input" />
-    <mat-error *ngIf="control.touched && control.errors as errors">
-      {{ errors | humanReadableError }}
-    </mat-error>
-  `,
+    @if (control.touched && control.errors; as errors) {
+      <mat-error>
+        {{ errors | humanReadableError }}
+      </mat-error>
+    }
+    `,
 })
 export class IntervalValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<{ start: number; end: number } | null>;

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,6 @@ import { MultiLanguageFormService } from './multi-language-form.service';
   standalone: true,
   providers: [MultiLanguageFormService],
   imports: [
-    CommonModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
@@ -23,8 +22,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     MatMenuModule,
     FormsModule,
     ReactiveFormsModule,
-    HumanReadableErrorPipe,
-  ],
+    HumanReadableErrorPipe
+],
   template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ placeholder }}</mat-label>
@@ -42,41 +41,44 @@ import { MultiLanguageFormService } from './multi-language-form.service';
             ) !== undefined
           "
           >{{ formService.availableLanguages[formService.selectedLanguageIndex] }}</span
-        >
-        <mat-icon class="icon" matSuffix>keyboard_arrow_down</mat-icon>
-      </button>
-
-      <input
-        matInput
-        [placeholder]="placeholder"
-        #textInput
-        [required]="isRequired"
-        [ngModel]="formService.inputValue"
-        (ngModelChange)="formService.onInputChange($event)"
-        (blur)="formService.formArray.markAsTouched()"
-        [disabled]="formService.selectedFormControl?.disabled"
-        [readonly]="!editable" />
-    </mat-form-field>
-    <mat-error *ngIf="formService.formArray.invalid && formService.formArray.touched">
-      <ng-container *ngIf="formService.invalidErrors?.language"
-        >Language {{ formService.invalidErrors.language }}:
-        {{ formService.invalidErrors.error | humanReadableError }}
-      </ng-container>
-      <ng-container *ngIf="!formService.invalidErrors?.language"
-        >{{ formService.invalidErrors.error | humanReadableError }}
-      </ng-container>
-    </mat-error>
-
-    <mat-menu #selectLanguage="matMenu" class="lang-menu">
-      <button
-        mat-menu-item
-        type="button"
-        *ngFor="let lang of formService.availableLanguages; let index = index"
-        (click)="formService.changeLanguage(index); textInput.focus()">
-        <span [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">{{ lang }}</span>
-      </button>
-    </mat-menu>
-  `,
+          >
+          <mat-icon class="icon" matSuffix>keyboard_arrow_down</mat-icon>
+        </button>
+    
+        <input
+          matInput
+          [placeholder]="placeholder"
+          #textInput
+          [required]="isRequired"
+          [ngModel]="formService.inputValue"
+          (ngModelChange)="formService.onInputChange($event)"
+          (blur)="formService.formArray.markAsTouched()"
+          [disabled]="formService.selectedFormControl?.disabled"
+          [readonly]="!editable" />
+      </mat-form-field>
+      @if (formService.formArray.invalid && formService.formArray.touched) {
+        <mat-error>
+          @if (formService.invalidErrors?.language) {
+            Language {{ formService.invalidErrors.language }}:
+            {{ formService.invalidErrors.error | humanReadableError }}
+          }
+          @if (!formService.invalidErrors?.language) {
+            {{ formService.invalidErrors.error | humanReadableError }}
+          }
+        </mat-error>
+      }
+    
+      <mat-menu #selectLanguage="matMenu" class="lang-menu">
+        @for (lang of formService.availableLanguages; track lang; let index = $index) {
+          <button
+            mat-menu-item
+            type="button"
+            (click)="formService.changeLanguage(index); textInput.focus()">
+            <span [class.bold]="formService.getFormControlWithLanguage(lang) !== undefined">{{ lang }}</span>
+          </button>
+        }
+      </mat-menu>
+    `,
   styles: [
     `
       :host {
