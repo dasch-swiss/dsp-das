@@ -17,7 +17,7 @@ export interface EditUserDialogProps {
   selector: 'app-edit-user-dialog',
   template: `
     <app-dialog-header [title]="data.isOwnAccount ? 'Edit my profile' : 'Edit user'" />
-    @if (data.user as user) {
+    @if (data.user; as user) {
       <app-user-form [data]="user" (afterFormInit)="afterFormInit($event)" />
     }
 
