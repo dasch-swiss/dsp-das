@@ -4,18 +4,18 @@
     "outDir": "../../../../dist/out-tsc",
     "module": "commonjs",
     "target": "es2016",
-    "types": ["jest", "node"],
-    "skipLibCheck": true,
-    "strict": false,
-    "noImplicitOverride": false,
-    "noImplicitReturns": false,
-    "noPropertyAccessFromIndexSignature": false
+    "types": [
+      "jest",
+      "node"
+    ]
   },
-  "files": ["src/test-setup.ts"],
+  "files": [
+    "src/test-setup.ts"
+  ],
   "include": [
     "jest.config.ts",
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
-]
+  ]
 }
