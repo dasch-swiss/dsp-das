@@ -23,16 +23,12 @@ import { UsersTabService } from '../users-tab.service';
     </button>
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
-      <button
-        mat-menu-item
-        *ngIf="user.username !== (user$ | async)?.username"
-        (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
-        {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
-      </button>
-
       <ng-container *ngIf="user.status">
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
+        <button mat-menu-item (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
+          {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
+        </button>
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
         <button mat-menu-item (click)="askToDeactivateUser(user.username, user.id)">Suspend user</button>
       </ng-container>
