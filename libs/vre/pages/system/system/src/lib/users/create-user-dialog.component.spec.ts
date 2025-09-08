@@ -1,6 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,17 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReadUser, User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import {
-  PasswordConfirmFormComponent,
-  PasswordFormFieldComponent,
-  UserForm,
-  UserFormComponent,
-} from '@dasch-swiss/vre/pages/user-settings/user';
-
-import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { CreateUserDialogComponent } from './create-user-dialog.component';
@@ -43,9 +34,7 @@ describe('CreateUserDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [
-        CreateUserDialogComponent,
-      ],
+      declarations: [CreateUserDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [
         ReactiveFormsModule,
@@ -109,7 +98,12 @@ describe('CreateUserDialogComponent', () => {
   it('should not create user when form is invalid', () => {
     // Initialize form with empty controls that will be invalid
     const mockUserForm = new FormBuilder().group({
-      givenName: ['', [/* add required validator to make it invalid */]],
+      givenName: [
+        '',
+        [
+          /* add required validator to make it invalid */
+        ],
+      ],
       familyName: [''],
       email: [''],
       username: [''],
