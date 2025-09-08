@@ -50,7 +50,7 @@ export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   private _passwordMatchValidator(): ValidatorFn {

@@ -15,7 +15,7 @@ describe('PasswordConfirmFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasswordConfirmFormComponent, PasswordFormFieldComponent, HumanReadableErrorPipe],
+      declarations: [PasswordConfirmFormComponent, PasswordFormFieldComponent],
       imports: [
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -23,6 +23,7 @@ describe('PasswordConfirmFormComponent', () => {
         MatIconModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
+        HumanReadableErrorPipe,
       ],
       providers: [FormBuilder],
     }).compileComponents();
@@ -60,7 +61,7 @@ describe('PasswordConfirmFormComponent', () => {
 
   describe('ngOnInit', () => {
     it('should emit afterFormInit with passwordControl', () => {
-      spyOn(component.afterFormInit, 'emit');
+      jest.spyOn(component.afterFormInit, 'emit');
 
       component.ngOnInit();
 
@@ -240,7 +241,7 @@ describe('PasswordConfirmFormComponent', () => {
   describe('ngOnDestroy', () => {
     it('should unsubscribe from subscription', () => {
       component.ngOnInit();
-      spyOn(component.subscription, 'unsubscribe');
+      jest.spyOn(component.subscription, 'unsubscribe');
 
       component.ngOnDestroy();
 
