@@ -1,6 +1,6 @@
 import { PerformanceTestBase, USER_SERVICE_TEST_PAGES } from '../../support/utils/performance-test-base';
 
-describe('Memory Leak Detection - User Service Refactor', () => {
+describe('Memory Leak Detection', () => {
   const perfTest = new PerformanceTestBase();
 
   beforeEach(() => {
@@ -18,16 +18,16 @@ describe('Memory Leak Detection - User Service Refactor', () => {
   it('should monitor user authentication memory patterns', () => {
     // Test memory usage during repeated login/logout cycles
     perfTest.takeMemorySnapshot('auth_test_start');
-    
+
     for (let authCycle = 1; authCycle <= 5; authCycle++) {
       cy.log(`Auth memory test cycle ${authCycle}/5`);
-      
+
       // Logout using dedicated command
       cy.logout();
       cy.wait(500);
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_logout`);
-      
-      // Login again  
+
+      // Login again
       cy.loginAdmin();
       cy.visit('/');
       // Wait for authenticated state to load
@@ -35,7 +35,7 @@ describe('Memory Leak Detection - User Service Refactor', () => {
       cy.wait(500);
       perfTest.takeMemorySnapshot(`cycle_${authCycle}_login`);
     }
-    
+
     perfTest.takeMemorySnapshot('auth_test_end');
   });
 
