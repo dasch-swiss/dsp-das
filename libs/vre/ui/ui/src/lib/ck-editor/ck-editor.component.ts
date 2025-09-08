@@ -9,13 +9,13 @@ import { unescapeHtml } from './unescape-html';
   selector: 'app-ck-editor',
   styleUrl: './ck-editor.component.scss',
   template: ` <ckeditor
-        [formControl]="footnoteControl"
-        [config]="ckEditor.config"
-        [editor]="editor"
-        style="margin-bottom: 22px; display: block;" />
-      @if (control.touched && control.errors; as errors) {
-        <mat-error>{{ errors | humanReadableError }}</mat-error>
-      }`,
+      [formControl]="footnoteControl"
+      [config]="ckEditor.config"
+      [editor]="editor"
+      style="margin-bottom: 22px; display: block;" />
+    @if (control.touched && control.errors; as errors) {
+      <mat-error>{{ errors | humanReadableError }}</mat-error>
+    }`,
 })
 export class CkEditorComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string | null>;

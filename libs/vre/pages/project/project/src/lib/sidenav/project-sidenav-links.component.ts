@@ -33,7 +33,7 @@ import { ProjectPageService } from '../project-page.service';
           [active]="link === 'data-models'" />
       </mat-list>
     }
-    `,
+  `,
   styles: [
     `
       mat-list {

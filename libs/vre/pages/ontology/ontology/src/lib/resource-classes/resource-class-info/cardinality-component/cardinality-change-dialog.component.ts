@@ -49,12 +49,7 @@ export interface CardinalityInfo {
           <button mat-button (click)="dialogRef.close(false)">No</button>
         }
         @if (canSetCardinality) {
-          <button
-            mat-raised-button
-            (click)="dialogRef.close(true)"
-            data-cy="confirmation-button">
-            Yes
-          </button>
+          <button mat-raised-button (click)="dialogRef.close(true)" data-cy="confirmation-button">Yes</button>
         }
         @if (canSetCardinality === false) {
           <button mat-button (click)="dialogRef.close(false)">
@@ -63,7 +58,7 @@ export interface CardinalityInfo {
         }
       </div>
     </mat-dialog-content>
-    `,
+  `,
   styles: [
     `
       .cando-headline {

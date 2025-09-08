@@ -12,7 +12,7 @@ import { startWith } from 'rxjs/operators';
         {{ errors | humanReadableError }}
       </mat-error>
     }
-    `,
+  `,
 })
 export class IntervalValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<{ start: number; end: number } | null>;

@@ -32,8 +32,7 @@ import { UserService } from '@dasch-swiss/vre/core/session';
         </div>
       }
     </div>
-    
-    `,
+  `,
   styleUrls: ['./system-page.component.scss'],
 })
 export class SystemPageComponent {

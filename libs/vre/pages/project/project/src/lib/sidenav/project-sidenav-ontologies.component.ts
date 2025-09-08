@@ -27,7 +27,7 @@ import { ProjectPageService } from '../project-page.service';
         <mat-divider />
       </mat-accordion>
     }
-    `,
+  `,
   styleUrls: ['./project-sidenav-ontologies.component.scss'],
 })
 export class ProjectSidenavOntologiesComponent {

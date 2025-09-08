@@ -11,26 +11,26 @@ import {
 @Component({
   selector: 'app-create-resource-form-image',
   template: ` <app-create-resource-form-row [label]="'Image'" style="display: block; margin-bottom: 16px">
-      <div style="margin-bottom: 8px; margin-top: 8px">
-        <app-double-chip-selector
-          data-cy="image-source-selector"
-          [options]="['Upload file', 'Link external IIIF image']"
-          [(value)]="isUploadFileTab"
-          (valueChange)="onChange($event)" />
-      </div>
-    
-      @if (isUploadFileTab) {
-        <app-upload-control
-          [formControl]="control"
-          [projectShortcode]="projectShortcode"
-          [representation]="fileRepresentation"
-          data-cy="upload-control" />
-      }
-    
-      @if (!isUploadFileTab) {
-        <app-iiif-control [control]="control" />
-      }
-    </app-create-resource-form-row>`,
+    <div style="margin-bottom: 8px; margin-top: 8px">
+      <app-double-chip-selector
+        data-cy="image-source-selector"
+        [options]="['Upload file', 'Link external IIIF image']"
+        [(value)]="isUploadFileTab"
+        (valueChange)="onChange($event)" />
+    </div>
+
+    @if (isUploadFileTab) {
+      <app-upload-control
+        [formControl]="control"
+        [projectShortcode]="projectShortcode"
+        [representation]="fileRepresentation"
+        data-cy="upload-control" />
+    }
+
+    @if (!isUploadFileTab) {
+      <app-iiif-control [control]="control" />
+    }
+  </app-create-resource-form-row>`,
 })
 export class CreateResourceFormImageComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

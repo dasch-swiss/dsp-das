@@ -10,58 +10,54 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
 @Component({
   selector: 'app-property-form',
   template: ` <form [formGroup]="form">
-      <mat-form-field style="width: 100%">
-        <span matPrefix>
-          <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
-        </span>
-        <mat-label>Property type</mat-label>
-        <mat-select [formControl]="form.controls.guiElement">
-          <mat-select-trigger>
-            {{ propertyData.propType.group }}
-            :&nbsp; {{ propertyData.propType.label }}
-          </mat-select-trigger>
-    
-          @for (type of filteredProperties; track type) {
-            <mat-optgroup [label]="type.group">
-              @for (ele of type.elements; track ele) {
-                <mat-option [value]="ele.guiElement">
-                  <mat-icon>{{ ele.icon }}</mat-icon>
-                  {{ ele.label }}
-                </mat-option>
-              }
-            </mat-optgroup>
-          }
-        </mat-select>
-      </mat-form-field>
-      <app-common-input
-        label="Property name"
-        data-cy="name-input"
-        prefixIcon="fingerprint"
-        [control]="form.controls.name" />
-      <app-multi-language-input
-        [formArray]="form.controls.labels"
-        [isRequired]="true"
-        data-cy="label-input"
-        placeholder="Property label" />
-    
-      @if (propertyData.propType.objectType === Constants.ListValue) {
-        <app-gui-attr-list
-          data-cy="object-attribute-list"
-          [control]="form.controls.guiAttr" />
-      }
-    
-      @if (propertyData.propType.objectType === Constants.LinkValue) {
-        <app-gui-attr-link
-          data-cy="object-attribute-link"
-          [control]="form.controls.objectType" />
-      }
-    
-      <app-multi-language-textarea
-        [formArray]="form.controls.comments"
-        data-cy="comment-textarea"
-        placeholder="Comment"
-        [isRequired]="true" />
-    </form>`,
+    <mat-form-field style="width: 100%">
+      <span matPrefix>
+        <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
+      </span>
+      <mat-label>Property type</mat-label>
+      <mat-select [formControl]="form.controls.guiElement">
+        <mat-select-trigger>
+          {{ propertyData.propType.group }}
+          :&nbsp; {{ propertyData.propType.label }}
+        </mat-select-trigger>
+
+        @for (type of filteredProperties; track type) {
+          <mat-optgroup [label]="type.group">
+            @for (ele of type.elements; track ele) {
+              <mat-option [value]="ele.guiElement">
+                <mat-icon>{{ ele.icon }}</mat-icon>
+                {{ ele.label }}
+              </mat-option>
+            }
+          </mat-optgroup>
+        }
+      </mat-select>
+    </mat-form-field>
+    <app-common-input
+      label="Property name"
+      data-cy="name-input"
+      prefixIcon="fingerprint"
+      [control]="form.controls.name" />
+    <app-multi-language-input
+      [formArray]="form.controls.labels"
+      [isRequired]="true"
+      data-cy="label-input"
+      placeholder="Property label" />
+
+    @if (propertyData.propType.objectType === Constants.ListValue) {
+      <app-gui-attr-list data-cy="object-attribute-list" [control]="form.controls.guiAttr" />
+    }
+
+    @if (propertyData.propType.objectType === Constants.LinkValue) {
+      <app-gui-attr-link data-cy="object-attribute-link" [control]="form.controls.objectType" />
+    }
+
+    <app-multi-language-textarea
+      [formArray]="form.controls.comments"
+      data-cy="comment-textarea"
+      placeholder="Comment"
+      [isRequired]="true" />
+  </form>`,
 })
 export class PropertyFormComponent implements OnInit {
   @Input() propertyData!: EditPropertyDialogData;

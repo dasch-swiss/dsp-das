@@ -7,9 +7,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
   selector: 'app-create-resource-form-representation',
   template: `
     @if (fileRepresentation !== Constants.HasStillImageFileValue) {
-      <app-create-resource-form-row
-        [label]="'File'"
-        >
+      <app-create-resource-form-row [label]="'File'">
         <app-upload-control
           [formControl]="control"
           [projectShortcode]="projectShortcode"
@@ -22,8 +20,7 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
         [fileRepresentation]="fileRepresentation"
         [projectShortcode]="projectShortcode" />
     }
-    
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceFormRepresentationComponent {

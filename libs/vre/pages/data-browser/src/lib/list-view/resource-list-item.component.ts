@@ -30,7 +30,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
             <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
           }
         </div>
-    
+
         @if (showCheckbox || multipleViewerService.selectMode) {
           <mat-checkbox
             [checked]="isSelected$ | async"
@@ -39,7 +39,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         }
       </div>
     </div>
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `

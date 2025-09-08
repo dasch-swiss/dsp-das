@@ -68,7 +68,7 @@ import { OntologyPageService } from './ontology-page.service';
           </mat-menu>
         </div>
       }
-    
+
       @if (rla2.isActive) {
         <div>
           <!-- Properties tab content -->
@@ -106,7 +106,7 @@ import { OntologyPageService } from './ontology-page.service';
         </div>
       }
     </mat-tab-nav-panel>
-    `,
+  `,
   styles: [
     `
       button {

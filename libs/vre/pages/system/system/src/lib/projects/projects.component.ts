@@ -32,7 +32,7 @@ import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap
           data-cy="inactive-projects-section" />
       }
     </div>
-    `,
+  `,
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   @Input() isUsersProjects = false;

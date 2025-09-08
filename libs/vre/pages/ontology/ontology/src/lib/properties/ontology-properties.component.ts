@@ -8,15 +8,12 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   template: `
     <mat-list class="properties">
       @for (prop of oes.currentOntologyProperties$ | async; track trackByPropertyDefinitionFn($index, prop)) {
-        <mat-list-item
-          class="property"
-          [class.admin]="(hasProjectAdminRights$ | async) === true"
-          >
+        <mat-list-item class="property" [class.admin]="(hasProjectAdminRights$ | async) === true">
           <app-property-info [property]="prop" />
         </mat-list-item>
       }
     </mat-list>
-    `,
+  `,
   styles: `
     .properties {
       max-width: 100em;

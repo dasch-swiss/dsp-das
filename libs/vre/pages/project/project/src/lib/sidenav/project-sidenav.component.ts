@@ -11,7 +11,7 @@ import { ProjectPageService } from '../project-page.service';
     <app-projects-sidenav-links />
     <mat-divider />
     <app-projects-sidenav-ontologies />
-    `,
+  `,
   styles: [
     `
       :host {

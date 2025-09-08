@@ -22,8 +22,7 @@ import { ResourceResultService } from './resource-result.service';
         </div>
       }
     }
-    
-    `,
+  `,
   providers: [ResourceResultService],
 })
 export class ResourceClassBrowserPageComponent implements OnInit {

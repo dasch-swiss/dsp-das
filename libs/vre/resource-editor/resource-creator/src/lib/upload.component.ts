@@ -30,8 +30,7 @@ import { finalize } from 'rxjs';
         }
       </div>
     }
-    
-    `,
+  `,
   styles: [
     `
       .zone {

@@ -5,17 +5,17 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 @Component({
   selector: 'app-cookie-banner',
   template: ` @if (showCookieBanner) {
-  <div class="cookie-banner">
-    <p class="note">
-      This web-application uses cookies to provide you with a greater user experience. By using the application you
-      accept our
-      <span class="link" (click)="goToCookiePolicy()">use of cookies</span>.
-    </p>
-    <div class="action">
-      <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">ACCEPT</button>
+    <div class="cookie-banner">
+      <p class="note">
+        This web-application uses cookies to provide you with a greater user experience. By using the application you
+        accept our
+        <span class="link" (click)="goToCookiePolicy()">use of cookies</span>.
+      </p>
+      <div class="action">
+        <button mat-flat-button color="primary" (click)="closeCookieBanner()" data-cy="accept-cookies">ACCEPT</button>
+      </div>
     </div>
-  </div>
-}`,
+  }`,
   styleUrls: [`./cookie-banner.component.scss`],
 })
 export class CookieBannerComponent implements OnInit {

@@ -30,11 +30,11 @@ import { OntologyEditService } from './services/ontology-edit.service';
         </mat-sidenav-container>
       </div>
     }
-    
+
     @if (disableContent) {
       <app-status [status]="204" />
     }
-    `,
+  `,
   styleUrls: ['./ontology-page.component.scss'],
   providers: [OntologyPageService, OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,

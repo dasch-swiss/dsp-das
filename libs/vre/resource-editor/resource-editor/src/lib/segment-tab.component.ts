@@ -6,12 +6,10 @@ import { delay, Subscription } from 'rxjs';
 @Component({
   selector: 'app-segment-tab',
   template: ` @for (segment of segmentsService.segments; track segment) {
-  <div
-    [id]="segment.resource.res.id"
-    [class.active]="segment === selectedSegment">
-    <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
-  </div>
-}`,
+    <div [id]="segment.resource.res.id" [class.active]="segment === selectedSegment">
+      <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
+    </div>
+  }`,
   styles: ['.active {border: 1px solid}'],
 })
 export class SegmentTabComponent implements OnInit, OnDestroy {

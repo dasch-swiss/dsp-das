@@ -30,7 +30,7 @@ import { FormControl } from '@angular/forms';
         {{ errors | humanReadableError }}
       </mat-error>
     }
-    `,
+  `,
   styles: [
     `
       :host {

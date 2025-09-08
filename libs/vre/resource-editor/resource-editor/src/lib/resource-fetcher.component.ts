@@ -17,7 +17,7 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
         [resourceVersion]="resourceVersion"
         (navigateToCurrentVersion)="navigateToCurrentVersion()" />
     }
-    
+
     @if (!hideStatus) {
       @if (resource) {
         <app-resource [resource]="resource" />
@@ -42,9 +42,7 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
         }
       </div>
     }
-    
-    
-    `,
+  `,
   providers: [ResourceFetcherService],
 })
 export class ResourceFetcherComponent implements OnChanges {

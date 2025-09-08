@@ -26,11 +26,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
             {{ list.length | i18nPlural: itemPluralMapping['user'] }}
           </span>
           @if (isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)) {
-            <button
-              mat-flat-button
-              [color]="'primary'"
-              (click)="createUser()"
-              style="margin-right: 16px">
+            <button mat-flat-button [color]="'primary'" (click)="createUser()" style="margin-right: 16px">
               Create new
             </button>
           }
@@ -47,7 +43,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
         }
       </div>
     }
-    `,
+  `,
 })
 export class UsersListComponent {
   _list!: ReadUser[];

@@ -26,7 +26,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         <mat-icon>add_box</mat-icon>
       </button>
     }
-    `,
+  `,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

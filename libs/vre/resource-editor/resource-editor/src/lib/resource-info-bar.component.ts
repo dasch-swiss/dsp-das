@@ -15,27 +15,28 @@ import { map, Observable } from 'rxjs';
         Resource of the project
         <a (click)="openProject(project)" class="link" [title]="project.longname">
           <strong>{{ project?.shortname }}</strong></a
-          >,@if (resourceAttachedUser$ | async; as resourceAttachedUser) {
+        >,
+        @if (resourceAttachedUser$ | async; as resourceAttachedUser) {
           <span>
             created
             @if (resourceAttachedUser) {
               <span
                 >by
                 {{
-                resourceAttachedUser?.givenName || resourceAttachedUser?.familyName
-                ? resourceAttachedUser?.givenName + ' ' + resourceAttachedUser?.familyName
-                : resourceAttachedUser?.username
+                  resourceAttachedUser?.givenName || resourceAttachedUser?.familyName
+                    ? resourceAttachedUser?.givenName + ' ' + resourceAttachedUser?.familyName
+                    : resourceAttachedUser?.username
                 }}</span
-                >
-              }
-              @if (resource.creationDate) {
-                <span> on {{ resource.creationDate | date }}</span>
-              }
-            </span>
-          }
-        </div>
-      }
-    `,
+              >
+            }
+            @if (resource.creationDate) {
+              <span> on {{ resource.creationDate | date }}</span>
+            }
+          </span>
+        }
+      </div>
+    }
+  `,
   styles: [
     `
       .infobar {

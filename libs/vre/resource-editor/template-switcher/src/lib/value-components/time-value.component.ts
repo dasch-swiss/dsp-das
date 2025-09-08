@@ -21,7 +21,7 @@ import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
           <mat-datepicker #picker />
         </mat-form-field>
       </app-jdn-datepicker>
-    
+
       <mat-form-field>
         <input
           matInput
@@ -36,7 +36,7 @@ import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
     @if (control.touched && control.errors; as errors) {
       <mat-error>{{ errors | humanReadableError }}</mat-error>
     }
-    `,
+  `,
 })
 export class TimeValueComponent {
   @Input({ required: true }) control!: FormControl<DateTime>;

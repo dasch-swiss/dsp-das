@@ -28,7 +28,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
         <div class="center">No group defined yet.</div>
       }
     }
-    `,
+  `,
   styles: [
     `
       :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {

@@ -21,20 +21,18 @@ export interface ClassToSelect {
         @for (onto of ontologyClasses$ | async; track onto) {
           <mat-optgroup [label]="onto.ontologyLabel">
             @for (oClass of onto.classes; track oClass) {
-              <mat-option [value]="oClass.id">
-                {{ oClass.labels | appStringifyStringLiteral }}</mat-option
-                >
-              }
-            </mat-optgroup>
-          }
-        </mat-select>
-        @if (control.invalid && control.touched && control.errors![0]; as error) {
-          <mat-error>
-            {{ error | humanReadableError }}
-          </mat-error>
+              <mat-option [value]="oClass.id"> {{ oClass.labels | appStringifyStringLiteral }}</mat-option>
+            }
+          </mat-optgroup>
         }
-      </mat-form-field>
-    `,
+      </mat-select>
+      @if (control.invalid && control.touched && control.errors![0]; as error) {
+        <mat-error>
+          {{ error | humanReadableError }}
+        </mat-error>
+      }
+    </mat-form-field>
+  `,
   styles: ['mat-form-field {width: 100%}'],
 })
 export class GuiAttrLinkComponent {

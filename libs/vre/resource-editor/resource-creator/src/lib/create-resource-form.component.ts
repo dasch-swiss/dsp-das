@@ -64,8 +64,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     } @else {
       <app-progress-indicator />
     }
-    
-    `,
+  `,
   styles: [
     '.row { display: flex; padding: 16px 0;}',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',

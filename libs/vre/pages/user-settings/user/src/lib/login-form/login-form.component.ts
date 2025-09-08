@@ -10,7 +10,7 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
   template: `
     <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
-    
+
       <mat-form-field data-cy="password-input">
         <mat-label>Password</mat-label>
         <input
@@ -25,7 +25,7 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
           </mat-error>
         }
       </mat-form-field>
-    
+
       <button
         [class.mat-primary]="!isLoginError"
         [class.mat-warn]="isLoginError"
@@ -37,7 +37,7 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
         {{ isLoginError ? ('ui.form.action.retry' | translate) : ('pages.userSettings.loginForm.login' | translate) }}
       </button>
     </form>
-    `,
+  `,
   styles: [
     `
       .login-form {

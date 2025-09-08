@@ -25,11 +25,11 @@ import { ProjectPageService } from './project-page.service';
             (toggleSidenav)="toggleSidenav()"
             style="position: absolute; top: 21px; left: 8px" />
         }
-    
+
         <router-outlet />
       </mat-sidenav-content>
     </mat-sidenav-container>
-    `,
+  `,
   styleUrls: ['./project-page.component.scss'],
   providers: [ProjectPageService],
 })

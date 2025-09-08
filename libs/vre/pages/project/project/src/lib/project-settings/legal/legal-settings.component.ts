@@ -27,7 +27,7 @@ import {
         }
       </app-alternated-list>
     </section>
-    
+
     <section class="section">
       <h2>{{ 'pages.project.legalSettings.licenses' | translate }}</h2>
       <app-legal-settings-licenses />
@@ -39,7 +39,7 @@ import {
           info
         </mat-icon>
       </h2>
-    
+
       @if (authorships$ | async; as authorship) {
         <app-alternated-list>
           @for (item of authorship; track item) {
@@ -53,7 +53,7 @@ import {
         }
       }
     </section>
-    `,
+  `,
   styles: [
     `
       .section {

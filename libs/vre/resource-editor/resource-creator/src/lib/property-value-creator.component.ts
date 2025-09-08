@@ -18,12 +18,7 @@ import { map, startWith } from 'rxjs/operators';
         </div>
         <div class="action-buttons">
           @if (canRemoveValue) {
-            <button
-              mat-icon-button
-              type="button"
-              color="primary"
-              [matTooltip]="'remove'"
-              (click)="removeValue.emit()">
+            <button mat-icon-button type="button" color="primary" [matTooltip]="'remove'" (click)="removeValue.emit()">
               <mat-icon>delete</mat-icon>
             </button>
           }
@@ -39,7 +34,7 @@ import { map, startWith } from 'rxjs/operators';
         </div>
       </div>
     }
-    `,
+  `,
   styles: [
     `
       .action-buttons {

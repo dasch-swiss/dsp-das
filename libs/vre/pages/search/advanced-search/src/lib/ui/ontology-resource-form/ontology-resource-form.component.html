@@ -11,13 +11,10 @@
             appearance="fill"
             [compareWith]="compareApiDataObjects">
             @if (ontologiesLoading) {
-              <mat-option disabled="true">Loading...</mat-option>
-            }
-            @if (!ontologiesLoading) {
-              @for (onto of ontologies; track onto) {
-                <mat-option [value]="onto"> {{ onto.label }} </mat-option>
-              }
-            }
+            <mat-option disabled="true">Loading...</mat-option>
+            } @if (!ontologiesLoading) { @for (onto of ontologies; track onto) {
+            <mat-option [value]="onto"> {{ onto.label }} </mat-option>
+            } }
           </mat-select>
         </mat-form-field>
       </div>
@@ -33,14 +30,12 @@
             appearance="fill"
             [compareWith]="compareApiDataObjects">
             @if (resourceClassesLoading) {
-              <mat-option disabled="true">Loading...</mat-option>
-            }
-            @if (!resourceClassesLoading) {
-              <mat-option>None</mat-option>
-              @for (class of resourceClasses; track class) {
-                <mat-option [value]="class"> {{ class.label }} </mat-option>
-              }
-            }
+            <mat-option disabled="true">Loading...</mat-option>
+            } @if (!resourceClassesLoading) {
+            <mat-option>None</mat-option>
+            @for (class of resourceClasses; track class) {
+            <mat-option [value]="class"> {{ class.label }} </mat-option>
+            } }
           </mat-select>
         </mat-form-field>
       </div>

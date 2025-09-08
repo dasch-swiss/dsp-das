@@ -16,22 +16,18 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         <span matListItemTitle>Add property</span>
       </mat-list-item>
     </mat-list>
-    
+
     <mat-menu #addPropertyMenu="matMenu" xPosition="after">
       <button data-cy="create-new-from-type-button" mat-menu-item [matMenuTriggerFor]="newFromPropType">
         Create new from type
       </button>
       @if (resourceClass) {
-        <button
-          data-cy="add-existing-property-button"
-          mat-menu-item
-          [matMenuTriggerFor]="addExistingProp"
-          >
+        <button data-cy="add-existing-property-button" mat-menu-item [matMenuTriggerFor]="addExistingProp">
           Add existing property
         </button>
       }
     </mat-menu>
-    
+
     <mat-menu #addExistingProp="matMenu" class="default-nested-sub-menu">
       @for (onto of availableProperties$ | async; track trackByPropToAddFn($index, onto)) {
         <button mat-menu-item [disabled]="!onto.properties.length" [matMenuTriggerFor]="sub_menu">
@@ -51,7 +47,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         </mat-menu>
       }
     </mat-menu>
-    
+
     <mat-menu #newFromPropType="matMenu">
       @for (type of defaultProperties; track trackByPropCategoryFn($index, type)) {
         <button
@@ -76,7 +72,7 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         </mat-menu>
       }
     </mat-menu>
-    `,
+  `,
   styles: [
     `
       .property:hover {

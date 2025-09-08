@@ -10,7 +10,7 @@ import { UsersTabService } from './users-tab.service';
     @if (usersTabService.isLoading) {
       <app-progress-indicator-overlay />
     }
-    
+
     @if (users$ | async; as users) {
       <div style="display: flex; justify-content: center; margin: 16px 0">
         <app-double-chip-selector
@@ -18,15 +18,13 @@ import { UsersTabService } from './users-tab.service';
           [(value)]="showActiveUsers" />
       </div>
       @if (showActiveUsers && users[0]; as activeUsers) {
-        <app-users-list
-          [list]="activeUsers"
-          [isButtonEnabledToCreateNewUser]="true" />
+        <app-users-list [list]="activeUsers" [isButtonEnabledToCreateNewUser]="true" />
       }
       @if (!showActiveUsers && users[1]; as inactiveUsers) {
         <app-users-list [list]="inactiveUsers" />
       }
     }
-    `,
+  `,
   providers: [UsersTabService],
 })
 export class UsersTabComponent {

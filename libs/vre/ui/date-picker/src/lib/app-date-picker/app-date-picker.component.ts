@@ -100,8 +100,8 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
     MatMenuModule,
     MatButtonModule,
     MatButtonToggleModule,
-    MatSelectModule
-],
+    MatSelectModule,
+  ],
   providers: [Subject],
 })
 export class AppDatePickerComponent

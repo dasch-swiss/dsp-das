@@ -11,7 +11,7 @@ import { IIIFUrl } from './third-party-iiif';
         <img [src]="previewImageUrl" alt="IIIF Preview" height="240" />
       </div>
     }
-    
+
     <mat-form-field style="width: 100%">
       <mat-label>IIIF Image URL</mat-label>
       <input
@@ -19,12 +19,12 @@ import { IIIFUrl } from './third-party-iiif';
         [formControl]="control"
         data-cy="external-iiif-input"
         placeholder="https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
-    
+
       @if (control.errors; as errors) {
         <mat-error> {{ errors | humanReadableError: validatorErrors }}</mat-error>
       }
     </mat-form-field>
-    `,
+  `,
   styles: [
     `
       .third-party-iiif-preview {

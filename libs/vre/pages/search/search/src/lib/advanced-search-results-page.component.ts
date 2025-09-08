@@ -16,7 +16,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
         [showBackToFormButton]="true"
         [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
     }
-    `,
+  `,
   providers: [ResourceResultService],
 })
 export class AdvancedSearchResultsPageComponent {

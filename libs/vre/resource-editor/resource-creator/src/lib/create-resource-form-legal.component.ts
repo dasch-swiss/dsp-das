@@ -21,14 +21,12 @@ import { finalize, map } from 'rxjs/operators';
             <mat-option [value]="undefined">None</mat-option>
           }
           @for (copyrightHolder of copyrightHolders$ | async; track copyrightHolder) {
-            <mat-option [value]="copyrightHolder"
-              >{{ copyrightHolder }}
-            </mat-option>
+            <mat-option [value]="copyrightHolder">{{ copyrightHolder }} </mat-option>
           }
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>
-    
+
     <app-create-resource-form-row [label]="'License/Statement'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.license" data-cy="license-select">
@@ -44,11 +42,11 @@ import { finalize, map } from 'rxjs/operators';
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>
-    
+
     <app-create-resource-form-row [label]="'Authorship'">
       <app-authorship-form-field [control]="formGroup.controls.authorship" [projectShortcode]="projectShortcode" />
     </app-create-resource-form-row>
-    `,
+  `,
   styles: [
     `
       mat-form-field {

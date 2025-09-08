@@ -18,7 +18,7 @@ export interface EditUserDialogProps {
     @if (data.user) {
       <app-user-form [user]="data.user" (afterFormInit)="form = $event" />
     }
-    
+
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
       <button
@@ -29,7 +29,7 @@ export interface EditUserDialogProps {
         {{ 'ui.form.action.update' | translate }}
       </button>
     </div>
-    `,
+  `,
 })
 export class EditUserDialogComponent {
   form!: UserForm;

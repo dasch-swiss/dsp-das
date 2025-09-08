@@ -1,119 +1,105 @@
 @if (projectsList && !isLoading) {
-  <div class="app-projects-list">
-    <!-- header toolbar -->
-    <div class="app-toolbar">
-      <div class="app-toolbar-row">
-        <h3 class="mat-body subtitle">
-          @if (isUserActive) {
-            <span>{{ 'pages.system.projectsList.statusActive' | translate }}</span>
-          }
-          @if (!isUserActive) {
-            <span>{{ 'pages.system.projectsList.statusDeactivated' | translate }}</span>
-          }
-        </h3>
-        <span class="fill-remaining-space"></span>
-        <span class="app-toolbar-action"> </span>
-      </div>
-      <div class="app-toolbar-row">
-        <span class="app-toolbar-action button left">
-          <!-- sort button if more than one item in the list -->
-          @if (projectsList.length) {
-            <app-sort-button
-              [icon]="'sort_by_alpha'"
-              [sortProps]="sortProps"
-              [activeKey]="sortBy"
-              (sortKeyChange)="sortList($event)" />
-          }
-        </span>
-        <h2 class="mat-headline-6">{{ projectsList.length | i18nPlural : itemPluralMapping['project'] }}</h2>
-        <span class="fill-remaining-space"></span>
-        @if (isUserActive && createNewButtonEnabled && (isSysAdmin$ | async) === true) {
-          <span
-            class="app-toolbar-action button right"
-            >
-            <button mat-flat-button [color]="'primary'" (click)="createNewProject()">
-              {{ 'pages.system.projectsList.createNew' | translate }}
-            </button>
-          </span>
+<div class="app-projects-list">
+  <!-- header toolbar -->
+  <div class="app-toolbar">
+    <div class="app-toolbar-row">
+      <h3 class="mat-body subtitle">
+        @if (isUserActive) {
+        <span>{{ 'pages.system.projectsList.statusActive' | translate }}</span>
+        } @if (!isUserActive) {
+        <span>{{ 'pages.system.projectsList.statusDeactivated' | translate }}</span>
         }
-      </div>
+      </h3>
+      <span class="fill-remaining-space"></span>
+      <span class="app-toolbar-action"> </span>
     </div>
-    <!-- content: projectsList -->
-    <table class="table more-space-bottom" [class.deactivated]="!isUserActive">
-      @for (project of projectsList; track trackByFn($index, project); let last = $last) {
-        <tr
-          class="table-entry"
-          [class.no-border]="last"
-          data-cy="project-row">
-          <!-- logo -->
-          <td class="avatar-cell">
-            <mat-icon mat-list-icon>
-              @if (isUserActive) {
-                <span>assignment</span>
-              }
-              @if (!isUserActive) {
-                <span>lock</span>
-              }
-            </mat-icon>
-          </td>
-          <td class="table-info">
-            <!-- Longname hidden on phone devices -->
-            <h5 class="mat-subtitle-1 link info-longname" (click)="openProjectPage(project.id)">{{ project.longname }}</h5>
-            <p class="mat-subtitle-2 link" (click)="openProjectPage(project.id)">
-              {{ project.shortcode }} | {{ project.shortname }}
-            </p>
-          </td>
-          <td class="table-admin-chip">
-            @if (userIsProjectAdmin$(project.id) | async) {
-              <mat-chip-listbox>
-                <mat-chip class="admin-chip">{{ 'pages.system.projectsList.projectAdmin' | translate }}</mat-chip>
-              </mat-chip-listbox>
-            }
-          </td>
-          <!-- action: menu with edit, remove, etc. -->
-          <td class="table-action">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="projectMenu"
-              [disabled]="(userHasPermission$(project.id) | async) === false || systemProjects.includes(project.id)"
-              data-cy="more-button">
-              <mat-icon>more_horiz</mat-icon>
-            </button>
-            <mat-menu #projectMenu="matMenu" xPosition="before" class="menu">
-              @if (isUserActive) {
-                <button mat-menu-item (click)="editProject(project.id)" data-cy="edit-button">
-                  {{ 'pages.system.projectsList.edit' | translate }}
-                </button>
-              }
-              @if (isUserActive) {
-                <button
-                  mat-menu-item
-                  (click)="askToDeactivateProject(project.shortname, project.id)"
-                  data-cy="deactivate-button">
-                  {{ 'pages.system.projectsList.deactivate' | translate }}
-                </button>
-              }
-              @if (allowEraseProject && (isSysAdmin$ | async)) {
-                <button
-                  mat-menu-item
-                  class="warn"
-                  (click)="askToEraseProject(project)"
-                  data-cy="erase-button">
-                  {{ 'pages.system.projectsList.erase' | translate }}
-                </button>
-              }
-              @if (!isUserActive) {
-                <button
-                  mat-menu-item
-                  (click)="askToActivateProject(project.shortname, project.id)"
-                  data-cy="reactivate-button">
-                  {{ 'pages.system.projectsList.reactivate' | translate }}
-                </button>
-              }
-            </mat-menu>
-          </td>
-        </tr>
+    <div class="app-toolbar-row">
+      <span class="app-toolbar-action button left">
+        <!-- sort button if more than one item in the list -->
+        @if (projectsList.length) {
+        <app-sort-button
+          [icon]="'sort_by_alpha'"
+          [sortProps]="sortProps"
+          [activeKey]="sortBy"
+          (sortKeyChange)="sortList($event)" />
+        }
+      </span>
+      <h2 class="mat-headline-6">{{ projectsList.length | i18nPlural : itemPluralMapping['project'] }}</h2>
+      <span class="fill-remaining-space"></span>
+      @if (isUserActive && createNewButtonEnabled && (isSysAdmin$ | async) === true) {
+      <span class="app-toolbar-action button right">
+        <button mat-flat-button [color]="'primary'" (click)="createNewProject()">
+          {{ 'pages.system.projectsList.createNew' | translate }}
+        </button>
+      </span>
       }
-    </table>
+    </div>
   </div>
+  <!-- content: projectsList -->
+  <table class="table more-space-bottom" [class.deactivated]="!isUserActive">
+    @for (project of projectsList; track trackByFn($index, project); let last = $last) {
+    <tr class="table-entry" [class.no-border]="last" data-cy="project-row">
+      <!-- logo -->
+      <td class="avatar-cell">
+        <mat-icon mat-list-icon>
+          @if (isUserActive) {
+          <span>assignment</span>
+          } @if (!isUserActive) {
+          <span>lock</span>
+          }
+        </mat-icon>
+      </td>
+      <td class="table-info">
+        <!-- Longname hidden on phone devices -->
+        <h5 class="mat-subtitle-1 link info-longname" (click)="openProjectPage(project.id)">{{ project.longname }}</h5>
+        <p class="mat-subtitle-2 link" (click)="openProjectPage(project.id)">
+          {{ project.shortcode }} | {{ project.shortname }}
+        </p>
+      </td>
+      <td class="table-admin-chip">
+        @if (userIsProjectAdmin$(project.id) | async) {
+        <mat-chip-listbox>
+          <mat-chip class="admin-chip">{{ 'pages.system.projectsList.projectAdmin' | translate }}</mat-chip>
+        </mat-chip-listbox>
+        }
+      </td>
+      <!-- action: menu with edit, remove, etc. -->
+      <td class="table-action">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="projectMenu"
+          [disabled]="(userHasPermission$(project.id) | async) === false || systemProjects.includes(project.id)"
+          data-cy="more-button">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #projectMenu="matMenu" xPosition="before" class="menu">
+          @if (isUserActive) {
+          <button mat-menu-item (click)="editProject(project.id)" data-cy="edit-button">
+            {{ 'pages.system.projectsList.edit' | translate }}
+          </button>
+          } @if (isUserActive) {
+          <button
+            mat-menu-item
+            (click)="askToDeactivateProject(project.shortname, project.id)"
+            data-cy="deactivate-button">
+            {{ 'pages.system.projectsList.deactivate' | translate }}
+          </button>
+          } @if (allowEraseProject && (isSysAdmin$ | async)) {
+          <button mat-menu-item class="warn" (click)="askToEraseProject(project)" data-cy="erase-button">
+            {{ 'pages.system.projectsList.erase' | translate }}
+          </button>
+          } @if (!isUserActive) {
+          <button
+            mat-menu-item
+            (click)="askToActivateProject(project.shortname, project.id)"
+            data-cy="reactivate-button">
+            {{ 'pages.system.projectsList.reactivate' | translate }}
+          </button>
+          }
+        </mat-menu>
+      </td>
+    </tr>
+    }
+  </table>
+</div>
 }

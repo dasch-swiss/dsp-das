@@ -33,19 +33,19 @@
       (cdkDropListDropped)="drop($event)"
       (selectionChange)="onSelectionChange($event)">
       @for (item of orderByList; track item) {
-        <mat-list-option
-          class="sort-item"
-          [selected]="item.orderBy"
-          [value]="item.id"
-          [disabled]="item.disabled"
-          [matTooltip]="tooltipText"
-          [matTooltipDisabled]="!item.disabled"
-          cdkDrag>
-          <span cdkDragHandle matListItemIcon class="drag-handle">
-            <mat-icon>drag_indicator</mat-icon>
-          </span>
-          <span matListItemTitle> {{ item.label }} </span>
-        </mat-list-option>
+      <mat-list-option
+        class="sort-item"
+        [selected]="item.orderBy"
+        [value]="item.id"
+        [disabled]="item.disabled"
+        [matTooltip]="tooltipText"
+        [matTooltipDisabled]="!item.disabled"
+        cdkDrag>
+        <span cdkDragHandle matListItemIcon class="drag-handle">
+          <mat-icon>drag_indicator</mat-icon>
+        </span>
+        <span matListItemTitle> {{ item.label }} </span>
+      </mat-list-option>
       }
     </mat-selection-list>
   </ng-template>

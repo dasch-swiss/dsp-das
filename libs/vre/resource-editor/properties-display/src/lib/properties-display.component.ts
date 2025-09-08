@@ -18,7 +18,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
           <app-annotation-toolbar [resource]="resource.res" [parentResourceId]="parentResourceId" />
         }
       </div>
-    
+
       @if (displayLabel) {
         <h3
           style="margin: 0 16px; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
@@ -27,19 +27,17 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
         </h3>
       }
     </div>
-    
+
     @if (displayLabel && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)) {
-      <div
-        class="infobar mat-caption"
-        >
+      <div class="infobar mat-caption">
         Created
         @if (resourceAttachedUser$ | async; as resourceAttachedUser) {
           <span>
             by
             {{
-            resourceAttachedUser.username
-            ? resourceAttachedUser.username
-            : resourceAttachedUser.givenName + ' ' + resourceAttachedUser.familyName
+              resourceAttachedUser.username
+                ? resourceAttachedUser.username
+                : resourceAttachedUser.givenName + ' ' + resourceAttachedUser.familyName
             }}
           </span>
         }
@@ -48,7 +46,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
         }
       </div>
     }
-    
+
     <!-- list of properties -->
     @if (editableProperties && editableProperties.length > 0) {
       @for (prop of editableProperties; track trackByPropertyInfoFn($index, prop); let last = $last) {
@@ -59,10 +57,10 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
           [prop]="prop"
           [singleRow]="false"
           [attr.data-cy]="'row-' + prop.propDef.label"
-        [label]="
-          prop.propDef.label +
-          (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
-        ">
+          [label]="
+            prop.propDef.label +
+            (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
+          ">
           <app-property-values-with-footnotes [prop]="prop" [resource]="resource.res" />
         </app-property-row>
       }
@@ -71,11 +69,10 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
         <div>This resource has no defined properties.</div>
       </app-property-row>
     }
-    
+
     <app-standoff-links-property [resource]="resource" />
     <app-incoming-links-property [resource]="resource.res" />
-    
-    `,
+  `,
   styles: [
     `
       .infobar {

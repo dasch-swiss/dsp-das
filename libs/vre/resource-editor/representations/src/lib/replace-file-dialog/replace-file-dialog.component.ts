@@ -34,7 +34,7 @@ export interface ReplaceFileDialogProps {
           <div class="message">{{ data.title }} will be replaced.</div>
         </div>
       </div>
-    
+
       @if (resourceFetcher.projectShortcode$ | async; as projectShortcode) {
         <app-create-resource-form-file
           [fileRepresentation]="data.representation"
@@ -42,7 +42,7 @@ export interface ReplaceFileDialogProps {
           [projectShortcode]="projectShortcode" />
       }
     </mat-dialog-content>
-    
+
     <mat-dialog-actions align="end">
       <button mat-button type="button" data-cy="replace-file-cancel-button" (click)="dialogRef.close()">
         {{ 'ui.form.action.cancel' | translate }}
@@ -56,7 +56,7 @@ export interface ReplaceFileDialogProps {
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </mat-dialog-actions>
-    `,
+  `,
   styleUrls: ['./replace-file-dialog.component.scss'],
 })
 export class ReplaceFileDialogComponent {

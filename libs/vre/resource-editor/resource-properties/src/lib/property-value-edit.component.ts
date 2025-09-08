@@ -24,7 +24,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       [resourceClassIri]="propertyValueService.editModeData.resource.type"
       [value]="readValue"
       (templateFound)="foundTemplate($event)" />
-    
+
     @if (!loading) {
       <div style="display: flex; padding: 16px 0">
         <div style="flex: 1">
@@ -32,8 +32,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <ng-container *ngTemplateOutlet="template; context: { item: group.controls.item }"></ng-container>
           }
           @if (group.controls.comment.value !== null) {
-            <app-property-value-basic-comment
-              [control]="group.controls.comment" />
+            <app-property-value-basic-comment [control]="group.controls.comment" />
           }
         </div>
         <div style="display: flex">
@@ -50,12 +49,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
           </button>
           @if (group.controls.item.value !== null) {
-            <button
-              (click)="onSave()"
-              [matTooltip]="'save'"
-              mat-icon-button
-              data-cy="save-button"
-              color="primary">
+            <button (click)="onSave()" [matTooltip]="'save'" mat-icon-button data-cy="save-button" color="primary">
               <mat-icon>save</mat-icon>
             </button>
           }
@@ -64,8 +58,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     } @else {
       <app-progress-indicator [size]="'xsmall'" />
     }
-    
-    `,
+  `,
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;

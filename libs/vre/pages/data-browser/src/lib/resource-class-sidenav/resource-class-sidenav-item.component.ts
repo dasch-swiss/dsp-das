@@ -20,10 +20,10 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
               <ngx-skeleton-loader
                 count="1"
                 appearance="line"
-              [theme]="{
-                'margin-bottom': 0,
-                'vertical-align': 'middle',
-              }" />
+                [theme]="{
+                  'margin-bottom': 0,
+                  'vertical-align': 'middle',
+                }" />
             }
             <div class="entry">
               {{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}
@@ -31,16 +31,13 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
           </div>
         </div>
         @if (hasProjectMemberRights$ | async) {
-          <a
-            class="icon link"
-            data-cy="add-class-instance"
-            (click)="goToAddClassInstance()">
+          <a class="icon link" data-cy="add-class-instance" (click)="goToAddClassInstance()">
             <mat-icon>add_circle_outline</mat-icon>
           </a>
         }
       </div>
     </div>
-    `,
+  `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {

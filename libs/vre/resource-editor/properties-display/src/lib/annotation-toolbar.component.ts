@@ -39,7 +39,7 @@ import { take } from 'rxjs';
           (resourceUpdated)="onResourceUpdated()" />
       }
     </span>
-    
+
     <mat-menu #share="matMenu" class="res-share-menu">
       <button
         mat-menu-item
@@ -62,7 +62,7 @@ import { take } from 'rxjs';
         Copy internal link to clipboard
       </button>
     </mat-menu>
-    `,
+  `,
   styles: [
     `
       .action {

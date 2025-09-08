@@ -23,7 +23,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
           [searchKeyword]="query" />
       }
     }
-    `,
+  `,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

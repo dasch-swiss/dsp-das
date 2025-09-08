@@ -16,7 +16,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <div class="centered">Select a resource on the left panel to display.</div>
       }
     }
-    `,
+  `,
   styles: [
     `
       .centered {

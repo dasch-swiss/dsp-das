@@ -45,8 +45,7 @@ import { LinkValueDataService } from './link-value-data.service';
           <mat-option [disabled]="true"> No results were found.</mat-option>
         }
         @for (rc of _linkValueDataService.resourceClasses; track trackByResourceClassFn($index, rc)) {
-          <mat-option
-            (click)="openCreateResourceDialog($event, rc.id, rc.label)">
+          <mat-option (click)="openCreateResourceDialog($event, rc.id, rc.label)">
             Create New: {{ rc?.label }}
           </mat-option>
         }
@@ -66,7 +65,7 @@ import { LinkValueDataService } from './link-value-data.service';
         <mat-error>{{ errors | humanReadableError }}</mat-error>
       }
     </mat-form-field>
-    `,
+  `,
   providers: [LinkValueDataService],
 })
 export class LinkValueComponent implements OnInit {

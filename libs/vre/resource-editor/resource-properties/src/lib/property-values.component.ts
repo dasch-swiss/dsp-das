@@ -9,25 +9,19 @@ import { PropertyValueService } from './property-value.service';
   selector: 'app-property-values',
   template: `
     @for (group of propertyValueService.editModeData.values; track group; let index = $index) {
-      <app-property-value
-        [index]="index"
-        style="width: 100%" />
+      <app-property-value [index]="index" style="width: 100%" />
     }
-    
+
     @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
-      <button
-        mat-icon-button
-        (click)="currentlyAdding = true"
-        data-cy="add-property-value-button"
-        >
+      <button mat-icon-button (click)="currentlyAdding = true" data-cy="add-property-value-button">
         <mat-icon class="add-icon">add_box</mat-icon>
       </button>
     }
-    
+
     @if (currentlyAdding) {
       <app-property-value-add (stopAdding)="currentlyAdding = false" />
     }
-    `,
+  `,
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

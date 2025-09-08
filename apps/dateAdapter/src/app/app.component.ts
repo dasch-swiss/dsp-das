@@ -83,7 +83,7 @@ export class AppComponent {
       }
     </mat-select>
     <mat-calendar-header />
-    `,
+  `,
   styleUrls: [],
 })
 export class HeaderComponent implements OnInit {

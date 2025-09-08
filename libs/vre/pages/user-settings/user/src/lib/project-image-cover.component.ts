@@ -2,20 +2,20 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-project-image-cover',
-  template: ` @if (!imageCantLoad) {
-  <img
-    mat-card-image
-    [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
-    alt="image of project"
-    (error)="imageCantLoad = true"
-    class="img" />
-} @else {
-  <div class="backup-text" [ngClass]="{ small: project.shortname.length > 10 }">
-    <span>{{ project.shortname }}</span>
-  </div>
-}
-
-`,
+  template: `
+    @if (!imageCantLoad) {
+      <img
+        mat-card-image
+        [src]="'assets/images/project/width-500/' + project.shortcode + '.webp'"
+        alt="image of project"
+        (error)="imageCantLoad = true"
+        class="img" />
+    } @else {
+      <div class="backup-text" [ngClass]="{ small: project.shortname.length > 10 }">
+        <span>{{ project.shortname }}</span>
+      </div>
+    }
+  `,
   styles: [
     `
       :host {

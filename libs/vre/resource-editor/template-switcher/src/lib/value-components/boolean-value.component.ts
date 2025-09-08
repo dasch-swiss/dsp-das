@@ -6,10 +6,7 @@ import { FormControl } from '@angular/forms';
   template: `
     <app-nullable-editor [formControl]="control" [defaultValue]="false">
       @if (control.value !== null) {
-        <mat-slide-toggle
-          [formControl]="control"
-          data-cy="bool-toggle"
-          style="padding: 16px" />
+        <mat-slide-toggle [formControl]="control" data-cy="bool-toggle" style="padding: 16px" />
       }
     </app-nullable-editor>
     @if (control.touched && control.errors; as errors) {
@@ -17,7 +14,7 @@ import { FormControl } from '@angular/forms';
         {{ errors | humanReadableError }}
       </mat-error>
     }
-    `,
+  `,
 })
 export class BooleanValueComponent {
   @Input({ required: true }) control!: FormControl<boolean | null>;

@@ -19,7 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
           (createdResourceIri)="afterCreation($event)" />
       }
     </app-centered-layout>
-    `,
+  `,
 })
 export class CreateResourcePageComponent implements OnDestroy {
   private _destroy = new Subject<void>();

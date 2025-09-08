@@ -13,14 +13,13 @@ import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
       <span>{{ knoraDate | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
       <ng-container *ngTemplateOutlet="calendarType; context: { date: knoraDate }"></ng-container>
     }
-    
-    
+
     <ng-template #calendarType let-date="date">
       <span data-cy="date-switch" style="display: inline-block; margin-left: 8px">
         ({{ date | knoraDate: 'dd.MM.YYYY' : 'calendarOnly' }})
       </span>
     </ng-template>
-    `,
+  `,
 })
 export class DateViewerComponent implements OnInit {
   @Input({ required: true }) value!: ReadDateValue;

@@ -8,19 +8,17 @@ import { ResourceResultService } from '../resource-result.service';
 @Component({
   selector: 'app-resources-list',
   template: `<div style="padding: 16px; display: flex; flex-direction: row-reverse">
-        @if (showBackToFormButton) {
-          <a mat-stroked-button (click)="navigate()"
-            ><mat-icon>chevron_left</mat-icon>Back to search form</a
-            >
-          }
-        </div>
-        <app-pager
-          (pageIndexChanged)="updatePageIndex($event)"
-          [numberOfAllResults]="resourceResultService.numberOfResults" />
-        @if (multipleViewerService.selectMode) {
-          <app-resource-list-selection [resources]="resources" />
-        }
-        <app-resource-list [resources]="resources" />`,
+      @if (showBackToFormButton) {
+        <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
+      }
+    </div>
+    <app-pager
+      (pageIndexChanged)="updatePageIndex($event)"
+      [numberOfAllResults]="resourceResultService.numberOfResults" />
+    @if (multipleViewerService.selectMode) {
+      <app-resource-list-selection [resources]="resources" />
+    }
+    <app-resource-list [resources]="resources" />`,
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];

@@ -12,18 +12,17 @@ import { CollaborationPageService } from './collaboration-page.service';
       <div>
         @if (project$ | async; as project) {
           @if (project.status && (hasProjectAdminRights$ | async) && (projectUuid$ | async); as projectUuid) {
-            <app-add-user
-              [projectUuid]="projectUuid" />
+            <app-add-user [projectUuid]="projectUuid" />
           }
         }
         @if (activeProjectMembers$ | async; as activeProjectMembers) {
           @if (inactiveProjectMembers$ | async; as inactiveProjectMembers) {
             <div style="display: flex; justify-content: center; margin: 16px 0">
               <app-double-chip-selector
-              [options]="[
-                'Active users (' + activeProjectMembers.length + ')',
-                'Inactive users (' + inactiveProjectMembers.length + ')',
-              ]"
+                [options]="[
+                  'Active users (' + activeProjectMembers.length + ')',
+                  'Inactive users (' + inactiveProjectMembers.length + ')',
+                ]"
                 [(value)]="showActiveUsers" />
             </div>
             @if (showActiveUsers) {
@@ -36,11 +35,11 @@ import { CollaborationPageService } from './collaboration-page.service';
         }
       </div>
     }
-    
+
     @if ((hasProjectAdminRights$ | async) === false) {
       <app-status [status]="403" />
     }
-    `,
+  `,
   styleUrls: ['./collaboration-page.component.scss'],
   providers: [CollaborationPageService],
 })

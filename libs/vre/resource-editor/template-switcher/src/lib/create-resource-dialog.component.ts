@@ -20,7 +20,7 @@ export interface CreateResourceDialogProps {
           (createdResourceIri)="onCreatedResource($event)" />
       }
     </div>
-    `,
+  `,
 })
 export class CreateResourceDialogComponent {
   project$ = this._projectPageService.currentProject$;

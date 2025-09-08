@@ -25,7 +25,7 @@ import { CanDeleteResource } from './can-delete-resource.interface';
       (menuOpened)="checkResourceCanBeDeleted()">
       <mat-icon>more_vert</mat-icon>
     </button>
-    
+
     <mat-menu #more="matMenu" class="res-more-menu">
       @if (showEditLabel) {
         <button
@@ -38,7 +38,7 @@ import { CanDeleteResource } from './can-delete-resource.interface';
           Edit label
         </button>
       }
-    
+
       <button
         data-cy="resource-more-menu-delete-button"
         mat-menu-item
@@ -61,16 +61,16 @@ import { CanDeleteResource } from './can-delete-resource.interface';
           Delete
         </div>
       </button>
-    
+
       @if (userCanDelete) {
         <button
           data-cy="resource-more-menu-erase-button"
           mat-menu-item
-        [matTooltip]="
-          resourceCanBeDeleted?.canDo
-            ? 'Erase resource forever. This cannot be undone.'
-            : resourceCanBeDeleted?.reason || 'Checking if resource can be deleted...'
-        "
+          [matTooltip]="
+            resourceCanBeDeleted?.canDo
+              ? 'Erase resource forever. This cannot be undone.'
+              : resourceCanBeDeleted?.reason || 'Checking if resource can be deleted...'
+          "
           matTooltipPosition="above"
           [disabled]="!resourceCanBeDeleted?.canDo"
           (click)="eraseResource()">
@@ -87,7 +87,7 @@ import { CanDeleteResource } from './can-delete-resource.interface';
         </button>
       }
     </mat-menu>
-    `,
+  `,
   styles: [
     `
       .more-menu {

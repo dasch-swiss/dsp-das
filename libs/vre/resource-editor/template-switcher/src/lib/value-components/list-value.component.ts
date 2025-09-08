@@ -17,7 +17,7 @@ import { startWith } from 'rxjs/operators';
     @if (control.touched && control.errors) {
       <mat-error>{{ control.errors | humanReadableError }}</mat-error>
     }
-    `,
+  `,
 })
 export class ListValueComponent implements OnInit {
   @Input({ required: true }) propertyDef!: ResourcePropertyDefinition;

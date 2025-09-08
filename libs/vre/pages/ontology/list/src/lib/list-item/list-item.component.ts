@@ -8,16 +8,12 @@ import { ListItemService } from './list-item.service';
   selector: 'app-list-item',
   template: `
     @for (child of children; track trackByFn(index, child); let index = $index; let first = $first; let last = $last) {
-      <app-list-item-element
-        [position]="index"
-        [length]="children.length"
-        [node]="child"
-        [isAdmin]="isAdmin" />
+      <app-list-item-element [position]="index" [length]="children.length" [node]="child" [isAdmin]="isAdmin" />
     }
     @if (isAdmin) {
       <app-list-item-form [parentNode]="node" style="display: block; margin-left: 46px" />
     }
-    `,
+  `,
   styles: [':host { display: block; }'],
 })
 export class ListItemComponent implements OnInit, OnDestroy {

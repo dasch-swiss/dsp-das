@@ -19,30 +19,26 @@ import { UsersTabService } from '../users-tab.service';
         <mat-icon>more_horiz</mat-icon>
       </button>
     }
-    
+
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
       @if (user.username !== (user$ | async)?.username) {
-        <button
-          mat-menu-item
-          (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
+        <button mat-menu-item (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
           {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
         </button>
       }
-    
+
       @if (user.status) {
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
         <button mat-menu-item (click)="askToDeactivateUser(user.username, user.id)">Suspend user</button>
       }
-    
+
       @if (!user.status) {
-        <button mat-menu-item (click)="askToActivateUser(user.username, user.id)">
-          Reactivate user
-        </button>
+        <button mat-menu-item (click)="askToActivateUser(user.username, user.id)">Reactivate user</button>
       }
     </mat-menu>
-    `,
+  `,
 })
 export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

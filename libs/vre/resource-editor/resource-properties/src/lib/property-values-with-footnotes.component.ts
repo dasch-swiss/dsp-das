@@ -9,11 +9,11 @@ import { FootnoteService } from './footnotes/footnote.service';
     @if (resource.type) {
       <app-property-values [myProperty]="prop" [editModeData]="{ resource, values: prop.values }" />
     }
-    
+
     @if (footnoteService.footnotes.length > 0) {
       <app-footnotes />
     }
-    `,
+  `,
   styles: [':host { display: block; position: relative; width: 100%}'],
   providers: [FootnoteService],
 })

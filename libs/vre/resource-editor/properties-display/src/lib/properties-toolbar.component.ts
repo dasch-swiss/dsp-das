@@ -30,7 +30,7 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
         </button>
       }
     }
-    
+
     @if (showToggleProperties) {
       @if (!showOnlyIcons) {
         <button
@@ -38,9 +38,9 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
           color="primary"
           class="toggle-props"
           data-cy="show-all-properties"
-        [matTooltip]="
-          ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
-        "
+          [matTooltip]="
+            ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
+          "
           matTooltipPosition="above"
           (click)="toggleShowAllProps()">
           <mat-icon>unfold_more</mat-icon>
@@ -50,17 +50,18 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
         <button
           mat-icon-button
           style="color: rgb(51, 103, 144)"
-        [matTooltip]="
-          ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
-        "
+          [matTooltip]="
+            ((propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all') + ' properties'
+          "
           matTooltipPosition="above"
           (click)="toggleShowAllProps()">
-          <mat-icon>{{ (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+          <mat-icon>{{
+            (propertiesDisplayService.showAllProperties$ | async) ? 'unfold_less' : 'unfold_more'
+          }}</mat-icon>
         </button>
       }
     }
-    
-    `,
+  `,
   styles: ['button { padding-top: 24px; padding-bottom: 24px}'],
 })
 export class PropertiesToolbarComponent {
