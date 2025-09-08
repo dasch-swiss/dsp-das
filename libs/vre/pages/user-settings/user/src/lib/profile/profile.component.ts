@@ -26,44 +26,20 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
             <p style="margin: 0; color: #666">({{ user.username }})</p>
           </div>
 
-          <div style="display: flex; flex-direction: row; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <div
-              class="badge"
-              style="background: #f8f9fa;
-        border-color: #e9ecef">
-              <mat-icon class="icon" style="color: #495057">language</mat-icon>
-              <span>{{ user.lang }}</span>
-            </div>
-            <div *ngIf="isSysAdmin$ | async" class="badge" style="background: #f8f9fa; border-color: #e9ecef">
-              <mat-icon class="icon" style="color: #856404">verified_user</mat-icon>
-              <span>{{ 'pages.userSettings.profile.systemAdmin' | translate }}</span>
-            </div>
-          </div>
+          <mat-chip-set>
+            <mat-chip [disableRipple]="true">
+              <mat-icon matChipAvatar>language</mat-icon>
+              {{ user.lang }}
+            </mat-chip>
+            <mat-chip [disableRipple]="true">
+              <mat-icon matChipAvatar style="color: #856404">verified_user</mat-icon>
+              {{ 'pages.userSettings.profile.systemAdmin' | translate }}
+            </mat-chip>
+          </mat-chip-set>
         </div>
       </div>
     </div>
   `,
-  styles: [
-    `
-      .badge {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 8px;
-
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 400;
-        border: 1px solid;
-        color: #495057;
-      }
-      .icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-      }
-    `,
-  ],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
