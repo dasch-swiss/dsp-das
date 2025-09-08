@@ -21,11 +21,7 @@ export interface EditUserDialogProps {
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
-      <button
-        mat-raised-button
-        color="primary"
-        [disabled]="!form?.valid || (form && form.pristine)"
-        (click)="updateUser()">
+      <button mat-raised-button color="primary" (click)="updateUser()">
         {{ 'ui.form.action.update' | translate }}
       </button>
     </div>
