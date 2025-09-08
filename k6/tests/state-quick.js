@@ -1,12 +1,12 @@
 import { browser } from 'k6/browser';
 import { HomePage } from '../pages/home-page.js';
 import { check } from 'k6';
-import { StoreRegressionTestBase, createStoreRegressionMetrics } from '../utils/test-base.js';
+import { StorePerformanceTestBase, createStatePerformanceMetrics } from '../utils/test-base.js';
 import { getPerformanceExpectations, getThresholds, getTestConfig, getBrowserConfig } from '../utils/environment-config.js';
 
 // Initialize test base and metrics
-const testBase = new StoreRegressionTestBase('quickRegressionTest');
-const metrics = createStoreRegressionMetrics();
+const testBase = new StorePerformanceTestBase('quickRegressionTest');
+const metrics = createStatePerformanceMetrics();
 
 // Override config functions method to provide the actual imports
 testBase.getConfigFunctions = () => ({ getThresholds, getTestConfig, getBrowserConfig });

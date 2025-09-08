@@ -90,7 +90,7 @@ export class K6TestBase {
         } else if (url.includes('/v2/resources') || url.includes('/v2/search')) {
           apiCounts.resources++;
         }
-        
+
         if (url.includes('/v2/') || url.includes('/admin/')) {
           apiCounts.total++;
         }
@@ -107,7 +107,7 @@ export class K6TestBase {
     metrics.totalApiCalls.add(apiRequests.total, { version });
 
     console.log(`📊 API Requests - Auth: ${apiRequests.auth}, Projects: ${apiRequests.projects}, Ontologies: ${apiRequests.ontologies}, Resources: ${apiRequests.resources}, Total: ${apiRequests.total}`);
-    
+
     return apiRequests;
   }
 
@@ -136,7 +136,7 @@ export class K6TestBase {
  */
 export function createUserServiceMetrics() {
   const { Trend, Rate, Counter } = require('k6/metrics');
-  
+
   return {
     loginDuration: new Trend('login_duration', true),
     userMenuAppearance: new Trend('user_menu_appearance', true),
@@ -165,9 +165,9 @@ export const USER_SERVICE_THRESHOLDS = {
 };
 
 /**
- * Base class for store refactor regression tests
+ * Base class for state performance tests
  */
-export class StoreRegressionTestBase extends K6TestBase {
+export class StorePerformanceTestBase extends K6TestBase {
   constructor(testName, iterations = 1, maxDuration = '5m') {
     super(testName, maxDuration);
     this.iterations = iterations;
@@ -223,12 +223,12 @@ export class StoreRegressionTestBase extends K6TestBase {
         marks: [],
         memorySnapshots: [],
         measurements: [],
-        
+
         mark: function(name) {
           performance.mark(name);
           this.marks.push({ name, timestamp: performance.now() });
         },
-        
+
         measure: function(name, startMark, endMark) {
           performance.measure(name, startMark, endMark);
           const entry = performance.getEntriesByName(name, 'measure')[0];
@@ -241,19 +241,19 @@ export class StoreRegressionTestBase extends K6TestBase {
           }
           return entry ? entry.duration : 0;
         },
-        
+
         getMemorySnapshot: function() {
           const snapshot = performance.memory ? {
             used: performance.memory.usedJSHeapSize,
             total: performance.memory.totalJSHeapSize,
             limit: performance.memory.jsHeapSizeLimit
           } : { used: 0, total: 0, limit: 0 };
-          
+
           this.memorySnapshots.push({
             ...snapshot,
             timestamp: Date.now()
           });
-          
+
           return snapshot;
         },
 
@@ -281,21 +281,21 @@ export class StoreRegressionTestBase extends K6TestBase {
    */
   async testBootstrap(page, homepage, metrics) {
     const startTime = Date.now();
-    
+
     await homepage.goto();
     await page.waitForLoadState('domcontentloaded');
-    
+
     // Wait for Angular to bootstrap
     await page.waitForFunction(() => {
       return document.readyState === 'complete' &&
              (window.ng || document.querySelector('[ng-version]'));
     }, { timeout: 20000 });
-    
+
     const totalBootstrapTime = Date.now() - startTime;
-    
+
     console.log(`Bootstrap time: ${totalBootstrapTime}ms`);
     metrics.bootstrapTime.add(totalBootstrapTime);
-    
+
     return totalBootstrapTime;
   }
 
@@ -321,7 +321,7 @@ export class StoreRegressionTestBase extends K6TestBase {
     const memoryDelta = finalMemory - initialMemory;
     console.log(`Memory growth: ${Math.round(memoryDelta / 1024)}KB`);
     metrics.memoryGrowth.add(memoryDelta);
-    
+
     return memoryDelta;
   }
 
@@ -340,9 +340,9 @@ export class StoreRegressionTestBase extends K6TestBase {
       try {
         const elements = page.locator(test.selector);
         const count = await elements.count();
-        
+
         if (count === 0) continue;
-        
+
         const element = elements.first();
         if (!(await element.isVisible()) || !(await element.isEnabled())) {
           continue;
@@ -350,12 +350,12 @@ export class StoreRegressionTestBase extends K6TestBase {
 
         const duration = await page.evaluate(async (testInfo) => {
           if (!window.performanceMetrics) return 0;
-          
+
           const { result, duration } = await window.performanceMetrics.measureAsync(testInfo.name, async () => {
             // Simulate state update
             return true;
           });
-          
+
           return duration;
         }, test);
 
@@ -369,7 +369,7 @@ export class StoreRegressionTestBase extends K6TestBase {
 
         await page.waitForTimeout(50);
         metrics.stateUpdateLatency.add(duration);
-        
+
       } catch (e) {
         console.log(`State update test ${test.name} failed: ${e.message}`);
       }
@@ -378,11 +378,11 @@ export class StoreRegressionTestBase extends K6TestBase {
 }
 
 /**
- * Common metrics for store regression tests
+ * Common metrics for state performance tests
  */
-export function createStoreRegressionMetrics() {
+export function createStatePerformanceMetrics() {
   const { Trend, Rate, Counter } = require('k6/metrics');
-  
+
   return {
     stateUpdateLatency: new Trend('state_update_latency'),
     memoryGrowth: new Trend('memory_growth'),

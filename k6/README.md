@@ -145,9 +145,7 @@ We have a `just` command that sets this variable for you:
 just run-grafana <test_name>
 ```
 
-## Store Refactor Regression Tests
-
-Performance tests for store → BehaviorSubject refactor validation.
+## State Performance Tests
 
 ### Test Types
 

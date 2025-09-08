@@ -1,11 +1,11 @@
 import { browser } from 'k6/browser';
 import { HomePage } from '../pages/home-page.js';
-import { StoreRegressionTestBase, createStoreRegressionMetrics } from '../utils/test-base.js';
+import { StorePerformanceTestBase, createStatePerformanceMetrics } from '../utils/test-base.js';
 import { getThresholds, getTestConfig, getBrowserConfig } from '../utils/environment-config.js';
 
 // Initialize test base and metrics
-const testBase = new StoreRegressionTestBase('storeRegressionTest');
-const metrics = createStoreRegressionMetrics();
+const testBase = new StorePerformanceTestBase('storeRegressionTest');
+const metrics = createStatePerformanceMetrics();
 
 // Override config functions method to provide the actual imports
 testBase.getConfigFunctions = () => ({ getThresholds, getTestConfig, getBrowserConfig });
@@ -23,7 +23,7 @@ export default async function storeRegressionTest() {
   const homepage = new HomePage(page);
 
   await testBase.runTestWithCleanup(page, async () => {
-    console.log('🔬 Starting Store Refactor Regression Tests');
+    console.log('🔬 Starting State Performance Tests');
 
     await testBase.setupPerformanceMonitoring(page);
 
@@ -37,6 +37,6 @@ export default async function storeRegressionTest() {
     ];
     await testBase.testMemoryPattern(page, memoryOperations, metrics);
 
-    console.log('✅ Store refactor regression tests completed');
+    console.log('✅ State Performance tests completed');
   });
 }

@@ -28,7 +28,7 @@ export default async function(data) {
     // Step 1: Navigate to homepage
     await homePage.goto();
 
-    // Step 2: Measure login process (NGXS vs UserService impact)
+    // Step 2: Measure login process
     const { duration: loginTime } = await testBase.measureAsync(async () => {
       await homePage.loginButton.click();
       await homePage.usernameInput.fill(__ENV.DSP_APP_USERNAME);
