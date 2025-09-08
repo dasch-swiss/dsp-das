@@ -30,7 +30,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
           (click)="createUser()"
           *ngIf="isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)"
           style="margin-right: 16px">
-          Create new
+          Create a new user
         </button>
 
         <app-sort-button

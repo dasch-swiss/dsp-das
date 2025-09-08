@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from '@dasch-swiss/dsp-js';
@@ -11,6 +11,7 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
     <app-dialog-header [title]="'Create a new user'" />
     <app-user-form [data]="data" (afterFormInit)="afterUserFormInit($event)" />
     <app-password-confirm-form (afterFormInit)="afterPasswordFormInit($event)" />
+    <mat-slide-toggle [formControl]="form.controls.isSystemAdmin">Is a system admin user</mat-slide-toggle>
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
@@ -20,8 +21,14 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
     </div>
   `,
 })
-export class CreateUserDialogComponent {
-  form = this._fb.group({} as { user: UserForm; password: FormControl<string> });
+export class CreateUserDialogComponent implements OnInit {
+  form = this._fb.group(
+    {} as {
+      user: UserForm;
+      password: FormControl<string>;
+      isSystemAdmin: FormControl<boolean>;
+    }
+  );
   isLoading = false;
 
   readonly data = { givenName: '', familyName: '', email: '', username: '', lang: 'en', isSystemAdmin: false };
@@ -31,6 +38,10 @@ export class CreateUserDialogComponent {
     private readonly _userApiService: UserApiService,
     private _fb: FormBuilder
   ) {}
+
+  ngOnInit() {
+    this.form.addControl('isSystemAdmin', this._fb.control(false));
+  }
 
   afterUserFormInit(form: UserForm): void {
     this.form.addControl('user', form);
@@ -56,7 +67,7 @@ export class CreateUserDialogComponent {
     user.username = userFormControls.username.value;
     user.password = this.form.controls.password.value;
     user.lang = userFormControls.lang.value;
-    user.systemAdmin = false;
+    user.systemAdmin = this.form.controls.isSystemAdmin.value;
     user.status = true;
 
     this._userApiService.create(user).subscribe(response => {
