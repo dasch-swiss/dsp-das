@@ -6,12 +6,15 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
   selector: 'app-users-list-row',
   template: `<span style="display: flex">
     <app-user-description [user]="user" style="flex: 1" />
-    <mat-chip-set *ngIf="isSystemAdmin(user.permissions)" style="padding: 0 16px">
-      <mat-chip [disableRipple]="true">
-        <mat-icon matChipAvatar style="color: #856404">verified_user</mat-icon>
-        {{ 'pages.userSettings.profile.systemAdmin' | translate }}
-      </mat-chip>
-    </mat-chip-set>
+
+    @if (isSystemAdmin(user.permissions)) {
+      <mat-chip-set style="padding: 0 16px">
+        <mat-chip [disableRipple]="true">
+          <mat-icon matChipAvatar style="color: #856404">verified_user</mat-icon>
+          {{ 'pages.userSettings.profile.systemAdmin' | translate }}
+        </mat-chip>
+      </mat-chip-set>
+    }
 
     <app-users-list-row-menu [user]="user" />
   </span>`,

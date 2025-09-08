@@ -17,7 +17,9 @@ export interface EditUserDialogProps {
   selector: 'app-edit-user-dialog',
   template: `
     <app-dialog-header [title]="data.isOwnAccount ? 'Edit my profile' : 'Edit user'" />
-    <app-user-form *ngIf="data.user" [data]="data.user" (afterFormInit)="afterFormInit($event)" />
+    @if (data.user as user) {
+      <app-user-form [data]="user" (afterFormInit)="afterFormInit($event)" />
+    }
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>

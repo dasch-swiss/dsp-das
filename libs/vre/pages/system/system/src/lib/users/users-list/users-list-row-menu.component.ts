@@ -19,12 +19,14 @@ import { UsersTabService } from '../users-tab.service';
 @Component({
   selector: 'app-users-list-row-menu',
   template: `
-    <button mat-icon-button *ngIf="isSysAdmin$ | async" [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
-      <mat-icon>more_horiz</mat-icon>
-    </button>
+    @if (isSysAdmin$ | async) {
+      <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+    }
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
-      <ng-container *ngIf="user.status">
+      @if (user.status) {
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
@@ -36,11 +38,11 @@ import { UsersTabService } from '../users-tab.service';
           <mat-icon>warning</mat-icon>
           Suspend user
         </button>
-      </ng-container>
+      }
 
-      <button mat-menu-item *ngIf="!user.status" (click)="askToActivateUser(user.username, user.id)">
-        Reactivate user
-      </button>
+      @if (!user.status) {
+        <button mat-menu-item (click)="askToActivateUser(user.username, user.id)">Reactivate user</button>
+      }
     </mat-menu>
   `,
 })
