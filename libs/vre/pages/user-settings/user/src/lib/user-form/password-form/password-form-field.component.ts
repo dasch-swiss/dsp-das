@@ -11,18 +11,15 @@ import { FormControl } from '@angular/forms';
       autocomplete="current-password" />
     <mat-label>{{ placeholder }}</mat-label>
 
-    <button
-      type="button"
-      matSuffix
-      mat-icon-button
-      class="input-icon"
-      *ngIf="showToggleVisibility"
-      (click)="showPassword = !showPassword">
-      <mat-icon> {{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-    </button>
-    <mat-error *ngIf="control.errors as errors">
-      {{ errors | humanReadableError: validatorErrors }}
-    </mat-error>
+    @if (showToggleVisibility) {
+      <button type="button" matSuffix mat-icon-button class="input-icon" (click)="showPassword = !showPassword">
+        <mat-icon> {{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    }
+
+    @if (control.errors; as errors) {
+      <mat-error>{{ errors | humanReadableError: validatorErrors }}</mat-error>
+    }
   </mat-form-field>`,
 })
 export class PasswordFormFieldComponent {

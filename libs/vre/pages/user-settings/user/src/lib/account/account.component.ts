@@ -12,32 +12,34 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
 @Component({
   selector: 'app-account',
   template: `
-    <div *ngIf="user$ | async as user">
-      <mat-card appearance="outlined" style="margin: 16px 0">
-        <mat-list style="padding: 0">
-          <mat-list-item (click)="onEditProfile(user)">
-            <mat-icon matListItemIcon>person</mat-icon>
-            <div matLine>Edit my profile</div>
-          </mat-list-item>
+    @if (user$ | async; as user) {
+      <div>
+        <mat-card appearance="outlined" style="margin: 16px 0">
+          <mat-list style="padding: 0">
+            <mat-list-item (click)="onEditProfile(user)">
+              <mat-icon matListItemIcon>person</mat-icon>
+              <div matLine>Edit my profile</div>
+            </mat-list-item>
 
-          <mat-list-item (click)="onEditPassword(user)">
-            <mat-icon matListItemIcon>lock</mat-icon>
-            <div matLine>Edit my password</div>
-          </mat-list-item>
-        </mat-list>
-      </mat-card>
+            <mat-list-item (click)="onEditPassword(user)">
+              <mat-icon matListItemIcon>lock</mat-icon>
+              <div matLine>Edit my password</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
 
-      <h3>{{ 'pages.userSettings.account.danger' | translate }}</h3>
+        <h3>{{ 'pages.userSettings.account.danger' | translate }}</h3>
 
-      <mat-card appearance="outlined">
-        <mat-list style="padding: 0">
-          <mat-list-item (click)="onDeleteOwnAccount(user)">
-            <mat-icon matListItemIcon>warning</mat-icon>
-            <div matLine>{{ 'pages.userSettings.account.deleteButton' | translate }}</div>
-          </mat-list-item>
-        </mat-list>
-      </mat-card>
-    </div>
+        <mat-card appearance="outlined">
+          <mat-list style="padding: 0">
+            <mat-list-item (click)="onDeleteOwnAccount(user)">
+              <mat-icon matListItemIcon>warning</mat-icon>
+              <div matLine>{{ 'pages.userSettings.account.deleteButton' | translate }}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </div>
+    }
   `,
   styles: [
     `
