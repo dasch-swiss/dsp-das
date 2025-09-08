@@ -4,7 +4,12 @@
     "outDir": "../../../../dist/out-tsc",
     "module": "commonjs",
     "target": "es2016",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "skipLibCheck": true,
+    "strict": false,
+    "noImplicitOverride": false,
+    "noImplicitReturns": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "files": ["src/test-setup.ts"],
   "include": [
