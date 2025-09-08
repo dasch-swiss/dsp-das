@@ -85,34 +85,34 @@ compare testToRun=testToRun env1="stage" env2="dev02":
     @echo ""
     @echo "✅ Comparison complete: {{env1}} vs {{env2}}"
 
-# Store refactor regression tests (flexible environment)
-regression-full env="dev":
-    @echo "🔬 Running comprehensive store refactor regression tests on {{env}}"
-    just run store-refactor-regression {{env}}
+# State performance tests (flexible environment)
+state-performance env="dev":
+    @echo "🔬 Running comprehensive state management tests on {{env}}"
+    just run state-management {{env}}
 
-regression-quick env="dev":
-    @echo "🔬 Running quick store refactor regression tests on {{env}}"
-    just run store-refactor-regression-quick {{env}}
+state-quick env="dev":
+    @echo "🔬 Running quick state performance tests on {{env}}"
+    just run state-quick {{env}}
 
-regression-micro env="dev":
-    @echo "🔬 Running micro-benchmark store performance tests on {{env}}"
-    just run store-refactor-regression-micro {{env}}
+ui-performance env="dev":
+    @echo "🔬 Running UI interaction performance tests on {{env}}"
+    just run ui-interactions {{env}}
 
-regression-statistical env="dev":
-    @echo "📊 Running statistical regression tests with multiple iterations on {{env}}"
-    just run store-refactor-regression-statistical {{env}}
+state-stats env="dev":
+    @echo "📊 Running statistical state performance tests on {{env}}"
+    just run state-stats {{env}}
 
-# Compare regression tests between any two environments
-regression-compare env1="stage" env2="dev02":
-    @echo "🔬 Store Regression Comparison: {{env1}} vs {{env2}}"
-    @echo "======================================================="
+# Compare state performance between environments
+state-compare env1="stage" env2="dev02":
+    @echo "🔬 State Performance Comparison: {{env1}} vs {{env2}}"
+    @echo "================================================="
     @echo "🟡 Testing {{env1}} environment..."
-    just regression-quick {{env1}}
+    just state-quick {{env1}}
     @echo ""
     @echo "🔵 Testing {{env2}} environment..."
-    just regression-quick {{env2}}
+    just state-quick {{env2}}
     @echo ""
-    @echo "✅ Regression comparison complete: {{env1}} vs {{env2}}"
+    @echo "✅ State comparison complete: {{env1}} vs {{env2}}"
 
 # Convenience aliases for common environment combinations
 compare-stage-dev02 testToRun=testToRun:
@@ -131,22 +131,22 @@ environments:
     @echo ""
     @echo "You can also pass custom URLs directly as the env parameter"
 
-# User Service performance tests with API request analysis
-user-login-performance env="dev":
-    @echo "🚀 Testing UserService login performance on {{env}}"
-    just run user-state-login-performance {{env}}
+# Login performance tests with API request analysis
+login-performance env="dev":
+    @echo "🚀 Testing login performance on {{env}}"
+    just run login-performance {{env}}
 
-user-propagation-performance env="dev":
-    @echo "🔄 Testing UserService state propagation on {{env}}"
-    just run user-state-propagation-performance {{env}}
+login-propagation env="dev":
+    @echo "🔄 Testing login state propagation on {{env}}"
+    just run login-propagation {{env}}
 
-# Compare UserService performance between environments
-user-performance-compare env1="stage" env2="dev":
-    @echo "🔬 UserService Performance: {{env1}} vs {{env2}}"
-    @echo "============================================="
-    just user-login-performance {{env1}}
-    just user-propagation-performance {{env1}}
+# Compare login performance between environments
+login-compare env1="stage" env2="dev":
+    @echo "🔬 Login Performance: {{env1}} vs {{env2}}"
+    @echo "=================================="
+    just login-performance {{env1}}
+    just login-propagation {{env1}}
     @echo ""
-    just user-login-performance {{env2}}
-    just user-propagation-performance {{env2}}
+    just login-performance {{env2}}
+    just login-propagation {{env2}}
     @echo "✅ Results include API request metrics in results/ directory"

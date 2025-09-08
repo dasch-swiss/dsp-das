@@ -153,10 +153,10 @@ Performance tests for store → BehaviorSubject refactor validation.
 
 | Test | Duration | Purpose | Command |
 |------|----------|---------|---------|
-| `regression-quick` | 2-4 min | Fast validation (CI/CD) | `just regression-quick` |
-| `regression-full` | 5-10 min | Deep analysis (pre-deploy) | `just regression-full` |
-| `regression-micro` | 30s | Micro-benchmarks (debugging) | `just regression-micro` |
-| `regression-statistical` | 8-12 min | Statistical validation | `just regression-statistical` |
+| `state-quick` | 2-4 min | Fast state validation (CI/CD) | `just state-quick` |
+| `state-performance` | 5-10 min | Deep state analysis (pre-deploy) | `just state-performance` |
+| `ui-performance` | 30s | UI interaction benchmarks | `just ui-performance` |
+| `state-stats` | 8-12 min | Statistical validation | `just state-stats` |
 
 ### Environment-Aware Thresholds
 
@@ -168,37 +168,37 @@ Performance tests for store → BehaviorSubject refactor validation.
 
 ### Usage
 
-**Compare versions:**
+**Compare environments:**
 ```bash
-just regression-compare    # STAGE vs DEV-02
-just regression-quick dev02    # Auto-detects environment thresholds
+just state-compare stage dev02    # STAGE vs DEV-02
+just state-quick dev02            # Auto-detects environment thresholds
 ```
 
 **CI/CD integration:**
 ```bash
-just regression-quick && echo "✅ No regressions" || echo "❌ Regression detected"
+just state-quick && echo "✅ Performance OK" || echo "❌ Performance issues detected"
 ```
 
 ## User Service Refactor Performance Tests
 
 Compare NGXS → UserService performance impact with K6 browser tests + Cypress frontend tests.
 
-### 🎯 K6 Tests
+### K6 Tests
 
 | Test | Purpose | Command |
 |------|---------|---------|
-| `user-state-login-performance` | Auth flow timing + API requests | `just run user-state-login-performance stage` |
-| `user-state-propagation-performance` | Cross-page state updates + API analysis | `just run user-state-propagation-performance` |
+| `login-performance` | Auth flow timing + API requests | `just login-performance stage` |
+| `login-propagation` | Cross-page state updates + API analysis | `just login-propagation dev` |
 
-**Compare versions:**
+**Compare environments:**
 ```bash
-k6 run k6/tests/user-state-login-performance.js --out json=k6/results/stage-login.json
+just login-compare stage dev    # Compare login performance
 # Results include: login_duration, auth_flow_success, api_auth_requests, api_total_requests
 ```
 
 **API Request Metrics:** Tests now track authentication, project, ontology, and resource API calls to detect request pattern changes.
 
-### 🔍 Cypress Tests
+### Cypress Tests
 
 | Test | Purpose |
 |------|---------|
@@ -218,7 +218,7 @@ cd apps/dsp-app && npx cypress run \
   --env VERSION=dev,skipDatabaseCleanup=true,apiUrl=https://api.dev.dasch.swiss,DSP_APP_USERNAME=$DSP_APP_USERNAME,DSP_APP_PASSWORD=$DSP_APP_PASSWORD
 ```
 
-## Documentation
+## More to read
 
 - [k6: Types of Load Testing](https://grafana.com/load-testing/types-of-load-testing/)
 - [k6: Official Tutorial](https://k6.io/docs/examples/tutorials/get-started-with-k6/)
