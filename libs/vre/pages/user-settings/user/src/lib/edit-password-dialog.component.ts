@@ -45,7 +45,7 @@ export interface EditPasswordDialogProps {
       </mat-step>
     </mat-stepper>
 
-    <div mat-dialog-actions align="end"><button mat-button matDialogClose>Cancel</button></div>
+    <div mat-dialog-actions align="end"><button mat-button color="primary" matDialogClose>Cancel</button></div>
   `,
   styles: [
     `
