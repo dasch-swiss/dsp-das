@@ -5,6 +5,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { finalize } from 'rxjs';
 
 export interface EditPasswordDialogProps {
@@ -68,18 +69,21 @@ export class EditPasswordDialogComponent {
     private _userApiService: UserApiService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _userService: UserService
   ) {}
 
   checkAdminPassword() {
-    this._dspApiConnection.v2.auth.login('iri', this.data.user.id, this.adminPasswordControl.value).subscribe(
-      () => {
-        this.stepper.next();
-      },
-      e => {
-        this.adminPasswordControl.setErrors({ incorrect: true });
-      }
-    );
+    this._dspApiConnection.v2.auth
+      .login('iri', this._userService.currentUser!.id, this.adminPasswordControl.value)
+      .subscribe(
+        () => {
+          this.stepper.next();
+        },
+        e => {
+          this.adminPasswordControl.setErrors({ incorrect: true });
+        }
+      );
   }
 
   updateNewPassword() {
