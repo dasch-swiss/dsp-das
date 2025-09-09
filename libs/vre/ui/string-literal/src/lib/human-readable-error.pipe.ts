@@ -7,6 +7,7 @@ import { ValidatorError } from '@dasch-swiss/vre/ui/ui';
 })
 export class HumanReadableErrorPipe implements PipeTransform {
   transform(error: object, params: ValidatorError[] | null = null): string {
+    console.log('aaa', error);
     if (error.hasOwnProperty('required')) {
       return 'This field is required';
     }
@@ -15,22 +16,21 @@ export class HumanReadableErrorPipe implements PipeTransform {
       return `The length must be greater than or equal to ${
         (
           error as {
-            minLength: {
+            minlength: {
               requiredLength: number;
             };
           }
-        ).minLength.requiredLength
+        ).minlength.requiredLength
       }`;
     }
 
     if (error.hasOwnProperty('maxlength')) {
       return `The length must be less than or equal to ${
-        (error as { maxLength: { requiredLength: number } }).maxLength.requiredLength
+        (error as { maxlength: { requiredLength: number } }).maxlength.requiredLength
       }`;
     }
 
     if (error.hasOwnProperty('min')) {
-      console.log(error);
       return `The value must be greater than or equal to ${
         (
           error as {
