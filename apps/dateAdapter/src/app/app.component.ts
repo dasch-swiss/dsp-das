@@ -1,8 +1,16 @@
 import { Component, Directive, Inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatCalendar, MatDatepickerContent } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_LOCALE, MatOption } from '@angular/material/core';
+import { MatCalendar, MatDatepickerContent, MatCalendarHeader } from '@angular/material/datepicker';
+import { MatSelect } from '@angular/material/select';
 import {
   CalendarDate,
   CalendarPeriod,
@@ -85,6 +93,8 @@ export class AppComponent {
     <mat-calendar-header />
   `,
   styleUrls: [],
+  standalone: true,
+  imports: [MatSelect, FormsModule, ReactiveFormsModule, MatOption, MatCalendarHeader],
 })
 export class HeaderComponent implements OnInit {
   constructor(
@@ -148,6 +158,7 @@ const makeCalToken = () => {
       deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
     },
   ],
+  standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class JdnDatepicker implements OnChanges, OnDestroy {

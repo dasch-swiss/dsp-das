@@ -1,5 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   FileRepresentationType,
@@ -7,6 +9,7 @@ import {
   UploadFileService,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { DragDropDirective } from '@dasch-swiss/vre/ui/ui';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -60,6 +63,8 @@ import { finalize } from 'rxjs';
       }
     `,
   ],
+  standalone: true,
+  imports: [DragDropDirective, MatIcon, MatProgressBar],
 })
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;

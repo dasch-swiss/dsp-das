@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
@@ -5,6 +6,7 @@ import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/con
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, map, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { ResourceBrowserComponent } from './comparison/resource-browser.component';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
@@ -24,6 +26,8 @@ import { ResourceResultService } from './resource-result.service';
     }
   `,
   providers: [ResourceResultService],
+  standalone: true,
+  imports: [ResourceBrowserComponent, AsyncPipe],
 })
 export class ResourceClassBrowserPageComponent implements OnInit {
   userCanViewResources = true;

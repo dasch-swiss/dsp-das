@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-licenses-enabled-table',
@@ -57,6 +60,8 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIcon, MatCheckbox, TranslateModule],
 })
 export class LicensesEnabledTableComponent {
   @Input({ required: true }) licenses!: ProjectLicenseDto[];

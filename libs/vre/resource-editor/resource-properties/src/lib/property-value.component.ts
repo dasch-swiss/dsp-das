@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { PropertyValueDisplayComponent } from './property-value-display.component';
+import { PropertyValueUpdateComponent } from './property-value-update.component';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -13,6 +15,8 @@ import { PropertyValueService } from './property-value.service';
       <app-property-value-update [index]="index" />
     }
   `,
+  standalone: true,
+  imports: [PropertyValueDisplayComponent, PropertyValueUpdateComponent],
 })
 export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;

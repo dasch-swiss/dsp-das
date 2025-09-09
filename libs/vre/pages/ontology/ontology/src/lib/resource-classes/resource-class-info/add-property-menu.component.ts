@@ -1,6 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemIcon, MatListItemTitle } from '@angular/material/list';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { Observable, Subject, BehaviorSubject, combineLatest, map, takeUntil } from 'rxjs';
 import { EditPropertyFormDialogComponent } from '../../forms/property-form/edit-property-form-dialog.component';
 import { CreatePropertyDialogData } from '../../forms/property-form/property-form.type';
@@ -82,6 +88,20 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatList,
+    MatListItem,
+    MatMenuTrigger,
+    MatIcon,
+    MatListItemIcon,
+    MatListItemTitle,
+    MatMenu,
+    MatMenuItem,
+    MatTooltip,
+    AsyncPipe,
+    StringifyStringLiteralPipe,
+  ],
 })
 export class AddPropertyMenuComponent implements OnChanges {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;

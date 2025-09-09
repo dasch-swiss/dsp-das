@@ -1,5 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLinkActive, RouterLink } from '@angular/router';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import {
@@ -119,6 +127,22 @@ import { OntologyPageService } from './ontology-page.service';
         background: var(--element-active-hover);
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatTabNav,
+    MatTabLink,
+    RouterLinkActive,
+    RouterLink,
+    MatDivider,
+    MatTabNavPanel,
+    MatButton,
+    MatIcon,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatTooltip,
+    AsyncPipe,
   ],
 })
 export class OntologySidenavComponent {

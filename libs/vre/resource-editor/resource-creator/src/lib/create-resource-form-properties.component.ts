@@ -3,6 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
+import { PropertyValuesCreatorComponent } from './property-values-creator.component';
 
 @Component({
   selector: 'app-create-resource-form-properties',
@@ -32,6 +34,8 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       }
     `,
   ],
+  standalone: true,
+  imports: [CreateResourceFormRowComponent, PropertyValuesCreatorComponent],
 })
 export class CreateResourceFormPropertiesComponent {
   @Input({ required: true }) resourceClassIri!: string;

@@ -1,8 +1,16 @@
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { PermissionInfoComponent } from './permission-info/permission-info.component';
+import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu/resource-edit-more-menu.component';
 
 @Component({
   selector: 'app-resource-toolbar',
@@ -66,6 +74,19 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
         }
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatMenuTrigger,
+    PermissionInfoComponent,
+    ResourceEditMoreMenuComponent,
+    MatMenu,
+    MatMenuItem,
+    CdkCopyToClipboard,
+    AsyncPipe,
   ],
 })
 export class ResourceToolbarComponent {

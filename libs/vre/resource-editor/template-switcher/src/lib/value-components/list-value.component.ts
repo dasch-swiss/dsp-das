@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatError } from '@angular/material/form-field';
 import { KnoraApiConnection, ListNodeV2, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { startWith } from 'rxjs/operators';
+import { NestedMenuComponent } from './nested-menu.component';
 
 @Component({
   selector: 'app-list-value',
@@ -18,6 +21,8 @@ import { startWith } from 'rxjs/operators';
       <mat-error>{{ control.errors | humanReadableError }}</mat-error>
     }
   `,
+  standalone: true,
+  imports: [NestedMenuComponent, MatError, HumanReadableErrorPipe],
 })
 export class ListValueComponent implements OnInit {
   @Input({ required: true }) propertyDef!: ResourcePropertyDefinition;

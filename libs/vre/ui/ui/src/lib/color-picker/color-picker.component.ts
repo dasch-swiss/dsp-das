@@ -20,6 +20,8 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import {
   _AbstractConstructor,
@@ -28,7 +30,9 @@ import {
   ErrorStateMatcher,
   mixinErrorState,
 } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { ColorPickerModule } from 'ngx-color-picker';
 import { Subject } from 'rxjs';
 
 /** error when invalid control is dirty, touched, or submitted. */
@@ -57,6 +61,8 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
   styleUrls: ['./color-picker.component.scss'],
   providers: [{ provide: MatFormFieldControl, useExisting: ColorPickerComponent }, { provide: Subject }],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, ColorPickerModule, MatError],
 })
 export class ColorPickerComponent
   extends _MatInputMixinBase

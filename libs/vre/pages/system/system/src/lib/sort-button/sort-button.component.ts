@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 export interface SortProp {
   key: string;
@@ -13,6 +16,8 @@ export interface SortProp {
   selector: 'app-sort-button',
   templateUrl: './sort-button.component.html',
   styleUrls: ['./sort-button.component.scss'],
+  standalone: true,
+  imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem],
 })
 export class SortButtonComponent implements OnInit {
   @Input({ required: true }) sortProps!: SortProp[];

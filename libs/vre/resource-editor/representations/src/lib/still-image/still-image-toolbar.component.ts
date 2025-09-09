@@ -1,6 +1,10 @@
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   Constants,
@@ -13,7 +17,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { CompoundNavigationComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -54,6 +60,18 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
         opacity: 0.5;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatTooltip,
+    MatMenuTrigger,
+    MatIcon,
+    CompoundNavigationComponent,
+    MatMenu,
+    MatMenuItem,
+    CdkCopyToClipboard,
+    AsyncPipe,
+    TranslateModule,
   ],
 })
 export class StillImageToolbarComponent {

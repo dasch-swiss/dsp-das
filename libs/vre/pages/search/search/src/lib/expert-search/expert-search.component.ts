@@ -1,3 +1,4 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -16,7 +17,12 @@ import {
   UntypedFormGroup,
   ValidatorFn,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { GravsearchSearchParams, SearchParamsService } from '../services/search-params.service';
@@ -38,6 +44,17 @@ export function forbiddenTermValidator(termRe: RegExp): ValidatorFn {
   templateUrl: './expert-search.component.html',
   styleUrls: ['./expert-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    CdkTextareaAutosize,
+    MatError,
+    MatButton,
+  ],
 })
 export class ExpertSearchComponent implements OnInit, AfterViewInit {
   /**

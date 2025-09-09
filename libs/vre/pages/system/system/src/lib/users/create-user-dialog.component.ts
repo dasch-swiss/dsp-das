@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatDialogRef, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
+import { UserForm, UserFormComponent, PasswordConfirmFormComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -20,6 +25,20 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
       </button>
     </div>
   `,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    UserFormComponent,
+    PasswordConfirmFormComponent,
+    MatSlideToggle,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+    TranslateModule,
+  ],
 })
 export class CreateUserDialogComponent implements OnInit {
   form = this._fb.group(

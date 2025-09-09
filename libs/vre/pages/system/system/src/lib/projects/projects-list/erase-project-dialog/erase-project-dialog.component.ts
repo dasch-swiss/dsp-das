@@ -1,10 +1,31 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { KnoraApiConnection, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 
 export interface IEraseProjectDialogProps {
@@ -21,6 +42,23 @@ export interface IEraseProjectDialogProps {
     `,
   ],
   templateUrl: './erase-project-dialog.component.html',
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+    TranslateModule,
+  ],
 })
 export class EraseProjectDialogComponent {
   eraseForm = new FormGroup({

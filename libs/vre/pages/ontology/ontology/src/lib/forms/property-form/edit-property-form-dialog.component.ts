@@ -1,9 +1,20 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { take } from 'rxjs';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { PropertyFormComponent } from './property-form.component';
 import {
   CreatePropertyData,
   CreatePropertyDialogData,
@@ -29,6 +40,17 @@ import {
         Submit
       </button>
     </div>`,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    PropertyFormComponent,
+    CdkScrollable,
+    MatDialogContent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+  ],
 })
 export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;

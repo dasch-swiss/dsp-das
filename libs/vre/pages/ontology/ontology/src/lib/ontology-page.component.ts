@@ -1,10 +1,16 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, take } from 'rxjs';
+import { OntologyEditorHeaderComponent } from './ontology-editor-header.component';
 import { OntologyPageService } from './ontology-page.service';
+import { OntologySidenavComponent } from './ontology-sidenav.component';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
@@ -38,6 +44,18 @@ import { OntologyEditService } from './services/ontology-edit.service';
   styleUrls: ['./ontology-page.component.scss'],
   providers: [OntologyPageService, OntologyEditService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    AppProgressIndicatorComponent,
+    MatSidenavContainer,
+    MatSidenav,
+    OntologySidenavComponent,
+    MatSidenavContent,
+    OntologyEditorHeaderComponent,
+    RouterOutlet,
+    StatusComponent,
+    AsyncPipe,
+  ],
 })
 export class OntologyPageComponent implements OnInit {
   project$ = this._projectPageService.currentProject$;

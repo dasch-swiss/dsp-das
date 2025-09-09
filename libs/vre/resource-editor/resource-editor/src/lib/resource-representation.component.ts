@@ -1,6 +1,15 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { getFileValue, RepresentationConstants } from '@dasch-swiss/vre/resource-editor/representations';
+import {
+  getFileValue,
+  RepresentationConstants,
+  StillImageComponent,
+  DocumentComponent,
+  AudioComponent,
+  VideoComponent,
+  ArchiveComponent,
+  TextComponent,
+} from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
@@ -43,6 +52,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       }
     }
   </div>`,
+  standalone: true,
+  imports: [StillImageComponent, DocumentComponent, AudioComponent, VideoComponent, ArchiveComponent, TextComponent],
 })
 export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

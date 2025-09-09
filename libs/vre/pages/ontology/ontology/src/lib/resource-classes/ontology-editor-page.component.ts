@@ -1,6 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
+import { ResourceClassInfoComponent } from './resource-class-info/resource-class-info.component';
 
 @Component({
   selector: 'app-ontology-editor-page',
@@ -18,6 +20,8 @@ import { OntologyEditService } from '../services/ontology-edit.service';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [ResourceClassInfoComponent, AsyncPipe],
 })
 export class OntologyEditorPageComponent {
   trackByClassDefinitionFn = (index: number, item: ResourceClassInfo) => `${index}-${item.id}`;

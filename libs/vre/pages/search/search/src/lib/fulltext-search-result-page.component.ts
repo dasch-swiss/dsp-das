@@ -1,9 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceResultService, ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -26,6 +28,8 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
   `,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [AppProgressIndicatorComponent, ResourceBrowserComponent, AsyncPipe],
 })
 export class FulltextSearchResultPageComponent {
   loading = true;

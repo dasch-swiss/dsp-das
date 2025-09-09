@@ -1,8 +1,21 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { tap } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
@@ -43,6 +56,20 @@ export interface DeleteValueDialogProps {
       </button>
     </div>
   `,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+  ],
 })
 export class DeleteValueDialogComponent {
   loading = false;

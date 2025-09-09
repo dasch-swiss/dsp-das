@@ -1,7 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { MatFormField, MatPrefix, MatLabel, MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect } from '@angular/material/select';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
+import { HumanReadableErrorPipe, StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { combineLatest, map } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
@@ -34,6 +41,22 @@ export interface ClassToSelect {
     </mat-form-field>
   `,
   styles: ['mat-form-field {width: 100%}'],
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatPrefix,
+    MatIcon,
+    MatLabel,
+    MatSelect,
+    FormsModule,
+    ReactiveFormsModule,
+    MatOptgroup,
+    MatOption,
+    MatError,
+    HumanReadableErrorPipe,
+    AsyncPipe,
+    StringifyStringLiteralPipe,
+  ],
 })
 export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];

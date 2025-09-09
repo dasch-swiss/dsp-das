@@ -1,4 +1,12 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormField } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import {
   AdminUsersApiService,
@@ -64,6 +72,18 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
     }
   `,
   styleUrls: ['./membership.component.scss'],
+  standalone: true,
+  imports: [
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatDivider,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    AsyncPipe,
+    I18nPluralPipe,
+  ],
 })
 export class MembershipComponent implements OnDestroy, OnChanges {
   @Input({ required: true }) userId!: string;

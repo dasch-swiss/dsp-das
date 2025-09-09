@@ -1,10 +1,15 @@
+import { NgFor } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AvailableLanguages } from '@dasch-swiss/vre/core/config';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
-import { TranslateService } from '@ngx-translate/core';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { map, shareReplay } from 'rxjs';
 import { existingNamesAsyncValidator } from '../existing-names.validator';
 import { UserForm } from './user-form.type';
@@ -36,6 +41,18 @@ import { UserForm } from './user-form.type';
       </mat-form-field>
     </form>
   `,
+  standalone: true,
+  imports: [
+    FormsModule,
+    CommonInputComponent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    ReactiveFormsModule,
+    NgFor,
+    MatOption,
+    TranslateModule,
+  ],
 })
 export class UserFormComponent implements OnInit {
   @Input({ required: true }) data!: {

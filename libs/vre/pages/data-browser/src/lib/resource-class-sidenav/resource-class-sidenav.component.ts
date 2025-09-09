@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
+import { ResourceClassSidenavItemComponent } from './resource-class-sidenav-item.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,6 +13,8 @@ import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-
       </div>
     }
   `,
+  standalone: true,
+  imports: [ResourceClassSidenavItemComponent],
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;

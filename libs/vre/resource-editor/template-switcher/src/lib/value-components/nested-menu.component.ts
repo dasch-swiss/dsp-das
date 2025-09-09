@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
+import { MatSelect } from '@angular/material/select';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 @Component({
@@ -47,6 +49,8 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
       }
     `,
   ],
+  standalone: true,
+  imports: [MatFormField, MatMenuTrigger, MatLabel, MatSelect, MatMenuItem, MatMenu],
 })
 export class NestedMenuComponent {
   @Input() data!: ListNodeV2;

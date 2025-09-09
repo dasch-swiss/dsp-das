@@ -2,9 +2,13 @@ import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { sortByKeys } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { sortByKeys, PropertyRowComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 import { expand, map, Observable, of, reduce, take, takeWhile } from 'rxjs';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
+import { IncomingResourcePagerComponent } from './incoming-resource-pager.component';
+import { IncomingStandoffLinkValueComponent } from './incoming-standoff-link-value.component';
 
 @Component({
   selector: 'app-incoming-links-property',
@@ -29,6 +33,14 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
       }
     </app-property-row>
   `,
+  standalone: true,
+  imports: [
+    PropertyRowComponent,
+    IncomingStandoffLinkValueComponent,
+    IncomingResourcePagerComponent,
+    AppProgressIndicatorComponent,
+    TranslateModule,
+  ],
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

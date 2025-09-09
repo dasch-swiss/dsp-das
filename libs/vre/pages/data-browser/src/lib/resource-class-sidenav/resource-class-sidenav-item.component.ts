@@ -1,10 +1,13 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { ActivatedRoute, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -39,6 +42,8 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
     </div>
   `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
+  standalone: true,
+  imports: [RouterLinkActive, RouterLink, MatIcon, NgxSkeletonLoaderModule, AsyncPipe, I18nPluralPipe],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;

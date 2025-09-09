@@ -11,17 +11,37 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
+import {
+  MediaControlService,
+  SegmentsService,
+  SegmentsDisplayComponent,
+} from '@dasch-swiss/vre/resource-editor/segment-support';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { Subject, takeUntil } from 'rxjs';
+import { MediaSliderComponent } from '../audio/media-slider.component';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';
+import { DisableContextMenuDirective } from './disable-context-menu.directive';
 import { MediaPlayerService } from './media-player.service';
+import { VideoOverlayComponent } from './video-overlay.component';
+import { VideoToolbarComponent } from './video-toolbar.component';
 
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
   providers: [MediaControlService, MediaPlayerService],
+  standalone: true,
+  imports: [
+    DisableContextMenuDirective,
+    StatusComponent,
+    AppProgressIndicatorComponent,
+    VideoOverlayComponent,
+    MediaSliderComponent,
+    SegmentsDisplayComponent,
+    VideoToolbarComponent,
+  ],
 })
 export class VideoComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

@@ -1,16 +1,25 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
-import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
+import {
+  MediaControlService,
+  SegmentsService,
+  SegmentsDisplayComponent,
+} from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { Subject, takeUntil } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { MediaPlayerService } from '../video/media-player.service';
+import { AudioToolbarComponent } from './audio-toolbar.component';
+import { MediaSliderComponent } from './media-slider.component';
 
 @Component({
   selector: 'app-audio',
   templateUrl: './audio.component.html',
   providers: [MediaControlService, MediaPlayerService],
+  standalone: true,
+  imports: [MatIcon, MediaSliderComponent, SegmentsDisplayComponent, AudioToolbarComponent],
 })
 export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) src!: ReadAudioFileValue;

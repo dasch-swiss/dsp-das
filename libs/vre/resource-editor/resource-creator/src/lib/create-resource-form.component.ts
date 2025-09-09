@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import {
   Cardinality,
   Constants,
@@ -16,7 +17,13 @@ import { ApiConstants, DspApiConnectionToken } from '@dasch-swiss/vre/core/confi
 import { FileForm, FileRepresentationType, fileValueMapping } from '@dasch-swiss/vre/resource-editor/representations';
 import { FormValueGroup, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { AppProgressIndicatorComponent, LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, InvalidControlScrollDirective } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { finalize, switchMap, take } from 'rxjs';
+import { CreateResourceFormFileComponent } from './create-resource-form-file.component';
+import { CreateResourceFormPropertiesComponent } from './create-resource-form-properties.component';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
@@ -69,6 +76,20 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
     '.row { display: flex; padding: 16px 0;}',
     '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
     '.form { display: block; margin-right: 100px;}',
+  ],
+  standalone: true,
+  imports: [
+    FormsModule,
+    InvalidControlScrollDirective,
+    ReactiveFormsModule,
+    CreateResourceFormFileComponent,
+    CreateResourceFormRowComponent,
+    CommonInputComponent,
+    CreateResourceFormPropertiesComponent,
+    MatButton,
+    LoadingButtonDirective,
+    AppProgressIndicatorComponent,
+    TranslateModule,
   ],
 })
 export class CreateResourceFormComponent implements OnInit {

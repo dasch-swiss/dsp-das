@@ -1,8 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguages,
+  MultiLanguageTextareaComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { ChipListInputComponent, CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
@@ -42,6 +48,15 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
       </form>
     }
   `,
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonInputComponent,
+    MultiLanguageTextareaComponent,
+    ChipListInputComponent,
+    TranslateModule,
+  ],
 })
 export class ReusableProjectFormComponent implements OnInit {
   @Input({ required: true }) formData!: {

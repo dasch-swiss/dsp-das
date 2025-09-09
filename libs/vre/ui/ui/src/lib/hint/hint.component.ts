@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatAnchor } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-hint',
@@ -30,5 +32,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   styleUrls: ['./hint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatAnchor, MatIcon],
 })
 export class HintComponent {}

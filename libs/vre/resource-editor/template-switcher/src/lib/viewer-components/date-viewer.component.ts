@@ -1,5 +1,7 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
+import { KnoraDatePipe } from '@dasch-swiss/vre/ui/ui';
 
 @Component({
   selector: 'app-date-viewer',
@@ -20,6 +22,8 @@ import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
       </span>
     </ng-template>
   `,
+  standalone: true,
+  imports: [NgTemplateOutlet, KnoraDatePipe],
 })
 export class DateViewerComponent implements OnInit {
   @Input({ required: true }) value!: ReadDateValue;

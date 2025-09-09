@@ -1,5 +1,8 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 export interface ConfirmDialogProps {
   message: string;
@@ -20,6 +23,8 @@ export interface ConfirmDialogProps {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [DialogHeaderComponent, CdkScrollable, MatDialogContent, MatDialogActions, MatButton],
 })
 export class ConfirmDialogComponent {
   constructor(

@@ -1,6 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
+import { MatToolbarRow } from '@angular/material/toolbar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
@@ -10,6 +13,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from '../video/media-player.service';
+import { AudioMoreButtonComponent } from './audio-more-button.component';
 
 @Component({
   selector: 'app-audio-toolbar',
@@ -37,6 +41,8 @@ import { MediaPlayerService } from '../video/media-player.service';
       </div>
     </mat-toolbar-row>
   `,
+  standalone: true,
+  imports: [MatToolbarRow, MatIconButton, MatIcon, AudioMoreButtonComponent, AsyncPipe],
 })
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;

@@ -1,9 +1,14 @@
 import { Component, Input } from '@angular/core';
+import { MatAnchor } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { PagerComponent } from '@dasch-swiss/vre/ui/ui';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
+import { ResourceListSelectionComponent } from './resource-list-selection.component';
+import { ResourceListComponent } from './resource-list.component';
 
 @Component({
   selector: 'app-resources-list',
@@ -19,6 +24,8 @@ import { ResourceResultService } from '../resource-result.service';
       <app-resource-list-selection [resources]="resources" />
     }
     <app-resource-list [resources]="resources" />`,
+  standalone: true,
+  imports: [MatAnchor, MatIcon, PagerComponent, ResourceListSelectionComponent, ResourceListComponent],
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];

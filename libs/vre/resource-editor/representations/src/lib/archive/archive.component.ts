@@ -1,7 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -13,6 +18,8 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   selector: 'app-archive',
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.scss'],
+  standalone: true,
+  imports: [StatusComponent, MatIcon, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, AsyncPipe],
 })
 export class ArchiveComponent implements OnChanges {
   @Input({ required: true }) src!: ReadArchiveFileValue;

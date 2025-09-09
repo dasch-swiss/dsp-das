@@ -1,5 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { map, Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
@@ -52,6 +56,8 @@ import { PropertyValueService } from './property-value.service';
     ]),
   ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
+  standalone: true,
+  imports: [MatButton, MatTooltip, MatIcon, AsyncPipe],
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
   @Input({ required: true }) showDelete!: boolean;

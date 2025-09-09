@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
@@ -38,6 +41,8 @@ import { CollaborationPageService } from './collaboration-page.service';
       </button>
     </mat-menu>
   `,
+  standalone: true,
+  imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem],
 })
 export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

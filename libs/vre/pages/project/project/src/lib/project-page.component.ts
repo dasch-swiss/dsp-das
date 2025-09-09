@@ -1,9 +1,12 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { filter, startWith, Subject, takeUntil } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
+import { ProjectSidenavCollapseButtonComponent } from './sidenav/project-sidenav-collapse-button.component';
+import { ProjectSidenavComponent } from './sidenav/project-sidenav.component';
 
 @Component({
   selector: 'app-project-page',
@@ -32,6 +35,15 @@ import { ProjectPageService } from './project-page.service';
   `,
   styleUrls: ['./project-page.component.scss'],
   providers: [ProjectPageService],
+  standalone: true,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    ProjectSidenavCollapseButtonComponent,
+    ProjectSidenavComponent,
+    MatSidenavContent,
+    RouterOutlet,
+  ],
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;

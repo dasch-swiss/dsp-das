@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { sortByKeys } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { sortByKeys, PropertyRowComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateModule } from '@ngx-translate/core';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
+import { IncomingStandoffLinkValueComponent } from './incoming-standoff-link-value.component';
 
 @Component({
   selector: 'app-standoff-links-property',
@@ -14,6 +16,8 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
     [borderBottom]="true">
     <app-incoming-standoff-link-value [links]="standoffLinks" />
   </app-property-row>`,
+  standalone: true,
+  imports: [PropertyRowComponent, IncomingStandoffLinkValueComponent, TranslateModule],
 })
 export class StandoffLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

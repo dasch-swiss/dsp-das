@@ -1,11 +1,17 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatCard } from '@angular/material/card';
+import { MatLine } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
 import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
@@ -53,6 +59,8 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
       }
     `,
   ],
+  standalone: true,
+  imports: [MatCard, MatList, MatListItem, MatIcon, MatListItemIcon, MatLine, AsyncPipe, TranslateModule],
 })
 export class AccountComponent {
   user$ = this._userService.user$;

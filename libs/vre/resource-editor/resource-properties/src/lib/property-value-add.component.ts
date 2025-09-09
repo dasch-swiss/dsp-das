@@ -5,6 +5,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { finalize } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
+import { PropertyValueEditComponent } from './property-value-edit.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -14,6 +15,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     [readValue]="undefined"
     (afterEdit)="addItem($event)"
     (afterUndo)="stopAdding.emit()" />`,
+  standalone: true,
+  imports: [PropertyValueEditComponent],
 })
 export class PropertyValueAddComponent {
   @Output() stopAdding = new EventEmitter<void>();

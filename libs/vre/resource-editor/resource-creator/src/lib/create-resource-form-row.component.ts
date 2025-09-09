@@ -1,4 +1,6 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-create-resource-form-row',
@@ -32,6 +34,8 @@ import { Component, Input } from '@angular/core';
       }
     `,
   ],
+  standalone: true,
+  imports: [NgClass, MatTooltip],
 })
 export class CreateResourceFormRowComponent {
   @Input({ required: true }) label!: string;

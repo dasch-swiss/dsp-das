@@ -1,8 +1,17 @@
-import { ConnectionPositionPair, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import {
+  ConnectionPositionPair,
+  ScrollStrategyOptions,
+  CdkOverlayOrigin,
+  CdkConnectedOverlay,
+} from '@angular/cdk/overlay';
 import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ApiResponseData, GroupResponse, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { Interaction, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateModule } from '@ngx-translate/core';
 import { filter, map, take } from 'rxjs';
 import {
   GroupPermissionsUtil,
@@ -16,6 +25,8 @@ import {
   selector: 'app-permission-info',
   templateUrl: './permission-info.component.html',
   styleUrls: ['./permission-info.component.scss'],
+  standalone: true,
+  imports: [MatIconButton, MatTooltip, CdkOverlayOrigin, MatIcon, CdkConnectedOverlay, TranslateModule],
 })
 export class PermissionInfoComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

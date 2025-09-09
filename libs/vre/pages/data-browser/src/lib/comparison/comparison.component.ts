@@ -1,5 +1,8 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ResourceFetcherComponent } from '@dasch-swiss/vre/resource-editor/resource-editor/src/lib/resource-fetcher.component';
+import { AngularSplitModule } from 'angular-split';
 
 @Component({
   selector: 'app-comparison',
@@ -33,6 +36,8 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
         <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
       </div>
     </ng-template>`,
+  standalone: true,
+  imports: [AngularSplitModule, NgTemplateOutlet, ResourceFetcherComponent],
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];

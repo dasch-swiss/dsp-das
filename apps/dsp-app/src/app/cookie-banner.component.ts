@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
@@ -17,6 +18,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
     </div>
   }`,
   styleUrls: [`./cookie-banner.component.scss`],
+  standalone: true,
+  imports: [MatButton],
 })
 export class CookieBannerComponent implements OnInit {
   showCookieBanner = true;

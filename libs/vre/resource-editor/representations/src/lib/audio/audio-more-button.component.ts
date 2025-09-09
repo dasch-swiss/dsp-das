@@ -1,5 +1,10 @@
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { Constants, ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { getFileValue } from '../get-file-value';
@@ -23,6 +28,8 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         <button mat-menu-item (click)="openReplaceFileDialog()">Replace file</button>
       }
     </mat-menu>`,
+  standalone: true,
+  imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, CdkCopyToClipboard, AsyncPipe],
 })
 export class AudioMoreButtonComponent {
   @Input({ required: true }) parentResource!: ReadResource;

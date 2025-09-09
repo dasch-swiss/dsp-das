@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { CompoundService } from './compound.service';
 
 @Component({
@@ -30,6 +33,8 @@ import { CompoundService } from './compound.service';
       <mat-icon>last_page</mat-icon>
     </button>
   </span>`,
+  standalone: true,
+  imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class CompoundNavigationComponent {
   get compoundNavigation() {

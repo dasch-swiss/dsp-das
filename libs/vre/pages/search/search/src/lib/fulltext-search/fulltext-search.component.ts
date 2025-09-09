@@ -1,4 +1,11 @@
-import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
+import {
+  ConnectionPositionPair,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+  PositionStrategy,
+  CdkOverlayOrigin,
+} from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -14,12 +21,21 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatLine } from '@angular/material/core';
+import { MatDivider } from '@angular/material/divider';
+import { MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemTitle } from '@angular/material/list';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ApiResponseError, Constants, ReadProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { ComponentCommunicationEventService, Events, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription, tap } from 'rxjs';
 
 export interface PrevSearchItem {
@@ -35,6 +51,25 @@ const resolvedPromise = Promise.resolve(null);
   templateUrl: './fulltext-search.component.html',
   styleUrls: ['./fulltext-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CdkOverlayOrigin,
+    MatButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatSuffix,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    MatTooltip,
+    FormsModule,
+    MatList,
+    MatListItem,
+    MatListItemTitle,
+    MatIconButton,
+    MatLine,
+    TranslateModule,
+  ],
 })
 export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**

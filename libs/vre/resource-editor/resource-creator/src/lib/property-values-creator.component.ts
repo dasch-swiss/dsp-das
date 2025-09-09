@@ -1,8 +1,13 @@
 import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { TemplateEditorSwitcherComponent } from 'template-switcher';
+import { PropertyValueCreatorComponent } from './property-value-creator.component';
 
 @Component({
   selector: 'app-property-values-creator',
@@ -33,7 +38,16 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </button>
     }
   `,
-  // TODO do not change detection strategy until ng18 is on with formControls touchedChanged to manage common-inputs change event
+  standalone: true,
+  imports: [
+    TemplateEditorSwitcherComponent,
+    PropertyValueCreatorComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+  ],
 })
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;

@@ -1,5 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { debounceTime, switchMap, tap } from 'rxjs';
 import { GeonameService, SearchPlace } from '../geoname.service';
 
@@ -28,6 +34,20 @@ import { GeonameService, SearchPlace } from '../geoname.service';
       </mat-error>
     }
   </mat-form-field>`,
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatInput,
+    FormsModule,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatProgressSpinner,
+    MatSuffix,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+    HumanReadableErrorPipe,
+  ],
 })
 export class GeonameValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string>;

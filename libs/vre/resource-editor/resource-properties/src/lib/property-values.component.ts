@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { JsLibPotentialError } from './JsLibPotentialError';
+import { PropertyValueAddComponent } from './property-value-add.component';
+import { PropertyValueComponent } from './property-value.component';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -24,6 +28,8 @@ import { PropertyValueService } from './property-value.service';
   `,
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [PropertyValueComponent, MatIconButton, MatIcon, PropertyValueAddComponent],
 })
 export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };

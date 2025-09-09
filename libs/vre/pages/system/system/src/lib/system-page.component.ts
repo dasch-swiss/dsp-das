@@ -1,7 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabNav, MatTabNavPanel, MatTabLink } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 @Component({
   selector: 'app-system-page',
@@ -34,6 +39,18 @@ import { UserService } from '@dasch-swiss/vre/core/session';
     </div>
   `,
   styleUrls: ['./system-page.component.scss'],
+  standalone: true,
+  imports: [
+    MatTabNav,
+    MatTabNavPanel,
+    MatTabLink,
+    RouterLinkActive,
+    RouterLink,
+    MatIcon,
+    RouterOutlet,
+    StatusComponent,
+    AsyncPipe,
+  ],
 })
 export class SystemPageComponent {
   isSysAdmin$ = this._userService.isSysAdmin$;

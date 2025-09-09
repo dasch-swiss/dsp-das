@@ -1,10 +1,16 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatBadge } from '@angular/material/badge';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 import { Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateModule } from '@ngx-translate/core';
+import { PropertiesDisplayComponent } from 'dsp-app/libs/vre/resource-editor/properties-display/src/lib/properties-display.component';
 import { Subject, takeUntil } from 'rxjs';
+import { AnnotationTabComponent } from './annotation-tab.component';
 import { CompoundService } from './compound/compound.service';
+import { SegmentTabComponent } from './segment-tab.component';
 
 @Component({
   selector: 'app-resource-tabs',
@@ -64,6 +70,17 @@ import { CompoundService } from './compound/compound.service';
         }
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatTabGroup,
+    MatTab,
+    PropertiesDisplayComponent,
+    MatTabLabel,
+    MatBadge,
+    AnnotationTabComponent,
+    SegmentTabComponent,
+    TranslateModule,
   ],
 })
 export class ResourceTabsComponent implements OnInit, OnDestroy {

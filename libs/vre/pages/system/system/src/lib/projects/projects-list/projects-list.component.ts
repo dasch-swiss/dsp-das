@@ -1,5 +1,10 @@
+import { AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
@@ -10,9 +15,9 @@ import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
-import { SortProp } from '../../sort-button/sort-button.component';
+import { SortProp, SortButtonComponent } from '../../sort-button/sort-button.component';
 import {
   EraseProjectDialogComponent,
   IEraseProjectDialogProps,
@@ -23,6 +28,21 @@ import {
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
   styleUrls: ['./projects-list.component.scss'],
+  standalone: true,
+  imports: [
+    SortButtonComponent,
+    MatButton,
+    MatIcon,
+    MatChipListbox,
+    MatChip,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    AsyncPipe,
+    I18nPluralPipe,
+    TranslateModule,
+  ],
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();

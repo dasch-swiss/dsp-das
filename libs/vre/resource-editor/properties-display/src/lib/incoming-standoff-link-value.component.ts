@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({
@@ -14,6 +15,8 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
       </div>
     }
   `,
+  standalone: true,
+  imports: [RouterLink],
 })
 export class IncomingStandoffLinkValueComponent {
   @Input({ required: true }) links!: IncomingOrStandoffLink[];

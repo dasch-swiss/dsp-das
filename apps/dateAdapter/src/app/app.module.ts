@@ -12,7 +12,7 @@ import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconv
 import { AppComponent, HeaderComponent, JdnDatepicker } from './app.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, JdnDatepicker],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -24,6 +24,8 @@ import { AppComponent, HeaderComponent, JdnDatepicker } from './app.component';
     MatJDNConvertibleCalendarDateAdapterModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HeaderComponent,
+    JdnDatepicker,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +30,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
     </div>
   `,
   styleUrls: ['./incoming-resource-pager.component.scss'],
+  standalone: true,
+  imports: [MatButton, MatIcon, TranslateModule],
 })
 export class IncomingResourcePagerComponent {
   @Input({ required: true }) pageIndex!: number;

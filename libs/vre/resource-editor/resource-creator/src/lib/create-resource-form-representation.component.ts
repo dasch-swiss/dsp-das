@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
+import { CreateResourceFormImageComponent } from './create-resource-form-image.component';
+import { CreateResourceFormRowComponent } from './create-resource-form-row.component';
+import { UploadControlComponent } from './upload-control.component';
 
 @Component({
   selector: 'app-create-resource-form-representation',
@@ -22,6 +25,14 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CreateResourceFormRowComponent,
+    UploadControlComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CreateResourceFormImageComponent,
+  ],
 })
 export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

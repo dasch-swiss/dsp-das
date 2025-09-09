@@ -1,7 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, map, shareReplay, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
+import { LicensesEnabledTableComponent } from './licenses-enabled-table.component';
 
 @Component({
   selector: 'app-legal-settings-licenses',
@@ -28,6 +31,8 @@ import { ProjectPageService } from '../../project-page.service';
     }
   }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [LicensesEnabledTableComponent, AsyncPipe, TranslateModule],
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

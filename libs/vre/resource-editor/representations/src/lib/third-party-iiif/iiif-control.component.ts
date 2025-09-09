@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { startWith, Subscription } from 'rxjs';
 import { IIIFUrl } from './third-party-iiif';
 
@@ -41,6 +44,8 @@ import { IIIFUrl } from './third-party-iiif';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatError, HumanReadableErrorPipe],
 })
 export class IiifControlComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;

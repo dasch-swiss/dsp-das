@@ -1,16 +1,38 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { RouterLinkActive, RouterLink } from '@angular/router';
 import { User } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
-import { TranslateService } from '@ngx-translate/core';
+import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { LoginFormComponent } from '../login-form/login-form.component';
 import { MenuItem } from '../menu-item';
 
 @Component({
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
+  standalone: true,
+  imports: [
+    MatButton,
+    MatMenuTrigger,
+    AdminImageDirective,
+    MatMenu,
+    MatList,
+    MatListItem,
+    RouterLinkActive,
+    RouterLink,
+    MatDivider,
+    LoginFormComponent,
+    AsyncPipe,
+    TranslateModule,
+  ],
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
   @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;

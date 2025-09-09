@@ -1,4 +1,6 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { WithBreaksPipe } from '../resource-properties.components';
 import { PropertiesDisplayService } from './properties-display.service';
 import { PropertyValueService } from './property-value.service';
 
@@ -11,6 +13,8 @@ import { PropertyValueService } from './property-value.service';
       [innerHTML]="comment | withBreaks"></div>
   }`,
   styleUrls: [`./property-value-display-comment.component.scss`],
+  standalone: true,
+  imports: [AsyncPipe, WithBreaksPipe],
 })
 export class PropertyValueDisplayCommentComponent {
   @Input({ required: true }) index!: number;

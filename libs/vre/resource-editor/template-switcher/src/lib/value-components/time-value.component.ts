@@ -1,7 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatFormField, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { JDNDatepickerDirective } from '@dasch-swiss/vre/ui/date-picker';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 
 @Component({
   selector: 'app-time-value',
@@ -37,6 +42,19 @@ import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
       <mat-error>{{ errors | humanReadableError }}</mat-error>
     }
   `,
+  standalone: true,
+  imports: [
+    JDNDatepickerDirective,
+    MatFormField,
+    MatInput,
+    MatDatepickerInput,
+    FormsModule,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+    MatError,
+    HumanReadableErrorPipe,
+  ],
 })
 export class TimeValueComponent {
   @Input({ required: true }) control!: FormControl<DateTime>;

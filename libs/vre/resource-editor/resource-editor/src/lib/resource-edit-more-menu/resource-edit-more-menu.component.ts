@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
@@ -8,6 +12,7 @@ import {
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { ProgressSpinnerComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { combineLatest, map, of, take } from 'rxjs';
 import { CanDeleteResource } from './can-delete-resource.interface';
 
@@ -95,6 +100,8 @@ import { CanDeleteResource } from './can-delete-resource.interface';
       }
     `,
   ],
+  standalone: true,
+  imports: [MatIconButton, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, ProgressSpinnerComponent],
 })
 export class ResourceEditMoreMenuComponent {
   @Input({ required: true }) resource!: ReadResource;

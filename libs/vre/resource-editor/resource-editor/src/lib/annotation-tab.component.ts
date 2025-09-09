@@ -1,7 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { PropertiesDisplayComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { RegionService } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource, ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
@@ -28,6 +30,8 @@ import { Subscription } from 'rxjs';
     </div>
   }`,
   styles: ['.active {border: 1px solid}'],
+  standalone: true,
+  imports: [PropertiesDisplayComponent, AsyncPipe],
 })
 export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;

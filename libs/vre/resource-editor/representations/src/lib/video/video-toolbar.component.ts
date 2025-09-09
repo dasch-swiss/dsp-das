@@ -1,7 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconRegistry } from '@angular/material/icon';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
+import { MatToolbarRow } from '@angular/material/toolbar';
+import { TooltipPosition, MatTooltip } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
@@ -9,9 +12,12 @@ import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
 } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { TimePipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from './media-player.service';
+import { VideoMoreButtonComponent } from './video-more-button.component';
 
 @Component({
   selector: 'app-video-toolbar',
@@ -62,6 +68,17 @@ import { MediaPlayerService } from './media-player.service';
       </button>
     </div>
   </mat-toolbar-row>`,
+  standalone: true,
+  imports: [
+    MatToolbarRow,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    VideoMoreButtonComponent,
+    AsyncPipe,
+    TranslateModule,
+    TimePipe,
+  ],
 })
 export class VideoToolbarComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

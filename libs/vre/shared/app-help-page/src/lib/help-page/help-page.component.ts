@@ -1,14 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { HealthResponse, KnoraApiConnection, VersionResponse } from '@dasch-swiss/dsp-js';
 import { AppConfigService, DspApiConnectionToken, DspConfig } from '@dasch-swiss/vre/core/config';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import packageJson from '../../../../../../../package.json';
-import { GridItem } from '../grid/grid.component';
+import { FooterComponent } from '../footer/footer.component';
+import { GridItem, GridComponent } from '../grid/grid.component';
 
 @Component({
   selector: 'app-help',
   templateUrl: './help-page.component.html',
   styleUrls: ['./help-page.component.scss'],
+  standalone: true,
+  imports: [GridComponent, MatIcon, FooterComponent],
 })
 export class HelpPageComponent implements OnInit {
   loading = true;

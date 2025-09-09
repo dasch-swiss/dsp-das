@@ -13,10 +13,13 @@ import {
 import { Constants, ReadResource, ReadStillImageFileValue } from '@dasch-swiss/dsp-js';
 import { ReadStillImageExternalFileValue } from '@dasch-swiss/dsp-js/src/models/v2/resources/values/read/read-file-value';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { CompoundArrowNavigationComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { CompoundSliderComponent } from '@dasch-swiss/vre/resource-editor/resource-editor/src/lib/compound/compound-slider.component';
 import { IIIFUrl } from '../third-party-iiif/third-party-iiif';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 import { OsdDrawerService } from './osd-drawer.service';
 import { StillImageHelper } from './still-image-helper';
+import { StillImageToolbarComponent } from './still-image-toolbar.component';
 
 @Component({
   selector: 'app-still-image',
@@ -44,6 +47,8 @@ import { StillImageHelper } from './still-image-helper';
   styleUrls: ['./still-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OsdDrawerService, OpenSeaDragonService],
+  standalone: true,
+  imports: [CompoundArrowNavigationComponent, CompoundSliderComponent, StillImageToolbarComponent],
 })
 export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;

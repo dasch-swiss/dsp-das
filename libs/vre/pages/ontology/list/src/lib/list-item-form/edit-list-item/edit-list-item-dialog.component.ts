@@ -1,10 +1,21 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { finalize, of, switchMap } from 'rxjs';
 import { ListItemForm } from '../list-item-form.type';
+import { ReusableListItemFormComponent } from '../reusable-list-item-form.component';
 
 export interface EditListItemDialogProps {
   nodeIri: string;
@@ -35,6 +46,17 @@ export interface EditListItemDialogProps {
       </button>
     </div>
   `,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    ReusableListItemFormComponent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+  ],
 })
 export class EditListItemDialogComponent {
   form: ListItemForm;

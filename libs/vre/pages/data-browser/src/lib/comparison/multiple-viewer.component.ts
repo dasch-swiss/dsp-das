@@ -1,5 +1,7 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
+import { ComparisonComponent } from './comparison.component';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -27,6 +29,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
       }
     `,
   ],
+  standalone: true,
+  imports: [ComparisonComponent, AsyncPipe],
 })
 export class MultipleViewerComponent {
   readonly MAX_RESOURCES = 6;

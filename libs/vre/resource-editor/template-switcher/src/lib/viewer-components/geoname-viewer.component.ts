@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ReadGeonameValue } from '@dasch-swiss/dsp-js';
 import { Observable } from 'rxjs';
@@ -16,6 +17,8 @@ import { DisplayPlace, GeonameService } from '../geoname.service';
     >
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [AsyncPipe],
 })
 export class GeonameViewerComponent implements OnChanges {
   @Input({ required: true }) value!: ReadGeonameValue;

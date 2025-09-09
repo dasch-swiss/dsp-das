@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
+import { FootnoteDirective, FootnoteParserPipe } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { InternalLinkReplacerPipe, AddTargetBlankPipe } from '@dasch-swiss/vre/ui/ui';
 
 @Component({
   selector: 'app-rich-text-viewer',
@@ -35,6 +37,8 @@ import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
       }
     `,
   ],
+  standalone: true,
+  imports: [FootnoteDirective, FootnoteParserPipe, InternalLinkReplacerPipe, AddTargetBlankPipe],
 })
 export class RichTextViewerComponent {
   @Input({ required: true }) value!: ReadTextValueAsXml;

@@ -1,7 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguages,
+  MutiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
 import { ListItemForm } from './list-item-form.type';
 
 @Component({
@@ -18,6 +23,8 @@ import { ListItemForm } from './list-item-form.type';
       [validators]="commentsValidators"
       [isRequired]="false" />
   `,
+  standalone: true,
+  imports: [MutiLanguageInputComponent, MultiLanguageTextareaComponent],
 })
 export class ReusableListItemFormComponent implements OnInit {
   @Input() formData: {

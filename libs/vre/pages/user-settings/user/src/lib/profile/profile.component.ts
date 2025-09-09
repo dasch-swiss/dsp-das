@@ -1,6 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatChipSet, MatChip, MatChipAvatar } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
@@ -40,6 +45,8 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
       </div>
     }
   `,
+  standalone: true,
+  imports: [AdminImageDirective, MatChipSet, MatChip, MatIcon, MatChipAvatar, AsyncPipe, TranslateModule],
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

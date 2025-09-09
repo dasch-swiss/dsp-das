@@ -1,6 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DoubleChipSelectorComponent } from '@dasch-swiss/vre/ui/ui';
 import { combineLatest, map } from 'rxjs';
+import { UsersListComponent } from './users-list/users-list.component';
 import { UsersTabService } from './users-tab.service';
 
 @Component({
@@ -26,6 +30,8 @@ import { UsersTabService } from './users-tab.service';
     }
   `,
   providers: [UsersTabService],
+  standalone: true,
+  imports: [ProgressIndicatorOverlayComponent, DoubleChipSelectorComponent, UsersListComponent, AsyncPipe],
 })
 export class UsersTabComponent {
   private _activeUsers$ = this.usersTabService.allUsers$.pipe(map(users => users.filter(user => user.status)));

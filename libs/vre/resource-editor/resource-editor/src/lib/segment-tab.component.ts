@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { PropertiesDisplayComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { Segment, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { delay, Subscription } from 'rxjs';
 
@@ -11,6 +12,8 @@ import { delay, Subscription } from 'rxjs';
     </div>
   }`,
   styles: ['.active {border: 1px solid}'],
+  standalone: true,
+  imports: [PropertiesDisplayComponent],
 })
 export class SegmentTabComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;

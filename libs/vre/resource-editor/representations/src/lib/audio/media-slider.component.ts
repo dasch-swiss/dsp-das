@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatSlider, MatSliderThumb } from '@angular/material/slider';
+import { MatToolbarRow } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-media-slider',
@@ -16,6 +19,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       }
     `,
   ],
+  standalone: true,
+  imports: [MatToolbarRow, MatSlider, MatSliderThumb, FormsModule],
 })
 export class MediaSliderComponent {
   @Input({ required: true }) max!: number;

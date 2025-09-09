@@ -1,3 +1,4 @@
+import { NgClass, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,7 +11,10 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Cardinality } from '@dasch-swiss/dsp-js';
+import { TemplateViewerSwitcherComponent } from 'template-switcher';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
+import { PropertyValueActionBubbleComponent } from './property-value-action-bubble.component';
+import { PropertyValueDisplayCommentComponent } from './property-value-display-comment.component';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
@@ -46,6 +50,15 @@ import { PropertyValueService } from './property-value.service';
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    TemplateViewerSwitcherComponent,
+    PropertyValueActionBubbleComponent,
+    NgClass,
+    NgTemplateOutlet,
+    PropertyValueDisplayCommentComponent,
+    AsyncPipe,
+  ],
 })
 export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;

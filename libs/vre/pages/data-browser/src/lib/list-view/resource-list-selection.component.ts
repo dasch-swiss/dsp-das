@@ -1,5 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
@@ -17,6 +20,8 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
+  standalone: true,
+  imports: [MatButton, MatIconButton, MatIcon, AsyncPipe],
 })
 export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];

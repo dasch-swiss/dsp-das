@@ -6,7 +6,13 @@ import { getFileValue, RegionService } from '@dasch-swiss/vre/resource-editor/re
 import { SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { DspCompoundPosition, DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { take } from 'rxjs';
+import { CompoundViewerComponent } from './compound/compound-viewer.component';
 import { CompoundService } from './compound/compound.service';
+import { ResourceHeaderComponent } from './resource-header.component';
+import { ResourceLegalComponent } from './resource-legal.component';
+import { ResourceRepresentationComponent } from './resource-representation.component';
+import { ResourceRestrictionComponent } from './resource-restriction.component';
+import { ResourceTabsComponent } from './resource-tabs.component';
 
 @Component({
   selector: 'app-resource',
@@ -25,6 +31,15 @@ import { CompoundService } from './compound/compound.service';
     <app-resource-tabs [resource]="resource" />
   `,
   providers: [CompoundService, RegionService, SegmentsService],
+  standalone: true,
+  imports: [
+    ResourceRestrictionComponent,
+    ResourceHeaderComponent,
+    ResourceLegalComponent,
+    ResourceRepresentationComponent,
+    CompoundViewerComponent,
+    ResourceTabsComponent,
+  ],
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

@@ -1,4 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ResourceClassSidenavComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
@@ -29,6 +39,17 @@ import { ProjectPageService } from '../project-page.service';
     }
   `,
   styleUrls: ['./project-sidenav-ontologies.component.scss'],
+  standalone: true,
+  imports: [
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatTooltip,
+    ResourceClassSidenavComponent,
+    MatDivider,
+    AsyncPipe,
+  ],
 })
 export class ProjectSidenavOntologiesComponent {
   projectOntologies$ = this._projectPageService.ontologies$;

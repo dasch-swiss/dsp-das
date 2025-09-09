@@ -15,7 +15,10 @@ import {
   UntypedFormGroup,
   ValidatorFn,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import {
   _AbstractConstructor,
   _Constructor,
@@ -23,10 +26,13 @@ import {
   ErrorStateMatcher,
   mixinErrorState,
 } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatFormFieldControl, MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { JDNConvertibleCalendar } from '@dasch-swiss/jdnconvertiblecalendar';
 import { Subject, Subscription } from 'rxjs';
+import { AppDatePickerComponent } from '../app-date-picker/app-date-picker.component';
 import { ValueService } from './value.service';
 
 /** if a period is defined, start date must be before end date */
@@ -75,6 +81,8 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
     },
     { provide: Subject },
   ],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, AppDatePickerComponent, MatButton, MatTooltip, MatIcon, MatError],
 })
 export class DateValueHandlerComponent
   extends _MatInputMixinBase

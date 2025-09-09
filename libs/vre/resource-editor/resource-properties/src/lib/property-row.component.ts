@@ -1,4 +1,6 @@
+import { NgClass, AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from './properties-display.service';
 
@@ -14,6 +16,8 @@ import { PropertiesDisplayService } from './properties-display.service';
     </div>
   </div>`,
   styleUrls: ['./property-row.component.scss'],
+  standalone: true,
+  imports: [NgClass, MatTooltip, AsyncPipe],
 })
 export class PropertyRowComponent {
   @Input({ required: true }) label!: string;

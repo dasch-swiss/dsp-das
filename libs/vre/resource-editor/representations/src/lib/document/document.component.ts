@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,10 +8,16 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Constants, ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { PdfViewerComponent } from 'ng2-pdf-viewer';
+import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { PdfViewerComponent, PdfViewerModule } from 'ng2-pdf-viewer';
 import {
   ReplaceFileDialogComponent,
   ReplaceFileDialogProps,
@@ -22,6 +29,19 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
   selector: 'app-document',
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
+  standalone: true,
+  imports: [
+    StatusComponent,
+    PdfViewerModule,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatInput,
+    MatTooltip,
+    AsyncPipe,
+  ],
 })
 export class DocumentComponent implements OnChanges {
   @Input({ required: true }) src!: ReadDocumentFileValue;

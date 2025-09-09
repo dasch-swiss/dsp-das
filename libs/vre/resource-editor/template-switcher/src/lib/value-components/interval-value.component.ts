@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatError } from '@angular/material/form-field';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { TimeInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { startWith } from 'rxjs/operators';
 
 @Component({
@@ -13,6 +16,8 @@ import { startWith } from 'rxjs/operators';
       </mat-error>
     }
   `,
+  standalone: true,
+  imports: [TimeInputComponent, MatError, HumanReadableErrorPipe],
 })
 export class IntervalValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<{ start: number; end: number } | null>;

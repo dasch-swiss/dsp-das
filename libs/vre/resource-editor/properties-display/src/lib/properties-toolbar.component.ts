@@ -1,4 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
@@ -63,6 +67,8 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
     }
   `,
   styles: ['button { padding-top: 24px; padding-bottom: 24px}'],
+  standalone: true,
+  imports: [MatButton, MatTooltip, MatIcon, MatIconButton, AsyncPipe],
 })
 export class PropertiesToolbarComponent {
   @Input({ required: true }) showToggleProperties!: boolean;

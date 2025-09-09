@@ -1,10 +1,16 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, ViewContainerRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ReadResource, ResourceClassDefinitionWithPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
+import { ResourceInfoBarComponent } from './resource-info-bar.component';
+import { ResourceToolbarComponent } from './resource-toolbar.component';
 
 @Component({
   selector: 'app-resource-header',
@@ -82,6 +88,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       }
     `,
   ],
+  standalone: true,
+  imports: [MatTooltip, ResourceToolbarComponent, MatIconButton, MatIcon, ResourceInfoBarComponent, AsyncPipe],
 })
 export class ResourceHeaderComponent {
   @Input({ required: true }) resource!: DspResource;

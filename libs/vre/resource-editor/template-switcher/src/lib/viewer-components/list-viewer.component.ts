@@ -1,4 +1,6 @@
+import { NgStyle, AsyncPipe } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
@@ -25,6 +27,8 @@ import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
       }
     </div>
   `,
+  standalone: true,
+  imports: [NgStyle, MatIcon, AsyncPipe],
 })
 export class ListViewerComponent implements OnInit {
   @Input() value!: ReadListValue;

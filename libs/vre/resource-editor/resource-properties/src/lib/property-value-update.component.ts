@@ -3,6 +3,7 @@ import { KnoraApiConnection, UpdateResource, UpdateValue } from '@dasch-swiss/ds
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { FormValueGroup } from './form-value-array.type';
+import { PropertyValueEditComponent } from './property-value-edit.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -12,6 +13,8 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     [readValue]="propertyValueService.editModeData.values[index]"
     (afterEdit)="update($event)"
     (afterUndo)="goToDisplayMode()" />`,
+  standalone: true,
+  imports: [PropertyValueEditComponent],
 })
 export class PropertyValueUpdateComponent {
   @Input({ required: true }) index!: number;

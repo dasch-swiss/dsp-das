@@ -1,6 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { MatChipSet, MatChip, MatChipAvatar } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
 import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { TranslateModule } from '@ngx-translate/core';
+import { UserDescriptionComponent } from './user-description.component';
+import { UsersListRowMenuComponent } from './users-list-row-menu.component';
 
 @Component({
   selector: 'app-users-list-row',
@@ -29,6 +34,16 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
         }
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    UserDescriptionComponent,
+    MatChipSet,
+    MatChip,
+    MatIcon,
+    MatChipAvatar,
+    UsersListRowMenuComponent,
+    TranslateModule,
   ],
 })
 export class UsersListRowComponent {

@@ -1,6 +1,12 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonInputComponent, CkEditorControlComponent, ColorPickerComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface AddRegionFormDialogProps {
   resourceIri: string;
@@ -73,6 +79,23 @@ export interface AddRegionFormDialogProps {
         }
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonInputComponent,
+    CkEditorControlComponent,
+    MatFormField,
+    MatLabel,
+    ColorPickerComponent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    TranslateModule,
   ],
 })
 export class AddRegionFormDialogComponent {

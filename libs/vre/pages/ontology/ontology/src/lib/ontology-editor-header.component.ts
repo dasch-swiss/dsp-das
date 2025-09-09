@@ -1,5 +1,10 @@
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OntologyMetadata, ReadOntology } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -103,6 +108,8 @@ import { OntologyEditService } from './services/ontology-edit.service';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatToolbar, MatToolbarRow, MatButton, MatTooltip, MatIcon, AsyncPipe, DatePipe],
 })
 export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;

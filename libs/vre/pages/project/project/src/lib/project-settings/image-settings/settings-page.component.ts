@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { MenuItem } from '@dasch-swiss/vre/pages/user-settings/user';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -33,6 +37,17 @@ import { TranslateService } from '@ngx-translate/core';
       </mat-tab-nav-panel>
     </app-centered-layout>
   `,
+  standalone: true,
+  imports: [
+    CenteredLayoutComponent,
+    MatTabNav,
+    MatTabLink,
+    RouterLinkActive,
+    RouterLink,
+    MatIcon,
+    MatTabNavPanel,
+    RouterOutlet,
+  ],
 })
 export class SettingsPageComponent {
   private _translateService = inject(TranslateService);

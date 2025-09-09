@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { InternalLinkReplacerPipe, AddTargetBlankPipe } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { FootnoteService } from './footnote.service';
 
 @Component({
@@ -36,6 +38,8 @@ import { FootnoteService } from './footnote.service';
       }
     `,
   ],
+  standalone: true,
+  imports: [TranslateModule, InternalLinkReplacerPipe, AddTargetBlankPipe],
 })
 export class FootnotesComponent {
   constructor(public readonly footnoteService: FootnoteService) {}

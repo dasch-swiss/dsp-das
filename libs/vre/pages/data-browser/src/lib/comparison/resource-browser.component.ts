@@ -1,6 +1,10 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { AngularSplitModule } from 'angular-split';
 import { Observable } from 'rxjs';
+import { ResourcesListComponent } from '../list-view/resources-list.component';
+import { MultipleViewerComponent } from './multiple-viewer.component';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -17,6 +21,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
   </div>`,
   styleUrls: ['./resource-browser.component.scss'],
   providers: [MultipleViewerService],
+  standalone: true,
+  imports: [AngularSplitModule, ResourcesListComponent, CdkScrollable, MultipleViewerComponent],
 })
 export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };

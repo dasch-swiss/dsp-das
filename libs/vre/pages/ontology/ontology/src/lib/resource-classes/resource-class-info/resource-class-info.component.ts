@@ -1,14 +1,22 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDrag, CdkDragHandle, CdkDropList } from '@angular/cdk/drag-drop';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatList } from '@angular/material/list';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogService, TruncatePipe } from '@dasch-swiss/vre/ui/ui';
 import { Observable, Subscription, switchMap, take } from 'rxjs';
 import {
   EditResourceClassDialogComponent,
@@ -17,12 +25,37 @@ import {
 import { OntologyPageService } from '../../ontology-page.service';
 import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { AddPropertyMenuComponent } from './add-property-menu.component';
+import { PropertyItemComponent } from './property-item.component';
 
 @Component({
   selector: 'app-resource-class-info',
   templateUrl: './resource-class-info.component.html',
   styleUrls: ['./resource-class-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCard,
+    CdkDrag,
+    MatCardHeader,
+    CdkDragHandle,
+    MatCardTitle,
+    MatTooltip,
+    MatCardSubtitle,
+    MatIcon,
+    MatIconButton,
+    MatMenuTrigger,
+    MatCardContent,
+    MatList,
+    CdkDropList,
+    PropertyItemComponent,
+    AddPropertyMenuComponent,
+    MatMenu,
+    MatMenuItem,
+    AsyncPipe,
+    TruncatePipe,
+    StringifyStringLiteralPipe,
+  ],
 })
 export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;

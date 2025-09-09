@@ -4,8 +4,11 @@ import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { TranslateService } from '@ngx-translate/core';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { ResourceVersionWarningComponent } from './resource-version-warning.component';
+import { ResourceComponent } from './resource.component';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
@@ -44,6 +47,8 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
     }
   `,
   providers: [ResourceFetcherService],
+  standalone: true,
+  imports: [ResourceVersionWarningComponent, ResourceComponent, AppProgressIndicatorComponent, TranslateModule],
 })
 export class ResourceFetcherComponent implements OnChanges {
   @Input({ required: true }) resourceIri!: string;

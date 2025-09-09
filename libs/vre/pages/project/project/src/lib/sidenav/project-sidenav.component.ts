@@ -1,5 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
 import { ProjectPageService } from '../project-page.service';
+import { ProjectSidenavLinksComponent } from './project-sidenav-links.component';
+import { ProjectSidenavOntologiesComponent } from './project-sidenav-ontologies.component';
 
 @Component({
   selector: 'app-project-sidenav',
@@ -26,6 +30,8 @@ import { ProjectPageService } from '../project-page.service';
       }
     `,
   ],
+  standalone: true,
+  imports: [MatDivider, ProjectSidenavLinksComponent, ProjectSidenavOntologiesComponent, AsyncPipe],
 })
 export class ProjectSidenavComponent {
   currentProject$ = this._projectPageService.currentProject$;

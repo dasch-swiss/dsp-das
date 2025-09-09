@@ -1,7 +1,17 @@
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { RegionService, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import {
+  PermissionInfoComponent,
+  ResourceEditMoreMenuComponent,
+} from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { take } from 'rxjs';
@@ -73,6 +83,19 @@ import { take } from 'rxjs';
         }
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatMenuTrigger,
+    PermissionInfoComponent,
+    ResourceEditMoreMenuComponent,
+    MatMenu,
+    MatMenuItem,
+    CdkCopyToClipboard,
+    AsyncPipe,
   ],
 })
 export class AnnotationToolbarComponent {

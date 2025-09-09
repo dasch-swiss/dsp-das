@@ -1,5 +1,7 @@
+import { NgStyle } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { Segment } from './segment';
+import { SegmentComponent } from './segment.component';
 
 @Component({
   selector: 'app-segments-display',
@@ -14,6 +16,8 @@ import { Segment } from './segment';
       }
     </div>
   </div>`,
+  standalone: true,
+  imports: [NgStyle, SegmentComponent],
 })
 export class SegmentsDisplayComponent implements OnChanges {
   @Input({ required: true }) segments!: Segment[];

@@ -1,6 +1,13 @@
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { StringLiteral } from '@dasch-swiss/dsp-js/src/models/admin/string-literal';
 import { AvailableLanguages, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectImageCoverComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { map, tap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 import { LicenseCaptionsMapping } from './license-captions-mapping';
@@ -9,6 +16,18 @@ import { LicenseCaptionsMapping } from './license-captions-mapping';
   selector: 'app-project-description-page',
   templateUrl: './project-description-page.component.html',
   styleUrls: ['./project-description-page.component.scss'],
+  standalone: true,
+  imports: [
+    MatButton,
+    RouterLink,
+    MatIcon,
+    ProjectImageCoverComponent,
+    MatDivider,
+    MatChipListbox,
+    MatChip,
+    AsyncPipe,
+    UpperCasePipe,
+  ],
 })
 export class ProjectDescriptionPageComponent {
   readonly routeConstants = RouteConstants;

@@ -1,6 +1,14 @@
+import { NgClass, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { FormValueGroup, propertiesTypeMapping } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import {
+  FormValueGroup,
+  propertiesTypeMapping,
+  PropertyValueBasicCommentComponent,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -43,6 +51,16 @@ import { map, startWith } from 'rxjs/operators';
         right: -140px;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    NgClass,
+    NgTemplateOutlet,
+    PropertyValueBasicCommentComponent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    AsyncPipe,
   ],
 })
 export class PropertyValueCreatorComponent implements OnInit {

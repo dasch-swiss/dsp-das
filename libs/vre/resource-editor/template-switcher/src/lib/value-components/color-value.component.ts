@@ -1,5 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NullableEditorComponent } from '../nullable-editor.component';
 
 @Component({
   selector: 'app-color-value',
@@ -42,7 +47,19 @@ import { FormControl } from '@angular/forms';
         }
       }
     `,
-  ], // for color picker popup z-index
+  ],
+  standalone: true,
+  imports: [
+    NullableEditorComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    ColorPickerModule,
+    MatError,
+    HumanReadableErrorPipe,
+  ],
 })
 export class ColorValueComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

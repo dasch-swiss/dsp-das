@@ -1,8 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { ProjectsListComponent } from './projects-list/projects-list.component';
 
 /**
  * ProjectsComponent handles the list of projects.
@@ -33,6 +35,8 @@ import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap
       }
     </div>
   `,
+  standalone: true,
+  imports: [ProjectsListComponent, AsyncPipe],
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   @Input() isUsersProjects = false;

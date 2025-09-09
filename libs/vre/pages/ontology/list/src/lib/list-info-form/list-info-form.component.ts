@@ -1,6 +1,14 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import {
   ListInfoResponse,
   ListNodeInfo,
@@ -11,7 +19,14 @@ import {
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MultiLanguageTextareaComponent,
+  MutiLanguageInputComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateModule } from '@ngx-translate/core';
 import { switchMap } from 'rxjs';
 import { ListInfoForm } from './list-info-form.type';
 
@@ -47,6 +62,19 @@ import { ListInfoForm } from './list-info-form.type';
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    MutiLanguageInputComponent,
+    MultiLanguageTextareaComponent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+    TranslateModule,
+  ],
 })
 export class ListInfoFormComponent implements OnInit {
   form!: ListInfoForm;

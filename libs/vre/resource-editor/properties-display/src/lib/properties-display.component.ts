@@ -1,8 +1,17 @@
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import {
+  PropertiesDisplayService,
+  PropertyRowComponent,
+  PropertyValuesWithFootnotesComponent,
+} from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { AnnotationToolbarComponent } from './annotation-toolbar.component';
+import { IncomingLinksPropertyComponent } from './incoming-links-property.component';
+import { PropertiesToolbarComponent } from './properties-toolbar.component';
+import { StandoffLinksPropertyComponent } from './standoff-links-property.component';
 
 @Component({
   selector: 'app-properties-display',
@@ -82,6 +91,17 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
     `,
   ],
   providers: [PropertiesDisplayService],
+  standalone: true,
+  imports: [
+    PropertiesToolbarComponent,
+    AnnotationToolbarComponent,
+    PropertyRowComponent,
+    PropertyValuesWithFootnotesComponent,
+    StandoffLinksPropertyComponent,
+    IncomingLinksPropertyComponent,
+    AsyncPipe,
+    DatePipe,
+  ],
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

@@ -1,9 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceResultService, ResourceBrowserComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map, switchMap } from 'rxjs';
 
@@ -18,6 +19,8 @@ import { combineLatest, map, switchMap } from 'rxjs';
     }
   `,
   providers: [ResourceResultService],
+  standalone: true,
+  imports: [ResourceBrowserComponent, AsyncPipe],
 })
 export class AdvancedSearchResultsPageComponent {
   readonly resources$ = this._route.params.pipe(

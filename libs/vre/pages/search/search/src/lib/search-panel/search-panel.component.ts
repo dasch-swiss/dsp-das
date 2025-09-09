@@ -1,4 +1,11 @@
-import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
+import {
+  ConnectionPositionPair,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+  PositionStrategy,
+  CdkOverlayOrigin,
+} from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -11,14 +18,33 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatPrefix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { HintComponent } from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
+import { ExpertSearchComponent } from '../expert-search/expert-search.component';
+import { FulltextSearchComponent } from '../fulltext-search/fulltext-search.component';
 
 @Component({
   selector: 'app-search-panel',
   templateUrl: './search-panel.component.html',
   styleUrls: ['./search-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CdkOverlayOrigin,
+    FulltextSearchComponent,
+    MatButton,
+    MatIcon,
+    MatPrefix,
+    MatIconButton,
+    ExpertSearchComponent,
+    HintComponent,
+    TranslateModule,
+  ],
 })
 export class SearchPanelComponent {
   /**

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -9,10 +10,16 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
+import { TemplateEditorSwitcherComponent } from 'template-switcher';
 import { FormValueGroup } from './form-value-array.type';
+import { PropertyValueBasicCommentComponent } from './property-value-basic-comment.component';
 import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
@@ -59,6 +66,16 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator [size]="'xsmall'" />
     }
   `,
+  standalone: true,
+  imports: [
+    TemplateEditorSwitcherComponent,
+    NgTemplateOutlet,
+    PropertyValueBasicCommentComponent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    AppProgressIndicatorComponent,
+  ],
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;

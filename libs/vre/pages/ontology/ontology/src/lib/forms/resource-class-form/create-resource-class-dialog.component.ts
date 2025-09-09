@@ -1,9 +1,20 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { DefaultClass } from '@dasch-swiss/vre/shared/app-helper-services';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { ResourceClassFormComponent } from './resource-class-form.component';
 import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
@@ -28,6 +39,17 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    ResourceClassFormComponent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    LoadingButtonDirective,
+  ],
 })
 export class CreateResourceClassDialogComponent {
   loading = false;

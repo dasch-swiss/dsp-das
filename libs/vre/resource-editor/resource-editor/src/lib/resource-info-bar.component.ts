@@ -1,3 +1,4 @@
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
@@ -46,6 +47,8 @@ import { map, Observable } from 'rxjs';
       }
     `,
   ],
+  standalone: true,
+  imports: [AsyncPipe, DatePipe],
 })
 export class ResourceInfoBarComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

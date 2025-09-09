@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { FootnoteService } from './footnotes/footnote.service';
+import { FootnotesComponent } from './footnotes/footnotes.component';
+import { PropertyValuesComponent } from './property-values.component';
 
 @Component({
   selector: 'app-property-values-with-footnotes',
@@ -16,6 +18,8 @@ import { FootnoteService } from './footnotes/footnote.service';
   `,
   styles: [':host { display: block; position: relative; width: 100%}'],
   providers: [FootnoteService],
+  standalone: true,
+  imports: [PropertyValuesComponent, FootnotesComponent],
 })
 export class PropertyValuesWithFootnotesComponent implements OnChanges {
   @Input({ required: true }) prop!: PropertyInfoValues;

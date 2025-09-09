@@ -1,10 +1,21 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { MatFormField, MatPrefix, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  DEFAULT_MULTILANGUAGE_FORM,
+  MutiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
+import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { OntologyEditService } from '../../services/ontology-edit.service';
+import { GuiAttrLinkComponent } from './gui-attr-link.component';
+import { GuiAttrListComponent } from './gui-attr-list.component';
 import { PropertyForm, EditPropertyDialogData } from './property-form.type';
 
 @Component({
@@ -58,6 +69,24 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       placeholder="Comment"
       [isRequired]="true" />
   </form>`,
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatPrefix,
+    MatIcon,
+    MatLabel,
+    MatSelect,
+    MatSelectTrigger,
+    MatOptgroup,
+    MatOption,
+    CommonInputComponent,
+    MutiLanguageInputComponent,
+    GuiAttrListComponent,
+    GuiAttrLinkComponent,
+    MultiLanguageTextareaComponent,
+  ],
 })
 export class PropertyFormComponent implements OnInit {
   @Input() propertyData!: EditPropertyDialogData;

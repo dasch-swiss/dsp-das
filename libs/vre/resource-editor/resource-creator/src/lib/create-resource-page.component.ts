@@ -4,7 +4,9 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { CenteredLayoutComponent } from '@dasch-swiss/vre/ui/ui';
 import { Subject, takeUntil } from 'rxjs';
+import { CreateResourceFormComponent } from './create-resource-form.component';
 
 @Component({
   selector: 'app-create-resource-page',
@@ -20,6 +22,8 @@ import { Subject, takeUntil } from 'rxjs';
       }
     </app-centered-layout>
   `,
+  standalone: true,
+  imports: [CenteredLayoutComponent, CreateResourceFormComponent],
 })
 export class CreateResourcePageComponent implements OnDestroy {
   private _destroy = new Subject<void>();

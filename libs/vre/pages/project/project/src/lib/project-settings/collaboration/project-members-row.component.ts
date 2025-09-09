@@ -1,8 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
 import { ReadProject, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
+import { UserDescriptionComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectPageService } from '../../project-page.service';
+import { ProjectMembersRowMenuComponent } from './project-members-row-menu.component';
+import { SelectGroupComponent } from './select-group/select-group.component';
 
 @Component({
   selector: 'app-project-members-row',
@@ -25,6 +29,8 @@ import { ProjectPageService } from '../../project-page.service';
       }
     </div>
   `,
+  standalone: true,
+  imports: [UserDescriptionComponent, MatChipListbox, MatChip, SelectGroupComponent, ProjectMembersRowMenuComponent],
 })
 export class ProjectMembersRowComponent implements OnInit {
   @Input({ required: true }) user!: ReadUser;

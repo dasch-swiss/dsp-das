@@ -1,6 +1,10 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { CreateResourceFormComponent } from '@dasch-swiss/vre/resource-editor/resource-creator';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 export interface CreateResourceDialogProps {
   resourceType: string;
@@ -21,6 +25,8 @@ export interface CreateResourceDialogProps {
       }
     </div>
   `,
+  standalone: true,
+  imports: [DialogHeaderComponent, CdkScrollable, MatDialogContent, CreateResourceFormComponent, AsyncPipe],
 })
 export class CreateResourceDialogComponent {
   project$ = this._projectPageService.currentProject$;

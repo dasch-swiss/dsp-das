@@ -1,4 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import {
   Constants,
   PropertyDefinition,
@@ -8,6 +11,16 @@ import {
   ReadValue,
 } from '@dasch-swiss/dsp-js';
 import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { CkEditorComponent, CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
+import { BooleanValueComponent } from './value-components/boolean-value.component';
+import { ColorValueComponent } from './value-components/color-value.component';
+import { GeonameValueComponent } from './value-components/geoname-value.component';
+import { IntervalValueComponent } from './value-components/interval-value.component';
+import { LinkValueComponent } from './value-components/link-value.component';
+import { ListValueComponent } from './value-components/list-value.component';
+import { TimeValueComponent } from './value-components/time-value.component';
 
 @Component({
   selector: 'app-template-editor-switcher',
@@ -107,6 +120,25 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>
   `,
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    BooleanValueComponent,
+    ListValueComponent,
+    ColorValueComponent,
+    CkEditorComponent,
+    CommonInputComponent,
+    DateValueHandlerComponent,
+    TimeValueComponent,
+    IntervalValueComponent,
+    GeonameValueComponent,
+    LinkValueComponent,
+    HumanReadableErrorPipe,
+  ],
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;

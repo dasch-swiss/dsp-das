@@ -1,12 +1,18 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { MatStepper, MatStep } from '@angular/material/stepper';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import { PasswordConfirmFormComponent } from './user-form/password-form/password-confirm-form.component';
+import { PasswordFormFieldComponent } from './user-form/password-form/password-form-field.component';
 
 export interface EditPasswordDialogProps {
   user: ReadUser;
@@ -54,6 +60,19 @@ export interface EditPasswordDialogProps {
         margin-top: 16px;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    MatStepper,
+    MatStep,
+    PasswordFormFieldComponent,
+    MatButton,
+    PasswordConfirmFormComponent,
+    LoadingButtonDirective,
+    MatDialogActions,
+    MatDialogClose,
+    TranslateModule,
   ],
 })
 export class EditPasswordDialogComponent {

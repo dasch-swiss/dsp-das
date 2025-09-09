@@ -1,7 +1,11 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from '@angular/material/chips';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chip-list-input',
@@ -31,6 +35,19 @@ import { MatChipInputEvent } from '@angular/material/chips';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatChipGrid,
+    MatChipRow,
+    MatIcon,
+    MatChipRemove,
+    MatChipInput,
+    MatError,
+    HumanReadableErrorPipe,
+    TranslateModule,
+  ],
 })
 export class ChipListInputComponent {
   @Input({ required: true }) formArray!: FormArray<FormControl<string>>;

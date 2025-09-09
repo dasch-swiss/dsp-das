@@ -1,9 +1,14 @@
+import { UpperCasePipe } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiResponseData, HealthResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { LinkifyPipe } from '@dasch-swiss/vre/ui/ui';
 
 export interface StatusMsg {
   status: number;
@@ -18,6 +23,8 @@ export interface StatusMsg {
   selector: 'app-status',
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss'],
+  standalone: true,
+  imports: [MatButton, RouterLink, MatIcon, AppProgressIndicatorComponent, UpperCasePipe, LinkifyPipe],
 })
 export class StatusComponent implements OnInit {
   _status = 404;

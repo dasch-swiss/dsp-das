@@ -1,8 +1,20 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 @Component({
   selector: 'app-delete-resource-dialog',
@@ -31,6 +43,19 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
         Yes, delete
       </button>
     </mat-dialog-actions>`,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CdkScrollable,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+  ],
 })
 export class DeleteResourceDialogComponent {
   comment: string | undefined;

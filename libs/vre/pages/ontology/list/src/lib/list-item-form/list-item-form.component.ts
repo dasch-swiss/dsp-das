@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { ListNodeInfo } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
+import { DEFAULT_MULTILANGUAGE_FORM, MutiLanguageInputComponent } from '@dasch-swiss/vre/ui/string-literal';
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
@@ -30,6 +33,8 @@ import { ListItemService } from '../list-item/list-item.service';
       }
     `,
   ],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MutiLanguageInputComponent, MatIconButton, MatSuffix, MatIcon],
 })
 export class ListItemFormComponent {
   @Input({ required: true }) parentNode!: ListNodeInfo;

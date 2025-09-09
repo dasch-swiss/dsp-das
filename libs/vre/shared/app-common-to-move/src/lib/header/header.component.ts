@@ -1,14 +1,33 @@
 import { Component } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatPrefix } from '@angular/material/form-field';
+import { MatIconRegistry, MatIcon } from '@angular/material/icon';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatToolbar } from '@angular/material/toolbar';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { SearchPanelComponent } from '@dasch-swiss/vre/pages/search/search';
+import { UserMenuComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { TranslateModule } from '@ngx-translate/core';
 import { SearchParams } from '../search-params.interface';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  standalone: true,
+  imports: [
+    MatToolbar,
+    RouterLink,
+    MatIcon,
+    MatPrefix,
+    SearchPanelComponent,
+    MatButton,
+    UserMenuComponent,
+    MatProgressBar,
+    TranslateModule,
+  ],
 })
 export class HeaderComponent {
   session = false;
