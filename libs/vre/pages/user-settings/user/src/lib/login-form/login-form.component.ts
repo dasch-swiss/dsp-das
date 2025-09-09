@@ -11,7 +11,7 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
     <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
 
-      <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" />
+      <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
 
       <button
         [class.mat-primary]="!isLoginError"
