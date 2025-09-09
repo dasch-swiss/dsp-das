@@ -1,4 +1,4 @@
-import { Component, Directive, Inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Directive, Inject, Input, OnChanges, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormControl,
@@ -9,7 +9,16 @@ import {
 } from '@angular/forms';
 
 import { DateAdapter, MAT_DATE_LOCALE, MatOption } from '@angular/material/core';
-import { MatCalendar, MatDatepickerContent, MatCalendarHeader } from '@angular/material/datepicker';
+import {
+  MatCalendar,
+  MatDatepickerContent,
+  MatCalendarHeader,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+  MatDatepicker,
+} from '@angular/material/datepicker';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import {
   CalendarDate,
@@ -25,6 +34,19 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatLabel,
+    forwardRef(() => JdnDatepicker),
+    MatInput,
+    MatDatepickerInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDatepickerToggle,
+    MatSuffix,
+    MatDatepicker,
+  ],
 })
 export class AppComponent {
   form: UntypedFormGroup;
