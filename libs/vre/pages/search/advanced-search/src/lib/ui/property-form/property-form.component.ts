@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { ApiData, PropertyData, PropertyFormItem, ResourceLabelObject } from '../../model';
-import { OPERATORS } from '../../service/operators.config';
+import { ApiData, PropertyData, PropertyFormItem } from '../../model';
+import { Operators } from '../../service/operators.config';
+import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
@@ -30,13 +31,13 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     PropertyFormLinkValueComponent,
     PropertyFormListValueComponent,
   ],
-  providers: [MatSelect],
   templateUrl: './property-form.component.html',
   styleUrls: ['./property-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormComponent implements AfterViewInit {
-  private searchService = inject(SearchStateService);
+export class PropertyFormComponent {
+  private _searchService = inject(SearchStateService);
+  private _formManager = inject(PropertyFormManager);
 
   @Input() propertyFormItem: PropertyFormItem = {
     id: '',
@@ -48,59 +49,35 @@ export class PropertyFormComponent implements AfterViewInit {
   };
 
   // Observables from the service
-  filteredProperties$ = this.searchService.filteredProperties$;
-  propertiesLoading$ = this.searchService.propertiesLoading$;
-  matchResourceClassesLoading$ = this.searchService.matchResourceClassesLoading$;
-  resourcesSearchResultsLoading$ = this.searchService.resourcesSearchResultsLoading$;
-  resourcesSearchResultsCount$ = this.searchService.resourcesSearchResultsCount$;
-  resourcesSearchResults$ = this.searchService.resourcesSearchResults$;
-  resourcesSearchNoResults$ = this.searchService.resourcesSearchNoResults$;
+  filteredProperties$ = this._searchService.filteredProperties$;
+  propertiesLoading$ = this._searchService.propertiesLoading$;
+  matchResourceClassesLoading$ = this._searchService.matchResourceClassesLoading$;
 
-  @ViewChild('propertiesList') propertiesList!: MatSelect;
-  @ViewChild('operatorsList') operatorsList!: MatSelect;
-  @ViewChild('resourceClassList') resourceClassList!: MatSelect;
-  @ViewChild('propertyFormValue')
-  propertyFormValueComponent!: PropertyFormValueComponent;
-
-  operators = OPERATORS; // in order to use it in the template
+  operators = Operators;
   constants = Constants;
 
-  // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
-  resourceLabelObj = ResourceLabelObject;
-
-  ngAfterViewInit(): void {
-    if (this.propertiesList && this.propertyFormItem.selectedProperty) {
-      this.propertiesList.value = this.propertyFormItem.selectedProperty;
-    }
-
-    if (this.operatorsList && this.propertyFormItem.selectedOperator) {
-      this.operatorsList.value = this.propertyFormItem.selectedOperator;
-    }
-
-    if (this.resourceClassList && this.propertyFormItem.selectedMatchPropertyResourceClass) {
-      this.resourceClassList.value = this.propertyFormItem.selectedMatchPropertyResourceClass;
-    }
-  }
-
   onSelectedPropertyChanged(event: MatSelectChange): void {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem) {
-      propFormItem.selectedProperty = event.value;
+    this.propertyFormItem.selectedProperty = event.value;
+    // Reset dependent fields when property changes
+    this.propertyFormItem.selectedOperator = undefined;
+    this.propertyFormItem.searchValue = undefined;
+    this.propertyFormItem.selectedMatchPropertyResourceClass = undefined;
 
-      // this isn't great but we need to reset the value of the input control
-      // because the input will not clear itself if the input switches to an input of the same type
-      // i.e. from an integer input to a decimal input, the entered integer value will remain in the input
-      if (this.propertyFormValueComponent) {
-        this.propertyFormValueComponent.inputControl.setValue('');
+    const currentState = this._searchService.currentState;
+    const updates = this._formManager.updatePropertyFormItem(
+      currentState, 
+      this.propertyFormItem,
+      (property) => {
+        // Handle list loaded callback
+        this._searchService.patchState({ propertyFormList: currentState.propertyFormList });
+      },
+      (error) => {
+        console.error('Error updating property:', error);
       }
-
-      // when the selected property changes, we need to reset the selected operator in the UI
-      // because the selected operator might not be valid for the new selected property
-      if (this.operatorsList) {
-        this.operatorsList.value = undefined;
-      }
-
-      this.searchService.updateSelectedProperty(propFormItem);
+    );
+    
+    if (updates && typeof updates === 'object' && 'propertyFormList' in updates) {
+      this._searchService.patchState(updates);
     }
   }
 
@@ -108,7 +85,17 @@ export class PropertyFormComponent implements AfterViewInit {
     const propFormItem = this.propertyFormItem;
     if (propFormItem) {
       propFormItem.selectedOperator = event.value;
-      this.searchService.updateSelectedOperator(propFormItem);
+      const currentState = this._searchService.currentState;
+      this._formManager.updateSelectedOperatorForProperty(currentState, propFormItem).subscribe({
+        next: (updates) => {
+          if (updates) {
+            this._searchService.patchState(updates);
+          }
+        },
+        error: (error) => {
+          console.error('Error updating operator:', error);
+        }
+      });
     }
   }
 
@@ -116,7 +103,17 @@ export class PropertyFormComponent implements AfterViewInit {
     const propFormItem = this.propertyFormItem;
     if (propFormItem) {
       propFormItem.selectedMatchPropertyResourceClass = event.value;
-      this.searchService.updateSelectedMatchPropertyResourceClass(propFormItem);
+      const currentState = this._searchService.currentState;
+      this._formManager.updateSelectedMatchPropertyResourceClass(currentState, propFormItem).subscribe({
+        next: (updates) => {
+          if (updates) {
+            this._searchService.patchState(updates);
+          }
+        },
+        error: (error) => {
+          console.error('Error updating match property resource class:', error);
+        }
+      });
     }
   }
 
@@ -132,27 +129,9 @@ export class PropertyFormComponent implements AfterViewInit {
       } else {
         propFormItem.searchValue = value;
       }
-      this.searchService.updateSearchValue(propFormItem);
-    }
-  }
-
-  onResourceSearchValueChanged(searchValue: string) {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem && propFormItem.selectedProperty) {
-      this.searchService.updateResourcesSearchResults({
-        value: searchValue,
-        objectType: propFormItem.selectedProperty?.objectType,
-      });
-    }
-  }
-
-  onLoadMoreSearchResults(searchValue: string) {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem && propFormItem.selectedProperty) {
-      this.searchService.loadMoreResourcesSearchResults({
-        value: searchValue,
-        objectType: propFormItem.selectedProperty?.objectType,
-      });
+      const currentState = this._searchService.currentState;
+      const updates = this._formManager.updateSearchValueForProperty(currentState, propFormItem);
+      this._searchService.patchState(updates);
     }
   }
 

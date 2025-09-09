@@ -5,15 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute } from '@angular/router';
-import { Constants } from '@dasch-swiss/dsp-js';
-import { AppConfigService, DspAppConfig } from '@dasch-swiss/vre/core/config';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { take } from 'rxjs';
-import { AdvancedSearchStateSnapshot, PropertyFormItem, QueryObject } from './model';
+import { PropertyFormItem, QueryObject } from './model';
+import { GravsearchService } from './service/gravsearch.service';
+import { PreviousSearchService } from './service/previous-search.service';
+import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
-import { FormActionsComponent } from './ui/form-actions/form-actions.component';
 import { OntologyResourceFormComponent } from './ui/ontology-resource-form/ontology-resource-form.component';
 import { OrderByComponent } from './ui/order-by/order-by.component';
 import { PropertyFormSubcriteriaComponent } from './ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
@@ -29,7 +27,6 @@ import { INITIAL_FORMS_STATE } from './util';
     OntologyResourceFormComponent,
     PropertyFormComponent,
     PropertyFormSubcriteriaComponent,
-    FormActionsComponent,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
@@ -44,61 +41,58 @@ import { INITIAL_FORMS_STATE } from './util';
 export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
 
-  @Output() emitGravesearchQuery = new EventEmitter<QueryObject>();
+  @Output() gravesearchQuery = new EventEmitter<QueryObject>();
 
   private readonly IRI_BASE = 'http://rdfh.ch/projects/';
 
-  private _searchState: SearchStateService = inject(SearchStateService);
-  route: ActivatedRoute = inject(ActivatedRoute);
-
-  propertyFormList$ = this._searchState.propertyForms$;
-
-  constants = Constants;
-  previousSearchObject: AdvancedSearchStateSnapshot | null = null;
-
-  constructor(private _dialogService: DialogService) {}
+  searchState: SearchStateService = inject(SearchStateService);
+  private _dialogService: DialogService = inject(DialogService);
+  private _gravsearchService: GravsearchService = inject(GravsearchService);
+  private _formManager: PropertyFormManager = inject(PropertyFormManager);
+  _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ngOnInit(): void {
     const projectIri = `${this.IRI_BASE}${this.projectUuid}`;
-    this._searchState.initWithProject(projectIri);
-    const searchStored = localStorage.getItem('advanced-search-previous-search') || '{}';
-    this.previousSearchObject = JSON.parse(searchStored)[projectIri];
+    this._formManager.init(projectIri);
+    this._previousSearchService.init(projectIri);
   }
 
-  handleRemovePropertyForm(property: PropertyFormItem): void {
-    this._searchState.deletePropertyForm(property);
+  removePropertyForm(property: PropertyFormItem): void {
+    this._formManager.deletePropertyForm(property);
   }
 
-  handleSearchButtonClicked(): void {
-    this.propertyFormList$.pipe(take(1)).subscribe(propertyFormList => {
-      // Filter out empty property forms (forms without a selected property)
-      const nonEmptyProperties = propertyFormList.filter(prop => prop.selectedProperty);
+  doSearch(): void {
+    const state = this.searchState.currentState;
+    const nonEmptyProperties = state.propertyFormList.filter(prop => prop.selectedProperty);
 
-      const queryObject: QueryObject = {
-        query: this._searchState.onSearch(),
-        properties: nonEmptyProperties,
-      };
+    this._previousSearchService.storeSearchSnapshot(state);
 
-      this.emitGravesearchQuery.emit(queryObject);
-    });
+    const query = this._gravsearchService.generateGravSearchQuery(
+      state.selectedOntology?.iri || '',
+      state.resourceClasses.map(resClass => resClass.iri),
+      state.selectedResourceClass?.iri,
+      nonEmptyProperties,
+      state.propertiesOrderBy
+    );
+
+    const queryObject: QueryObject = {
+      query,
+      properties: nonEmptyProperties,
+    };
+    this.gravesearchQuery.emit(queryObject);
   }
 
-  handleResetButtonClicked(): void {
+  resetSearch(): void {
     this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this._searchState.reset();
+      this.searchState.reset();
     });
   }
+
   loadPreviousSearch(): void {
-    if (!this.previousSearchObject) return;
-
-    this._searchState.setState({
+    const previousSearch = this._previousSearchService.previousSearchObject;
+    this.searchState.patchState({
       ...INITIAL_FORMS_STATE,
-      ...this.previousSearchObject,
+      ...previousSearch,
     });
-  }
-
-  // Get the list of child properties of a linked resource
-  getLinkMatchPropertyFormItems(value: string | PropertyFormItem[]): PropertyFormItem[] {
-    return Array.isArray(value) ? value : [];
   }
 }

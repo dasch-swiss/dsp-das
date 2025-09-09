@@ -5,12 +5,10 @@
         <p class="label">Select a property</p>
         <mat-form-field>
           <mat-select
-            #propertiesList
+            [value]="item.selectedProperty"
             (selectionChange)="onSelectedPropertyChanged($event, i)"
             placeholder="Select a value"
-            name="properties"
             [compareWith]="compareObjects">
-            <mat-option [value]="resourceLabelObj">{{ resourceLabelObj.label }}</mat-option>
             <mat-option *ngFor="let prop of properties" [value]="prop"> {{ prop.label }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -21,10 +19,9 @@
         <p class="label">Comparison Operator</p>
         <mat-form-field class="operator">
           <mat-select
-            #operatorsList
+            [value]="item.selectedOperator"
             (selectionChange)="onSelectedOperatorChanged($event, i)"
-            placeholder="Select a value"
-            name="operators">
+            placeholder="Select a value">
             <mat-option *ngFor="let operator of item.operators" [value]="operator"> {{ operator }} </mat-option>
           </mat-select>
         </mat-form-field>
@@ -39,7 +36,6 @@
       class="value-container">
       <!-- choose correct component based on objectType -->
       <app-property-form-value
-        #propertyFormValue
         *ngIf="
                     !item.selectedProperty?.isLinkedResourceProperty &&
                     item.selectedProperty?.objectType !== constants.ListValue

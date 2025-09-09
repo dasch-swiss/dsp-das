@@ -47,7 +47,7 @@ export class OrderByComponent {
   isOpen = false;
 
   drop(event: CdkDragDrop<string[]>) {
-    const currentOrderByList = this.searchService.get(state => state.propertiesOrderBy);
+    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
     if (!currentOrderByList) return;
 
     moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
@@ -55,7 +55,7 @@ export class OrderByComponent {
   }
 
   onSelectionChange(event: MatSelectionListChange) {
-    const currentOrderByList = this.searchService.get(state => state.propertiesOrderBy);
+    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
     if (!currentOrderByList) return;
 
     event.options.forEach(option => {

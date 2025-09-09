@@ -78,7 +78,7 @@ You can open the "Order by" dropdown, by selecting the checkboy of the property,
 
 <https://github.com/dasch-swiss/dsp-das/assets/136320187/e43bb484-91b9-48ad-a59d-0e7c79a4df1b>
 
-### Comparison OPERATORS
+### Comparison Operators
 
 Depending on the value type of the chosen property,
 one or more of the following comparison operators can be selected:

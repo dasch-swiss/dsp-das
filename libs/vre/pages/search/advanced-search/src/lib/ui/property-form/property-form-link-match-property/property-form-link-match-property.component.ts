@@ -1,22 +1,12 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { ApiData, PropertyData, PropertyFormItem, ResourceLabelObject, SearchItem } from '../../../model';
-import { OPERATORS } from '../../../service/operators.config';
+import { ApiData, PropertyData, PropertyFormItem, SearchItem } from '../../../model';
+import { Operators } from '../../../service/operators.config';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
@@ -39,8 +29,8 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
   styleUrls: ['./property-form-link-match-property.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
-  @Input() values: PropertyFormItem[] | undefined = [];
+export class PropertyFormLinkMatchPropertyComponent {
+  @Input() values: PropertyFormItem[] = [];
   @Input() properties: PropertyData[] | undefined = [];
   @Input() resourcesSearchResultsLoading: boolean | null = false;
   @Input() resourcesSearchResultsCount: number | null = 0;
@@ -54,91 +44,51 @@ export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
   @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
   @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
 
-  @ViewChildren('propertiesList') propertiesList!: QueryList<MatSelect>;
-  @ViewChildren('operatorsList') operatorsList!: QueryList<MatSelect>;
-  @ViewChild('propertyFormValue')
-  propertyFormValueComponent!: PropertyFormValueComponent;
-
-  operators = OPERATORS; // in order to use it in the template
+  operators = Operators;
   constants = Constants;
 
-  // objectType is manually set so that it uses the KnoraApiV2 string for boolean checks later
-  resourceLabelObj = ResourceLabelObject;
-
-  ngAfterViewInit(): void {
-    if (this.propertiesList && this.values?.length) {
-      this.values.forEach((value, index) => {
-        this.propertiesList.toArray()[index].value = value.selectedProperty;
-      });
-    }
-
-    if (this.operatorsList && this.values?.length) {
-      this.values.forEach((value, index) => {
-        this.operatorsList.toArray()[index].value = value.selectedOperator;
-      });
-    }
-  }
-
   onRemovePropertyFormClicked(propFormItem: PropertyFormItem): void {
-    if (propFormItem) {
-      this.emitRemovePropertyForm.emit(propFormItem);
-    }
+    this.emitRemovePropertyForm.emit(propFormItem);
   }
 
   onSelectedPropertyChanged(event: MatSelectChange, index: number): void {
-    if (this.values) {
-      this.values[index].selectedProperty = event.value;
-
-      // when the selected property changes, we need to reset the selected operator at the specified index in the UI
-      // because the selected operator might not be valid for the new selected property
-      if (this.operatorsList.length) {
-        this.operatorsList.toArray()[index].value = undefined;
-      }
-
-      this.emitSelectedPropertyChanged.emit(this.values[index]);
-    }
+    this.values[index].selectedProperty = event.value;
+    this.values[index].selectedOperator = undefined;
+    this.emitSelectedPropertyChanged.emit(this.values[index]);
   }
 
   onSelectedOperatorChanged(event: MatSelectChange, index: number): void {
-    if (this.values) {
-      this.values[index].selectedOperator = event.value;
-      this.emitSelectedOperatorChanged.emit(this.values[index]);
-    }
+    this.values[index].selectedOperator = event.value;
+    this.emitSelectedOperatorChanged.emit(this.values[index]);
   }
 
   onValueChanged(value: string | ApiData, index: number): void {
-    if (this.values) {
-      if (this._isApiData(value)) {
-        this.values[index].searchValue = value.iri;
-        this.values[index].searchValueLabel = value.label;
-      } else {
-        this.values[index].searchValue = value;
-      }
-      this.emitValueChanged.emit(this.values[index]);
+    if (this._isApiData(value)) {
+      this.values[index].searchValue = value.iri;
+      this.values[index].searchValueLabel = value.label;
+    } else {
+      this.values[index].searchValue = value;
     }
+    this.emitValueChanged.emit(this.values[index]);
   }
 
   onResourceSearchValueChanged(value: string, index: number): void {
-    if (this.values) {
-      const objectType = this.values[index].selectedProperty?.objectType;
-      if (objectType) {
-        this.emitResourceSearchValueChanged.emit({
-          value,
-          objectType,
-        });
-      }
+    const objectType = this.values[index].selectedProperty?.objectType;
+    if (objectType) {
+      this.emitResourceSearchValueChanged.emit({
+        value,
+        objectType,
+      });
     }
   }
 
   onLoadMoreSearchResults(value: string, index: number): void {
-    if (this.values) {
-      const objectType = this.values[index].selectedProperty?.objectType;
-      if (objectType) {
-        this.emitLoadMoreSearchResults.emit({
-          value,
-          objectType,
-        });
-      }
+    const objectType = this.values[index].selectedProperty?.objectType;
+    if (objectType) {
+      this.emitLoadMoreSearchResults.emit({
+        value,
+        objectType,
+      });
     }
   }
 

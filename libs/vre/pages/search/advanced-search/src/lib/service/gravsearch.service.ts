@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { GravsearchPropertyString, OrderByItem, PropertyFormItem, ResourceLabel } from '../model';
-import { OPERATORS } from './operators.config';
+import { Operators } from './operators.config';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class GravsearchService {
   generateGravSearchQuery(
     ontoIri: string,
@@ -97,7 +95,7 @@ export class GravsearchService {
       !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
       property.selectedProperty?.objectType !== ResourceLabel
     ) {
-      if (property.selectedOperator !== OPERATORS.NotEquals) {
+      if (property.selectedOperator !== Operators.NotEquals) {
         constructString = `?mainRes <${property.selectedProperty?.iri}> ?prop${index} .`;
         whereString = constructString;
       }
@@ -105,7 +103,7 @@ export class GravsearchService {
       if (Array.isArray(property.searchValue)) {
         property.searchValue.forEach((value, i) => {
           if (value.selectedProperty?.objectType !== ResourceLabel) {
-            if (value.selectedOperator === OPERATORS.NotExists) {
+            if (value.selectedOperator === Operators.NotExists) {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> ?linkProp${index}${i} .`;
               whereString +=
                 '\nFILTER NOT EXISTS { \n' +
@@ -113,7 +111,7 @@ export class GravsearchService {
                 '}\n';
             } else if (
               // searching for a resource class
-              value.selectedOperator === OPERATORS.Equals &&
+              value.selectedOperator === Operators.Equals &&
               !value.selectedProperty?.objectType.includes(Constants.KnoraApiV2)
             ) {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> <${value.searchValue}> .`;
@@ -121,7 +119,7 @@ export class GravsearchService {
               whereString += `\n?prop${index} a <${property.selectedMatchPropertyResourceClass?.iri}> .\n`;
             } else if (
               // searching for a resource class
-              value.selectedOperator === OPERATORS.NotEquals &&
+              value.selectedOperator === Operators.NotEquals &&
               !value.selectedProperty?.objectType.includes(Constants.KnoraApiV2)
             ) {
               constructString += `\n?prop${index} <${value.selectedProperty?.iri}> <${value.searchValue}> .`;
@@ -139,9 +137,9 @@ export class GravsearchService {
       }
     }
 
-    if (!(property.selectedOperator === OPERATORS.Exists || property.selectedOperator === OPERATORS.NotExists)) {
+    if (!(property.selectedOperator === Operators.Exists || property.selectedOperator === Operators.NotExists)) {
       whereString += `\n${this._valueStringHelper(property, index, '?prop', '?mainRes')}`;
-    } else if (property.selectedOperator === OPERATORS.NotExists) {
+    } else if (property.selectedOperator === Operators.NotExists) {
       whereString = `FILTER NOT EXISTS { \n${whereString}\n}\n`;
     }
 
@@ -164,7 +162,7 @@ export class GravsearchService {
     if (
       property.isChildProperty &&
       !property.selectedProperty?.objectType.includes(Constants.KnoraApiV2) &&
-      (property.selectedOperator === OPERATORS.Equals || property.selectedOperator === OPERATORS.NotEquals)
+      (property.selectedOperator === Operators.Equals || property.selectedOperator === Operators.NotEquals)
     )
       return '';
 
@@ -176,15 +174,15 @@ export class GravsearchService {
     if (!property.selectedProperty?.objectType.includes(Constants.KnoraApiV2)) {
       let valueString = '';
       switch (property.selectedOperator) {
-        case OPERATORS.Equals:
+        case Operators.Equals:
           return `?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> .`;
-        case OPERATORS.NotEquals:
+        case Operators.NotEquals:
           // this looks wrong but it is correct
           return `FILTER NOT EXISTS { \n?mainRes <${property.selectedProperty?.iri}> <${property.searchValue}> . }`;
-        case OPERATORS.Matches:
+        case Operators.Matches:
           if (Array.isArray(property.searchValue)) {
             property.searchValue.forEach((value, i) => {
-              if (value.selectedOperator !== OPERATORS.Exists && value.selectedOperator !== OPERATORS.NotExists) {
+              if (value.selectedOperator !== Operators.Exists && value.selectedOperator !== Operators.NotExists) {
                 valueString += this._valueStringHelper(value, i, `?linkProp${index}`, `?prop${index}`);
               }
             });
@@ -197,20 +195,20 @@ export class GravsearchService {
       switch (property.selectedProperty?.objectType) {
         case ResourceLabel:
           switch (property.selectedOperator) {
-            case OPERATORS.Equals:
-            case OPERATORS.NotEquals:
+            case Operators.Equals:
+            case Operators.NotEquals:
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
                 `FILTER (${labelVariableName} ${this._operatorToSymbol(property.selectedOperator)} "${
                   property.searchValue
                 }") .`
               );
-            case OPERATORS.IsLike:
+            case Operators.IsLike:
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
                 `FILTER regex(${labelVariableName}, "${property.searchValue}", "i") .`
               );
-            case OPERATORS.Matches:
+            case Operators.Matches:
               return (
                 `${labelRes} rdfs:label ${labelVariableName} .\n` +
                 `FILTER knora-api:matchLabel(${labelRes}, "${property.searchValue}") .`
@@ -220,22 +218,22 @@ export class GravsearchService {
           }
         case Constants.TextValue:
           switch (property.selectedOperator) {
-            case OPERATORS.Equals:
-            case OPERATORS.NotEquals:
+            case Operators.Equals:
+            case Operators.NotEquals:
               return (
                 `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n` +
                 `FILTER (${identifier}${index}Literal ${this._operatorToSymbol(property.selectedOperator)} "${
                   property.searchValue
                 }"^^<${Constants.XsdString}>) .`
               );
-            case OPERATORS.IsLike:
+            case Operators.IsLike:
               return (
                 `${identifier}${index} <${Constants.ValueAsString}> ${identifier}${index}Literal .\n` +
                 `FILTER ${this._operatorToSymbol(property.selectedOperator)}(${identifier}${index}Literal, "${
                   property.searchValue
                 }"^^<${Constants.XsdString}>, "i") .`
               );
-            case OPERATORS.Matches:
+            case Operators.Matches:
               return `FILTER <${this._operatorToSymbol(property.selectedOperator)}>(${identifier}${index}, "${
                 property.searchValue
               }"^^<${Constants.XsdString}>) .`;
@@ -271,7 +269,7 @@ export class GravsearchService {
           }Date>) .`;
         case Constants.ListValue:
           switch (property.selectedOperator) {
-            case OPERATORS.NotEquals: {
+            case Operators.NotEquals: {
               const listValueAsListNode = Constants.ListValueAsListNode.split('#').pop();
               return (
                 `${identifier}${index} knora-api:${listValueAsListNode} ${identifier}${index}List .\n` +
@@ -296,25 +294,25 @@ export class GravsearchService {
 
   private _operatorToSymbol(operator: string | undefined): string {
     switch (operator) {
-      case OPERATORS.Equals:
+      case Operators.Equals:
         return '=';
-      case OPERATORS.NotEquals:
+      case Operators.NotEquals:
         return '!=';
-      case OPERATORS.GreaterThan:
+      case Operators.GreaterThan:
         return '>';
-      case OPERATORS.GreaterThanEquals:
+      case Operators.GreaterThanEquals:
         return '>=';
-      case OPERATORS.LessThan:
+      case Operators.LessThan:
         return '<';
-      case OPERATORS.LessThanEquals:
+      case Operators.LessThanEquals:
         return '<=';
-      case OPERATORS.Exists:
+      case Operators.Exists:
         return 'E';
-      case OPERATORS.NotExists:
+      case Operators.NotExists:
         return '!E';
-      case OPERATORS.IsLike:
+      case Operators.IsLike:
         return 'regex';
-      case OPERATORS.Matches:
+      case Operators.Matches:
         return Constants.MatchText;
       default:
         return '';

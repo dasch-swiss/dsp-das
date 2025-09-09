@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { ApiData } from '../../model';
+import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../../util';
 
@@ -36,8 +37,9 @@ import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../../util';
   styleUrls: ['../advanced-search.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyResourceFormComponent {
+export class OntologyResourceFormComponent implements OnInit {
   private searchService = inject(SearchStateService);
+  private formManager = inject(PropertyFormManager);
 
   ontologies$ = this.searchService.ontologies$;
   resourceClasses$ = this.searchService.resourceClasses$;
@@ -49,12 +51,18 @@ export class OntologyResourceFormComponent {
   @ViewChild('ontologiesList') ontologiesList!: MatSelect;
   @ViewChild('resourceClassesList') resourceClassesList!: MatSelect;
 
+  ngOnInit(): void {
+    this.ontologies$.subscribe(ontologies => {
+      console.log('Ontologies loaded:', ontologies);
+    });
+  }
+
   onSelectedOntologyChanged(selected: ApiData): void {
-    this.searchService.updateSelectedOntology(selected);
+    this.formManager.updateSelectedOntology(selected);
   }
 
   onSelectedResourceClassChanged(selected: ApiData = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
-    this.searchService.updateSelectedResourceClass(selected);
+    this.formManager.updateSelectedResourceClass(selected);
   }
 
   compareApiDataObjects(object1: ApiData, object2: ApiData) {

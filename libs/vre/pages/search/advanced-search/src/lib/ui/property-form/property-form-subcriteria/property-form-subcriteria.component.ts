@@ -5,14 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
-import {
-  ApiData,
-  ParentChildPropertyPair,
-  PropertyData,
-  PropertyFormItem,
-  ResourceLabelObject,
-  SearchItem,
-} from '../../../model';
+import { ApiData, PropertyData, PropertyFormItem } from '../../../model';
+import { PropertyFormManager } from '../../../service/property-form.manager';
 import { SearchStateService } from '../../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
@@ -36,85 +30,62 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormSubcriteriaComponent {
-  @Input() parentProperty: PropertyFormItem | null = null;
-  @Input() childProperties: PropertyFormItem[] = [];
+  @Input({ required: true }) parentProperty!: PropertyFormItem;
 
-  // Inject SearchStateService for direct access to observables and methods
   private searchService = inject(SearchStateService);
-
-  // Access observables directly from service
-  resourcesSearchResultsLoading$ = this.searchService.resourcesSearchResultsLoading$;
-  resourcesSearchResultsCount$ = this.searchService.resourcesSearchResultsCount$;
-  resourcesSearchResults$ = this.searchService.resourcesSearchResults$;
-  resourcesSearchNoResults$ = this.searchService.resourcesSearchNoResults$;
+  private formManager = inject(PropertyFormManager);
+  get childProperties(): PropertyFormItem[] {
+    return Array.isArray(this.parentProperty.searchValue) ? this.parentProperty.searchValue : [];
+  }
 
   constants = Constants;
-  resourceLabelObj = ResourceLabelObject;
 
   onAddSubcriteria(): void {
-    if (this.parentProperty) {
-      this.searchService.addChildPropertyFormList(this.parentProperty);
-    }
+    this.formManager.addChildPropertyFormList(this.parentProperty);
   }
 
   onRemoveSubcriteria(childProperty: PropertyFormItem): void {
-    if (this.parentProperty) {
-      this.searchService.deleteChildPropertyFormList({
-        parentProperty: this.parentProperty,
-        childProperty,
-      });
-    }
+    this.searchService.deleteChildPropertyFormList({
+      parentProperty: this.parentProperty,
+      childProperty,
+    });
   }
 
   onChildPropertySelectionChange(childProperty: PropertyFormItem, selectedProperty: PropertyData): void {
-    if (this.parentProperty) {
-      const updatedChildProperty = { ...childProperty, selectedProperty };
-      this.searchService.updateChildSelectedProperty({
-        parentProperty: this.parentProperty,
-        childProperty: updatedChildProperty,
-      });
-    }
+    const updatedChildProperty = { ...childProperty, selectedProperty };
+    this.formManager.updateChildSelectedProperty({
+      parentProperty: this.parentProperty,
+      childProperty: updatedChildProperty,
+    });
   }
 
   onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: string): void {
-    if (this.parentProperty) {
-      const updatedChildProperty = { ...childProperty, selectedOperator };
-      this.searchService.updateChildSelectedOperator({
-        parentProperty: this.parentProperty,
-        childProperty: updatedChildProperty,
-      });
-    }
+    const updatedChildProperty = { ...childProperty, selectedOperator };
+    this.formManager.updateChildSelectedOperator({
+      parentProperty: this.parentProperty,
+      childProperty: updatedChildProperty,
+    });
   }
 
   onChildValueChange(childProperty: PropertyFormItem, searchValue: string | ApiData): void {
-    if (this.parentProperty) {
-      let updatedChildProperty: PropertyFormItem;
+    let updatedChildProperty: PropertyFormItem;
 
-      if (this._isApiData(searchValue)) {
-        // If it's an ApiData object, extract iri and label
-        updatedChildProperty = {
-          ...childProperty,
-          searchValue: searchValue.iri,
-          searchValueLabel: searchValue.label,
-        };
-      } else {
-        // If it's a string, use directly
-        updatedChildProperty = { ...childProperty, searchValue };
-      }
-
-      this.searchService.updateChildSearchValue({
-        parentProperty: this.parentProperty,
-        childProperty: updatedChildProperty,
-      });
+    if (this._isApiData(searchValue)) {
+      // If it's an ApiData object, extract iri and label
+      updatedChildProperty = {
+        ...childProperty,
+        searchValue: searchValue.iri,
+        searchValueLabel: searchValue.label,
+      };
+    } else {
+      // If it's a string, use directly
+      updatedChildProperty = { ...childProperty, searchValue };
     }
-  }
 
-  onResourceSearchValueChanged(searchItem: SearchItem): void {
-    this.searchService.updateResourcesSearchResults(searchItem);
-  }
-
-  onLoadMoreSearchResults(searchItem: SearchItem): void {
-    this.searchService.loadMoreResourcesSearchResults(searchItem);
+    this.formManager.updateChildSearchValue({
+      parentProperty: this.parentProperty,
+      childProperty: updatedChildProperty,
+    });
   }
 
   compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {

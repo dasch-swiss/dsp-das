@@ -2,15 +2,12 @@
   <mat-form-field class="adv-property-form">
     <mat-label>Property</mat-label>
     <mat-select
-      #propertiesList
+      [value]="propertyFormItem.selectedProperty"
       (selectionChange)="onSelectedPropertyChanged($event)"
       data-cy="property-select"
       [compareWith]="compareObjects">
       <mat-option *ngIf="propertiesLoading$ | async" disabled="true">Loading...</mat-option>
-      <ng-container *ngIf="!(propertiesLoading$ | async)">
-        <mat-option [value]="resourceLabelObj" [attr.data-cy]="resourceLabelObj.label">
-          {{ resourceLabelObj.label }}
-        </mat-option>
+      <ng-container *ngIf="(propertiesLoading$ | async) === false">
         <mat-option *ngFor="let prop of filteredProperties$ | async" [value]="prop" [attr.data-cy]="prop.label">
           {{ prop.label }}
         </mat-option>
@@ -20,7 +17,7 @@
   <mat-form-field class="adv-property-form right-hand-form">
     <mat-label>Comparison Operator</mat-label>
     <mat-select
-      #operatorsList
+      [value]="propertyFormItem.selectedOperator"
       (selectionChange)="onSelectedOperatorChanged($event)"
       data-cy="comparison-operator-select">
       <mat-option *ngFor="let operator of propertyFormItem?.operators" [value]="operator" [attr.data-cy]="operator">
@@ -36,7 +33,7 @@
       ">
       <mat-label>Resource Class</mat-label>
       <mat-select
-        #resourceClassList
+        [value]="propertyFormItem.selectedMatchPropertyResourceClass"
         (selectionChange)="onSelectedMatchPropertyResourceClassChanged($event)"
         data-cy="resource-class-select"
         [compareWith]="compareObjects">
@@ -61,7 +58,6 @@
       "
       class="adv-property-form">
       <app-property-form-value
-        #propertyFormValue
         *ngIf="
           (propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2) ||
             propertyFormItem.selectedProperty?.objectType === constants.Label) &&
@@ -82,12 +78,7 @@
           propertyFormItem.selectedOperator !== operators.Matches"
         [value]="propertyFormItem.searchValue"
         [label]="propertyFormItem.searchValueLabel"
-        [resourcesSearchResultsLoading]="resourcesSearchResultsLoading$ | async"
-        [resourcesSearchResultsCount]="resourcesSearchResultsCount$ | async"
-        [resourcesSearchResults]="resourcesSearchResults$ | async"
-        [resourcesSearchNoResults]="resourcesSearchNoResults$ | async"
-        (emitResourceSearchValueChanged)="onResourceSearchValueChanged($event)"
-        (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
+        [objectType]="propertyFormItem.selectedProperty?.objectType"
         (emitResourceSelected)="onValueChanged($event)" />
     </div>
   </div>

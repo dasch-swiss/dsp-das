@@ -59,7 +59,7 @@ export interface SearchFormsState {
   ontologiesLoading: boolean;
   resourceClasses: ApiData[];
   resourceClassesLoading: boolean;
-  selectedProject: string | undefined;
+  selectedProject: string;
   selectedOntology: ApiData | undefined;
   selectedResourceClass: ApiData | undefined;
   propertyFormList: PropertyFormItem[];
@@ -91,8 +91,9 @@ export type AdvancedSearchStateSnapshot = Pick<
 
 export const ResourceLabel = `${Constants.KnoraApiV2 + Constants.HashDelimiter}ResourceLabel`;
 
-export const ResourceLabelObject = {
-  iri: 'resourceLabel',
+export const ResourceLabelPropertyData: PropertyData = {
+  iri: ResourceLabel,
   label: 'Resource Label',
   objectType: ResourceLabel,
-};
+  isLinkedResourceProperty: false,
+} as const;

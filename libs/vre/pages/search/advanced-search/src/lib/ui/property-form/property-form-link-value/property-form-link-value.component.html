@@ -12,17 +12,17 @@
     [displayWith]="displayResource"
     (optionsScroll)="onScroll()"
     (optionSelected)="onResourceSelected($event)">
-    <mat-option *ngIf="resourcesSearchNoResults && !resourcesSearchResultsLoading" [disabled]="true">
+    <mat-option *ngIf="(resourcesSearchNoResults$ | async) && !(resourcesSearchResultsLoading$ | async)" [disabled]="true">
       No results found
     </mat-option>
     <mat-option
-      *ngIf="!resourcesSearchNoResults && !resourcesSearchResultsLoading && resourcesSearchResultsCount"
+      *ngIf="!(resourcesSearchNoResults$ | async) && !(resourcesSearchResultsLoading$ | async) && (resourcesSearchResultsCount$ | async)"
       [disabled]="true">
-      {{ resourcesSearchResultsCount }} results found
+      {{ resourcesSearchResultsCount$ | async }} results found
     </mat-option>
 
-    <mat-option *ngFor="let res of resourcesSearchResults" [value]="res"> {{ res?.label }}</mat-option>
-    <mat-option *ngIf="resourcesSearchResultsLoading" [disabled]="true" class="loader">
+    <mat-option *ngFor="let res of resourcesSearchResults$ | async" [value]="res"> {{ res?.label }}</mat-option>
+    <mat-option *ngIf="resourcesSearchResultsLoading$ | async" [disabled]="true" class="loader">
       <app-progress-indicator />
     </mat-option>
   </mat-autocomplete>

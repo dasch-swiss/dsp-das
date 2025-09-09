@@ -10,11 +10,9 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { catchError, map, Observable, of, Subject, takeUntil } from 'rxjs';
-import { ApiData, PropertyData } from '../model';
+import { ApiData, PropertyData, ResourceLabelPropertyData } from '../model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AdvancedSearchApiService {
   // subjects to handle canceling of previous search requests when searching for a linked resource
   private cancelPreviousCountRequest$ = new Subject<void>();
@@ -87,7 +85,7 @@ export class AdvancedSearchApiService {
           .getPropertyDefinitionsByType(ResourcePropertyDefinition)
           .filter(propDef => propDef.isEditable && !propDef.isLinkValueProperty);
 
-        return props
+        const propertyDataList = props
           .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
             (a.label || '').localeCompare(b.label || '')
           )
@@ -125,15 +123,17 @@ export class AdvancedSearchApiService {
               isLinkedResourceProperty: linkProperty,
             };
           });
+
+        return [ResourceLabelPropertyData, ...propertyDataList];
       }),
       catchError(err => {
-        return []; // return an empty array on error
+        return of([ResourceLabelPropertyData]); // return ResourceLabel on error
       })
     );
 
   // API call to get the list of properties filtered by resource class
-  filteredPropertiesList = (resourceClassIri: string): Observable<PropertyData[]> =>
-    this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
+  filteredPropertiesList = (resourceClassIri: string): Observable<PropertyData[]> => {
+    return this._dspApiConnection.v2.ontologyCache.getResourceClassDefinition(resourceClassIri).pipe(
       map(onto => {
         // filter out properties that shouldn't be able to be selected
         // this is a bit different than how the propertiesList method does it
@@ -141,7 +141,7 @@ export class AdvancedSearchApiService {
         // that should be filtered out
         const props = this._filterProperties(onto);
 
-        return props
+        const filteredPropertyDataList = props
           .sort((a: ResourcePropertyDefinition, b: ResourcePropertyDefinition) =>
             (a.label || '').localeCompare(b.label || '')
           )
@@ -179,11 +179,14 @@ export class AdvancedSearchApiService {
               isLinkedResourceProperty: linkProperty,
             };
           });
+
+        return [ResourceLabelPropertyData, ...filteredPropertyDataList];
       }),
       catchError(err => {
-        return []; // return an empty array on error
+        return of([ResourceLabelPropertyData]); // return ResourceLabel on error
       })
     );
+  };
 
   getResourcesListCount(searchValue: string, resourceClassIri: string): Observable<number> {
     // Cancel the previous count request

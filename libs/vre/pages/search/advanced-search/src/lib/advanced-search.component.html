@@ -1,35 +1,42 @@
 <div class="advanced-search-container">
   <div class="advanced-search-header">
     <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
-    <button [disabled]="!previousSearchObject" mat-stroked-button color="primary" (click)="loadPreviousSearch()">
+    <button
+      [disabled]="!_previousSearchService.hasPreviousSearch()"
+      mat-stroked-button
+      color="primary"
+      (click)="loadPreviousSearch()">
       {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
     </button>
   </div>
   <div class="advanced-search-content">
     <app-ontology-resource-form class="advanced-search-item" />
 
-    <ng-container *ngFor="let propertyForm of propertyFormList$ | async; let isLast = last">
+    <ng-container *ngFor="let propertyForm of searchState.propertyForms$ | async; let isLast = last">
       <div style="display: flex; width: 100%">
         <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
         <button
           *ngIf="!isLast && propertyForm.selectedProperty"
           mat-icon-button
-          (click)="handleRemovePropertyForm(propertyForm)"
+          (click)="removePropertyForm(propertyForm)"
           class="remove-property-button"
           matTooltip="Remove search criteria">
           <mat-icon>remove_circle</mat-icon>
         </button>
       </div>
-      <!-- Subcriteria component -->
-      <app-property-form-subcriteria
-        class="advanced-search-item"
-        [parentProperty]="propertyForm"
-        [childProperties]="getLinkMatchPropertyFormItems(propertyForm.searchValue) || []" />
+      <app-property-form-subcriteria class="advanced-search-item" [parentProperty]="propertyForm" />
     </ng-container>
-
     <app-order-by />
-    <app-form-actions
-      (emitResetButtonClicked)="handleResetButtonClicked()"
-      (emitSearchButtonClicked)="handleSearchButtonClicked()" />
+    <div class="action-buttons">
+      <button mat-button mat-stroked-button color="primary" (click)="resetSearch()">Reset</button>
+      <button
+        mat-button
+        mat-raised-button
+        color="primary"
+        [disabled]="(searchState.isFormStateValid$ | async) === false"
+        (click)="doSearch()">
+        Search
+      </button>
+    </div>
   </div>
 </div>

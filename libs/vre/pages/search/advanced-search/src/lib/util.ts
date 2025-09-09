@@ -1,14 +1,14 @@
 import { Constants } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
 import { PropertyFormItem, OrderByItem, PropertyData, ResourceLabel, ApiData, SearchFormsState } from './model';
-import { OPERATORS } from './service/operators.config';
+import { Operators } from './service/operators.config';
 
 export function isPropertyFormItemInvalid(prop: PropertyFormItem): boolean {
   // No property selected
   if (!prop.selectedProperty) return true;
 
   // Selected operator is 'exists' or 'does not exist' - these are always valid
-  if (prop.selectedOperator === OPERATORS.Exists || prop.selectedOperator === OPERATORS.NotExists) return false;
+  if (prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists) return false;
 
   // If searchValue is an array (child properties), validate each child
   if (Array.isArray(prop.searchValue)) {

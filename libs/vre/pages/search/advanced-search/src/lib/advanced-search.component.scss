@@ -31,4 +31,11 @@
   .advanced-search-item {
     width: 90%;
   }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
 }

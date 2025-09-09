@@ -1,4 +1,3 @@
-<!-- Subcriteria forms and Add button - displayed when property is a link with 'matches' operator -->
 <div
   *ngIf="
     parentProperty &&
@@ -23,7 +22,6 @@
               placeholder="Select a value"
               name="properties"
               [compareWith]="compareObjects">
-              <mat-option [value]="resourceLabelObj">{{ resourceLabelObj.label }}</mat-option>
               <mat-option *ngFor="let prop of parentProperty.childPropertiesList" [value]="prop">
                 {{ prop.label }}
               </mat-option>
@@ -72,12 +70,6 @@
           *ngIf="childProperty.selectedProperty?.isLinkedResourceProperty"
           [value]="childProperty.searchValue"
           [label]="childProperty.searchValueLabel"
-          [resourcesSearchResultsLoading]="resourcesSearchResultsLoading$ | async"
-          [resourcesSearchResultsCount]="resourcesSearchResultsCount$ | async"
-          [resourcesSearchResults]="resourcesSearchResults$ | async"
-          [resourcesSearchNoResults]="resourcesSearchNoResults$ | async"
-          (emitResourceSearchValueChanged)="onResourceSearchValueChanged($event)"
-          (emitLoadMoreSearchResults)="onLoadMoreSearchResults($event)"
           (emitResourceSelected)="onChildValueChange(childProperty, $event)" />
       </div>
     </div>

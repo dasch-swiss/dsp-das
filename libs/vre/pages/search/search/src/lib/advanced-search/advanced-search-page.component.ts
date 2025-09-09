@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { QueryObject, SearchStateService } from '@dasch-swiss/vre/pages/search/advanced-search';
+import { QueryObject, provideAdvancedSearch } from '@dasch-swiss/vre/pages/search/advanced-search';
 
 @Component({
   selector: 'app-advanced-search-page',
@@ -9,7 +9,7 @@ import { QueryObject, SearchStateService } from '@dasch-swiss/vre/pages/search/a
     <app-advanced-search [projectUuid]="uuid" (emitGravesearchQuery)="onSearch($event)" />
   </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [SearchStateService],
+  providers: [...provideAdvancedSearch()],
 })
 export class AdvancedSearchPageComponent implements OnInit {
   uuid: string;
