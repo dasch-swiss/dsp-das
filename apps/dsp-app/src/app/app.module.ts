@@ -62,7 +62,7 @@ import { AppComponent } from './app.component';
 import { CookieBannerComponent } from './cookie-banner.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
-import { MaterialModule } from './material-module';
+
 
 // translate: AoT requires an exported function for factories
 export function httpLoaderFactory(httpClient: HttpClient) {
@@ -86,7 +86,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     FormsModule,
     HttpClientModule,
     IMaskModule,
-    MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     MatRippleModule,
     NgxSkeletonLoaderModule,
@@ -95,11 +94,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     AdvancedSearchComponent,
     MatStepperModule,
     TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpLoaderFactory,
-        deps: [HttpClient],
-      },
+        loader: {
+            provide: TranslateLoader,
+            useFactory: httpLoaderFactory,
+            deps: [HttpClient],
+        },
     }),
     MultiLanguageTextareaComponent,
     MutiLanguageInputComponent,
@@ -125,7 +124,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ProgressIndicatorComponents,
     ...DatePickerComponents,
     ...StringLiteralComponents,
-  ],
+],
   providers: [
     AppConfigService,
     PendoAnalyticsService,
