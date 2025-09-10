@@ -12,6 +12,7 @@ import { Component } from '@angular/core';
       :host {
         width: 290px;
         display: block;
+        border-right: 1px solid #ebebeb;
       }
     `,
   ],

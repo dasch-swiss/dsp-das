@@ -10,9 +10,11 @@ import { ResourceResultService } from './resource-result.service';
 @Component({
   selector: 'app-resource-class-browser-page',
   template: `
+    <app-project-sidenav />
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
         <app-resource-browser
+          style="flex: 1"
           [data]="data"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       } @else {
@@ -24,6 +26,13 @@ import { ResourceResultService } from './resource-result.service';
     }
   `,
   providers: [ResourceResultService],
+  styles: [
+    `
+      :host {
+        display: flex;
+      }
+    `,
+  ],
 })
 export class ResourceClassBrowserPageComponent implements OnInit {
   userCanViewResources = true;
