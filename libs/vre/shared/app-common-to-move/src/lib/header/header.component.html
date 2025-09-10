@@ -37,6 +37,33 @@
     <app-user-menu />
   </span>
 </mat-toolbar>
-@if (!dsp.production) {
-<mat-progress-bar [color]="dsp.color" mode="determinate" value="100" />
-}
+
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">description</mat-icon>
+      Description
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">list</mat-icon>
+      Data
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">bubble_chart</mat-icon>
+      Data model
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">settings</mat-icon>
+      Settings
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
