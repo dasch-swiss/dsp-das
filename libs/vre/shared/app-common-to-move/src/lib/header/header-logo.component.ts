@@ -20,8 +20,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
         cursor: pointer;
 
         .mat-icon {
-          height: 48px;
-          width: 48px;
+          height: 32px;
+          width: 32px;
         }
       }
     `,
