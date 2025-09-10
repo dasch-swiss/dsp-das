@@ -11,9 +11,8 @@ import {
   ReadResource,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
 import { finalize, Subject } from 'rxjs';
 
 export interface ResourceLinkDialogProps {
@@ -36,7 +35,9 @@ export interface ResourceLinkDialogProps {
         <div class="resource-container">
           <p>The following resources will be connected:</p>
           <ul>
-            <li *ngFor="let res of data.resources">{{ res.label }}</li>
+            @for (res of data.resources; track res) {
+              <li>{{ res.label }}</li>
+            }
           </ul>
         </div>
       </form>
@@ -67,7 +68,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
   });
 
   isLoading = false;
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
     @Inject(DspApiConnectionToken)
@@ -75,7 +76,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     private _fb: FormBuilder,
     private _resourceService: ResourceService,
     private _router: Router,
-    private _store: Store,
+    private _userService: UserService,
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {}

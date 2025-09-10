@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Store } from '@ngxs/store';
 import { combineLatest, map } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
@@ -19,15 +18,19 @@ export interface ClassToSelect {
       <span matPrefix> <mat-icon>tune</mat-icon>&nbsp; </span>
       <mat-label>Select resource class</mat-label>
       <mat-select [formControl]="control">
-        <mat-optgroup *ngFor="let onto of ontologyClasses$ | async" [label]="onto.ontologyLabel">
-          <mat-option *ngFor="let oClass of onto.classes" [value]="oClass.id">
-            {{ oClass.labels | appStringifyStringLiteral }}</mat-option
-          >
-        </mat-optgroup>
+        @for (onto of ontologyClasses$ | async; track onto) {
+          <mat-optgroup [label]="onto.ontologyLabel">
+            @for (oClass of onto.classes; track oClass) {
+              <mat-option [value]="oClass.id"> {{ oClass.labels | appStringifyStringLiteral }}</mat-option>
+            }
+          </mat-optgroup>
+        }
       </mat-select>
-      <mat-error *ngIf="control.invalid && control.touched && control.errors![0] as error">
-        {{ error | humanReadableError }}
-      </mat-error>
+      @if (control.invalid && control.touched && control.errors![0]; as error) {
+        <mat-error>
+          {{ error | humanReadableError }}
+        </mat-error>
+      }
     </mat-form-field>
   `,
   styles: ['mat-form-field {width: 100%}'],
@@ -57,7 +60,6 @@ export class GuiAttrLinkComponent {
   );
 
   constructor(
-    private _store: Store,
     private _projectPageService: ProjectPageService,
     private _localizationService: LocalizationService
   ) {}

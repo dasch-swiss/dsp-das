@@ -2,28 +2,32 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
-import { Store } from '@ngxs/store';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-search-project-results-page',
-  template: ` <app-progress-indicator *ngIf="loading" />
-    <ng-container *ngIf="resources$ | async as resources">
-      <h2 *ngIf="resources.length === 0" style="text-align: center;margin-top: 50px;">There is no result.</h2>
-      <app-resource-browser
-        *ngIf="resources.length > 0"
-        [data]="{ resources: resources, selectFirstResource: true }"
-        [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
-        [searchKeyword]="query" />
-    </ng-container>`,
+  template: ` @if (loading) {
+      <app-progress-indicator />
+    }
+    @if (resources$ | async; as resources) {
+      @if (resources.length === 0) {
+        <h2 style="text-align: center;margin-top: 50px;">There is no result.</h2>
+      }
+      @if (resources.length > 0) {
+        <app-resource-browser
+          [data]="{ resources: resources, selectFirstResource: true }"
+          [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
+          [searchKeyword]="query" />
+      }
+    }`,
   providers: [ResourceResultService],
 })
 export class SearchProjectResultsPageComponent {
   query?: string;
   loading = true;
-  userIsSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  userIsSysAdmin$ = this._userService.isSysAdmin$;
 
   readonly resources$ = this._route.params.pipe(
     map(params => ({
@@ -59,6 +63,6 @@ export class SearchProjectResultsPageComponent {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _resourceResultService: ResourceResultService,
-    private _store: Store
+    private _userService: UserService
   ) {}
 }

@@ -26,14 +26,17 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          <div *ngIf="foundIn.length > 0" class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+          @if (foundIn.length > 0) {
+            <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+          }
         </div>
 
-        <mat-checkbox
-          *ngIf="showCheckbox || multipleViewerService.selectMode"
-          [checked]="isSelected$ | async"
-          (change)="onCheckboxChanged($event)"
-          (click)="$event.stopPropagation()" />
+        @if (showCheckbox || multipleViewerService.selectMode) {
+          <mat-checkbox
+            [checked]="isSelected$ | async"
+            (change)="onCheckboxChanged($event)"
+            (click)="$event.stopPropagation()" />
+        }
       </div>
     </div>
   `,
@@ -94,7 +97,7 @@ export class ResourceListItemComponent implements OnInit {
       values.forEach(value => {
         if (
           value.strval &&
-          value.strval.toLowerCase().includes(keyword) &&
+          value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
           !this.foundIn.includes(value.propertyLabel!)
         ) {
           this.foundIn.push(value.propertyLabel!);
