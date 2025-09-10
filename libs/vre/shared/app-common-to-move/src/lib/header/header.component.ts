@@ -8,14 +8,13 @@ import { SearchParams } from '../search-params.interface';
 @Component({
   selector: 'app-header',
   template: `
-    <mat-toolbar style="background: inherit; height: 56px">
-      <app-header-logo />
-      <h1 style="flex: 1; display: flex; align-items: center; font-size: 18px">Dasch Service Platform</h1>
+    <mat-toolbar style="background: inherit; height: 56px; justify-content: space-between">
+      <span style="display: flex; align-items: center">
+        <app-header-logo />
+        <h1 style="font-size: 18px">Dasch Service Platform</h1>
+      </span>
 
-      @if (false) {
-        <app-search-panel [projectfilter]="true" [advanced]="true" [expert]="true" (search)="doSearch($event)" />
-      }
-
+      <app-fulltext-search />
       <app-header-right />
     </mat-toolbar>
   `,
