@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { first } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
@@ -20,8 +21,7 @@ export class DataBrowserPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._projectPageService.ontologies$.subscribe(ontologies => {
-      console.log('ontologies', ontologies);
+    this._projectPageService.ontologies$.pipe(first()).subscribe(ontologies => {
       const [ontologyIri, className] = Object.values(ontologies[0].classes)[0].id.split('#');
       const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
       this._router.navigate(['..', 'ontology', ontologyName, className], { relativeTo: this._route });

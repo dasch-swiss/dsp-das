@@ -11,7 +11,7 @@ import { ProjectPageService } from './project-page.service';
       </span>
       <app-header-right />
     </mat-toolbar>
-    <app-header-tabs />`,
+    <app-header-project-tabs />`,
   styles: [
     `
       :host {

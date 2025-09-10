@@ -4,6 +4,6 @@ export * from './lib/split.pipe';
 export * from './lib/search-params.interface';
 export * from './lib/header/header.component';
 export * from './lib/status/status.component';
-export * from './lib/header/header-tabs.component';
+export * from './lib/header/header-project-tabs.component';
 export * from './lib/header/header-right.component';
 export * from './lib/header/header-logo.component';
