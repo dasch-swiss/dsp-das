@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem } from '../../../model';
+import { Operators } from '../../../service/operators.config';
 import { PropertyFormManager } from '../../../service/property-form.manager';
 import { SearchStateService } from '../../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
@@ -52,39 +53,32 @@ export class PropertyFormSubcriteriaComponent {
   }
 
   onChildPropertySelectionChange(childProperty: PropertyFormItem, selectedProperty: PropertyData): void {
-    const updatedChildProperty = { ...childProperty, selectedProperty };
-    this.formManager.updateChildSelectedProperty({
-      parentProperty: this.parentProperty,
-      childProperty: updatedChildProperty,
-    });
+    childProperty.selectedProperty = selectedProperty;
+    this.parentProperty.updateChildProperty(childProperty.selectedProperty);
+    this.formManager.updateChildProperty(childProperty, this.parentProperty);
   }
 
-  onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: string): void {
-    const updatedChildProperty = { ...childProperty, selectedOperator };
+  onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: Operators): void {
+    childProperty.selectedOperator = selectedOperator;
     this.formManager.updateChildSelectedOperator({
       parentProperty: this.parentProperty,
-      childProperty: updatedChildProperty,
+      childProperty,
     });
   }
 
   onChildValueChange(childProperty: PropertyFormItem, searchValue: string | ApiData): void {
-    let updatedChildProperty: PropertyFormItem;
-
     if (this._isApiData(searchValue)) {
       // If it's an ApiData object, extract iri and label
-      updatedChildProperty = {
-        ...childProperty,
-        searchValue: searchValue.iri,
-        searchValueLabel: searchValue.label,
-      };
+      childProperty.searchValue = searchValue.iri;
+      childProperty.searchValueLabel = searchValue.label;
     } else {
       // If it's a string, use directly
-      updatedChildProperty = { ...childProperty, searchValue };
+      childProperty.searchValue = searchValue;
     }
 
-    this.formManager.updateChildSearchValue({
+    this.searchService.updateChildSearchValue({
       parentProperty: this.parentProperty,
-      childProperty: updatedChildProperty,
+      childProperty,
     });
   }
 

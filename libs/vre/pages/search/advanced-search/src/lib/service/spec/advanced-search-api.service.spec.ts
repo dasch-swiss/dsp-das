@@ -18,10 +18,10 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConfigToken, DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { of } from 'rxjs';
-import { AdvancedSearchApiService } from '../advanced-search-api.service';
+import { AdvancedSearchDataService } from '../advanced-search-api.service';
 
-describe('AdvancedSearchApiService', () => {
-  let service: AdvancedSearchApiService;
+describe('AdvancedSearchDataService', () => {
+  let service: AdvancedSearchDataService;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -36,7 +36,7 @@ describe('AdvancedSearchApiService', () => {
         },
       ],
     });
-    service = TestBed.inject(AdvancedSearchApiService);
+    service = TestBed.inject(AdvancedSearchDataService);
   });
 
   it('should be created', () => {
@@ -111,7 +111,7 @@ describe('AdvancedSearchApiService', () => {
       // Use type assertion to bypass type checking for the mock connection
       service['_dspApiConnection'] = mockDspApiConnection as unknown as KnoraApiConnection;
 
-      service.ontologiesInProjectList(projectIri).subscribe(ontologies => {
+      service.ontologies$(projectIri).subscribe(ontologies => {
         expect(ontologies).toEqual([
           { iri: 'ontology1', label: 'Ontology 1' },
           { iri: 'ontology2', label: 'Ontology 2' },

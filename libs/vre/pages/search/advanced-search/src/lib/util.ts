@@ -51,20 +51,6 @@ export function updateOrderByList(currentList: OrderByItem[], property: Property
   return updatedOrderByList;
 }
 
-export const EMPTY_PROPERTY_FORM_ITEM: PropertyFormItem = {
-  id: uuidv4(),
-  selectedProperty: undefined,
-  selectedOperator: undefined,
-  searchValue: undefined,
-  operators: [],
-  list: undefined,
-} as const;
-
-export const EMPTY_CHILD_PROPERTY_FORM_ITEM: PropertyFormItem = {
-  ...EMPTY_PROPERTY_FORM_ITEM,
-  isChildProperty: true,
-} as const;
-
 export const SEARCH_ALL_RESOURCE_CLASSES_OPTION: ApiData = {
   iri: 'all-resource-classes',
   label: 'All resource classes',
@@ -75,19 +61,10 @@ export const INITIAL_FORMS_STATE: SearchFormsState = {
   ontologiesLoading: false,
   resourceClasses: [],
   resourceClassesLoading: false,
-  selectedProject: undefined,
+  selectedProject: '',
   selectedOntology: undefined,
   selectedResourceClass: undefined,
-  propertyFormList: [
-    {
-      id: uuidv4(),
-      selectedProperty: undefined,
-      selectedOperator: undefined,
-      searchValue: undefined,
-      operators: [],
-      list: undefined,
-    },
-  ],
+  propertyFormList: [new PropertyFormItem()],
   properties: [],
   propertiesLoading: false,
   propertiesOrderBy: [],

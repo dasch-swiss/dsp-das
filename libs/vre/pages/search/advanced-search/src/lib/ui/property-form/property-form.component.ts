@@ -39,16 +39,7 @@ export class PropertyFormComponent {
   private _searchService = inject(SearchStateService);
   private _formManager = inject(PropertyFormManager);
 
-  @Input() propertyFormItem: PropertyFormItem = {
-    id: '',
-    selectedProperty: undefined,
-    selectedOperator: undefined,
-    searchValue: undefined,
-    operators: [],
-    list: undefined,
-  };
-
-  // Observables from the service
+  @Input() propertyFormItem: PropertyFormItem = new PropertyFormItem();
   filteredProperties$ = this._searchService.filteredProperties$;
   propertiesLoading$ = this._searchService.propertiesLoading$;
   matchResourceClassesLoading$ = this._searchService.matchResourceClassesLoading$;
@@ -57,90 +48,22 @@ export class PropertyFormComponent {
   constants = Constants;
 
   onSelectedPropertyChanged(event: MatSelectChange): void {
-    this.propertyFormItem.selectedProperty = event.value;
-    // Reset dependent fields when property changes
-    this.propertyFormItem.selectedOperator = undefined;
-    this.propertyFormItem.searchValue = undefined;
-    this.propertyFormItem.selectedMatchPropertyResourceClass = undefined;
-
-    const currentState = this._searchService.currentState;
-    const updates = this._formManager.updatePropertyFormItem(
-      currentState, 
-      this.propertyFormItem,
-      (property) => {
-        // Handle list loaded callback
-        this._searchService.patchState({ propertyFormList: currentState.propertyFormList });
-      },
-      (error) => {
-        console.error('Error updating property:', error);
-      }
-    );
-    
-    if (updates && typeof updates === 'object' && 'propertyFormList' in updates) {
-      this._searchService.patchState(updates);
-    }
+    this._formManager.onPropertySelectionChanged(this.propertyFormItem, event.value);
   }
 
   onSelectedOperatorChanged(event: MatSelectChange): void {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem) {
-      propFormItem.selectedOperator = event.value;
-      const currentState = this._searchService.currentState;
-      this._formManager.updateSelectedOperatorForProperty(currentState, propFormItem).subscribe({
-        next: (updates) => {
-          if (updates) {
-            this._searchService.patchState(updates);
-          }
-        },
-        error: (error) => {
-          console.error('Error updating operator:', error);
-        }
-      });
-    }
+    this._formManager.onOperatorSelectionChanged(this.propertyFormItem, event.value);
   }
 
   onSelectedMatchPropertyResourceClassChanged(event: MatSelectChange): void {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem) {
-      propFormItem.selectedMatchPropertyResourceClass = event.value;
-      const currentState = this._searchService.currentState;
-      this._formManager.updateSelectedMatchPropertyResourceClass(currentState, propFormItem).subscribe({
-        next: (updates) => {
-          if (updates) {
-            this._searchService.patchState(updates);
-          }
-        },
-        error: (error) => {
-          console.error('Error updating match property resource class:', error);
-        }
-      });
-    }
+    this._formManager.onMatchPropertyResourceClassChanged(this.propertyFormItem, event.value);
   }
 
-  // the parameter will be an ApiData object when the input is a link value
-  // the parameter will be a PropertyFormItem[] when the input is a child value
-  // the parameter will be a string when the input is anything other than the two above
   onValueChanged(value: string | ApiData | PropertyFormItem[]) {
-    const propFormItem = this.propertyFormItem;
-    if (propFormItem) {
-      if (this._isApiData(value)) {
-        propFormItem.searchValue = value.iri;
-        propFormItem.searchValueLabel = value.label;
-      } else {
-        propFormItem.searchValue = value;
-      }
-      const currentState = this._searchService.currentState;
-      const updates = this._formManager.updateSearchValueForProperty(currentState, propFormItem);
-      this._searchService.patchState(updates);
-    }
+    this._formManager.onSearchValueChanged(this.propertyFormItem, value);
   }
 
   compareObjects(object1: PropertyData | ApiData, object2: PropertyData | ApiData) {
     return object1 && object2 && object1.iri == object2.iri;
-  }
-
-  // Type guard function to check if the value adheres to ApiData interface
-  _isApiData(value: any): value is ApiData {
-    return value && typeof value === 'object' && 'iri' in value && 'label' in value;
   }
 }

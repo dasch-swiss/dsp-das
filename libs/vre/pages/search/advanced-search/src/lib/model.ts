@@ -1,4 +1,7 @@
-import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { v4 as uuidv4 } from 'uuid';
+import { ResourceLabel } from './constants';
+import { getOperatorsForObjectType, Operators } from './service/operators.config';
 
 export interface ApiData {
   iri: string;
@@ -18,18 +21,64 @@ export interface GravsearchPropertyString {
   whereString: string;
 }
 
-export interface PropertyFormItem {
-  id: string;
-  selectedProperty: PropertyData | undefined;
-  selectedOperator: string | undefined;
+export class PropertyFormItem {
+  id = uuidv4();
+  private _selectedProperty: PropertyData | undefined;
+  _selectedOperator: Operators | undefined;
   searchValue: string | PropertyFormItem[] | undefined;
-  operators: string[] | undefined;
   list: ListNodeV2 | undefined;
   matchPropertyResourceClasses?: any[] | undefined;
   selectedMatchPropertyResourceClass?: any | undefined;
   isChildProperty?: boolean;
   childPropertiesList?: PropertyData[];
   searchValueLabel?: string;
+
+  get selectedProperty(): PropertyData | undefined {
+    return this._selectedProperty;
+  }
+
+  set selectedProperty(prop: PropertyData | undefined) {
+    this._selectedProperty = prop;
+    this.searchValue = undefined;
+    this.searchValueLabel = undefined;
+    this.selectedOperator = undefined;
+    this.matchPropertyResourceClasses = undefined;
+    this.selectedMatchPropertyResourceClass = undefined;
+    this.list = undefined;
+  }
+
+  get operators(): Operators[] {
+    return this._selectedProperty ? getOperatorsForObjectType(this._selectedProperty) : [];
+  }
+
+  get selectedOperator(): Operators | undefined {
+    return this._selectedOperator;
+  }
+
+  set selectedOperator(operator: Operators | undefined) {
+    this._selectedOperator = operator;
+    this.searchValue = undefined;
+    this.searchValueLabel = undefined;
+    this.matchPropertyResourceClasses = undefined;
+    this.selectedMatchPropertyResourceClass = undefined;
+    this.list = undefined;
+  }
+
+  addChildProperty(): void {
+    if (!Array.isArray(this.searchValue)) {
+      this.searchValue = [];
+    }
+    this.searchValue.push(new PropertyFormItem());
+    if (!this.childPropertiesList) {
+      this.childPropertiesList = [];
+    }
+  }
+
+  updateChildProperty(childProperty: PropertyData): void {
+    if (this.childPropertiesList) {
+      this.childPropertiesList = this.childPropertiesList.map(c => (c.iri === childProperty.iri ? childProperty : c));
+    }
+  }
 }
 
 export interface OrderByItem {
@@ -89,7 +138,7 @@ export type AdvancedSearchStateSnapshot = Pick<
   | 'filteredProperties'
 >;
 
-export const ResourceLabel = `${Constants.KnoraApiV2 + Constants.HashDelimiter}ResourceLabel`;
+export { ResourceLabel } from './constants';
 
 export const ResourceLabelPropertyData: PropertyData = {
   iri: ResourceLabel,
