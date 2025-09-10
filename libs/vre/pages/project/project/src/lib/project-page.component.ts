@@ -9,9 +9,9 @@ import { ProjectPageService } from './project-page.service';
   selector: 'app-project-page',
   template: `
     <app-header-project />
-    <span class="content">
+    <div class="content">
       <router-outlet />
-    </span>
+    </div>
   `,
   styleUrls: ['./project-page.component.scss'],
   providers: [ProjectPageService],

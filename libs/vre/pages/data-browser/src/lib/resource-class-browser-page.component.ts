@@ -30,6 +30,7 @@ import { ResourceResultService } from './resource-result.service';
     `
       :host {
         display: flex;
+        height: 100%;
       }
     `,
   ],

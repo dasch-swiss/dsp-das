@@ -2,5 +2,5 @@
 @use '../../../../../../../apps/dsp-app/src/styles/responsive' as *;
 
 .content {
-  min-height: calc(100vh - 94px);
+  height: calc(100vh - 94px);
 }
