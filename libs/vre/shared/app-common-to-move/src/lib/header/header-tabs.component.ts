@@ -9,13 +9,13 @@ import { Component } from '@angular/core';
       mat-stretch-tabs="false"
       mat-align-tabs="start"
       animationDuration="0"
-      style="padding-left: 16px">
+      style="background-color: inherit; padding-left: 16px">
       <a mat-tab-link [routerLink]="['description']" routerLinkActive="active-link">
         <mat-icon class="tab-icon">description</mat-icon>
         Description
       </a>
       <a mat-tab-link [routerLink]="['data-models']" routerLinkActive="active-link">
-        <mat-icon class="tab-icon">bubble_chart</mat-icon>
+        <mat-icon class="tab-icon">lan</mat-icon>
         Data models
       </a>
       <a mat-tab-link [routerLink]="['data']" routerLinkActive="active-link">

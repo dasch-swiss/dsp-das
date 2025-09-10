@@ -12,6 +12,7 @@ import {
 import {
   CollaborationPageComponent,
   CreateProjectFormPageComponent,
+  DataBrowserPageComponent,
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
@@ -95,6 +96,8 @@ const routes: Routes = [
           },
         ],
       },
+      { path: 'data', component: DataBrowserPageComponent },
+
       {
         path: RouteConstants.OntologyClassRelative,
         component: ResourceClassBrowserPageComponent,

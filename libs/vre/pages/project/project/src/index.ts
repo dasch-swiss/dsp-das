@@ -31,3 +31,4 @@ export * from './lib/sidenav/project-sidenav-ontologies.component';
 export * from './lib/sidenav/project-sidenav-collapse-button.component';
 
 export * from './lib/header-project.component';
+export * from './lib/data-browser-page.component';

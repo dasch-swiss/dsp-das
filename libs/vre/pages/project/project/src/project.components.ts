@@ -1,3 +1,4 @@
+import { DataBrowserPageComponent } from './lib/data-browser-page.component';
 import { ProjectDescriptionPageComponent } from './lib/description/project-description-page.component';
 import { HeaderProjectComponent } from './lib/header-project.component';
 import { ProjectPageComponent } from './lib/project-page.component';
@@ -52,4 +53,5 @@ export const ProjectComponents = [
   ProjectSidenavLinksItemComponent,
   ProjectSidenavOntologiesComponent,
   HeaderProjectComponent,
+  DataBrowserPageComponent,
 ];

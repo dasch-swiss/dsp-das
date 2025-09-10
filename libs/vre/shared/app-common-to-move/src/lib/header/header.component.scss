@@ -1,18 +1,5 @@
 @use "config" as *;
 @use "responsive";
 
-:host {
-  display: block;
-  border-bottom: 1px solid #ebebeb;
-}
 
-
-.toolbar-header {
-  background-color: $white;
-}
-
-
-.login-button {
-  margin: 0 16px;
-}
 

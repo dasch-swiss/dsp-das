@@ -8,7 +8,7 @@ import { SearchParams } from '../search-params.interface';
 @Component({
   selector: 'app-header',
   template: `
-    <mat-toolbar class="toolbar-header">
+    <mat-toolbar style="background: inherit">
       <app-header-logo />
       <span style="flex: 1; display: flex; align-items: center">
         <span class="title-container">Dasch Service Platform</span>
@@ -21,7 +21,15 @@ import { SearchParams } from '../search-params.interface';
       <app-header-right />
     </mat-toolbar>
   `,
-  styleUrls: ['./header.component.scss'],
+  styles: [
+    `
+      :host {
+        display: block;
+        border-bottom: 1px solid #ebebeb;
+        background-color: #fcfdff;
+      }
+    `,
+  ],
 })
 export class HeaderComponent {
   session = false;

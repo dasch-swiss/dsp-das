@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -30,14 +30,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     private _projectPageService: ProjectPageService
   ) {}
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    const element = event.target as HTMLElement;
-    if (event.key === '[' && !element.matches('input, textarea')) {
-      this.toggleSidenav();
-    }
-  }
-
   ngOnInit() {
     this._route.params.subscribe(params => {
       this._projectPageService.setCurrentProjectUuid(params[RouteConstants.uuidParameter]);
@@ -46,8 +38,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     this._projectPageService.currentProject$.subscribe(project => {
       this._titleService.setTitle(project.shortname);
     });
-
-    this._projectPageService.hasProjectMemberRights$.subscribe();
 
     this._router.events
       .pipe(
@@ -74,9 +64,5 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed.next();
     this.destroyed.complete();
-  }
-
-  toggleSidenav() {
-    this.sideNavOpened = !this.sideNavOpened;
   }
 }
