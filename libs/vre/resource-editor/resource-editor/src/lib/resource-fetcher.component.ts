@@ -49,16 +49,8 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
 
   private _destroy$ = new Subject<void>();
 
-  get resourceVersion(): string | undefined {
-    const resourceVersion = this._route.snapshot.queryParamMap.get('version') || undefined;
-
-    if (resourceVersion && !ResourceUtil.versionIsValid(resourceVersion)) {
-      this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
-        this._notification.openSnackBar(v);
-      });
-      return undefined;
-    }
-    return resourceVersion;
+  get resourceVersion(): string | null {
+    return this._route.snapshot.queryParamMap.get('version');
   }
 
   constructor(
@@ -70,6 +62,12 @@ export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.resourceVersion && !ResourceUtil.versionIsValid(this.resourceVersion)) {
+      this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
+        this._notification.openSnackBar(v);
+      });
+    }
+
     this._resourceFetcherService.resource$
       .pipe(
         filter(resource => !!resource),

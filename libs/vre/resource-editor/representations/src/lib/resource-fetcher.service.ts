@@ -3,14 +3,15 @@ import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-s
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { DspResource, filterUndefined, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
 import { BehaviorSubject, filter, map, switchMap, take, Observable, shareReplay } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _resource = new BehaviorSubject<DspResource | undefined>(undefined);
-  resource$ = this._resource.asObservable();
+  private _resourceSubject = new BehaviorSubject<DspResource | undefined>(undefined);
+  resource$ = this._resourceSubject.asObservable();
 
   resourceVersion?: string;
 
@@ -23,12 +24,12 @@ export class ResourceFetcherService {
   );
 
   attachedUser$ = this.resource$.pipe(
-    filter(resource => resource !== undefined),
+    filterUndefined(),
     switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
   );
 
   projectShortcode$ = this.resource$.pipe(
-    filter(resource => resource !== undefined),
+    filterUndefined(),
     switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)),
     map(v => v.project.shortcode as unknown as string),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -43,18 +44,17 @@ export class ResourceFetcherService {
 
   loadResource(resourceIri: string, resourceVersion?: string) {
     this.resourceVersion = resourceVersion;
-    this._getResource(resourceIri, resourceVersion)
-      .pipe(take(1))
-      .subscribe(resource => {
-        this._resource.next(resource);
-      });
+    this._getResource(resourceIri, resourceVersion).subscribe(resource => {
+      this._resourceSubject.next(resource);
+    });
   }
 
   reload() {
-    const resourceIri = this._resource.value?.res.id;
-    if (resourceIri) {
-      this.loadResource(resourceIri);
+    const resourceIri = this._resourceSubject.value?.res.id;
+    if (!resourceIri) {
+      throw new AppError('Resource IRI is not found');
     }
+    this.loadResource(resourceIri);
   }
 
   private _getResource(resourceIri: string, resourceVersion?: string) {
