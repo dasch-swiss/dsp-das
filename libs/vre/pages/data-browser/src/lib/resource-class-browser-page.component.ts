@@ -14,7 +14,7 @@ import { ResourceResultService } from './resource-result.service';
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
         <app-resource-browser
-          style="flex: 1"
+          style="flex: 1; overflow: auto"
           [data]="data"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       } @else {
