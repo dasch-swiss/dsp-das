@@ -8,27 +8,8 @@ import { ProjectPageService } from './project-page.service';
 @Component({
   selector: 'app-project-page',
   template: `
-    <mat-sidenav-container style="flex: 1" autosize>
-      <mat-sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" style="overflow: visible">
-        @if (sideNavOpened) {
-          <app-project-sidenav-collapse-button
-            [expand]="false"
-            (toggleSidenav)="toggleSidenav()"
-            style="position: absolute; right: -11px; top: 21px" />
-        }
-        <app-project-sidenav />
-      </mat-sidenav>
-      <mat-sidenav-content>
-        @if (!sideNavOpened) {
-          <app-project-sidenav-collapse-button
-            [expand]="true"
-            (toggleSidenav)="toggleSidenav()"
-            style="position: absolute; top: 21px; left: 8px" />
-        }
-
-        <router-outlet />
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+    <app-header-project />
+    <router-outlet />
   `,
   styleUrls: ['./project-page.component.scss'],
   providers: [ProjectPageService],

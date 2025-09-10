@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
 @Component({
@@ -27,4 +29,14 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 })
 export class HeaderLogoComponent {
   homeLink = RouteConstants.home;
+
+  constructor(
+    private _matIconRegistry: MatIconRegistry,
+    private _domSanitizer: DomSanitizer
+  ) {
+    this._matIconRegistry.addSvgIcon(
+      'dasch_mosaic_icon_color',
+      this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/images/dasch-mosaic-icon-color.svg')
+    );
+  }
 }

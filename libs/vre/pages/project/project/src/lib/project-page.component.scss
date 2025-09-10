@@ -2,6 +2,5 @@
 @use '../../../../../../../apps/dsp-app/src/styles/responsive' as *;
 
 :host {
-  display: flex;
   height: calc(100vh - #{$header-height});
 }

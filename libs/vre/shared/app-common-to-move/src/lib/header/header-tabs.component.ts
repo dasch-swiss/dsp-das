@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-header-tabs',
   template: `
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="tab-icon">description</mat-icon>
