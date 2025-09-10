@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -62,7 +62,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   constructor(
     private _cd: ChangeDetectorRef,
     private _localizationService: LocalizationService,
-    private _route: ActivatedRoute,
     private _router: Router,
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)
@@ -71,11 +70,13 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const projectUuid = this._route.snapshot.paramMap.get(RouteConstants.uuidParameter);
-    const [ontologyIri, className] = this.resClass.id.split('#');
-    const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
+    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
+      const [ontologyIri, className] = this.resClass.id.split('#');
+      const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
-    this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
+      this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
+    });
+
     this.icon = this._getIcon();
 
     this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
