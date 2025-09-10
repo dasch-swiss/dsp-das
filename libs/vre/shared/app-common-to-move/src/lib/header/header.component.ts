@@ -7,7 +7,20 @@ import { SearchParams } from '../search-params.interface';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
+  template: `
+    <mat-toolbar class="toolbar-header">
+      <app-header-logo />
+      <span style="flex: 1; display: flex; align-items: center">
+        <span class="title-container">Dasch Service Platform</span>
+      </span>
+
+      @if (false) {
+        <app-search-panel [projectfilter]="true" [advanced]="true" [expert]="true" (search)="doSearch($event)" />
+      }
+
+      <app-header-right />
+    </mat-toolbar>
+  `,
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
@@ -15,8 +28,6 @@ export class HeaderComponent {
   searchParams?: SearchParams;
 
   dsp: DspConfig;
-
-  homeLink = RouteConstants.home;
 
   constructor(
     private _appConfigService: AppConfigService,

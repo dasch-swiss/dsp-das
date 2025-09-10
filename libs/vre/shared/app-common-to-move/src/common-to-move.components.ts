@@ -1,4 +1,5 @@
 import { DialogHeaderComponent } from './lib/dialog-header.component';
+import { HeaderLogoComponent } from './lib/header/header-logo.component';
 import { HeaderRightComponent } from './lib/header/header-right.component';
 import { HeaderTabsComponent } from './lib/header/header-tabs.component';
 import { HeaderComponent } from './lib/header/header.component';
@@ -12,4 +13,5 @@ export const CommonToMoveComponents = [
   StatusComponent,
   HeaderTabsComponent,
   HeaderRightComponent,
+  HeaderLogoComponent,
 ];

@@ -6,3 +6,4 @@ export * from './lib/header/header.component';
 export * from './lib/status/status.component';
 export * from './lib/header/header-tabs.component';
 export * from './lib/header/header-right.component';
+export * from './lib/header/header-logo.component';
