@@ -1,6 +1,10 @@
 @use "config" as *;
 @use "responsive";
 
+.example-tab-icon {
+  margin-right: 16px;
+}
+
 .toolbar-header {
   height: 72px;
   background-color: $white;
@@ -20,7 +24,6 @@
   }
 
   .title-container {
-    padding-top: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
