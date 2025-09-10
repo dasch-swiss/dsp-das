@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { PropertyFormItem, QueryObject } from './model';
+import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
 import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
@@ -40,21 +41,21 @@ import { INITIAL_FORMS_STATE } from './util';
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
-
   @Output() gravesearchQuery = new EventEmitter<QueryObject>();
 
-  private readonly IRI_BASE = 'http://rdfh.ch/projects/';
-
   searchState: SearchStateService = inject(SearchStateService);
+  private _dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
   private _dialogService: DialogService = inject(DialogService);
   private _gravsearchService: GravsearchService = inject(GravsearchService);
   private _formManager: PropertyFormManager = inject(PropertyFormManager);
-  _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
+  previousSearchService: PreviousSearchService = inject(PreviousSearchService);
+
+  private _projectIri = '';
 
   ngOnInit(): void {
-    const projectIri = `${this.IRI_BASE}${this.projectUuid}`;
-    this._formManager.init(projectIri);
-    this._previousSearchService.init(projectIri);
+    this._projectIri = `http://rdfh.ch/projects/${this.projectUuid}`;
+    this.previousSearchService.init(this._projectIri);
+    this._dataService.initWithProject$(this._projectIri);
   }
 
   removePropertyForm(property: PropertyFormItem): void {
@@ -63,13 +64,11 @@ export class AdvancedSearchComponent implements OnInit {
 
   doSearch(): void {
     const state = this.searchState.currentState;
+    this.previousSearchService.storeSearchSnapshot(this._projectIri, this._dataService.selectedOntology, state);
+
     const nonEmptyProperties = state.propertyFormList.filter(prop => prop.selectedProperty);
 
-    this._previousSearchService.storeSearchSnapshot(state);
-
     const query = this._gravsearchService.generateGravSearchQuery(
-      state.selectedOntology?.iri || '',
-      state.resourceClasses.map(resClass => resClass.iri),
       state.selectedResourceClass?.iri,
       nonEmptyProperties,
       state.propertiesOrderBy
@@ -84,15 +83,20 @@ export class AdvancedSearchComponent implements OnInit {
 
   resetSearch(): void {
     this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this.searchState.reset();
+      this._dataService.initWithProject$(this._projectIri);
+      this.searchState.clear();
     });
   }
 
   loadPreviousSearch(): void {
-    const previousSearch = this._previousSearchService.previousSearchObject;
+    const previousSearch = this.previousSearchService.previousSearchObject;
     this.searchState.patchState({
       ...INITIAL_FORMS_STATE,
       ...previousSearch,
     });
+    this._dataService.setOntology(previousSearch.selectedOntology?.iri || '');
+    if (previousSearch.selectedResourceClass) {
+      this._dataService.setSelectedResourceClass(previousSearch.selectedResourceClass);
+    }
   }
 }

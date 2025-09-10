@@ -8,6 +8,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem } from '../../model';
+import { AdvancedSearchDataService } from '../../service/advanced-search-data.service';
 import { Operators } from '../../service/operators.config';
 import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
@@ -36,12 +37,13 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent {
+  @Input() propertyFormItem: PropertyFormItem = new PropertyFormItem();
+
   private _searchService = inject(SearchStateService);
+  private _dataService = inject(AdvancedSearchDataService);
   private _formManager = inject(PropertyFormManager);
 
-  @Input() propertyFormItem: PropertyFormItem = new PropertyFormItem();
-  filteredProperties$ = this._searchService.filteredProperties$;
-  propertiesLoading$ = this._searchService.propertiesLoading$;
+  properties$ = this._dataService.availableProperties$;
   matchResourceClassesLoading$ = this._searchService.matchResourceClassesLoading$;
 
   operators = Operators;

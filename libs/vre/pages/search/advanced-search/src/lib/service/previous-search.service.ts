@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AdvancedSearchStateSnapshot, SearchFormsState } from '../model';
+import { AdvancedSearchStateSnapshot, ApiData, SearchFormsState } from '../model';
+import { INITIAL_FORMS_STATE } from '../util';
 
 @Injectable()
 export class PreviousSearchService {
@@ -17,12 +18,10 @@ export class PreviousSearchService {
       (JSON.parse(storedSearches)[projectIri] as AdvancedSearchStateSnapshot) || ({} as AdvancedSearchStateSnapshot);
   }
 
-  storeSearchSnapshot(state: SearchFormsState): void {
+  storeSearchSnapshot(projectIri: string, ontology: ApiData, state: SearchFormsState): void {
     const snapshot: AdvancedSearchStateSnapshot = {
-      ontologies: state.ontologies,
-      resourceClasses: state.resourceClasses,
-      selectedProject: state.selectedProject,
-      selectedOntology: state.selectedOntology,
+      selectedProject: projectIri,
+      selectedOntology: ontology,
       selectedResourceClass: state.selectedResourceClass,
       propertyFormList: state.propertyFormList,
       properties: state.properties,

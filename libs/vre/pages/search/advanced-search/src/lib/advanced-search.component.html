@@ -2,7 +2,7 @@
   <div class="advanced-search-header">
     <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
     <button
-      [disabled]="!_previousSearchService.hasPreviousSearch()"
+      [disabled]="!previousSearchService.hasPreviousSearch()"
       mat-stroked-button
       color="primary"
       (click)="loadPreviousSearch()">

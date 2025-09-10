@@ -8,26 +8,6 @@ import { Operators } from './operators.config';
 export class SearchStateService {
   private _state = new BehaviorSubject<SearchFormsState>(INITIAL_FORMS_STATE);
 
-  ontologies$ = this._state.pipe(
-    map(state => state.ontologies),
-    distinctUntilChanged()
-  );
-
-  resourceClasses$ = this._state.pipe(
-    map(state => state.resourceClasses),
-    distinctUntilChanged()
-  );
-
-  selectedOntology$ = this._state.pipe(
-    map(state => state.selectedOntology),
-    distinctUntilChanged()
-  );
-
-  selectedResourceClass$ = this._state.pipe(
-    map(state => state.selectedResourceClass),
-    distinctUntilChanged()
-  );
-
   propertyForms$ = this._state.pipe(
     map(state => state.propertyFormList),
     distinctUntilChanged()
@@ -37,15 +17,12 @@ export class SearchStateService {
     map(state => state.propertiesOrderBy),
     distinctUntilChanged()
   );
-  propertiesLoading$ = this._state.pipe(
-    map(state => state.propertiesLoading),
-    distinctUntilChanged()
-  );
 
   filteredProperties$ = this._state.pipe(
     map(state => state.filteredProperties),
     distinctUntilChanged()
   );
+
   matchResourceClassesLoading$ = this._state.pipe(
     map(state => state.matchResourceClassesLoading),
     distinctUntilChanged()
@@ -107,8 +84,7 @@ export class SearchStateService {
     this.updatePropertyForm(parentProperty);
   }
 
-  reset() {
-    this.patchState({ selectedOntology: this._state.value.ontologies[0] });
+  clear() {
     this.patchState({ selectedResourceClass: undefined });
     this.patchState({ propertyFormList: [new PropertyFormItem()] });
     this.patchState({ propertiesOrderBy: [] });

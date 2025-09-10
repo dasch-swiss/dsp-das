@@ -6,12 +6,9 @@
       (selectionChange)="onSelectedPropertyChanged($event)"
       data-cy="property-select"
       [compareWith]="compareObjects">
-      <mat-option *ngIf="propertiesLoading$ | async" disabled="true">Loading...</mat-option>
-      <ng-container *ngIf="(propertiesLoading$ | async) === false">
-        <mat-option *ngFor="let prop of filteredProperties$ | async" [value]="prop" [attr.data-cy]="prop.label">
-          {{ prop.label }}
-        </mat-option>
-      </ng-container>
+      <mat-option *ngFor="let prop of properties$ | async" [value]="prop" [attr.data-cy]="prop.label">
+        {{ prop.label }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field class="adv-property-form right-hand-form">

@@ -57,12 +57,6 @@ export const SEARCH_ALL_RESOURCE_CLASSES_OPTION: ApiData = {
 };
 
 export const INITIAL_FORMS_STATE: SearchFormsState = {
-  ontologies: [],
-  ontologiesLoading: false,
-  resourceClasses: [],
-  resourceClassesLoading: false,
-  selectedProject: '',
-  selectedOntology: undefined,
   selectedResourceClass: undefined,
   propertyFormList: [new PropertyFormItem()],
   properties: [],

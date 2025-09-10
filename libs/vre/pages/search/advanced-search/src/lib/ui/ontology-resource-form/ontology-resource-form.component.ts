@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { ApiData } from '../../model';
+import { filter, map } from 'rxjs';
+import { ApiData, PropertyFormItem } from '../../model';
+import { AdvancedSearchDataService } from '../../service/advanced-search-data.service';
 import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../../util';
@@ -37,32 +39,39 @@ import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../../util';
   styleUrls: ['../advanced-search.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyResourceFormComponent implements OnInit {
-  private searchService = inject(SearchStateService);
+export class OntologyResourceFormComponent {
+  private dataService = inject(AdvancedSearchDataService);
+  private searchStateService = inject(SearchStateService);
   private formManager = inject(PropertyFormManager);
 
-  ontologies$ = this.searchService.ontologies$;
-  resourceClasses$ = this.searchService.resourceClasses$;
-  selectedOntology$ = this.searchService.selectedOntology$;
-  selectedResourceClass$ = this.searchService.selectedResourceClass$;
+  ontologies$ = this.dataService.ontologies$;
+  selectedOntology$ = this.dataService.selectedOntology$.pipe(
+    filter(o => o !== null),
+    map(o => ({ iri: o.id, label: o.label }))
+  );
+
+  resourceClasses$ = this.dataService.resourceClasses$;
+  selectedResourceClass$ = this.dataService.selectedResourceClass$;
 
   searchAllResourceClassesOption = SEARCH_ALL_RESOURCE_CLASSES_OPTION;
 
   @ViewChild('ontologiesList') ontologiesList!: MatSelect;
   @ViewChild('resourceClassesList') resourceClassesList!: MatSelect;
 
-  ngOnInit(): void {
-    this.ontologies$.subscribe(ontologies => {
-      console.log('Ontologies loaded:', ontologies);
+  onSelectedOntologyChanged(ontology: ApiData): void {
+    this.dataService.setOntology(ontology.iri);
+    this.searchStateService.patchState({
+      propertyFormList: [new PropertyFormItem()],
+      propertiesOrderBy: [],
     });
   }
 
-  onSelectedOntologyChanged(selected: ApiData): void {
-    this.formManager.updateSelectedOntology(selected);
-  }
-
-  onSelectedResourceClassChanged(selected: ApiData = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
-    this.formManager.updateSelectedResourceClass(selected);
+  onSelectedResourceClassChanged(resourceClass: ApiData = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
+    this.dataService.setSelectedResourceClass(resourceClass);
+    this.searchStateService.patchState({
+      propertyFormList: [new PropertyFormItem()],
+      propertiesOrderBy: [],
+    });
   }
 
   compareApiDataObjects(object1: ApiData, object2: ApiData) {

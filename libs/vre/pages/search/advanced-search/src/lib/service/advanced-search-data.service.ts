@@ -4,24 +4,11 @@ import {
   KnoraApiConnection,
   ListNodeV2,
   ReadOntology,
-  ResourceClassDefinition,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import {
-  BehaviorSubject,
-  catchError,
-  filter,
-  map,
-  Observable,
-  of,
-  shareReplay,
-  Subject,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, catchError, filter, map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { ApiData, PropertyData, ResourceLabelPropertyData } from '../model';
 
 @Injectable()
@@ -30,37 +17,64 @@ export class AdvancedSearchDataService {
   private cancelPreviousCountRequest$ = new Subject<void>();
   private cancelPreviousSearchRequest$ = new Subject<void>();
 
-  private _currentOntology = new BehaviorSubject<ReadOntology | null>(null);
-  currentOntology$ = this._currentOntology.asObservable();
+  private _ontologies = new BehaviorSubject<ApiData[]>([]);
+  ontologies$ = this._ontologies.asObservable();
+
+  private _selectedOntology = new BehaviorSubject<ReadOntology | null>(null);
+  selectedOntology$ = this._selectedOntology.asObservable();
+
+  get selectedOntology(): ApiData {
+    return this._selectedOntology.value
+      ? { iri: this._selectedOntology.value.id, label: this._selectedOntology.value.label || '' }
+      : ({} as ApiData);
+  }
+
+  get classIris(): string[] {
+    const ontology = this._selectedOntology.value;
+    if (!ontology) {
+      return [];
+    }
+    return ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages).map(c => c.id);
+  }
+
+  private _selectedResourceClass = new BehaviorSubject<ApiData | null>(null);
+  selectedResourceClass$ = this._selectedResourceClass.asObservable();
+
+  private _availableProperties = new BehaviorSubject<PropertyData[]>([]);
+  availableProperties$ = this._availableProperties.asObservable();
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  ontologies$ = (projectIri: string): Observable<ApiData[]> =>
-    this._dspApiConnection.v2.onto.getOntologiesByProjectIri(projectIri).pipe(
-      map(response => {
-        return response.ontologies.map((onto: { id: string; label: string }) => ({
-          iri: onto.id,
-          label: onto.label,
-        }));
-      })
-    );
-
-  initWithOntology(ontologyIri: string) {
+  initWithProject$(projectIri: string) {
     this._dspApiConnection.v2.onto
-      .getOntology(ontologyIri, true)
-      .pipe(
-        take(1),
-        tap(ontology => {
-          this._currentOntology.next(ontology);
-        })
-      )
-      .subscribe();
+      .getOntologiesByProjectIri(projectIri)
+      .pipe(map(r => r.ontologies.map(o => ({ iri: o.id, label: o.label }))))
+      .subscribe({
+        next: ontologies => {
+          this._ontologies.next(ontologies);
+          if (ontologies.length > 0) {
+            this.setOntology(ontologies[0].iri);
+          }
+        },
+      });
   }
 
-  private _resourceClasses$ = this.currentOntology$.pipe(
+  setOntology(ontologyIri: string) {
+    this._selectedResourceClass.next(null);
+    this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).subscribe({
+      next: ontology => this._selectedOntology.next(ontology),
+    });
+  }
+
+  setSelectedResourceClass(resourceClass: ApiData | null) {
+    this._selectedResourceClass.next(resourceClass);
+    this._setAvailableProperties(resourceClass?.iri);
+  }
+
+  private _resourceClasses$ = this.selectedOntology$.pipe(
     filter((o): o is ReadOntology => o !== null),
     map(o => o.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages)),
     map(xs =>
@@ -70,7 +84,7 @@ export class AdvancedSearchDataService {
     )
   );
 
-  private _properties$: Observable<ResourcePropertyDefinition[]> = this.currentOntology$.pipe(
+  private _properties$: Observable<ResourcePropertyDefinition[]> = this.selectedOntology$.pipe(
     filter((o): o is ReadOntology => o !== null),
     map(o => o.getPropertyDefinitionsByType(ResourcePropertyDefinition)),
     map(props => props.filter(propDef => propDef.isEditable && !propDef.isLinkValueProperty)),
@@ -81,13 +95,23 @@ export class AdvancedSearchDataService {
     )
   );
 
-  resourceClassesList$: Observable<ApiData[]> = this._resourceClasses$.pipe(
+  resourceClasses$: Observable<ApiData[]> = this._resourceClasses$.pipe(
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
         return { iri: resClassDef.id, label: resClassDef.label || '' };
       })
     )
   );
+
+  private _setAvailableProperties(classIri?: string): void {
+    const props$ =
+      !classIri || classIri === 'all-resource-classes'
+        ? this._properties$.pipe(map(props => [ResourceLabelPropertyData, ...props.map(this._createPropertyData)]))
+        : this._getPropertiesOfResourceClass$(classIri);
+    props$.subscribe(props => {
+      this._availableProperties.next(props);
+    });
+  }
 
   getProperties$ = (classIri?: string): Observable<PropertyData[]> =>
     !classIri || classIri === 'all-resource-classes'

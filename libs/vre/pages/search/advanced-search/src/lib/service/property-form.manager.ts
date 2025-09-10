@@ -1,71 +1,18 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
-import {
-  tap,
-  catchError,
-  EMPTY,
-  take,
-  map,
-  distinctUntilChanged,
-  switchMap,
-  takeUntil,
-  combineLatest,
-  Subject,
-  filter,
-} from 'rxjs';
+import { tap, catchError, EMPTY, take, map, distinctUntilChanged, switchMap, takeUntil, Subject } from 'rxjs';
 import { PropertyFormItem, PropertyData, ApiData, ParentChildPropertyPair, SearchItem, OrderByItem } from '../model';
-import { INITIAL_FORMS_STATE } from '../util';
 import { AdvancedSearchDataService } from './advanced-search-data.service';
 import { Operators } from './operators.config';
 import { SearchStateService } from './search-state.service';
 
 @Injectable()
 export class PropertyFormManager implements OnDestroy {
-  private apiService = inject(AdvancedSearchDataService);
+  private dataService = inject(AdvancedSearchDataService);
   private searchStateService = inject(SearchStateService);
 
   private _destroy$ = new Subject<void>();
 
   constructor() {
-    this.apiService
-      .getProperties$()
-      .pipe(
-        take(1),
-        tap(properties => {
-          console.log('Loaded properties for all resource classes:', properties);
-
-          this.searchStateService.patchState({
-            properties: properties || [],
-            filteredProperties: properties || [],
-            propertiesLoading: false,
-          });
-        })
-      )
-      .subscribe();
-
-    this.apiService.resourceClassesList$.subscribe(resourceClasses => {
-      this.searchStateService.patchState({
-        resourceClasses: resourceClasses || [],
-        resourceClassesLoading: false,
-      });
-    });
-
-    this.searchStateService.selectedResourceClass$
-      .pipe(
-        takeUntil(this._destroy$),
-        distinctUntilChanged((prev, curr) => prev?.iri === curr?.iri),
-        switchMap(resourceClass => {
-          return this.apiService.getProperties$(resourceClass?.iri).pipe(
-            tap(properties => {
-              this.searchStateService.patchState({
-                filteredProperties: properties || [],
-                propertiesLoading: false,
-              });
-            })
-          );
-        })
-      )
-      .subscribe();
-
     this.searchStateService.propertyForms$
       .pipe(
         takeUntil(this._destroy$),
@@ -101,36 +48,6 @@ export class PropertyFormManager implements OnDestroy {
         })
       )
       .subscribe();
-
-    this.searchStateService.selectedOntology$
-      .pipe(
-        filter(ontology => !!ontology),
-        takeUntil(this._destroy$)
-      )
-      .subscribe(ontology => {
-        this.apiService.initWithOntology(ontology.iri);
-      });
-  }
-
-  init(projectIri: string): void {
-    this.searchStateService.patchState({
-      ...INITIAL_FORMS_STATE,
-      selectedProject: projectIri,
-    });
-
-    this.apiService
-      .ontologies$(projectIri)
-      .pipe(take(1))
-      .subscribe(ontologies => {
-        if (!ontologies?.length) {
-          return;
-        }
-        this.searchStateService.patchState({
-          ontologies,
-          ontologiesLoading: false,
-          selectedOntology: ontologies[0],
-        });
-      });
   }
 
   updateResourcesSearchResults(searchItem: SearchItem): void {
@@ -140,7 +57,7 @@ export class PropertyFormManager implements OnDestroy {
       resourcesSearchResultsPageNumber: 0,
     });
 
-    this.apiService
+    this.dataService
       .getResourcesListCount(searchItem.value, searchItem.objectType)
       .pipe(
         take(1),
@@ -148,7 +65,7 @@ export class PropertyFormManager implements OnDestroy {
           this.searchStateService.patchState({ resourcesSearchResultsCount: count });
 
           if (count > 0) {
-            return this.apiService.getResourcesList(searchItem.value, searchItem.objectType, 0).pipe(
+            return this.dataService.getResourcesList(searchItem.value, searchItem.objectType, 0).pipe(
               take(1),
               tap(resources => {
                 this.searchStateService.patchState({
@@ -182,7 +99,7 @@ export class PropertyFormManager implements OnDestroy {
       const nextPageNumber = this.searchStateService.currentState.resourcesSearchResultsPageNumber + 1;
       this.searchStateService.patchState({ resourcesSearchResultsLoading: true });
 
-      this.apiService
+      this.dataService
         .getResourcesList(searchItem.value, searchItem.objectType, nextPageNumber)
         .pipe(
           take(1),
@@ -210,7 +127,7 @@ export class PropertyFormManager implements OnDestroy {
       return;
     }
 
-    this.apiService
+    this.dataService
       .getList(property.selectedProperty.listIri)
       .pipe(
         take(1),
@@ -233,23 +150,6 @@ export class PropertyFormManager implements OnDestroy {
   updateSelectedOperator(form: PropertyFormItem, operator: Operators): PropertyFormItem {
     form.selectedOperator = operator;
     return form;
-  }
-
-  updateSelectedOntology(ontology: ApiData): void {
-    this.searchStateService.patchState({
-      selectedOntology: ontology,
-      selectedResourceClass: undefined,
-      propertyFormList: [new PropertyFormItem()],
-      propertiesOrderBy: [],
-    });
-  }
-
-  updateSelectedResourceClass(resourceClass: ApiData): void {
-    this.searchStateService.patchState({
-      selectedResourceClass: resourceClass,
-      propertyFormList: [new PropertyFormItem()],
-      propertiesOrderBy: [],
-    });
   }
 
   deletePropertyForm(property: PropertyFormItem): void {
@@ -322,7 +222,7 @@ export class PropertyFormManager implements OnDestroy {
 
     property.selectedMatchPropertyResourceClass = selectedResourceClass;
 
-    this.apiService
+    this.dataService
       .getProperties$(selectedResourceClass.iri)
       .pipe(
         take(1),

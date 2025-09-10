@@ -104,12 +104,6 @@ export interface QueryObject {
 }
 
 export interface SearchFormsState {
-  ontologies: ApiData[];
-  ontologiesLoading: boolean;
-  resourceClasses: ApiData[];
-  resourceClassesLoading: boolean;
-  selectedProject: string;
-  selectedOntology: ApiData | undefined;
   selectedResourceClass: ApiData | undefined;
   propertyFormList: PropertyFormItem[];
   properties: PropertyData[];
@@ -127,16 +121,11 @@ export interface SearchFormsState {
 
 export type AdvancedSearchStateSnapshot = Pick<
   SearchFormsState,
-  | 'ontologies'
-  | 'resourceClasses'
-  | 'selectedProject'
-  | 'selectedOntology'
-  | 'selectedResourceClass'
-  | 'propertyFormList'
-  | 'properties'
-  | 'propertiesOrderBy'
-  | 'filteredProperties'
->;
+  'selectedResourceClass' | 'propertyFormList' | 'properties' | 'propertiesOrderBy' | 'filteredProperties'
+> & {
+  selectedProject: string;
+  selectedOntology: ApiData | undefined;
+};
 
 export { ResourceLabel } from './constants';
 

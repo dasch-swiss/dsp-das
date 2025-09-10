@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { GravsearchPropertyString, OrderByItem, PropertyFormItem, ResourceLabel } from '../model';
+import { AdvancedSearchDataService } from './advanced-search-data.service';
 import { Operators } from './operators.config';
 
 @Injectable()
 export class GravsearchService {
+  private dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
+
   generateGravSearchQuery(
-    ontoIri: string,
-    resourceClasses: string[],
     resourceClassIri: string | undefined,
     properties: PropertyFormItem[],
     orderByList: OrderByItem[]
@@ -16,9 +17,8 @@ export class GravsearchService {
     let restrictToResourceClass = '';
 
     // Safety check for ontoIri
-    if (!ontoIri || typeof ontoIri !== 'string') {
-      throw new Error('Invalid ontology IRI provided');
-    }
+    const ontoIri = this.dataService.selectedOntology?.iri;
+    const resourceClasses = this.dataService.classIris;
 
     const ontoShortCodeMatch = ontoIri.match(/\/([^/]+)\/v2$/);
     if (!ontoShortCodeMatch) {
