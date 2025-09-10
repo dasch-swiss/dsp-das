@@ -3,6 +3,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-header-tabs',
   template: `
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <a mat-tab-link [active]="true">Test </a>
+    </nav>
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0">
       <mat-tab>
         <ng-template mat-tab-label>
