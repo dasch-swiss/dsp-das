@@ -1,59 +1,15 @@
 <mat-toolbar class="toolbar-header">
-  <span class="logo" routerLink="{{homeLink}}">
-    <mat-icon matPrefix svgIcon="dasch_mosaic_icon_color" />
-    <div class="title-container">
-      <div class="title desktop-only">Anton Webern Ausgabe</div>
-      <div class="title phone-tablet-only">DSP</div>
-    </div>
+  <span style="flex: 1; display: flex; align-items: center">
+    <a class="logo" [routerLink]="homeLink">
+      <mat-icon matPrefix svgIcon="dasch_mosaic_icon_color" />
+    </a>
+
+    <span class="title-container">Dasch Service Platform</span>
   </span>
 
-  <span class="fill-remaining-space"></span>
+  @if (false) {
+  <app-search-panel [projectfilter]="true" [advanced]="true" [expert]="true" (search)="doSearch($event)" />
+  }
 
-  <!-- search-panel (in desktop and tablet version) -->
-  <span class="action">
-    <!-- button to reactivate when dsp-app will be used as a research platform again: -->
-    <app-search-panel [projectfilter]="true" [advanced]="true" [expert]="true" (search)="doSearch($event)" />
-  </span>
-
-  <span class="fill-remaining-space desktop-only"></span>
-
-  <!-- action tools: info menu, select language, login button, user menu -->
-  <span class="action">
-    <!-- navigation: help -->
-    <button mat-button [routerLink]="helpLink" class="main-toolbar-button help">
-      {{ 'ui.header.help' | translate }}
-    </button>
-    <!-- user menu or login form -->
-    <app-user-menu />
-  </span>
+  <app-header-right />
 </mat-toolbar>
-
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">description</mat-icon>
-      Description
-    </ng-template>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">list</mat-icon>
-      Data
-    </ng-template>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">bubble_chart</mat-icon>
-      Data model
-    </ng-template>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">settings</mat-icon>
-      Settings
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>

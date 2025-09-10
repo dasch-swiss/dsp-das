@@ -1,14 +1,14 @@
 @use "config" as *;
 @use "responsive";
 
-.example-tab-icon {
-  margin-right: 16px;
+:host {
+  display: block;
+  border-bottom: 1px solid #ebebeb;
 }
 
+
 .toolbar-header {
-  height: 72px;
   background-color: $white;
-  box-shadow: 0 4px 4px $cool_gray_300;
 }
 
 .logo {
@@ -19,8 +19,8 @@
   cursor: pointer;
 
   .mat-icon {
-    height: 72px;
-    width: 72px;
+    height: 48px;
+    width: 48px;
   }
 
   .title-container {
@@ -38,23 +38,3 @@
   margin: 0 16px;
 }
 
-@media (min-width: 1025px) {
-  .desktop-only {
-    display: contents;
-  }
-  .phone-tablet-only {
-    display: none;
-  }
-}
-
-@media (max-width: 1024px) {
-  .development.badge {
-    font-weight: normal;
-  }
-  .desktop-only {
-    display: none;
-  }
-  .phone-tablet-only {
-    display: contents;
-  }
-}
