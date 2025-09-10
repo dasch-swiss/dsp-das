@@ -1,6 +1,6 @@
 @use '../../../../../../../apps/dsp-app/src/styles/config' as *;
 @use '../../../../../../../apps/dsp-app/src/styles/responsive' as *;
 
-:host {
-  height: calc(100vh - #{$header-height});
+.content {
+  min-height: calc(100vh - 94px);
 }

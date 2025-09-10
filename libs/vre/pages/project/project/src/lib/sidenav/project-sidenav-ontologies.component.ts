@@ -24,7 +24,6 @@ import { ProjectPageService } from '../project-page.service';
           <!-- list of ontology classes -->
           <app-resource-class-sidenav [ontology]="onto" />
         </mat-expansion-panel>
-        <mat-divider />
       </mat-accordion>
     }
   `,
