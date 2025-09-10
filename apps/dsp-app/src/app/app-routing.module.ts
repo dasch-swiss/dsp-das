@@ -78,7 +78,7 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: RouteConstants.ontologyEditorRelative,
+        path: RouteConstants.ontologyEditorRelative, // TODO this route should change to /data-models/
         component: OntologyPageComponent,
         children: [
           {

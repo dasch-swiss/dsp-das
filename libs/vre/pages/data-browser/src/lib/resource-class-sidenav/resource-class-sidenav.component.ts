@@ -7,9 +7,7 @@ import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-
   selector: 'app-resource-class-sidenav',
   template: `
     @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
-      <div>
-        <app-resource-class-sidenav-item [resClass]="classToDisplay" />
-      </div>
+      <app-resource-class-sidenav-item [resClass]="classToDisplay" />
     }
   `,
 })

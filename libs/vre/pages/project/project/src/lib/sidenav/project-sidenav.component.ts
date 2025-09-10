@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styles: [
     `
       :host {
-        width: 290px;
+        width: 500px;
         display: block;
         border-right: 1px solid #ebebeb;
         overflow: auto;

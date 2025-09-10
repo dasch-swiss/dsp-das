@@ -10,33 +10,21 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    <div class="class-item-container">
-      <div class="content" data-cy="class-item" [routerLinkActive]="['is-active']">
-        <div class="box link" [routerLink]="classLink">
-          <div class="label">{{ ontologiesLabel }}</div>
-          <div class="entry-container">
-            <mat-icon>{{ icon }}</mat-icon>
-            @if (loading) {
-              <ngx-skeleton-loader
-                count="1"
-                appearance="line"
-                [theme]="{
-                  'margin-bottom': 0,
-                  'vertical-align': 'middle',
-                }" />
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <!--<a [routerLinkActive]="['is-active']" [routerLink]="classLink" style="display: flex;"> </a>-->
+          <mat-panel-title> {{ ontologiesLabel }}</mat-panel-title>
+          <mat-panel-description>
+            <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
+            @if (hasProjectMemberRights$ | async) {
+              <span data-cy="add-class-instance" (click)="goToAddClassInstance()"> + </span>
             }
-            <div class="entry">
-              {{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}
-            </div>
-          </div>
-        </div>
-        @if (hasProjectMemberRights$ | async) {
-          <a class="icon link" data-cy="add-class-instance" (click)="goToAddClassInstance()">
-            <mat-icon>add_circle_outline</mat-icon>
-          </a>
-        }
-      </div>
-    </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>This is the primary content of the panel.</p>
+      </mat-expansion-panel>
+    </mat-accordion>
   `,
   styleUrls: ['./resource-class-sidenav-item.component.scss'],
 })
