@@ -115,7 +115,6 @@ export class ResourceEditMoreMenuComponent {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     public resourceFetcher: ResourceFetcherService,
-    private _store: Store,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
