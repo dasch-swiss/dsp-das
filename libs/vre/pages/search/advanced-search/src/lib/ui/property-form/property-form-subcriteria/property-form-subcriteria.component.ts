@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem } from '../../../model';
-import { Operators } from '../../../service/operators.config';
+import { Operator } from '../../../service/operators.config';
 import { PropertyFormManager } from '../../../service/property-form.manager';
 import { SearchStateService } from '../../../service/search-state.service';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
@@ -58,7 +58,7 @@ export class PropertyFormSubcriteriaComponent {
     this.formManager.updateChildProperty(childProperty, this.parentProperty);
   }
 
-  onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: Operators): void {
+  onChildOperatorSelectionChange(childProperty: PropertyFormItem, selectedOperator: Operator): void {
     childProperty.selectedOperator = selectedOperator;
     this.formManager.updateChildSelectedOperator({
       parentProperty: this.parentProperty,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, shareReplay, Subject } from 'rxjs';
 import { PropertyFormItem, OrderByItem, ParentChildPropertyPair, SearchFormsState, ApiData } from '../model';
 import { INITIAL_FORMS_STATE } from '../util';
-import { Operators } from './operators.config';
+import { Operator } from './operators.config';
 
 @Injectable()
 export class SearchStateService {
@@ -15,32 +15,6 @@ export class SearchStateService {
 
   propertiesOrderBy$ = this._state.pipe(
     map(state => state.propertiesOrderBy),
-    distinctUntilChanged()
-  );
-
-  filteredProperties$ = this._state.pipe(
-    map(state => state.filteredProperties),
-    distinctUntilChanged()
-  );
-
-  matchResourceClassesLoading$ = this._state.pipe(
-    map(state => state.matchResourceClassesLoading),
-    distinctUntilChanged()
-  );
-  resourcesSearchResultsLoading$ = this._state.pipe(
-    map(state => state.resourcesSearchResultsLoading),
-    distinctUntilChanged()
-  );
-  resourcesSearchResultsCount$ = this._state.pipe(
-    map(state => state.resourcesSearchResultsCount),
-    distinctUntilChanged()
-  );
-  resourcesSearchResults$ = this._state.pipe(
-    map(state => state.resourcesSearchResults),
-    distinctUntilChanged()
-  );
-  resourcesSearchNoResults$ = this._state.pipe(
-    map(state => state.resourcesSearchNoResults),
     distinctUntilChanged()
   );
 
@@ -92,7 +66,7 @@ export class SearchStateService {
 
   isPropertyFormItemValid(prop: PropertyFormItem): boolean {
     return (
-      prop.selectedOperator === Operators.Exists || prop.selectedOperator === Operators.NotExists || !!prop.searchValue
+      prop.selectedOperator === Operator.Exists || prop.selectedOperator === Operator.NotExists || !!prop.searchValue
     );
   }
 }

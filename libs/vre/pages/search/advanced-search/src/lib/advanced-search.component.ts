@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { PropertyFormItem, QueryObject } from './model';
@@ -34,6 +35,7 @@ import { INITIAL_FORMS_STATE } from './util';
     MatSelectModule,
     MatTooltipModule,
     TranslateModule,
+    AppProgressIndicatorComponent,
   ],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
@@ -50,12 +52,14 @@ export class AdvancedSearchComponent implements OnInit {
   private _formManager: PropertyFormManager = inject(PropertyFormManager);
   previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
+  ontologyLoading$ = this._dataService.ontologyLoading$;
+
   private _projectIri = '';
 
   ngOnInit(): void {
     this._projectIri = `http://rdfh.ch/projects/${this.projectUuid}`;
     this.previousSearchService.init(this._projectIri);
-    this._dataService.initWithProject$(this._projectIri);
+    this._dataService.init(this._projectIri);
   }
 
   removePropertyForm(property: PropertyFormItem): void {
@@ -83,7 +87,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   resetSearch(): void {
     this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this._dataService.initWithProject$(this._projectIri);
+      this._dataService.init(this._projectIri);
       this.searchState.clear();
     });
   }

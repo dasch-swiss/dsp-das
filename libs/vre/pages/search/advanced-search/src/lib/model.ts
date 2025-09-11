@@ -1,7 +1,7 @@
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
 import { ResourceLabel } from './constants';
-import { getOperatorsForObjectType, Operators } from './service/operators.config';
+import { getOperatorsForObjectType, Operator } from './service/operators.config';
 
 export interface ApiData {
   iri: string;
@@ -12,7 +12,7 @@ export interface PropertyData {
   iri: string;
   label: string;
   objectType: string;
-  isLinkedResourceProperty: boolean;
+  isLinkProperty: boolean;
   listIri?: string; // only for list values
 }
 
@@ -22,12 +22,12 @@ export interface GravsearchPropertyString {
 }
 
 export class PropertyFormItem {
-  id = uuidv4();
+  readonly id = uuidv4();
   private _selectedProperty: PropertyData | undefined;
-  _selectedOperator: Operators | undefined;
+  private _selectedOperator: Operator | undefined;
   searchValue: string | PropertyFormItem[] | undefined;
   list: ListNodeV2 | undefined;
-  matchPropertyResourceClasses?: any[] | undefined;
+  matchPropertyResourceClasses?: any[] | undefined; // Todo: Set those
   selectedMatchPropertyResourceClass?: any | undefined;
   isChildProperty?: boolean;
   childPropertiesList?: PropertyData[];
@@ -39,23 +39,18 @@ export class PropertyFormItem {
 
   set selectedProperty(prop: PropertyData | undefined) {
     this._selectedProperty = prop;
-    this.searchValue = undefined;
-    this.searchValueLabel = undefined;
     this.selectedOperator = undefined;
-    this.matchPropertyResourceClasses = undefined;
-    this.selectedMatchPropertyResourceClass = undefined;
-    this.list = undefined;
   }
 
-  get operators(): Operators[] {
+  get operators(): Operator[] {
     return this._selectedProperty ? getOperatorsForObjectType(this._selectedProperty) : [];
   }
 
-  get selectedOperator(): Operators | undefined {
+  get selectedOperator(): Operator | undefined {
     return this._selectedOperator;
   }
 
-  set selectedOperator(operator: Operators | undefined) {
+  set selectedOperator(operator: Operator | undefined) {
     this._selectedOperator = operator;
     this.searchValue = undefined;
     this.searchValueLabel = undefined;
@@ -106,22 +101,12 @@ export interface QueryObject {
 export interface SearchFormsState {
   selectedResourceClass: ApiData | undefined;
   propertyFormList: PropertyFormItem[];
-  properties: PropertyData[];
-  propertiesLoading: boolean;
   propertiesOrderBy: OrderByItem[];
-  filteredProperties: PropertyData[];
-  matchResourceClassesLoading: boolean;
-  resourcesSearchResultsLoading: boolean;
-  resourcesSearchResultsCount: number;
-  resourcesSearchNoResults: boolean;
-  resourcesSearchResultsPageNumber: number;
-  resourcesSearchResults: ApiData[];
-  error?: any;
 }
 
 export type AdvancedSearchStateSnapshot = Pick<
   SearchFormsState,
-  'selectedResourceClass' | 'propertyFormList' | 'properties' | 'propertiesOrderBy' | 'filteredProperties'
+  'selectedResourceClass' | 'propertyFormList' | 'propertiesOrderBy'
 > & {
   selectedProject: string;
   selectedOntology: ApiData | undefined;
@@ -133,5 +118,5 @@ export const ResourceLabelPropertyData: PropertyData = {
   iri: ResourceLabel,
   label: 'Resource Label',
   objectType: ResourceLabel,
-  isLinkedResourceProperty: false,
+  isLinkProperty: false,
 } as const;

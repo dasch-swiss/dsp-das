@@ -2,7 +2,7 @@ import { Injectable, inject, OnDestroy } from '@angular/core';
 import { tap, catchError, EMPTY, take, map, distinctUntilChanged, switchMap, takeUntil, Subject } from 'rxjs';
 import { PropertyFormItem, PropertyData, ApiData, ParentChildPropertyPair, SearchItem, OrderByItem } from '../model';
 import { AdvancedSearchDataService } from './advanced-search-data.service';
-import { Operators } from './operators.config';
+import { Operator } from './operators.config';
 import { SearchStateService } from './search-state.service';
 
 @Injectable()
@@ -50,104 +50,20 @@ export class PropertyFormManager implements OnDestroy {
       .subscribe();
   }
 
-  updateResourcesSearchResults(searchItem: SearchItem): void {
-    this.searchStateService.patchState({
-      resourcesSearchResultsLoading: true,
-      resourcesSearchResults: [],
-      resourcesSearchResultsPageNumber: 0,
-    });
-
-    this.dataService
-      .getResourcesListCount(searchItem.value, searchItem.objectType)
-      .pipe(
-        take(1),
-        switchMap(count => {
-          this.searchStateService.patchState({ resourcesSearchResultsCount: count });
-
-          if (count > 0) {
-            return this.dataService.getResourcesList(searchItem.value, searchItem.objectType, 0).pipe(
-              take(1),
-              tap(resources => {
-                this.searchStateService.patchState({
-                  resourcesSearchResults: resources,
-                  resourcesSearchResultsLoading: false,
-                  resourcesSearchNoResults: resources.length === 0 && searchItem.value?.length >= 3,
-                });
-              })
-            );
-          } else {
-            this.searchStateService.patchState({
-              resourcesSearchNoResults: true,
-              resourcesSearchResultsLoading: false,
-            });
-            return EMPTY;
-          }
-        }),
-        catchError(error => {
-          this.searchStateService.patchState({ error, resourcesSearchResultsLoading: false });
-          return EMPTY;
-        })
-      )
-      .subscribe();
-  }
-
   loadMoreResourcesSearchResults(searchItem: SearchItem): void {
-    const count = this.searchStateService.currentState.resourcesSearchResultsCount;
-    const results = this.searchStateService.currentState.resourcesSearchResults;
-
-    if (count > results.length) {
-      const nextPageNumber = this.searchStateService.currentState.resourcesSearchResultsPageNumber + 1;
-      this.searchStateService.patchState({ resourcesSearchResultsLoading: true });
-
-      this.dataService
-        .getResourcesList(searchItem.value, searchItem.objectType, nextPageNumber)
-        .pipe(
-          take(1),
-          tap(resources => {
-            this.searchStateService.patchState({
-              resourcesSearchResultsPageNumber: nextPageNumber,
-              resourcesSearchResults: results.concat(resources),
-              resourcesSearchResultsLoading: false,
-            });
-          }),
-          catchError(error => {
-            this.searchStateService.patchState({ error, resourcesSearchResultsLoading: false });
-            return EMPTY;
-          })
-        )
-        .subscribe();
-    }
+    throw new Error('Method not implemented.');
   }
 
   /**
    * Loads list data for a property if needed (separate async operation)
    */
   private loadListForProperty(property: PropertyFormItem): void {
-    if (!property.selectedProperty?.listIri) {
-      return;
-    }
-
-    this.dataService
-      .getList(property.selectedProperty.listIri)
-      .pipe(
-        take(1),
-        tap(list => {
-          if (list) {
-            property.list = list;
-            // Re-patch state after list is loaded
-            this.searchStateService.updatePropertyForm(property);
-          }
-        }),
-        catchError(error => {
-          console.error('Error loading list for property:', error);
-          this.searchStateService.patchState({ error });
-          return EMPTY;
-        })
-      )
-      .subscribe();
+    console.error('not implemented yet');
+    throw new Error('Method not implemented.');
+    // Todo: implement loading list data for a property
   }
 
-  updateSelectedOperator(form: PropertyFormItem, operator: Operators): PropertyFormItem {
+  updateSelectedOperator(form: PropertyFormItem, operator: Operator): PropertyFormItem {
     form.selectedOperator = operator;
     return form;
   }
@@ -202,7 +118,7 @@ export class PropertyFormManager implements OnDestroy {
     }
   }
 
-  onOperatorSelectionChanged(property: PropertyFormItem, selectedOperator: Operators): void {
+  onOperatorSelectionChanged(property: PropertyFormItem, selectedOperator: Operator): void {
     property.selectedOperator = selectedOperator;
     // Todo: Add matches or so
     this.searchStateService.updatePropertyForm(property);
@@ -212,32 +128,7 @@ export class PropertyFormManager implements OnDestroy {
    * Handles match property resource class selection change - completely stateless
    */
   onMatchPropertyResourceClassChanged(property: PropertyFormItem, selectedResourceClass: ApiData): void {
-    const currentState = this.searchStateService.currentState;
-    const currentPropertyFormList = currentState.propertyFormList;
-    const index = currentPropertyFormList.indexOf(property);
-
-    if (index === -1) {
-      return;
-    }
-
-    property.selectedMatchPropertyResourceClass = selectedResourceClass;
-
-    this.dataService
-      .getProperties$(selectedResourceClass.iri)
-      .pipe(
-        take(1),
-        tap(properties => {
-          property.childPropertiesList = properties;
-          property.searchValue = [];
-          this.searchStateService.updatePropertyForm(property);
-        }),
-        catchError(error => {
-          console.error('Error loading filtered properties:', error);
-          this.searchStateService.patchState({ error });
-          return EMPTY;
-        })
-      )
-      .subscribe();
+    console.error('not implemented yet');
   }
 
   /**

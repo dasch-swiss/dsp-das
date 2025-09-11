@@ -1,8 +1,8 @@
 import { Constants } from '@dasch-swiss/dsp-js';
-import { PropertyData } from '../model';
 import { ResourceLabel } from '../constants';
+import { PropertyData } from '../model';
 
-export enum Operators {
+export enum Operator {
   Equals = 'equals',
   NotEquals = 'does not equal',
   Exists = 'exists',
@@ -15,17 +15,17 @@ export enum Operators {
   Matches = 'matches',
 }
 
-export const BASIC_OPS = [Operators.Equals, Operators.NotEquals, Operators.Exists, Operators.NotExists];
-export const TEXT_OPS = [...BASIC_OPS, Operators.IsLike, Operators.Matches];
+export const BASIC_OPS = [Operator.Equals, Operator.NotEquals, Operator.Exists, Operator.NotExists];
+export const TEXT_OPS = [...BASIC_OPS, Operator.IsLike];
 export const NUMERIC_OPS = [
   ...BASIC_OPS,
-  Operators.GreaterThan,
-  Operators.GreaterThanEquals,
-  Operators.LessThan,
-  Operators.LessThanEquals,
+  Operator.GreaterThan,
+  Operator.GreaterThanEquals,
+  Operator.LessThan,
+  Operator.LessThanEquals,
 ] as const;
-export const EXISTENCE_OPS = [Operators.Exists, Operators.NotExists];
-export const LINKED_RESOURCE_OPS = [...BASIC_OPS, Operators.Matches];
+export const EXISTENCE_OPS = [Operator.Exists, Operator.NotExists];
+export const LINKED_RESOURCE_OPS = [...BASIC_OPS, Operator.Matches];
 
 export const SPECIAL_VALUE_OPERATORS = {
   [ResourceLabel]: TEXT_OPS,
@@ -41,6 +41,6 @@ export const SPECIAL_VALUE_OPERATORS = {
 } as const;
 
 export const getOperatorsForObjectType = (property: PropertyData) =>
-  property.isLinkedResourceProperty
-    ? (LINKED_RESOURCE_OPS as Operators[])
-    : ((SPECIAL_VALUE_OPERATORS[property.objectType] ?? EXISTENCE_OPS) as Operators[]);
+  property.isLinkProperty
+    ? (LINKED_RESOURCE_OPS as Operator[])
+    : ((SPECIAL_VALUE_OPERATORS[property.objectType] ?? EXISTENCE_OPS) as Operator[]);

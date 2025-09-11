@@ -9,7 +9,8 @@
       {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
     </button>
   </div>
-  <div class="advanced-search-content">
+  <app-progress-indicator *ngIf="(ontologyLoading$ | async) === true" class="loading-spinner" />
+  <div class="advanced-search-content" *ngIf="(ontologyLoading$ | async) === false">
     <app-ontology-resource-form class="advanced-search-item" />
 
     <ng-container *ngFor="let propertyForm of searchState.propertyForms$ | async; let isLast = last">

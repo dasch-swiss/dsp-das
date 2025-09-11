@@ -37,7 +37,7 @@
       <!-- choose correct component based on objectType -->
       <app-property-form-value
         *ngIf="
-                    !item.selectedProperty?.isLinkedResourceProperty &&
+                    !item.selectedProperty?.isLinkProperty &&
                     item.selectedProperty?.objectType !== constants.ListValue
                 "
         [objectType]="item.selectedProperty?.objectType"
@@ -51,7 +51,7 @@
         [value]="item.searchValue"
         (emitValueChanged)="onValueChanged($event, i)" />
       <app-property-form-link-value
-        *ngIf="item.selectedProperty?.isLinkedResourceProperty"
+        *ngIf="item.selectedProperty?.isLinkProperty"
         [value]="item.searchValue"
         [label]="item.searchValueLabel"
         (emitResourceSelected)="onValueChanged($event, i)" />

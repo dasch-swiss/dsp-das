@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AdvancedSearchStateSnapshot, ApiData, SearchFormsState } from '../model';
-import { INITIAL_FORMS_STATE } from '../util';
 
 @Injectable()
 export class PreviousSearchService {
@@ -24,9 +23,7 @@ export class PreviousSearchService {
       selectedOntology: ontology,
       selectedResourceClass: state.selectedResourceClass,
       propertyFormList: state.propertyFormList,
-      properties: state.properties,
       propertiesOrderBy: state.propertiesOrderBy,
-      filteredProperties: state.filteredProperties,
     };
 
     const storedSearch = localStorage.getItem(this.STORAGE_KEY);

@@ -34,29 +34,22 @@
         (selectionChange)="onSelectedMatchPropertyResourceClassChanged($event)"
         data-cy="resource-class-select"
         [compareWith]="compareObjects">
-        <mat-option *ngIf="matchResourceClassesLoading$ | async" disabled="true">Loading...</mat-option>
-        <ng-container *ngIf="!(matchResourceClassesLoading$ | async)">
-          <mat-option
-            *ngFor="let resClass of propertyFormItem?.matchPropertyResourceClasses"
-            [attr.data-cy]="resClass.label"
-            [value]="resClass">
-            {{ resClass.label }}
-          </mat-option>
-        </ng-container>
+        <mat-option
+          *ngFor="let resClass of propertyFormItem?.matchPropertyResourceClasses"
+          [attr.data-cy]="resClass.label"
+          [value]="resClass">
+          {{ resClass.label }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- Value forms -->
     <div
-      *ngIf="
-        propertyFormItem.selectedOperator &&
-        propertyFormItem.selectedOperator !== operators.Exists &&
-        propertyFormItem.selectedOperator !== operators.NotExists
-      "
+      *ngIf="propertyFormItem.selectedOperator && !existanceOps.includes(propertyFormItem.selectedOperator)"
       class="adv-property-form">
       <app-property-form-value
         *ngIf="
-          (propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2) ||
+          (!propertyFormItem.selectedProperty?.isLinkProperty ||
             propertyFormItem.selectedProperty?.objectType === constants.Label) &&
           propertyFormItem.selectedProperty?.objectType !== constants.ListValue
         "
@@ -70,13 +63,19 @@
         (emitValueChanged)="onValueChanged($event)" />
       <app-property-form-link-value
         *ngIf="
-          !propertyFormItem.selectedProperty?.objectType?.includes(constants.KnoraApiV2) &&
+          propertyFormItem.selectedProperty?.isLinkProperty &&
           propertyFormItem.selectedProperty?.objectType !== constants.Label &&
           propertyFormItem.selectedOperator !== operators.Matches"
         [value]="propertyFormItem.searchValue"
         [label]="propertyFormItem.searchValueLabel"
         [objectType]="propertyFormItem.selectedProperty?.objectType"
         (emitResourceSelected)="onValueChanged($event)" />
+      <app-property-form-link-match-property
+        *ngIf="propertyFormItem.selectedProperty?.isLinkProperty &&
+                    propertyFormItem.selectedProperty?.objectType !==
+                        constants.Label &&
+                    propertyFormItem.selectedOperator === operators.Matches &&
+                    propertyFormItem.selectedMatchPropertyResourceClass" />
     </div>
   </div>
 </div>

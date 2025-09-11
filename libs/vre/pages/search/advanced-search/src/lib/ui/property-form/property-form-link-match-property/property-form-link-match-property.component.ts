@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem, SearchItem } from '../../../model';
-import { Operators } from '../../../service/operators.config';
+import { Operator } from '../../../service/operators.config';
 import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
@@ -44,7 +44,7 @@ export class PropertyFormLinkMatchPropertyComponent {
   @Output() emitResourceSearchValueChanged = new EventEmitter<SearchItem>();
   @Output() emitLoadMoreSearchResults = new EventEmitter<SearchItem>();
 
-  operators = Operators;
+  operators = Operator;
   constants = Constants;
 
   onRemovePropertyFormClicked(propFormItem: PropertyFormItem): void {

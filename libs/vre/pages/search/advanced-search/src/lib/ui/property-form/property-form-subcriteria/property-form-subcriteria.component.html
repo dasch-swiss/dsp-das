@@ -55,7 +55,7 @@
         <!-- Value form components for child properties -->
         <app-property-form-value
           *ngIf="
-            !childProperty.selectedProperty?.isLinkedResourceProperty &&
+            !childProperty.selectedProperty?.isLinkProperty &&
             childProperty.selectedProperty?.objectType !== constants.ListValue
           "
           [objectType]="childProperty.selectedProperty?.objectType"
@@ -67,7 +67,7 @@
           [value]="childProperty.searchValue"
           (emitValueChanged)="onChildValueChange(childProperty, $event)" />
         <app-property-form-link-value
-          *ngIf="childProperty.selectedProperty?.isLinkedResourceProperty"
+          *ngIf="childProperty.selectedProperty?.isLinkProperty"
           [value]="childProperty.searchValue"
           [label]="childProperty.searchValueLabel"
           (emitResourceSelected)="onChildValueChange(childProperty, $event)" />

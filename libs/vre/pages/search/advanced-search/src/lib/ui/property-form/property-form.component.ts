@@ -9,9 +9,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { ApiData, PropertyData, PropertyFormItem } from '../../model';
 import { AdvancedSearchDataService } from '../../service/advanced-search-data.service';
-import { Operators } from '../../service/operators.config';
+import { EXISTENCE_OPS, Operator } from '../../service/operators.config';
 import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
+import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
@@ -31,6 +32,7 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     PropertyFormValueComponent,
     PropertyFormLinkValueComponent,
     PropertyFormListValueComponent,
+    PropertyFormLinkMatchPropertyComponent,
   ],
   templateUrl: './property-form.component.html',
   styleUrls: ['./property-form.component.scss'],
@@ -39,15 +41,15 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
 export class PropertyFormComponent {
   @Input() propertyFormItem: PropertyFormItem = new PropertyFormItem();
 
-  private _searchService = inject(SearchStateService);
   private _dataService = inject(AdvancedSearchDataService);
   private _formManager = inject(PropertyFormManager);
 
   properties$ = this._dataService.availableProperties$;
-  matchResourceClassesLoading$ = this._searchService.matchResourceClassesLoading$;
 
-  operators = Operators;
+  operators = Operator;
   constants = Constants;
+
+  existanceOps = EXISTENCE_OPS;
 
   onSelectedPropertyChanged(event: MatSelectChange): void {
     this._formManager.onPropertySelectionChanged(this.propertyFormItem, event.value);
