@@ -13,14 +13,14 @@ export class ResourceFetcherService {
   private _resourceSubject = new BehaviorSubject<DspResource | undefined>(undefined);
   resource$ = this._resourceSubject.asObservable();
 
-  resourceVersion: string | null = null;
+  resourceVersion?: string | null = null;
 
   userCanEdit$ = this.resource$.pipe(
-    map(resource => resource && this.resourceVersion === null && ResourceUtil.userCanEdit(resource.res))
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanEdit(resource.res))
   );
 
   userCanDelete$ = this.resource$.pipe(
-    map(resource => resource && this.resourceVersion === null && ResourceUtil.userCanDelete(resource.res))
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanDelete(resource.res))
   );
 
   attachedUser$ = this.resource$.pipe(
