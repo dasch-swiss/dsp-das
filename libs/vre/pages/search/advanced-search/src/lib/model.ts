@@ -97,11 +97,13 @@ export class PropertyFormItem {
   }
 }
 
-export interface OrderByItem {
-  id: string;
-  label: string;
-  orderBy: boolean;
-  disabled?: boolean;
+export class OrderByItem {
+  orderBy = false;
+  constructor(
+    public id: string,
+    public label?: string,
+    public disabled?: boolean
+  ) {}
 }
 
 export interface ParentChildPropertyPair {

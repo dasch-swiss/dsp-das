@@ -1,53 +1,37 @@
-import { Injectable, inject, OnDestroy } from '@angular/core';
-import { tap, catchError, EMPTY, take, map, distinctUntilChanged, switchMap, takeUntil, Subject } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { tap, map, distinctUntilChanged, filter } from 'rxjs';
 import { PropertyFormItem, PropertyData, ApiData, ParentChildPropertyPair, SearchItem, OrderByItem } from '../model';
-import { AdvancedSearchDataService } from './advanced-search-data.service';
 import { Operator } from './operators.config';
 import { SearchStateService } from './search-state.service';
 
 @Injectable()
-export class PropertyFormManager implements OnDestroy {
-  private dataService = inject(AdvancedSearchDataService);
+export class PropertyFormManager {
   private searchStateService = inject(SearchStateService);
-
-  private _destroy$ = new Subject<void>();
 
   constructor() {
     this.searchStateService.propertyForms$
       .pipe(
-        takeUntil(this._destroy$),
-        distinctUntilChanged(),
-        map(propertyFormList => {
-          const validOrderByItems = this.searchStateService.currentState.propertiesOrderBy.filter(orderByItem =>
-            propertyFormList.some(form => form.id === orderByItem.id)
+        map(forms => {
+          const distinctFormsById = new Map(
+            forms
+              .filter(f => f.selectedProperty)
+              .map(({ selectedProperty }) => [selectedProperty.iri, selectedProperty.label])
           );
 
-          const newOrderByItems = propertyFormList
-            .filter(
-              form => form.selectedProperty && !validOrderByItems.some(item => item.id === form.selectedProperty?.iri)
-            )
-            .map(
-              form =>
-                ({
-                  id: form.selectedProperty?.iri,
-                  label: form.selectedProperty!.label,
-                  orderBy: false,
-                  disabled: false,
-                }) as OrderByItem
-            );
+          const toKeep = this.searchStateService.currentState.propertiesOrderBy.filter(i =>
+            distinctFormsById.has(i.id)
+          );
 
-          return [...validOrderByItems, ...newOrderByItems];
-        }),
-        tap(updatedOrderByList => {
-          // Only update if the order by list actually changed
-          const currentOrderByList = this.searchStateService.currentState.propertiesOrderBy;
-          console.log('Updated Order By List:', currentOrderByList, updatedOrderByList);
-          if (JSON.stringify(currentOrderByList) !== JSON.stringify(updatedOrderByList)) {
-            this.searchStateService.patchState({ propertiesOrderBy: updatedOrderByList });
-          }
+          const toAdd = [...distinctFormsById]
+            .filter(([id]) => !toKeep.some(i => i.id === id))
+            .map(([id, label]) => new OrderByItem(id, label));
+
+          return [...toKeep, ...toAdd];
         })
       )
-      .subscribe();
+      .subscribe(orderByList => {
+        this.searchStateService.updatePropertyOrderBy(orderByList);
+      });
   }
 
   loadMoreResourcesSearchResults(searchItem: SearchItem): void {
@@ -136,10 +120,5 @@ export class PropertyFormManager implements OnDestroy {
   // Type guard function to check if the value adheres to ApiData interface
   private _isApiData(value: any): value is ApiData {
     return value && typeof value === 'object' && 'iri' in value && 'label' in value;
-  }
-
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 }

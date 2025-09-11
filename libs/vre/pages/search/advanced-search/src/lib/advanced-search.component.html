@@ -9,10 +9,10 @@
       {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
     </button>
   </div>
-  <app-progress-indicator *ngIf="(ontologyLoading$ | async) === true" class="loading-spinner" />
+  <app-ontology-form class="advanced-search-item" *ngIf="(ontologies$ | async).length" />
+  <app-resource-class-form class="advanced-search-item" />
+  <mat-progress-bar mode="query" *ngIf="(ontologyLoading$ | async) === true" class="advanced-search-item" />
   <div class="advanced-search-content" *ngIf="(ontologyLoading$ | async) === false">
-    <app-ontology-resource-form class="advanced-search-item" />
-
     <ng-container *ngFor="let propertyForm of searchState.propertyForms$ | async; let isLast = last">
       <div style="display: flex; width: 100%">
         <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
@@ -27,17 +27,19 @@
       </div>
       <app-property-form-subcriteria class="advanced-search-item" [parentProperty]="propertyForm" />
     </ng-container>
-    <app-order-by />
-    <div class="action-buttons">
-      <button mat-button mat-stroked-button color="primary" (click)="resetSearch()">Reset</button>
-      <button
-        mat-button
-        mat-raised-button
-        color="primary"
-        [disabled]="(searchState.isFormStateValid$ | async) === false"
-        (click)="doSearch()">
-        Search
-      </button>
+    <div class="advanced-search-bottom-selections advanced-search-item">
+      <app-order-by />
+      <div class="action-buttons">
+        <button mat-button mat-stroked-button color="primary" (click)="resetSearch()">Reset</button>
+        <button
+          mat-button
+          mat-raised-button
+          color="primary"
+          [disabled]="(searchState.isFormStateValid$ | async) === false"
+          (click)="doSearch()">
+          Search
+        </button>
+      </div>
     </div>
   </div>
 </div>

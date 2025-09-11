@@ -34,6 +34,16 @@ export class SearchStateService {
     this._state.next({ ...this._state.value, ...partialState });
   }
 
+  clearAllSelections() {
+    this.patchState({ selectedResourceClass: undefined });
+    this.clearPropertySelections();
+  }
+
+  clearPropertySelections() {
+    this.patchState({ propertyFormList: [new PropertyFormItem()] });
+    this.patchState({ propertiesOrderBy: [] });
+  }
+
   updatePropertyForm(property: PropertyFormItem): void {
     this.patchState({
       propertyFormList: this._state.value.propertyFormList.map(p => (p.id === property.id ? property : p)),
@@ -56,12 +66,6 @@ export class SearchStateService {
       parentProperty.searchValue = parentProperty.searchValue.filter(c => c.id !== childProperty.id);
     }
     this.updatePropertyForm(parentProperty);
-  }
-
-  clear() {
-    this.patchState({ selectedResourceClass: undefined });
-    this.patchState({ propertyFormList: [new PropertyFormItem()] });
-    this.patchState({ propertiesOrderBy: [] });
   }
 
   isPropertyFormItemValid(prop: PropertyFormItem): boolean {

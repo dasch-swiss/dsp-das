@@ -7,7 +7,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, startWith } from 'rxjs';
 import { ResourceLabelPropertyData } from '../constants';
 import { ApiData, PropertyData } from '../model';
 
@@ -75,6 +75,7 @@ export class AdvancedSearchDataService {
   );
 
   resourceClasses$: Observable<ApiData[]> = this._resourceClassDefinitions$.pipe(
+    startWith([]),
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
         return { iri: resClassDef.id, label: resClassDef.label || '' };

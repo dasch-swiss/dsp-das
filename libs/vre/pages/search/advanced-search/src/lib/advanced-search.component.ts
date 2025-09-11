@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
@@ -14,10 +15,11 @@ import { GravsearchService } from './service/gravsearch.service';
 import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
-import { OntologyResourceFormComponent } from './ui/ontology-resource-form/ontology-resource-form.component';
+import { OntologyFormComponent } from './ui/ontology-form.component';
 import { OrderByComponent } from './ui/order-by/order-by.component';
 import { PropertyFormSubcriteriaComponent } from './ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
 import { PropertyFormComponent } from './ui/property-form/property-form.component';
+import { ResourceClassFormComponent } from './ui/resource-class-form.component';
 import { INITIAL_FORMS_STATE } from './util';
 
 @Component({
@@ -26,7 +28,8 @@ import { INITIAL_FORMS_STATE } from './util';
   imports: [
     CommonModule,
     OrderByComponent,
-    OntologyResourceFormComponent,
+    OntologyFormComponent,
+    ResourceClassFormComponent,
     PropertyFormComponent,
     PropertyFormSubcriteriaComponent,
     MatButtonModule,
@@ -35,7 +38,7 @@ import { INITIAL_FORMS_STATE } from './util';
     MatSelectModule,
     MatTooltipModule,
     TranslateModule,
-    AppProgressIndicatorComponent,
+    MatProgressBar,
   ],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
@@ -53,13 +56,17 @@ export class AdvancedSearchComponent implements OnInit {
   previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
+  ontologies$ = this._dataService.ontologies$;
 
-  private _projectIri = '';
+  get projectIri() {
+    return `http://rdfh.ch/projects/${this.projectUuid}`;
+  }
 
   ngOnInit(): void {
-    this._projectIri = `http://rdfh.ch/projects/${this.projectUuid}`;
-    this.previousSearchService.init(this._projectIri);
-    this._dataService.init(this._projectIri);
+    this.previousSearchService.init(this.projectIri);
+    const previousOntology = this.previousSearchService.previousSearchObject.selectedOntology;
+    const previousResourceClass = this.previousSearchService.previousSearchObject.selectedResourceClass;
+    this._dataService.init(this.projectIri, previousOntology, previousResourceClass);
   }
 
   removePropertyForm(property: PropertyFormItem): void {
@@ -68,7 +75,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   doSearch(): void {
     const state = this.searchState.currentState;
-    this.previousSearchService.storeSearchSnapshot(this._projectIri, this._dataService.selectedOntology, state);
+    this.previousSearchService.storeSearchSnapshot(this.projectIri, this._dataService.selectedOntology, state);
 
     const nonEmptyProperties = state.propertyFormList.filter(prop => prop.selectedProperty);
 
@@ -87,8 +94,8 @@ export class AdvancedSearchComponent implements OnInit {
 
   resetSearch(): void {
     this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this._dataService.init(this._projectIri);
-      this.searchState.clear();
+      this._dataService.init(this.projectIri);
+      this.searchState.clearAllSelections();
     });
   }
 
