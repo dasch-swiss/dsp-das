@@ -63,7 +63,7 @@ export class PropertyFormComponent {
     this._formManager.onMatchPropertyResourceClassChanged(this.propertyFormItem, event.value);
   }
 
-  onValueChanged(value: string | ApiData | PropertyFormItem[]) {
+  onValueChanged(value: string | ApiData) {
     this._formManager.onSearchValueChanged(this.propertyFormItem, value);
   }
 

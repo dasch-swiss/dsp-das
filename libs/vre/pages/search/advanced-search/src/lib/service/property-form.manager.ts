@@ -54,15 +54,6 @@ export class PropertyFormManager implements OnDestroy {
     throw new Error('Method not implemented.');
   }
 
-  /**
-   * Loads list data for a property if needed (separate async operation)
-   */
-  private loadListForProperty(property: PropertyFormItem): void {
-    console.error('not implemented yet');
-    throw new Error('Method not implemented.');
-    // Todo: implement loading list data for a property
-  }
-
   updateSelectedOperator(form: PropertyFormItem, operator: Operator): PropertyFormItem {
     form.selectedOperator = operator;
     return form;
@@ -113,14 +104,10 @@ export class PropertyFormManager implements OnDestroy {
   onPropertySelectionChanged(property: PropertyFormItem, selectedProperty: PropertyData): void {
     property.selectedProperty = selectedProperty;
     this.searchStateService.updatePropertyForm(property);
-    if (property.selectedProperty.listIri) {
-      this.loadListForProperty(property);
-    }
   }
 
   onOperatorSelectionChanged(property: PropertyFormItem, selectedOperator: Operator): void {
     property.selectedOperator = selectedOperator;
-    // Todo: Add matches or so
     this.searchStateService.updatePropertyForm(property);
   }
 
@@ -134,7 +121,7 @@ export class PropertyFormManager implements OnDestroy {
   /**
    * Handles search value change - completely stateless
    */
-  onSearchValueChanged(property: PropertyFormItem, searchValue: string | ApiData | PropertyFormItem[]): void {
+  onSearchValueChanged(property: PropertyFormItem, searchValue: string | ApiData): void {
     const currentState = this.searchStateService.currentState;
     const currentPropertyFormList = currentState.propertyFormList;
     const index = currentPropertyFormList.indexOf(property);
@@ -142,14 +129,7 @@ export class PropertyFormManager implements OnDestroy {
     if (index === -1) {
       return;
     }
-
-    // Handle different types of search values
-    if (this._isApiData(searchValue)) {
-      property.searchValue = searchValue.iri;
-      property.searchValueLabel = searchValue.label;
-    } else {
-      property.searchValue = searchValue;
-    }
+    property.searchValue = searchValue;
     this.searchStateService.updatePropertyForm(property);
   }
 

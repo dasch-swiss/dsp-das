@@ -67,14 +67,7 @@ export class PropertyFormSubcriteriaComponent {
   }
 
   onChildValueChange(childProperty: PropertyFormItem, searchValue: string | ApiData): void {
-    if (this._isApiData(searchValue)) {
-      // If it's an ApiData object, extract iri and label
-      childProperty.searchValue = searchValue.iri;
-      childProperty.searchValueLabel = searchValue.label;
-    } else {
-      // If it's a string, use directly
-      childProperty.searchValue = searchValue;
-    }
+    childProperty.searchValue = searchValue;
 
     this.searchService.updateChildSearchValue({
       parentProperty: this.parentProperty,

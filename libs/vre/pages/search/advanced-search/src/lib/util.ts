@@ -1,6 +1,6 @@
 import { Constants } from '@dasch-swiss/dsp-js';
-import { v4 as uuidv4 } from 'uuid';
-import { PropertyFormItem, OrderByItem, PropertyData, ResourceLabel, ApiData, SearchFormsState } from './model';
+import { ResourceLabel } from './constants';
+import { PropertyFormItem, OrderByItem, ApiData, SearchFormsState } from './model';
 import { Operator } from './service/operators.config';
 
 export function isPropertyFormItemInvalid(prop: PropertyFormItem): boolean {

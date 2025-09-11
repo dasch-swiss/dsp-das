@@ -8,7 +8,8 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
-import { ApiData, PropertyData, ResourceLabelPropertyData } from '../model';
+import { ResourceLabelPropertyData } from '../constants';
+import { ApiData, PropertyData } from '../model';
 
 @Injectable()
 export class AdvancedSearchDataService {

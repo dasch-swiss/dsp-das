@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { combineLatest, distinctUntilChanged, map, tap } from 'rxjs';
-import { PropertyFormManager } from '../../service/property-form.manager';
 import { SearchStateService } from '../../service/search-state.service';
 
 @Component({
@@ -30,7 +29,6 @@ import { SearchStateService } from '../../service/search-state.service';
 })
 export class OrderByComponent {
   private searchService = inject(SearchStateService);
-  private _propertyFormManager = inject(PropertyFormManager);
 
   readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 

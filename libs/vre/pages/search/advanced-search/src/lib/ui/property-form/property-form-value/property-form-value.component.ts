@@ -9,7 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { PropertyFormItem, ResourceLabel } from '../../../model';
+import { ResourceLabel } from '../../../constants';
+import { PropertyFormItem } from '../../../model';
 
 class CustomRegex {
   public static readonly INT_REGEX = /^-?\d+$/;

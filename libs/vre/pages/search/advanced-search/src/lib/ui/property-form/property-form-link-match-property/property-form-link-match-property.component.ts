@@ -63,12 +63,7 @@ export class PropertyFormLinkMatchPropertyComponent {
   }
 
   onValueChanged(value: string | ApiData, index: number): void {
-    if (this._isApiData(value)) {
-      this.values[index].searchValue = value.iri;
-      this.values[index].searchValueLabel = value.label;
-    } else {
-      this.values[index].searchValue = value;
-    }
+    this.values[index].searchValue = value;
     this.emitValueChanged.emit(this.values[index]);
   }
 

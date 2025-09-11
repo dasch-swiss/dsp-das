@@ -1,6 +1,5 @@
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
-import { ResourceLabel } from './constants';
 import { getOperatorsForObjectType, Operator } from './service/operators.config';
 
 export interface ApiData {
@@ -25,13 +24,13 @@ export class PropertyFormItem {
   readonly id = uuidv4();
   private _selectedProperty: PropertyData | undefined;
   private _selectedOperator: Operator | undefined;
-  searchValue: string | PropertyFormItem[] | undefined;
+  private _searchValue: string | PropertyFormItem[] | undefined;
+  private _searchValueLabel: string | undefined;
   list: ListNodeV2 | undefined;
   matchPropertyResourceClasses?: any[] | undefined; // Todo: Set those
   selectedMatchPropertyResourceClass?: any | undefined;
   isChildProperty?: boolean;
   childPropertiesList?: PropertyData[];
-  searchValueLabel?: string;
 
   get selectedProperty(): PropertyData | undefined {
     return this._selectedProperty;
@@ -40,6 +39,24 @@ export class PropertyFormItem {
   set selectedProperty(prop: PropertyData | undefined) {
     this._selectedProperty = prop;
     this.selectedOperator = undefined;
+  }
+
+  get searchValueLabel(): string | undefined {
+    return this._searchValueLabel;
+  }
+
+  get searchValue(): string | PropertyFormItem[] | undefined {
+    return this._searchValue;
+  }
+
+  set searchValue(value: string | PropertyFormItem[] | ApiData | undefined) {
+    if (this._isApiData(value)) {
+      this._searchValue = value.iri;
+      this._searchValueLabel = value.label;
+    } else {
+      this._searchValue = value;
+      this._searchValueLabel = undefined;
+    }
   }
 
   get operators(): Operator[] {
@@ -53,7 +70,7 @@ export class PropertyFormItem {
   set selectedOperator(operator: Operator | undefined) {
     this._selectedOperator = operator;
     this.searchValue = undefined;
-    this.searchValueLabel = undefined;
+    this._searchValueLabel = undefined; // Todo: not needed currently -> remove after proper refactor?
     this.matchPropertyResourceClasses = undefined;
     this.selectedMatchPropertyResourceClass = undefined;
     this.list = undefined;
@@ -73,6 +90,10 @@ export class PropertyFormItem {
     if (this.childPropertiesList) {
       this.childPropertiesList = this.childPropertiesList.map(c => (c.iri === childProperty.iri ? childProperty : c));
     }
+  }
+
+  private _isApiData(value: any): value is ApiData {
+    return value && typeof value === 'object' && 'iri' in value && 'label' in value;
   }
 }
 
@@ -111,12 +132,3 @@ export type AdvancedSearchStateSnapshot = Pick<
   selectedProject: string;
   selectedOntology: ApiData | undefined;
 };
-
-export { ResourceLabel } from './constants';
-
-export const ResourceLabelPropertyData: PropertyData = {
-  iri: ResourceLabel,
-  label: 'Resource Label',
-  objectType: ResourceLabel,
-  isLinkProperty: false,
-} as const;
