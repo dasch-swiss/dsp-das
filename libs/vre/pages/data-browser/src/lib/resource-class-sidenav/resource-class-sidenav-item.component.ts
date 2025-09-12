@@ -11,26 +11,48 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-accordion>
-      <mat-expansion-panel>
+      <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none">
         <mat-expansion-panel-header>
           <!--<a [routerLinkActive]="['is-active']" [routerLink]="classLink" style="display: flex;"> </a>-->
-          <mat-panel-title> {{ ontologiesLabel }}</mat-panel-title>
-          <mat-panel-description>
+          <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
+          <mat-panel-description
+            style="flex-grow: 0; flex-basis: 150px;
+    justify-content: end;
+    margin-right: 0;">
             <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
             @if (hasProjectMemberRights$ | async) {
-              <span data-cy="add-class-instance" (click)="goToAddClassInstance()"> + </span>
+              <button
+                mat-icon-button
+                data-cy="add-class-instance"
+                (click)="goToAddClassInstance()"
+                class="small-icon-button">
+                <mat-icon>add</mat-icon>
+              </button>
             }
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <p>This is the primary content of the panel.</p>
+        <ng-template matExpansionPanelContent>
+          Some deferred content
+          <p>This is the primary content of the panel. {{ test }}</p>
+        </ng-template>
       </mat-expansion-panel>
     </mat-accordion>
   `,
-  styleUrls: ['./resource-class-sidenav-item.component.scss'],
+  styles: [
+    `
+      .small-icon-button {
+        transform: scale(0.6);
+      }
+    `,
+  ],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
+  get test() {
+    console.log('got it', this.resClass.id);
+    return 'test';
+  }
   destroyed = new Subject<void>();
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   classLink!: string;

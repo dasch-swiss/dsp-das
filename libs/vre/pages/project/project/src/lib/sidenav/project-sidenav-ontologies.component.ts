@@ -5,28 +5,30 @@ import { ProjectPageService } from '../project-page.service';
   selector: 'app-projects-sidenav-ontologies',
   template: `
     @for (onto of projectOntologies$ | async; track onto; let first = $first) {
-      <mat-accordion [displayMode]="'flat'">
-        <mat-expansion-panel [expanded]="first">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="first" [togglePosition]="'before'" style="box-shadow: none">
           <mat-expansion-panel-header>
-            <div class="sidenav-panel-header">
-              <mat-panel-title class="mat-subtitle-1">
-                <p
-                  #ontoTitle
-                  matTooltip="{{ onto.label }}"
-                  matTooltipShowDelay="500"
-                  matTooltipPosition="right"
-                  [matTooltipDisabled]="compareElementHeights(ontoTitle)">
-                  {{ onto.label }}
-                </p>
-              </mat-panel-title>
-            </div>
+            <mat-panel-title
+              #ontoTitle
+              matTooltip="{{ onto.label }}"
+              matTooltipShowDelay="500"
+              matTooltipPosition="right"
+              [matTooltipDisabled]="compareElementHeights(ontoTitle)">
+              {{ onto.label }}
+            </mat-panel-title>
           </mat-expansion-panel-header>
           <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 16px" />
         </mat-expansion-panel>
       </mat-accordion>
     }
   `,
-  styleUrls: ['./project-sidenav-ontologies.component.scss'],
+  styles: [
+    `
+      :host ::ng-deep .mat-expansion-panel-body {
+        padding: 0;
+      }
+    `,
+  ],
 })
 export class ProjectSidenavOntologiesComponent {
   projectOntologies$ = this._projectPageService.ontologies$;
