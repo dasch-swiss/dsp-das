@@ -25,7 +25,7 @@ import { ProjectPageService } from '../project-page.service';
   styles: [
     `
       :host ::ng-deep .mat-expansion-panel-body {
-        padding: 0;
+        padding: 0 8px;
       }
     `,
   ],

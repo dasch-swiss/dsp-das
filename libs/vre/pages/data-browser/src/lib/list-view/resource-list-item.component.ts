@@ -8,23 +8,21 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   selector: 'app-resource-list-item',
   template: `
     <div
-      style="padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #ebebeb"
-      [ngStyle]="{
-        'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
-      }"
+      style="padding: 8px 16px; cursor: pointer"
+      [ngClass]="{ highlighted: isHighlighted$ | async }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
       (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          <div style="color: black">
+            {{ resource.label }}
+          </div>
           <div
             style="    color: #979797;
     font-size: 12px">
             {{ resource.resourceClassLabel }}
-          </div>
-          <div style="color: black">
-            {{ resource.label }}
           </div>
           @if (foundIn.length > 0) {
             <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
@@ -43,6 +41,10 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
+      .highlighted {
+        border-left: 2px solid #33678f;
+        background-color: #d6e0e8;
+      }
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
       }

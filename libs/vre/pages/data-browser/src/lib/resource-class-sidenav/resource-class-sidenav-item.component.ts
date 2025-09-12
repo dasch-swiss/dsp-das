@@ -32,8 +32,7 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
           </mat-panel-description>
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
-          Some deferred content
-          <p>This is the primary content of the panel. {{ test }}</p>
+          <app-resources-list-fetcher />
         </ng-template>
       </mat-expansion-panel>
     </mat-accordion>
@@ -49,10 +48,6 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
-  get test() {
-    console.log('got it', this.resClass.id);
-    return 'test';
-  }
   destroyed = new Subject<void>();
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   classLink!: string;

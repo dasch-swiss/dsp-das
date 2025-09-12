@@ -17,3 +17,5 @@ export * from './lib/comparison/multiple-viewer.service';
 export * from './lib/list-view/resource-list-selection.component';
 
 export * from './lib/resource-result.service';
+export * from './lib/resource-class-sidenav/resources-list-fetcher.component';
+export * from './lib/resource-class-browser-page-2.component';

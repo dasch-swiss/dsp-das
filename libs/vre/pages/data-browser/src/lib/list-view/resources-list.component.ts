@@ -13,12 +13,24 @@ import { ResourceResultService } from '../resource-result.service';
       </div>
     }
     <app-pager
+      class="pager"
       (pageIndexChanged)="updatePageIndex($event)"
       [numberOfAllResults]="resourceResultService.numberOfResults" />
     @if (multipleViewerService.selectMode) {
       <app-resource-list-selection [resources]="resources" />
     }
     <app-resource-list [resources]="resources" />`,
+  styles: [
+    `
+      .pager {
+        display: block;
+        padding: 8px;
+        border: 1px solid #ebebeb;
+        border-radius: 10px;
+        margin-bottom: 16px;
+      }
+    `,
+  ],
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
