@@ -6,9 +6,9 @@
 
 This monorepo hosts various libraries of the DaSCH Service Platform and it is built on:
 
-- Nx `v19.0.8`
-- Angular `v17.3.0`
-- Node.js `v20.9.0`
+- Nx `v19.8.9`
+- Angular `v18.2.9`
+- Node.js `v20.11.1` (stored in [.nvmrc](https://github.com/dasch-swiss/dsp-das/blob/main/.nvmrc) file)
 
 # Install libraries
 
@@ -70,7 +70,6 @@ The most common commands are defined in `package.json`.
 | `nx run dsp-app:test`                                | `npm run test-local`      |
 | `nx run-many --all --target=test --configuration=ci` | `npm run test-ci-all`     |
 | `nx run dsp-app:serve`                               | `npm run start-local`     |
-| `nx run dsp-app:serve:test-server`                   | `npm run start-test`      |
 | `nx run dsp-app:serve:dev-server`                    | `npm run start-dev`       |
 | `nx run dsp-app:serve:ls-test-server`                | `npm run start-ls-test`   |
 | `nx run dsp-app:serve:stage-server`                  | `npm run start-stage`     |
@@ -85,6 +84,11 @@ The most common commands are defined in `package.json`.
 | npx                                       | npm                 |
 |-------------------------------------------|---------------------|
 | `cd apps/dsp-app-e2e && npx cypress open` | `npm run e2e-local` |
+
+### OpenAPI Client Generation
+
+For API client generation and maintenance:
+- [OpenAPI Client Generation](https://github.com/dasch-swiss/dsp-app/blob/main/libs/vre/3rd-party-services/open-api/README.md) - Auto-generated TypeScript client for DSP-API
 
 ### IDE plugins
 

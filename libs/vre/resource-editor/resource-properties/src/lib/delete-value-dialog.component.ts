@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { tap } from 'rxjs/operators';
+import { tap } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
 export interface DeleteValueDialogProps {
@@ -60,9 +60,9 @@ export class DeleteValueDialogComponent {
   ) {}
 
   deleteValue() {
-    const resource = this.propertyValueService.editModeData?.resource as ReadResource;
+    const resource = this.propertyValueService.editModeData.resource as ReadResource;
 
-    const value = this.propertyValueService.editModeData?.values[this.data.index] as unknown as ReadResource;
+    const value = this.propertyValueService.editModeData.values[this.data.index] as unknown as ReadResource;
     const deleteVal = new DeleteValue();
     deleteVal.id = value.id;
     deleteVal.type = value.type;

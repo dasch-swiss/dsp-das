@@ -8,8 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
@@ -38,20 +37,19 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
         #auto="matAutocomplete"
         [displayWith]="displayNode"
         (optionSelected)="onSelectionChange($event.option.value)">
-        <ng-container *ngFor="let node of filteredList$ | async; trackBy: trackByFn">
-          <ng-container *ngTemplateOutlet="renderNode; context: { node: node, depth: 0 }"></ng-container>
-        </ng-container>
+        @for (node of filteredList$ | async; track trackByFn($index, node)) {
+          <ng-container *ngTemplateOutlet="renderNode; context: { node: node, depth: 0 }" />
+        }
 
         <ng-template #renderNode let-node="node" let-depth="depth">
           <mat-option [value]="node">
             <span [style.padding-left.px]="depth * 15">{{ node.label }}</span>
           </mat-option>
-          <ng-container *ngIf="node.children?.length > 0">
-            <ng-container *ngFor="let subchild of node.children; trackBy: trackByFn">
-              <ng-container
-                *ngTemplateOutlet="renderNode; context: { node: subchild, depth: depth + 1 }"></ng-container>
-            </ng-container>
-          </ng-container>
+          @if (node.children?.length > 0) {
+            @for (subchild of node.children; track trackByFn($index, subchild)) {
+              <ng-container *ngTemplateOutlet="renderNode; context: { node: subchild, depth: depth + 1 }" />
+            }
+          }
         </ng-template>
       </mat-autocomplete>
     </mat-form-field>

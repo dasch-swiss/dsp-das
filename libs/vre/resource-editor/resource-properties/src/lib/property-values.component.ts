@@ -1,73 +1,57 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
-import { Cardinality } from '@dasch-swiss/dsp-js';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { Cardinality, ReadResource, ReadValue } from '@dasch-swiss/dsp-js';
+import { ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { JsLibPotentialError } from './JsLibPotentialError';
 import { PropertyValueService } from './property-value.service';
-import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
   selector: 'app-property-values',
-  styles: [
-    `
-      @use '../../../../../../apps/dsp-app/src/styles/config' as *;
-      .add-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-      }
-    `,
-  ],
-  template: ` <app-property-value
-      *ngFor="let group of propertyValueService.formArray.controls; let index = index"
-      [itemTpl]="itemTpl"
-      [index]="index"
-      style="width: 100%" />
-
-    <button
-      mat-icon-button
-      (click)="addItem()"
-      data-cy="add-property-value-button"
-      *ngIf="
-        (isCurrentProjectAdminSysAdminOrMember$ | async) &&
-        (!propertyValueService.currentlyAdding || propertyValueService.keepEditMode) &&
-        (propertyValueService.formArray.controls.length === 0 ||
-          [Cardinality._0_n, Cardinality._1_n].includes(propertyValueService.cardinality)) &&
-        propertyValueService.propertyDefinition.isEditable
-      ">
-      <mat-icon class="add-icon">add_box</mat-icon>
-    </button>`,
-})
-export class PropertyValuesComponent implements OnInit {
-  @Input() itemTpl!: TemplateRef<any>;
-
-  @Select(ProjectsSelectors.isCurrentProjectAdminSysAdminOrMember)
-  isCurrentProjectAdminSysAdminOrMember$!: Observable<boolean>;
-
-  protected readonly Cardinality = Cardinality;
-
-  constructor(
-    public propertyValueService: PropertyValueService,
-    private _fb: FormBuilder
-  ) {}
-
-  ngOnInit() {
-    if (!this.propertyValueService.formArray) {
-      throw new Error('The form array should not be empty.');
+  template: `
+    @for (group of propertyValueService.editModeData.values; track group; let index = $index) {
+      <app-property-value [index]="index" style="width: 100%" />
     }
+
+    @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
+      <button mat-icon-button (click)="currentlyAdding = true" data-cy="add-property-value-button">
+        <mat-icon class="add-icon">add_box</mat-icon>
+      </button>
+    }
+
+    @if (currentlyAdding) {
+      <app-property-value-add (stopAdding)="currentlyAdding = false" />
+    }
+  `,
+  providers: [PropertyValueService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PropertyValuesComponent implements OnChanges {
+  @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
+  @Input({ required: true }) myProperty!: PropertyInfoValues;
+
+  get userCanAdd() {
+    return ResourceUtil.userCanEdit(this.editModeData.resource);
   }
 
-  addItem() {
-    this.propertyValueService.formArray.push(
-      this._fb.group({
-        item: propertiesTypeMapping
-          .get(this.propertyValueService.propertyDefinition.objectType!)!
-          .control() as AbstractControl,
-        comment: this._fb.control(''),
-      })
-    );
-    this.propertyValueService.toggleOpenedValue(this.propertyValueService.formArray.length - 1);
-    this.propertyValueService.currentlyAdding = true;
+  get matchesCardinality() {
+    return [Cardinality._0_n, Cardinality._1_n].includes(this.propertyValueService.cardinality);
+  }
+
+  get propertyDefinition() {
+    return JsLibPotentialError.setAs(this.myProperty.propDef);
+  }
+
+  currentlyAdding = false;
+
+  constructor(public propertyValueService: PropertyValueService) {}
+
+  ngOnChanges() {
+    this._setupData();
+  }
+
+  private _setupData() {
+    this.propertyValueService.editModeData = this.editModeData;
+    this.propertyValueService.propertyDefinition = this.propertyDefinition;
+    this.propertyValueService.cardinality = this.myProperty.guiDef.cardinality;
   }
 }

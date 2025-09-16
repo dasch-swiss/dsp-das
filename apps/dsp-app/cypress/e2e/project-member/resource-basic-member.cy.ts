@@ -21,6 +21,7 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   beforeEach(() => {
+    cy.viewport(2000, 1000); // width: 2000px, height: 1000px
     cy.loginAdmin();
     cy.request(
       'POST',
@@ -54,14 +55,14 @@ describe('Check project admin existing resource functionality', () => {
 
   it('ThingPicture resource should not be deletable or erasable', () => {
     project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(Project0001Page.thingArchiveClass.label).click();
+    cy.get('[data-cy=resource-list-item]').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
   });
 
   it('ThingPicture resource should be visible', () => {
     cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
+    cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
     cy.should('not.contain', '[data-cy=close-restricted-button]');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
     cy.get('.representation-container').should('exist');
@@ -74,10 +75,10 @@ describe('Check project admin existing resource functionality', () => {
   it('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
-    cy.get('[data-cy=class-item] div.label')
+    cy.get('[data-cy=class-item]')
       .contains(Project0001Page.thingPictureClass.label)
-      .parentsUntil('app-ontology-class-item')
-      .find('[data-cy="add-class-instance"]')
+      .closest('[data-cy=class-item]')
+      .find('[data-cy=add-class-instance]')
       .click();
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
@@ -94,11 +95,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
 
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').should('be.visible').type(newLabel);
+    cy.get('[data-cy=resource-label]')
+      .find('[data-cy=common-input-text]')
+      .should('be.visible')
+      .type(newLabel, { force: true });
 
     const newTitle = faker.lorem.word();
-    cy.get('[data-cy=Titel]').find('[data-cy=common-input-text]').type(newTitle);
-    cy.get('[data-cy=Titel]').find('[data-cy=comment-textarea]').type(faker.lorem.word());
+    cy.get('[data-cy=creator-row-Titel]').find('[data-cy=common-input-text]').type(newTitle);
     cy.get('[data-cy="submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
     cy.get('@resourceRequest.all').should('have.length', 1);
@@ -106,11 +109,11 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=resource-header-label]').contains(newLabel);
     cy.get('.representation-container').should('exist');
     cy.get('app-still-image').should('be.visible');
-    cy.get('app-base-switch').contains(newTitle);
+    cy.get('[data-cy=row-Titel]').contains(newTitle);
 
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
     cy.get('[data-cy=resource-toolbar-more-button]').click();
-    cy.get('[data-cy=resource-toolbar-delete-resource-button]').should('exist').click();
+    cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').and('not.be.disabled').click();
     cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
     cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
@@ -118,7 +121,7 @@ describe('Check project admin existing resource functionality', () => {
 
   it('ThingPicture resource should be editable', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
-    cy.get('[data-cy=resource-list-item] h3.res-class-value').contains(thingPictureData.label).click();
+    cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
@@ -156,6 +159,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=common-input-text]').scrollIntoView();
     cy.get('[data-cy=common-input-text]', { timeout: 500 }).should('be.visible').type(newLabel);
     const firstComment = faker.lorem.word();
+    cy.get('[data-cy="toggle-comment-button"]').click();
     cy.get('[data-cy=comment-textarea]').should('be.visible').type(firstComment);
     cy.get('[data-cy="save-button"]').click();
     cy.wait('@resourcesRequest').its('response.statusCode').should('eq', 200);
@@ -176,6 +180,9 @@ describe('Check project admin existing resource functionality', () => {
 
     cy.get('[data-cy=add-property-value-button]').should('be.visible').click();
     cy.get('[data-cy="common-input-text"]', { timeout: 500 }).should('be.visible').type(faker.lorem.sentence());
+    cy.wait(5000);
+    cy.get('[data-cy="toggle-comment-button"]').click();
+
     cy.get('[data-cy="comment-textarea"]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy="save-button"]').click();
     cy.get('[data-cy="common-input-text"]', { timeout: 2000 }).should('not.exist');

@@ -3,8 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@dasch-swiss/vre/core/session';
-import { Subscription } from 'rxjs';
-import { finalize, takeLast, tap } from 'rxjs/operators';
+import { finalize, Subscription, takeLast, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -12,18 +11,7 @@ import { finalize, takeLast, tap } from 'rxjs/operators';
     <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
 
-      <mat-form-field data-cy="password-input">
-        <mat-label>Password</mat-label>
-        <input
-          placeholder="Password"
-          autocomplete="current-password"
-          [formControl]="form.controls.password"
-          matInput
-          type="password" />
-        <mat-error *ngIf="form.controls.password.errors as errors">
-          {{ errors | humanReadableError }}
-        </mat-error>
-      </mat-form-field>
+      <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
 
       <button
         [class.mat-primary]="!isLoginError"

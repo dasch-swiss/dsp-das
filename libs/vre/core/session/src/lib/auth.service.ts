@@ -3,39 +3,28 @@ import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import {
-  ClearListsAction,
-  ClearOntologiesAction,
-  ClearOntologyClassAction,
-  ClearProjectsAction,
-  LoadUserAction,
-  LogUserOutAction,
-} from '@dasch-swiss/vre/core/state';
-import {
   ComponentCommunicationEventService,
   EmitEvent,
   Events as CommsEvents,
   LocalizationService,
 } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { of, throwError } from 'rxjs';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(
-    private store: Store,
+    private _userService: UserService,
     private _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _componentCommsService: ComponentCommunicationEventService,
-    private _actions$: Actions,
     private _localizationsService: LocalizationService
   ) {}
 
   isCredentialsValid$() {
     return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-      take(1),
       map(() => true),
       catchError(() => {
         return of(false);
@@ -59,37 +48,26 @@ export class AuthService {
       }),
       catchError(error => {
         if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
-          return throwError(new UserFeedbackError('The username and / or password do not match.'));
+          throw new UserFeedbackError('The username and / or password do not match.');
         }
-        return throwError(error);
+        throw error;
       }),
       switchMap(() => {
-        this._actions$.pipe(ofActionSuccessful(LoadUserAction), take(1)).subscribe(() => {
-          this._localizationsService.setLanguage(this.store.selectSnapshot(state => state.user.user).lang);
-        });
-        return this.store.dispatch(new LoadUserAction(identifier, identifierType));
+        return this._userService.loadUser(identifier, identifierType).pipe(
+          tap(user => {
+            this._localizationsService.setLanguage(user.lang);
+          })
+        );
       })
     );
   }
 
   logout() {
-    this._dspApiConnection.v2.auth
-      .logout()
-      .pipe(switchMap(() => this.clearState()))
-      .subscribe(() => {
-        this._accessTokenService.removeTokens();
-        this._dspApiConnection.v2.jsonWebToken = '';
-        window.location.reload();
-      });
-  }
-
-  private clearState() {
-    return this.store.dispatch([
-      new LogUserOutAction(),
-      new ClearProjectsAction(),
-      new ClearListsAction(),
-      new ClearOntologiesAction(),
-      new ClearOntologyClassAction(),
-    ]);
+    this._dspApiConnection.v2.auth.logout().subscribe(() => {
+      this._userService.logout();
+      this._accessTokenService.removeTokens();
+      this._dspApiConnection.v2.jsonWebToken = '';
+      window.location.reload();
+    });
   }
 }

@@ -3,8 +3,7 @@ import { KnoraApiConnection, ReadResource, ReadResourceSequence } from '@dasch-s
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { sortByKeys } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { Observable, of } from 'rxjs';
-import { expand, map, reduce, take, takeWhile } from 'rxjs/operators';
+import { expand, map, Observable, of, reduce, take, takeWhile } from 'rxjs';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({
@@ -15,16 +14,19 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
       [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
-      <ng-container *ngIf="allIncomingLinks.length > 0">
+      @if (allIncomingLinks.length > 0) {
         <app-incoming-standoff-link-value [links]="slidedLinks" />
-        <app-incoming-resource-pager
-          *ngIf="allIncomingLinks.length > pageSize"
-          [pageIndex]="pageIndex"
-          [pageSize]="pageSize"
-          [itemsNumber]="allIncomingLinks.length"
-          (pageChanged)="pageChanged($event)" />
-      </ng-container>
-      <app-progress-indicator *ngIf="loading" />
+        @if (allIncomingLinks.length > pageSize) {
+          <app-incoming-resource-pager
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [itemsNumber]="allIncomingLinks.length"
+            (pageChanged)="pageChanged($event)" />
+        }
+      }
+      @if (loading) {
+        <app-progress-indicator />
+      }
     </app-property-row>
   `,
 })

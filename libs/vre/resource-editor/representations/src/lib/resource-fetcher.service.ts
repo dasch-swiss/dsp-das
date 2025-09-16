@@ -1,59 +1,60 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
-import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { Store } from '@ngxs/store';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { DspResource, filterUndefined, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
+import { BehaviorSubject, filter, map, switchMap, take, Observable, shareReplay } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _reloadSubject = new BehaviorSubject(null);
+  private _resourceSubject = new BehaviorSubject<DspResource | undefined>(undefined);
+  resource$ = this._resourceSubject.asObservable();
 
-  resource$!: Observable<DspResource>;
-  projectShortcode$!: Observable<string>;
+  resourceVersion?: string | null = null;
 
-  userCanEdit$!: Observable<boolean>;
-  userCanDelete$!: Observable<boolean>;
-  resourceVersion?: string;
+  userCanEdit$ = this.resource$.pipe(
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanEdit(resource.res))
+  );
+
+  userCanDelete$ = this.resource$.pipe(
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanDelete(resource.res))
+  );
+
+  attachedUser$ = this.resource$.pipe(
+    filterUndefined(),
+    switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
+  );
+
+  projectShortcode$ = this.resource$.pipe(
+    filterUndefined(),
+    switchMap(resource => this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)),
+    map(v => v.project.shortcode as unknown as string),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
 
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _adminProjectsApiService: AdminProjectsApiService,
-    private _store: Store
+    private _userApiService: UserApiService
   ) {}
 
-  onInit(resourceIri: string, resourceVersion?: string) {
-    this.resource$ = this._reloadSubject.asObservable().pipe(
-      switchMap(() => this._getResource(resourceIri, resourceVersion)),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
-    this.projectShortcode$ = this.resource$.pipe(
-      switchMap(resource =>
-        this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)
-      ),
-      map(v => v.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
+  loadResource(resourceIri: string, resourceVersion?: string) {
     this.resourceVersion = resourceVersion;
-
-    this.userCanEdit$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
-    );
-
-    this.userCanDelete$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
-    );
+    this._getResource(resourceIri, resourceVersion).subscribe(resource => {
+      this._resourceSubject.next(resource);
+    });
   }
 
   reload() {
-    this._reloadSubject.next(null);
+    const resourceIri = this._resourceSubject.value?.res.id;
+    if (!resourceIri) {
+      throw new AppError('Resource IRI is not found');
+    }
+    this.loadResource(resourceIri);
   }
 
   private _getResource(resourceIri: string, resourceVersion?: string) {
@@ -62,8 +63,6 @@ export class ResourceFetcherService {
         const res = new DspResource(response);
         res.resProps = GenerateProperty.commonProperty(res.res);
         res.systemProps = res.res.entityInfo.getPropertyDefinitionsByType(SystemPropertyDefinition);
-
-        this._store.dispatch(new SetCurrentResourceAction(res));
         return res;
       })
     );

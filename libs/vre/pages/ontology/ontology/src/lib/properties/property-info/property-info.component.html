@@ -1,0 +1,108 @@
+<div data-cy="property-info" class="property-info" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+  <div class="prop-container">
+    <div mat-line class="title property-info-title" [class.with-line-break]="true">
+      @if (property.propType) {
+      <span
+        class="icon"
+        [matTooltip]="property.propType?.group + ': ' + property.propType?.label + ' (' + property.propDef!.id.split('#')[1] + ')'"
+        matTooltipPosition="above">
+        <mat-icon class="type">{{ property.propType?.icon }}</mat-icon>
+      </span>
+      }
+      <span
+        class="label"
+        [matTooltip]="property.propDef.comments | appStringifyStringLiteral"
+        matTooltipPosition="above"
+        matTooltipClass="multi-line-tooltip"
+        data-cy="property-labels">
+        {{ property.propDef!.labels.length ? (property.propDef!.labels | appStringifyStringLiteral) :
+        property.propDef?.label }}
+      </span>
+      <mat-icon
+        [matTooltip]="property.propDef.comments | appStringifyStringLiteral"
+        matTooltipPosition="above"
+        class="icon property-info-icon">
+        info
+      </mat-icon>
+      <!-- property is linked to a class or to a list: display connected class or list -->
+      @if (property.objectLabels && property.objectLabels.length) {
+      <span
+        class="attribute additional-info"
+        [matTooltip]="property.objectComments | appStringifyStringLiteral"
+        matTooltipPosition="above"
+        [innerHTML]="'&rarr;&nbsp;' + (property.objectLabels | appStringifyStringLiteral)">
+      </span>
+      }
+    </div>
+  </div>
+
+  <div mat-line class="info additional-info" [class.with-line-break]="true">
+    <span
+      [matTooltip]="'id: ' + property.propDef!.id"
+      matTooltipPosition="above"
+      matTooltipClass="wide-tooltip"
+      class="mat-caption"
+      [matTooltipDisabled]="isLockHovered">
+      {{ property.propDef!.id | split: '#':1 }}
+    </span>
+    <span class="fill-remaining-space center"></span>
+    <!-- in case of ontology property: display corresponding resource classes -->
+    <span class="white-space">
+      @if (property.usedByClasses.length) {
+      <span>
+        <span class="mat-caption">&gt; Property is used in:</span>
+        @for (c of property.usedByClasses; track trackByFn($index, c); let last = $last) {
+        <span>
+          <span
+            [matTooltip]="(c.labels | appStringifyStringLiteral ) + ': ' +(c.comments | appStringifyStringLiteral )"
+            matTooltipPosition="above"
+            [matTooltipDisabled]="isLockHovered"
+            >{{ c.labels | appStringifyStringLiteral }} @if (c.id && c.id === c.restrictedToClass) {
+            <span
+              [matTooltip]="'This property can only be used by the class ' + (c.labels | appStringifyStringLiteral)"
+              (mouseenter)="isLockHovered = true"
+              (mouseleave)="isLockHovered = false">
+              <mat-icon class="type">lock</mat-icon>
+            </span>
+            }</span
+          >@if (!last) {
+          <span>&nbsp;&middot;</span>
+          }
+        </span>
+        }
+      </span>
+      } @else {
+      <span class="mat-caption"
+        >&gt;
+        <span class="not-used">This property is not used in a class.</span>
+      </span>
+      }
+    </span>
+  </div>
+  @if ((hasProjectAdminRights$ | async) && (project$ | async)?.status && showActionBubble) {
+  <div class="action-bubble">
+    <div class="button-container">
+      <button
+        [disabled]="!property.propDef!.isEditable"
+        [matTooltip]="property.propDef!.isEditable ? 'Edit property' : 'The property can\'t be edited; No further information available'"
+        matTooltipPosition="above"
+        mat-button
+        class="edit"
+        (click)="openEditProperty(property.propDef!, property.propType)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <span
+        [matTooltip]="((canBeDeleted$ | async) === false ? 'The property can\'t be deleted because it is used in a class' : 'Delete property')"
+        matTooltipPosition="above">
+        <button
+          mat-button
+          [disabled]="(canBeDeleted$ | async) !== true"
+          class="delete"
+          (click)="openDeleteProperty(property.propDef!.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </span>
+    </div>
+  </div>
+  }
+</div>

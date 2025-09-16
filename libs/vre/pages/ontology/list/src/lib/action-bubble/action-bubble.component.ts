@@ -6,7 +6,7 @@ import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
 import { DIALOG_LARGE, DialogService } from '@dasch-swiss/vre/ui/ui';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs';
 import { ListItemService } from '../list-item/list-item.service';
 import {
   CreateListItemDialogComponent,
@@ -21,22 +21,24 @@ import {
   selector: 'app-action-bubble',
   template: ` <div class="action-bubble" [@simpleFadeAnimation]="'in'">
     <div class="button-container d-flex">
-      <button
-        mat-button
-        *ngIf="position > 0"
-        matTooltip="move up"
-        (click)="$event.stopPropagation(); repositionNode('up')"
-        class="reposition up">
-        <mat-icon>arrow_upward</mat-icon>
-      </button>
-      <button
-        mat-button
-        *ngIf="position < length - 1"
-        matTooltip="move down"
-        (click)="$event.stopPropagation(); repositionNode('down')"
-        class="reposition down">
-        <mat-icon>arrow_downward</mat-icon>
-      </button>
+      @if (position > 0) {
+        <button
+          mat-button
+          matTooltip="move up"
+          (click)="$event.stopPropagation(); repositionNode('up')"
+          class="reposition up">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      }
+      @if (position < length - 1) {
+        <button
+          mat-button
+          matTooltip="move down"
+          (click)="$event.stopPropagation(); repositionNode('down')"
+          class="reposition down">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+      }
       <button
         mat-button
         matTooltip="insert new child above"
@@ -63,9 +65,10 @@ import {
   styleUrls: ['./action-bubble.component.scss'],
 })
 export class ActionBubbleComponent {
-  @Input() position: number;
-  @Input() length: number;
-  @Input() node: ListNode;
+  @Input({ required: true }) position!: number;
+  @Input({ required: true }) length!: number;
+  @Input({ required: true }) node!: ListNode;
+  @Input({ required: true }) parentNodeIri!: string;
 
   constructor(
     private _dialog: DialogService,
@@ -90,7 +93,7 @@ export class ActionBubbleComponent {
         data: {
           nodeIri: this.node.id,
           projectIri: this._listItemService.projectInfos.projectIri,
-          parentIri: this._listItemService.projectInfos.rootNodeIri,
+          parentIri: this.parentNodeIri,
           position: this.position,
         },
       })
@@ -127,7 +130,7 @@ export class ActionBubbleComponent {
   repositionNode(direction: 'up' | 'down') {
     this._listApiService
       .repositionChildNode(this.node.id, {
-        parentNodeIri: this._listItemService.projectInfos.rootNodeIri,
+        parentNodeIri: this.parentNodeIri,
         position: direction === 'up' ? this.position - 1 : this.position + 1,
       })
       .subscribe(() => {

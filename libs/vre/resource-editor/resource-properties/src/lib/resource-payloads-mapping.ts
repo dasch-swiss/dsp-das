@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import {
   Constants,
   CreateBooleanValue,
@@ -45,24 +45,28 @@ import {
   UpdateUriValue,
   UpdateValue,
 } from '@dasch-swiss/dsp-js';
-import { CalendarDate, CalendarPeriod, GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
-import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { CustomRegex, handleXML } from '@dasch-swiss/vre/shared/app-common';
 import { DateTime } from './date-time';
 import { convertTimestampToDateTime, dateTimeTimestamp } from './date-time-timestamp';
-import { handleXML } from './handle-xml';
 import { populateValue } from './populate-value-method';
 
 interface MappingParameters<T extends ReadValue> {
   control: (value?: T) => AbstractControl;
+  isNullValue: (value: any) => boolean;
   createValue: (value: any, propertyDefinition?: any) => CreateValue;
   updateValue: (id: string, value: any, propertyDefinition?: any) => UpdateValue;
+  newValue?: unknown;
 }
+
+const defaultNullValue = (value: unknown | null) => value === null;
+const stringNullValue = (value: string | null) => value === null || value === '';
 
 export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.IntValue,
     {
       control: (value?: ReadIntValue) => new FormControl(value?.int),
+      isNullValue: defaultNullValue,
       createValue: (value: number) => {
         const newIntValue = new CreateIntValue();
         newIntValue.int = value;
@@ -80,6 +84,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.DecimalValue,
     {
       control: (value?: ReadDecimalValue) => new FormControl(value?.decimal),
+      isNullValue: defaultNullValue,
 
       createValue: (value: number) => {
         const newDecimalValue = new CreateDecimalValue();
@@ -98,9 +103,10 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.BooleanValue,
     {
       control: (value?: ReadBooleanValue) => {
-        const booleanValue = value ? value.bool : false;
+        const booleanValue = value ? value.bool : null;
         return new FormControl(booleanValue);
       },
+      isNullValue: defaultNullValue,
 
       createValue: (value: boolean) => {
         const newBooleanValue = new CreateBooleanValue();
@@ -113,6 +119,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
         newBooleanValue.bool = value;
         return newBooleanValue;
       },
+      newValue: { bool: false },
     },
   ],
   [
@@ -125,6 +132,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
         const match = value.strval!.match(pattern);
         return new FormControl(match ? match[1] : value.strval);
       },
+      isNullValue: stringNullValue,
 
       createValue: (value: string, propertyDefinition: ResourcePropertyDefinition) => {
         switch (propertyDefinition.guiElement) {
@@ -166,6 +174,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.TextValueAsXml, // TODO
     {
       control: (value?: ReadTextValue) => new FormControl(value?.strval),
+      isNullValue: stringNullValue,
 
       createValue: (value: string) => {
         const newTextValue = new CreateTextValueAsString();
@@ -184,6 +193,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.DateValue,
     {
       control: (value?: ReadDateValue) => new FormControl(value?.date),
+      isNullValue: defaultNullValue,
       createValue: (value: any) => {
         const newDateValue = new CreateDateValue();
         populateValue(newDateValue, value);
@@ -207,6 +217,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
         }
         return new FormControl<DateTime | undefined>(undefined);
       },
+      isNullValue: defaultNullValue,
 
       createValue: (value: DateTime) => {
         const newValue = dateTimeTimestamp(value.date, value.time);
@@ -225,11 +236,11 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.IntervalValue,
     {
-      control: (value?: ReadIntervalValue) =>
-        new FormGroup({
-          start: new FormControl(value?.start, [Validators.required]),
-          end: new FormControl(value?.end, [Validators.required]),
-        }),
+      control: (value?: ReadIntervalValue) => {
+        const myValue = value?.start && value.end ? { start: value.start, end: value.end } : null;
+        return new FormControl(myValue);
+      },
+      isNullValue: defaultNullValue,
       createValue: (value: { start: number; end: number }) => {
         const newIntervalValue = new CreateIntervalValue();
         newIntervalValue.start = value.start;
@@ -248,7 +259,8 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
   [
     Constants.ColorValue,
     {
-      control: (value?: ReadColorValue) => new FormControl(value?.color ?? '#000000'),
+      control: (value?: ReadColorValue) => new FormControl(value?.color ?? null),
+      isNullValue: defaultNullValue,
       createValue: (value: string) => {
         const newColorValue = new CreateColorValue();
         newColorValue.color = value;
@@ -260,12 +272,14 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
         newColorValue.color = value;
         return newColorValue;
       },
+      newValue: { color: '#000000' },
     },
   ],
   [
     Constants.ListValue,
     {
       control: (value?: ReadListValue) => new FormControl(value?.listNode ?? null),
+      isNullValue: defaultNullValue,
       createValue: (value: string) => {
         const newListValue = new CreateListValue();
         newListValue.listNode = value;
@@ -283,6 +297,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.GeonameValue,
     {
       control: (value?: ReadGeonameValue) => new FormControl(value?.geoname),
+      isNullValue: defaultNullValue,
 
       createValue: (value: string) => {
         const newGeonameValue = new CreateGeonameValue();
@@ -302,6 +317,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     {
       control: (value?: ReadLinkValue) =>
         new FormControl(value?.linkedResourceIri, [Validators.pattern(/http:\/\/rdfh.ch\/.*/)]),
+      isNullValue: defaultNullValue,
       createValue: (value: string) => {
         const newLinkValue = new CreateLinkValue();
         newLinkValue.linkedResourceIri = value;
@@ -319,6 +335,7 @@ export const propertiesTypeMapping = new Map<string, MappingParameters<any>>([
     Constants.UriValue,
     {
       control: (value?: ReadUriValue) => new FormControl(value?.uri, [Validators.pattern(CustomRegex.URI_REGEX)]),
+      isNullValue: stringNullValue,
       createValue: (value: string) => {
         const newUriValue = new CreateUriValue();
         newUriValue.uri = value;

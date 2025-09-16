@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { LoadUserAction } from '@dasch-swiss/vre/core/state';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { finalize, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, finalize, switchMap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AutoLoginService {
@@ -17,9 +16,8 @@ export class AutoLoginService {
     private _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _store: Store,
+    private _userService: UserService,
     private _authService: AuthService,
-    private _actions$: Actions,
     private _localizationsService: LocalizationService
   ) {}
 
@@ -46,18 +44,20 @@ export class AutoLoginService {
       .pipe(
         switchMap(isValid => {
           if (!isValid) {
-            throwError('Credentials not valid');
+            throw new AppError('Credentials not valid');
           }
 
           const userIri = decodedToken.sub;
           if (!userIri) {
-            return throwError('Decoded user in JWT token is not valid.');
+            throw new AppError('Decoded user in JWT token is not valid.');
           }
 
-          this._actions$.pipe(ofActionSuccessful(LoadUserAction), take(1)).subscribe(() => {
-            this._localizationsService.setLanguage(this._store.selectSnapshot(state => state.user.user).lang);
-          });
-          return this._store.dispatch(new LoadUserAction(userIri, 'iri'));
+          return this._userService.loadUser(userIri, 'iri').pipe(
+            switchMap(user => {
+              this._localizationsService.setLanguage(user.lang);
+              return [user];
+            })
+          );
         }),
         finalize(() => this.hasCheckedCredentials$.next(true))
       )

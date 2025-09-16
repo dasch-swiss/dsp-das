@@ -1,30 +1,40 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { CreateListInfoPageComponent, ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
-import { DataModelsComponent, OntologyComponent } from '@dasch-swiss/vre/pages/ontology/ontology';
-import { OntologyClassInstanceComponent } from '@dasch-swiss/vre/pages/ontology/ontology-classes';
+import { ResourceClassBrowserPageComponent } from '@dasch-swiss/vre/pages/data-browser';
+import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
-  CollaborationComponent,
+  DataModelsPageComponent,
+  OntologyEditorPageComponent,
+  OntologyPageComponent,
+  OntologyPropertiesComponent,
+} from '@dasch-swiss/vre/pages/ontology/ontology';
+import {
+  CollaborationPageComponent,
   CreateProjectFormPageComponent,
-  DescriptionComponent,
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
-  ProjectComponent,
-  SettingsPageComponent,
+  ProjectDescriptionPageComponent,
+  ProjectPageComponent,
   ResourceMetadataComponent,
+  SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
-import { AdvancedSearchContainerComponent, ResultsComponent } from '@dasch-swiss/vre/pages/search/search';
+import {
+  AdvancedSearchPageComponent,
+  AdvancedSearchResultsPageComponent,
+  FulltextSearchResultPageComponent,
+  SearchProjectResultsPageComponent,
+} from '@dasch-swiss/vre/pages/search/search';
 import {
   CookiePolicyComponent,
   ProjectsComponent,
-  SystemComponent,
-  UsersComponent,
+  SystemPageComponent,
+  UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-creator';
 import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
-import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { AuthGuard } from './main/guard/auth.guard';
@@ -46,30 +56,48 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.projectUuidRelative,
-    component: ProjectComponent,
+    component: ProjectPageComponent,
     children: [
       {
         path: RouteConstants.home,
-        component: DescriptionComponent,
+        pathMatch: 'full',
+        redirectTo: RouteConstants.projectDescription,
+      },
+      {
+        path: RouteConstants.projectDescription,
+        component: ProjectDescriptionPageComponent,
       },
       {
         path: RouteConstants.dataModels,
-        component: DataModelsComponent,
+        component: DataModelsPageComponent,
       },
       {
         path: RouteConstants.ontologyRelative,
-        component: OntologyComponent,
-        canActivate: [AuthGuard],
+        redirectTo: RouteConstants.ontologyEditorRelative,
+        pathMatch: 'full',
       },
       {
-        path: RouteConstants.OntologyEditorViewRelative,
-        component: OntologyComponent,
-        canActivate: [AuthGuard],
+        path: RouteConstants.ontologyEditorRelative,
+        component: OntologyPageComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: RouteConstants.classes,
+          },
+          {
+            path: RouteConstants.classes,
+            component: OntologyEditorPageComponent,
+          },
+          {
+            path: RouteConstants.properties,
+            component: OntologyPropertiesComponent,
+          },
+        ],
       },
       {
-        canActivate: [OntologyClassInstanceGuard],
         path: RouteConstants.OntologyClassRelative,
-        component: OntologyClassInstanceComponent,
+        component: ResourceClassBrowserPageComponent,
       },
       {
         canActivate: [OntologyClassInstanceGuard],
@@ -81,14 +109,8 @@ const routes: Routes = [
         component: ResourcePageComponent,
       },
       {
-        path: RouteConstants.addList,
-        component: CreateListInfoPageComponent,
-        canActivate: [AuthGuard],
-      },
-      {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
         component: ListPageComponent,
-        canActivate: [AuthGuard],
       },
       {
         path: RouteConstants.settings,
@@ -118,17 +140,17 @@ const routes: Routes = [
           },
           {
             path: RouteConstants.collaboration,
-            component: CollaborationComponent,
+            component: CollaborationPageComponent,
           },
         ],
       },
       {
         path: RouteConstants.advancedSearch,
-        component: AdvancedSearchContainerComponent,
+        component: AdvancedSearchPageComponent,
       },
       {
         path: RouteConstants.advancedSearchResultsRelative,
-        component: ResultsComponent,
+        component: AdvancedSearchResultsPageComponent,
       },
       {
         path: RouteConstants.notFoundWildcard,
@@ -149,7 +171,7 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.system,
-    component: SystemComponent,
+    component: SystemPageComponent,
     canActivate: [AuthGuard],
     children: [
       {
@@ -163,7 +185,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.systemUsers,
-        component: UsersComponent,
+        component: UsersTabComponent,
       },
     ],
   },
@@ -172,11 +194,11 @@ const routes: Routes = [
     children: [
       {
         path: RouteConstants.searchProjectRelative,
-        component: ResultsComponent,
+        component: SearchProjectResultsPageComponent,
       },
       {
         path: RouteConstants.searchRelative,
-        component: ResultsComponent,
+        component: FulltextSearchResultPageComponent,
       },
     ],
   },

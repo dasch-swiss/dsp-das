@@ -1,66 +1,95 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AuthService } from '@dasch-swiss/vre/core/session';
-import { LoadUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
+import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { apiConnectionTokenProvider } from './api-connection-token.provider';
+import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
+import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
 @Component({
   selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
-  providers: [apiConnectionTokenProvider],
+  template: `
+    @if (user$ | async; as user) {
+      <div>
+        <mat-card appearance="outlined" style="margin: 16px 0">
+          <mat-list style="padding: 0">
+            <mat-list-item (click)="onEditProfile(user)">
+              <mat-icon matListItemIcon>person</mat-icon>
+              <div matLine>Edit my profile</div>
+            </mat-list-item>
+
+            <mat-list-item (click)="onEditPassword(user)">
+              <mat-icon matListItemIcon>lock</mat-icon>
+              <div matLine>Edit my password</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+
+        <h3>{{ 'pages.userSettings.account.danger' | translate }}</h3>
+
+        <mat-card appearance="outlined">
+          <mat-list style="padding: 0">
+            <mat-list-item (click)="onDeleteOwnAccount(user)">
+              <mat-icon matListItemIcon>warning</mat-icon>
+              <div matLine>{{ 'pages.userSettings.account.deleteButton' | translate }}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </div>
+    }
+  `,
+  styles: [
+    `
+      .mat-mdc-list-item {
+        border-radius: 8px;
+        transition: background-color 0.2s;
+        &:hover {
+          cursor: pointer;
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+    `,
+  ],
 })
-export class AccountComponent implements OnInit {
-  // in case of modification
-  @Output() refreshParent: EventEmitter<any> = new EventEmitter<any>();
-
-  @Input() username: string;
-
-  @Select(UserSelectors.user) user$: Observable<ReadUser>;
-  @Select(UserSelectors.isLoading) isLoading$: Observable<boolean>;
+export class AccountComponent {
+  user$ = this._userService.user$;
 
   constructor(
     private _userApiService: UserApiService,
     private _dialog: DialogService,
+    private _matDialog: MatDialog,
     private _titleService: Title,
-    private _store: Store,
+    private _userService: UserService,
     private _authService: AuthService
   ) {
     this._titleService.setTitle('Your account');
   }
 
-  ngOnInit() {
-    this._store.dispatch(new LoadUserAction(this.username));
+  onEditProfile(user: ReadUser) {
+    this._matDialog.open<EditUserDialogComponent, EditUserDialogProps>(
+      EditUserDialogComponent,
+      DspDialogConfig.dialogDrawerConfig({ user, isOwnAccount: true }, true)
+    );
   }
 
-  askToActivateUser() {
-    const user = this._store.selectSnapshot(UserSelectors.user);
-    this._dialog.afterConfirmation(`Do you want to reactivate user ${user!.username}?`).subscribe(() => {
-      this.activateUser(user!.id);
-    });
+  onEditPassword(user: ReadUser) {
+    this._matDialog
+      .open<
+        EditPasswordDialogComponent,
+        EditPasswordDialogProps,
+        boolean
+      >(EditPasswordDialogComponent, DspDialogConfig.dialogDrawerConfig({ user }, true))
+      .afterClosed()
+      .subscribe();
   }
-
-  askToDeleteUser() {
-    const user = this._store.selectSnapshot(UserSelectors.user);
-    this._dialog.afterConfirmation(`Do you want to suspend user ${user!.username}?`).subscribe(() => {
-      this.deleteUser(user!.id);
-    });
-  }
-
-  deleteUser(id: string) {
-    this._userApiService.delete(id).subscribe(() => {
-      this._authService.logout();
-    });
-  }
-
-  activateUser(id: string) {
-    this._userApiService.updateStatus(id, true).subscribe(() => {
-      this.refreshParent.emit();
+  onDeleteOwnAccount(user: ReadUser) {
+    this._dialog.afterConfirmation(`Do you want to suspend your own account?`).subscribe(() => {
+      this._userApiService.delete(user.id).subscribe(() => {
+        this._authService.logout();
+      });
     });
   }
 }

@@ -1,83 +1,86 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
-import { SetCurrentResourceAction } from '@dasch-swiss/vre/core/state';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { Subscription } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <div class="content large middle">
-      <app-resource-version-warning *ngIf="resourceVersion" [resourceVersion]="resourceVersion" />
+    @if (resourceVersion) {
+      <app-resource-version-warning
+        [resourceVersion]="resourceVersion"
+        (navigateToCurrentVersion)="navigateToCurrentVersion()" />
+    }
 
-      <ng-container *ngIf="!hideStatus; else hideTpl">
-        <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
-      </ng-container>
-    </div>
-
-    <ng-template #hideTpl>
+    @if (!hideStatus) {
+      @if (resource) {
+        <app-resource [resource]="resource" />
+      } @else {
+        <app-progress-indicator />
+      }
+    } @else {
       <div style="display: flex; justify-content: center; padding: 16px">
-        <h3 *ngIf="hideStatus === 'NotFound'">{{ 'resourceEditor.notFound' | translate }}</h3>
-
-        <h3 *ngIf="hideStatus === 'Unauthorized'">{{ 'resourceEditor.unauthorized' | translate }}</h3>
-
-        <div *ngIf="hideStatus === 'Deleted'" style="text-align: center">
-          <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
-          <h4 *ngIf="resource?.res.deleteComment as comment">"{{ comment }}"</h4>
-        </div>
+        @if (hideStatus === 'NotFound') {
+          <h3>{{ 'resourceEditor.notFound' | translate }}</h3>
+        }
+        @if (hideStatus === 'Unauthorized') {
+          <h3>{{ 'resourceEditor.unauthorized' | translate }}</h3>
+        }
+        @if (hideStatus === 'Deleted') {
+          <div style="text-align: center">
+            <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
+            @if (resource?.res.deleteComment; as comment) {
+              <h4>"{{ comment }}"</h4>
+            }
+          </div>
+        }
       </div>
-    </ng-template>
-
-    <ng-template #loadingTpl>
-      <app-progress-indicator />
-    </ng-template>
+    }
   `,
   providers: [ResourceFetcherService],
 })
-export class ResourceFetcherComponent implements OnChanges, OnDestroy {
+export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
-  @Input() resourceVersion?: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
 
   resource?: DspResource;
   hideStatus: HideReason = null;
 
-  subscription!: Subscription;
+  private _destroy$ = new Subject<void>();
+
+  get resourceVersion(): string | null {
+    return this._route.snapshot.queryParamMap.get('version');
+  }
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
     private _notification: NotificationService,
-    private _translateService: TranslateService,
-    private _store: Store
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _translateService: TranslateService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['resourceIri'] || changes['resourceVersion']) {
-      this.hideStatus = null;
-      this.resource = undefined;
+  ngOnInit() {
+    if (this.resourceVersion && !ResourceUtil.versionIsValid(this.resourceVersion)) {
+      this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
+        this._notification.openSnackBar(v);
+      });
+    }
 
-      if (
-        changes['resourceVersion']?.currentValue !== undefined &&
-        !ResourceUtil.versionIsValid(changes['resourceVersion'].currentValue)
-      ) {
-        this.resourceVersion = undefined;
-        this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
-          this._notification.openSnackBar(v);
-        });
-      }
-
-      this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
-
-      this.subscription?.unsubscribe();
-      this.subscription = this._resourceFetcherService.resource$.subscribe(
-        resource => {
-          if (resource.res.isDeleted) {
+    this._resourceFetcherService.resource$
+      .pipe(
+        filter(resource => !!resource),
+        takeUntil(this._destroy$)
+      )
+      .subscribe({
+        next: resource => {
+          if (resource?.res.type === Constants.DeletedResource) {
             this.hideStatus = 'Deleted';
             this.resource = resource;
             this.afterResourceDeleted.emit(resource.res);
@@ -86,8 +89,16 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
 
           this.hideStatus = null;
           this.resource = resource;
+
+          const hasResourceVersionOfLatestVersion =
+            (!!this.resourceVersion && this.resourceVersion === resource?.res.lastModificationDate) ||
+            (!!this.resourceVersion && !resource?.res.lastModificationDate);
+
+          if (hasResourceVersionOfLatestVersion) {
+            this._purgeVersionParam();
+          }
         },
-        err => {
+        error: err => {
           if (err instanceof ApiResponseError && err.status === 404) {
             this.hideStatus = 'NotFound';
             return;
@@ -99,12 +110,30 @@ export class ResourceFetcherComponent implements OnChanges, OnDestroy {
           }
 
           throw err;
-        }
-      );
-    }
+        },
+      });
+  }
+
+  ngOnChanges() {
+    this.hideStatus = null;
+    this.resource = undefined;
+    this._resourceFetcherService.loadResource(this.resourceIri, this.resourceVersion);
+  }
+
+  navigateToCurrentVersion() {
+    this._purgeVersionParam();
+    this._resourceFetcherService.loadResource(this.resourceIri);
+  }
+
+  private _purgeVersionParam() {
+    this._router.navigate([], {
+      queryParams: { version: null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   ngOnDestroy() {
-    this._store.dispatch(new SetCurrentResourceAction(null));
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

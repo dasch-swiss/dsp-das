@@ -11,56 +11,60 @@ export class HumanReadableErrorPipe implements PipeTransform {
       return 'This field is required';
     }
 
-    if (params) {
-      for (const { errorKey, message } of params) {
-        if (error.hasOwnProperty(errorKey)) return message;
-      }
-    }
-
     if (error.hasOwnProperty('minlength')) {
       return `The length must be greater than or equal to ${
         (
-          error['minlength'] as {
-            requiredLength: number;
+          error as {
+            minlength: {
+              requiredLength: number;
+            };
           }
-        ).requiredLength
+        ).minlength.requiredLength
       }`;
     }
 
     if (error.hasOwnProperty('maxlength')) {
       return `The length must be less than or equal to ${
-        (error['maxlength'] as { requiredLength: number }).requiredLength
+        (error as { maxlength: { requiredLength: number } }).maxlength.requiredLength
       }`;
     }
 
     if (error.hasOwnProperty('min')) {
-      console.log(error);
       return `The value must be greater than or equal to ${
         (
-          error['min'] as {
-            min: number;
+          error as {
+            min: {
+              min: number;
+            };
           }
-        ).min
+        ).min.min
       }`;
     }
 
     if (error.hasOwnProperty('max')) {
-      console.log(error);
       return `The value must be less than or equal to ${
         (
-          error['max'] as {
-            max: number;
+          error as {
+            max: {
+              max: number;
+            };
           }
-        ).max
+        ).max.max
       }`;
     }
 
     if (error.hasOwnProperty('existingName')) {
-      return 'This is already taken by another entity';
+      return 'This name is already taken by another entity';
     }
 
     if (error.hasOwnProperty('whitespace')) {
       return 'This field should not contain whitespace';
+    }
+
+    if (params) {
+      for (const { errorKey, message } of params) {
+        if (error.hasOwnProperty(errorKey)) return message;
+      }
     }
 
     throw Error(`Form control error "${Object.keys(error)[0]}" is not handled`);

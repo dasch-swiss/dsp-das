@@ -1,9 +1,7 @@
 @use 'config' as *;
 @use 'mixins' as *;
 @use 'sass:math';
-@use '@material/snackbar' as snackbar;
-@use '@material/button' as button;
-@use '@material/menu-surface' as menu-surface;
+@use '@angular/material' as mat;
 
 .fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
@@ -355,8 +353,8 @@ a,
   --mat-menu-item-label-text-color: $white;
 
   &.mdc-menu-surface {
-    @include menu-surface.fill-color($dark);
-    @include menu-surface.ink-color($white);
+    background-color: $dark;
+    color: $white;
   }
 }
 
@@ -551,6 +549,22 @@ $gc-small: $form-width - $gc-large - 4;
 //
 // progress-indicator without default color
 
+.overlay-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: all; // catch all events, no interaction possible
+}
+
+// overlay the progress indicator and block all user interaction
+.floating-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
 .app-progress-indicator {
   g {
     stroke: $primary !important;
@@ -604,34 +618,27 @@ nav.mat-mdc-tab-nav-bar,
   }
 }
 
-.mat-mdc-snack-bar-container {
-  &.success {
-    @include snackbar.fill-color(rgba($primary, 0.9));
-    @include snackbar.label-ink-color($primary_contrast);
+// Angular Material v18 snack-bar styles - Using correct CSS custom properties
+.mat-mdc-snack-bar-container.success {
+  --mdc-snackbar-container-color: rgba(51, 103, 144, 0.9) !important;
+  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
+}
 
-    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($primary_contrast);
-    }
-  }
+.mat-mdc-snack-bar-container.error {
+  --mdc-snackbar-container-color: rgba(225, 29, 72, 0.9) !important;
+  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
+}
 
-  &.failed,
-  &.error {
-    @include snackbar.fill-color(rgba($red, 0.9));
-    @include snackbar.label-ink-color($red_contrast);
+.mat-mdc-snack-bar-container.note {
+  --mdc-snackbar-container-color: rgba(251, 191, 36, 0.9) !important;
+  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
+}
 
-    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($red_contrast);
-    }
-  }
-
-  &.note {
-    @include snackbar.fill-color(rgba($yellow, 0.9));
-    @include snackbar.label-ink-color($yellow_contrast);
-
-    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
-      @include button.ink-color($yellow_contrast);
-    }
-  }
+simple-snack-bar .mdc-button__label {
+  color: rgb(255, 255, 255);
 }
 
 // --------------------------------------
@@ -685,7 +692,6 @@ nav.mat-mdc-tab-nav-bar,
 
   .button-container {
     button {
-      // cursor: pointer;
       border: none;
       padding: 4px;
       outline: none;
@@ -712,15 +718,15 @@ nav.mat-mdc-tab-nav-bar,
       }
 
       .mat-icon {
-        margin-right: 0px;
+        margin-right: 0;
         width: 18px;
         height: 18px;
         vertical-align: middle;
       }
 
       .mat-mdc-button-touch-target {
-        height: 0px !important;
-        width: 0px !important;
+        height: 0 !important;
+        width: 0 !important;
       }
     }
 
@@ -833,4 +839,3 @@ nav.mat-mdc-tab-nav-bar,
   --element-active-hover: #{$primary_100};
   --gray-500: #{$cool_gray_500};
 }
-

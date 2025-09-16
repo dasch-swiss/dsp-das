@@ -1,17 +1,15 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { Segment, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-segment-tab',
-  template: ` <div
-    *ngFor="let segment of segmentsService.segments"
-    [id]="segment.resource.res.id"
-    [class.active]="segment === selectedSegment">
-    <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
-  </div>`,
+  template: ` @for (segment of segmentsService.segments; track segment) {
+    <div [id]="segment.resource.res.id" [class.active]="segment === selectedSegment">
+      <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
+    </div>
+  }`,
   styles: ['.active {border: 1px solid}'],
 })
 export class SegmentTabComponent implements OnInit, OnDestroy {

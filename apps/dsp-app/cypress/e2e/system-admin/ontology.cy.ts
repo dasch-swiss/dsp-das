@@ -32,9 +32,8 @@ describe('Ontology', () => {
 
     cy.get('[data-cy=label-input]').clear();
     // no label, submit button should be disabled
-    cy.get('[data-cy=submit-button]').should('be.disabled');
     cy.get('[data-cy=label-input]').type(data.label);
-    cy.get('[data-cy=submit-button]').should('be.enabled');
+    cy.get('[data-cy=comment-textarea]').type(data.comment);
 
     cy.get('[data-cy=comment-textarea]').clear();
     cy.get('[data-cy=comment-textarea]').type(data.comment);

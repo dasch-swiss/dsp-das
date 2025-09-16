@@ -1,6 +1,6 @@
-import { StringLiteral } from '@dasch-swiss/dsp-js';
+export type DaschLanguage = 'en' | 'de' | 'fr' | 'it' | 'rm';
 
-export const AvailableLanguages: StringLiteral[] = [
+export const AvailableLanguages: { language: DaschLanguage; value: string }[] = [
   {
     language: 'en',
     value: 'English',
@@ -21,7 +21,9 @@ export const AvailableLanguages: StringLiteral[] = [
     language: 'rm',
     value: 'Romanic (Rumantsch)',
   },
-];
+] as const;
+
+export const LocalStorageLanguageKey = 'dsp_language';
 
 export class RouteConstants {
   static readonly home = '';
@@ -49,6 +51,7 @@ export class RouteConstants {
 
   static readonly resource = 'resource';
 
+  static readonly projectDescription = 'description';
   static readonly advancedSearch = 'advanced-search';
   static readonly gravSearch = 'gravsearch';
   static readonly search = 'search';
@@ -59,8 +62,6 @@ export class RouteConstants {
   static readonly editor = 'editor';
 
   static readonly list = 'list';
-  static readonly addList = 'add-list';
-
   static readonly addClassInstance = 'add';
 
   static readonly cookiePolicy = 'cookie-policy';
@@ -71,10 +72,8 @@ export class RouteConstants {
   static readonly ontoParameter = 'onto';
   static readonly projectParameter = 'project';
   static readonly resourceParameter = 'resource';
-  static readonly valueParameter = 'value';
   static readonly modeParameter = 'mode';
   static readonly qParameter = 'q';
-  static readonly viewParameter = 'view';
   static readonly classParameter = 'class';
   static readonly instanceParameter = 'instance';
   static readonly listParameter = 'list';
@@ -84,18 +83,17 @@ export class RouteConstants {
 
   static readonly homeRelative = `/${RouteConstants.home}`;
   static readonly userAccountRelative = `/${RouteConstants.userAccount}`;
-  static readonly systemAdminRelative = `/${RouteConstants.systemAdmin}`;
   static readonly refreshRelative = `/${RouteConstants.refresh}`;
 
   static readonly projectsRelative = `/${RouteConstants.projects}`;
   static readonly projectRelative = `/${RouteConstants.project}`;
   static readonly projectEditRelative = `${RouteConstants.settings}/${RouteConstants.edit}`;
   static readonly ontologyRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}`;
+  static readonly ontologyEditorRelative = `${RouteConstants.ontologyRelative}/${RouteConstants.editor}`;
   static readonly projectUuidRelative = `${RouteConstants.project}/:${RouteConstants.uuidParameter}`;
   static readonly createNewProjectRelative = `${RouteConstants.project}/${RouteConstants.createNew}`;
   static readonly projectResourceRelative = `${RouteConstants.resource}/:${RouteConstants.projectParameter}/:${RouteConstants.resourceParameter}`;
 
-  static readonly OntologyEditorViewRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/${RouteConstants.editor}/:${RouteConstants.viewParameter}`;
   static readonly OntologyClassAddRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/${RouteConstants.addClassInstance}`;
   static readonly OntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}`;
   static readonly JulienOntologyClassRelative = `${RouteConstants.ontology}/:${RouteConstants.ontoParameter}/:${RouteConstants.classParameter}/:${RouteConstants.instanceParameter}`;

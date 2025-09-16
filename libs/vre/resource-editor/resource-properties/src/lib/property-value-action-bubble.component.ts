@@ -1,8 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor
@@ -11,37 +10,36 @@ import { PropertyValueService } from './property-value.service';
   template: `
     <div class="action-bubble" data-cy="action-bubble">
       <div class="button-container d-flex">
-        <ng-container *ngIf="date">
-          <button
-            mat-button
-            class="edit"
-            *ngIf="infoTooltip$ | async as infoTooltip"
-            [matTooltip]="infoTooltip"
-            (click)="$event.stopPropagation()">
-            <mat-icon>info</mat-icon>
-          </button>
-        </ng-container>
+        @if (date) {
+          @if (infoTooltip$ | async; as infoTooltip) {
+            <button mat-button class="edit" [matTooltip]="infoTooltip" (click)="$event.stopPropagation()">
+              <mat-icon>info</mat-icon>
+            </button>
+          }
+        }
 
         <span matTooltip="edit">
-          <button
-            *ngIf="userHasPermission('edit')"
-            mat-button
-            class="edit edit-button"
-            (click)="$event.stopPropagation(); editAction.emit()"
-            data-cy="edit-button">
-            <mat-icon>edit</mat-icon>
-          </button>
+          @if (userHasPermission('edit')) {
+            <button
+              mat-button
+              class="edit edit-button"
+              (click)="$event.stopPropagation(); editAction.emit()"
+              data-cy="edit-button">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
         </span>
 
         <span [matTooltip]="showDelete ? 'delete' : 'This value cannot be deleted because it is required'">
-          <button
-            *ngIf="userHasPermission('delete')"
-            mat-button
-            class="delete"
-            data-cy="delete-button"
-            (click)="$event.stopPropagation(); deleteAction.emit()">
-            <mat-icon>delete</mat-icon>
-          </button>
+          @if (userHasPermission('delete')) {
+            <button
+              mat-button
+              class="delete"
+              data-cy="delete-button"
+              (click)="$event.stopPropagation(); deleteAction.emit()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
         </span>
       </div>
     </div>
@@ -56,8 +54,8 @@ import { PropertyValueService } from './property-value.service';
   styleUrls: ['./property-value-action-bubble.component.scss'],
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input() showDelete!: boolean;
-  @Input() date!: string;
+  @Input({ required: true }) showDelete!: boolean;
+  @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
 
@@ -72,6 +70,15 @@ export class PropertyValueActionBubbleComponent implements OnInit {
     this.infoTooltip$ = this._getInfoToolTip();
   }
 
+  userHasPermission(permissionType: 'edit' | 'delete'): boolean {
+    if (this._resourceFetcherService.resourceVersion) {
+      return false;
+    }
+
+    const value = this._propertyValueService.editModeData.values[0];
+    return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
+  }
+
   private _getInfoToolTip() {
     return this._resourceFetcherService.resource$.pipe(
       map(resource => {
@@ -79,18 +86,5 @@ export class PropertyValueActionBubbleComponent implements OnInit {
         return `Creation date: ${this.date}. Value creator: ${creator}`;
       })
     );
-  }
-
-  userHasPermission(permissionType: 'edit' | 'delete'): boolean {
-    if (this._resourceFetcherService.resourceVersion) {
-      return false;
-    }
-
-    if (!this._propertyValueService.editModeData || this._propertyValueService.editModeData.values.length === 0) {
-      return false;
-    }
-
-    const value = this._propertyValueService.editModeData.values[0];
-    return permissionType === 'edit' ? ResourceUtil.userCanEdit(value) : ResourceUtil.userCanDelete(value);
   }
 }

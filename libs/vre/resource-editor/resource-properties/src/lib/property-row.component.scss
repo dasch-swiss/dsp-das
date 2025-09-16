@@ -13,19 +13,13 @@
   flex-shrink: 0;
   line-height: normal;
   padding: 16px;
+  margin-right: 16px;
 }
 
 .hidden {
   display: none !important;
 }
 
-.value {
-  &.with-styling {
-    padding: 16px;
-
-    &:hover {
-      background: $primary_100;
-    }
-  }
-
+.value.with-styling {
+  padding: 16px;
 }
