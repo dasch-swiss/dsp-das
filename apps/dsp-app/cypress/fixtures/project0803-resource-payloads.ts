@@ -11,7 +11,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
 
   private hasColor(className: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}HasColor`]:
+      [`http://127.0.0.1:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${className}HasColor`]:
         {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#ColorValue',
           'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
@@ -22,7 +22,7 @@ export class Project0803ResourcePayloads extends ProjectAssertionPageBase {
 
   private richTextValue(propertyName: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
+      [`http://127.0.0.1:3333/ontology/${Project0803ResourcePayloads.project}/${Project0803ResourcePayloads.defaultOntology}/v2#${propertyName}`]:
         {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,

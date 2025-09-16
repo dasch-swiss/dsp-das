@@ -211,20 +211,20 @@
         "production": {
           "devServerTarget": "dsp-app:serve:production",
           "env": {
-            "API_URL": "http://0.0.0.0:3333/api"
+            "API_URL": "http://127.0.0.1:3333/api"
           }
         },
         "development": {
           "devServerTarget": "dsp-app:serve:development",
           "env": {
-            "API_URL": "http://0.0.0.0:3333/api"
+            "API_URL": "http://127.0.0.1:3333/api"
           }
         },
         "cypress-cloud": {
           "devServerTarget": "dsp-app:serve:development",
           "record": true,
           "env": {
-            "API_URL": "http://0.0.0.0:3333/api"
+            "API_URL": "http://127.0.0.1:3333/api"
           }
         },
         "coverage": {
