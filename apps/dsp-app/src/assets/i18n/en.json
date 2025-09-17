@@ -195,6 +195,11 @@
         "title": "Advanced Search",
         "usePreviousSearch": "Use Previous Search"
       }
+    },
+    "dataBrowser": {
+      "noResourcesForSearch": "No resources match your search criteria",
+      "noResourcesForClass": "There are no resources to display.",
+      "backToSearchForm": "Back to search form"
     }
   },
   "resourceEditor": {

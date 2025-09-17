@@ -12,8 +12,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
   template: `
     @if (resources$ | async; as resources) {
       <app-resource-browser
-        [data]="{ resources: resources, selectFirstResource: true }"
-        [showBackToFormButton]="true"
+        [resourceData]="{ resources: resources, selectFirstResource: true, isSearchResult: true }"
         [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
     }
   `,

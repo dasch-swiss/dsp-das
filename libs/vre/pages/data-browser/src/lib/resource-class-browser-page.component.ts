@@ -4,7 +4,8 @@ import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { combineLatest, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { ResourceData } from './comparison/resource-browser.type';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { ResourceResultService } from './resource-result.service';
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
         <app-resource-browser
-          [data]="data"
+          [resourceData]="data"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       } @else {
         <div style="margin-top: 80px; align-items: center; text-align: center">
@@ -54,13 +55,13 @@ export class ResourceClassBrowserPageComponent implements OnInit {
     map(params => params[RouteConstants.classParameter] as string)
   );
 
-  data$ = this._resources$.pipe(
+  data$: Observable<ResourceData> = this._resources$.pipe(
     withLatestFrom(this._classParam$),
     startWith([null, [] as ReadResource[]]),
     pairwise(),
     map(([[prevResources, prevClass], [currResources, currClass]]) => {
       const classParamChanged = prevClass !== currClass;
-      return { resources: currResources!, selectFirstResource: classParamChanged };
+      return { resources: currResources!, selectFirstResource: classParamChanged } as ResourceData;
     })
   );
 
