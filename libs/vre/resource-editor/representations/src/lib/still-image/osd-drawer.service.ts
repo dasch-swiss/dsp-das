@@ -46,15 +46,23 @@ export class OsdDrawerService implements OnDestroy {
     this._subscribeToSelectedRegion();
     this._subscribeToCreatedRectangle();
 
-    this._osd.viewer.addHandler('canvas-click', (event: any) => {
-      const target = event.originalTarget as SVGElement;
-      const regionIri = target.getAttribute('data-region-iri');
-      if (regionIri === this._currentHighlightedRegion) {
-        this._regionService.setHighlightedRegionClicked(regionIri);
-      } else {
-        this._regionService.selectRegion(regionIri);
+    this._osd.viewer.addHandler(
+      'canvas-click',
+      (
+        event: OpenSeadragon.ViewerEvent & {
+          originalTarget?: Element;
+        }
+      ) => {
+        event.preventDefaultAction = true;
+        const target = event.originalTarget as SVGElement;
+        const regionIri = target.getAttribute('data-region-iri');
+        if (regionIri === this._currentHighlightedRegion) {
+          this._regionService.setHighlightedRegionClicked(regionIri);
+        } else {
+          this._regionService.selectRegion(regionIri);
+        }
       }
-    });
+    );
   }
 
   update(resource: ReadResource): void {
