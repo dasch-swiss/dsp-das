@@ -32,13 +32,13 @@ export interface DefaultProperty {
 
 export class DefaultProperties {
   public static unsupported: DefaultProperty = {
-    icon: 'warning_amber',
-    label: 'Unsupported property type',
-    description: 'This property type is not supported in the ontology editor',
+    icon: 'data_object',
+    label: 'This property type is custom to the project and has been imported',
+    description: 'This property type is custom to the project and has been imported',
     subPropOf: '',
     objectType: '',
     guiElement: '',
-    group: 'Warning',
+    group: 'Custom / Imported',
   };
 
   public static data: PropertyCategory[] = [
