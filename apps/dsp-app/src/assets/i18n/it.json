@@ -197,7 +197,7 @@
       }
     },
     "dataBrowser": {
-      "noResourcesForSearch": "Nessuna risorsa corrisponde ai criteri di ricerca",
+      "noResourcesForSearch": "Nessuna risorsa corrisponde ai criteri di ricerca.",
       "noResourcesForClass": "Non ci sono risorse da visualizzare.",
       "backToSearchForm": "Torna al modulo di ricerca"
     }

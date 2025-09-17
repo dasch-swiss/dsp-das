@@ -197,7 +197,7 @@
       }
     },
     "dataBrowser": {
-      "noResourcesForSearch": "Die Suche ergab keine Treffer",
+      "noResourcesForSearch": "Die Suche ergab keine Treffer.",
       "noResourcesForClass": "Es sind keine Ressourcen zur gewählten Klasse vorhanden.",
       "backToSearchForm": "Zurück zur Suchmaske"
     }

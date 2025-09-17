@@ -197,7 +197,7 @@
       }
     },
     "dataBrowser": {
-      "noResourcesForSearch": "Aucune ressource ne correspond à vos critères de recherche",
+      "noResourcesForSearch": "Aucune ressource ne correspond à vos critères de recherche.",
       "noResourcesForClass": "Il n'y a aucune ressource à afficher.",
       "backToSearchForm": "Retour au formulaire de recherche"
     }

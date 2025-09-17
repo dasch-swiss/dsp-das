@@ -197,7 +197,7 @@
       }
     },
     "dataBrowser": {
-      "noResourcesForSearch": "No resources match your search criteria",
+      "noResourcesForSearch": "No resources match your search criteria.",
       "noResourcesForClass": "There are no resources to display.",
       "backToSearchForm": "Back to search form"
     }
