@@ -5,11 +5,12 @@ import { delay, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-segment-tab',
-  template: ` @for (segment of segmentsService.segments; track segment) {
-    <div [id]="segment.resource.res.id" [class.active]="segment === selectedSegment">
-      <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
-    </div>
-  }`,
+  template: ` <div
+    *ngFor="let segment of segmentsService.segments"
+    [id]="segment.resource.res.id"
+    [class.active]="segment === selectedSegment">
+    <app-properties-display [resource]="segment.resource" [parentResourceId]="resource.id" />
+  </div>`,
   styles: ['.active {border: 1px solid}'],
 })
 export class SegmentTabComponent implements OnInit, OnDestroy {
