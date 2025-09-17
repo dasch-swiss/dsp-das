@@ -42,7 +42,7 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
     }
 
     @if (editableProperties && editableProperties.length > 0) {
-      @for (prop of editableProperties; track prop.propDef.id; let last = $last) {
+      @for (prop of editableProperties; track $index; let last = $last) {
         <app-property-row
           [isEmptyRow]="prop.values.length === 0"
           [borderBottom]="true"

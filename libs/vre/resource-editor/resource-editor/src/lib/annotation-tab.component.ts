@@ -9,7 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-annotation-tab',
   template: `
     <mat-accordion>
-      @for (annotation of regionService.regions$ | async; track trackAnnotationByFn) {
+      @for (annotation of regionService.regions$ | async; track $index) {
         <mat-expansion-panel
           #panel
           [attr.data-annotation-resource]="annotation.res.id"
@@ -73,9 +73,6 @@ export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
       this._scrollToRegion(iri);
     });
   }
-
-  trackAnnotationByFn = (index: number, item: DspResource) => `${index}-${item.res.id}`;
-  protected readonly RouteConstants = RouteConstants;
 
   onPanelOpened(iri: string) {
     this.regionService.selectRegion(iri);

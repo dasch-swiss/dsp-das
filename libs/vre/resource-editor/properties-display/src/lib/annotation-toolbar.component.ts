@@ -1,4 +1,3 @@
-import { ViewportScroller } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Constants, ReadColorValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -129,11 +128,6 @@ export class AnnotationToolbarComponent {
   }
 
   onPinPointClicked() {
-    const element = document.getElementById('resource-fetcher-container');
-    element?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
+    this.resourceFetcher.scrollToTop();
   }
 }
