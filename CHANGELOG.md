@@ -1,5 +1,13 @@
 # Changelog
 
+## [11.43.1](https://github.com/dasch-swiss/dsp-das/compare/v11.43.0...v11.43.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* compare normalised ([#2513](https://github.com/dasch-swiss/dsp-das/issues/2513)) ([6fb011d](https://github.com/dasch-swiss/dsp-das/commit/6fb011d1381fe013e0cb099cdbff4faf5508deca))
+* track by unique (DEV-5420) ([#2518](https://github.com/dasch-swiss/dsp-das/issues/2518)) ([f81d38e](https://github.com/dasch-swiss/dsp-das/commit/f81d38e9fe885894da73fc3d01154531a2caebcb))
+
 ## [11.43.0](https://github.com/dasch-swiss/dsp-das/compare/v11.42.1...v11.43.0) (2025-09-15)
 
 
