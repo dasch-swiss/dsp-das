@@ -9,36 +9,38 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-annotation-tab',
   template: `
     <mat-accordion>
-      <mat-expansion-panel
-        #panel
-        *ngFor="let annotation of regionService.regions$ | async; trackBy: trackAnnotationByFn"
-        [attr.data-annotation-resource]="annotation.res.id"
-        [class.active]="annotation.res.id === selectedRegion"
-        [expanded]="annotation.res.id === expandedRegion"
-        (closed)="onPanelClosed(annotation.res.id)"
-        (opened)="onPanelOpened(annotation.res.id)"
-        data-cy="annotation-border">
-        <mat-expansion-panel-header>
-          <div style="width: 100%; display: flex; align-items: center; justify-content: space-between">
-            <div>
-              <h3 class="label" data-cy="property-header">
-                {{ annotation.res.label }}
-              </h3>
+      @for (annotation of regionService.regions$ | async; track trackAnnotationByFn) {
+        <mat-expansion-panel
+          #panel
+          [attr.data-annotation-resource]="annotation.res.id"
+          [class.active]="annotation.res.id === selectedRegion"
+          [expanded]="annotation.res.id === expandedRegion"
+          (closed)="onPanelClosed(annotation.res.id)"
+          (opened)="onPanelOpened(annotation.res.id)"
+          data-cy="annotation-border">
+          <mat-expansion-panel-header>
+            <div style="width: 100%; display: flex; align-items: center; justify-content: space-between">
+              <div>
+                <h3 class="label" data-cy="property-header">
+                  {{ annotation.res.label }}
+                </h3>
+              </div>
+              <div style="display: flex; align-items: center;">
+                <app-annotation-toolbar
+                  style="width: 100%"
+                  [resource]="annotation.res"
+                  [parentResourceId]="resource.id"
+                  [toolBarActive]="annotation.res.id === selectedRegion"
+                  (click)="$event.stopPropagation()" />
+              </div>
             </div>
-            <div style="display: flex; align-items: center;">
-              <app-annotation-toolbar
-                style="width: 100%"
-                [resource]="annotation.res"
-                [parentResourceId]="resource.id"
-                [toolBarActive]="annotation.res.id === selectedRegion"
-                (click)="$event.stopPropagation()" />
-            </div>
-          </div>
-        </mat-expansion-panel-header>
-        <ng-container *ngIf="panel.expanded">
-          <app-properties-display [resource]="annotation" [hideToolbar]="true"></app-properties-display>
-        </ng-container>
-      </mat-expansion-panel>
+          </mat-expansion-panel-header>
+
+          @if (panel.expanded) {
+            <app-properties-display [resource]="annotation" [hideToolbar]="true"></app-properties-display>
+          }
+        </mat-expansion-panel>
+      }
     </mat-accordion>
   `,
   styles: ['.active {border: 1px solid}'],

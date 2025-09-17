@@ -4,18 +4,20 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
 @Component({
   selector: 'app-properties-toolbar',
   template: `
-    <button
-      *ngIf="numberOfComments > 0"
-      mat-button
-      color="primary"
-      class="toggle-props"
-      data-cy="show-all-comments"
-      [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all') + ' comments'"
-      matTooltipPosition="above"
-      (click)="toggleShowAllComments()">
-      <mat-icon>comment</mat-icon>
-      {{ (showAllComments$ | async) ? 'Hide' : 'Show all' }} comments
-    </button>
+    @if (numberOfComments > 0) {
+      <button
+        mat-button
+        color="primary"
+        class="toggle-props"
+        data-cy="show-all-comments"
+        [matTooltip]="((showAllComments$ | async) ? 'Hide' : 'Show all') + ' comments'"
+        matTooltipPosition="above"
+        (click)="toggleShowAllComments()">
+        <mat-icon>comment</mat-icon>
+        {{ (showAllComments$ | async) ? 'Hide' : 'Show all' }} comments
+      </button>
+    }
+
     <button
       mat-button
       color="primary"
