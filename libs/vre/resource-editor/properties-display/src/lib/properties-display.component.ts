@@ -21,7 +21,10 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
       </div>
     }
 
-    @if ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate) {
+    @if (
+      ((resourceAttachedUser$ | async) !== undefined && (resourceAttachedUser$ | async) !== null) ||
+      resource.res.creationDate
+    ) {
       <div class="infobar mat-caption">
         Created
         @if (resourceAttachedUser$ | async; as resourceAttachedUser) {
@@ -38,9 +41,8 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
       </div>
     }
 
-    <!-- list of properties -->
     @if (editableProperties && editableProperties.length > 0) {
-      @for (prop of editableProperties; track trackByPropertyInfoFn; let last = $last) {
+      @for (prop of editableProperties; track prop.propDef.id; let last = $last) {
         <app-property-row
           [isEmptyRow]="prop.values.length === 0"
           [borderBottom]="true"
@@ -109,6 +111,4 @@ export class PropertiesDisplayComponent implements OnChanges {
       this.propertiesDisplayService.toggleShowProperties();
     }
   }
-
-  trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
 }
