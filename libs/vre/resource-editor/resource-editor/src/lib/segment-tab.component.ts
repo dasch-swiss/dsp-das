@@ -9,7 +9,7 @@ import { delay, Subscription } from 'rxjs';
     *ngFor="let segment of segmentsService.segments"
     [id]="segment.resource.res.id"
     [class.active]="segment === selectedSegment">
-    <app-properties-display [resource]="segment.resource" [parentResourceId]="resource.id" />
+    <app-properties-display [resource]="segment.resource" [displayLabel]="true" [parentResourceId]="resource.id" />
   </div>`,
   styles: ['.active {border: 1px solid}'],
 })

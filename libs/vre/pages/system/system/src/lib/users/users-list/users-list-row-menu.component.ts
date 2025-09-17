@@ -4,52 +4,57 @@ import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { SetUserAction, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { EditUserDialogComponent, EditUserDialogProps } from '@dasch-swiss/vre/pages/user-settings/user';
+import { UserService } from '@dasch-swiss/vre/core/session';
+import {
+  EditPasswordDialogComponent,
+  EditPasswordDialogProps,
+  EditUserDialogComponent,
+  EditUserDialogProps,
+} from '@dasch-swiss/vre/pages/user-settings/user';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { Store } from '@ngxs/store';
-import { take } from 'rxjs/operators';
-import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-password-dialog.component';
+import { switchMap } from 'rxjs';
 import { ManageProjectMembershipDialogComponent } from '../manage-project-membership-dialog.component';
 import { UsersTabService } from '../users-tab.service';
 
 @Component({
   selector: 'app-users-list-row-menu',
   template: `
-    <button mat-icon-button *ngIf="isSysAdmin$ | async" [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
-      <mat-icon>more_horiz</mat-icon>
-    </button>
+    @if (isSysAdmin$ | async) {
+      <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+    }
 
     <mat-menu #projectUserMenu="matMenu" xPosition="before">
-      <button
-        mat-menu-item
-        *ngIf="user.username !== (username$ | async)"
-        (click)="updateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
-        {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
-      </button>
-
-      <ng-container *ngIf="user.status">
+      @if (user.status) {
         <button mat-menu-item (click)="editUser(user)">Edit user</button>
         <button mat-menu-item (click)="openEditPasswordDialog(user)">Change user's password</button>
         <button mat-menu-item (click)="openManageProjectMembershipDialog(user)">Manage project membership</button>
-        <button mat-menu-item (click)="askToDeactivateUser(user.username, user.id)">Suspend user</button>
-      </ng-container>
+        <button mat-menu-item (click)="askToUpdateSystemAdminMembership(user, !isSystemAdmin(user.permissions))">
+          <mat-icon>verified_user</mat-icon>
+          {{ isSystemAdmin(user.permissions) ? 'Remove' : 'Add' }} as system admin
+        </button>
+        <button mat-menu-item (click)="askToDeactivateUser(user.username, user.id)">
+          <mat-icon>warning</mat-icon>
+          Suspend user
+        </button>
+      }
 
-      <button mat-menu-item *ngIf="!user.status" (click)="askToActivateUser(user.username, user.id)">
-        Reactivate user
-      </button>
+      @if (!user.status) {
+        <button mat-menu-item (click)="askToActivateUser(user.username, user.id)">Reactivate user</button>
+      }
     </mat-menu>
   `,
 })
 export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;
 
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  username$ = this._store.select(UserSelectors.username);
+  isSysAdmin$ = this._userService.isSysAdmin$;
+  user$ = this._userService.user$;
 
   constructor(
     private _matDialog: MatDialog,
-    private _store: Store,
+    private _userService: UserService,
     private _dialog: DialogService,
     private readonly _userApiService: UserApiService,
     private _usersTabService: UsersTabService
@@ -70,13 +75,15 @@ export class UsersListRowMenuComponent {
     });
   }
 
-  updateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
-    this._userApiService
-      .updateSystemAdminMembership(user.id, systemAdmin)
-      .pipe(take(1))
-      .subscribe(response => {
-        this._store.dispatch(new SetUserAction(response.user));
-        if (this._store.selectSnapshot(UserSelectors.username) !== user.username) {
+  askToUpdateSystemAdminMembership(user: ReadUser, systemAdmin: boolean): void {
+    this._dialog
+      .afterConfirmation(
+        `Do you want to have user ${user.username} ${systemAdmin ? 'added' : 'removed'} as system admin?`
+      )
+      .pipe(switchMap(() => this._userApiService.updateSystemAdminMembership(user.id, systemAdmin)))
+      .subscribe(() => {
+        const currentUser = this._userService.currentUser;
+        if (currentUser?.username !== user.username) {
           this._reloadUserList();
         }
       });
@@ -98,7 +105,7 @@ export class UsersListRowMenuComponent {
     this._matDialog
       .open<EditUserDialogComponent, EditUserDialogProps, boolean>(
         EditUserDialogComponent,
-        DspDialogConfig.dialogDrawerConfig({ user }, true)
+        DspDialogConfig.dialogDrawerConfig({ user, isOwnAccount: false }, true)
       )
       .afterClosed()
       .subscribe(success => {
@@ -128,14 +135,12 @@ export class UsersListRowMenuComponent {
 
   private deactivateUser(userIri: string) {
     this._userApiService.delete(userIri).subscribe(response => {
-      this._store.dispatch(new SetUserAction(response.user));
       this._reloadUserList();
     });
   }
 
   private activateUser(userIri: string) {
     this._userApiService.updateStatus(userIri, true).subscribe(response => {
-      this._store.dispatch(new SetUserAction(response.user));
       this._reloadUserList();
     });
   }

@@ -4,6 +4,7 @@ import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common
 import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -20,7 +21,6 @@ import {
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
-import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { DataBrowserComponents } from '@dasch-swiss/vre/pages/data-browser';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
@@ -59,6 +59,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { TemplateSwitcherComponents } from 'template-switcher';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CookieBannerComponent } from './cookie-banner.component';
 import { AuthInterceptor } from './main/http-interceptors/auth-interceptor';
 import { IiifWithCredentialsInterceptor } from './main/http-interceptors/iiif-with-credentials.interceptor';
 import { MaterialModule } from './material-module';
@@ -71,6 +72,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    CookieBannerComponent,
     ...TemplateSwitcherComponents,
     ...ResourcePropertiesComponents,
     ...ResourceCreatorComponents,
@@ -114,6 +116,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PdfViewerModule,
     ReactiveFormsModule,
     AdvancedSearchComponent,
+    MatStepperModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -123,7 +126,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     }),
     MultiLanguageTextareaComponent,
     MutiLanguageInputComponent,
-    NgxsStoreModule,
     ...UiStandaloneComponents,
   ],
   providers: [

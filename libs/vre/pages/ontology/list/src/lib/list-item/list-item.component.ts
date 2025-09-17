@@ -7,18 +7,23 @@ import { ListItemService } from './list-item.service';
 @Component({
   selector: 'app-list-item',
   template: `
-    <app-list-item-element
-      *ngFor="let child of children; let index = index; let first = first; let last = last; trackBy: trackByFn"
-      [position]="index"
-      [length]="children.length"
-      [node]="child"
-      [isAdmin]="isAdmin" />
-    <app-list-item-form [parentNode]="node" *ngIf="isAdmin" style="display: block; margin-left: 46px" />
+    @for (child of children; track trackByFn($index, child); let index = $index) {
+      <app-list-item-element
+        [position]="index"
+        [length]="children.length"
+        [node]="child"
+        [parentNodeIri]="node.id"
+        [isAdmin]="isAdmin" />
+    }
+    @if (isAdmin) {
+      <app-list-item-form [parentNode]="node" style="display: block; margin-left: 46px" />
+    }
   `,
   styles: [':host { display: block; }'],
 })
 export class ListItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) node!: ListNodeInfo;
+  @Input() parentNodeIri?: string;
   @Input() isAdmin = false;
 
   children: ListNode[] = [];
@@ -50,7 +55,7 @@ export class ListItemComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  trackByFn(index: number, item: any): string {
+  trackByFn(_index: number, item: any): string {
     return item.id;
   }
 }

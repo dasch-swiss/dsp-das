@@ -8,34 +8,42 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-property-value-creator',
   template: `
-    <div style="display: flex; position: relative" [ngClass]="{ works: isValid$ | async }" *ngIf="template">
-      <div style="flex: 1">
-        <ng-container *ngTemplateOutlet="template; context: { item: formGroup.controls.item }" />
-        <app-property-value-basic-comment *ngIf="commentIsNotNull" [control]="formGroup.controls.comment" />
+    @if (template) {
+      <div style="display: flex; position: relative" [ngClass]="{ works: isValid$ | async }">
+        <div style="flex: 1">
+          <ng-container *ngTemplateOutlet="template; context: { item: formGroup.controls.item }" />
+          @if (commentIsNotNull) {
+            <app-property-value-basic-comment [control]="formGroup.controls.comment" />
+          }
+        </div>
+        <div class="action-buttons">
+          @if (canRemoveValue) {
+            <button mat-icon-button type="button" color="primary" [matTooltip]="'remove'" (click)="removeValue.emit()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
+          <button
+            mat-icon-button
+            type="button"
+            color="primary"
+            [hidden]="isHidden$ | async"
+            (click)="toggleCommentValue()"
+            [matTooltip]="commentIsNotNull ? 'remove comment' : 'add comment'">
+            <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
+          </button>
+        </div>
       </div>
-      <div style="width: 140px; position: absolute; right: -160px">
-        <button
-          mat-icon-button
-          type="button"
-          color="primary"
-          [matTooltip]="'remove'"
-          *ngIf="canRemoveValue"
-          (click)="removeValue.emit()">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          type="button"
-          color="primary"
-          [hidden]="isHidden$ | async"
-          (click)="toggleCommentValue()"
-          [matTooltip]="commentIsNotNull ? 'remove comment' : 'add comment'">
-          <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
-        </button>
-      </div>
-    </div>
+    }
   `,
-  styles: [``],
+  styles: [
+    `
+      .action-buttons {
+        width: 140px;
+        position: absolute;
+        right: -140px;
+      }
+    `,
+  ],
 })
 export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;

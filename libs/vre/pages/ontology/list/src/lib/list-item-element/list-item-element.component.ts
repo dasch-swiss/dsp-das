@@ -19,10 +19,14 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
             [validators]="[]"
             [isRequired]="true" />
 
-          <app-action-bubble *ngIf="showActionBubble" [position]="position" [length]="length" [node]="node" />
+          @if (showActionBubble) {
+            <app-action-bubble [position]="position" [length]="length" [node]="node" [parentNodeIri]="parentNodeIri" />
+          }
         </div>
 
-        <app-list-item *ngIf="showChildren" [node]="node" [isAdmin]="isAdmin" />
+        @if (showChildren) {
+          <app-list-item [node]="node" [parentNodeIri]="node.id" [isAdmin]="isAdmin" />
+        }
       </div>
     </div>
   `,
@@ -32,6 +36,7 @@ export class ListItemElementComponent implements OnChanges {
   @Input({ required: true }) node!: ListNode;
   @Input({ required: true }) position!: number;
   @Input({ required: true }) length!: number;
+  @Input({ required: true }) parentNodeIri!: string;
 
   @Input() isAdmin = false;
   showChildren = false;

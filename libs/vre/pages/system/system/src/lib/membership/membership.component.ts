@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import {
   AdminUsersApiService,
@@ -15,49 +6,48 @@ import {
   Project,
   UserDto,
 } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { LoadProjectsAction, ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { AutocompleteItem } from '@dasch-swiss/vre/pages/user-settings/user';
-import { Store } from '@ngxs/store';
+import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { AutocompleteItem } from '../autocomplete-item.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-membership',
   template: `
-    <ng-container *ngIf="user$ | async as user">
+    @if (user$ | async; as user) {
       <div class="mat-headline-6 mb-2">
         This user is member of {{ ((userProjects$ | async) || []).length | i18nPlural: itemPluralMapping['project'] }}
       </div>
-
-      <div *ngFor="let project of user.projects || []" class="align-center">
-        <div class="flex-1">
-          <div style="max-width: 500px">{{ project.longname }} ({{ project.shortname }})</div>
-          <div>
-            @if (isUserProjectAdmin(user.permissions, project)) {
-              User is <strong>Project admin</strong>
-            }
+      @for (project of user.projects || []; track project) {
+        <div class="align-center">
+          <div class="flex-1">
+            <div style="max-width: 500px">{{ project.longname }} ({{ project.shortname }})</div>
+            <div>
+              @if (isUserProjectAdmin(user.permissions, project)) {
+                User is <strong>Project admin</strong>
+              }
+            </div>
           </div>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeFromProject(project)"
+            aria-label="Button to remove user from project"
+            matTooltip="Remove user from project"
+            matTooltipPosition="above">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
         </div>
-
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="removeFromProject(project)"
-          aria-label="Button to remove user from project"
-          matTooltip="Remove user from project"
-          matTooltipPosition="above">
-          <mat-icon>delete_outline</mat-icon>
-        </button>
-      </div>
-
+      }
       <mat-divider class="my-2" />
-
       <div class="d-flex">
         <mat-form-field class="flex-1 mr-2">
           <mat-select placeholder="Add user to project" [(value)]="selectedValue">
-            <mat-option *ngFor="let project of projects$ | async" [value]="project?.iri">
-              {{ project?.name }}
-            </mat-option>
+            @for (project of projects$ | async; track project) {
+              <mat-option [value]="project?.iri">
+                {{ project?.name }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <button
@@ -71,11 +61,11 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, ta
           <mat-icon>add</mat-icon>
         </button>
       </div>
-    </ng-container>
+    }
   `,
   styleUrls: ['./membership.component.scss'],
 })
-export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class MembershipComponent implements OnDestroy, OnChanges {
   @Input({ required: true }) userId!: string;
   @Output() closeDialog = new EventEmitter<void>();
 
@@ -96,20 +86,16 @@ export class MembershipComponent implements AfterViewInit, OnDestroy, OnChanges 
   };
 
   constructor(
-    private _store: Store,
+    private _allProjectsService: AllProjectsService,
     private _adminUsersApi: AdminUsersApiService
   ) {}
-
-  ngAfterViewInit() {
-    this._store.dispatch(new LoadProjectsAction());
-  }
 
   ngOnChanges() {
     this.user$ = this._refreshSubject.pipe(
       switchMap(() => this._adminUsersApi.getAdminUsersIriUseriri(this.userId)),
       map(response => response.user)
     );
-    this.projects$ = combineLatest([this._store.select(ProjectsSelectors.allProjects), this.user$]).pipe(
+    this.projects$ = combineLatest([this._allProjectsService.allProjects$, this.user$]).pipe(
       map(([projects, user]) => this._getProjects(projects, user)),
       takeUntil(this._ngUnsubscribe)
     );

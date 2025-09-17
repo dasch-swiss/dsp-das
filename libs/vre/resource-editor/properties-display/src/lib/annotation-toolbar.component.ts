@@ -43,37 +43,38 @@ import { take } from 'rxjs';
         <mat-icon>share</mat-icon>
       </button>
       <app-permission-info [resource]="resource" />
-      <app-resource-edit-more-menu
-        *ngIf="!!(resourceFetcher.userCanEdit$ | async) || !!(resourceFetcher.userCanDelete$ | async)"
-        [resource]="resource"
-        [showEditLabel]="true"
-        (resourceDeleted)="onResourceDeleted()"
-        (resourceErased)="onResourceDeleted()"
-        (resourceUpdated)="onResourceUpdated()" />
-    </div>
+      @if (!!(resourceFetcher.userCanEdit$ | async) || !!(resourceFetcher.userCanDelete$ | async)) {
+        <app-resource-edit-more-menu
+          [resource]="resource"
+          [showEditLabel]="true"
+          (resourceDeleted)="onResourceDeleted()"
+          (resourceErased)="onResourceDeleted()"
+          (resourceUpdated)="onResourceUpdated()" />
+      }
 
-    <mat-menu #share="matMenu" class="res-share-menu">
-      <button
-        mat-menu-item
-        matTooltip="Copy ARK url"
-        matTooltipPosition="above"
-        data-cy="copy-ark-url-button"
-        [cdkCopyToClipboard]="resource.versionArkUrl"
-        (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
-        <mat-icon>content_copy</mat-icon>
-        Copy ARK url to clipboard
-      </button>
-      <button
-        mat-menu-item
-        matTooltip="Copy internal link"
-        data-cy="copy-internal-link-button"
-        matTooltipPosition="above"
-        [cdkCopyToClipboard]="resource.id"
-        (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
-        <mat-icon>content_copy</mat-icon>
-        Copy internal link to clipboard
-      </button>
-    </mat-menu>
+      <mat-menu #share="matMenu" class="res-share-menu">
+        <button
+          mat-menu-item
+          matTooltip="Copy ARK url"
+          matTooltipPosition="above"
+          data-cy="copy-ark-url-button"
+          [cdkCopyToClipboard]="resource.versionArkUrl"
+          (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
+          <mat-icon>content_copy</mat-icon>
+          Copy ARK url to clipboard
+        </button>
+        <button
+          mat-menu-item
+          matTooltip="Copy internal link"
+          data-cy="copy-internal-link-button"
+          matTooltipPosition="above"
+          [cdkCopyToClipboard]="resource.id"
+          (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
+          <mat-icon>content_copy</mat-icon>
+          Copy internal link to clipboard
+        </button>
+      </mat-menu>
+    </div>
   `,
   styles: [
     `

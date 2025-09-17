@@ -2,14 +2,12 @@ import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
-import { Store } from '@ngxs/store';
 import { combineLatest, map, of, take } from 'rxjs';
 import { CanDeleteResource } from './can-delete-resource.interface';
 
@@ -29,16 +27,17 @@ import { CanDeleteResource } from './can-delete-resource.interface';
     </button>
 
     <mat-menu #more="matMenu" class="res-more-menu">
-      <button
-        *ngIf="showEditLabel"
-        data-cy="resource-more-menu-edit-label-button"
-        mat-menu-item
-        matTooltip="Edit the label of this resource"
-        matTooltipPosition="above"
-        (click)="editResourceLabel()">
-        <mat-icon>edit</mat-icon>
-        Edit label
-      </button>
+      @if (showEditLabel) {
+        <button
+          data-cy="resource-more-menu-edit-label-button"
+          mat-menu-item
+          matTooltip="Edit the label of this resource"
+          matTooltipPosition="above"
+          (click)="editResourceLabel()">
+          <mat-icon>edit</mat-icon>
+          Edit label
+        </button>
+      }
 
       <button
         data-cy="resource-more-menu-delete-button"
@@ -53,41 +52,40 @@ import { CanDeleteResource } from './can-delete-resource.interface';
         (click)="deleteResource()">
         <div style="display: inline-flex; align-items: center; gap: 8px;">
           <span style="display: inline-block; width: 32px; height: 24px;">
-            <ng-container *ngIf="resourceCanBeDeleted === undefined; else deleteIcon">
+            @if (resourceCanBeDeleted === undefined) {
               <app-progress-spinner />
-            </ng-container>
-            <ng-template #deleteIcon>
+            } @else {
               <mat-icon>delete</mat-icon>
-            </ng-template>
+            }
           </span>
           Delete
         </div>
       </button>
 
-      <button
-        *ngIf="isAdmin$ | async"
-        data-cy="resource-more-menu-erase-button"
-        mat-menu-item
-        [matTooltip]="
-          resourceCanBeDeleted?.canDo
-            ? 'Erase resource forever. This cannot be undone.'
-            : resourceCanBeDeleted?.reason || 'Checking if resource can be deleted...'
-        "
-        matTooltipPosition="above"
-        [disabled]="!resourceCanBeDeleted?.canDo"
-        (click)="eraseResource()">
-        <span style="display: inline-flex; align-items: center; gap: 8px;">
-          <span style="display: inline-block; width: 32px; height: 24px;">
-            <ng-container *ngIf="resourceCanBeDeleted === undefined; else eraseIcon">
-              <app-progress-spinner />
-            </ng-container>
-            <ng-template #eraseIcon>
-              <mat-icon>delete_forever</mat-icon>
-            </ng-template>
+      @if (userCanDelete) {
+        <button
+          data-cy="resource-more-menu-erase-button"
+          mat-menu-item
+          [matTooltip]="
+            resourceCanBeDeleted?.canDo
+              ? 'Erase resource forever. This cannot be undone.'
+              : resourceCanBeDeleted?.reason || 'Checking if resource can be deleted...'
+          "
+          matTooltipPosition="above"
+          [disabled]="!resourceCanBeDeleted?.canDo"
+          (click)="eraseResource()">
+          <span style="display: inline-flex; align-items: center; gap: 8px;">
+            <span style="display: inline-block; width: 32px; height: 24px;">
+              @if (resourceCanBeDeleted === undefined) {
+                <app-progress-spinner />
+              } @else {
+                <mat-icon>delete_forever</mat-icon>
+              }
+            </span>
+            Erase resource
           </span>
-          Erase resource
-        </span>
-      </button>
+        </button>
+      }
     </mat-menu>
   `,
   styles: [
@@ -106,20 +104,22 @@ export class ResourceEditMoreMenuComponent {
   @Output() resourceErased = new EventEmitter<void>();
   @Output() resourceUpdated = new EventEmitter<void>();
 
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  userCanDelete() {
+    return ResourceUtil.userCanDelete(this.resource);
+  }
+
   resourceCanBeDeleted?: CanDeleteResource;
 
   constructor(
-    public resourceFetcher: ResourceFetcherService,
-    private _store: Store,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
+    public resourceFetcher: ResourceFetcherService,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
   checkResourceCanBeDeleted() {
-    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically(this.resource)])
+    combineLatest([this.resourceFetcher.userCanDelete$, this._resourceCanBeDeletedTechnically$(this.resource)])
       .pipe(
         take(1),
         map(([userCanDelete, technicalCheck]) => {
@@ -145,7 +145,7 @@ export class ResourceEditMoreMenuComponent {
       });
   }
 
-  private _resourceCanBeDeletedTechnically(resource: ReadResource) {
+  private _resourceCanBeDeletedTechnically$(resource: ReadResource) {
     if (resource.incomingReferences.length > 0) {
       return of({
         canDo: false,

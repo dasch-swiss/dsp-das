@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
-import { ProjectsSelectors, UserSelectors } from '@dasch-swiss/vre/core/state';
-import { SortingService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { UserService } from '@dasch-swiss/vre/core/session';
+import { SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { CreateUserDialogComponent } from '../create-user-dialog.component';
 import { UsersTabService } from '../users-tab.service';
 
@@ -20,36 +19,39 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-users-list',
   template: `
-    <div *ngIf="list.length > 0">
-      <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
-        <span class="mat-headline-6" style="margin-bottom: 0; flex: 1" data-cy="user-count">
-          {{ list.length | i18nPlural: itemPluralMapping['user'] }}
-        </span>
-        <button
-          mat-flat-button
-          [color]="'primary'"
-          (click)="createUser()"
-          *ngIf="isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)"
-          style="margin-right: 16px">
-          Create new
-        </button>
+    @if (list.length > 0) {
+      <div>
+        <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
+          <span class="mat-headline-6" style="margin-bottom: 0; flex: 1" data-cy="user-count">
+            {{ list.length | i18nPlural: itemPluralMapping['user'] }}
+          </span>
 
-        <app-sort-button
-          *ngIf="list.length > 1"
-          [icon]="'sort_by_alpha'"
-          [sortProps]="sortProps"
-          [activeKey]="sortBy"
-          (sortKeyChange)="sortList($event)" />
+          @if (isButtonEnabledToCreateNewUser && (isSysAdmin$ | async)) {
+            <button mat-flat-button [color]="'primary'" (click)="createUser()" style="margin-right: 16px">
+              Create a new user
+            </button>
+          }
+
+          @if (list.length > 1) {
+            <app-sort-button
+              [icon]="'sort_by_alpha'"
+              [sortProps]="sortProps"
+              [activeKey]="sortBy"
+              (sortKeyChange)="sortList($event)" />
+          }
+        </div>
+
+        @for (user of list; track trackByFn($index, user)) {
+          <app-users-list-row [user]="user" />
+        }
       </div>
-
-      <app-users-list-row [user]="user" *ngFor="let user of list; trackBy: trackByFn" />
-    </div>
+    }
   `,
 })
 export class UsersListComponent {
   _list!: ReadUser[];
   @Input() set list(value: ReadUser[]) {
-    this._list = this._sortingService.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
+    this._list = SortingHelper.keySortByAlphabetical(value, this.sortBy as keyof ReadUser);
   }
 
   get list(): ReadUser[] {
@@ -91,13 +93,11 @@ export class UsersListComponent {
   ];
 
   sortBy: UserSortKey = (localStorage.getItem('sortUsersBy') as UserSortKey) || 'username';
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
-  project$ = this._store.select(ProjectsSelectors.currentProject);
+  isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
     private readonly _matDialog: MatDialog,
-    private readonly _sortingService: SortingService,
-    private readonly _store: Store,
+    private readonly _userService: UserService,
     private readonly _ts: TranslateService,
     private _usersTabService: UsersTabService
   ) {}
@@ -120,7 +120,7 @@ export class UsersListComponent {
 
   sortList(key: UserSortKey) {
     this.sortBy = key;
-    this.list = this._sortingService.keySortByAlphabetical(this.list, this.sortBy);
+    this.list = SortingHelper.keySortByAlphabetical(this.list, this.sortBy);
     localStorage.setItem('sortUsersBy', key);
   }
 }

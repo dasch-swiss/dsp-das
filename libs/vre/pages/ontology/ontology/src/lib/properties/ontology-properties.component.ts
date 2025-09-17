@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ProjectsSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
@@ -8,12 +7,11 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   selector: 'app-ontology-properties',
   template: `
     <mat-list class="properties">
-      <mat-list-item
-        class="property"
-        [class.admin]="(isAdmin$ | async) === true"
-        *ngFor="let prop of oes.currentOntologyProperties$ | async; trackBy: trackByPropertyDefinitionFn">
-        <app-property-info [property]="prop" />
-      </mat-list-item>
+      @for (prop of oes.currentOntologyProperties$ | async; track trackByPropertyDefinitionFn($index, prop)) {
+        <mat-list-item class="property" [class.admin]="(hasProjectAdminRights$ | async) === true">
+          <app-property-info [property]="prop" />
+        </mat-list-item>
+      }
     </mat-list>
   `,
   styles: `
@@ -36,12 +34,12 @@ import { OntologyEditService } from '../services/ontology-edit.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyPropertiesComponent {
-  isAdmin$ = this._store.select(ProjectsSelectors.isCurrentProjectAdminOrSysAdmin);
+  hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
 
   trackByPropertyDefinitionFn = (index: number, item: PropertyInfo) => `${index}-${item.propDef.id}`;
 
   constructor(
     public oes: OntologyEditService,
-    private _store: Store
+    private _projectPageService: ProjectPageService
   ) {}
 }
