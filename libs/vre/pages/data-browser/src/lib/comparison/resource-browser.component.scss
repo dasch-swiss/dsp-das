@@ -3,3 +3,11 @@
 .whole-height {
   height: calc(100vh - #{$header-height});
 }
+
+.no-resources-message {
+  margin: 8px;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+
+}

@@ -17,7 +17,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
       }
       @if (resources.length > 0) {
         <app-resource-browser
-          [data]="{ resources: resources, selectFirstResource: true }"
+          [resourceData]="{ resources: resources, selectFirstResource: true }"
           [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
           [searchKeyword]="query" />
       }
