@@ -28,11 +28,11 @@ describe('AdvancedSearchService', () => {
       providers: [
         {
           provide: DspApiConfigToken,
-          useValue: new KnoraApiConfig('http', '0.0.0.0', 3333),
+          useValue: new KnoraApiConfig('http', '127.0.0.1', 3333),
         },
         {
           provide: DspApiConnectionToken,
-          useValue: new KnoraApiConnection(new KnoraApiConfig('http', '0.0.0.0', 3333)),
+          useValue: new KnoraApiConnection(new KnoraApiConfig('http', '127.0.0.1', 3333)),
         },
       ],
     });
@@ -183,7 +183,7 @@ describe('AdvancedSearchService', () => {
       const propDef2 = new ResourcePropertyDefinition();
       propDef2.id = 'prop2';
       propDef2.label = 'Property 2';
-      propDef2.objectType = 'http://0.0.0.0:3333/ontology/0801/newton/v2#letter';
+      propDef2.objectType = 'http://127.0.0.1:3333/ontology/0801/newton/v2#letter';
       propDef2.isEditable = true;
       propDef2.isLinkValueProperty = false;
 
@@ -253,7 +253,7 @@ describe('AdvancedSearchService', () => {
           {
             iri: 'prop2',
             label: 'Property 2',
-            objectType: 'http://0.0.0.0:3333/ontology/0801/newton/v2#letter',
+            objectType: 'http://127.0.0.1:3333/ontology/0801/newton/v2#letter',
             isLinkedResourceProperty: true,
           },
           {
@@ -281,7 +281,7 @@ describe('AdvancedSearchService', () => {
       const propDef2 = new ResourcePropertyDefinition();
       propDef2.id = 'prop2';
       propDef2.label = 'Property 2';
-      propDef2.objectType = 'http://0.0.0.0:3333/ontology/0801/newton/v2#letter';
+      propDef2.objectType = 'http://127.0.0.1:3333/ontology/0801/newton/v2#letter';
       propDef2.isEditable = true;
       propDef2.isLinkValueProperty = false;
 
@@ -353,7 +353,7 @@ describe('AdvancedSearchService', () => {
           {
             iri: 'prop2',
             label: 'Property 2',
-            objectType: 'http://0.0.0.0:3333/ontology/0801/newton/v2#letter',
+            objectType: 'http://127.0.0.1:3333/ontology/0801/newton/v2#letter',
             isLinkedResourceProperty: true,
           },
           {

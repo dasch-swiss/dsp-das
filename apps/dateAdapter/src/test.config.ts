@@ -2,7 +2,7 @@ import { KnoraApiConfig } from '@dasch-swiss/dsp-js';
 import { Session } from '@dasch-swiss/vre/core/session';
 
 export class TestConfig {
-  public static ApiConfig = new KnoraApiConfig('http', '0.0.0.0', 3333);
+  public static ApiConfig = new KnoraApiConfig('http', '127.0.0.1', 3333);
 
   public static ProjectCode = '0001';
 

@@ -23,9 +23,11 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 ## Essential Development Commands
 
 ### Local Development
-- `npm run start-local` or `nx run dsp-app:serve` - Start local development server
+- `npm run start-local` or `nx run dsp-app:serve` - Start local development server (serves on localhost:4200, connects to APIs on 127.0.0.1)
 - `npm run start-test` - Start with test server configuration
 - `npm run start-dev` - Start with dev server configuration
+
+**Browser Compatibility Note:** Local development now uses 127.0.0.1 for API connections (instead of 0.0.0.0) for better cross-browser compatibility, particularly with Firefox which rejects 0.0.0.0 connections. The app itself still serves on localhost:4200.
 
 ### Testing
 - `npm run test-local` or `nx run dsp-app:test` - Run tests for main app

@@ -16,7 +16,7 @@ export default class StillImagePage {
     cy.fixture(fileName, 'binary').then(fileContent => {
       cy.request({
         method: 'POST',
-        url: 'http://0.0.0.0:3340/projects/0803/assets/ingest/screen.png',
+        url: 'http://127.0.0.1:3340/projects/0803/assets/ingest/screen.png',
         headers: {
           Accept: 'application/json, text/plain, */*',
           Authorization: `Bearer ${token}`,
@@ -31,14 +31,14 @@ export default class StillImagePage {
 
         cy.request({
           method: 'POST',
-          url: 'http://0.0.0.0:3333/v2/resources',
+          url: 'http://127.0.0.1:3333/v2/resources',
           body: {
-            '@type': 'http://0.0.0.0:3333/ontology/0803/incunabula/v2#Sideband',
+            '@type': 'http://127.0.0.1:3333/ontology/0803/incunabula/v2#Sideband',
             'http://www.w3.org/2000/01/rdf-schema#label': 'fff',
             'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
               '@id': 'http://rdfh.ch/projects/0803',
             },
-            'http://0.0.0.0:3333/ontology/0803/incunabula/v2#sbTitle': {
+            'http://127.0.0.1:3333/ontology/0803/incunabula/v2#sbTitle': {
               '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
               'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'fff',
             },
@@ -62,7 +62,7 @@ export default class StillImagePage {
   createAnnotation(color: { hex: string }) {
     cy.request({
       method: 'POST',
-      url: 'http://0.0.0.0:3333/v2/resources',
+      url: 'http://127.0.0.1:3333/v2/resources',
       body: {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#Region',
         'http://www.w3.org/2000/01/rdf-schema#label': this.label,

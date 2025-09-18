@@ -26,7 +26,7 @@ describe('Resource', () => {
   describe('footnotes', () => {
     it.skip('a created footnote should be sent in the right format (no double escape, empty text in tagTEST)', () => {
       // Intercept the POST request
-      cy.intercept('POST', 'http://0.0.0.0:3333/v2/resources').as('postRequest');
+      cy.intercept('POST', 'http://127.0.0.1:3333/v2/resources').as('postRequest');
 
       ResourceRequests.resourceRequest(ClassPropertyPayloads.richText(finalLastModificationDate));
       po.visitAddPage();
@@ -48,7 +48,7 @@ describe('Resource', () => {
       cy.wait('@postRequest').then(interception => {
         // Assert that the intercepted request body matches the expected payload (X)
         const v =
-          interception.request.body['http://0.0.0.0:3333/ontology/00FF/images/v2#property'][
+          interception.request.body['http://127.0.0.1:3333/ontology/00FF/images/v2#property'][
             'http://api.knora.org/ontology/knora-api/v2#textValueAsXml'
           ];
         expect(v).to.contain('<footnote content="&lt;p&gt;myfootnote&lt;/p&gt;"></footnote>');
@@ -57,12 +57,12 @@ describe('Resource', () => {
 
     it.skip('should be displayed, and can be edited', () => {
       const footnote = {
-        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
+        '@type': 'http://127.0.0.1:3333/ontology/00FF/images/v2#datamodelclass',
         'http://www.w3.org/2000/01/rdf-schema#label': 'rlabel',
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
           '@id': 'http://rdfh.ch/projects/00FF',
         },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#property': {
+        'http://127.0.0.1:3333/ontology/00FF/images/v2#property': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#textValueAsXml':
             '<?xml version="1.0" encoding="UTF-8"?> <text><p>footnote1<footnote content="&lt;p&gt;fn1&lt;/p&gt;"/> footnote2 <footnote content="&lt;p&gt;fn2&lt;/p&gt;"/></p></text>',
@@ -234,7 +234,7 @@ describe('Resource', () => {
 
     const propertyListPayload = (lastModificationDate: string, listId: string) => {
       return {
-        '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
+        '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2',
         '@type': 'http://www.w3.org/2002/07/owl#Ontology',
         'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
           '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
@@ -256,7 +256,7 @@ describe('Resource', () => {
               '@id': 'http://api.knora.org/ontology/salsah-gui/v2#Pulldown',
             },
             'http://api.knora.org/ontology/salsah-gui/v2#guiAttribute': [`hlist=<${listId}>`],
-            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+            '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#property',
             '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
           },
         ],
@@ -320,16 +320,16 @@ describe('Resource', () => {
     it('link', () => {
       // create John Smith person
       cy.request('POST', `${Cypress.env('apiUrl')}/v2/resources`, {
-        '@type': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
+        '@type': 'http://127.0.0.1:3333/ontology/00FF/images/v2#person',
         'http://www.w3.org/2000/01/rdf-schema#label': 'john',
         'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
           '@id': 'http://rdfh.ch/projects/00FF',
         },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#lastname': {
+        'http://127.0.0.1:3333/ontology/00FF/images/v2#lastname': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'john',
         },
-        'http://0.0.0.0:3333/ontology/00FF/images/v2#firstname': {
+        'http://127.0.0.1:3333/ontology/00FF/images/v2#firstname': {
           '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
           'http://api.knora.org/ontology/knora-api/v2#valueAsString': 'smith',
         },

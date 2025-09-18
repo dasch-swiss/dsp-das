@@ -1,6 +1,6 @@
 {
   "method": "GET",
-  "url": "http://0.0.0.0:3333/admin/users/username/root",
+  "url": "http://127.0.0.1:3333/admin/users/username/root",
   "status": 0,
   "error": {
     "message": "ajax error",
@@ -43,7 +43,7 @@
         }
       ],
       "__zone_symbol__xhrSync": false,
-      "__zone_symbol__xhrURL": "http://0.0.0.0:3333/admin/users/username/root",
+      "__zone_symbol__xhrURL": "http://127.0.0.1:3333/admin/users/username/root",
       "__zone_symbol__xhrScheduled": true,
       "__zone_symbol__xhrErrorBeforeScheduled": false,
       "__zone_symbol__xhrTask": {
@@ -64,7 +64,7 @@
       "method": "GET",
       "responseType": "json",
       "timeout": 0,
-      "url": "http://0.0.0.0:3333/admin/users/username/root"
+      "url": "http://127.0.0.1:3333/admin/users/username/root"
     },
     "status": 0,
     "responseType": "json",
