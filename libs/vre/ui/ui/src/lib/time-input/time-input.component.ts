@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { ValidatorError } from '../validator-error.interface';
+import { HumanReadableErrorPipe, ValidatorError } from '@dasch-swiss/vre/ui/string-literal';
 import { TimeFormatDirective } from './time-format.directive';
 import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 

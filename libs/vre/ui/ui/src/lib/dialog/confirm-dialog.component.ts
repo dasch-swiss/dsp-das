@@ -1,8 +1,13 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 export interface ConfirmDialogProps {
   message: string;
@@ -13,7 +18,10 @@ export interface ConfirmDialogProps {
 @Component({
   selector: 'app-confirm-dialog',
   template: `
-    <app-dialog-header [title]="data.title ?? 'Confirmation needed'" [subtitle]="data.subtitle ?? ''" />
+    <div mat-dialog-title>{{ data.title ?? 'Confirmation needed' }}</div>
+    @if (data.subtitle) {
+      <div style="font-size: 14px; color: #666; margin-bottom: 16px;">{{ data.subtitle }}</div>
+    }
     <div mat-dialog-content>
       <p>{{ data.message }}</p>
     </div>
@@ -24,7 +32,7 @@ export interface ConfirmDialogProps {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [DialogHeaderComponent, CdkScrollable, MatDialogContent, MatDialogActions, MatButton],
+  imports: [CdkScrollable, MatDialogContent, MatDialogActions, MatDialogTitle, MatButton],
 })
 export class ConfirmDialogComponent {
   constructor(

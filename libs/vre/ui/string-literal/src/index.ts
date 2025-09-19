@@ -7,4 +7,5 @@ export * from './lib/multi-language-form-array.type';
 export * from './lib/dash-language.type';
 export * from './lib/default-multi-language-form';
 export * from './lib/stringify-string-literal.pipe';
+export * from './lib/validator-error.interface';
 export * from './string-literal.components';
