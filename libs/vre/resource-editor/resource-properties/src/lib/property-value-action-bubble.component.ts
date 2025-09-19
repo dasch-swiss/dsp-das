@@ -1,10 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceUtil } from '@dasch-swiss/vre/core/config';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { map, Observable } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
@@ -68,7 +69,8 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   infoTooltip$!: Observable<string>;
 
   constructor(
-    private _resourceFetcherService: ResourceFetcherService,
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface,
     private _propertyValueService: PropertyValueService
   ) {}
 

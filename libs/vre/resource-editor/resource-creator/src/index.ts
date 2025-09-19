@@ -15,3 +15,4 @@ export * from './lib/authorship-form-field.component';
 export * from './lib/upload.component';
 export * from './lib/upload-control.component';
 export * from './lib/uploaded-file.component';
+export * from './lib/resource-creation.service';

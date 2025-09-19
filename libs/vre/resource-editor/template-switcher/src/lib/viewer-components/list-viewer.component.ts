@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { KnoraApiConnection, ListNodeV2, ReadListValue, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 
 @Component({
@@ -41,7 +41,7 @@ export class ListViewerComponent implements OnInit {
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceFetcher: ResourceFetcherService
+    private _resourceFetcher: ResourceFetcherServiceInterface
   ) {}
 
   ngOnInit() {

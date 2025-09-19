@@ -26,5 +26,4 @@ export * from './lib/property-value-display-comment.component';
 export * from './lib/property-value-basic-comment.component';
 export * from './lib/paginated-api.service';
 export * from './lib/date-time-timestamp';
-export * from './lib/JsLibPotentialError';
 export * from './lib/with-breaks.pipe';

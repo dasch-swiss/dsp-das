@@ -4,7 +4,7 @@ import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular
 import { MatFormField, MatSuffix, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
-import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { DateTime } from '@dasch-swiss/vre/core/config';
 import { JDNDatepickerDirective } from '@dasch-swiss/vre/ui/date-picker';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 

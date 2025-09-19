@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important: Permission Protocol
+## Important: Permission Protocol and rules to follow
 
 **ALWAYS ask for explicit permission before:**
 - Making any code changes or modifications
@@ -12,7 +12,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Installing or updating dependencies
 - Making commits or pushing changes
 
-Only proceed with changes after receiving clear approval from the user.
+**Only proceed with changes after receiving clear approval from the user.**
+
+**Always propose the best practices approach instead of quick fixes.**
+
+**When refactoring and moving code, always perform the cleanup afterwards.**
 
 ## Project Overview
 

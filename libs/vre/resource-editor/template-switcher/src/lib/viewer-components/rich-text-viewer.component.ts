@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Inject } from '@angular/core';
 import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
-import { FootnoteDirective, FootnoteParserPipe } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { FootnoteProcessorInterface } from '@dasch-swiss/vre/core/session';
 import { InternalLinkReplacerPipe, AddTargetBlankPipe } from '@dasch-swiss/vre/ui/ui';
+import { SimpleFootnoteProcessorService } from '../simple-footnote-processor.service';
 
 @Component({
   selector: 'app-rich-text-viewer',
@@ -9,8 +10,7 @@ import { InternalLinkReplacerPipe, AddTargetBlankPipe } from '@dasch-swiss/vre/u
     <div
       data-cy="rich-text-switch"
       class="rich-text-viewer"
-      [innerHTML]="value.strval || '' | footnoteParser: index | internalLinkReplacer | addTargetBlank"
-      appFootnote></div>
+      [innerHTML]="processedContent | internalLinkReplacer | addTargetBlank"></div>
   `,
   styles: [
     `
@@ -38,9 +38,19 @@ import { InternalLinkReplacerPipe, AddTargetBlankPipe } from '@dasch-swiss/vre/u
     `,
   ],
   standalone: true,
-  imports: [FootnoteDirective, FootnoteParserPipe, InternalLinkReplacerPipe, AddTargetBlankPipe],
+  imports: [InternalLinkReplacerPipe, AddTargetBlankPipe],
+  providers: [{ provide: FootnoteProcessorInterface, useClass: SimpleFootnoteProcessorService }],
 })
 export class RichTextViewerComponent {
   @Input({ required: true }) value!: ReadTextValueAsXml;
   @Input({ required: true }) index!: number;
+
+  constructor(
+    @Inject(FootnoteProcessorInterface)
+    private _footnoteProcessor: FootnoteProcessorInterface
+  ) {}
+
+  get processedContent() {
+    return this._footnoteProcessor.processFootnotes(this.value.strval || '', this.index);
+  }
 }

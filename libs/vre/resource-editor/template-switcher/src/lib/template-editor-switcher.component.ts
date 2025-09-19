@@ -10,7 +10,7 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { JsLibPotentialError } from '@dasch-swiss/vre/core/config';
 import { DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { CkEditorComponent, CommonInputComponent } from '@dasch-swiss/vre/ui/ui';

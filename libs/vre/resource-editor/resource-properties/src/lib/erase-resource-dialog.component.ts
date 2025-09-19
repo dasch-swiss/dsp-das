@@ -13,7 +13,7 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
@@ -86,7 +86,8 @@ export class EraseResourceDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: ReadResource,
     private _dialogRef: MatDialogRef<EraseResourceDialogComponent>,
-    private _resourceFetcherService: ResourceFetcherService
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface
   ) {}
 
   submit() {

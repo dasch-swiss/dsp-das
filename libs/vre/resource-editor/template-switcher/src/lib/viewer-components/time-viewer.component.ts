@@ -1,11 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { ReadTimeValue } from '@dasch-swiss/dsp-js';
-import {
-  convertTimestampToDateTime,
-  DateTime,
-  dateTimeTimestamp,
-} from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { convertTimestampToDateTime, DateTime, dateTimeTimestamp } from '@dasch-swiss/vre/core/config';
 
 @Component({
   selector: 'app-time-viewer',

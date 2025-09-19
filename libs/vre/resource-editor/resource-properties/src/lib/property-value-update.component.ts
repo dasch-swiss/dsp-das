@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import { KnoraApiConnection, UpdateResource, UpdateValue } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueEditComponent } from './property-value-edit.component';
 import { PropertyValueService } from './property-value.service';
@@ -21,7 +21,8 @@ export class PropertyValueUpdateComponent {
 
   constructor(
     public propertyValueService: PropertyValueService,
-    private _resourceFetcherService: ResourceFetcherService,
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection
   ) {}

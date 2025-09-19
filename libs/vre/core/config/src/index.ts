@@ -9,3 +9,8 @@ export * from './lib/app-config/dsp-iiif-config';
 export * from './lib/app-config/dsp-instrumentation-config';
 export * from './lib/build-tag/build-tag-token';
 export * from './lib/build-tag/build-tag';
+export * from './lib/js-lib-potential-error';
+export * from './lib/resource-util';
+export * from './lib/with-breaks.pipe';
+export * from './lib/date-time';
+export * from './lib/date-time-timestamp';

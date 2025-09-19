@@ -17,7 +17,7 @@ import {
   ReadTextValueAsXml,
   ReadValue,
 } from '@dasch-swiss/dsp-js';
-import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { JsLibPotentialError } from '@dasch-swiss/vre/core/config';
 import { ColorViewerComponent } from './viewer-components/color-viewer.component';
 import { DateViewerComponent } from './viewer-components/date-viewer.component';
 import { GeonameViewerComponent } from './viewer-components/geoname-viewer.component';

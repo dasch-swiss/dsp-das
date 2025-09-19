@@ -6,3 +6,6 @@ export { AccessTokenService } from './lib/access-token.service';
 export { AutoLoginService } from './lib/auto-login.service';
 export { LocalStorageWatcherService } from './lib/local-storage-watcher.service';
 export { UserService } from './lib/user.service';
+export { ResourceCreationServiceInterface, ResourceCreationOptions } from './lib/resource-creation.service.interface';
+export { ResourceFetcherServiceInterface } from './lib/resource-fetcher.service.interface';
+export { FootnoteProcessorInterface } from './lib/footnote-processor.interface';

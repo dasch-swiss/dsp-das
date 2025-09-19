@@ -11,7 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
@@ -60,7 +60,8 @@ export class EditResourceLabelDialogComponent {
     private _dspApiConnection: KnoraApiConnection,
     @Inject(MAT_DIALOG_DATA) public data: ReadResource,
     private _dialogRef: MatDialogRef<EditResourceLabelDialogComponent>,
-    private _resourceFetcherService: ResourceFetcherService
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface
   ) {}
 
   submit() {

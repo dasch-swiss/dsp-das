@@ -13,7 +13,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { tap } from 'rxjs';
@@ -82,7 +82,8 @@ export class DeleteValueDialogComponent {
     public data: DeleteValueDialogProps,
     public dialogRef: MatDialogRef<DeleteValueDialogComponent, boolean>,
     public propertyValueService: PropertyValueService,
-    private _resourceFetcherService: ResourceFetcherService,
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface,
     private _cd: ChangeDetectorRef
   ) {}
 

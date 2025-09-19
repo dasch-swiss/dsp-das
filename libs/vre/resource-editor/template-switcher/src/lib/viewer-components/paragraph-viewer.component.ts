@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReadTextValueAsString } from '@dasch-swiss/dsp-js';
-import { WithBreaksPipe } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { WithBreaksPipe } from '@dasch-swiss/vre/core/config';
 
 @Component({
   selector: 'app-paragraph-viewer',

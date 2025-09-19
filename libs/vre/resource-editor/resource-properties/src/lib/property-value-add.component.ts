@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ApiResponseError, CreateValue, KnoraApiConnection, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherServiceInterface } from '@dasch-swiss/vre/core/session';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { finalize } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
@@ -26,7 +26,8 @@ export class PropertyValueAddComponent {
     public propertyValueService: PropertyValueService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _resourceFetcherService: ResourceFetcherService,
+    @Inject(ResourceFetcherServiceInterface)
+    private _resourceFetcherService: ResourceFetcherServiceInterface,
     private _notification: NotificationService
   ) {}
 
