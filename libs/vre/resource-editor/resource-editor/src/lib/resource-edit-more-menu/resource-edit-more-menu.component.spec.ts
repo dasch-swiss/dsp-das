@@ -73,7 +73,7 @@ describe('ResourceEditMoreMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResourceEditMoreMenuComponent],
+      imports: [ResourceEditMoreMenuComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: MatDialog, useValue: mockDialog },

@@ -15,15 +15,16 @@ describe('PasswordConfirmFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasswordConfirmFormComponent, PasswordFormFieldComponent],
       imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
         BrowserAnimationsModule,
-        TranslateModule.forRoot(),
         HumanReadableErrorPipe,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        PasswordConfirmFormComponent,
+        PasswordFormFieldComponent,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
       ],
       providers: [FormBuilder],
     }).compileComponents();

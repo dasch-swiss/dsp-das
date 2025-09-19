@@ -34,19 +34,19 @@ describe('CreateUserDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [CreateUserDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [
-        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        CreateUserDialogComponent,
+        HumanReadableErrorPipe,
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
+        MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MatIconModule,
-        BrowserAnimationsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
-        HumanReadableErrorPipe,
       ],
       providers: [
         FormBuilder,

@@ -15,18 +15,19 @@ import { AppComponent, HeaderComponent } from './app.component';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent, HeaderComponent],
       imports: [
+        AppComponent,
+        BrowserAnimationsModule,
         BrowserModule,
         FormsModule,
+        HeaderComponent,
         MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
+        MatJDNConvertibleCalendarDateAdapterModule,
         MatOptionModule,
         MatSelectModule,
-        MatJDNConvertibleCalendarDateAdapterModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
       ],
       providers: [
         {

@@ -39,7 +39,7 @@ describe('TruncatePipe', () => {
     }
 
     TestBed.configureTestingModule({
-      declarations: [AppComponent, TruncatePipe],
+      imports: [AppComponent, TruncatePipe],
     });
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -56,7 +56,7 @@ describe('TruncatePipe', () => {
     }
 
     TestBed.configureTestingModule({
-      declarations: [AppComponent, TruncatePipe],
+      imports: [AppComponent, TruncatePipe],
     });
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
