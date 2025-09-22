@@ -14,7 +14,7 @@ import { ResourceResultService } from './resource-result.service';
       @if (userCanViewResources) {
         @if (data.resources.length === 0) {
           <app-centered-box>
-            <app-no-results-found />
+            <app-no-results-found [message]="'There are no data in this resource class yet.'" />
           </app-centered-box>
         } @else {
           <app-resource-browser
