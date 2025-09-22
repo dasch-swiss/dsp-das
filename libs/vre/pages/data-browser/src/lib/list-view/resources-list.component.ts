@@ -12,10 +12,12 @@ import { ResourceResultService } from '../resource-result.service';
         <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
       </div>
     }
-    <app-pager
-      class="pager"
-      (pageIndexChanged)="updatePageIndex($event)"
-      [numberOfAllResults]="resourceResultService.numberOfResults" />
+    @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
+      <app-pager
+        class="pager"
+        (pageIndexChanged)="updatePageIndex($event)"
+        [numberOfAllResults]="resourceResultService.numberOfResults" />
+    }
     @if (multipleViewerService.selectMode) {
       <app-resource-list-selection [resources]="resources" />
     }
