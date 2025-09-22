@@ -15,9 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Only proceed with changes after receiving clear approval from the user.**
 
-**Always propose the best practices approach instead of quick fixes.**
-
 **While refactoring and/or moving code, always perform the cleanup afterwards.**
+
+**Try to propose the best practices approach instead of quick fixes. In list of solutions clearly mark which is which.**
 
 ## Project Overview
 
