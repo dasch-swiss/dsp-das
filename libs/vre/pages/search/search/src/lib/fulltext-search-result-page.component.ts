@@ -15,7 +15,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
         <app-centered-box>
-          <app-no-results-found />
+          <app-no-results-found [message]="noResultMessage" />
         </app-centered-box>
       }
       @if (resources.length > 0) {
@@ -53,6 +53,8 @@ export class FulltextSearchResultPageComponent {
       return resourceResponse.resources;
     })
   );
+
+  readonly noResultMessage = 'There are no resources to display.';
 
   constructor(
     private _route: ActivatedRoute,

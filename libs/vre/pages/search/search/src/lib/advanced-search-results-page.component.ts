@@ -13,7 +13,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
         <app-centered-box>
-          <app-no-results-found />
+          <app-no-results-found [message]="noResultMessage" />
           <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
         </app-centered-box>
       } @else {
@@ -41,6 +41,8 @@ export class AdvancedSearchResultsPageComponent {
       return resourceResponse.resources;
     })
   );
+
+  readonly noResultMessage = `We couldn't find any resources matching your search criteria. Try adjusting your search parameters.`;
 
   constructor(
     private _route: ActivatedRoute,
