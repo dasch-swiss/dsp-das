@@ -10,18 +10,20 @@ import { take } from 'rxjs';
   selector: 'app-annotation-toolbar',
   template: `
     <div class="actions">
-      <span class="color-value" *ngIf="!toolBarActive">
-        <app-color-viewer [value]="readColorValue" />
-      </span>
-      <button
-        *ngIf="toolBarActive"
-        mat-icon-button
-        matTooltip="Highlight Region"
-        color="primary"
-        matTooltipPosition="above"
-        (click)="onPinPointClicked()">
-        <mat-icon>my_location</mat-icon>
-      </button>
+      @if (!toolBarActive) {
+        <span class="color-value">
+          <app-color-viewer [value]="readColorValue" />
+        </span>
+      } @else {
+        <button
+          mat-icon-button
+          matTooltip="Highlight Region"
+          color="primary"
+          matTooltipPosition="above"
+          (click)="onPinPointClicked()">
+          <mat-icon>my_location</mat-icon>
+        </button>
+      }
       <button
         mat-icon-button
         matTooltip="Open resource in new tab"
@@ -50,30 +52,29 @@ import { take } from 'rxjs';
           (resourceErased)="onResourceDeleted()"
           (resourceUpdated)="onResourceUpdated()" />
       }
-
-      <mat-menu #share="matMenu" class="res-share-menu">
-        <button
-          mat-menu-item
-          matTooltip="Copy ARK url"
-          matTooltipPosition="above"
-          data-cy="copy-ark-url-button"
-          [cdkCopyToClipboard]="resource.versionArkUrl"
-          (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
-          <mat-icon>content_copy</mat-icon>
-          Copy ARK url to clipboard
-        </button>
-        <button
-          mat-menu-item
-          matTooltip="Copy internal link"
-          data-cy="copy-internal-link-button"
-          matTooltipPosition="above"
-          [cdkCopyToClipboard]="resource.id"
-          (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
-          <mat-icon>content_copy</mat-icon>
-          Copy internal link to clipboard
-        </button>
-      </mat-menu>
     </div>
+    <mat-menu #share="matMenu" class="res-share-menu">
+      <button
+        mat-menu-item
+        matTooltip="Copy ARK url"
+        matTooltipPosition="above"
+        data-cy="copy-ark-url-button"
+        [cdkCopyToClipboard]="resource.versionArkUrl"
+        (click)="this.notification.openSnackBar('ARK URL copied to clipboard!')">
+        <mat-icon>content_copy</mat-icon>
+        Copy ARK url to clipboard
+      </button>
+      <button
+        mat-menu-item
+        matTooltip="Copy internal link"
+        data-cy="copy-internal-link-button"
+        matTooltipPosition="above"
+        [cdkCopyToClipboard]="resource.id"
+        (click)="this.notification.openSnackBar('Internal link copied to clipboard!')">
+        <mat-icon>content_copy</mat-icon>
+        Copy internal link to clipboard
+      </button>
+    </mat-menu>
   `,
   styles: [
     `
