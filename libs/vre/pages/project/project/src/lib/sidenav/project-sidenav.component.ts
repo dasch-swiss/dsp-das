@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-project-sidenav',
-  template: ` <app-projects-sidenav-ontologies /> `,
+  template: ` <app-projects-sidenav-ontologies />
+    <app-project-sidenav-link-objects />`,
   styles: [
     `
       :host {
