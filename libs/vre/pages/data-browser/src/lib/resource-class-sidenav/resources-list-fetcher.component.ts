@@ -59,7 +59,6 @@ export class ResourcesListFetcherComponent implements OnInit {
     pairwise(),
     map(([[prevResources, prevClass], [currResources, currClass]]) => {
       const classParamChanged = prevClass !== currClass;
-      console.log('currResources', currResources);
       return { resources: currResources!, selectFirstResource: classParamChanged };
     })
   );
