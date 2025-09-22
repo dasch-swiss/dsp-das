@@ -99,7 +99,7 @@ const routes: Routes = [
       { path: 'data', component: DataBrowserPageComponent },
 
       {
-        path: RouteConstants.OntologyClassRelative,
+        path: 'data2',
         component: ResourceClassBrowserPage2Component,
       },
       {

@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
         <mat-icon class="tab-icon">lan</mat-icon>
         Data models
       </a>
-      <a mat-tab-link [routerLink]="['data']" [class.active-link]="isDataRouteActive()">
+      <a mat-tab-link [routerLink]="['data2']" [class.active-link]="isDataRouteActive()">
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>

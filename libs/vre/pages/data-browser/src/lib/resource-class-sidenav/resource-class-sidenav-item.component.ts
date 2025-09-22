@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -14,8 +14,7 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
-      (mouseleave)="isHovered = false"
-      (opened)="navigate()">
+      (mouseleave)="isHovered = false">
       <mat-expansion-panel-header>
         <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
         <mat-panel-description
@@ -31,7 +30,9 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
         </mat-panel-description>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
-        <app-resources-list-fetcher />
+        @if (ontologyLabel && classLabel) {
+          <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
+        }
       </ng-template>
     </mat-expansion-panel>
   `,
@@ -56,6 +57,9 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     },
   };
 
+  ontologyLabel!: string;
+  classLabel!: string;
+
   constructor(
     private _cd: ChangeDetectorRef,
     private _localizationService: LocalizationService,
@@ -63,8 +67,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _projectPageService: ProjectPageService,
-    private _route: ActivatedRoute
+    private _projectPageService: ProjectPageService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +75,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       const [ontologyIri, className] = this.resClass.id.split('#');
       const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
+      this.ontologyLabel = ontologyName;
+      this.classLabel = className;
       this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
     });
 
@@ -91,11 +96,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
-  }
-
-  navigate() {
-    console.log(this.resClass);
-    this._router.navigate([this.classLink]);
   }
 
   goToAddClassInstance() {
