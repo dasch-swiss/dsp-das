@@ -6,7 +6,7 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
   template: `<div style="display: flex; height: 100%">
     <app-project-sidenav />
     <div style="flex: 1; display: flex; justify-content: center">
-      <app-multiple-viewer />
+      <app-multiple-viewer style="flex: 1" />
     </div>
   </div> `,
   providers: [MultipleViewerService],
