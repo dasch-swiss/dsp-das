@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -15,7 +15,8 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
         [togglePosition]="'before'"
         style="box-shadow: none"
         (mouseenter)="isHovered = true"
-        (mouseleave)="isHovered = false">
+        (mouseleave)="isHovered = false"
+        (opened)="navigate()">
         <mat-expansion-panel-header>
           <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
           <mat-panel-description
@@ -64,7 +65,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +93,11 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  navigate() {
+    console.log(this.resClass);
+    this._router.navigate(['..', this.resClass.label], { relativeTo: this._route });
   }
 
   goToAddClassInstance() {
