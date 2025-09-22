@@ -11,23 +11,23 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-accordion>
-      <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none">
+      <mat-expansion-panel
+        [togglePosition]="'before'"
+        style="box-shadow: none"
+        (mouseenter)="isHovered = true"
+        (mouseleave)="isHovered = false">
         <mat-expansion-panel-header>
           <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
           <mat-panel-description
             style="flex-grow: 0; flex-basis: 150px;
     justify-content: end;
     margin-right: 0;">
-            <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
-            @if (hasProjectMemberRights$ | async) {
-              <button
-                mat-icon-button
-                data-cy="add-class-instance"
-                (click)="goToAddClassInstance()"
-                class="small-icon-button">
-                <mat-icon>add</mat-icon>
+            @if ((hasProjectMemberRights$ | async) && isHovered) {
+              <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance()">
+                <mat-icon>add_circle</mat-icon>
               </button>
             }
+            <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
           </mat-panel-description>
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
@@ -36,13 +36,6 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
       </mat-expansion-panel>
     </mat-accordion>
   `,
-  styles: [
-    `
-      .small-icon-button {
-        transform: scale(0.6);
-      }
-    `,
-  ],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
@@ -54,6 +47,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ontologiesLabel!: string;
   count$!: Observable<number>;
   loading = true;
+  isHovered = false;
 
   readonly itemPluralMapping = {
     entry: {
