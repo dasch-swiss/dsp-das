@@ -33,12 +33,12 @@ export interface DefaultProperty {
 export class DefaultProperties {
   public static unsupported: DefaultProperty = {
     icon: 'data_object',
-    label: 'This property type is custom to the project and has been imported',
-    description: 'This property type is custom to the project and has been imported',
+    label: 'This property type is custom to the project',
+    description: 'This property type is custom to the project',
     subPropOf: '',
     objectType: '',
     guiElement: '',
-    group: 'Custom / Imported',
+    group: 'Custom',
   };
 
   public static data: PropertyCategory[] = [
