@@ -14,7 +14,12 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
     }
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
-        <h2 style="text-align: center;margin-top: 50px;">There is no result.</h2>
+        <div
+          style="display: flex; justify-content: center; align-items: center; text-align: center;  margin-top: 100px">
+          <div>
+            <app-no-results-found />
+          </div>
+        </div>
       }
       @if (resources.length > 0) {
         <app-resource-browser
