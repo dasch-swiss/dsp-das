@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important: Permission Protocol
+## Important: Permission Protocol and rules to follow
 
 **ALWAYS ask for explicit permission before:**
 - Making any code changes or modifications
@@ -12,7 +12,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Installing or updating dependencies
 - Making commits or pushing changes
 
-Only proceed with changes after receiving clear approval from the user.
+
+**Only proceed with changes after receiving clear approval from the user.**
+
+**While refactoring and/or moving code, always perform the cleanup afterwards.**
+
+**Try to propose the best practices approach instead of quick fixes. In list of solutions clearly mark which is which.**
 
 ## Project Overview
 
@@ -72,11 +77,6 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 - **shared/** - Common utilities and services
 - **ui/** - Reusable UI components
 
-### State Management
-Uses **NGXS** for state management with domain-specific states:
-- User, Projects, Ontologies, Lists, OntologyClass, Resource, Config states
-- Actions and selectors co-located with state files
-
 ### Key Patterns
 - **Barrel exports** via `*.components.ts` files
 - **exposing exported files** via `*.index.ts` files
@@ -103,6 +103,7 @@ Multiple environment configurations available:
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
 - Self-closing tags for component selectors in templates
+- no usage of ::ng-deep
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
@@ -262,7 +263,6 @@ DSP-JS is integrated with NGXS state management:
 Key external libraries:
 - **@dasch-swiss/dsp-js** - DSP API client library (see detailed section above)
 - **@angular/material** - UI components
-- **@ngxs/store** - State management
 - **openseadragon** - Image viewer
 - **ckeditor5-custom-build** - Rich text editing
 - **cypress** - E2E testing
