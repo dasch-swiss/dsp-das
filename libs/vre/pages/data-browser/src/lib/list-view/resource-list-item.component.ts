@@ -8,7 +8,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   selector: 'app-resource-list-item',
   template: `
     <div
-      style="padding: 8px 16px; cursor: pointer"
+      class="item"
       [ngClass]="{ highlighted: isHighlighted$ | async }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
@@ -42,6 +42,13 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
+      .item {
+        padding: 0 16px;
+        cursor: pointer;
+        &:hover {
+          background-color: #ebebeb;
+        }
+      }
       .highlighted {
         border-left: 2px solid #33678f;
         background-color: #d6e0e8;
