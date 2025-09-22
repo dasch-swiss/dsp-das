@@ -7,7 +7,6 @@ import { ResourceListSelectionComponent } from './lib/list-view/resource-list-se
 import { ResourceListComponent } from './lib/list-view/resource-list.component';
 import { ResourcesListComponent } from './lib/list-view/resources-list.component';
 import { ResourceClassBrowserPage2Component } from './lib/resource-class-browser-page-2.component';
-import { ResourceClassBrowserPageComponent } from './lib/resource-class-browser-page.component';
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav/resource-class-sidenav.component';
 import { ResourcesListFetcherComponent } from './lib/resource-class-sidenav/resources-list-fetcher.component';
@@ -15,7 +14,6 @@ import { ResourcesListFetcherComponent } from './lib/resource-class-sidenav/reso
 export const DataBrowserComponents = [
   ResourceClassSidenavComponent,
   ResourceClassSidenavItemComponent,
-  ResourceClassBrowserPageComponent,
   ComparisonComponent,
   ResourceLinkDialogComponent,
   ResourcesListComponent,
