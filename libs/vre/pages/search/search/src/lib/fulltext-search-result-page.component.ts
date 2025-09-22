@@ -14,12 +14,9 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
     }
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
-        <div
-          style="display: flex; justify-content: center; align-items: center; text-align: center;  margin-top: 100px">
-          <div>
-            <app-no-results-found />
-          </div>
-        </div>
+        <app-centered-box>
+          <app-no-results-found />
+        </app-centered-box>
       }
       @if (resources.length > 0) {
         <app-resource-browser
