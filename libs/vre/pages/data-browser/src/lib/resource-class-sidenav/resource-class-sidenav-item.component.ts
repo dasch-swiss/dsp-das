@@ -13,7 +13,6 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
     <mat-accordion>
       <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none">
         <mat-expansion-panel-header>
-          <!--<a [routerLinkActive]="['is-active']" [routerLink]="classLink" style="display: flex;"> </a>-->
           <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
           <mat-panel-description
             style="flex-grow: 0; flex-basis: 150px;
