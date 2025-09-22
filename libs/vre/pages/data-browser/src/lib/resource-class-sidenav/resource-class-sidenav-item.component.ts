@@ -10,32 +10,30 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    <mat-accordion>
-      <mat-expansion-panel
-        [togglePosition]="'before'"
-        style="box-shadow: none"
-        (mouseenter)="isHovered = true"
-        (mouseleave)="isHovered = false"
-        (opened)="navigate()">
-        <mat-expansion-panel-header>
-          <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
-          <mat-panel-description
-            style="flex-grow: 0; flex-basis: 150px;
+    <mat-expansion-panel
+      [togglePosition]="'before'"
+      style="box-shadow: none"
+      (mouseenter)="isHovered = true"
+      (mouseleave)="isHovered = false"
+      (opened)="navigate()">
+      <mat-expansion-panel-header>
+        <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
+        <mat-panel-description
+          style="flex-grow: 0; flex-basis: 150px;
     justify-content: end;
     margin-right: 0;">
-            @if ((hasProjectMemberRights$ | async) && isHovered) {
-              <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance()">
-                <mat-icon>add_circle</mat-icon>
-              </button>
-            }
-            <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <ng-template matExpansionPanelContent>
-          <app-resources-list-fetcher />
-        </ng-template>
-      </mat-expansion-panel>
-    </mat-accordion>
+          @if ((hasProjectMemberRights$ | async) && isHovered) {
+            <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          }
+          <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <app-resources-list-fetcher />
+      </ng-template>
+    </mat-expansion-panel>
   `,
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
@@ -97,7 +95,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
 
   navigate() {
     console.log(this.resClass);
-    this._router.navigate(['..', this.resClass.label], { relativeTo: this._route });
+    this._router.navigate([this.classLink]);
   }
 
   goToAddClassInstance() {

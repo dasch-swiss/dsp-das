@@ -6,9 +6,11 @@ import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-sidenav',
   template: `
-    @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
-      <app-resource-class-sidenav-item [resClass]="classToDisplay" />
-    }
+    <mat-accordion>
+      @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
+        <app-resource-class-sidenav-item [resClass]="classToDisplay" />
+      }
+    </mat-accordion>
   `,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
