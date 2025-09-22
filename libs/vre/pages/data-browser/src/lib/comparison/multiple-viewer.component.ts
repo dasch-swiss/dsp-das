@@ -6,14 +6,12 @@ import { MultipleViewerService } from './multiple-viewer.service';
   selector: 'app-multiple-viewer',
   template: `
     @if (selectedResourceIds$ | async; as selectedResourceIds) {
-      @if (selectedResourceIds.length <= MAX_RESOURCES) {
-        <app-comparison [resourceIds]="selectedResourceIds" />
-      }
-      @if (selectedResourceIds.length > MAX_RESOURCES) {
-        <div class="centered">Too many resources are selected to be displayed.</div>
-      }
       @if (selectedResourceIds.length === 0) {
         <div class="centered">Select a resource on the left panel to display.</div>
+      } @else if (selectedResourceIds.length <= MAX_RESOURCES) {
+        <app-comparison [resourceIds]="selectedResourceIds" />
+      } @else if (selectedResourceIds.length > MAX_RESOURCES) {
+        <div class="centered">Too many resources are selected to be displayed.</div>
       }
     }
   `,
