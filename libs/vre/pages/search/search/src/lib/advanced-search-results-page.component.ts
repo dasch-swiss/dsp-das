@@ -12,9 +12,10 @@ import { combineLatest, map, switchMap } from 'rxjs';
   template: `
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
-        <div style="display: flex; justify-content: center; text-align: center">
+        <div
+          style="display: flex; justify-content: center; align-items: center; text-align: center;  margin-top: 100px">
           <div>
-            <h2>There is no results.</h2>
+            <app-no-results-found />
             <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
           </div>
         </div>
