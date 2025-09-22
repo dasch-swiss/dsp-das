@@ -19,11 +19,12 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          <div
-            style="    color: #979797;
-    font-size: 12px">
-            {{ resource.resourceClassLabel }}
-          </div>
+          @if (false) {
+            <!-- TODO if false -->
+            <div style="color: #979797;font-size: 12px">
+              {{ resource.resourceClassLabel }}
+            </div>
+          }
           @if (foundIn.length > 0) {
             <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
           }
