@@ -32,12 +32,12 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
         </mat-panel-description>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
-        <div style="padding: 0 16px 16px; font-style: italic">
-          {{ ontologyDescription }}
+        <div style="padding-left: 24px">
+          <div style="padding: 0 16px 16px; font-style: italic">{{ ontologiesDescription }}</div>
+          @if (ontologyLabel && classLabel) {
+            <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
+          }
         </div>
-        @if (ontologyLabel && classLabel) {
-          <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
-        }
       </ng-template>
     </mat-expansion-panel>
   `,
@@ -55,7 +55,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   isHovered = false;
 
   ontologyLabel!: string;
-  ontologyDescription!: string;
   classLabel!: string;
 
   constructor(
@@ -127,7 +126,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   private getOntologiesDescriptionInPreferredLanguage(): void {
-    if (this.resClass.labels) {
+    if (this.resClass.comments) {
       const description = this.resClass.comments.find(
         l => l.language === this._localizationService.getCurrentLanguage()
       );
