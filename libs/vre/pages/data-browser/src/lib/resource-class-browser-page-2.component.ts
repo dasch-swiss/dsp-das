@@ -3,11 +3,11 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-class-browser-page-2',
-  template: `<div style="height: 100%">
+  template: `<div style="display: flex; flex-direction: column; height: 100%">
     @if (multipleViewerService.selectMode) {
       <app-resource-list-selection />
     }
-    <div style="display: flex">
+    <div style="display: flex; height: 100%">
       <app-project-sidenav />
       <div style="flex: 1; display: flex; justify-content: center">
         <app-multiple-viewer style="flex: 1" />

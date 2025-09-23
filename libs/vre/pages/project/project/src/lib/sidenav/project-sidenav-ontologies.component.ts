@@ -4,9 +4,9 @@ import { ProjectPageService } from '../project-page.service';
 @Component({
   selector: 'app-projects-sidenav-ontologies',
   template: `
-    @for (onto of projectOntologies$ | async; track onto; let first = $first) {
+    @for (onto of projectOntologies$ | async; track onto) {
       <mat-accordion>
-        <mat-expansion-panel [expanded]="first" [togglePosition]="'before'" style="box-shadow: none">
+        <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none">
           <mat-expansion-panel-header>
             <mat-panel-title
               #ontoTitle
