@@ -15,11 +15,11 @@ import { ActivatedRoute } from '@angular/router';
         <mat-icon class="tab-icon">description</mat-icon>
         Description
       </a>
-      <a mat-tab-link [routerLink]="['data-models']" routerLinkActive="active-link">
+      <a mat-tab-link [routerLink]="['data-models']" [class.active-link]="isDataModelsRouteActive()">
         <mat-icon class="tab-icon">lan</mat-icon>
         Data models
       </a>
-      <a mat-tab-link [routerLink]="['data']" [class.active-link]="isDataRouteActive()">
+      <a mat-tab-link [routerLink]="['data']" routerLinkActive="active-link">
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
@@ -54,7 +54,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HeaderProjectTabsComponent {
   constructor(private _route: ActivatedRoute) {}
-  isDataRouteActive(): boolean {
-    return ['ontology', 'data'].includes(this._route.snapshot.children[0].url[0].path);
+  isDataModelsRouteActive(): boolean {
+    const path = this._route.snapshot.children[0].url[0].path;
+    return path.startsWith('data-models') || path.startsWith('ontology');
   }
 }
