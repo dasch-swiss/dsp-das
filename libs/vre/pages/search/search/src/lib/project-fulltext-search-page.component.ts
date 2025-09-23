@@ -1,20 +1,23 @@
 import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-project-fulltext-search-page',
   template: `
-    <p>Search through all text content in the project.</p>
-    <form>
-      <div style="display: flex; align-items: center; gap: 16px">
-        <mat-form-field appearance="outline" style="flex: 1">
-          <mat-label>Search</mat-label>
-          <input matInput type="text" placeholder="Enter search term..." />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <button mat-flat-button color="primary" type="submit">Search</button>
-      </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" style="display: flex; justify-content: center">
+      <mat-form-field appearance="outline" style="width: 600px">
+        <mat-label>Search in the entire project</mat-label>
+        <input matInput [formControl]="formGroup.controls.query" type="text" placeholder="Enter search term..." />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
     </form>
+
+    @if (querySubject | async; as query) {
+      <mat-divider style="margin-top: 32px" />
+
+      <app-fulltext-search-result-page [query]="query" />
+    }
   `,
   styles: [
     `
@@ -24,4 +27,17 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class ProjectFulltextSearchPageComponent {}
+export class ProjectFulltextSearchPageComponent {
+  querySubject = new Subject<string>();
+
+  formGroup = this._fb.group({ query: [''] });
+
+  constructor(private _fb: FormBuilder) {}
+  onSubmit() {
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    this.querySubject.next(this.formGroup.controls.query.value!);
+  }
+}
