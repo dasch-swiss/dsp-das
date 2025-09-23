@@ -24,7 +24,9 @@ export class ProjectPageService {
     switchMap(() => this._currentProjectUuidSubject),
     switchMap(projectUuid => this.projectApiService.get(this._projectService.uuidToIri(projectUuid))),
     map(response => response.project),
-    tap(project => (this._currentProjectId = project.id)),
+    tap(project => {
+      return (this._currentProjectId = project.id);
+    }),
     shareReplay(1)
   );
 
