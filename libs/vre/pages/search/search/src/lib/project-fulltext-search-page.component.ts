@@ -1,19 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-project-fulltext-search-page',
   template: `
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" style="display: flex; justify-content: center">
-      <mat-form-field appearance="outline" style="width: 600px">
-        <mat-label>Search in the entire project</mat-label>
-        <input matInput [formControl]="formGroup.controls.query" type="text" placeholder="Enter search term..." />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-    </form>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 16px">
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" style="width: 600px">
+          <mat-label>Search in the entire project</mat-label>
+          <input matInput [formControl]="formGroup.controls.query" type="text" placeholder="Enter search term..." />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
 
-    @if (querySubject | async; as query) {
+      <button mat-stroked-button (click)="goToAdvancedSearch.emit()">
+        <mat-icon>swap_horiz</mat-icon>
+        Switch to advanced search
+      </button>
+    </div>
+
+    @if (query$ | async; as query) {
       <mat-divider style="margin-top: 32px" />
 
       <app-fulltext-search-result-page [query]="query" />
@@ -28,7 +35,9 @@ import { Subject } from 'rxjs';
   ],
 })
 export class ProjectFulltextSearchPageComponent {
+  @Output() goToAdvancedSearch = new EventEmitter();
   querySubject = new Subject<string>();
+  query$ = this.querySubject.asObservable();
 
   formGroup = this._fb.group({ query: [''] });
 
