@@ -27,7 +27,7 @@
       <!-- system for system admin only -->
       @if (isSysAdmin$ | async) {
       <mat-list-item class="nav-item">
-        <button mat-button [routerLink]="systemLink" routerLinkActive="active-link" class="nav-item button">
+        <button mat-button [routerLink]="['/', systemLink]" routerLinkActive="active-link" class="nav-item button">
           <span class="label">{{ 'pages.userSettings.userMenu.systemAdministration' | translate }}</span>
         </button>
       </mat-list-item>

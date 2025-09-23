@@ -33,7 +33,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
         <div style="padding-left: 24px">
-          <div style="padding: 0 16px 16px; font-style: italic">{{ ontologiesDescription }}</div>
+          <div style="padding: 0 16px; font-style: italic">{{ ontologiesDescription }}</div>
           @if (ontologyLabel && classLabel) {
             <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
           }

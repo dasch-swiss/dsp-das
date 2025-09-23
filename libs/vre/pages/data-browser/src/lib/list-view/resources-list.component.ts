@@ -22,7 +22,7 @@ import { ResourceResultService } from '../resource-result.service';
   styles: [
     `
       app-pager {
-        margin: 0 8px;
+        margin: 8px;
       }
     `,
   ],
