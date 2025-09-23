@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
 @Component({
@@ -14,30 +13,17 @@ import { ResourceResultService } from '../resource-result.service';
     }
     @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
       <app-pager
-        class="pager"
         (pageIndexChanged)="updatePageIndex($event)"
         [numberOfAllResults]="resourceResultService.numberOfResults" />
     }
 
     <app-resource-list [resources]="resources" />`,
-  styles: [
-    `
-      .pager {
-        display: block;
-        padding: 8px;
-        border: 1px solid #ebebeb;
-        border-radius: 10px;
-        margin-bottom: 16px;
-      }
-    `,
-  ],
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
   @Input({ required: true }) showBackToFormButton!: boolean;
 
   constructor(
-    public multipleViewerService: MultipleViewerService,
     public resourceResultService: ResourceResultService,
     private _router: Router,
     private _route: ActivatedRoute

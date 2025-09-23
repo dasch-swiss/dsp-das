@@ -1,21 +1,30 @@
 @use 'config' as *;
 
-.paginator-container {
+:host {
+  display: block;
+  border: 1px solid #ebebeb;
+  padding: 0 8px;
+  border-radius: 10px;
+}
+
+.main-row {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
 
+.paginator-container {
+  display: flex;
+  align-items: center;
+}
+
 .paginator-nav {
   display: flex;
-  flex-direction: row;
   align-items: center;
 }
 
 .paginator-page-info {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
