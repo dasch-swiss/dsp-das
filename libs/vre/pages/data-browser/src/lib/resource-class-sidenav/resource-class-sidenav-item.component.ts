@@ -17,7 +17,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       (mouseenter)="isHovered = true"
       (mouseleave)="isHovered = false">
       <mat-expansion-panel-header>
-        <mat-panel-title style="flex: 1"> {{ ontologiesLabel }}</mat-panel-title>
+        <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
         <mat-panel-description
           style="flex-grow: 0; flex-basis: 150px;
     justify-content: end;
@@ -27,7 +27,8 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
               <mat-icon>add_circle</mat-icon>
             </button>
           }
-          <span>{{ count$ | async | i18nPlural: itemPluralMapping['entry'] }}</span>
+          <span>{{ count$ | async }}</span>
+          <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
@@ -52,8 +53,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   readonly itemPluralMapping = {
     entry: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': '1 Entry',
-      other: '# Entries',
+      '=1': '1 entry',
+      other: '# entries',
     },
   };
 
@@ -102,10 +103,13 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     console.log('test', this);
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        ...DspDialogConfig.mediumDialog({
-          resourceType: this.resClass.label,
-          resourceClassIri: this.resClass.id,
-        }),
+        ...DspDialogConfig.dialogDrawerConfig(
+          {
+            resourceType: this.resClass.label,
+            resourceClassIri: this.resClass.id,
+          },
+          true
+        ),
         viewContainerRef: this._viewContainerRef,
       })
       .afterClosed()
