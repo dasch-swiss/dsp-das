@@ -9,7 +9,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
       @if (selectedResourceIds.length === 0) {
         <app-centered-box>
           <app-centered-message
-            [icon]="'search'"
+            [icon]="'arrow_circle_left'"
             [title]="'Select a resource on the left panel'"
             [message]="'Choose one or more resources from the left panel to display and compare them here.'" />
         </app-centered-box>

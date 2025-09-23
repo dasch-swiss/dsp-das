@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { User } from '@dasch-swiss/dsp-js';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MenuItem } from '../menu-item';
 
 @Component({
@@ -13,8 +11,6 @@ import { MenuItem } from '../menu-item';
   styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
-  @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
-
   destroyed: Subject<void> = new Subject<void>();
 
   navigation: MenuItem[];
@@ -31,12 +27,6 @@ export class UserMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.isLoggedIn$.pipe(takeUntil(this.destroyed)).subscribe(isLoggedIn => {
-      if (isLoggedIn && this.menuTrigger.menuOpen) {
-        this.menuTrigger.closeMenu();
-      }
-    });
-
     this.setNav();
   }
 
