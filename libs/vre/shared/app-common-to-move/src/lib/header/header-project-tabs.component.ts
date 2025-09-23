@@ -23,7 +23,7 @@ import { ActivatedRoute } from '@angular/router';
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
-      <a mat-tab-link [routerLink]="['search']" routerLinkActive="active-link">
+      <a mat-tab-link [routerLink]="['search']" [class.active-link]="isSearchRouteActive()">
         <mat-icon class="tab-icon">search</mat-icon>
         Search
       </a>
@@ -53,9 +53,15 @@ import { ActivatedRoute } from '@angular/router';
   ],
 })
 export class HeaderProjectTabsComponent {
+  get path() {
+    return this._route.snapshot.children[0].url[0].path;
+  }
   constructor(private _route: ActivatedRoute) {}
   isDataModelsRouteActive(): boolean {
-    const path = this._route.snapshot.children[0].url[0].path;
-    return path.startsWith('data-models') || path.startsWith('ontology');
+    return this.path.startsWith('data-models') || this.path.startsWith('ontology');
+  }
+
+  isSearchRouteActive() {
+    return this.path.startsWith('search') || this.path.startsWith('advanced-search');
   }
 }
