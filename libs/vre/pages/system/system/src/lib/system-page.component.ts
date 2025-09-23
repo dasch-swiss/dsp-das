@@ -6,6 +6,7 @@ import { UserService } from '@dasch-swiss/vre/core/session';
 @Component({
   selector: 'app-system-page',
   template: `
+    <app-header />
     <div class="content large middle">
       @if (isSysAdmin$ | async) {
         <div>
