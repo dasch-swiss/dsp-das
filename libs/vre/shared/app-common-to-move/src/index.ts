@@ -8,3 +8,4 @@ export * from './lib/header/header-project-tabs.component';
 export * from './lib/header/header-right.component';
 export * from './lib/header/header-logo.component';
 export * from './lib/header/version-badge.component';
+export * from './lib/header/header-search.component';

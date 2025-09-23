@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { AppConfigService, DspConfig } from '@dasch-swiss/vre/core/config';
 import { SearchParams } from '../search-params.interface';
 
 @Component({
@@ -13,6 +13,7 @@ import { SearchParams } from '../search-params.interface';
         <app-header-logo />
         <h1 style="font-size: 18px">DaSCH Service Platform</h1>
       </span>
+      <app-header-search />
 
       <app-header-right />
     </mat-toolbar>
@@ -46,24 +47,5 @@ export class HeaderComponent {
     );
 
     this.dsp = this._appConfigService.dspConfig;
-  }
-
-  doSearch(search: SearchParams) {
-    // reset search params
-    this.searchParams = undefined;
-
-    // we can do the routing here or send the search param
-    // to (resource) list view directly
-    this.searchParams = search;
-
-    if (this.searchParams.mode && this.searchParams.query) {
-      let doSearchRoute = `/${RouteConstants.search}/${this.searchParams.mode}/${this.searchParams.query}`;
-
-      if (this.searchParams.filter && this.searchParams.filter.limitToProject) {
-        doSearchRoute += `/${encodeURIComponent(this.searchParams.filter.limitToProject)}`;
-      }
-
-      this._router.navigateByUrl('/').then(() => this._router.navigate([doSearchRoute]));
-    }
   }
 }
