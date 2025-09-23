@@ -20,10 +20,12 @@ import {
   ResourceMetadataComponent,
   SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import {
+  AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
   FulltextSearchResultPageComponent,
-  ProjectSearchPageComponent,
+  ProjectFulltextSearchPageComponent,
   SearchProjectResultsPageComponent,
 } from '@dasch-swiss/vre/pages/search/search';
 import {
@@ -146,10 +148,11 @@ const routes: Routes = [
       },
       {
         path: 'search',
-        component: ProjectSearchPageComponent,
+        component: ProjectFulltextSearchPageComponent,
       },
+      { path: 'advanced-search', component: AdvancedSearchPageComponent },
       {
-        path: RouteConstants.advancedSearchResultsRelative,
+        path: 'advanced-search/results',
         component: AdvancedSearchResultsPageComponent,
       },
       {
