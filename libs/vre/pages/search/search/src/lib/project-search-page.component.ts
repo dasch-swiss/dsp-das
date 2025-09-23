@@ -5,10 +5,10 @@ import { Component } from '@angular/core';
   template: `
     <app-centered-layout>
       <div style="display: flex; justify-content: center">
-        <app-double-chip-selector [value]="isFulltextSearch" [options]="['Fulltext search', 'Advanced search']" />
+        <app-double-chip-selector [(value)]="isFulltextSearch" [options]="['Fulltext search', 'Advanced search']" />
       </div>
       @if (isFulltextSearch) {
-        <app-fulltext-search />
+        <app-project-fulltext-search-page />
       } @else {
         <app-advanced-search-page />
       }
