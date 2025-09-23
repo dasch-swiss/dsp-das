@@ -9,7 +9,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   template: `
     <div
       class="item"
-      [ngClass]="{ highlighted: isHighlighted$ | async }"
+      [ngClass]="{ highlighted: isHighlighted$ | async, search: multipleViewerService.searchKeyword !== undefined }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
@@ -19,12 +19,6 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
           <div style="color: black">
             {{ resource.label }}
           </div>
-          @if (false) {
-            <!-- TODO if false -->
-            <div style="color: #979797;font-size: 12px">
-              {{ resource.resourceClassLabel }}
-            </div>
-          }
           @if (foundIn.length > 0) {
             <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
           }
@@ -47,6 +41,9 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         cursor: pointer;
         &:hover {
           background-color: #ebebeb;
+        }
+        &.search {
+          padding: 8px 16px;
         }
       }
       .highlighted {
