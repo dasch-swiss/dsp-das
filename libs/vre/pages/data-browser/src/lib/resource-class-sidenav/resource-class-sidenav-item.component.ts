@@ -5,7 +5,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { filter, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
@@ -54,14 +54,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   loading = true;
   isHovered = false;
 
-  readonly itemPluralMapping = {
-    entry: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': '1 entry',
-      other: '# entries',
-    },
-  };
-
   ontologyLabel!: string;
   ontologyDescription!: string;
   classLabel!: string;
@@ -85,7 +77,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       this.getOntologiesDescriptionInPreferredLanguage();
     });
 
-    this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
+    this._projectPageService.currentProjectUuid$.pipe(first()).subscribe(projectUuid => {
       const [ontologyIri, className] = this.resClass.id.split('#');
       const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
