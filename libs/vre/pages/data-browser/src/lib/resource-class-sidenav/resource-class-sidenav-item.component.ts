@@ -16,7 +16,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
       (mouseleave)="isHovered = false">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header style="padding-right: 16px">
         <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
         <mat-panel-description
           style="flex-grow: 0; flex-basis: 150px;

@@ -13,6 +13,7 @@
       mat-icon-button
       [matTooltip]="'ui.pager.previousPage' | translate"
       (click)="pageIndex = pageIndex - 1"
+      [attr.mat-density]="-2"
       [disabled]="pageIndex === 0">
       <mat-icon>chevron_left</mat-icon>
     </button>
