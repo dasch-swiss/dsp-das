@@ -21,9 +21,9 @@ import {
   SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
 import {
-  AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
   FulltextSearchResultPageComponent,
+  ProjectSearchPageComponent,
   SearchProjectResultsPageComponent,
 } from '@dasch-swiss/vre/pages/search/search';
 import {
@@ -145,8 +145,8 @@ const routes: Routes = [
         ],
       },
       {
-        path: RouteConstants.advancedSearch,
-        component: AdvancedSearchPageComponent,
+        path: 'search',
+        component: ProjectSearchPageComponent,
       },
       {
         path: RouteConstants.advancedSearchResultsRelative,

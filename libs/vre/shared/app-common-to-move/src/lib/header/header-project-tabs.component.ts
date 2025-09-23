@@ -23,7 +23,7 @@ import { ActivatedRoute } from '@angular/router';
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
-      <a mat-tab-link [routerLink]="['advanced-search']" routerLinkActive="active-link">
+      <a mat-tab-link [routerLink]="['search']" routerLinkActive="active-link">
         <mat-icon class="tab-icon">search</mat-icon>
         Search
       </a>

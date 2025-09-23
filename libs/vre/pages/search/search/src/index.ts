@@ -8,3 +8,5 @@ export * from './lib/advanced-search-results-page.component';
 export * from './lib/fulltext-search-result-page.component';
 export * from './lib/search-project-results-page.component';
 export * from './lib/no-results-found.component';
+export * from './lib/project-search-page.component';
+export * from './lib/project-fulltext-search-page.component';
