@@ -4,13 +4,11 @@ import { FulltextSearchResultPageComponent } from './lib/fulltext-search-result-
 import { NoResultsFoundComponent } from './lib/no-results-found.component';
 import { ProjectFulltextSearchPageComponent } from './lib/project-fulltext-search-page.component';
 import { ProjectSearchPageComponent } from './lib/project-search-page.component';
-import { SearchProjectResultsPageComponent } from './lib/search-project-results-page.component';
 
 export const SearchComponents = [
   AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
   FulltextSearchResultPageComponent,
-  SearchProjectResultsPageComponent,
   NoResultsFoundComponent,
   ProjectSearchPageComponent,
   ProjectFulltextSearchPageComponent,

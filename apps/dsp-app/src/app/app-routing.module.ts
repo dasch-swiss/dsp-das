@@ -23,9 +23,7 @@ import {
 import {
   AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
-  FulltextSearchResultPageComponent,
   ProjectFulltextSearchPageComponent,
-  SearchProjectResultsPageComponent,
 } from '@dasch-swiss/vre/pages/search/search';
 import {
   CookiePolicyComponent,
@@ -188,19 +186,6 @@ const routes: Routes = [
       {
         path: RouteConstants.systemUsers,
         component: UsersTabComponent,
-      },
-    ],
-  },
-  {
-    path: RouteConstants.search,
-    children: [
-      {
-        path: RouteConstants.searchProjectRelative,
-        component: SearchProjectResultsPageComponent,
-      },
-      {
-        path: RouteConstants.searchRelative,
-        component: FulltextSearchResultPageComponent,
       },
     ],
   },
