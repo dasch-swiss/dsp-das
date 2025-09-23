@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
@@ -16,10 +17,12 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
   </div> `,
   providers: [MultipleViewerService],
 })
-export class ResourceClassBrowserPage2Component {
-  constructor(public multipleViewerService: MultipleViewerService) {}
-
-  ngOnIinit() {
-    // this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$);
+export class ResourceClassBrowserPage2Component implements OnInit {
+  constructor(
+    public multipleViewerService: MultipleViewerService,
+    private _userService: UserService
+  ) {}
+  ngOnInit() {
+    this.multipleViewerService.onInit(this._userService.isSysAdmin$);
   }
 }

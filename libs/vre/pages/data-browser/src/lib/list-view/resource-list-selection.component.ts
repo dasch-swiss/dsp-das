@@ -9,10 +9,12 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   selector: 'app-resource-list-selection',
   template: `
     <div style="background: #336790; color: white; padding: 0 16px; display: flex; gap: 8px; align-items: center">
-      <div style="flex: 1">{{ count$ | async }} resources selected</div>
-      @if ((showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async); as selectedResources) {
-        <button mat-flat-button (click)="openCreateLinkDialog(selectedResources)">Create a link object</button>
-      }
+      <div style="flex: 1; display: flex; align-items: center; gap: 16px;">
+        <div>{{ count$ | async }} resources selected</div>
+        @if ((showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async); as selectedResources) {
+          <button mat-flat-button (click)="openCreateLinkDialog(selectedResources)">Create a link object</button>
+        }
+      </div>
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
