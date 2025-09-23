@@ -137,7 +137,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   private _getIcon(): string {
-    console.log('aaa', this.resClass.label, this, this.resClass.subClassOf[0]);
     switch (this.resClass.subClassOf[0]) {
       case Constants.AudioRepresentation:
         return 'audio_file';

@@ -18,10 +18,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   `,
 })
 export class ResourceListSelectionComponent {
-  count$ = this.multipleViewerService.selectedResources$.pipe(
-    map(resources => resources.length),
-    tap(v => console.log('count', v))
-  );
+  count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
   showCreateLink$ = combineLatest([this.count$, this.multipleViewerService.hasRightsToShowCreateLinkObject$]).pipe(
     tap(v => console.log('zz', v)),
     map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
