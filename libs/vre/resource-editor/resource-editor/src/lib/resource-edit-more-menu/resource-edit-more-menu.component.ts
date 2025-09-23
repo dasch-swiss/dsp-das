@@ -131,7 +131,6 @@ export class ResourceEditMoreMenuComponent implements OnInit {
   }
 
   resourceCanBeDeleted$!: Observable<CanDoResponse>;
-  private _resource$ = new BehaviorSubject<ReadResource | null>(null);
 
   constructor(
     @Inject(DspApiConnectionToken)
