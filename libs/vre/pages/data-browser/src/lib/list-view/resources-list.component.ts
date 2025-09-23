@@ -11,6 +11,10 @@ import { ResourceResultService } from '../resource-result.service';
         <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
       </div>
     }
+
+    <div style="padding: 0 16px 16px; font-style: italic">
+      Individual chapters from Alice'd Adventures in Wonderland
+    </div>
     @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
       <app-pager
         (pageIndexChanged)="updatePageIndex($event)"

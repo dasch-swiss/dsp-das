@@ -18,4 +18,8 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
 })
 export class ResourceClassBrowserPage2Component {
   constructor(public multipleViewerService: MultipleViewerService) {}
+
+  ngOnIinit() {
+    // this._multipleViewerService.onInit(this.hasRightsToShowCreateLinkObject$);
+  }
 }
