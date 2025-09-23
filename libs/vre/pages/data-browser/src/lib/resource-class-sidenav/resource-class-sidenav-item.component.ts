@@ -130,6 +130,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   private _getIcon(): string {
+    console.log('aaa', this.resClass.label, this, this.resClass.subClassOf[0]);
     switch (this.resClass.subClassOf[0]) {
       case Constants.AudioRepresentation:
         return 'audio_file';
@@ -144,7 +145,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       case Constants.TextRepresentation:
         return 'text_snippet';
       default: // resource does not have a file representation
-        return 'insert_drive_file';
+        return '';
     }
   }
 
