@@ -14,7 +14,6 @@ import { SearchParams } from '../search-params.interface';
         <h1 style="font-size: 18px">DaSCH Service Platform</h1>
       </span>
 
-      <app-fulltext-search />
       <app-header-right />
     </mat-toolbar>
   `,
