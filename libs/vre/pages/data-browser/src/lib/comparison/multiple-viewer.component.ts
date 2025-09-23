@@ -10,7 +10,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
         <app-centered-box>
           <app-centered-message
             [icon]="'search'"
-            [title]="'Select resources on the left panel'"
+            [title]="'Select a resource on the left panel'"
             [message]="'Choose one or more resources from the left panel to display and compare them here.'" />
         </app-centered-box>
       } @else if (selectedResourceIds.length <= MAX_RESOURCES) {

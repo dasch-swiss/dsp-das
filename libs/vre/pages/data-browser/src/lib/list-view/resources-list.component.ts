@@ -18,9 +18,7 @@ import { ResourceResultService } from '../resource-result.service';
         (pageIndexChanged)="updatePageIndex($event)"
         [numberOfAllResults]="resourceResultService.numberOfResults" />
     }
-    @if (multipleViewerService.selectMode) {
-      <app-resource-list-selection [resources]="resources" />
-    }
+
     <app-resource-list [resources]="resources" />`,
   styles: [
     `
