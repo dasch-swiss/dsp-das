@@ -32,6 +32,9 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
         </mat-panel-description>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
+        <div style="padding: 0 16px 16px; font-style: italic">
+          {{ ontologyDescription }}
+        </div>
         @if (ontologyLabel && classLabel) {
           <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
         }
@@ -46,6 +49,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   icon!: string;
   ontologiesLabel!: string;
+  ontologiesDescription!: string;
   count$!: Observable<number>;
   loading = true;
   isHovered = false;
@@ -59,6 +63,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   };
 
   ontologyLabel!: string;
+  ontologyDescription!: string;
   classLabel!: string;
 
   constructor(
@@ -77,6 +82,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
 
     this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
       this.getOntologiesLabelsInPreferredLanguage();
+      this.getOntologiesDescriptionInPreferredLanguage();
     });
 
     this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
@@ -129,6 +135,16 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getOntologiesDescriptionInPreferredLanguage(): void {
+    if (this.resClass.labels) {
+      const description = this.resClass.comments.find(
+        l => l.language === this._localizationService.getCurrentLanguage()
+      );
+      this.ontologiesDescription = description ? description.value : this.resClass.comments[0].value;
+      this._cd.markForCheck();
+    }
+  }
+
   private _getIcon(): string {
     console.log('aaa', this.resClass.label, this, this.resClass.subClassOf[0]);
     switch (this.resClass.subClassOf[0]) {
@@ -145,7 +161,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       case Constants.TextRepresentation:
         return 'text_snippet';
       default: // resource does not have a file representation
-        return '';
+        return 'insert_drive_file';
     }
   }
 

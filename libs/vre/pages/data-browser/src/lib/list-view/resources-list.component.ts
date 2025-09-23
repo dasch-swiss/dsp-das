@@ -12,9 +12,6 @@ import { ResourceResultService } from '../resource-result.service';
       </div>
     }
 
-    <div style="padding: 0 16px 16px; font-style: italic">
-      Individual chapters from Alice'd Adventures in Wonderland
-    </div>
     @if (resourceResultService.numberOfResults > resourceResultService.MAX_RESULTS_PER_PAGE) {
       <app-pager
         (pageIndexChanged)="updatePageIndex($event)"
