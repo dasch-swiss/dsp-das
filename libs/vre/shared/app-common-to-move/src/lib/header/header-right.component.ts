@@ -4,7 +4,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 @Component({
   selector: 'app-header-right',
   template: `
-    <span>
+    <span style="display: flex; align-items: center">
+      <app-version-badge />
       <a mat-button [routerLink]="helpLink">{{ 'ui.header.help' | translate }}</a>
       <app-user-menu />
     </span>
