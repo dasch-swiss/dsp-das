@@ -98,7 +98,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   goToAddClassInstance() {
-    console.log('test', this);
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         ...DspDialogConfig.dialogDrawerConfig(
