@@ -8,12 +8,14 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
     @if (multipleViewerService.selectMode) {
       <app-resource-list-selection />
     }
-    <div style="display: flex; height: 100%">
-      <app-project-sidenav />
-      <div style="flex: 1; display: flex; justify-content: center">
-        <app-multiple-viewer style="flex: 1" />
-      </div>
-    </div>
+    <as-split direction="horizontal">
+      <as-split-area [size]="30">
+        <app-project-sidenav />
+      </as-split-area>
+      <as-split-area [size]="70" cdkScrollable>
+        <app-multiple-viewer />
+      </as-split-area>
+    </as-split>
   </div> `,
   providers: [MultipleViewerService],
 })
