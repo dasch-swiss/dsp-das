@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { filter, finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -42,7 +43,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
 
   destroyed = new Subject<void>();
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
-  classLink!: string;
   icon!: string;
   ontologiesLabel!: string;
   count$!: Observable<number>;
@@ -63,27 +63,27 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   constructor(
     private _cd: ChangeDetectorRef,
     private _localizationService: LocalizationService,
-    private _router: Router,
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit(): void {
+    this.icon = this._getIcon();
+
+    this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
+      this.getOntologiesLabelsInPreferredLanguage();
+    });
+
     this._projectPageService.currentProjectUuid$.subscribe(projectUuid => {
       const [ontologyIri, className] = this.resClass.id.split('#');
       const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
       this.ontologyLabel = ontologyName;
       this.classLabel = className;
-      this.classLink = `${RouteConstants.projectRelative}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${className}`;
-    });
-
-    this.icon = this._getIcon();
-
-    this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
-      this.getOntologiesLabelsInPreferredLanguage();
     });
 
     this.count$ = this._getCount(this.resClass.id).pipe(
@@ -99,8 +99,22 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   goToAddClassInstance() {
-    const link = `${this.classLink}/${RouteConstants.addClassInstance}`;
-    this._router.navigate(['/']).then(() => this._router.navigate([link]));
+    console.log('test', this);
+    this._dialog
+      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
+        ...DspDialogConfig.mediumDialog({
+          resourceType: this.resClass.label,
+          resourceClassIri: this.resClass.id,
+        }),
+        viewContainerRef: this._viewContainerRef,
+      })
+      .afterClosed()
+      .pipe(
+        filter(resourceId => {
+          return true;
+        })
+      )
+      .subscribe(res => {});
   }
 
   private getOntologiesLabelsInPreferredLanguage(): void {
