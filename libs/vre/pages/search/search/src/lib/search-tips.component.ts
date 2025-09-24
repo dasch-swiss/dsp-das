@@ -12,9 +12,9 @@ import { Component } from '@angular/core';
     border: 1px solid #e0e0e0;">
     Search tips
     <ul>
-      <li>Quotation marks for exact phrases: "down the rabbit hole"</li>
-      <li>AND, OR, NOT for boolean searches: Alice AND Wonderland</li>
-      <li>Wildcards: Alice* will match Alice, Alices, etc.</li>
+      <li>Use quotation marks for exact phrases: "down the rabbit hole"</li>
+      <li>Use AND, OR, NOT for boolean searches: Alice AND Wonderland</li>
+      <li>Use wildcards: Alice* will match Alice, Alices, etc.</li>
     </ul>
   </div>`,
   styles: [

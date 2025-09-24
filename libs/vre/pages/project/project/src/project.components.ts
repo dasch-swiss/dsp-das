@@ -24,11 +24,11 @@ import { CreateProjectFormPageComponent } from './lib/reusable-project-form/crea
 import { EditProjectFormPageComponent } from './lib/reusable-project-form/edit-project-form-page.component';
 import { ReusableProjectFormComponent } from './lib/reusable-project-form/reusable-project-form.component';
 import { ProjectSidenavCollapseButtonComponent } from './lib/sidenav/project-sidenav-collapse-button.component';
+import { ProjectSidenavLinkObjectsComponent } from './lib/sidenav/project-sidenav-link-objects.component';
 import { ProjectSidenavLinksItemComponent } from './lib/sidenav/project-sidenav-links-item.component';
 import { ProjectSidenavLinksComponent } from './lib/sidenav/project-sidenav-links.component';
 import { ProjectSidenavOntologiesComponent } from './lib/sidenav/project-sidenav-ontologies.component';
 import { ProjectSidenavComponent } from './lib/sidenav/project-sidenav.component';
-import { ProjectSidenavLinkObjectsComponent } from './lib/sidenav/project-sidenav-link-objects.component';
 
 export const ProjectComponents = [
   AddUserComponent,
