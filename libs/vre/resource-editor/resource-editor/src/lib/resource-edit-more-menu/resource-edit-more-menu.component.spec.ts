@@ -13,6 +13,10 @@ jest.mock('@dasch-swiss/dsp-js', () => ({
   },
   KnoraApiConnection: class MockKnoraApiConnection {},
   ReadResource: class MockReadResource {},
+  DeleteResource: class MockDeleteResource {},
+  CanDoResponse: class MockCanDoResponse {
+    constructor(public canDo: boolean = true, public cannotDoReason?: string) {}
+  },
 }));
 
 jest.mock('@angular/material/dialog', () => ({
@@ -46,6 +50,8 @@ describe('ResourceEditMoreMenuComponent', () => {
     properties: {},
   };
 
+  const mockCanDeleteResource = jest.fn().mockReturnValue(of({ canDo: true }));
+
   const mockSearchEndpoint = {
     doSearchIncomingLinks: jest.fn().mockReturnValue(of({ resources: [] })),
     doSearchStillImageRepresentationsCount: jest.fn().mockReturnValue(of({ numberOfResults: 0 })),
@@ -53,7 +59,12 @@ describe('ResourceEditMoreMenuComponent', () => {
   };
 
   const mockDspApiConnection = {
-    v2: { search: mockSearchEndpoint },
+    v2: {
+      search: mockSearchEndpoint,
+      res: {
+        canDeleteResource: mockCanDeleteResource
+      }
+    },
   };
 
   const userCanDelete$ = new BehaviorSubject(true);
@@ -94,54 +105,81 @@ describe('ResourceEditMoreMenuComponent', () => {
     component.resource = mockResource as any;
   });
 
+  beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks();
+    userCanDelete$.next(true);
+    mockCanDeleteResource.mockReturnValue(of({ canDo: true }));
+  });
+
   describe('business logic', () => {
     it('should be created', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should set resourceCanBeDeleted to false when user lacks permission', () => {
+    it('should call ngOnInit and set up resourceCanBeDeleted$ observable', () => {
+      // Act
+      component.ngOnInit();
+
+      // Assert
+      expect(component.resourceCanBeDeleted$).toBeDefined();
+    });
+
+    it('should return CanDoResponse from _canDeleteResource$', (done) => {
+      // Arrange
+      const mockCanDoResponse = { canDo: true };
+      mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
+
+      // Act
+      const result$ = (component as any)._canDeleteResource$(mockResource);
+
+      // Assert
+      result$.subscribe(response => {
+        expect(response).toEqual(mockCanDoResponse);
+        expect(mockCanDeleteResource).toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('should return canDo false when user lacks permission', (done) => {
       // Arrange
       userCanDelete$.next(false);
+      component.ngOnInit();
 
-      // Act
-      component.checkResourceCanBeDeleted();
-
-      // Assert
-      expect(component.resourceCanBeDeleted).toEqual({
-        canDo: false,
-        reason: 'You do not have permission to delete this resource.',
+      // Act & Assert
+      component.resourceCanBeDeleted$.subscribe(response => {
+        expect(response.canDo).toBe(false);
+        expect(response.cannotDoReason).toBe('You do not have permission to delete this resource.');
+        done();
       });
     });
 
-    it('should set resourceCanBeDeleted to false when resource has incoming references', () => {
+    it('should return canDo true when user has permission and resource can be deleted', (done) => {
       // Arrange
-      const resourceWithReferences = { ...mockResource, incomingReferences: [{}] };
-      component.resource = resourceWithReferences as any;
+      const mockCanDoResponse = { canDo: true };
+      mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
       userCanDelete$.next(true);
+      component.ngOnInit();
 
-      // Act
-      component.checkResourceCanBeDeleted();
-
-      // Assert
-      expect(component.resourceCanBeDeleted).toEqual({
-        canDo: false,
-        reason: 'This resource cannot be deleted as it has incoming references.',
+      // Act & Assert
+      component.resourceCanBeDeleted$.subscribe(response => {
+        expect(response.canDo).toBe(true);
+        done();
       });
     });
 
-    it('should set resourceCanBeDeleted to true when all conditions are met', () => {
+    it('should return resource cannot be deleted response when API returns canDo false', (done) => {
       // Arrange
+      const mockCanDoResponse = { canDo: false, cannotDoReason: 'Resource has dependencies' };
+      mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
       userCanDelete$.next(true);
-      mockSearchEndpoint.doSearchIncomingLinks.mockReturnValue(of({ resources: [] }));
-      mockSearchEndpoint.doSearchStillImageRepresentationsCount.mockReturnValue(of({ numberOfResults: 0 }));
+      component.ngOnInit();
 
-      // Act
-      component.checkResourceCanBeDeleted();
-
-      // Assert
-      expect(component.resourceCanBeDeleted).toEqual({
-        canDo: true,
-        reason: 'Resource can be deleted.',
+      // Act & Assert
+      component.resourceCanBeDeleted$.subscribe(response => {
+        expect(response.canDo).toBe(false);
+        expect(response.cannotDoReason).toBe('Resource has dependencies');
+        done();
       });
     });
 
