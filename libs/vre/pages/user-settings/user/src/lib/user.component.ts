@@ -5,7 +5,31 @@ import { MenuItem } from './menu-item';
 
 @Component({
   selector: 'app-user',
-  templateUrl: './user.component.html',
+  template: `
+    <app-centered-layout>
+      <app-profile />
+
+      <nav
+        mat-tab-nav-bar
+        mat-stretch-tabs="false"
+        mat-align-tabs="start"
+        animationDuration="0ms"
+        [tabPanel]="tabPanel">
+        <a mat-tab-link [routerLink]="['account']" routerLinkActive="active-link">
+          <mat-icon class="tab-icon">settings</mat-icon>
+          Account
+        </a>
+        <a mat-tab-link [routerLink]="['projects']" routerLinkActive="active-link">
+          <mat-icon class="tab-icon">assignments</mat-icon>
+          Projects
+        </a>
+      </nav>
+
+      <mat-tab-nav-panel #tabPanel>
+        <router-outlet />
+      </mat-tab-nav-panel>
+    </app-centered-layout>
+  `,
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
