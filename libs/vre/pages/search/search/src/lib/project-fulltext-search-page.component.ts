@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { map, startWith, Subject } from 'rxjs';
 
@@ -14,11 +14,17 @@ import { map, startWith, Subject } from 'rxjs';
       </a>
       <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" style="width: 600px">
-          <mat-label>Search in the entire project</mat-label>
-          <input matInput [formControl]="formGroup.controls.query" type="text" placeholder="Enter search term..." />
+          <input
+            #searchInput
+            matInput
+            [formControl]="formGroup.controls.query"
+            type="text"
+            placeholder="Enter search term..." />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </form>
+
+      <app-search-tips />
     </div>
 
     @if (false) {
@@ -27,20 +33,7 @@ import { map, startWith, Subject } from 'rxjs';
     display: flex
 ;
     justify-content: center;
-;">
-        <div
-          style="
-          max-width: 500px;
-    border: 1px solid #ebebeb;
-    padding: 16px">
-          Search Tips:
-          <ul>
-            <li>Use quotation marks for exact phrases: "down the rabbit hole"</li>
-            <li>Use AND, OR, NOT for boolean searches: Alice AND Wonderland</li>
-            <li>Use wildcards: Alice* will match Alice, Alices, etc.</li>
-          </ul>
-        </div>
-      </div>
+;"></div>
     }
 
     @if (query$ | async; as query) {
@@ -62,7 +55,7 @@ import { map, startWith, Subject } from 'rxjs';
     `,
   ],
 })
-export class ProjectFulltextSearchPageComponent {
+export class ProjectFulltextSearchPageComponent implements AfterViewInit {
   querySubject = new Subject<string>();
   query$ = this.querySubject.asObservable();
   isNotQuerying$ = this.query$.pipe(
@@ -72,7 +65,13 @@ export class ProjectFulltextSearchPageComponent {
 
   formGroup = this._fb.group({ query: [''] });
 
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
   constructor(private _fb: FormBuilder) {}
+
+  ngAfterViewInit() {
+    this.searchInput.nativeElement.focus();
+  }
 
   onSubmit() {
     if (!this.formGroup.valid) {
