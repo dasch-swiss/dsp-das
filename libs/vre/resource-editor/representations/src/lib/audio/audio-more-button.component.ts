@@ -11,8 +11,8 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-  selector: 'app-audio-more-button',
-  template: ` <button mat-icon-button [matMenuTriggerFor]="more">
+    selector: 'app-audio-more-button',
+    template: ` <button mat-icon-button [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #more="matMenu" class="representation-menu">
@@ -23,6 +23,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         <button mat-menu-item (click)="openReplaceFileDialog()">Replace file</button>
       }
     </mat-menu>`,
+    standalone: false
 })
 export class AudioMoreButtonComponent {
   @Input({ required: true }) parentResource!: ReadResource;

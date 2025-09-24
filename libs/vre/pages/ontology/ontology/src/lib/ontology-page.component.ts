@@ -8,8 +8,8 @@ import { OntologyPageService } from './ontology-page.service';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
-  selector: 'app-ontology',
-  template: `
+    selector: 'app-ontology',
+    template: `
     @if (!disableContent) {
       <div class="ontology-editor">
         @if (isTransacting$ | async) {
@@ -35,9 +35,10 @@ import { OntologyEditService } from './services/ontology-edit.service';
       <app-status [status]="204" />
     }
   `,
-  styleUrls: ['./ontology-page.component.scss'],
-  providers: [OntologyPageService, OntologyEditService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./ontology-page.component.scss'],
+    providers: [OntologyPageService, OntologyEditService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OntologyPageComponent implements OnInit {
   project$ = this._projectPageService.currentProject$;

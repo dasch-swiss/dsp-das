@@ -11,9 +11,9 @@ import { BehaviorSubject, combineLatest, map, Observable, Subject, switchMap, ta
 import { AutocompleteItem } from '../autocomplete-item.interface';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-membership',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-membership',
+    template: `
     @if (user$ | async; as user) {
       <div class="mat-headline-6 mb-2">
         This user is member of {{ ((userProjects$ | async) || []).length | i18nPlural: itemPluralMapping['project'] }}
@@ -63,7 +63,8 @@ import { AutocompleteItem } from '../autocomplete-item.interface';
       </div>
     }
   `,
-  styleUrls: ['./membership.component.scss'],
+    styleUrls: ['./membership.component.scss'],
+    standalone: false
 })
 export class MembershipComponent implements OnDestroy, OnChanges {
   @Input({ required: true }) userId!: string;

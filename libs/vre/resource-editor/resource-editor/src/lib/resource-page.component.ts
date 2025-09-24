@@ -5,12 +5,13 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'app-resource-page',
-  template: `<app-centered-layout>
+    selector: 'app-resource-page',
+    template: `<app-centered-layout>
     @if (resourceIri$ | async; as resourceIri) {
       <app-resource-fetcher [resourceIri]="resourceIri" (afterResourceDeleted)="updateResourceCount()" />
     }
   </app-centered-layout>`,
+    standalone: false
 })
 export class ResourcePageComponent {
   constructor(

@@ -5,9 +5,9 @@ import { ProjectPageService } from '../../project-page.service';
 import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-collaboration-page',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-collaboration-page',
+    template: `
     @if (hasProjectAdminRights$ | async) {
       <div>
         @if (project$ | async; as project) {
@@ -40,8 +40,9 @@ import { CollaborationPageService } from './collaboration-page.service';
       <app-status [status]="403" />
     }
   `,
-  styleUrls: ['./collaboration-page.component.scss'],
-  providers: [CollaborationPageService],
+    styleUrls: ['./collaboration-page.component.scss'],
+    providers: [CollaborationPageService],
+    standalone: false
 })
 export class CollaborationPageComponent {
   project$ = this._projectPageService.currentProject$.pipe(

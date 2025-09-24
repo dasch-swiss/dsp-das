@@ -7,8 +7,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'app-annotation-toolbar',
-  template: `
+    selector: 'app-annotation-toolbar',
+    template: `
     <div class="actions">
       @if (!toolBarActive) {
         <span class="color-value">
@@ -76,8 +76,8 @@ import { take } from 'rxjs';
       </button>
     </mat-menu>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .actions {
         display: flex;
         align-items: center;
@@ -92,7 +92,8 @@ import { take } from 'rxjs';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class AnnotationToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;

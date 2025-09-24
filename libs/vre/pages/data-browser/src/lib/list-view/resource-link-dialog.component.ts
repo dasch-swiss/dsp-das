@@ -21,9 +21,9 @@ export interface ResourceLinkDialogProps {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-resource-link-dialog',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-resource-link-dialog',
+    template: `
     <app-dialog-header [title]="title" [subtitle]="'Link resources'" />
 
     <mat-dialog-content>
@@ -57,6 +57,7 @@ export interface ResourceLinkDialogProps {
       </button>
     </mat-dialog-actions>
   `,
+    standalone: false
 })
 export class ResourceLinkDialogComponent implements OnDestroy {
   private _ngUnsubscribe = new Subject<void>();

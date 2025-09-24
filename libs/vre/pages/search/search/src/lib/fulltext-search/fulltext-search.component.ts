@@ -31,10 +31,11 @@ export interface PrevSearchItem {
 const resolvedPromise = Promise.resolve(null);
 
 @Component({
-  selector: 'app-fulltext-search',
-  templateUrl: './fulltext-search.component.html',
-  styleUrls: ['./fulltext-search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-fulltext-search',
+    templateUrl: './fulltext-search.component.html',
+    styleUrls: ['./fulltext-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FulltextSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**

@@ -12,8 +12,8 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
-  selector: 'app-audio-toolbar',
-  template: `
+    selector: 'app-audio-toolbar',
+    template: `
     <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
       <div>
         <button data-cy="play-pause-button" mat-icon-button (click)="mediaPlayer.togglePlay()">
@@ -37,6 +37,7 @@ import { MediaPlayerService } from '../video/media-player.service';
       </div>
     </mat-toolbar-row>
   `,
+    standalone: false
 })
 export class AudioToolbarComponent implements OnInit {
   @Input({ required: true }) parentResource!: ReadResource;

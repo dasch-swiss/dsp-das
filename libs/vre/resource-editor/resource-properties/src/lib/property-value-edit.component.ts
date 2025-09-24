@@ -17,8 +17,8 @@ import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-property-value-edit',
-  template: `
+    selector: 'app-property-value-edit',
+    template: `
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [resourceClassIri]="propertyValueService.editModeData.resource.type"
@@ -59,6 +59,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       <app-progress-indicator [size]="'xsmall'" />
     }
   `,
+    standalone: false
 })
 export class PropertyValueEditComponent implements OnInit, OnDestroy {
   @Input({ required: true }) readValue!: ReadValue | undefined;

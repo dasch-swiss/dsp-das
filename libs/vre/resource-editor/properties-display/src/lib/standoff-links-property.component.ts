@@ -6,14 +6,15 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({
-  selector: 'app-standoff-links-property',
-  template: ` <app-property-row
+    selector: 'app-standoff-links-property',
+    template: ` <app-property-row
     [tooltip]="'resourceEditor.propertiesDisplay.standoffLinkTooltip' | translate"
     [label]="'resourceEditor.propertiesDisplay.standoffLinkLabel' | translate"
     [isEmptyRow]="standoffLinks.length === 0"
     [borderBottom]="true">
     <app-incoming-standoff-link-value [links]="standoffLinks" />
   </app-property-row>`,
+    standalone: false
 })
 export class StandoffLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

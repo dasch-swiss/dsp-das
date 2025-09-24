@@ -7,8 +7,8 @@ import { OntologyService, ProjectService } from '@dasch-swiss/vre/shared/app-hel
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-create-resource-page',
-  template: `
+    selector: 'app-create-resource-page',
+    template: `
     <app-centered-layout>
       <h2 data-cy="create-resource-title">Create new resource of type: {{ classLabel }}</h2>
       @if (resourceClassIri && projectShortcode) {
@@ -20,6 +20,7 @@ import { Subject, takeUntil } from 'rxjs';
       }
     </app-centered-layout>
   `,
+    standalone: false
 })
 export class CreateResourcePageComponent implements OnDestroy {
   private _destroy = new Subject<void>();

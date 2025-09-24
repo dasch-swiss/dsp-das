@@ -8,9 +8,9 @@ import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { ListItemService } from '../list-item/list-item.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-list-item-form',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-list-item-form',
+    template: `
     <form [formGroup]="form" style="display: flex" (ngSubmit)="createChildNode()">
       <app-multi-language-input
         style="flex: 1"
@@ -23,13 +23,14 @@ import { ListItemService } from '../list-item/list-item.service';
       </button>
     </form>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host ::ng-deep mat-error {
         display: none;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ListItemFormComponent {
   @Input({ required: true }) parentNode!: ListNodeInfo;

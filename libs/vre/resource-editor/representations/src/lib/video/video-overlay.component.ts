@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { MediaPlayerService } from './media-player.service';
 
 @Component({
-  selector: 'app-video-overlay',
-  template: ` <div style="display: flex">
+    selector: 'app-video-overlay',
+    template: ` <div style="display: flex">
     <mat-icon (click)="updateTimeFromButton(-10)">replay_10</mat-icon>
     <mat-icon (click)="videoPlayer.togglePlay()">{{ play ? 'pause' : 'play_arrow' }}</mat-icon>
     <mat-icon (click)="updateTimeFromButton(10)">forward_10</mat-icon>
   </div>`,
+    standalone: false
 })
 export class VideoOverlayComponent {
   // todo change following variables

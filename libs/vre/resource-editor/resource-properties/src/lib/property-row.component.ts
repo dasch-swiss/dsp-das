@@ -3,8 +3,8 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { PropertiesDisplayService } from './properties-display.service';
 
 @Component({
-  selector: 'app-property-row',
-  template: ` <div
+    selector: 'app-property-row',
+    template: ` <div
     class="property-row"
     [class.border-bottom]="borderBottom"
     [ngClass]="{ hidden: (showAllProperties | async) === false && isEmptyRow }">
@@ -13,7 +13,8 @@ import { PropertiesDisplayService } from './properties-display.service';
       <ng-content />
     </div>
   </div>`,
-  styleUrls: ['./property-row.component.scss'],
+    styleUrls: ['./property-row.component.scss'],
+    standalone: false
 })
 export class PropertyRowComponent {
   @Input({ required: true }) label!: string;

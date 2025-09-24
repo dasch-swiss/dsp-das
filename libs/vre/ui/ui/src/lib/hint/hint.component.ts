@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-hint',
-  template: `
+    selector: 'app-hint',
+    template: `
     <div class="hint">
       <p>Use special syntax:</p>
       <ul>
@@ -28,7 +28,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <mat-icon class="suffix">launch</mat-icon>
     </a>
   `,
-  styleUrls: ['./hint.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./hint.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class HintComponent {}

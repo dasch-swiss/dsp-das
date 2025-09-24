@@ -6,8 +6,8 @@ import { PropertyValueService } from './property-value.service';
 
 // TODO copied from action-bubble.component.ts -> change when we do a css refactor
 @Component({
-  selector: 'app-property-value-action-bubble',
-  template: `
+    selector: 'app-property-value-action-bubble',
+    template: `
     <div class="action-bubble" data-cy="action-bubble">
       <div class="button-container d-flex">
         @if (date) {
@@ -44,14 +44,15 @@ import { PropertyValueService } from './property-value.service';
       </div>
     </div>
   `,
-  animations: [
-    trigger('simpleFadeAnimation', [
-      state('in', style({ opacity: 1 })),
-      transition(':enter', [style({ opacity: 0 }), animate(150)]),
-      transition(':leave', animate(150, style({ opacity: 0 }))),
-    ]),
-  ],
-  styleUrls: ['./property-value-action-bubble.component.scss'],
+    animations: [
+        trigger('simpleFadeAnimation', [
+            state('in', style({ opacity: 1 })),
+            transition(':enter', [style({ opacity: 0 }), animate(150)]),
+            transition(':leave', animate(150, style({ opacity: 0 }))),
+        ]),
+    ],
+    styleUrls: ['./property-value-action-bubble.component.scss'],
+    standalone: false
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
   @Input({ required: true }) showDelete!: boolean;

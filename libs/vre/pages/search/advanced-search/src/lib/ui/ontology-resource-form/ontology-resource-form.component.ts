@@ -4,12 +4,11 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
-  selector: 'app-ontology-resource-form',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatSelectModule],
-  templateUrl: './ontology-resource-form.component.html',
-  styleUrls: ['./ontology-resource-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-ontology-resource-form',
+    imports: [FormsModule, ReactiveFormsModule, MatSelectModule],
+    templateUrl: './ontology-resource-form.component.html',
+    styleUrls: ['./ontology-resource-form.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OntologyResourceFormComponent {
   @Input() ontologies: ApiData[] | null = []; // todo: handle null case in html

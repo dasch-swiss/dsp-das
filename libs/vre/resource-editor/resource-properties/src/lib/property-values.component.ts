@@ -6,8 +6,8 @@ import { JsLibPotentialError } from './JsLibPotentialError';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
-  selector: 'app-property-values',
-  template: `
+    selector: 'app-property-values',
+    template: `
     @for (group of propertyValueService.editModeData.values; track group; let index = $index) {
       <app-property-value [index]="index" style="width: 100%" />
     }
@@ -22,8 +22,9 @@ import { PropertyValueService } from './property-value.service';
       <app-property-value-add (stopAdding)="currentlyAdding = false" />
     }
   `,
-  providers: [PropertyValueService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [PropertyValueService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };

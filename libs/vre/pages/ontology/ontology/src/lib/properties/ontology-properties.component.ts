@@ -4,8 +4,8 @@ import { PropertyInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
-  selector: 'app-ontology-properties',
-  template: `
+    selector: 'app-ontology-properties',
+    template: `
     <mat-list class="properties">
       @for (prop of oes.currentOntologyProperties$ | async; track trackByPropertyDefinitionFn($index, prop)) {
         <mat-list-item class="property" [class.admin]="(hasProjectAdminRights$ | async) === true">
@@ -14,7 +14,7 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       }
     </mat-list>
   `,
-  styles: `
+    styles: `
     .properties {
       max-width: 100em;
 
@@ -31,7 +31,8 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OntologyPropertiesComponent {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;

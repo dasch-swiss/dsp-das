@@ -65,16 +65,17 @@ class MatInputBase {
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
-  selector: 'app-date-value-handler',
-  templateUrl: './date-value-handler.component.html',
-  styleUrls: ['./date-value-handler.component.scss'],
-  providers: [
-    {
-      provide: MatFormFieldControl,
-      useExisting: DateValueHandlerComponent,
-    },
-    { provide: Subject },
-  ],
+    selector: 'app-date-value-handler',
+    templateUrl: './date-value-handler.component.html',
+    styleUrls: ['./date-value-handler.component.scss'],
+    providers: [
+        {
+            provide: MatFormFieldControl,
+            useExisting: DateValueHandlerComponent,
+        },
+        { provide: Subject },
+    ],
+    standalone: false
 })
 export class DateValueHandlerComponent
   extends _MatInputMixinBase

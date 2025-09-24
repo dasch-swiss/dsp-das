@@ -5,8 +5,8 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-  selector: 'app-properties-display',
-  template: `
+    selector: 'app-properties-display',
+    template: `
     @if (!hideToolbar) {
       <div style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3">
         <div style="display: flex; flex: 0 0 auto">
@@ -66,15 +66,16 @@ import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-com
     <app-standoff-links-property [resource]="resource" />
     <app-incoming-links-property [resource]="resource.res" />
   `,
-  styles: [
-    `
+    styles: [
+        `
       .infobar {
         text-align: right;
         padding-right: 6px;
       }
     `,
-  ],
-  providers: [PropertiesDisplayService],
+    ],
+    providers: [PropertiesDisplayService],
+    standalone: false
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

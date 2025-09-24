@@ -5,10 +5,11 @@ import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { AllProjectsService } from './all-projects.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-project-overview',
-  templateUrl: './project-overview.component.html',
-  styleUrls: ['./project-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-project-overview',
+    templateUrl: './project-overview.component.html',
+    styleUrls: ['./project-overview.component.scss'],
+    standalone: false
 })
 export class ProjectOverviewComponent implements AfterViewInit {
   @ViewChild('filterInput') filterInput!: ElementRef;

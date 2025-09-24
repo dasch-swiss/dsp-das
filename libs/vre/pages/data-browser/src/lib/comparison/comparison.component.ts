@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 
 @Component({
-  selector: 'app-comparison',
-  template: ` <as-split direction="vertical">
+    selector: 'app-comparison',
+    template: ` <as-split direction="vertical">
       <as-split-area>
         <!-- note: This part is repeating twice (not added as component) because angular-split
           library does not support addition div inside as-split -->
@@ -33,6 +33,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
         <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
       </div>
     </ng-template>`,
+    standalone: false
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];

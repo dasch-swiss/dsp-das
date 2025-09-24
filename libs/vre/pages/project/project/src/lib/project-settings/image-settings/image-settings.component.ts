@@ -17,10 +17,11 @@ enum ImageSettingsEnum {
 }
 
 @Component({
-  selector: 'app-image-settings',
-  styleUrls: ['./image-settings.component.scss'],
-  templateUrl: './image-settings.component.html',
-  animations: [ReplaceAnimation.animation],
+    selector: 'app-image-settings',
+    styleUrls: ['./image-settings.component.scss'],
+    templateUrl: './image-settings.component.html',
+    animations: [ReplaceAnimation.animation],
+    standalone: false
 })
 export class ImageSettingsComponent implements OnInit {
   readonly minWidth = 128;

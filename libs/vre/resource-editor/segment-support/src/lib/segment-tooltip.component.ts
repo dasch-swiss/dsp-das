@@ -3,8 +3,8 @@ import { Segment } from './segment';
 import { SegmentsService } from './segments.service';
 
 @Component({
-  selector: 'app-segment-tooltip',
-  template: ` <div class="tooltip">
+    selector: 'app-segment-tooltip',
+    template: ` <div class="tooltip">
     <div class="mat-h5" style="margin-bottom: 0!important">
       <div>{{ segment.label }}</div>
       {{ segment.hasSegmentBounds.end - segment.hasSegmentBounds.start | timeFormat }}
@@ -13,8 +13,8 @@ import { SegmentsService } from './segments.service';
       <mat-icon>arrow_downward</mat-icon>
     </button>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       .tooltip {
         display: flex;
         align-items: center;
@@ -24,7 +24,8 @@ import { SegmentsService } from './segments.service';
         color: white;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class SegmentTooltipComponent {
   segment!: Segment;

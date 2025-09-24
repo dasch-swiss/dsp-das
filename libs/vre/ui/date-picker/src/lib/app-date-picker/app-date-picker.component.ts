@@ -86,23 +86,22 @@ class MatInputBase {
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
-  standalone: true,
-  selector: 'app-date-picker',
-  templateUrl: './app-date-picker.component.html',
-  styleUrls: ['./app-date-picker.component.scss'],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatOptionModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatSelectModule,
-  ],
-  providers: [Subject],
+    selector: 'app-date-picker',
+    templateUrl: './app-date-picker.component.html',
+    styleUrls: ['./app-date-picker.component.scss'],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatSelectModule,
+    ],
+    providers: [Subject]
 })
 export class AppDatePickerComponent
   extends _MatInputMixinBase

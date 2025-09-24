@@ -8,9 +8,10 @@ import { BehaviorSubject, finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({
-  selector: 'app-resource-metadata',
-  templateUrl: './resource-metadata.component.html',
-  styleUrl: './resource-metadata.component.scss',
+    selector: 'app-resource-metadata',
+    templateUrl: './resource-metadata.component.html',
+    styleUrl: './resource-metadata.component.scss',
+    standalone: false
 })
 export class ResourceMetadataComponent implements OnDestroy {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

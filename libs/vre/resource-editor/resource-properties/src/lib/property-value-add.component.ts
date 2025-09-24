@@ -9,11 +9,12 @@ import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-property-value-add',
-  template: ` <app-property-value-edit
+    selector: 'app-property-value-add',
+    template: ` <app-property-value-edit
     [readValue]="undefined"
     (afterEdit)="addItem($event)"
     (afterUndo)="stopAdding.emit()" />`,
+    standalone: false
 })
 export class PropertyValueAddComponent {
   @Output() stopAdding = new EventEmitter<void>();

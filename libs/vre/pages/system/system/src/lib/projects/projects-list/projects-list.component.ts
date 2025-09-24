@@ -19,10 +19,11 @@ import {
 } from './erase-project-dialog/erase-project-dialog.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-projects-list',
-  templateUrl: './projects-list.component.html',
-  styleUrls: ['./projects-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-projects-list',
+    templateUrl: './projects-list.component.html',
+    styleUrls: ['./projects-list.component.scss'],
+    standalone: false
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();

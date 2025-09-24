@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * or in case of zero hours to mm:ss
  */
 @Pipe({
-  name: 'appTime',
+    name: 'appTime',
+    standalone: false
 })
 export class TimePipe implements PipeTransform {
   transform(value: number): string {

@@ -8,9 +8,10 @@ import { RepresentationService } from '../representation.service';
 import { MediaPlayerService } from '../video/media-player.service';
 
 @Component({
-  selector: 'app-audio',
-  templateUrl: './audio.component.html',
-  providers: [MediaControlService, MediaPlayerService],
+    selector: 'app-audio',
+    templateUrl: './audio.component.html',
+    providers: [MediaControlService, MediaPlayerService],
+    standalone: false
 })
 export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) src!: ReadAudioFileValue;

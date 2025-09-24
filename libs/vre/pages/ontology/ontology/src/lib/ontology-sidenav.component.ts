@@ -15,8 +15,8 @@ import { CreateResourceClassDialogComponent } from './forms/resource-class-form/
 import { OntologyPageService } from './ontology-page.service';
 
 @Component({
-  selector: 'app-ontology-sidenav',
-  template: `
+    selector: 'app-ontology-sidenav',
+    template: `
     <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a
         mat-tab-link
@@ -107,8 +107,8 @@ import { OntologyPageService } from './ontology-page.service';
       }
     </mat-tab-nav-panel>
   `,
-  styles: [
-    `
+    styles: [
+        `
       button {
         width: 100%;
         text-align: left;
@@ -119,7 +119,8 @@ import { OntologyPageService } from './ontology-page.service';
         background: var(--element-active-hover);
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class OntologySidenavComponent {
   project$ = this._projectPageService.currentProject$;

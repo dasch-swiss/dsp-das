@@ -29,21 +29,20 @@ import { PropertyFormListValueComponent } from '../property-form-list-value/prop
 import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
 
 @Component({
-  selector: 'app-property-form-link-match-property',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    PropertyFormValueComponent,
-    PropertyFormListValueComponent,
-    PropertyFormLinkValueComponent,
-  ],
-  templateUrl: './property-form-link-match-property.component.html',
-  styleUrls: ['./property-form-link-match-property.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-property-form-link-match-property',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        PropertyFormValueComponent,
+        PropertyFormListValueComponent,
+        PropertyFormLinkValueComponent,
+    ],
+    templateUrl: './property-form-link-match-property.component.html',
+    styleUrls: ['./property-form-link-match-property.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyFormLinkMatchPropertyComponent implements AfterViewInit {
   @Input() values: PropertyFormItem[] | undefined = [];

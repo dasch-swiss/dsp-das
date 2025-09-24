@@ -13,9 +13,10 @@ import {
 } from './resource-permission';
 
 @Component({
-  selector: 'app-permission-info',
-  templateUrl: './permission-info.component.html',
-  styleUrls: ['./permission-info.component.scss'],
+    selector: 'app-permission-info',
+    templateUrl: './permission-info.component.html',
+    styleUrls: ['./permission-info.component.scss'],
+    standalone: false
 })
 export class PermissionInfoComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

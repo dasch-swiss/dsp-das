@@ -4,8 +4,8 @@ import { Constants } from '@dasch-swiss/dsp-js';
 import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
-  selector: 'app-create-resource-form-representation',
-  template: `
+    selector: 'app-create-resource-form-representation',
+    template: `
     @if (fileRepresentation !== Constants.HasStillImageFileValue) {
       <app-create-resource-form-row [label]="'File'">
         <app-upload-control
@@ -21,7 +21,8 @@ import { FileRepresentationType } from '@dasch-swiss/vre/resource-editor/represe
         [projectShortcode]="projectShortcode" />
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CreateResourceFormRepresentationComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

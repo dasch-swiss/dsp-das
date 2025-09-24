@@ -3,8 +3,8 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { FootnoteService } from './footnote.service';
 
 @Component({
-  selector: 'app-footnotes',
-  template: `<h5>{{ 'resourceEditor.resourceProperties.footnotes' | translate }}</h5>
+    selector: 'app-footnotes',
+    template: `<h5>{{ 'resourceEditor.resourceProperties.footnotes' | translate }}</h5>
     @for (footnote of footnoteService.footnotes; track footnote; let index = $index) {
       <div
         class="footnote"
@@ -16,8 +16,8 @@ import { FootnoteService } from './footnote.service';
         <span class="footnote-value" [innerHTML]="footnote.content | internalLinkReplacer | addTargetBlank"></span>
       </div>
     }`,
-  styles: [
-    `
+    styles: [
+        `
       .footnote {
         display: flex;
         align-items: flex-start;
@@ -35,7 +35,8 @@ import { FootnoteService } from './footnote.service';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class FootnotesComponent {
   constructor(public readonly footnoteService: FootnoteService) {}

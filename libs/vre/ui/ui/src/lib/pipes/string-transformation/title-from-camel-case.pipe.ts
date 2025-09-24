@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'titleFromCamelCase',
+    name: 'titleFromCamelCase',
+    standalone: false
 })
 export class TitleFromCamelCasePipe implements PipeTransform {
   transform(value: string): string {

@@ -3,8 +3,8 @@ import { map } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
-  selector: 'app-multiple-viewer',
-  template: `
+    selector: 'app-multiple-viewer',
+    template: `
     @if (selectedResourceIds$ | async; as selectedResourceIds) {
       @if (selectedResourceIds.length <= MAX_RESOURCES) {
         <app-comparison [resourceIds]="selectedResourceIds" />
@@ -17,8 +17,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
       }
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       .centered {
         height: 100%;
         display: flex;
@@ -26,7 +26,8 @@ import { MultipleViewerService } from './multiple-viewer.service';
         justify-content: center;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class MultipleViewerComponent {
   readonly MAX_RESOURCES = 6;

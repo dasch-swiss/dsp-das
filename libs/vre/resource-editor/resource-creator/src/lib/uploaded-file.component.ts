@@ -3,8 +3,8 @@ import { UploadedFileResponse, UploadFileService } from '@dasch-swiss/vre/resour
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-uploaded-file',
-  template: ` @if (fileToUpload$ | async; as fileToUpload) {
+    selector: 'app-uploaded-file',
+    template: ` @if (fileToUpload$ | async; as fileToUpload) {
     <mat-card>
       <mat-card-content style="display: flex; align-items: center">
         <mat-icon color="primary">description</mat-icon>
@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
       </mat-card-content>
     </mat-card>
   }`,
+    standalone: false
 })
 export class UploadedFileComponent implements OnInit {
   @Input({ required: true }) internalFilename!: string;

@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-image-display-ratio',
-  template: ` <div class="frame">
+    selector: 'app-image-display-ratio',
+    template: ` <div class="frame">
     <div [ngStyle]="{ width: ratio * 300 + 'px', height: ratio * 200 + 'px' }" class="back-rectangle">
       <div class="arrow left-arrow"></div>
       <div class="arrow right-arrow"></div>
       <div class="helper">{{ 'pages.project.imageSettings.ratio' | translate }}: {{ Math.ceil(ratio * 100) }}%</div>
     </div>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       .frame {
         background: gray;
         width: 300px;
@@ -66,7 +66,8 @@ import { Component, Input } from '@angular/core';
         border-right: 10px solid red; /* Adjust the width and color of the arrow */
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ImageDisplayRatioComponent {
   @Input({ required: true }) ratio!: number;

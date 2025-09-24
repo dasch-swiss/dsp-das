@@ -25,8 +25,8 @@ import { ClassPropertyInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
-  selector: 'app-property-item',
-  template: ` <div
+    selector: 'app-property-item',
+    template: ` <div
       cdkDrag
       [cdkDragDisabled]="(isAdmin$ | async) !== true"
       (mouseenter)="isHovered = true"
@@ -114,8 +114,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         Copy property id
       </button>
     </mat-menu>`,
-  styles: [
-    `
+    styles: [
+        `
       @use '../../../../../../../../../apps/dsp-app/src/styles/config' as *;
 
       .list-icon {
@@ -200,8 +200,9 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
         margin-top: 0.1rem;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PropertyItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input({ required: true }) classProp!: ClassPropertyInfo;

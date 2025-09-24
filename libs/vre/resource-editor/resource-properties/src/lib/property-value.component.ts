@@ -4,8 +4,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { PropertyValueService } from './property-value.service';
 
 @Component({
-  selector: 'app-property-value',
-  template: `
+    selector: 'app-property-value',
+    template: `
     @if (displayMode) {
       <app-property-value-display [index]="index" />
     }
@@ -13,6 +13,7 @@ import { PropertyValueService } from './property-value.service';
       <app-property-value-update [index]="index" />
     }
   `,
+    standalone: false
 })
 export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;

@@ -7,8 +7,8 @@ import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
-  selector: 'app-search-project-results-page',
-  template: ` @if (loading) {
+    selector: 'app-search-project-results-page',
+    template: ` @if (loading) {
       <app-progress-indicator />
     }
     @if (resources$ | async; as resources) {
@@ -24,7 +24,8 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
           [searchKeyword]="query" />
       }
     }`,
-  providers: [ResourceResultService],
+    providers: [ResourceResultService],
+    standalone: false
 })
 export class SearchProjectResultsPageComponent {
   query?: string;

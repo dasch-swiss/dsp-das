@@ -10,20 +10,19 @@ import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
-  selector: 'app-multi-language-input',
-  standalone: true,
-  providers: [MultiLanguageFormService],
-  imports: [
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatInputModule,
-    MatMenuModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HumanReadableErrorPipe,
-  ],
-  template: `
+    selector: 'app-multi-language-input',
+    providers: [MultiLanguageFormService],
+    imports: [
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatIconModule,
+        MatInputModule,
+        MatMenuModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HumanReadableErrorPipe,
+    ],
+    template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ placeholder }}</mat-label>
       <button
@@ -75,8 +74,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       }
     </mat-menu>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -85,7 +84,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         font-weight: bold;
       }
     `,
-  ],
+    ]
 })
 export class MutiLanguageInputComponent implements OnInit, OnChanges {
   @Input({ required: true }) formArray!: MultiLanguageFormArray;

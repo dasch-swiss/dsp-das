@@ -10,9 +10,9 @@ import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap
  * We build two lists: one with active projects and another one with deactivated projects.
  */
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-projects',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-projects',
+    template: `
     <div class="app-projects">
       @if (activeProjects$ | async; as projectsList) {
         <app-projects-list
@@ -33,6 +33,7 @@ import { BehaviorSubject, combineLatest, map, Subject, switchMap, takeUntil, tap
       }
     </div>
   `,
+    standalone: false
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   @Input() isUsersProjects = false;

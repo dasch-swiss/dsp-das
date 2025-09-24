@@ -6,8 +6,8 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
-  selector: 'app-select-group',
-  template: `
+    selector: 'app-select-group',
+    template: `
     @if (groups$ | async; as groups) {
       @if (groups.length > 0) {
         <mat-form-field>
@@ -29,14 +29,15 @@ import { CollaborationPageService } from '../collaboration-page.service';
       }
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
         display: none !important;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SelectGroupComponent implements OnInit {
   @Input({ required: true }) projectId!: string;

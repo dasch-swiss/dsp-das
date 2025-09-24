@@ -4,9 +4,9 @@ import { combineLatest, map } from 'rxjs';
 import { UsersTabService } from './users-tab.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-users-tab',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-users-tab',
+    template: `
     @if (usersTabService.isLoading) {
       <app-progress-indicator-overlay />
     }
@@ -25,7 +25,8 @@ import { UsersTabService } from './users-tab.service';
       }
     }
   `,
-  providers: [UsersTabService],
+    providers: [UsersTabService],
+    standalone: false
 })
 export class UsersTabComponent {
   private _activeUsers$ = this.usersTabService.allUsers$.pipe(map(users => users.filter(user => user.status)));

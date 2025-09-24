@@ -3,8 +3,8 @@ import { ListNode } from '@dasch-swiss/dsp-js';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss/vre/ui/string-literal';
 
 @Component({
-  selector: 'app-list-item-element',
-  template: `
+    selector: 'app-list-item-element',
+    template: `
     <div style="display: flex">
       <button type="button" color="primary" mat-icon-button (click)="showChildren = !showChildren">
         <mat-icon>{{ showChildren ? 'expand_more' : 'chevron_right' }}</mat-icon>
@@ -30,7 +30,8 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss
       </div>
     </div>
   `,
-  styles: [':host ::ng-deep app-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
+    styles: [':host ::ng-deep app-multi-language-input .mat-mdc-form-field-bottom-align { display: none;}'],
+    standalone: false
 })
 export class ListItemElementComponent implements OnChanges {
   @Input({ required: true }) node!: ListNode;

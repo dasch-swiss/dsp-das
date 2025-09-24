@@ -8,8 +8,8 @@ export interface ConfirmDialogProps {
 }
 
 @Component({
-  selector: 'app-confirm-dialog',
-  template: `
+    selector: 'app-confirm-dialog',
+    template: `
     <app-dialog-header [title]="data.title ?? 'Confirmation needed'" [subtitle]="data.subtitle ?? ''" />
     <div mat-dialog-content>
       <p>{{ data.message }}</p>
@@ -19,7 +19,8 @@ export interface ConfirmDialogProps {
       <button mat-raised-button color="warn" (click)="dialogRef.close(true)" data-cy="confirmation-button">Yes</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ConfirmDialogComponent {
   constructor(

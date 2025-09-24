@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-dialog-header',
-  template: `
+    selector: 'app-dialog-header',
+    template: `
     <div class="app-toolbar transparent">
       <div class="app-toolbar-row">
         <h3 class="mat-body subtitle">{{ subtitle }}</h3>
@@ -14,6 +14,7 @@ import { Component, Input } from '@angular/core';
       </div>
     </div>
   `,
+    standalone: false
 })
 export class DialogHeaderComponent {
   @Input({ required: true }) title!: string;

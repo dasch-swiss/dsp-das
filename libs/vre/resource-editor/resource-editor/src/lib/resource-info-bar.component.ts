@@ -8,8 +8,8 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-resource-info-bar',
-  template: `
+    selector: 'app-resource-info-bar',
+    template: `
     @if (project$ | async; as project) {
       <div class="infobar mat-caption">
         Resource of the project
@@ -37,15 +37,16 @@ import { map, Observable } from 'rxjs';
       </div>
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       .infobar {
         box-sizing: border-box;
         white-space: nowrap;
         color: rgba(0, 0, 0, 0.87);
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ResourceInfoBarComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

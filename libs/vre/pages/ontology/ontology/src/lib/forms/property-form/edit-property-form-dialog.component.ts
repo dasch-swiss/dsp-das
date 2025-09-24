@@ -13,8 +13,8 @@ import {
 } from './property-form.type';
 
 @Component({
-  selector: 'app-edit-property-form-dialog',
-  template: ` <app-dialog-header [title]="title" [subtitle]="data.propType.group + ': ' + data.propType.label || ''" />
+    selector: 'app-edit-property-form-dialog',
+    template: ` <app-dialog-header [title]="title" [subtitle]="data.propType.group + ': ' + data.propType.label || ''" />
     <app-property-form mat-dialog-content (afterFormInit)="form = $event" [propertyData]="data" />
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -29,6 +29,7 @@ import {
         Submit
       </button>
     </div>`,
+    standalone: false
 })
 export class EditPropertyFormDialogComponent implements OnInit {
   loading = false;

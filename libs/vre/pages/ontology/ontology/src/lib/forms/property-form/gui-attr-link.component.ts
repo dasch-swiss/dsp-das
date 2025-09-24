@@ -12,8 +12,8 @@ export interface ClassToSelect {
 }
 
 @Component({
-  selector: 'app-gui-attr-link',
-  template: `
+    selector: 'app-gui-attr-link',
+    template: `
     <mat-form-field>
       <span matPrefix> <mat-icon>tune</mat-icon>&nbsp; </span>
       <mat-label>Select resource class</mat-label>
@@ -33,7 +33,8 @@ export interface ClassToSelect {
       }
     </mat-form-field>
   `,
-  styles: ['mat-form-field {width: 100%}'],
+    styles: ['mat-form-field {width: 100%}'],
+    standalone: false
 })
 export class GuiAttrLinkComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];

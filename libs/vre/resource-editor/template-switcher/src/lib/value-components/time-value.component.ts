@@ -4,8 +4,8 @@ import { GregorianCalendarDate } from '@dasch-swiss/jdnconvertiblecalendar';
 import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
-  selector: 'app-time-value',
-  template: `
+    selector: 'app-time-value',
+    template: `
     <div style="display: flex; gap: 8px">
       <app-jdn-datepicker [activeCalendar]="'Gregorian'">
         <mat-form-field>
@@ -37,6 +37,7 @@ import { DateTime } from '@dasch-swiss/vre/resource-editor/resource-properties';
       <mat-error>{{ errors | humanReadableError }}</mat-error>
     }
   `,
+    standalone: false
 })
 export class TimeValueComponent {
   @Input({ required: true }) control!: FormControl<DateTime>;

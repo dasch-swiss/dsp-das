@@ -7,8 +7,8 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { finalize, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-edit-resource-label-dialog',
-  template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label" />
+    selector: 'app-edit-resource-label-dialog',
+    template: ` <app-dialog-header [title]="initialValue" subtitle="Edit resource's label" />
 
     <div mat-dialog-content>
       <app-common-input [control]="control" [label]="'Label'" />
@@ -27,6 +27,7 @@ import { finalize, switchMap } from 'rxjs';
         Submit
       </button>
     </div>`,
+    standalone: false
 })
 export class EditResourceLabelDialogComponent {
   control = new FormControl(this.data.label, { validators: [Validators.required], nonNullable: true });

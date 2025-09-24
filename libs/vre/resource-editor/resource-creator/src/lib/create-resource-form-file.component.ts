@@ -4,14 +4,15 @@ import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api'
 import { FileForm } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
-  selector: 'app-create-resource-form-file',
-  template: ` <app-create-resource-form-representation
+    selector: 'app-create-resource-form-file',
+    template: ` <app-create-resource-form-representation
       [control]="form.controls.link"
       [fileRepresentation]="fileRepresentation"
       [projectShortcode]="projectShortcode"
       (externalImageSelected)="externalImageSelected.emit($event)" />
 
     <app-create-resource-form-legal [formGroup]="form.controls.legal" [projectShortcode]="projectShortcode" />`,
+    standalone: false
 })
 export class CreateResourceFormFileComponent implements OnInit {
   @Input({ required: true }) projectShortcode!: string;

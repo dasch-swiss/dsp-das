@@ -5,8 +5,8 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { switchMap, take } from 'rxjs';
 
 @Component({
-  selector: 'app-resource-legal',
-  template: `
+    selector: 'app-resource-legal',
+    template: `
     @if (fileValue.copyrightHolder || fileValue.authorship?.length > 0 || fileValue.license) {
       <div
         class="mat-caption"
@@ -38,7 +38,8 @@ import { switchMap, take } from 'rxjs';
       </div>
     }
   `,
-  styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
+    styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
+    standalone: false
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) fileValue!: ReadFileValue;

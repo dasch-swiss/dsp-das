@@ -3,13 +3,13 @@ import { ResourceClassInfo } from '../ontology.types';
 import { OntologyEditService } from '../services/ontology-edit.service';
 
 @Component({
-  selector: 'app-ontology-editor-page',
-  template: `<div class="ontology-editor-grid classes drag-drop-stop">
+    selector: 'app-ontology-editor-page',
+    template: `<div class="ontology-editor-grid classes drag-drop-stop">
     @for (resClass of oes.currentOntologyClasses$ | async; track trackByClassDefinitionFn($index, resClass)) {
       <app-resource-class-info [resourceClass]="resClass" />
     }
   </div>`,
-  styles: `
+    styles: `
     .ontology-editor-grid {
       display: grid;
       grid-template-rows: auto;
@@ -17,7 +17,8 @@ import { OntologyEditService } from '../services/ontology-edit.service';
       grid-gap: 6px;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OntologyEditorPageComponent {
   trackByClassDefinitionFn = (index: number, item: ResourceClassInfo) => `${index}-${item.id}`;

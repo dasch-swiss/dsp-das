@@ -3,7 +3,8 @@ import { StringLiteral } from '@dasch-swiss/dsp-js';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Pipe({
-  name: 'appStringifyStringLiteral',
+    name: 'appStringifyStringLiteral',
+    standalone: false
 })
 export class StringifyStringLiteralPipe implements PipeTransform {
   constructor(private localizationService: LocalizationService) {}

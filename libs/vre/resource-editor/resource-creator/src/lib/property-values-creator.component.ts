@@ -5,8 +5,8 @@ import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-  selector: 'app-property-values-creator',
-  template: `
+    selector: 'app-property-values-creator',
+    template: `
     <app-template-editor-switcher
       [myPropertyDefinition]="myProperty.propDef"
       [resourceClassIri]="resourceClassIri"
@@ -33,7 +33,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </button>
     }
   `,
-  // TODO do not change detection strategy until ng18 is on with formControls touchedChanged to manage common-inputs change event
+    standalone: false
 })
 export class PropertyValuesCreatorComponent {
   @Input({ required: true }) myProperty!: PropertyInfoValues;

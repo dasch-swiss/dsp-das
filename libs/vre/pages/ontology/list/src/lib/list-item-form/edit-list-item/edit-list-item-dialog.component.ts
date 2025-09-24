@@ -13,8 +13,8 @@ export interface EditListItemDialogProps {
 }
 
 @Component({
-  selector: 'app-edit-list-item-dialog',
-  template: `
+    selector: 'app-edit-list-item-dialog',
+    template: `
     <app-dialog-header [title]="data.formData.labels[0].value" subtitle="Edit child node" />
 
     <div mat-dialog-content>
@@ -35,6 +35,7 @@ export interface EditListItemDialogProps {
       </button>
     </div>
   `,
+    standalone: false
 })
 export class EditListItemDialogComponent {
   form: ListItemForm;

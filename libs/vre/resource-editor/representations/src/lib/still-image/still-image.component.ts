@@ -19,8 +19,8 @@ import { OsdDrawerService } from './osd-drawer.service';
 import { StillImageHelper } from './still-image-helper';
 
 @Component({
-  selector: 'app-still-image',
-  template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
+    selector: 'app-still-image',
+    template: ` <div class="osd-container" [class.drawing]="isViewInitialized && osdService.drawing" #osdViewer>
       @if (compoundMode) {
         <div>
           <app-compound-arrow-navigation [forwardNavigation]="false" class="arrow" />
@@ -41,9 +41,10 @@ import { StillImageHelper } from './still-image-helper';
           (imageIsPng)="afterFormatChange($event)" />
       }
     </div>`,
-  styleUrls: ['./still-image.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [OsdDrawerService, OpenSeaDragonService],
+    styleUrls: ['./still-image.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [OsdDrawerService, OpenSeaDragonService],
+    standalone: false
 })
 export class StillImageComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) compoundMode!: boolean;

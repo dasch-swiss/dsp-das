@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-alternated-list',
-  template: ` <div class="container">
+    selector: 'app-alternated-list',
+    template: ` <div class="container">
     <ng-content />
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host ::ng-deep {
         .container {
           max-height: 400px;
@@ -29,7 +29,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AlternatedListComponent {}

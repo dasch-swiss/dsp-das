@@ -10,8 +10,8 @@ import { existingNamesAsyncValidator } from '../existing-names.validator';
 import { UserForm } from './user-form.type';
 
 @Component({
-  selector: 'app-user-form',
-  template: `
+    selector: 'app-user-form',
+    template: `
     <form>
       <app-common-input
         [control]="userForm.controls.username"
@@ -38,6 +38,7 @@ import { UserForm } from './user-form.type';
       </mat-form-field>
     </form>
   `,
+    standalone: false
 })
 export class UserFormComponent implements OnInit {
   @Input({ required: true }) data!: {

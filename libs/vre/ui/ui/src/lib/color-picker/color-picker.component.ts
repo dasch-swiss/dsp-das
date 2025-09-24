@@ -52,11 +52,12 @@ class MatInputBase {
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
-  selector: 'app-color-picker',
-  templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.scss'],
-  providers: [{ provide: MatFormFieldControl, useExisting: ColorPickerComponent }, { provide: Subject }],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-color-picker',
+    templateUrl: './color-picker.component.html',
+    styleUrls: ['./color-picker.component.scss'],
+    providers: [{ provide: MatFormFieldControl, useExisting: ColorPickerComponent }, { provide: Subject }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ColorPickerComponent
   extends _MatInputMixinBase

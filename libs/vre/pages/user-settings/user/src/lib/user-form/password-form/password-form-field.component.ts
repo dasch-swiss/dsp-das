@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-password-form-field',
-  template: ` <mat-form-field style="width: 100%">
+    selector: 'app-password-form-field',
+    template: ` <mat-form-field style="width: 100%">
     <input
       matInput
       [type]="showPassword ? 'text' : 'password'"
@@ -21,6 +21,7 @@ import { FormControl } from '@angular/forms';
       <mat-error>{{ errors | humanReadableError: validatorErrors }}</mat-error>
     }
   </mat-form-field>`,
+    standalone: false
 })
 export class PasswordFormFieldComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

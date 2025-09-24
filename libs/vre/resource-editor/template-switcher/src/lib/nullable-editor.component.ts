@@ -2,8 +2,8 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-nullable-editor',
-  template: `
+    selector: 'app-nullable-editor',
+    template: `
     @if (value !== null) {
       <div style="display: flex; align-items: center">
         <ng-content />
@@ -27,13 +27,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       </button>
     }
   `,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NullableEditorComponent),
-      multi: true,
-    },
-  ],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NullableEditorComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class NullableEditorComponent implements ControlValueAccessor {
   @Input({ required: true }) defaultValue!: unknown;

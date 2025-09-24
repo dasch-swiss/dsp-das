@@ -13,9 +13,9 @@ import { ClassPropertyInfo } from '../../../ontology.types';
 import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality-change-dialog.component';
 
 @Component({
-  selector: 'app-cardinality',
-  styles: [
-    `
+    selector: 'app-cardinality',
+    styles: [
+        `
       .cardinality-checkbox {
         gap: 0.5rem;
         display: flex;
@@ -36,8 +36,8 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
         cursor: pointer;
       }
     `,
-  ],
-  template: `
+    ],
+    template: `
     <div class="cardinality-checkbox">
       <input
         type="checkbox"
@@ -57,7 +57,8 @@ import { CardinalityChangeDialogComponent, CardinalityInfo } from './cardinality
       <label>Required</label>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CardinalityComponent implements OnInit {
   @Input({ required: true }) classProp!: ClassPropertyInfo;

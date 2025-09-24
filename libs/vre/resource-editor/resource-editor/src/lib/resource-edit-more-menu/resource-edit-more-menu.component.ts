@@ -12,8 +12,8 @@ import { combineLatest, map, of, take } from 'rxjs';
 import { CanDeleteResource } from './can-delete-resource.interface';
 
 @Component({
-  selector: 'app-resource-edit-more-menu',
-  template: `
+    selector: 'app-resource-edit-more-menu',
+    template: `
     <button
       data-cy="resource-toolbar-more-button"
       color="primary"
@@ -88,13 +88,14 @@ import { CanDeleteResource } from './can-delete-resource.interface';
       }
     </mat-menu>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .more-menu {
         border-radius: 0;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ResourceEditMoreMenuComponent {
   @Input({ required: true }) resource!: ReadResource;

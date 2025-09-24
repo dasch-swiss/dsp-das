@@ -10,20 +10,19 @@ import { MultiLanguageFormArray } from './multi-language-form-array.type';
 import { MultiLanguageFormService } from './multi-language-form.service';
 
 @Component({
-  selector: 'app-multi-language-textarea',
-  standalone: true,
-  providers: [MultiLanguageFormService],
-  imports: [
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatInputModule,
-    MatMenuModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HumanReadableErrorPipe,
-  ],
-  template: `
+    selector: 'app-multi-language-textarea',
+    providers: [MultiLanguageFormService],
+    imports: [
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatIconModule,
+        MatInputModule,
+        MatMenuModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HumanReadableErrorPipe,
+    ],
+    template: `
     <div style="display: flex; flex-direction: row-reverse">
       <mat-form-field style="flex: 1" subscriptSizing="dynamic" class="formfield">
         <mat-label>{{ placeholder }}</mat-label>
@@ -64,8 +63,8 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       }
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
         padding-bottom: 22px;
@@ -75,7 +74,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
         font-weight: bold;
       }
     `,
-  ],
+    ]
 })
 export class MultiLanguageTextareaComponent implements OnInit, OnChanges {
   @Input({ required: true }) formArray!: MultiLanguageFormArray;

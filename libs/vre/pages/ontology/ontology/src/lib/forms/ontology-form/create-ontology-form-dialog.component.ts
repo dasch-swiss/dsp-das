@@ -12,8 +12,8 @@ import { MakeOntologyFor } from '../../services/make-ontology-for';
 import { OntologyForm } from './ontology-form.type';
 
 @Component({
-  selector: 'app-create-ontology-form-dialog',
-  template: ` <app-dialog-header [title]="'pages.ontology.ontologyForm.create' | translate" />
+    selector: 'app-create-ontology-form-dialog',
+    template: ` <app-dialog-header [title]="'pages.ontology.ontologyForm.create' | translate" />
 
     <form>
       @if (form) {
@@ -38,6 +38,7 @@ import { OntologyForm } from './ontology-form.type';
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
+    standalone: false
 })
 export class CreateOntologyFormDialogComponent implements OnDestroy {
   private _destroy$ = new Subject<void>();

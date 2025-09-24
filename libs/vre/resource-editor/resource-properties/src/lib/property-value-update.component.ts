@@ -7,11 +7,12 @@ import { PropertyValueService } from './property-value.service';
 import { propertiesTypeMapping } from './resource-payloads-mapping';
 
 @Component({
-  selector: 'app-property-value-update',
-  template: ` <app-property-value-edit
+    selector: 'app-property-value-update',
+    template: ` <app-property-value-edit
     [readValue]="propertyValueService.editModeData.values[index]"
     (afterEdit)="update($event)"
     (afterUndo)="goToDisplayMode()" />`,
+    standalone: false
 })
 export class PropertyValueUpdateComponent {
   @Input({ required: true }) index!: number;

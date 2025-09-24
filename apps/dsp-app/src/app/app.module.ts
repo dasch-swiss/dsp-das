@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
+import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -177,12 +177,10 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       provide: Sentry.TraceService,
       deps: [Router],
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (() => () => {})(inject(Sentry.TraceService));
+        return initializerFn();
+      }),
     LocalizationService,
   ],
   bootstrap: [AppComponent],

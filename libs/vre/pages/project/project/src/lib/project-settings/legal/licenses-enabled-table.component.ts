@@ -3,8 +3,8 @@ import { ReadProject } from '@dasch-swiss/dsp-js';
 import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 
 @Component({
-  selector: 'app-licenses-enabled-table',
-  template: `
+    selector: 'app-licenses-enabled-table',
+    template: `
     <table style="width: 100%">
       <tr>
         <th>{{ label }}</th>
@@ -28,8 +28,8 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
       }
     </table>
   `,
-  styles: [
-    `
+    styles: [
+        `
       table {
         border: 1px solid #f2f2f2;
       }
@@ -55,8 +55,9 @@ import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swis
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LicensesEnabledTableComponent {
   @Input({ required: true }) licenses!: ProjectLicenseDto[];

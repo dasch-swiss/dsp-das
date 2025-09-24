@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-project-image-cover',
-  template: `
+    selector: 'app-project-image-cover',
+    template: `
     @if (!imageCantLoad) {
       <img
         mat-card-image
@@ -16,8 +16,8 @@ import { Component, Input } from '@angular/core';
       </div>
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
         position: relative;
@@ -57,7 +57,8 @@ import { Component, Input } from '@angular/core';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ProjectImageCoverComponent {
   @Input({ required: true }) project!: { shortcode: string; shortname: string };

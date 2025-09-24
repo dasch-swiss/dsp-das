@@ -3,7 +3,8 @@ import { Md5 } from 'ts-md5';
 import { AdminImageConfig } from './admin-image.config';
 
 @Directive({
-  selector: '[appAdminImage]',
+    selector: '[appAdminImage]',
+    standalone: false
 })
 export class AdminImageDirective implements OnChanges {
   /**

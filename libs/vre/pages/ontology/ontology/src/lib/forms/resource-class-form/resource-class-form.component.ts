@@ -7,8 +7,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
-  selector: 'app-resource-class-form',
-  template: `
+    selector: 'app-resource-class-form',
+    template: `
     <form [formGroup]="form">
       <app-common-input
         class="name-input"
@@ -34,8 +34,9 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
         [isRequired]="true" />
     </form>
   `,
-  styles: [':host ::ng-deep .name-input .mat-icon { padding-right: 24px; }'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [':host ::ng-deep .name-input .mat-icon { padding-right: 24px; }'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ResourceClassFormComponent implements OnInit {
   @Input({ required: true }) formData!: ResourceClassFormData;

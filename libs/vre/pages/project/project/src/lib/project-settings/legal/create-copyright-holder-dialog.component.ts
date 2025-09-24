@@ -10,8 +10,8 @@ export interface CreateCopyrightHolderDialogProps {
 }
 
 @Component({
-  selector: 'app-add-copyright-holder-dialog',
-  template: ` <app-dialog-header [title]="'pages.project.legalSettings.dialog.addCopyrightHolder' | translate" />
+    selector: 'app-add-copyright-holder-dialog',
+    template: ` <app-dialog-header [title]="'pages.project.legalSettings.dialog.addCopyrightHolder' | translate" />
 
     <app-common-input
       [label]="'pages.project.legalSettings.dialog.text' | translate"
@@ -28,6 +28,7 @@ export interface CreateCopyrightHolderDialogProps {
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
+    standalone: false
 })
 export class CreateCopyrightHolderDialogComponent {
   form = this._fb.group({

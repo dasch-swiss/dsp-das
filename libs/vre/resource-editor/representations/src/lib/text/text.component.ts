@@ -10,9 +10,10 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-  selector: 'app-text',
-  templateUrl: './text.component.html',
-  styleUrls: ['./text.component.scss'],
+    selector: 'app-text',
+    templateUrl: './text.component.html',
+    styleUrls: ['./text.component.scss'],
+    standalone: false
 })
 export class TextComponent implements OnChanges {
   @Input({ required: true }) src!: ReadTextFileValue;

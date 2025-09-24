@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
-  selector: 'app-properties-toolbar',
-  template: `
+    selector: 'app-properties-toolbar',
+    template: `
     @if (numberOfComments > 0) {
       <button
         mat-button
@@ -30,7 +30,8 @@ import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resou
       {{ (propertiesDisplayService.showAllProperties$ | async) ? 'Hide empty' : 'Show all' }} properties
     </button>
   `,
-  styles: ['button { padding-top: 24px; padding-bottom: 24px}'],
+    styles: ['button { padding-top: 24px; padding-bottom: 24px}'],
+    standalone: false
 })
 export class PropertiesToolbarComponent {
   @Input({ required: true }) numberOfComments!: number;

@@ -8,8 +8,8 @@ import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-authorship-form-field',
-  template: `
+    selector: 'app-authorship-form-field',
+    template: `
     <mat-form-field style="width: 100%">
       <mat-label>Authorship</mat-label>
       <mat-chip-grid #chipGrid aria-label="Authorship">
@@ -53,6 +53,7 @@ import { finalize } from 'rxjs/operators';
       }
     </mat-form-field>
   `,
+    standalone: false
 })
 export class AuthorshipFormFieldComponent implements OnInit, OnDestroy {
   @Input() control!: FormControl<string[] | null>;

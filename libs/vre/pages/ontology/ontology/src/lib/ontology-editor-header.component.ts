@@ -11,8 +11,8 @@ import { UpdateOntologyData } from './forms/ontology-form/ontology-form.type';
 import { OntologyEditService } from './services/ontology-edit.service';
 
 @Component({
-  selector: 'app-ontology-editor-header',
-  template: `
+    selector: 'app-ontology-editor-header',
+    template: `
     @if (ontology$ | async; as ontology) {
       <mat-toolbar class="ontology-editor-header">
         <mat-toolbar-row>
@@ -68,7 +68,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
       </mat-toolbar>
     }
   `,
-  styles: `
+    styles: `
     .ontology-editor-header {
       margin-top: 0.5em;
 
@@ -102,7 +102,8 @@ import { OntologyEditService } from './services/ontology-edit.service';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OntologyEditorHeaderComponent {
   ontology$ = this._oes.currentOntologyInfo$;

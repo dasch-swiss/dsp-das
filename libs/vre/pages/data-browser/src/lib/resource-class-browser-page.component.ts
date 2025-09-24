@@ -8,8 +8,8 @@ import { combineLatest, map, pairwise, startWith, switchMap, withLatestFrom } fr
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
-  selector: 'app-resource-class-browser-page',
-  template: `
+    selector: 'app-resource-class-browser-page',
+    template: `
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
         @if (data.resources.length === 0) {
@@ -29,7 +29,8 @@ import { ResourceResultService } from './resource-result.service';
       }
     }
   `,
-  providers: [ResourceResultService],
+    providers: [ResourceResultService],
+    standalone: false
 })
 export class ResourceClassBrowserPageComponent implements OnInit {
   userCanViewResources = true;

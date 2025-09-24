@@ -17,8 +17,8 @@ import { ManageProjectMembershipDialogComponent } from '../manage-project-member
 import { UsersTabService } from '../users-tab.service';
 
 @Component({
-  selector: 'app-users-list-row-menu',
-  template: `
+    selector: 'app-users-list-row-menu',
+    template: `
     @if (isSysAdmin$ | async) {
       <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
         <mat-icon>more_horiz</mat-icon>
@@ -45,6 +45,7 @@ import { UsersTabService } from '../users-tab.service';
       }
     </mat-menu>
   `,
+    standalone: false
 })
 export class UsersListRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

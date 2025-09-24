@@ -8,8 +8,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 import { PropertyForm, EditPropertyDialogData } from './property-form.type';
 
 @Component({
-  selector: 'app-property-form',
-  template: ` <form [formGroup]="form">
+    selector: 'app-property-form',
+    template: ` <form [formGroup]="form">
     <mat-form-field style="width: 100%">
       <span matPrefix>
         <mat-icon>{{ propertyData.propType.icon }}</mat-icon>
@@ -58,6 +58,7 @@ import { PropertyForm, EditPropertyDialogData } from './property-form.type';
       placeholder="Comment"
       [isRequired]="true" />
   </form>`,
+    standalone: false
 })
 export class PropertyFormComponent implements OnInit {
   @Input() propertyData!: EditPropertyDialogData;

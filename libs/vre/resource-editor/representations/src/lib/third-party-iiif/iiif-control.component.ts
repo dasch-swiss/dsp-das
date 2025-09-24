@@ -4,8 +4,8 @@ import { startWith, Subscription } from 'rxjs';
 import { IIIFUrl } from './third-party-iiif';
 
 @Component({
-  selector: 'app-iiif-control',
-  template: `
+    selector: 'app-iiif-control',
+    template: `
     @if (previewImageUrl) {
       <div class="third-party-iiif-preview">
         <img [src]="previewImageUrl" alt="IIIF Preview" height="240" />
@@ -25,8 +25,8 @@ import { IIIFUrl } from './third-party-iiif';
       }
     </mat-form-field>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .third-party-iiif-preview {
         width: 100%;
         border: 1px solid #000;
@@ -39,8 +39,9 @@ import { IIIFUrl } from './third-party-iiif';
         overflow: hidden;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class IiifControlComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;

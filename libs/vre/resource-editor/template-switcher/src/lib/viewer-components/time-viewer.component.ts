@@ -8,12 +8,13 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
-  selector: 'app-time-viewer',
-  template: `
+    selector: 'app-time-viewer',
+    template: `
     <span data-cy="time-switch-date">{{ dateTime | date: 'dd.MM.YYYY' }}</span> at
     <span data-cy="time-switch-time">{{ dateTime | date: 'HH:mm' }}</span>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TimeViewerComponent implements OnChanges {
   @Input({ required: true }) value!: ReadTimeValue;

@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ReadUser } from '@dasch-swiss/dsp-js';
 
 @Component({
-  selector: 'app-user-description',
-  template: ` <span style="display: flex; align-items: center">
+    selector: 'app-user-description',
+    template: ` <span style="display: flex; align-items: center">
     <span style="width: 50px; margin-right: 16px">
       <img appAdminImage [image]="user.email" [type]="'user'" alt="avatar" style="width: 50px;border-radius: 50px;" />
     </span>
@@ -13,6 +13,7 @@ import { ReadUser } from '@dasch-swiss/dsp-js';
       <span class="mat-subtitle-2">{{ user.username }} | {{ user.email }}</span>
     </span>
   </span>`,
+    standalone: false
 })
 export class UserDescriptionComponent {
   @Input({ required: true }) user!: ReadUser;

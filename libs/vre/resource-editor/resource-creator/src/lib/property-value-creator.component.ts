@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-property-value-creator',
-  template: `
+    selector: 'app-property-value-creator',
+    template: `
     @if (template) {
       <div style="display: flex; position: relative" [ngClass]="{ works: isValid$ | async }">
         <div style="flex: 1">
@@ -35,15 +35,16 @@ import { map, startWith } from 'rxjs/operators';
       </div>
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       .action-buttons {
         width: 140px;
         position: absolute;
         right: -140px;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class PropertyValueCreatorComponent implements OnInit {
   @Input({ required: true }) myProperty!: PropertyInfoValues;

@@ -16,9 +16,10 @@ interface VersionResponse {
 }
 
 @Component({
-  selector: 'app-help',
-  templateUrl: './help-page.component.html',
-  styleUrls: ['./help-page.component.scss'],
+    selector: 'app-help',
+    templateUrl: './help-page.component.html',
+    styleUrls: ['./help-page.component.scss'],
+    standalone: false
 })
 export class HelpPageComponent implements OnInit {
   loading = true;

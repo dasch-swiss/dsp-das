@@ -3,8 +3,8 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { CompoundService } from './compound.service';
 
 @Component({
-  selector: 'app-compound-arrow-navigation',
-  template: `
+    selector: 'app-compound-arrow-navigation',
+    template: `
     <div style="height: 100%; display:flex; align-items: center; cursor: pointer">
       <button
         mat-button
@@ -15,7 +15,8 @@ import { CompoundService } from './compound.service';
       </button>
     </div>
   `,
-  styles: ['button[disabled] {color: #b8b8b8!important}'],
+    styles: ['button[disabled] {color: #b8b8b8!important}'],
+    standalone: false
 })
 export class CompoundArrowNavigationComponent implements OnInit {
   @Input() forwardNavigation!: boolean;

@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
 
 @Component({
-  selector: 'app-date-viewer',
-  template: `
+    selector: 'app-date-viewer',
+    template: `
     @if (isKnoraPeriod) {
       <span>{{ start | knoraDate: 'dd.MM.YYYY' : 'era' }}</span>
       -
@@ -20,6 +20,7 @@ import { KnoraDate, KnoraPeriod, ReadDateValue } from '@dasch-swiss/dsp-js';
       </span>
     </ng-template>
   `,
+    standalone: false
 })
 export class DateViewerComponent implements OnInit {
   @Input({ required: true }) value!: ReadDateValue;

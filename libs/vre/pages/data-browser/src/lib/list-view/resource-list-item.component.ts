@@ -5,8 +5,8 @@ import { map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 
 @Component({
-  selector: 'app-resource-list-item',
-  template: `
+    selector: 'app-resource-list-item',
+    template: `
     <div
       style="padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #ebebeb"
       [ngStyle]="{
@@ -40,9 +40,9 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [
+        `
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
       }
@@ -54,7 +54,8 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
         font-size: 12px;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

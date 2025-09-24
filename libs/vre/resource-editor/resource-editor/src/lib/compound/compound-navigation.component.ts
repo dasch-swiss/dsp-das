@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CompoundService } from './compound.service';
 
 @Component({
-  selector: 'app-compound-navigation',
-  template: ` <span style="display: flex; align-items: center">
+    selector: 'app-compound-navigation',
+    template: ` <span style="display: flex; align-items: center">
     <button mat-icon-button [disabled]="compoundNavigation.page <= 1" matTooltip="First page" (click)="openPage(1)">
       <mat-icon>first_page</mat-icon>
     </button>
@@ -30,6 +30,7 @@ import { CompoundService } from './compound.service';
       <mat-icon>last_page</mat-icon>
     </button>
   </span>`,
+    standalone: false
 })
 export class CompoundNavigationComponent {
   get compoundNavigation() {

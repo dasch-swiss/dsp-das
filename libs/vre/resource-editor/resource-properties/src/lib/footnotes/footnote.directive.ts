@@ -6,7 +6,8 @@ import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { FootnoteTooltipComponent } from './footnote-tooltip.component';
 
 @Directive({
-  selector: '[appFootnote]',
+    selector: '[appFootnote]',
+    standalone: false
 })
 export class FootnoteDirective {
   private _overlayRef: OverlayRef | null = null;

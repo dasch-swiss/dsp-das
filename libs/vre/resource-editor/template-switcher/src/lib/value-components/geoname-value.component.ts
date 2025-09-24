@@ -4,8 +4,8 @@ import { debounceTime, switchMap, tap } from 'rxjs';
 import { GeonameService, SearchPlace } from '../geoname.service';
 
 @Component({
-  selector: 'app-geoname-value',
-  template: ` <mat-form-field style="width: 100%">
+    selector: 'app-geoname-value',
+    template: ` <mat-form-field style="width: 100%">
     <input
       matInput
       [formControl]="control"
@@ -28,6 +28,7 @@ import { GeonameService, SearchPlace } from '../geoname.service';
       </mat-error>
     }
   </mat-form-field>`,
+    standalone: false
 })
 export class GeonameValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string>;

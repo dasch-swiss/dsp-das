@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-common-input',
-  template: `
+    selector: 'app-common-input',
+    template: `
     <mat-form-field style="width: 100%">
       @if (withLabel) {
         <mat-label data-cy="common-input-label">{{ label }}</mat-label>
@@ -24,9 +24,8 @@ import { FormControl } from '@angular/forms';
       }
     </mat-form-field>
   `,
-  styles: [':host { display: block;}'],
-  /** TODO can't mark as OnPush because it does not detect touched / pristine changes.
-   This should be fixed with angular 18 form touchedChangedEvent. * */
+    styles: [':host { display: block;}'],
+    standalone: false
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;

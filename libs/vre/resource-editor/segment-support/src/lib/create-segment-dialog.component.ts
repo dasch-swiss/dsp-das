@@ -13,8 +13,8 @@ export interface CreateSegmentDialogProps {
 }
 
 @Component({
-  selector: 'app-create-segment-dialog',
-  template: ` <app-dialog-header
+    selector: 'app-create-segment-dialog',
+    template: ` <app-dialog-header
       title="{{ 'resourceEditor.segmentSupport.createSegmentDialog.createAnnotation' | translate }}" />
     <div mat-dialog-content>
       <app-common-input [control]="form.controls.label" label="Label" />
@@ -41,6 +41,7 @@ export interface CreateSegmentDialogProps {
         Submit
       </button>
     </div>`,
+    standalone: false
 })
 export class CreateSegmentDialogComponent {
   loading = false;

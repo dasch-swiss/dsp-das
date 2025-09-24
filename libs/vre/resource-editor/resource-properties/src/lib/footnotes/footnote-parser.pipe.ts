@@ -4,7 +4,8 @@ import { unescapeHtml } from '@dasch-swiss/vre/ui/ui';
 import { FootnoteService } from './footnote.service';
 
 @Pipe({
-  name: 'footnoteParser',
+    name: 'footnoteParser',
+    standalone: false
 })
 export class FootnoteParserPipe implements PipeTransform {
   private readonly _footnoteRegExp = /<footnote content="([^>]+)"\/>/g;

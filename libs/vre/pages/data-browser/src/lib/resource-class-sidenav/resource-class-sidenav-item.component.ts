@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-resource-class-sidenav-item',
-  template: `
+    selector: 'app-resource-class-sidenav-item',
+    template: `
     <div class="class-item-container">
       <div class="content" data-cy="class-item" [routerLinkActive]="['is-active']">
         <div class="box link" [routerLink]="classLink">
@@ -38,7 +38,8 @@ import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
       </div>
     </div>
   `,
-  styleUrls: ['./resource-class-sidenav-item.component.scss'],
+    styleUrls: ['./resource-class-sidenav-item.component.scss'],
+    standalone: false
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;

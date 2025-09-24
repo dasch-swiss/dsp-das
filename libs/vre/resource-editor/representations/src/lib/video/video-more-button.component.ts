@@ -12,8 +12,8 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-  selector: 'app-video-more-button',
-  template: ` <button mat-icon-button [matMenuTriggerFor]="more">
+    selector: 'app-video-more-button',
+    template: ` <button mat-icon-button [matMenuTriggerFor]="more">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #more="matMenu" class="representation-menu">
@@ -32,6 +32,7 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">Replace file</button>
       }
     </mat-menu>`,
+    standalone: false
 })
 export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

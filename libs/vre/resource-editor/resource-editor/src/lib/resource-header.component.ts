@@ -7,8 +7,8 @@ import { EditResourceLabelDialogComponent } from '@dasch-swiss/vre/resource-edit
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-  selector: 'app-resource-header',
-  template: ` <div class="resource-header">
+    selector: 'app-resource-header',
+    template: ` <div class="resource-header">
     <div class="resource-class-header">
       <h3
         [class.label-info]="resourceClassType?.comment"
@@ -34,8 +34,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
     </div>
     <app-resource-info-bar [resource]="resource.res" />
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       .resource-header {
         margin-bottom: 24px;
       }
@@ -81,7 +81,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
         }
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ResourceHeaderComponent {
   @Input({ required: true }) resource!: DspResource;

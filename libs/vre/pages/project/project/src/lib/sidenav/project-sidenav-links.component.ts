@@ -5,8 +5,8 @@ import { filter, map, startWith, switchMap } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
-  selector: 'app-projects-sidenav-links',
-  template: `
+    selector: 'app-projects-sidenav-links',
+    template: `
     @if (link$ | async; as link) {
       <mat-list>
         <app-projects-sidenav-links-item
@@ -34,13 +34,14 @@ import { ProjectPageService } from '../project-page.service';
       </mat-list>
     }
   `,
-  styles: [
-    `
+    styles: [
+        `
       mat-list {
         padding: 0;
       }
     `,
-  ],
+    ],
+    standalone: false
 })
 export class ProjectSidenavLinksComponent {
   protected readonly routeConstants = RouteConstants;

@@ -4,13 +4,14 @@ import { Segment, SegmentsService } from '@dasch-swiss/vre/resource-editor/segme
 import { delay, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-segment-tab',
-  template: `@for (segment of segmentsService.segments; track segment) {
+    selector: 'app-segment-tab',
+    template: `@for (segment of segmentsService.segments; track segment) {
     <div [id]="segment.resource.res.id" [class.active]="segment === selectedSegment">
       <app-properties-display [resource]="segment.resource" [parentResourceId]="resource.id" />
     </div>
   }`,
-  styles: ['.active {border: 1px solid}'],
+    styles: ['.active {border: 1px solid}'],
+    standalone: false
 })
 export class SegmentTabComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;

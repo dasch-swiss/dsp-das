@@ -11,8 +11,8 @@ export interface DeleteValueDialogProps {
 }
 
 @Component({
-  selector: 'app-delete-value-dialog',
-  template: `
+    selector: 'app-delete-value-dialog',
+    template: `
     <app-dialog-header
       [title]="
         'Are you sure you want to delete this value from ' + propertyValueService.propertyDefinition.label + '?'
@@ -43,6 +43,7 @@ export interface DeleteValueDialogProps {
       </button>
     </div>
   `,
+    standalone: false
 })
 export class DeleteValueDialogComponent {
   loading = false;

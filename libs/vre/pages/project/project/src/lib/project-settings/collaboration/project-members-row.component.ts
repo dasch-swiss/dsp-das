@@ -5,8 +5,8 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({
-  selector: 'app-project-members-row',
-  template: `
+    selector: 'app-project-members-row',
+    template: `
     <div style="display: flex; align-items: center; gap: 16px; padding: 16px 0">
       <app-user-description [user]="user" style="flex: 1" />
 
@@ -25,6 +25,7 @@ import { ProjectPageService } from '../../project-page.service';
       }
     </div>
   `,
+    standalone: false
 })
 export class ProjectMembersRowComponent implements OnInit {
   @Input({ required: true }) user!: ReadUser;

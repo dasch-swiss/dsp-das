@@ -6,9 +6,9 @@ import { ckEditor } from './ck-editor';
 import { unescapeHtml } from './unescape-html';
 
 @Component({
-  selector: 'app-ck-editor',
-  styleUrl: './ck-editor.component.scss',
-  template: ` <ckeditor
+    selector: 'app-ck-editor',
+    styleUrl: './ck-editor.component.scss',
+    template: ` <ckeditor
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
@@ -16,6 +16,7 @@ import { unescapeHtml } from './unescape-html';
     @if (control.touched && control.errors; as errors) {
       <mat-error>{{ errors | humanReadableError }}</mat-error>
     }`,
+    standalone: false
 })
 export class CkEditorComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string | null>;

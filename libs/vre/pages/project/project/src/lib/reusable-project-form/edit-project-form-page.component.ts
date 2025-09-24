@@ -8,8 +8,8 @@ import { ProjectPageService } from '../project-page.service';
 import { ProjectForm } from './project-form.type';
 
 @Component({
-  selector: 'app-edit-project-form-page',
-  template: `
+    selector: 'app-edit-project-form-page',
+    template: `
     @if (formData$ | async; as formData) {
       <app-reusable-project-form [formData]="formData" (afterFormInit)="form = $event" />
     }
@@ -27,6 +27,7 @@ import { ProjectForm } from './project-form.type';
       </button>
     </div>
   `,
+    standalone: false
 })
 export class EditProjectFormPageComponent {
   form!: ProjectForm;

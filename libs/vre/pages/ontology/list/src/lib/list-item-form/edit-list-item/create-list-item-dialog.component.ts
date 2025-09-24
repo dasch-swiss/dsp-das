@@ -14,9 +14,9 @@ export interface CreateListItemDialogProps {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-create-list-item-dialog',
-  template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-create-list-item-dialog',
+    template: `
     <app-dialog-header title="Insert new child node" />
 
     <div mat-dialog-content>
@@ -37,6 +37,7 @@ export interface CreateListItemDialogProps {
       </button>
     </div>
   `,
+    standalone: false
 })
 export class CreateListItemDialogComponent {
   form: ListItemForm;
