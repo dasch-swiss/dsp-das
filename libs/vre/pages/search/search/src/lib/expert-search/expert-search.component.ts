@@ -41,12 +41,7 @@ export function forbiddenTermValidator(termRe: RegExp): ValidatorFn {
   standalone: false,
 })
 export class ExpertSearchComponent implements OnInit, AfterViewInit {
-  /**
-   * the data event emitter of type SearchParams
-   *
-   * @param  search
-   */
-  @Output() search = new EventEmitter<SearchParams>();
+  @Output() searchParam = new EventEmitter<SearchParams>();
 
   @ViewChild('textArea') textAreaElement: ElementRef;
 
@@ -108,7 +103,7 @@ CONSTRUCT {
     const gravsearch = this._generateGravsearch(0);
 
     if (gravsearch) {
-      this.search.emit({
+      this.searchParam.emit({
         query: gravsearch,
         mode: 'gravsearch',
       });
