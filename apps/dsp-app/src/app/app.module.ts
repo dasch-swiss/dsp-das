@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
+import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -41,7 +41,7 @@ import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { HumanReadableErrorPipe, StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
-import { UiComponents } from '@dasch-swiss/vre/ui/ui';
+import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
@@ -115,6 +115,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       },
     }),
     HumanReadableErrorPipe,
+    PagerComponent,
   ],
   providers: [
     AppConfigService,
@@ -165,12 +166,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       provide: Sentry.TraceService,
       deps: [Router],
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = (() => () => {})();
+      inject(Sentry.TraceService);
+      return initializerFn();
+    }),
     LocalizationService,
   ],
   bootstrap: [AppComponent],

@@ -30,14 +30,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {
-  _AbstractConstructor,
-  _Constructor,
-  CanUpdateErrorState,
-  ErrorStateMatcher,
-  MatOptionModule,
-  mixinErrorState,
-} from '@angular/material/core';
+import { ErrorStateMatcher, MatOptionModule } from '@angular/material/core';
 import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -191,7 +184,7 @@ export class AppDatePickerComponent
 
   set required(req) {
     this._required = coerceBooleanProperty(req);
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   @Input()
@@ -203,7 +196,7 @@ export class AppDatePickerComponent
     this._disabled = coerceBooleanProperty(value);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this._disabled ? this.dateForm.disable() : this.dateForm.enable();
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   @Input()
@@ -213,7 +206,7 @@ export class AppDatePickerComponent
 
   set placeholder(plh) {
     this._placeholder = plh;
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   @Input()
@@ -242,7 +235,7 @@ export class AppDatePickerComponent
       this.dateForm.setValue({ date: null, knoraDate: null });
     }
 
-    this.stateChanges.next();
+    this._stateChanges.next();
     this.buildForm();
   }
 
@@ -275,7 +268,7 @@ export class AppDatePickerComponent
 
     _fm.monitor(_elRef.nativeElement, true).subscribe(origin => {
       this.focused = !!origin;
-      this.stateChanges.next();
+      this._stateChanges.next();
     });
 
     if (this.ngControl != null) {
@@ -311,7 +304,7 @@ export class AppDatePickerComponent
   }
 
   ngOnDestroy() {
-    this.stateChanges.complete();
+    this._stateChanges.complete();
   }
 
   onContainerClick(event: MouseEvent) {
