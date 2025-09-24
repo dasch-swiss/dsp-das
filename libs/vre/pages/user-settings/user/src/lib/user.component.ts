@@ -12,19 +12,11 @@ import { Component } from '@angular/core';
         mat-align-tabs="start"
         animationDuration="0ms"
         [tabPanel]="tabPanel">
-        <a
-          mat-tab-link
-          [routerLink]="['account']"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }">
+        <a mat-tab-link [routerLink]="['/', 'my-profile', 'account']" routerLinkActive="active-link">
           <mat-icon class="tab-icon">settings</mat-icon>
           {{ 'pages.userSettings.navigation.myAccount' | translate }}
         </a>
-        <a
-          mat-tab-link
-          [routerLink]="['projects']"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }">
+        <a mat-tab-link [routerLink]="['projects']" routerLinkActive="active-link">
           <mat-icon class="tab-icon">assignments</mat-icon>
           {{ 'pages.userSettings.navigation.myProjects' | translate }}
         </a>
@@ -34,5 +26,14 @@ import { Component } from '@angular/core';
       <router-outlet></router-outlet>
     </app-centered-layout>
   `,
+  styles: [
+    `
+      .active-link {
+        color: var(--mat-tab-header-active-label-text-color) !important;
+        border-bottom: 2px solid var(--mat-tab-header-active-ripple-color);
+        font-weight: 500;
+      }
+    `,
+  ],
 })
 export class UserComponent {}

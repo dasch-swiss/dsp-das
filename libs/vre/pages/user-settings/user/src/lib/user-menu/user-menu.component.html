@@ -19,16 +19,12 @@
     <div class="menu-title">{{ (user$ | async)?.givenName }} {{ (user$ | async)?.familyName }}</div>
   </div>
 
-  <a
-    mat-menu-item
-    [routerLink]="['/', 'my-profile', 'account']"
-    [routerLinkActiveOptions]="{ exact: true }"
-    routerLinkActive="active-link">
+  <a mat-menu-item [routerLink]="['/', 'my-profile', 'account']">
     {{ 'pages.userSettings.userMenu.myAccount' | translate }}
   </a>
 
   @if (isSysAdmin$ | async) {
-  <a mat-menu-item [routerLink]="['/', systemLink]" routerLinkActive="active-link">
+  <a mat-menu-item [routerLink]="['/', systemLink]">
     {{ 'pages.userSettings.userMenu.systemAdministration' | translate }}
   </a>
   }
