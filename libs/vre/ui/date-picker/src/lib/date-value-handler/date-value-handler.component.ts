@@ -2,8 +2,10 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { CommonModule } from '@angular/common';
 import { Component, DoCheck, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import {
+  ReactiveFormsModule,
   AbstractControl,
   ControlValueAccessor,
   FormGroupDirective,
@@ -20,6 +22,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { KnoraDate, KnoraPeriod } from '@dasch-swiss/dsp-js';
 import { JDNConvertibleCalendar } from '@dasch-swiss/jdnconvertiblecalendar';
 import { Subject, Subscription } from 'rxjs';
+import { AppDatePickerComponent } from '../app-date-picker/app-date-picker.component';
 import { ValueService } from './value.service';
 
 /** if a period is defined, start date must be before end date */
@@ -45,6 +48,7 @@ export function periodStartEndValidator(
 
 @Component({
   selector: 'app-date-value-handler',
+  imports: [CommonModule, ReactiveFormsModule, AppDatePickerComponent],
   templateUrl: './date-value-handler.component.html',
   styleUrls: ['./date-value-handler.component.scss'],
   providers: [
@@ -54,7 +58,7 @@ export function periodStartEndValidator(
     },
     { provide: Subject },
   ],
-  standalone: false,
+  standalone: true,
 })
 export class DateValueHandlerComponent
   implements ControlValueAccessor, MatFormFieldControl<KnoraDate | KnoraPeriod>, DoCheck, OnInit, OnDestroy

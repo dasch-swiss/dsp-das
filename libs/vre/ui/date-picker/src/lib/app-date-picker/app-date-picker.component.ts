@@ -54,8 +54,6 @@ export class DatePickerErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
-
 interface FormErrors {
   [key: string]: string;
 }
@@ -65,18 +63,6 @@ interface ValidationMessages {
     [key: string]: string;
   };
 }
-
-class MatInputBase {
-  constructor(
-    public _defaultErrorStateMatcher: ErrorStateMatcher,
-    public _parentForm: NgForm,
-    public _parentFormGroup: FormGroupDirective,
-    public ngControl: NgControl,
-    public stateChanges: Subject<void>
-  ) {}
-}
-
-const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
   selector: 'app-date-picker',
@@ -94,17 +80,21 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
     MatButtonToggleModule,
     MatSelectModule,
   ],
+  standalone: true,
 })
 export class AppDatePickerComponent
-  extends _MatInputMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, CanUpdateErrorState, OnDestroy
+  implements ControlValueAccessor, MatFormFieldControl<KnoraDate>, OnChanges, DoCheck, OnDestroy
 {
   static nextId = 0;
+
+  // Required for MatFormFieldControl interface
+  stateChanges = new Subject<void>();
+  errorState = false;
 
   @ViewChild(MatMenuTrigger) popover!: MatMenuTrigger;
   @Output() datePickerClosed: EventEmitter<void> = new EventEmitter();
   @Output() emitDateChanged: EventEmitter<string> = new EventEmitter();
-  @Input() override errorStateMatcher!: ErrorStateMatcher;
+  @Input() errorStateMatcher!: ErrorStateMatcher;
 
   // disable calendar selector in case of end date in a period date value
   @Input() disableCalendarSelector!: boolean;
@@ -118,7 +108,6 @@ export class AppDatePickerComponent
   @HostBinding('attr.aria-describedby') describedBy = '';
   dateForm: UntypedFormGroup;
   focused = false;
-  override errorState = false;
   controlType = 'app-date-picker';
   matcher = new DatePickerErrorStateMatcher();
 
@@ -184,7 +173,7 @@ export class AppDatePickerComponent
 
   set required(req) {
     this._required = coerceBooleanProperty(req);
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   @Input()
@@ -196,7 +185,7 @@ export class AppDatePickerComponent
     this._disabled = coerceBooleanProperty(value);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this._disabled ? this.dateForm.disable() : this.dateForm.enable();
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   @Input()
@@ -206,7 +195,7 @@ export class AppDatePickerComponent
 
   set placeholder(plh) {
     this._placeholder = plh;
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   @Input()
@@ -235,7 +224,7 @@ export class AppDatePickerComponent
       this.dateForm.setValue({ date: null, knoraDate: null });
     }
 
-    this._stateChanges.next();
+    this.stateChanges.next();
     this.buildForm();
   }
 
@@ -250,17 +239,14 @@ export class AppDatePickerComponent
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor(
-    _defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    @Optional() @Self() public override ngControl: NgControl,
-    private _stateChanges: Subject<void>,
+    public _defaultErrorStateMatcher: ErrorStateMatcher,
+    @Optional() public _parentForm: NgForm,
+    @Optional() public _parentFormGroup: FormGroupDirective,
+    @Optional() @Self() public ngControl: NgControl,
     fb: UntypedFormBuilder,
     private _elRef: ElementRef<HTMLElement>,
     private _fm: FocusMonitor
   ) {
-    super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
-
     this.dateForm = fb.group({
       date: [null, Validators.required],
       knoraDate: [null, Validators.required],
@@ -268,7 +254,7 @@ export class AppDatePickerComponent
 
     _fm.monitor(_elRef.nativeElement, true).subscribe(origin => {
       this.focused = !!origin;
-      this._stateChanges.next();
+      this.stateChanges.next();
     });
 
     if (this.ngControl != null) {
@@ -303,8 +289,21 @@ export class AppDatePickerComponent
     }
   }
 
+  updateErrorState() {
+    const oldState = this.errorState;
+    const parent = this._parentFormGroup || this._parentForm;
+    const matcher = this._defaultErrorStateMatcher;
+    const control = this.ngControl ? this.ngControl.control : null;
+    const newState = matcher.isErrorState(control, parent);
+
+    if (newState !== oldState) {
+      this.errorState = newState;
+      this.stateChanges.next();
+    }
+  }
+
   ngOnDestroy() {
-    this._stateChanges.complete();
+    this.stateChanges.complete();
   }
 
   onContainerClick(event: MouseEvent) {
