@@ -112,6 +112,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
     if (!this.formGroup.valid) {
       return;
     }
+    this.searchInput.nativeElement.blur();
 
     this.querySubject.next(this.formGroup.controls.query.value!);
   }
