@@ -37,11 +37,10 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
-import { DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
-import { HumanReadableErrorPipe, StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
+import { HumanReadableErrorPipe, StringLiteralComponents, MultiLanguageInputComponent, MultiLanguageTextareaComponent } from '@dasch-swiss/vre/ui/string-literal';
 import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -68,29 +67,30 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     AppComponent,
     CookieBannerComponent,
-    ...TemplateSwitcherComponents,
-    ...ResourcePropertiesComponents,
-    ...ResourceCreatorComponents,
-    ...SegmentSupportComponents,
-    ...ResourcePageComponents,
-    ...RepresentationsComponents,
-    ...PropertiesDisplayComponents,
     ...CommonToMoveComponents,
-    ...ListComponents,
-    ...UiComponents,
-    ...HelpPageComponents,
-    ...ProjectComponents,
-    ...UserComponents,
-    ...SearchComponents,
     ...DataBrowserComponents,
-    ...OntologyComponents,
-    ...SystemComponents,
-    ...ProgressIndicatorComponents,
     ...DatePickerComponents,
+    ...HelpPageComponents,
+    ...ListComponents,
+    ...OntologyComponents,
+    ...ProgressIndicatorComponents,
+    ...ProjectComponents,
+    ...PropertiesDisplayComponents,
+    ...RepresentationsComponents,
+    ...ResourceCreatorComponents,
+    ...ResourcePageComponents,
+    ...ResourcePropertiesComponents,
+    ...SearchComponents,
+    ...SegmentSupportComponents,
     ...StringLiteralComponents,
+    ...SystemComponents,
+    ...TemplateSwitcherComponents,
+    ...UiComponents,
+    ...UserComponents,
   ],
   imports: [
     AngularSplitModule,
+    AppProgressIndicatorComponent,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -98,16 +98,21 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ClipboardModule,
     ColorPickerModule,
     CommonModule,
+    DateValueHandlerComponent,
     FormsModule,
     HttpClientModule,
+    HumanReadableErrorPipe,
     IMaskModule,
+    MultiLanguageInputComponent,
+    MultiLanguageTextareaComponent,
     MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     MatRippleModule,
+    MatStepperModule,
     NgxSkeletonLoaderModule,
+    PagerComponent,
     PdfViewerModule,
     ReactiveFormsModule,
-    MatStepperModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -115,10 +120,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    HumanReadableErrorPipe,
-    PagerComponent,
-    AppProgressIndicatorComponent,
-    DateValueHandlerComponent,
   ],
   providers: [
     AppConfigService,
