@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
 import { MenuItem } from './menu-item';
 
 @Component({
@@ -40,6 +38,7 @@ export class UserComponent {
     private _translateService: TranslateService
   ) {
     // get the activated route; we need it for the viewer switch
+    console.log('aaa', this._route);
     this.route = this._route.pathFromRoot[1].snapshot.url[0].path;
   }
 }

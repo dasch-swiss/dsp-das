@@ -24,6 +24,7 @@ import {
   AdvancedSearchPageComponent,
   AdvancedSearchResultsPageComponent,
   FulltextSearchResultsPageComponent,
+  GlobalPageComponent,
   ProjectFulltextSearchPageComponent,
 } from '@dasch-swiss/vre/pages/search/search';
 import {
@@ -41,20 +42,6 @@ import { AuthGuard } from './main/guard/auth.guard';
 import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 
 const routes: Routes = [
-  {
-    path: RouteConstants.home,
-    component: ProjectOverviewComponent,
-  },
-  { path: 'search/:query', component: FulltextSearchResultsPageComponent },
-  {
-    path: RouteConstants.help,
-    component: HelpPageComponent,
-  },
-  {
-    path: `${RouteConstants.createNewProjectRelative}`,
-    canActivate: [AuthGuard],
-    component: CreateProjectFormPageComponent,
-  },
   {
     path: RouteConstants.projectUuidRelative,
     component: ProjectPageComponent,
@@ -162,47 +149,68 @@ const routes: Routes = [
     ],
   },
   {
-    path: RouteConstants.userAccount,
-    component: UserComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: RouteConstants.projects,
-    component: UserComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: RouteConstants.system,
-    component: SystemPageComponent,
-    canActivate: [AuthGuard],
+    path: '',
+    component: GlobalPageComponent,
     children: [
       {
-        path: '',
-        redirectTo: RouteConstants.systemProjects,
-        pathMatch: 'full',
+        path: RouteConstants.home,
+        component: ProjectOverviewComponent,
+      },
+      { path: 'search/:query', component: FulltextSearchResultsPageComponent },
+      {
+        path: RouteConstants.help,
+        component: HelpPageComponent,
       },
       {
-        path: RouteConstants.systemProjects,
-        component: ProjectsComponent,
+        path: `${RouteConstants.createNewProjectRelative}`,
+        canActivate: [AuthGuard],
+        component: CreateProjectFormPageComponent,
+      },
+
+      {
+        path: RouteConstants.userAccount,
+        component: UserComponent,
+        canActivate: [AuthGuard],
       },
       {
-        path: RouteConstants.systemUsers,
-        component: UsersTabComponent,
+        path: RouteConstants.projects,
+        component: UserComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: RouteConstants.system,
+        component: SystemPageComponent,
+        canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: RouteConstants.systemProjects,
+            pathMatch: 'full',
+          },
+          {
+            path: RouteConstants.systemProjects,
+            component: ProjectsComponent,
+          },
+          {
+            path: RouteConstants.systemUsers,
+            component: UsersTabComponent,
+          },
+        ],
+      },
+      {
+        path: RouteConstants.projectResourceRelative,
+        component: SingleResourcePageComponent,
+      },
+      {
+        path: RouteConstants.cookiePolicy,
+        component: CookiePolicyComponent,
+      },
+      {
+        path: RouteConstants.notFoundWildcard,
+        component: StatusComponent,
+        data: { status: RouteConstants.notFound },
       },
     ],
-  },
-  {
-    path: RouteConstants.projectResourceRelative,
-    component: SingleResourcePageComponent,
-  },
-  {
-    path: RouteConstants.cookiePolicy,
-    component: CookiePolicyComponent,
-  },
-  {
-    path: RouteConstants.notFoundWildcard,
-    component: StatusComponent,
-    data: { status: RouteConstants.notFound },
   },
 ];
 

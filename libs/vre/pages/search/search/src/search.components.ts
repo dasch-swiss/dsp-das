@@ -1,6 +1,7 @@
 import { AdvancedSearchPageComponent } from './lib/advanced-search/advanced-search-page.component';
 import { AdvancedSearchResultsPageComponent } from './lib/advanced-search-results-page.component';
 import { FulltextSearchResultsPageComponent } from './lib/fulltext-search-results-page.component';
+import { GlobalPageComponent } from './lib/global-page.component';
 import { NoResultsFoundComponent } from './lib/no-results-found.component';
 import { ProjectFulltextSearchPageComponent } from './lib/project-fulltext-search-page.component';
 import { ProjectFulltextSearchResultComponent } from './lib/project-fulltext-search-result.component';
@@ -14,4 +15,5 @@ export const SearchComponents = [
   ProjectSearchPageComponent,
   ProjectFulltextSearchPageComponent,
   FulltextSearchResultsPageComponent,
+  GlobalPageComponent,
 ];
