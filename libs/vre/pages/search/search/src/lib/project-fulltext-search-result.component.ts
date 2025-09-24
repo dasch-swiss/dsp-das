@@ -17,8 +17,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
         <app-centered-box>
           <app-no-results-found [message]="noResultMessage" />
         </app-centered-box>
-      }
-      @if (resources.length > 0) {
+      } @else if (resources.length > 0) {
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
           [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
