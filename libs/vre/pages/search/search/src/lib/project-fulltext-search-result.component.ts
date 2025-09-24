@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
@@ -39,7 +39,7 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
   readonly noResultMessage = 'There are no resources to display.';
 
   constructor(
-    private _route: ActivatedRoute,
+    private _projectPageService: ProjectPageService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _resourceResultService: ResourceResultService,
@@ -51,7 +51,11 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
 
     this.resources$ = combineLatest([
       this._resourceResultService.pageIndex$.pipe(
-        switchMap(pageNumber => this._dspApiConnection.v2.search.doFulltextSearch(this.query, pageNumber))
+        switchMap(pageNumber =>
+          this._dspApiConnection.v2.search.doFulltextSearch(this.query, pageNumber, {
+            limitToProject: this._projectPageService.currentProjectId,
+          })
+        )
       ),
       this._numberOfAllResults$(this.query),
     ]).pipe(
