@@ -7,7 +7,7 @@ import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-fulltext-search-result-page',
+  selector: 'app-project-fulltext-search-result',
   template: `
     @if (loading) {
       <app-progress-indicator />
@@ -29,7 +29,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FulltextSearchResultPageComponent implements OnChanges {
+export class ProjectFulltextSearchResultComponent implements OnChanges {
   @Input({ required: true }) query!: string;
   loading = true;
 

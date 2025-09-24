@@ -46,7 +46,7 @@ import { map, startWith, Subject } from 'rxjs';
     @if (query$ | async; as query) {
       <mat-divider />
 
-      <app-fulltext-search-result-page [query]="query" />
+      <app-project-fulltext-search-result [query]="query" />
     }
   `,
   styles: [
