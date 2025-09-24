@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { ResourceEditMoreMenuComponent } from './resource-edit-more-menu.component';
 
 // Mock everything at the module level
@@ -53,7 +53,7 @@ describe('ResourceEditMoreMenuComponent', () => {
     properties: {},
   };
 
-  const mockCanDeleteResource = jest.fn().mockReturnValue(of({ canDo: true }));
+  const mockCanDeleteResource = jest.fn();
 
   const mockSearchEndpoint = {
     doSearchIncomingLinks: jest.fn().mockReturnValue(of({ resources: [] })),
@@ -108,7 +108,8 @@ describe('ResourceEditMoreMenuComponent', () => {
     // Reset mocks before each test
     jest.clearAllMocks();
     userCanDelete$.next(true);
-    mockCanDeleteResource.mockReturnValue(of({ canDo: true }));
+    const CanDoResponse = jest.requireMock('@dasch-swiss/dsp-js').CanDoResponse;
+    mockCanDeleteResource.mockReturnValue(of(new CanDoResponse(true)));
   });
 
   describe('business logic', () => {
@@ -124,62 +125,61 @@ describe('ResourceEditMoreMenuComponent', () => {
       expect(component.resourceCanBeDeleted$).toBeDefined();
     });
 
-    it('should return CanDoResponse from _canDeleteResource$', done => {
+    it('should return CanDoResponse from _canDeleteResource$', async () => {
       // Arrange
-      const mockCanDoResponse = { canDo: true };
+      const CanDoResponse = jest.requireMock('@dasch-swiss/dsp-js').CanDoResponse;
+      const mockCanDoResponse = new CanDoResponse(true);
       mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
 
       // Act
       const result$ = (component as any)._canDeleteResource$(mockResource);
+      const response = await firstValueFrom(result$);
 
       // Assert
-      result$.subscribe((response: any) => {
-        expect(response).toEqual(mockCanDoResponse);
-        expect(mockCanDeleteResource).toHaveBeenCalled();
-        done();
-      });
+      expect(response).toBeInstanceOf(CanDoResponse);
+      expect((response as any).canDo).toBe(true);
+      expect(mockCanDeleteResource).toHaveBeenCalled();
     });
 
-    it('should return canDo false when user lacks permission', done => {
+    it('should return canDo false when user lacks permission', async () => {
       // Arrange
       userCanDelete$.next(false);
       component.ngOnInit();
 
       // Act & Assert
-      component.resourceCanBeDeleted$.subscribe((response: any) => {
-        expect(response.canDo).toBe(false);
-        expect(response.cannotDoReason).toBe('You do not have permission to delete this resource.');
-        done();
-      });
+      const response = await firstValueFrom(component.resourceCanBeDeleted$);
+      expect(response).toBeDefined();
+      expect(response.canDo).toBe(false);
+      expect(response.cannotDoReason).toBe('You do not have permission to delete this resource.');
     });
 
-    it('should return canDo true when user has permission and resource can be deleted', done => {
+    it('should return canDo true when user has permission and resource can be deleted', async () => {
       // Arrange
-      const mockCanDoResponse = { canDo: true };
+      const CanDoResponse = jest.requireMock('@dasch-swiss/dsp-js').CanDoResponse;
+      const mockCanDoResponse = new CanDoResponse(true);
       mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
       userCanDelete$.next(true);
       component.ngOnInit();
 
       // Act & Assert
-      component.resourceCanBeDeleted$.subscribe((response: any) => {
-        expect(response.canDo).toBe(true);
-        done();
-      });
+      const response = await firstValueFrom(component.resourceCanBeDeleted$);
+      expect(response).toBeDefined();
+      expect(response.canDo).toBe(true);
     });
 
-    it('should return resource cannot be deleted response when API returns canDo false', done => {
+    it('should return resource cannot be deleted response when API returns canDo false', async () => {
       // Arrange
-      const mockCanDoResponse = { canDo: false, cannotDoReason: 'Resource has dependencies' };
+      const CanDoResponse = jest.requireMock('@dasch-swiss/dsp-js').CanDoResponse;
+      const mockCanDoResponse = new CanDoResponse(false, 'Resource has dependencies');
       mockCanDeleteResource.mockReturnValue(of(mockCanDoResponse));
       userCanDelete$.next(true);
       component.ngOnInit();
 
       // Act & Assert
-      component.resourceCanBeDeleted$.subscribe((response: any) => {
-        expect(response.canDo).toBe(false);
-        expect(response.cannotDoReason).toBe('Resource has dependencies');
-        done();
-      });
+      const response = await firstValueFrom(component.resourceCanBeDeleted$);
+      expect(response).toBeDefined();
+      expect(response.canDo).toBe(false);
+      expect(response.cannotDoReason).toBe('Resource has dependencies');
     });
 
     it('should emit resourceDeleted when delete dialog returns true', () => {
