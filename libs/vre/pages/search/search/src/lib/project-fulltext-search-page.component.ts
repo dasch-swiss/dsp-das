@@ -1,6 +1,9 @@
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { map, startWith, Subject } from 'rxjs';
+import { SearchTipsComponent } from './search-tips.component';
 
 @Component({
   selector: 'app-project-fulltext-search-page',
@@ -19,22 +22,13 @@ import { map, startWith, Subject } from 'rxjs';
             matInput
             [formControl]="formGroup.controls.query"
             type="text"
-            placeholder="Enter search term..." />
+            placeholder="Enter search term..."
+            (focus)="showSearchTips()"
+            (blur)="hideSearchTips()" />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </form>
-
-      <app-search-tips />
     </div>
-
-    @if (false) {
-      <div
-        style="
-    display: flex
-;
-    justify-content: center;
-;"></div>
-    }
 
     @if (query$ | async; as query) {
       <mat-divider />
@@ -66,11 +60,50 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
   formGroup = this._fb.group({ query: [''] });
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  private overlayRef: OverlayRef | null = null;
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(
+    private _fb: FormBuilder,
+    private overlay: Overlay
+  ) {}
 
   ngAfterViewInit() {
     this.searchInput.nativeElement.focus();
+  }
+
+  showSearchTips() {
+    if (this.overlayRef) {
+      return;
+    }
+
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(this.searchInput)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+          offsetY: 48,
+        },
+      ]);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      hasBackdrop: false,
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    const portal = new ComponentPortal(SearchTipsComponent);
+    this.overlayRef.attach(portal);
+  }
+
+  hideSearchTips() {
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+      this.overlayRef = null;
+    }
   }
 
   onSubmit() {
