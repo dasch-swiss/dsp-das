@@ -41,7 +41,6 @@ export class UserMenuComponent implements OnInit, OnDestroy {
 
   private setNav() {
     this._translateService.onLangChange.pipe(takeUntil(this.destroyed)).subscribe(() => {
-      console.log('nav');
       this.navigation = [
         {
           label: this._translateService.instant('pages.userSettings.userMenu.home'),

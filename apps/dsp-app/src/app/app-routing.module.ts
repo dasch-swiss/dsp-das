@@ -33,7 +33,7 @@ import {
   SystemPageComponent,
   UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
-import { ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
+import { AccountComponent, ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-creator';
 import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
@@ -168,8 +168,12 @@ const routes: Routes = [
       },
 
       {
-        path: RouteConstants.userAccount,
+        path: 'my-profile',
         component: UserComponent,
+        children: [
+          { path: RouteConstants.userAccount, component: AccountComponent },
+          { path: 'projects', component: ProjectsComponent },
+        ],
         canActivate: [AuthGuard],
       },
       {
