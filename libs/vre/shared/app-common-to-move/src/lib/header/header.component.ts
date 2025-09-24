@@ -6,10 +6,10 @@ import { AppConfigService, DspConfig, RouteConstants } from '@dasch-swiss/vre/co
 import { SearchParams } from '../search-params.interface';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  standalone: false,
 })
 export class HeaderComponent {
   session = false;

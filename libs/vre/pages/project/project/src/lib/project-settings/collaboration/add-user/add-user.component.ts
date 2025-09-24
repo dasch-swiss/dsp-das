@@ -11,9 +11,9 @@ import { BehaviorSubject, combineLatest, filter, map, shareReplay, startWith, sw
 import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-add-user',
-    template: `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-add-user',
+  template: `
     <h3>{{ 'pages.project.addUser.title' | translate }}</h3>
     <div style="display: flex; gap: 8px; align-items: center">
       <mat-form-field style="flex: 1">
@@ -44,8 +44,8 @@ import { CollaborationPageService } from '../collaboration-page.service';
       </button>
     </div>
   `,
-    styleUrls: ['./add-user.component.scss'],
-    standalone: false
+  styleUrls: ['./add-user.component.scss'],
+  standalone: false,
 })
 export class AddUserComponent {
   @Input({ required: true }) projectUuid!: string;

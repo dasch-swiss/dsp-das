@@ -4,8 +4,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 
 @Component({
-    selector: 'app-system-page',
-    template: `
+  selector: 'app-system-page',
+  template: `
     <div class="content large middle">
       @if (isSysAdmin$ | async) {
         <div>
@@ -33,8 +33,8 @@ import { UserService } from '@dasch-swiss/vre/core/session';
       }
     </div>
   `,
-    styleUrls: ['./system-page.component.scss'],
-    standalone: false
+  styleUrls: ['./system-page.component.scss'],
+  standalone: false,
 })
 export class SystemPageComponent {
   isSysAdmin$ = this._userService.isSysAdmin$;

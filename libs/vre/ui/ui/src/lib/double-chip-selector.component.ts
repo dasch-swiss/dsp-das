@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
 
 @Component({
-    selector: 'app-double-chip-selector',
-    template: ` <mat-chip-listbox
+  selector: 'app-double-chip-selector',
+  template: ` <mat-chip-listbox
     aria-label="File source"
     style="margin-bottom: 8px; margin-top: 8px"
     [required]="true"
@@ -12,7 +12,7 @@ import { MatChipListbox, MatChipListboxChange } from '@angular/material/chips';
     <mat-chip-option [value]="true">{{ options[0] }}</mat-chip-option>
     <mat-chip-option [value]="false">{{ options[1] }}</mat-chip-option>
   </mat-chip-listbox>`,
-    standalone: false
+  standalone: false,
 })
 export class DoubleChipSelectorComponent {
   @Input({ required: true }) value!: boolean;

@@ -2,8 +2,8 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Segment } from './segment';
 
 @Component({
-    selector: 'app-segments-display',
-    template: ` <div style="background: black; padding: 0 24px" [ngStyle]="{ height: height + 'px' }">
+  selector: 'app-segments-display',
+  template: ` <div style="background: black; padding: 0 24px" [ngStyle]="{ height: height + 'px' }">
     <div style="position: relative">
       @for (row of segmentInRow; track row) {
         <div style="height: 10px">
@@ -14,7 +14,7 @@ import { Segment } from './segment';
       }
     </div>
   </div>`,
-    standalone: false
+  standalone: false,
 })
 export class SegmentsDisplayComponent implements OnChanges {
   @Input({ required: true }) segments!: Segment[];

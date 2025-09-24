@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
-    selector: 'app-projects-sidenav-ontologies',
-    template: `
+  selector: 'app-projects-sidenav-ontologies',
+  template: `
     @for (onto of projectOntologies$ | async; track onto; let first = $first) {
       <mat-accordion [displayMode]="'flat'">
         <mat-expansion-panel [expanded]="first">
@@ -28,8 +28,8 @@ import { ProjectPageService } from '../project-page.service';
       </mat-accordion>
     }
   `,
-    styleUrls: ['./project-sidenav-ontologies.component.scss'],
-    standalone: false
+  styleUrls: ['./project-sidenav-ontologies.component.scss'],
+  standalone: false,
 })
 export class ProjectSidenavOntologiesComponent {
   projectOntologies$ = this._projectPageService.ontologies$;

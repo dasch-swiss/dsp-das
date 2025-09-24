@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'app-color-value',
-    template: `
+  selector: 'app-color-value',
+  template: `
     <app-nullable-editor [formControl]="control" [defaultValue]="'#000000'">
       <mat-form-field appearance="outline" style="cursor: pointer">
         <mat-label>{{ control.value }}</mat-label>
@@ -31,8 +31,8 @@ import { FormControl } from '@angular/forms';
       </mat-error>
     }
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         z-index: 1;
         position: relative;
@@ -42,8 +42,8 @@ import { FormControl } from '@angular/forms';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ColorValueComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

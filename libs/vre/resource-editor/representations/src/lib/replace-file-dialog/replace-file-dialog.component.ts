@@ -22,8 +22,8 @@ export interface ReplaceFileDialogProps {
 }
 
 @Component({
-    selector: 'app-replace-file-dialog',
-    template: `
+  selector: 'app-replace-file-dialog',
+  template: `
     <app-dialog-header [title]="data.title" [subtitle]="data.subtitle" />
     <mat-dialog-content>
       <div class="warning">
@@ -57,8 +57,8 @@ export interface ReplaceFileDialogProps {
       </button>
     </mat-dialog-actions>
   `,
-    styleUrls: ['./replace-file-dialog.component.scss'],
-    standalone: false
+  styleUrls: ['./replace-file-dialog.component.scss'],
+  standalone: false,
 })
 export class ReplaceFileDialogComponent {
   form!: FileForm;

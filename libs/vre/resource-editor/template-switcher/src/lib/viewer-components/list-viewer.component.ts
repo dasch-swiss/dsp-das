@@ -5,8 +5,8 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 
 @Component({
-    selector: 'app-list-viewer',
-    template: `
+  selector: 'app-list-viewer',
+  template: `
     <div
       data-cy="list-switch"
       style="display: flex;
@@ -25,7 +25,7 @@ import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
       }
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class ListViewerComponent implements OnInit {
   @Input() value!: ReadListValue;

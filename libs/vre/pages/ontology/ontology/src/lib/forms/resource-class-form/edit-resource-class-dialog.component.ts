@@ -13,8 +13,8 @@ export interface EditResourceClassDialogProps {
 }
 
 @Component({
-    selector: 'app-edit-resource-class-dialog',
-    template: `
+  selector: 'app-edit-resource-class-dialog',
+  template: `
     <app-dialog-header [title]="data.labels | appStringifyStringLiteral" subtitle="Customize resource class" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
@@ -33,8 +33,8 @@ export interface EditResourceClassDialogProps {
       </button>
     </div>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EditResourceClassDialogComponent implements OnInit {
   loading = false;

@@ -3,8 +3,8 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { ListNodeV2 } from '@dasch-swiss/dsp-js';
 
 @Component({
-    selector: 'app-nested-menu',
-    template: `
+  selector: 'app-nested-menu',
+  template: `
     @if (data.isRootNode) {
       <mat-form-field [matMenuTriggerFor]="menu" data-cy="select-list-button" style="width: 100%">
         <mat-label>{{ selection ?? data.label }}</mat-label>
@@ -35,8 +35,8 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
       }
     </mat-menu>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .list-item-button {
         padding: 0 16px;
         width: 400px;
@@ -46,8 +46,8 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
         width: 100%;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class NestedMenuComponent {
   @Input() data!: ListNodeV2;

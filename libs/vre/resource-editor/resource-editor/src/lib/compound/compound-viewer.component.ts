@@ -5,8 +5,8 @@ import { map } from 'rxjs';
 import { CompoundService } from './compound.service';
 
 @Component({
-    selector: 'app-compound-viewer',
-    template: `
+  selector: 'app-compound-viewer',
+  template: `
     @if (compoundService.incomingResource$ | async; as incomingResource) {
       @if (fileValue$ | async; as fileValue) {
         <app-resource-legal [fileValue]="fileValue" />
@@ -16,7 +16,7 @@ import { CompoundService } from './compound.service';
       }
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class CompoundViewerComponent {
   HasStillImageFileValue = Constants.HasStillImageFileValue;

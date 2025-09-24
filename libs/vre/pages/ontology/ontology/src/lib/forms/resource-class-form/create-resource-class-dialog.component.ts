@@ -7,8 +7,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
 
 @Component({
-    selector: 'app-create-resource-class-dialog',
-    template: `
+  selector: 'app-create-resource-class-dialog',
+  template: `
     <app-dialog-header [title]="data.label" subtitle="Create resource class" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
@@ -27,8 +27,8 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
       </button>
     </div>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CreateResourceClassDialogComponent {
   loading = false;

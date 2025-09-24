@@ -7,8 +7,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
 
 @Component({
-    selector: 'app-resource-tabs',
-    template: `
+  selector: 'app-resource-tabs',
+  template: `
     <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedTab" (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resourceEditor.properties' | translate">
         @if (resource) {
@@ -54,8 +54,8 @@ import { CompoundService } from './compound/compound.service';
       }
     </mat-tab-group>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .dots-container {
         margin-left: 1.5em;
         min-width: 3ch;
@@ -81,8 +81,8 @@ import { CompoundService } from './compound/compound.service';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ResourceTabsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;

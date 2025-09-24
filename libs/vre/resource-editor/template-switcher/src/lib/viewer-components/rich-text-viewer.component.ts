@@ -2,16 +2,16 @@ import { Component, Input } from '@angular/core';
 import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
 
 @Component({
-    selector: 'app-rich-text-viewer',
-    template: `
+  selector: 'app-rich-text-viewer',
+  template: `
     <div
       data-cy="rich-text-switch"
       class="rich-text-viewer"
       [innerHTML]="value.strval || '' | footnoteParser: index | internalLinkReplacer | addTargetBlank"
       appFootnote></div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .rich-text-viewer {
         overflow-wrap: break-word;
         word-break: break-word;
@@ -34,8 +34,8 @@ import { ReadTextValueAsXml } from '@dasch-swiss/dsp-js';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class RichTextViewerComponent {
   @Input({ required: true }) value!: ReadTextValueAsXml;

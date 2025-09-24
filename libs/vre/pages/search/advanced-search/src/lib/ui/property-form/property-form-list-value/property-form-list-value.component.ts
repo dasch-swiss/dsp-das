@@ -12,18 +12,18 @@ import { ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
-    selector: 'app-property-form-list-value',
-    imports: [
-        CommonModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatOptionModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-        MatInputModule,
-        TranslateModule,
-    ],
-    template: `
+  selector: 'app-property-form-list-value',
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    TranslateModule,
+  ],
+  template: `
     <mat-form-field appearance="fill" class="dropdown">
       <mat-label>{{ 'pages.search.propertyFormListValue' | translate }}</mat-label>
       <input
@@ -53,7 +53,7 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
       </mat-autocomplete>
     </mat-form-field>
   `,
-    styleUrls: ['./property-form-list-value.component.scss']
+  styleUrls: ['./property-form-list-value.component.scss'],
 })
 export class PropertyFormListValueComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() list: ListNodeV2 | undefined = undefined;

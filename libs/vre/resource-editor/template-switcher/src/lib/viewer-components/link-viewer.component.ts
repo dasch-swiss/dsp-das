@@ -3,10 +3,10 @@ import { ReadLinkValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-    selector: 'app-link-viewer',
-    template: `<a [href]="link" target="_blank" data-cy="link-switch">{{ value.strval }}</a> `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-link-viewer',
+  template: `<a [href]="link" target="_blank" data-cy="link-switch">{{ value.strval }}</a> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LinkViewerComponent {
   @Input({ required: true }) value!: ReadLinkValue;

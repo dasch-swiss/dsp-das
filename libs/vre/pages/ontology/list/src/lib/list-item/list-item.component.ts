@@ -5,8 +5,8 @@ import { startWith, Subscription, switchMap } from 'rxjs';
 import { ListItemService } from './list-item.service';
 
 @Component({
-    selector: 'app-list-item',
-    template: `
+  selector: 'app-list-item',
+  template: `
     @for (child of children; track trackByFn($index, child); let index = $index) {
       <app-list-item-element
         [position]="index"
@@ -19,8 +19,8 @@ import { ListItemService } from './list-item.service';
       <app-list-item-form [parentNode]="node" style="display: block; margin-left: 46px" />
     }
   `,
-    styles: [':host { display: block; }'],
-    standalone: false
+  styles: [':host { display: block; }'],
+  standalone: false,
 })
 export class ListItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) node!: ListNodeInfo;

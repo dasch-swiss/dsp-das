@@ -2,8 +2,8 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
 import { MathJaxService } from './math-jax.service';
 
 @Directive({
-    selector: '[appMathjax]',
-    standalone: false
+  selector: '[appMathjax]',
+  standalone: false,
 })
 export class MathJaxDirective implements OnInit {
   constructor(

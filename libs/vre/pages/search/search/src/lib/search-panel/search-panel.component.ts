@@ -15,11 +15,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SearchParams } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 @Component({
-    selector: 'app-search-panel',
-    templateUrl: './search-panel.component.html',
-    styleUrls: ['./search-panel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-search-panel',
+  templateUrl: './search-panel.component.html',
+  styleUrls: ['./search-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SearchPanelComponent {
   /**

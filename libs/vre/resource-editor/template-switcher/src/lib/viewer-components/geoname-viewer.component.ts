@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { DisplayPlace, GeonameService } from '../geoname.service';
 
 @Component({
-    selector: 'app-geoname-viewer',
-    template: `
+  selector: 'app-geoname-viewer',
+  template: `
     <a
       class="link"
       target="_blank"
@@ -15,8 +15,8 @@ import { DisplayPlace, GeonameService } from '../geoname.service';
       >{{ (geonameLabel$ | async)?.displayName }}</a
     >
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class GeonameViewerComponent implements OnChanges {
   @Input({ required: true }) value!: ReadGeonameValue;

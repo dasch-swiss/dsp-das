@@ -13,8 +13,8 @@ export interface EditPasswordDialogProps {
 }
 
 @Component({
-    selector: 'app-edit-password-dialog',
-    template: `
+  selector: 'app-edit-password-dialog',
+  template: `
     <app-dialog-header [title]="data.user.username" [subtitle]="'pages.system.users.changePassword' | translate" />
 
     <mat-stepper orientation="vertical" linear #stepper>
@@ -48,14 +48,14 @@ export interface EditPasswordDialogProps {
 
     <div mat-dialog-actions align="end"><button mat-button color="primary" matDialogClose>Cancel</button></div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host ::ng-deep .mat-vertical-content-container {
         margin-top: 16px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class EditPasswordDialogComponent {
   @ViewChild('stepper') stepper!: MatStepper;

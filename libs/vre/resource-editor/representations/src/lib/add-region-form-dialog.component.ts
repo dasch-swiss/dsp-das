@@ -7,8 +7,8 @@ export interface AddRegionFormDialogProps {
 }
 
 @Component({
-    selector: 'app-add-region-form',
-    template: `
+  selector: 'app-add-region-form',
+  template: `
     <app-dialog-header
       [title]="'resourceEditor.representations.addRegionFormDialog.createAnnotation' | translate"
       [subtitle]="'Add further properties'" />
@@ -37,8 +37,8 @@ export interface AddRegionFormDialogProps {
       </button>
     </mat-dialog-actions>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .form-content {
         margin: 0;
 
@@ -73,8 +73,8 @@ export interface AddRegionFormDialogProps {
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class AddRegionFormDialogComponent {
   readonly regionForm = this._fb.group({

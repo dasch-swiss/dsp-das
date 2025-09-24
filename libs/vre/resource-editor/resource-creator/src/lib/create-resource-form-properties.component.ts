@@ -5,8 +5,8 @@ import { FormValueArray, propertiesTypeMapping } from '@dasch-swiss/vre/resource
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-    selector: 'app-create-resource-form-properties',
-    template: `
+  selector: 'app-create-resource-form-properties',
+  template: `
     @for (prop of myProperties; track prop) {
       <div style="border-top: 1px solid rgba(51, 103, 144, .1); padding: 16px 0">
         <app-create-resource-form-row
@@ -24,15 +24,15 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </div>
     }
   `,
-    styles: [
-        `
+  styles: [
+    `
       app-create-resource-form-row {
         display: block;
         margin-bottom: 8px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class CreateResourceFormPropertiesComponent {
   @Input({ required: true }) resourceClassIri!: string;

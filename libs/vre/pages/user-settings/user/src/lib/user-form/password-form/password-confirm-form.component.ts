@@ -4,8 +4,8 @@ import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-password-confirm-form',
-    template: `
+  selector: 'app-password-confirm-form',
+  template: `
     <app-password-form-field
       [control]="passwordControl"
       [placeholder]="'pages.userSettings.passwordForm.newPassword' | translate"
@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
       [validatorErrors]="passwordConfirmValidatorErrors"
       [showToggleVisibility]="true" />
   `,
-    standalone: false
+  standalone: false,
 })
 export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   @Output() afterFormInit = new EventEmitter<FormControl<string>>();

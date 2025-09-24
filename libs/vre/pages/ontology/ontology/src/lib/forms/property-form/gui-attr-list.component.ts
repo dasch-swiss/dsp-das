@@ -5,8 +5,8 @@ import { map, switchMap } from 'rxjs';
 import { PropertyForm } from './property-form.type';
 
 @Component({
-    selector: 'app-gui-attr-list',
-    template: `
+  selector: 'app-gui-attr-list',
+  template: `
     <mat-form-field class="large-field">
       <span matPrefix> <mat-icon>tune</mat-icon>&nbsp; </span>
       <mat-label>Select a list</mat-label>
@@ -24,8 +24,8 @@ import { PropertyForm } from './property-form.type';
       }
     </mat-form-field>
   `,
-    styles: ['.large-field {width: 100%}'],
-    standalone: false
+  styles: ['.large-field {width: 100%}'],
+  standalone: false,
 })
 export class GuiAttrListComponent {
   @Input({ required: true }) control!: PropertyForm['controls']['guiAttr'];

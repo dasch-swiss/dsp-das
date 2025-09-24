@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-projects-sidenav-links-item',
-    template: `
+  selector: 'app-projects-sidenav-links-item',
+  template: `
     <a mat-list-item class="section-title" [routerLink]="link" style="cursor: pointer" [ngClass]="{ active: active }">
       <span matListItemTitle class="section-label">
         <mat-icon class="sidenav-prefix-icon">{{ icon }}</mat-icon>
@@ -10,8 +10,8 @@ import { Component, Input } from '@angular/core';
       </span>
     </a>
   `,
-    styleUrls: ['./project-sidenav-links-item.component.scss'],
-    standalone: false
+  styleUrls: ['./project-sidenav-links-item.component.scss'],
+  standalone: false,
 })
 export class ProjectSidenavLinksItemComponent {
   @Input({ required: true }) link!: string[];

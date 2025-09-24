@@ -3,9 +3,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
 
 @Component({
-    selector: 'app-progress-indicator',
-    imports: [MatIconModule],
-    template: `
+  selector: 'app-progress-indicator',
+  imports: [MatIconModule],
+  template: `
     <div class="app-progress-indicator default" data-cy="loader">
       <svg
         class="loader"
@@ -39,8 +39,8 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
       </svg>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .app-progress-indicator.default {
         margin: 48px auto;
 
@@ -62,8 +62,8 @@ import { ProgressSize, SIZE_TO_PXL } from './progress-indicator.type';
         }
       }
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppProgressIndicatorComponent implements OnInit {
   @Input() size: ProgressSize = 'small';

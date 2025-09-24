@@ -20,8 +20,8 @@ import { finalize, switchMap, take } from 'rxjs';
 import { CreateResourceFormInterface } from './create-resource-form.interface';
 
 @Component({
-    selector: 'app-create-resource-form',
-    template: `
+  selector: 'app-create-resource-form',
+  template: `
     @if (!loading) {
       <form [formGroup]="form" appInvalidControlScroll class="form">
         @if (fileRepresentation) {
@@ -65,12 +65,12 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
       <app-progress-indicator />
     }
   `,
-    styles: [
-        '.row { display: flex; padding: 16px 0;}',
-        '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
-        '.form { display: block; margin-right: 100px;}',
-    ],
-    standalone: false
+  styles: [
+    '.row { display: flex; padding: 16px 0;}',
+    '.grid-h3 {width: 140px; margin-right: 10px; text-align: right; margin-top: 16px; color: rgb(107, 114, 128); cursor: help}',
+    '.form { display: block; margin-right: 100px;}',
+  ],
+  standalone: false,
 })
 export class CreateResourceFormComponent implements OnInit {
   @Input({ required: true }) resourceClassIri!: string;

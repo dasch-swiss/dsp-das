@@ -24,8 +24,8 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from '../cre
 import { LinkValueDataService } from './link-value-data.service';
 
 @Component({
-    selector: 'app-link-value',
-    template: `
+  selector: 'app-link-value',
+  template: `
     <mat-form-field style="width: 100%">
       <input
         #input
@@ -66,8 +66,8 @@ import { LinkValueDataService } from './link-value-data.service';
       }
     </mat-form-field>
   `,
-    providers: [LinkValueDataService],
-    standalone: false
+  providers: [LinkValueDataService],
+  standalone: false,
 })
 export class LinkValueComponent implements OnInit {
   private cancelPreviousSearchRequest$ = new Subject<void>();

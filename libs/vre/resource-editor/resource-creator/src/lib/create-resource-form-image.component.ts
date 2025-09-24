@@ -9,8 +9,8 @@ import {
 } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
-    selector: 'app-create-resource-form-image',
-    template: ` <app-create-resource-form-row [label]="'Image'" style="display: block; margin-bottom: 16px">
+  selector: 'app-create-resource-form-image',
+  template: ` <app-create-resource-form-row [label]="'Image'" style="display: block; margin-bottom: 16px">
     <div style="margin-bottom: 8px; margin-top: 8px">
       <app-double-chip-selector
         data-cy="image-source-selector"
@@ -31,7 +31,7 @@ import {
       <app-iiif-control [control]="control" />
     }
   </app-create-resource-form-row>`,
-    standalone: false
+  standalone: false,
 })
 export class CreateResourceFormImageComponent {
   @Input({ required: true }) control!: FormControl<string | null>;

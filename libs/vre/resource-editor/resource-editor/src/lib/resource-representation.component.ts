@@ -4,8 +4,8 @@ import { getFileValue, RepresentationConstants } from '@dasch-swiss/vre/resource
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
-    selector: 'app-resource-representation',
-    template: ` <div class="representation-container center">
+  selector: 'app-resource-representation',
+  template: ` <div class="representation-container center">
     @switch (fileValue.type) {
       @case (representationConstants.stillImage) {
         <app-still-image
@@ -43,7 +43,7 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
       }
     }
   </div>`,
-    standalone: false
+  standalone: false,
 })
 export class ResourceRepresentationComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

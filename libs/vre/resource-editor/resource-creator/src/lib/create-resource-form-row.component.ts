@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-create-resource-form-row',
-    template: `
+  selector: 'app-create-resource-form-row',
+  template: `
     <div style="display: flex">
       <h3
         class="mat-subtitle-2 grid-h3"
@@ -17,8 +17,8 @@ import { Component, Input } from '@angular/core';
       </div>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .grid-h3 {
         width: 140px;
         text-align: end;
@@ -31,8 +31,8 @@ import { Component, Input } from '@angular/core';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class CreateResourceFormRowComponent {
   @Input({ required: true }) label!: string;

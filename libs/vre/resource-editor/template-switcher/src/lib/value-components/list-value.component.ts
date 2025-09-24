@@ -5,8 +5,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { startWith } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-list-value',
-    template: `
+  selector: 'app-list-value',
+  template: `
     @if (listRootNode) {
       <app-nested-menu
         style="flex: 1"
@@ -18,7 +18,7 @@ import { startWith } from 'rxjs/operators';
       <mat-error>{{ control.errors | humanReadableError }}</mat-error>
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class ListValueComponent implements OnInit {
   @Input({ required: true }) propertyDef!: ResourcePropertyDefinition;

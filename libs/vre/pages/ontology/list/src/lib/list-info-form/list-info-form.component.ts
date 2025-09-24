@@ -16,8 +16,8 @@ import { switchMap } from 'rxjs';
 import { ListInfoForm } from './list-info-form.type';
 
 @Component({
-    selector: 'app-list-info-form',
-    template: `
+  selector: 'app-list-info-form',
+  template: `
     <app-dialog-header title="" [subtitle]="title" />
     <div mat-dialog-content>
       <app-multi-language-input
@@ -47,7 +47,7 @@ import { ListInfoForm } from './list-info-form.type';
       </div>
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class ListInfoFormComponent implements OnInit {
   form!: ListInfoForm;

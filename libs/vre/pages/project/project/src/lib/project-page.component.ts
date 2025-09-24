@@ -6,8 +6,8 @@ import { filter, startWith, Subject, takeUntil } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
-    selector: 'app-project-page',
-    template: `
+  selector: 'app-project-page',
+  template: `
     <mat-sidenav-container style="flex: 1" autosize>
       <mat-sidenav mode="side" [(opened)]="sideNavOpened" [disableClose]="true" style="overflow: visible">
         @if (sideNavOpened) {
@@ -30,9 +30,9 @@ import { ProjectPageService } from './project-page.service';
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
-    styleUrls: ['./project-page.component.scss'],
-    providers: [ProjectPageService],
-    standalone: false
+  styleUrls: ['./project-page.component.scss'],
+  providers: [ProjectPageService],
+  standalone: false,
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;

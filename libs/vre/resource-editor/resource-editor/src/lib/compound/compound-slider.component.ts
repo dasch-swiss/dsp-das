@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CompoundService } from './compound.service';
 
 @Component({
-    selector: 'app-compound-slider',
-    template: ` <mat-slider
+  selector: 'app-compound-slider',
+  template: ` <mat-slider
     [color]="'primary'"
     [disabled]="compoundNavigation.totalPages < 2"
     [max]="compoundNavigation.totalPages"
@@ -27,7 +27,7 @@ import { CompoundService } from './compound.service';
       "
       #ngSliderThumb="matSliderThumb" />
   </mat-slider>`,
-    standalone: false
+  standalone: false,
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {

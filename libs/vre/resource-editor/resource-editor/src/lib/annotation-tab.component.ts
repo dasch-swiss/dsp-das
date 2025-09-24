@@ -6,8 +6,8 @@ import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector: 'app-annotation-tab',
-    template: `
+  selector: 'app-annotation-tab',
+  template: `
     <mat-accordion>
       @for (annotation of regionService.regions$ | async; track $index) {
         <mat-expansion-panel
@@ -43,9 +43,9 @@ import { Subject, takeUntil } from 'rxjs';
       }
     </mat-accordion>
   `,
-    styles: ['.active {border: 1px solid}'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  styles: ['.active {border: 1px solid}'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AnnotationTabComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) resource!: ReadResource;

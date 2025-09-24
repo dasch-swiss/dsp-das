@@ -8,8 +8,8 @@ export interface CreateResourceDialogProps {
 }
 
 @Component({
-    selector: 'app-create-resource-dialog',
-    template: `
+  selector: 'app-create-resource-dialog',
+  template: `
     <app-dialog-header [title]="'Create new resource of type: ' + data.resourceType" />
     <div mat-dialog-content>
       @if (project$ | async; as project) {
@@ -21,7 +21,7 @@ export interface CreateResourceDialogProps {
       }
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class CreateResourceDialogComponent {
   project$ = this._projectPageService.currentProject$;

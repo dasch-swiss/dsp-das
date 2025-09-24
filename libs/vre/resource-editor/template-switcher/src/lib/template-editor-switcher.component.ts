@@ -10,8 +10,8 @@ import {
 import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
-    selector: 'app-template-editor-switcher',
-    template: `
+  selector: 'app-template-editor-switcher',
+  template: `
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
         <input matInput [formControl]="item" type="number" data-cy="int-input" [placeholder]="'e.g. 42'" />
@@ -107,7 +107,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
         [validatorErrors]="[{ errorKey: 'pattern', message: 'This is not a valid link.' }]" />
     </ng-template>
   `,
-    standalone: false
+  standalone: false,
 })
 export class TemplateEditorSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) myPropertyDefinition!: PropertyDefinition;

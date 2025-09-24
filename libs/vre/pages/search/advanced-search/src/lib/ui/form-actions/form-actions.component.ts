@@ -3,11 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-form-actions',
-    imports: [MatButtonModule, MatIconModule],
-    templateUrl: './form-actions.component.html',
-    styleUrls: ['./form-actions.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-form-actions',
+  imports: [MatButtonModule, MatIconModule],
+  templateUrl: './form-actions.component.html',
+  styleUrls: ['./form-actions.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormActionsComponent {
   @Input() addButtonDisabled: boolean | null = true;

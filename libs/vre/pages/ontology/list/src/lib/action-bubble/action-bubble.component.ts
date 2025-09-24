@@ -18,8 +18,8 @@ import {
 } from '../list-item-form/edit-list-item/edit-list-item-dialog.component';
 
 @Component({
-    selector: 'app-action-bubble',
-    template: ` <div class="action-bubble" [@simpleFadeAnimation]="'in'">
+  selector: 'app-action-bubble',
+  template: ` <div class="action-bubble" [@simpleFadeAnimation]="'in'">
     <div class="button-container d-flex">
       @if (position > 0) {
         <button
@@ -54,16 +54,16 @@ import {
       </button>
     </div>
   </div>`,
-    animations: [
-        // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
-        trigger('simpleFadeAnimation', [
-            state('in', style({ opacity: 1 })),
-            transition(':enter', [style({ opacity: 0 }), animate(150)]),
-            transition(':leave', animate(150, style({ opacity: 0 }))),
-        ]),
-    ],
-    styleUrls: ['./action-bubble.component.scss'],
-    standalone: false
+  animations: [
+    // https://www.kdechant.com/blog/angular-animations-fade-in-and-fade-out
+    trigger('simpleFadeAnimation', [
+      state('in', style({ opacity: 1 })),
+      transition(':enter', [style({ opacity: 0 }), animate(150)]),
+      transition(':leave', animate(150, style({ opacity: 0 }))),
+    ]),
+  ],
+  styleUrls: ['./action-bubble.component.scss'],
+  standalone: false,
 })
 export class ActionBubbleComponent {
   @Input({ required: true }) position!: number;

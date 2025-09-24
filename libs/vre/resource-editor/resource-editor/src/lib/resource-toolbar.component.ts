@@ -6,8 +6,8 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 
 @Component({
-    selector: 'app-resource-toolbar',
-    template: `
+  selector: 'app-resource-toolbar',
+  template: `
     <span class="action">
       <button
         mat-icon-button
@@ -57,8 +57,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
       </button>
     </mat-menu>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .action {
         display: inline-flex;
 
@@ -67,8 +67,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;

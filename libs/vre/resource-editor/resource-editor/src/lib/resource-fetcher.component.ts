@@ -20,8 +20,8 @@ import { filter, Subject, takeUntil } from 'rxjs';
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
 @Component({
-    selector: 'app-resource-fetcher',
-    template: `
+  selector: 'app-resource-fetcher',
+  template: `
     <div #scrollTarget>
       @if (resourceVersion) {
         <app-resource-version-warning
@@ -55,8 +55,8 @@ type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
       }
     </div>
   `,
-    providers: [ResourceFetcherService],
-    standalone: false
+  providers: [ResourceFetcherService],
+  standalone: false,
 })
 export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;

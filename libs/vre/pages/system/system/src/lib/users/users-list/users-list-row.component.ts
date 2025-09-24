@@ -3,8 +3,8 @@ import { Constants, ReadUser } from '@dasch-swiss/dsp-js';
 import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permissions-data';
 
 @Component({
-    selector: 'app-users-list-row',
-    template: `<span style="display: flex">
+  selector: 'app-users-list-row',
+  template: `<span style="display: flex">
     <app-user-description [user]="user" style="flex: 1" />
 
     @if (isSystemAdmin(user.permissions)) {
@@ -18,8 +18,8 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
 
     <app-users-list-row-menu [user]="user" />
   </span>`,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: block;
         padding: 16px;
@@ -29,8 +29,8 @@ import { PermissionsData } from '@dasch-swiss/dsp-js/src/models/admin/permission
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class UsersListRowComponent {
   @Input({ required: true }) user!: ReadUser;

@@ -12,11 +12,11 @@ import { ClassShortInfo, PropertyInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
-    selector: 'app-property-info',
-    templateUrl: './property-info.component.html',
-    styleUrls: ['./property-info.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-property-info',
+  templateUrl: './property-info.component.html',
+  styleUrls: ['./property-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PropertyInfoComponent {
   @Input({ required: true }) property!: PropertyInfo;

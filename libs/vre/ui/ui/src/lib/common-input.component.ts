@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'app-common-input',
-    template: `
+  selector: 'app-common-input',
+  template: `
     <mat-form-field style="width: 100%">
       @if (withLabel) {
         <mat-label data-cy="common-input-label">{{ label }}</mat-label>
@@ -24,8 +24,8 @@ import { FormControl } from '@angular/forms';
       }
     </mat-form-field>
   `,
-    styles: [':host { display: block;}'],
-    standalone: false
+  styles: [':host { display: block;}'],
+  standalone: false,
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;

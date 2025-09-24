@@ -7,8 +7,8 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
 import { finalize } from 'rxjs';
 
 @Component({
-    selector: 'app-erase-resource-dialog',
-    template: `
+  selector: 'app-erase-resource-dialog',
+  template: `
     <app-dialog-header title="Do you want to erase this resource forever?" [subtitle]="'Erase resource instance'" />
 
     <mat-dialog-content>
@@ -43,7 +43,7 @@ import { finalize } from 'rxjs';
       </button>
     </mat-dialog-actions>
   `,
-    standalone: false
+  standalone: false,
 })
 export class EraseResourceDialogComponent {
   eraseForm = new FormGroup({

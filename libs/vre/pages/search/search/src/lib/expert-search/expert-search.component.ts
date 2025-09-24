@@ -34,11 +34,11 @@ export function forbiddenTermValidator(termRe: RegExp): ValidatorFn {
 }
 
 @Component({
-    selector: 'app-expert-search',
-    templateUrl: './expert-search.component.html',
-    styleUrls: ['./expert-search.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-expert-search',
+  templateUrl: './expert-search.component.html',
+  styleUrls: ['./expert-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ExpertSearchComponent implements OnInit, AfterViewInit {
   /**

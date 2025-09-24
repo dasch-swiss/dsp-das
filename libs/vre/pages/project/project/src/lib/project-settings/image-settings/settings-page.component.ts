@@ -4,9 +4,9 @@ import { MenuItem } from '@dasch-swiss/vre/pages/user-settings/user';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-settings-page',
-    template: `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-settings-page',
+  template: `
     <app-centered-layout>
       <nav
         mat-tab-nav-bar
@@ -33,7 +33,7 @@ import { TranslateService } from '@ngx-translate/core';
       </mat-tab-nav-panel>
     </app-centered-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class SettingsPageComponent {
   private _translateService = inject(TranslateService);

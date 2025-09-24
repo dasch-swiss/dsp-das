@@ -30,18 +30,18 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'app-property-form-value',
-    imports: [
-        AppDatePickerComponent,
-        MatButtonModule,
-        MatInputModule,
-        MatMenuModule,
-        MatSelectModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
-    templateUrl: './property-form-value.component.html',
-    styleUrls: ['./property-form-value.component.scss']
+  selector: 'app-property-form-value',
+  imports: [
+    AppDatePickerComponent,
+    MatButtonModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './property-form-value.component.html',
+  styleUrls: ['./property-form-value.component.scss'],
 })
 export class PropertyFormValueComponent implements OnInit, AfterViewInit {
   @Input() objectType: string | undefined = '';

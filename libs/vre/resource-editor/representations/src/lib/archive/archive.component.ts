@@ -10,10 +10,10 @@ import { RepresentationService } from '../representation.service';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 
 @Component({
-    selector: 'app-archive',
-    templateUrl: './archive.component.html',
-    styleUrls: ['./archive.component.scss'],
-    standalone: false
+  selector: 'app-archive',
+  templateUrl: './archive.component.html',
+  styleUrls: ['./archive.component.scss'],
+  standalone: false,
 })
 export class ArchiveComponent implements OnChanges {
   @Input({ required: true }) src!: ReadArchiveFileValue;

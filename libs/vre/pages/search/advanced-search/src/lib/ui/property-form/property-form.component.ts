@@ -30,23 +30,23 @@ import { PropertyFormListValueComponent } from './property-form-list-value/prope
 import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
 
 @Component({
-    selector: 'app-property-form',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        PropertyFormValueComponent,
-        PropertyFormLinkValueComponent,
-        PropertyFormLinkMatchPropertyComponent,
-        PropertyFormListValueComponent,
-    ],
-    providers: [MatSelect],
-    templateUrl: './property-form.component.html',
-    styleUrls: ['./property-form.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-property-form',
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    PropertyFormValueComponent,
+    PropertyFormLinkValueComponent,
+    PropertyFormLinkMatchPropertyComponent,
+    PropertyFormListValueComponent,
+  ],
+  providers: [MatSelect],
+  templateUrl: './property-form.component.html',
+  styleUrls: ['./property-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormComponent implements AfterViewInit {
   @Input() propertyFormItem: PropertyFormItem = {

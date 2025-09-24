@@ -4,8 +4,8 @@ import { BehaviorSubject, map, shareReplay, switchMap } from 'rxjs';
 import { ProjectPageService } from '../../project-page.service';
 
 @Component({
-    selector: 'app-legal-settings-licenses',
-    template: ` @if (project$ | async; as project) {
+  selector: 'app-legal-settings-licenses',
+  template: ` @if (project$ | async; as project) {
     @if (recommendedLicenses$ | async; as recommendedLicenses) {
       <div style="margin-bottom: 24px">
         @if (recommendedLicenses.length > 0) {
@@ -27,8 +27,8 @@ import { ProjectPageService } from '../../project-page.service';
       }
     }
   }`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LegalSettingsLicensesComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

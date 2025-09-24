@@ -10,10 +10,10 @@ export interface SortProp {
  * It can be used together with the DspSortBy pipe.
  */
 @Component({
-    selector: 'app-sort-button',
-    templateUrl: './sort-button.component.html',
-    styleUrls: ['./sort-button.component.scss'],
-    standalone: false
+  selector: 'app-sort-button',
+  templateUrl: './sort-button.component.html',
+  styleUrls: ['./sort-button.component.scss'],
+  standalone: false,
 })
 export class SortButtonComponent implements OnInit {
   @Input({ required: true }) sortProps!: SortProp[];

@@ -6,8 +6,8 @@ import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
 
 @Component({
-    selector: 'app-create-user-dialog',
-    template: `
+  selector: 'app-create-user-dialog',
+  template: `
     <app-dialog-header [title]="'Create a new user'" />
     <app-user-form [data]="data" (afterFormInit)="afterUserFormInit($event)" />
     <app-password-confirm-form (afterFormInit)="afterPasswordFormInit($event)" />
@@ -20,7 +20,7 @@ import { UserForm } from '@dasch-swiss/vre/pages/user-settings/user';
       </button>
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class CreateUserDialogComponent implements OnInit {
   form = this._fb.group(

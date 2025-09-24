@@ -3,16 +3,16 @@ import { MediaControlService } from './media-control.service';
 import { Segment } from './segment';
 
 @Component({
-    selector: 'app-segment',
-    template: `
+  selector: 'app-segment',
+  template: `
     <div
       class="segment"
       [appCustomTooltip]="segment"
       [ngStyle]="{ width: width + '%', left: start + '%' }"
       (click)="playMedia()"></div>
   `,
-    styleUrls: ['./segment.component.scss'],
-    standalone: false
+  styleUrls: ['./segment.component.scss'],
+  standalone: false,
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;

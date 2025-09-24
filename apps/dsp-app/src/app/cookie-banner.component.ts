@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
 @Component({
-    selector: 'app-cookie-banner',
-    template: ` @if (showCookieBanner) {
+  selector: 'app-cookie-banner',
+  template: ` @if (showCookieBanner) {
     <div class="cookie-banner">
       <p class="note">
         This web-application uses cookies to provide you with a greater user experience. By using the application you
@@ -16,8 +16,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       </div>
     </div>
   }`,
-    styleUrls: [`./cookie-banner.component.scss`],
-    standalone: false
+  styleUrls: [`./cookie-banner.component.scss`],
+  standalone: false,
 })
 export class CookieBannerComponent implements OnInit {
   showCookieBanner = true;

@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'app-ck-editor-control',
-    template: ` <div class="mat-body-2 title">{{ label }}</div>
+  selector: 'app-ck-editor-control',
+  template: ` <div class="mat-body-2 title">{{ label }}</div>
     <app-ck-editor [control]="control" class="value" />`,
-    styles: [
-        `
+  styles: [
+    `
       .title {
         background: #fafafa;
         padding: 8px;
@@ -23,9 +23,9 @@ import { FormControl } from '@angular/forms';
         margin-bottom: 32px;
       }
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CkEditorControlComponent {
   @Input({ required: true }) label!: string;

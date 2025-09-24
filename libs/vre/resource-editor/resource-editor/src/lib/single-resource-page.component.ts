@@ -4,15 +4,15 @@ import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { map } from 'rxjs';
 
 @Component({
-    selector: 'app-single-resource-page',
-    template: `
+  selector: 'app-single-resource-page',
+  template: `
     <app-centered-layout>
       @if (resourceIri$ | async; as resourceIri) {
         <app-resource-fetcher [resourceIri]="resourceIri" />
       }
     </app-centered-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class SingleResourcePageComponent {
   resourceIri$ = this._route.params.pipe(

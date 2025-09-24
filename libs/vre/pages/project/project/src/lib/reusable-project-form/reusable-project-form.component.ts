@@ -8,8 +8,8 @@ import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
 
 @Component({
-    selector: 'app-reusable-project-form',
-    template: `
+  selector: 'app-reusable-project-form',
+  template: `
     @if (form) {
       <form [formGroup]="form">
         <div style="display: flex">
@@ -42,7 +42,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
       </form>
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class ReusableProjectFormComponent implements OnInit {
   @Input({ required: true }) formData!: {

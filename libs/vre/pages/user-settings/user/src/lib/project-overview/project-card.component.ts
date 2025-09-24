@@ -5,8 +5,8 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
-    selector: 'app-project-card',
-    template: `
+  selector: 'app-project-card',
+  template: `
     <div class="project-card-wrapper" data-cy="project-card">
       <a [routerLink]="[RouteConstants.project, projectUuid]">
         <mat-card class="project-card" appearance="outlined" (keydown.enter)="navigate()">
@@ -30,8 +30,8 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
       </a>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: block;
       }
@@ -92,8 +92,8 @@ import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
         overflow: hidden;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: StoredProject;

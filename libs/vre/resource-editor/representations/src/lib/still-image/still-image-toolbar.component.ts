@@ -24,10 +24,10 @@ import { ResourceUtil } from '../resource.util';
 import { OpenSeaDragonService } from './open-sea-dragon.service';
 
 @Component({
-    selector: 'app-still-image-toolbar',
-    templateUrl: './still-image-toolbar.component.html',
-    styles: [
-        `
+  selector: 'app-still-image-toolbar',
+  templateUrl: './still-image-toolbar.component.html',
+  styles: [
+    `
       .toolbar {
         display: flex;
         justify-content: space-between;
@@ -54,8 +54,8 @@ import { OpenSeaDragonService } from './open-sea-dragon.service';
         opacity: 0.5;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class StillImageToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;

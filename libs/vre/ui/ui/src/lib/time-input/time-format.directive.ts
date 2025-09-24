@@ -4,15 +4,15 @@ import { secondsToTimeString } from './seconds-to-time-string';
 import { timeStringToSeconds } from './time-string-to-seconds';
 
 @Directive({
-    selector: '[appTimeFormat]',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => TimeFormatDirective),
-            multi: true,
-        },
-    ],
-    standalone: false
+  selector: '[appTimeFormat]',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TimeFormatDirective),
+      multi: true,
+    },
+  ],
+  standalone: false,
 })
 export class TimeFormatDirective implements ControlValueAccessor {
   private onChange!: (value: number | null) => void;

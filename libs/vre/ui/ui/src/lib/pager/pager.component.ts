@@ -17,11 +17,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-pager',
-    imports: [MatIconModule, MatButtonModule, TranslateModule, MatInputModule, MatTooltipModule, AsyncPipe],
-    templateUrl: './pager.component.html',
-    styleUrls: ['./pager.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-pager',
+  imports: [MatIconModule, MatButtonModule, TranslateModule, MatInputModule, MatTooltipModule, AsyncPipe],
+  templateUrl: './pager.component.html',
+  styleUrls: ['./pager.component.scss'],
 })
 export class PagerComponent implements OnChanges {
   @Input() numberOfAllResults = 0;

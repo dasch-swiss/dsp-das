@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'app-resource-version-warning',
-    template: `
+  selector: 'app-resource-version-warning',
+  template: `
     <app-alert-info>
       <div style="display: flex; justify-content: center">
         <div style="display: flex; align-items: center">
@@ -14,7 +14,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       </div>
     </app-alert-info>
   `,
-    standalone: false
+  standalone: false,
 })
 export class ResourceVersionWarningComponent {
   @Input({ required: true }) resourceVersion!: string;

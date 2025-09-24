@@ -5,8 +5,8 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 
 // TODO this changes segment-dialog
 @Component({
-    selector: 'app-time-input',
-    template: `
+  selector: 'app-time-input',
+  template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ label }}</mat-label>
       <input
@@ -22,8 +22,8 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
       }
     </mat-form-field>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TimeInputComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<number | null>;

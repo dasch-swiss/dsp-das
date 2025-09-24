@@ -8,8 +8,8 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 @Component({
-    selector: 'app-advanced-search-results-page',
-    template: `
+  selector: 'app-advanced-search-results-page',
+  template: `
     @if (resources$ | async; as resources) {
       @if (resources.length === 0) {
         <app-centered-box>
@@ -24,8 +24,8 @@ import { combineLatest, map, switchMap } from 'rxjs';
       }
     }
   `,
-    providers: [ResourceResultService],
-    standalone: false
+  providers: [ResourceResultService],
+  standalone: false,
 })
 export class AdvancedSearchResultsPageComponent {
   readonly resources$ = this._route.params.pipe(

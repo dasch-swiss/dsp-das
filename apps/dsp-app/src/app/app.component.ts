@@ -5,10 +5,10 @@ import { AutoLoginService, LocalStorageWatcherService } from '@dasch-swiss/vre/c
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   constructor(

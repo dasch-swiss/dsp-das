@@ -2,8 +2,8 @@ import { Directive, ElementRef, HostListener, Input, OnChanges, Renderer2, ViewC
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Directive({
-    selector: '[appLoadingButton]',
-    standalone: false
+  selector: '[appLoadingButton]',
+  standalone: false,
 })
 export class LoadingButtonDirective implements OnChanges {
   @Input() isLoading = false;

@@ -4,8 +4,8 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 import { FootnoteService } from './footnotes/footnote.service';
 
 @Component({
-    selector: 'app-property-values-with-footnotes',
-    template: `
+  selector: 'app-property-values-with-footnotes',
+  template: `
     @if (resource.type) {
       <app-property-values [myProperty]="prop" [editModeData]="{ resource, values: prop.values }" />
     }
@@ -14,9 +14,9 @@ import { FootnoteService } from './footnotes/footnote.service';
       <app-footnotes />
     }
   `,
-    styles: [':host { display: block; position: relative; width: 100%}'],
-    providers: [FootnoteService],
-    standalone: false
+  styles: [':host { display: block; position: relative; width: 100%}'],
+  providers: [FootnoteService],
+  standalone: false,
 })
 export class PropertyValuesWithFootnotesComponent implements OnChanges {
   @Input({ required: true }) prop!: PropertyInfoValues;

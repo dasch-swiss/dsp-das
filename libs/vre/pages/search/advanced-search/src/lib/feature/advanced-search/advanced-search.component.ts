@@ -29,21 +29,21 @@ export interface QueryObject {
 }
 
 @Component({
-    selector: 'app-advanced-search',
-    imports: [
-        CommonModule,
-        OrderByComponent,
-        OntologyResourceFormComponent,
-        PropertyFormComponent,
-        FormActionsComponent,
-        MatButtonModule,
-        MatIconModule,
-        TranslateModule,
-    ],
-    providers: [AdvancedSearchStoreService],
-    templateUrl: './advanced-search.component.html',
-    styleUrls: ['./advanced-search.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-advanced-search',
+  imports: [
+    CommonModule,
+    OrderByComponent,
+    OntologyResourceFormComponent,
+    PropertyFormComponent,
+    FormActionsComponent,
+    MatButtonModule,
+    MatIconModule,
+    TranslateModule,
+  ],
+  providers: [AdvancedSearchStoreService],
+  templateUrl: './advanced-search.component.html',
+  styleUrls: ['./advanced-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchComponent implements OnInit {
   // either the uuid of the project or the shortcode

@@ -5,8 +5,8 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
-    selector: 'app-delete-resource-dialog',
-    template: ` <app-dialog-header title="Do you want to delete this resource ?" [subtitle]="data.label" />
+  selector: 'app-delete-resource-dialog',
+  template: ` <app-dialog-header title="Do you want to delete this resource ?" [subtitle]="data.label" />
     <mat-dialog-content class="form-content">
       <mat-form-field class="large-field">
         <mat-label>Comment why resource is being deleted</mat-label>
@@ -31,7 +31,7 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
         Yes, delete
       </button>
     </mat-dialog-actions>`,
-    standalone: false
+  standalone: false,
 })
 export class DeleteResourceDialogComponent {
   comment: string | undefined;

@@ -6,8 +6,8 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
 
 @Component({
-    selector: 'app-resource-list-selection',
-    template: `
+  selector: 'app-resource-list-selection',
+  template: `
     <div style="background: #336790; color: white; padding: 16px; display: flex; gap: 8px; align-items: center">
       <div style="flex: 1">{{ count$ | async }} resources selected</div>
       @if ((showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async); as selectedResources) {
@@ -17,7 +17,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
-    standalone: false
+  standalone: false,
 })
 export class ResourceListSelectionComponent {
   @Input({ required: true }) resources!: ReadResource[];

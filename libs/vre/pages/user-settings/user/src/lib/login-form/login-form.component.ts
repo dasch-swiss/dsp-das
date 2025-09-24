@@ -6,8 +6,8 @@ import { AuthService } from '@dasch-swiss/vre/core/session';
 import { finalize, Subscription, takeLast, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-login-form',
-    template: `
+  selector: 'app-login-form',
+  template: `
     <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
 
@@ -25,16 +25,16 @@ import { finalize, Subscription, takeLast, tap } from 'rxjs';
       </button>
     </form>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .login-form {
         display: flex;
         flex-direction: column;
         padding: 16px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   loading = false;

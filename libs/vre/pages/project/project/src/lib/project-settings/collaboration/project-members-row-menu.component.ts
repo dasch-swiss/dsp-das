@@ -18,8 +18,8 @@ import { switchMap } from 'rxjs';
 import { CollaborationPageService } from './collaboration-page.service';
 
 @Component({
-    selector: 'app-project-members-row-menu',
-    template: `
+  selector: 'app-project-members-row-menu',
+  template: `
     <button mat-icon-button [matMenuTriggerFor]="projectUserMenu" data-cy="user-menu">
       <mat-icon>more_horiz</mat-icon>
     </button>
@@ -38,7 +38,7 @@ import { CollaborationPageService } from './collaboration-page.service';
       </button>
     </mat-menu>
   `,
-    standalone: false
+  standalone: false,
 })
 export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

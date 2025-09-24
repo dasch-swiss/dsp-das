@@ -14,8 +14,8 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from './media-player.service';
 
 @Component({
-    selector: 'app-video-toolbar',
-    template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
+  selector: 'app-video-toolbar',
+  template: ` <mat-toolbar-row style="background: black; color: white; justify-content: space-between">
     <div>
       <button
         mat-icon-button
@@ -62,7 +62,7 @@ import { MediaPlayerService } from './media-player.service';
       </button>
     </div>
   </mat-toolbar-row>`,
-    standalone: false
+  standalone: false,
 })
 export class VideoToolbarComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

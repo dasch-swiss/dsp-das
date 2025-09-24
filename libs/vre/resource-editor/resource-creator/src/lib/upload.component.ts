@@ -10,8 +10,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { finalize } from 'rxjs';
 
 @Component({
-    selector: 'app-upload',
-    template: `
+  selector: 'app-upload',
+  template: `
     @if (!loading) {
       <div appDragDrop (click)="fileInput.click()" (fileDropped)="addFile($event.item(0))" class="zone">
         <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
@@ -31,8 +31,8 @@ import { finalize } from 'rxjs';
       </div>
     }
   `,
-    styles: [
-        `
+  styles: [
+    `
       .zone {
         cursor: pointer;
         text-align: center;
@@ -59,8 +59,8 @@ import { finalize } from 'rxjs';
         margin-bottom: 8px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class UploadComponent {
   @Input({ required: true }) representation!: FileRepresentationType;

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-incoming-resource-pager',
-    template: `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-incoming-resource-pager',
+  template: `
     <div class="paging-container">
       <div class="navigation">
         <button mat-button class="pagination-button previous" [disabled]="pageIndex === 0" (click)="changePage(-1)">
@@ -26,8 +26,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
       </div>
     </div>
   `,
-    styleUrls: ['./incoming-resource-pager.component.scss'],
-    standalone: false
+  styleUrls: ['./incoming-resource-pager.component.scss'],
+  standalone: false,
 })
 export class IncomingResourcePagerComponent {
   @Input({ required: true }) pageIndex!: number;

@@ -13,8 +13,8 @@ export interface CardinalityInfo {
 }
 
 @Component({
-    selector: 'cardinality-change-dialog',
-    template: `
+  selector: 'cardinality-change-dialog',
+  template: `
     <app-dialog-header
       title="Update cardinality"
       [subtitle]="
@@ -59,8 +59,8 @@ export interface CardinalityInfo {
       </div>
     </mat-dialog-content>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .cando-headline {
         display: flex;
         align-items: center;
@@ -75,9 +75,9 @@ export interface CardinalityInfo {
         margin: 0;
       }
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CardinalityChangeDialogComponent implements OnInit {
   canSetCardinality: boolean | undefined = undefined;

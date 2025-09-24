@@ -7,8 +7,8 @@ import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-fulltext-search-result-page',
-    template: `
+  selector: 'app-fulltext-search-result-page',
+  template: `
     @if (loading) {
       <app-progress-indicator />
     }
@@ -26,9 +26,9 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
       }
     }
   `,
-    providers: [ResourceResultService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  providers: [ResourceResultService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class FulltextSearchResultPageComponent {
   loading = true;

@@ -9,20 +9,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
-    selector: 'app-order-by',
-    imports: [
-        CdkDrag,
-        CdkDragHandle,
-        CdkDropList,
-        MatButtonModule,
-        MatIconModule,
-        MatListModule,
-        MatTooltipModule,
-        OverlayModule,
-    ],
-    templateUrl: './order-by.component.html',
-    styleUrls: ['./order-by.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-order-by',
+  imports: [
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatTooltipModule,
+    OverlayModule,
+  ],
+  templateUrl: './order-by.component.html',
+  styleUrls: ['./order-by.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderByComponent {
   @Input() orderByList: OrderByItem[] | null = [];

@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-image-display-absolute',
-    template: ` <div class="frame">
+  selector: 'app-image-display-absolute',
+  template: ` <div class="frame">
     <div class="text">Example image with width: {{ bigWidth }}px</div>
     <div
       [ngStyle]="{ width: (widthPx / bigWidth) * 300 + 'px', height: (widthPx / bigWidth) * 200 + 'px' }"
@@ -15,8 +15,8 @@ import { Component, Input } from '@angular/core';
       </div>
     </div>
   </div>`,
-    styles: [
-        `
+  styles: [
+    `
       .frame {
         background: gray;
         width: 300px;
@@ -77,8 +77,8 @@ import { Component, Input } from '@angular/core';
         border-right: 10px solid red; /* Adjust the width and color of the arrow */
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ImageDisplayAbsoluteComponent {
   @Input({ required: true }) widthPx!: number;

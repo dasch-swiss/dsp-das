@@ -6,8 +6,8 @@ import { OntologyEditService } from '../../services/ontology-edit.service';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
-    selector: 'app-edit-ontology-form-dialog',
-    template: ` <app-dialog-header [title]="data.id" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
+  selector: 'app-edit-ontology-form-dialog',
+  template: ` <app-dialog-header [title]="data.id" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
 
     <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
 
@@ -23,8 +23,8 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
         {{ 'ui.form.action.submit' | translate }}
       </button>
     </div>`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EditOntologyFormDialogComponent {
   loading = false;

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
-    selector: 'app-project-sidenav',
-    template: `
+  selector: 'app-project-sidenav',
+  template: `
     @if (currentProject$ | async; as currentProject) {
       <div class="project-title">{{ currentProject.longname }}</div>
     }
@@ -12,8 +12,8 @@ import { ProjectPageService } from '../project-page.service';
     <mat-divider />
     <app-projects-sidenav-ontologies />
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         width: 290px;
         display: block;
@@ -25,8 +25,8 @@ import { ProjectPageService } from '../project-page.service';
         margin: 0;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ProjectSidenavComponent {
   currentProject$ = this._projectPageService.currentProject$;

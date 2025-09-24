@@ -28,11 +28,11 @@ import { ClassPropertyInfo, ResourceClassInfo } from '../../ontology.types';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 
 @Component({
-    selector: 'app-resource-class-info',
-    templateUrl: './resource-class-info.component.html',
-    styleUrls: ['./resource-class-info.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-resource-class-info',
+  templateUrl: './resource-class-info.component.html',
+  styleUrls: ['./resource-class-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resourceClass!: ResourceClassInfo;

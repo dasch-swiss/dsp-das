@@ -10,8 +10,8 @@ import { EditPasswordDialogComponent, EditPasswordDialogProps } from '../edit-pa
 import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/edit-user-dialog.component';
 
 @Component({
-    selector: 'app-account',
-    template: `
+  selector: 'app-account',
+  template: `
     @if (user$ | async; as user) {
       <div>
         <mat-card appearance="outlined" style="margin: 16px 0">
@@ -41,8 +41,8 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
       </div>
     }
   `,
-    styles: [
-        `
+  styles: [
+    `
       .mat-mdc-list-item {
         border-radius: 8px;
         transition: background-color 0.2s;
@@ -52,8 +52,8 @@ import { EditUserDialogComponent, EditUserDialogProps } from '../edit-user-page/
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class AccountComponent {
   user$ = this._userService.user$;

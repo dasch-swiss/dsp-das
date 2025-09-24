@@ -3,8 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
 
 @Component({
-    selector: 'app-ontology-form',
-    template: `
+  selector: 'app-ontology-form',
+  template: `
     <form [formGroup]="ontologyForm">
       <app-common-input [control]="ontologyForm.controls.label" [label]="'Label'" data-cy="label-input" />
 
@@ -21,7 +21,7 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
       </mat-form-field>
     </form>
   `,
-    standalone: false
+  standalone: false,
 })
 export class OntologyFormComponent implements OnInit {
   @Input({ required: true }) mode!: 'create' | 'edit';

@@ -15,9 +15,9 @@ import { ACTIVE_CALENDAR, JDNConvertibleCalendarDateAdapter } from '@dasch-swiss
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  standalone: false,
 })
 export class AppComponent {
   form: UntypedFormGroup;
@@ -76,8 +76,8 @@ export class AppComponent {
 }
 
 @Component({
-    selector: 'app-calendar-header',
-    template: `
+  selector: 'app-calendar-header',
+  template: `
     <mat-select placeholder="Calendar" [formControl]="calendar">
       @for (cal of supportedCalendars; track cal) {
         <mat-option [value]="cal">{{ cal }}</mat-option>
@@ -85,8 +85,8 @@ export class AppComponent {
     </mat-select>
     <mat-calendar-header />
   `,
-    styleUrls: [],
-    standalone: false
+  styleUrls: [],
+  standalone: false,
 })
 export class HeaderComponent implements OnInit {
   constructor(
@@ -140,17 +140,17 @@ const makeCalToken = () => {
 };
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'jdn-datepicker',
-    providers: [
-        { provide: ACTIVE_CALENDAR, useFactory: makeCalToken },
-        {
-            provide: DateAdapter,
-            useClass: JDNConvertibleCalendarDateAdapter,
-            deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
-        },
-    ],
-    standalone: false
+  // eslint-disable-next-line @angular-eslint/directive-selector
+  selector: 'jdn-datepicker',
+  providers: [
+    { provide: ACTIVE_CALENDAR, useFactory: makeCalToken },
+    {
+      provide: DateAdapter,
+      useClass: JDNConvertibleCalendarDateAdapter,
+      deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
+    },
+  ],
+  standalone: false,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class JdnDatepicker implements OnChanges, OnDestroy {

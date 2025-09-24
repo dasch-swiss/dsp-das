@@ -4,8 +4,8 @@ import { FormArray, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Val
 import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
-    selector: 'app-chip-list-input',
-    template: `
+  selector: 'app-chip-list-input',
+  template: `
     <mat-form-field style="width: 100%">
       <mat-label>{{ 'ui.chipListInput.keywords' | translate }}</mat-label>
       <mat-chip-grid #chipList [required]="formArray.hasValidator(Validators.required)">
@@ -30,8 +30,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
       <mat-error>New value: {{ addChipFormError | humanReadableError }}</mat-error>
     }
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ChipListInputComponent {
   @Input({ required: true }) formArray!: FormArray<FormControl<string>>;

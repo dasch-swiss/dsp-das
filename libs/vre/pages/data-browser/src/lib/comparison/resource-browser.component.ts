@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
-    selector: 'app-resource-browser',
-    template: ` <div class="whole-height">
+  selector: 'app-resource-browser',
+  template: ` <div class="whole-height">
     <as-split direction="horizontal">
       <as-split-area [size]="40">
         <app-resources-list [resources]="data.resources" [showBackToFormButton]="showBackToFormButton" />
@@ -15,9 +15,9 @@ import { MultipleViewerService } from './multiple-viewer.service';
       </as-split-area>
     </as-split>
   </div>`,
-    styleUrls: ['./resource-browser.component.scss'],
-    providers: [MultipleViewerService],
-    standalone: false
+  styleUrls: ['./resource-browser.component.scss'],
+  providers: [MultipleViewerService],
+  standalone: false,
 })
 export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };

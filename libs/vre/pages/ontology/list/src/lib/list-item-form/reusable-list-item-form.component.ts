@@ -5,8 +5,8 @@ import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/
 import { ListItemForm } from './list-item-form.type';
 
 @Component({
-    selector: 'app-reusable-list-item-form',
-    template: `
+  selector: 'app-reusable-list-item-form',
+  template: `
     <app-multi-language-input
       placeholder="Child node label"
       [formArray]="form.controls.labels"
@@ -18,7 +18,7 @@ import { ListItemForm } from './list-item-form.type';
       [validators]="commentsValidators"
       [isRequired]="false" />
   `,
-    standalone: false
+  standalone: false,
 })
 export class ReusableListItemFormComponent implements OnInit {
   @Input() formData: {

@@ -3,8 +3,8 @@ import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/resource-editor/representations';
 
 @Component({
-    selector: 'app-upload-control',
-    template: `
+  selector: 'app-upload-control',
+  template: `
     @if (!control.value) {
       <app-upload
         style="margin-bottom: 16px;display: block;"
@@ -21,7 +21,7 @@ import { FileRepresentationType, UploadedFileResponse } from '@dasch-swiss/vre/r
         (removeFile)="control.setValue('')" />
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class UploadControlComponent implements ControlValueAccessor {
   @Input({ required: true }) representation!: FileRepresentationType;

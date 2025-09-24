@@ -14,8 +14,8 @@ import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-val
 import { PropertyValueService } from './property-value.service';
 
 @Component({
-    selector: 'app-property-value-display',
-    template: ` <app-template-viewer-switcher
+  selector: 'app-property-value-display',
+  template: ` <app-template-viewer-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [value]="propertyValueService.editModeData.values[index]"
       (templateFound)="templateFound($event)" />
@@ -44,9 +44,9 @@ import { PropertyValueService } from './property-value.service';
 
       <app-property-value-display-comment [index]="index" />
     </div>`,
-    styleUrls: ['./property-value-display.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  styleUrls: ['./property-value-display.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;

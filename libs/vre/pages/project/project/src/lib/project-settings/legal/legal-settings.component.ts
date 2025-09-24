@@ -9,8 +9,8 @@ import {
 } from './create-copyright-holder-dialog.component';
 
 @Component({
-    selector: 'app-legal-settings',
-    template: `
+  selector: 'app-legal-settings',
+  template: `
     <div style="display: flex;justify-content: center; margin: 32px;">
       <div style="border: 1px solid; padding: 16px">{{ 'pages.project.legalSettings.warning' | translate }}</div>
     </div>
@@ -54,14 +54,14 @@ import {
       }
     </section>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .section {
         margin-bottom: 48px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

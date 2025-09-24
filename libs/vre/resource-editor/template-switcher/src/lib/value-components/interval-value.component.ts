@@ -3,8 +3,8 @@ import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-interval-value',
-    template: `
+  selector: 'app-interval-value',
+  template: `
     <app-time-input label="Start" [control]="startControl" data-cy="start-input" />
     <app-time-input label="End" [control]="endControl" data-cy="end-input" />
     @if (control.touched && control.errors; as errors) {
@@ -13,7 +13,7 @@ import { startWith } from 'rxjs/operators';
       </mat-error>
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class IntervalValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<{ start: number; end: number } | null>;

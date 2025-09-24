@@ -178,9 +178,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       deps: [Router],
     },
     provideAppInitializer(() => {
-        const initializerFn = (() => () => {})(inject(Sentry.TraceService));
-        return initializerFn();
-      }),
+      const initializerFn = (() => () => {})(inject(Sentry.TraceService));
+      return initializerFn();
+    }),
     LocalizationService,
   ],
   bootstrap: [AppComponent],

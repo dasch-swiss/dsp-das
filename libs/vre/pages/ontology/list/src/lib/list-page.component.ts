@@ -11,12 +11,12 @@ import { ListInfoFormComponent } from './list-info-form/list-info-form.component
 import { ListItemService } from './list-item/list-item.service';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-list-page',
-    templateUrl: './list-page.component.html',
-    styleUrls: ['./list-page.component.scss'],
-    providers: [ListItemService],
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-list-page',
+  templateUrl: './list-page.component.html',
+  styleUrls: ['./list-page.component.scss'],
+  providers: [ListItemService],
+  standalone: false,
 })
 export class ListPageComponent implements OnInit, OnDestroy {
   private _reloadMainListSubject = new BehaviorSubject<null>(null);

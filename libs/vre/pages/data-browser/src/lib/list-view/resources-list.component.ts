@@ -6,8 +6,8 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
 @Component({
-    selector: 'app-resources-list',
-    template: ` @if (showBackToFormButton) {
+  selector: 'app-resources-list',
+  template: ` @if (showBackToFormButton) {
       <div style="padding: 16px; display: flex; flex-direction: row-reverse">
         <a mat-stroked-button (click)="navigate()"><mat-icon>chevron_left</mat-icon>Back to search form</a>
       </div>
@@ -19,7 +19,7 @@ import { ResourceResultService } from '../resource-result.service';
       <app-resource-list-selection [resources]="resources" />
     }
     <app-resource-list [resources]="resources" />`,
-    standalone: false
+  standalone: false,
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];

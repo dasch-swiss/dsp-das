@@ -12,16 +12,16 @@ export interface IEraseProjectDialogProps {
 }
 
 @Component({
-    selector: 'app-erase-project-confirmation-dialog',
-    styles: [
-        `
+  selector: 'app-erase-project-confirmation-dialog',
+  styles: [
+    `
       mat-form-field {
         width: 100%;
       }
     `,
-    ],
-    templateUrl: './erase-project-dialog.component.html',
-    standalone: false
+  ],
+  templateUrl: './erase-project-dialog.component.html',
+  standalone: false,
 })
 export class EraseProjectDialogComponent {
   eraseForm = new FormGroup({

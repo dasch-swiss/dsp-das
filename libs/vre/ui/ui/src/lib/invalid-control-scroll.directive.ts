@@ -2,8 +2,8 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 
 @Directive({
-    selector: '[appInvalidControlScroll]',
-    standalone: false
+  selector: '[appInvalidControlScroll]',
+  standalone: false,
 })
 export class InvalidControlScrollDirective {
   constructor(

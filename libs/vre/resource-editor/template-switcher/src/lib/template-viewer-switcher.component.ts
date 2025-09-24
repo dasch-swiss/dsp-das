@@ -19,8 +19,8 @@ import {
 import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-properties';
 
 @Component({
-    selector: 'app-template-viewer-switcher',
-    template: `
+  selector: 'app-template-viewer-switcher',
+  template: `
     <ng-template #textDisplayTpl let-item="item">
       <span>{{ item.text }}</span>
     </ng-template>
@@ -79,8 +79,8 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
 
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplateViewerSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) value!: ReadValue | undefined;

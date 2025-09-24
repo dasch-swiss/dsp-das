@@ -7,8 +7,8 @@ import { expand, map, Observable, of, reduce, take, takeWhile } from 'rxjs';
 import { IncomingOrStandoffLink } from './incoming-link.interface';
 
 @Component({
-    selector: 'app-incoming-links-property',
-    template: `
+  selector: 'app-incoming-links-property',
+  template: `
     <app-property-row
       [tooltip]="'resourceEditor.propertiesDisplay.incomingLinkTooltip' | translate"
       [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
@@ -29,7 +29,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
       }
     </app-property-row>
   `,
-    standalone: false
+  standalone: false,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;

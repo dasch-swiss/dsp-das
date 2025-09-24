@@ -4,9 +4,9 @@ import { UserService } from '@dasch-swiss/vre/core/session';
 import { Subject, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-profile',
-    template: `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-profile',
+  template: `
     @if (user$ | async; as user) {
       <div style="display: flex; flex-direction: row; gap: 24px; padding: 24px; max-width: 600px;">
         <div style="display: flex; align-items: center; gap: 20px;">
@@ -40,7 +40,7 @@ import { Subject, takeUntil, takeWhile } from 'rxjs';
       </div>
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

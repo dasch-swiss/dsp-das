@@ -16,9 +16,9 @@ interface SortProperty {
 type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-users-list',
-    template: `
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-users-list',
+  template: `
     @if (list.length > 0) {
       <div>
         <div style="display: flex; align-items: center; padding: 16px; background-color: #f5f5f5">
@@ -47,7 +47,7 @@ type UserSortKey = 'familyName' | 'givenName' | 'email' | 'username';
       </div>
     }
   `,
-    standalone: false
+  standalone: false,
 })
 export class UsersListComponent {
   _list!: ReadUser[];

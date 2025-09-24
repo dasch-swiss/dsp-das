@@ -9,8 +9,8 @@ import { take } from 'rxjs';
 import { CompoundService } from './compound/compound.service';
 
 @Component({
-    selector: 'app-resource',
-    template: `
+  selector: 'app-resource',
+  template: `
     @if (resource.res.userHasPermission === 'RV') {
       <app-resource-restriction />
     }
@@ -24,8 +24,8 @@ import { CompoundService } from './compound/compound.service';
     }
     <app-resource-tabs [resource]="resource" />
   `,
-    providers: [CompoundService, RegionService, SegmentsService],
-    standalone: false
+  providers: [CompoundService, RegionService, SegmentsService],
+  standalone: false,
 })
 export class ResourceComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;

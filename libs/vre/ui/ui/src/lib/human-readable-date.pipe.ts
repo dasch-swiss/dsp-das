@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'humanReadableDate',
-    standalone: false
+  name: 'humanReadableDate',
+  standalone: false,
 })
 export class HumanReadableDatePipe implements PipeTransform {
   transform(value: string): string {

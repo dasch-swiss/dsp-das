@@ -8,17 +8,17 @@ export function makeCalendarToken() {
 }
 
 @Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'app-jdn-datepicker',
-    providers: [
-        {
-            provide: DateAdapter,
-            useClass: JDNConvertibleCalendarDateAdapter,
-            deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
-        },
-        { provide: ACTIVE_CALENDAR, useFactory: makeCalendarToken },
-    ],
-    standalone: false
+  // eslint-disable-next-line @angular-eslint/directive-selector
+  selector: 'app-jdn-datepicker',
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: JDNConvertibleCalendarDateAdapter,
+      deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
+    },
+    { provide: ACTIVE_CALENDAR, useFactory: makeCalendarToken },
+  ],
+  standalone: false,
 })
 export class JDNDatepickerDirective implements OnChanges, OnDestroy {
   private _activeCalendar!: 'Gregorian' | 'Julian' | 'Islamic';

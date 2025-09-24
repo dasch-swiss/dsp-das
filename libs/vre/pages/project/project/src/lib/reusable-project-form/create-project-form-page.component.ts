@@ -10,8 +10,8 @@ import { finalize } from 'rxjs';
 import { ProjectForm } from './project-form.type';
 
 @Component({
-    selector: 'app-create-project-form-page',
-    template: `
+  selector: 'app-create-project-form-page',
+  template: `
     <app-centered-layout>
       <app-reusable-project-form
         [formData]="{
@@ -42,7 +42,7 @@ import { ProjectForm } from './project-form.type';
       </div>
     </app-centered-layout>
   `,
-    standalone: false
+  standalone: false,
 })
 export class CreateProjectFormPageComponent {
   form!: ProjectForm;

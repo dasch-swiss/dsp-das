@@ -7,8 +7,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * {{ mystr | split: '/':1 }}   --> returns 'pdf'
  */
 @Pipe({
-    name: 'split',
-    standalone: false
+  name: 'split',
+  standalone: false,
 })
 export class SplitPipe implements PipeTransform {
   transform(val: string, separator: string, position: number): string {
