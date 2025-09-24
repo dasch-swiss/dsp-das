@@ -85,8 +85,8 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
           originY: 'bottom',
           overlayX: 'start',
           overlayY: 'top',
-          offsetY: 38,
-          offsetX: -15,
+          offsetY: 25,
+          offsetX: -17,
         },
       ]);
 

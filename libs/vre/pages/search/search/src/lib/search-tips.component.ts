@@ -5,9 +5,11 @@ import { Component } from '@angular/core';
   template: ` <div
     style="
     width: 100%;
-    background: #ebebeb;
     border-radius: 5px;
-    padding: 16px">
+    background: white;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;">
     Search tips
     <ul>
       <li>Quotation marks for exact phrases: "down the rabbit hole"</li>
