@@ -40,7 +40,7 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
-import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
+import { HumanReadableErrorPipe, StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
 import { UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -114,6 +114,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    HumanReadableErrorPipe,
   ],
   providers: [
     AppConfigService,

@@ -1,4 +1,3 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
@@ -21,13 +20,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  _AbstractConstructor,
-  _Constructor,
-  CanUpdateErrorState,
-  ErrorStateMatcher,
-  mixinErrorState,
-} from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
@@ -38,18 +31,6 @@ export class ColorPickerErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
-type CanUpdateErrorStateCtor = _Constructor<CanUpdateErrorState> & _AbstractConstructor<CanUpdateErrorState>;
-
-class MatInputBase {
-  constructor(
-    public _defaultErrorStateMatcher: ErrorStateMatcher,
-    public _parentForm: NgForm,
-    public _parentFormGroup: FormGroupDirective,
-    public ngControl: NgControl,
-    public stateChanges: Subject<void>
-  ) {}
-}
-const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);
 
 @Component({
   selector: 'app-color-picker',
@@ -59,13 +40,13 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class ColorPickerComponent
-  extends _MatInputMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<string>, DoCheck, CanUpdateErrorState, OnDestroy
-{
+export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldControl<string>, DoCheck, OnDestroy {
   static nextId = 0;
 
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input() errorStateMatcher: ErrorStateMatcher = new ColorPickerErrorStateMatcher();
+
+  // Required for MatFormFieldControl
+  stateChanges = new Subject<void>();
 
   @HostBinding() id = `app-color-picker-${ColorPickerComponent.nextId++}`;
 
@@ -78,7 +59,7 @@ export class ColorPickerComponent
 
   private _required = false;
   private _disabled = false;
-  private _placeholder: string;
+  private _placeholder = '';
 
   @Input()
   get placeholder() {
@@ -117,7 +98,7 @@ export class ColorPickerComponent
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   set required(req) {
     this._required = coerceBooleanProperty(req);
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
@@ -125,13 +106,13 @@ export class ColorPickerComponent
     this._disabled = coerceBooleanProperty(value);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this._disabled ? this.colorForm.disable() : this.colorForm.enable();
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   set placeholder(plh) {
     this._placeholder = plh;
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
@@ -141,7 +122,7 @@ export class ColorPickerComponent
     } else {
       this.colorForm.setValue({ color: null });
     }
-    this.stateChanges.next();
+    this._stateChanges.next();
   }
 
   setDescribedByIds(ids: string[]) {
@@ -153,22 +134,14 @@ export class ColorPickerComponent
     fb: UntypedFormBuilder,
     @Optional() @Self() public ngControl: NgControl,
     private _stateChanges: Subject<void>,
-    private _fm: FocusMonitor,
-    private _elRef: ElementRef<HTMLElement>,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    _defaultErrorStateMatcher: ErrorStateMatcher
+    private _elRef: ElementRef<HTMLElement>
   ) {
-    super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl, _stateChanges);
-
     this.colorForm = fb.group({
       color: [null, Validators.required],
     });
 
-    _fm.monitor(_elRef.nativeElement, true).subscribe(origin => {
-      this.focused = !!origin;
-      this.stateChanges.next();
-    });
+    // Monitor focus state
+    this.focused = false;
 
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -185,17 +158,21 @@ export class ColorPickerComponent
 
   ngDoCheck() {
     if (this.ngControl) {
-      this.updateErrorState();
+      // Update error state manually since we don't have the mixin
+      this.errorState = this.ngControl ? !!this.ngControl.invalid && !!this.ngControl.touched : false;
     }
   }
 
   ngOnDestroy() {
-    this.stateChanges.complete();
+    this._stateChanges.complete();
   }
 
   onContainerClick(event: MouseEvent) {
     if ((event.target as Element).tagName.toLowerCase() !== 'input') {
-      this._elRef.nativeElement.querySelector('input').focus();
+      const input = this._elRef.nativeElement.querySelector('input');
+      if (input) {
+        input.focus();
+      }
     }
   }
 
