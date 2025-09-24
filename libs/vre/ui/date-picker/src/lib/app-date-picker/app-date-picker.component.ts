@@ -101,7 +101,6 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinE
     MatButtonToggleModule,
     MatSelectModule,
   ],
-  providers: [Subject],
 })
 export class AppDatePickerComponent
   extends _MatInputMixinBase
@@ -110,7 +109,7 @@ export class AppDatePickerComponent
   static nextId = 0;
 
   @ViewChild(MatMenuTrigger) popover!: MatMenuTrigger;
-  @Output() closed: EventEmitter<void> = new EventEmitter();
+  @Output() datePickerClosed: EventEmitter<void> = new EventEmitter();
   @Output() emitDateChanged: EventEmitter<string> = new EventEmitter();
   @Input() override errorStateMatcher!: ErrorStateMatcher;
 

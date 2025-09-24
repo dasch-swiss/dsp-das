@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -25,7 +25,6 @@ import { DataBrowserComponents } from '@dasch-swiss/vre/pages/data-browser';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
-import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
@@ -38,16 +37,11 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
-import {
-  HumanReadableErrorPipe,
-  MultiLanguageTextareaComponent,
-  MutiLanguageInputComponent,
-  StringLiteralComponents,
-} from '@dasch-swiss/vre/ui/string-literal';
-import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
+import { ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
+import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
+import { UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
@@ -96,9 +90,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   ],
   imports: [
     AngularSplitModule,
-    AppDatePickerComponent,
-    AppProgressIndicatorComponent,
-    HumanReadableErrorPipe,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -115,7 +106,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     NgxSkeletonLoaderModule,
     PdfViewerModule,
     ReactiveFormsModule,
-    AdvancedSearchComponent,
     MatStepperModule,
     TranslateModule.forRoot({
       loader: {
@@ -124,9 +114,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    MultiLanguageTextareaComponent,
-    MutiLanguageInputComponent,
-    ...UiStandaloneComponents,
   ],
   providers: [
     AppConfigService,
@@ -177,10 +164,12 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       provide: Sentry.TraceService,
       deps: [Router],
     },
-    provideAppInitializer(() => {
-      const initializerFn = (() => () => {})(inject(Sentry.TraceService));
-      return initializerFn();
-    }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     LocalizationService,
   ],
   bootstrap: [AppComponent],
