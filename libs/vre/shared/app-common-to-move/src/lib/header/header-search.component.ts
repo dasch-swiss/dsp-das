@@ -38,6 +38,6 @@ export class HeaderSearchComponent {
   ) {}
   search() {
     const query = this.formGroup.controls.search.value;
-    this._router.navigateByUrl('/').then(() => this._router.navigate([RouteConstants.search, 'fulltext', query]));
+    this._router.navigateByUrl('/').then(() => this._router.navigate([RouteConstants.search, query]));
   }
 }

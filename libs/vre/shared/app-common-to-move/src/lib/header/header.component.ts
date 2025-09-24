@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { AppConfigService, DspConfig } from '@dasch-swiss/vre/core/config';
-import { SearchParams } from '../search-params.interface';
 
 @Component({
   selector: 'app-header',
@@ -30,15 +28,13 @@ import { SearchParams } from '../search-params.interface';
 })
 export class HeaderComponent {
   session = false;
-  searchParams?: SearchParams;
 
   dsp: DspConfig;
 
   constructor(
     private _appConfigService: AppConfigService,
     private _domSanitizer: DomSanitizer,
-    private _matIconRegistry: MatIconRegistry,
-    private _router: Router
+    private _matIconRegistry: MatIconRegistry
   ) {
     // create own logo icon to use them in mat-icons
     this._matIconRegistry.addSvgIcon(
