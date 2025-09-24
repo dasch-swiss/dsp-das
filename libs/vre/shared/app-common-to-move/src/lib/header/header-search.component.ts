@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { SearchParams } from '../search-params.interface';
@@ -6,38 +7,35 @@ import { SearchParams } from '../search-params.interface';
 @Component({
   selector: 'app-header-search',
   template: `
-    <button mat-icon-button><mat-icon>search</mat-icon></button>
-    @if (false) {
-      <form>
-        <mat-form-field appearance="outline" class="search-field">
-          <input matInput />
-          <button mat-icon-button matSuffix aria-label="Search">
-            <mat-icon>search</mat-icon>
-          </button>
-        </mat-form-field>
+      <form [formGroup]="formGroup" (ngSubmit)="search()" style="border: 1px solid #ebebeb; display: flex; align-items: center; height: 40px">
+        <input
+          [formControl]="searchControl"
+          style="border: none; outline: none; padding: 0 16px; font-size: 14px; min-width: 260px"
+          placeholder="Search everywhere" />
+        <button mat-icon-button class="small-icon-button">
+          <mat-icon>search</mat-icon>
+        </button>
       </form>
-    }
   `,
+  styles: [
+    `
+      .small-icon-button {
+        transform: scale(0.8);
+      }
+    `,
+  ],
 })
 export class HeaderSearchComponent {
-  searchParams: any;
-  constructor(private _router: Router) {}
-  doSearch(search: SearchParams) {
-    // reset search params
-    this.searchParams = undefined;
+  formGroup = this._fb.group({
 
-    // we can do the routing here or send the search param
-    // to (resource) list view directly
-    this.searchParams = search;
-
-    if (this.searchParams.mode && this.searchParams.query) {
-      let doSearchRoute = `/${RouteConstants.search}/${this.searchParams.mode}/${this.searchParams.query}`;
-
-      if (this.searchParams.filter && this.searchParams.filter.limitToProject) {
-        doSearchRoute += `/${encodeURIComponent(this.searchParams.filter.limitToProject)}`;
-      }
-
-      this._router.navigateByUrl('/').then(() => this._router.navigate([doSearchRoute]));
+  })
+  searchControl = this._fb.control('');
+  constructor(
+    private _router: Router,
+    private _fb: FormBuilder
+  ) {}
+  search() {
+      this._router.navigateByUrl('/').then(() => this._router.navigate([RouteConstants.search, 'fulltext', query]));
     }
   }
 }

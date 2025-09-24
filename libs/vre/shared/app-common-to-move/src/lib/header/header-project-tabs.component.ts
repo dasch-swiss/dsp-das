@@ -42,7 +42,7 @@ import { ActivatedRoute } from '@angular/router';
       .active-link {
         color: var(--mat-tab-header-active-label-text-color) !important;
         border-bottom: 2px solid var(--mat-tab-header-active-ripple-color);
-        font-weight: bold;
+        font-weight: 500;
       }
 
       :host ::ng-deep .mat-mdc-tab-link {
