@@ -87,7 +87,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
     `,
   ],
 })
-export class MutiLanguageInputComponent implements OnInit, OnChanges {
+export class MultiLanguageInputComponent implements OnInit, OnChanges {
   @Input({ required: true }) formArray!: MultiLanguageFormArray;
   @Input({ required: true }) placeholder!: string;
   @Input() editable = true;

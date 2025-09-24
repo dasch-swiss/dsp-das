@@ -25,6 +25,7 @@ import { DataBrowserComponents } from '@dasch-swiss/vre/pages/data-browser';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
 import { ProjectComponents } from '@dasch-swiss/vre/pages/project/project';
+import { AdvancedSearchComponent } from '@dasch-swiss/vre/pages/search/advanced-search';
 import { SearchComponents } from '@dasch-swiss/vre/pages/search/search';
 import { SystemComponents } from '@dasch-swiss/vre/pages/system/system';
 import { apiConnectionTokenProvider, UserComponents } from '@dasch-swiss/vre/pages/user-settings/user';
@@ -40,7 +41,12 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
 import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
-import { HumanReadableErrorPipe, StringLiteralComponents, MultiLanguageInputComponent, MultiLanguageTextareaComponent } from '@dasch-swiss/vre/ui/string-literal';
+import {
+  HumanReadableErrorPipe,
+  StringLiteralComponents,
+  MultiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
+} from '@dasch-swiss/vre/ui/string-literal';
 import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -89,6 +95,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...UserComponents,
   ],
   imports: [
+    AdvancedSearchComponent,
     AngularSplitModule,
     AppProgressIndicatorComponent,
     AppRoutingModule,
