@@ -85,7 +85,8 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
           originY: 'bottom',
           overlayX: 'start',
           overlayY: 'top',
-          offsetY: 48,
+          offsetY: 38,
+          offsetX: -15,
         },
       ]);
 
@@ -93,6 +94,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
       positionStrategy,
       hasBackdrop: false,
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      width: '570px',
     });
 
     const portal = new ComponentPortal(SearchTipsComponent);

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-search-tips',
   template: ` <div
     style="
-          max-width: 500px;
+    width: 100%;
     background: #ebebeb;
     border-radius: 5px;
     padding: 16px">
@@ -17,6 +17,10 @@ import { Component } from '@angular/core';
   </div>`,
   styles: [
     `
+      :host {
+        display: block;
+        width: 100%;
+      }
       li {
         margin-bottom: 8px;
       }
