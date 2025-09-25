@@ -16,13 +16,13 @@ export * from './lib/project-settings/image-settings/image-display-ratio.compone
 export * from './lib/project-settings/image-settings/image-settings.component';
 export * from './lib/project-settings/legal/legal-settings.component';
 export * from './lib/project-settings/legal/legal-settings-licenses.component';
-export * from './lib/project-settings/legal/create-copyright-holder-dialog.component';
+export * from './lib/project-settings/create-copyright-holder-dialog.component';
 export * from './lib/project-settings/resource-metadata/resource-metadata.component';
 export * from './lib/project-settings/legal/licenses-enabled-table.component';
 
 export * from './lib/project-settings/collaboration/project-members.component';
 export * from './lib/project-settings/collaboration/project-members-row.component';
-export * from './lib/project-settings/collaboration/project-members-row-menu.component';
+export * from './lib/project-settings/project-members-row-menu.component';
 
 export * from './lib/sidenav/project-sidenav.component';
 export * from './lib/sidenav/project-sidenav-links.component';
