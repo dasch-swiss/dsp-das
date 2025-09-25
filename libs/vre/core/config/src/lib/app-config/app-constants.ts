@@ -102,7 +102,7 @@ export class RouteConstants {
 
   static readonly advancedSearchResultsRelative = `${RouteConstants.advancedSearch}/:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
   static readonly searchProjectRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}/:${RouteConstants.projectParameter}`;
-  static readonly searchRelative = `:${RouteConstants.modeParameter}/:${RouteConstants.qParameter}`;
+  static readonly searchRelative = `:${RouteConstants.search}/:${RouteConstants.qParameter}`;
 
   static readonly notFoundWildcardRelative = `/${RouteConstants.notFound}`;
 

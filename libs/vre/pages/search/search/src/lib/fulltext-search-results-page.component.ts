@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { map } from 'rxjs';
 
 @Component({
@@ -9,6 +10,6 @@ import { map } from 'rxjs';
   } `,
 })
 export class FulltextSearchResultsPageComponent {
-  query$ = this._route.params.pipe(map(v => v['query']));
+  query$ = this._route.params.pipe(map(v => v[RouteConstants.qParameter]));
   constructor(private _route: ActivatedRoute) {}
 }

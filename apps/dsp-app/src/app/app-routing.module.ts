@@ -156,7 +156,7 @@ const routes: Routes = [
         path: RouteConstants.home,
         component: ProjectOverviewComponent,
       },
-      { path: 'search/:query', component: FulltextSearchResultsPageComponent },
+      { path: RouteConstants.searchRelative, component: FulltextSearchResultsPageComponent },
       {
         path: RouteConstants.help,
         component: HelpPageComponent,
