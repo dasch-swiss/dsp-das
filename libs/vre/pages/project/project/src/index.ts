@@ -26,7 +26,6 @@ export * from './lib/project-settings/collaboration/project-members-row-menu.com
 
 export * from './lib/sidenav/project-sidenav.component';
 export * from './lib/sidenav/project-sidenav-links.component';
-export * from './lib/sidenav/project-sidenav-link-objects.component';
 export * from './lib/sidenav/project-sidenav-links-item.component';
 export * from './lib/sidenav/project-sidenav-ontologies.component';
 export * from './lib/sidenav/project-sidenav-collapse-button.component';

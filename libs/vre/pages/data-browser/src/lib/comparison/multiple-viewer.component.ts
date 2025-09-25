@@ -25,7 +25,6 @@ import { MultipleViewerService } from './multiple-viewer.service';
       }
     }
   `,
-  styles: [``],
 })
 export class MultipleViewerComponent {
   readonly MAX_RESOURCES = 6;

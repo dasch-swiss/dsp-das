@@ -102,7 +102,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         ...DspDialogConfig.dialogDrawerConfig(
           {
-            resourceType: this.resClass.label,
+            resourceType: this.resClass.label!,
             resourceClassIri: this.resClass.id,
           },
           true
