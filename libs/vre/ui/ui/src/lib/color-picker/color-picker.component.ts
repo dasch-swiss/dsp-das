@@ -98,7 +98,7 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   set required(req) {
     this._required = coerceBooleanProperty(req);
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
@@ -106,13 +106,13 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
     this._disabled = coerceBooleanProperty(value);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this._disabled ? this.colorForm.disable() : this.colorForm.enable();
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   set placeholder(plh) {
     this._placeholder = plh;
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
@@ -122,7 +122,7 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
     } else {
       this.colorForm.setValue({ color: null });
     }
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   setDescribedByIds(ids: string[]) {
@@ -133,7 +133,6 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
   constructor(
     fb: UntypedFormBuilder,
     @Optional() @Self() public ngControl: NgControl,
-    private _stateChanges: Subject<void>,
     private _elRef: ElementRef<HTMLElement>
   ) {
     this.colorForm = fb.group({
@@ -164,7 +163,7 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
   }
 
   ngOnDestroy() {
-    this._stateChanges.complete();
+    this.stateChanges.complete();
   }
 
   onContainerClick(event: MouseEvent) {
