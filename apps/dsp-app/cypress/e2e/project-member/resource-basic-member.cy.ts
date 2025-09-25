@@ -48,7 +48,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=add-class-instance]').should('be.visible');
   });
 
-  it.only('ThingPicture resource should not be deletable or erasable', () => {
+  it('ThingPicture resource should not be deletable or erasable', () => {
     project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
     cy.get('[data-cy=resource-list-item]').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
