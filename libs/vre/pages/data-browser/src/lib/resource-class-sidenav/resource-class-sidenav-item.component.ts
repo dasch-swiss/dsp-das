@@ -5,7 +5,7 @@ import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/co
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
@@ -35,7 +35,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
         <div style="padding-left: 24px">
           <div style="padding: 0 16px; font-style: italic">{{ ontologiesDescription }}</div>
           @if (ontologyLabel && classLabel) {
-            <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" />
+            <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" [reload$]="reload$" />
           }
         </div>
       </ng-template>
@@ -45,6 +45,8 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
+  private _reloadSubject = new BehaviorSubject<null>(null);
+  reload$ = this._reloadSubject.asObservable();
   destroyed = new Subject<void>();
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   icon!: string;
@@ -84,11 +86,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       this.classLabel = className;
     });
 
-    this.count$ = this._getCount(this.resClass.id).pipe(
-      finalize(() => {
-        this.loading = false;
-      })
-    );
+    this._loadData();
   }
 
   ngOnDestroy(): void {
@@ -114,7 +112,18 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
           return true;
         })
       )
-      .subscribe(res => {});
+      .subscribe(res => {
+        this._loadData();
+        this._reloadSubject.next(null);
+      });
+  }
+
+  private _loadData() {
+    this.count$ = this._getCount(this.resClass.id).pipe(
+      finalize(() => {
+        this.loading = false;
+      })
+    );
   }
 
   private getOntologiesLabelsInPreferredLanguage(): void {

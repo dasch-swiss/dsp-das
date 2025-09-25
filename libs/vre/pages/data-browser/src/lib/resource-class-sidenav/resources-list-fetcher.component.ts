@@ -27,7 +27,7 @@ import { ResourceResultService } from '../resource-result.service';
 export class ResourcesListFetcherComponent implements OnInit {
   @Input({ required: true }) ontologyLabel!: string;
   @Input({ required: true }) classLabel!: string;
-
+  @Input({ required: true }) reload$!: Observable<null>;
   userCanViewResources = true;
 
   private _resources$!: Observable<ReadResource[]>;
@@ -62,7 +62,8 @@ export class ResourcesListFetcherComponent implements OnInit {
       }
     });
 
-    this._resources$ = this.projectPageService.currentProject$.pipe(
+    this._resources$ = this.reload$.pipe(
+      switchMap(() => this.projectPageService.currentProject$),
       switchMap(project => {
         const ontologyLabel = this.ontologyLabel;
         const classLabel = this.classLabel;
