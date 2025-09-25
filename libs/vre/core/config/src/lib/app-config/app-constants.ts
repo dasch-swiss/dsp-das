@@ -49,6 +49,8 @@ export class RouteConstants {
   static readonly imageSettings = 'image-settings';
   static readonly legalSettings = 'legal-settings';
 
+  static readonly myProfile = 'my-profile';
+
   static readonly resource = 'resource';
 
   static readonly projectDescription = 'description';

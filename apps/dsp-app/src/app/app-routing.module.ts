@@ -168,11 +168,11 @@ const routes: Routes = [
       },
 
       {
-        path: 'my-profile',
+        path: RouteConstants.myProfile,
         component: UserComponent,
         children: [
           { path: RouteConstants.userAccount, component: AccountComponent },
-          { path: 'projects', component: ProjectsComponent },
+          { path: RouteConstants.projects, component: ProjectsComponent },
         ],
         canActivate: [AuthGuard],
       },

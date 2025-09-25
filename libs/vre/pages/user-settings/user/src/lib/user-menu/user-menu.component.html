@@ -19,7 +19,7 @@
     <div class="menu-title">{{ (user$ | async)?.givenName }} {{ (user$ | async)?.familyName }}</div>
   </div>
 
-  <a mat-menu-item [routerLink]="['/', 'my-profile', 'account']">
+  <a mat-menu-item [routerLink]="['/', MY_PROFILE, 'account']">
     {{ 'pages.userSettings.userMenu.myAccount' | translate }}
   </a>
 

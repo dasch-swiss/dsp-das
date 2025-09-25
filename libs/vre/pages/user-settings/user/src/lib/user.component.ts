@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
 @Component({
   selector: 'app-user',
@@ -12,11 +13,11 @@ import { Component } from '@angular/core';
         mat-align-tabs="start"
         animationDuration="0ms"
         [tabPanel]="tabPanel">
-        <a mat-tab-link [routerLink]="['/', 'my-profile', 'account']" routerLinkActive="active-link">
+        <a mat-tab-link [routerLink]="['/', MY_PROFILE, 'account']" routerLinkActive="active-link">
           <mat-icon class="tab-icon">settings</mat-icon>
           {{ 'pages.userSettings.navigation.myAccount' | translate }}
         </a>
-        <a mat-tab-link [routerLink]="['projects']" routerLinkActive="active-link">
+        <a mat-tab-link [routerLink]="[PROJECTS]" routerLinkActive="active-link">
           <mat-icon class="tab-icon">assignments</mat-icon>
           {{ 'pages.userSettings.navigation.myProjects' | translate }}
         </a>
@@ -36,4 +37,7 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class UserComponent {}
+export class UserComponent {
+  MY_PROFILE = RouteConstants.myProfile;
+  PROJECTS = RouteConstants.projects;
+}

@@ -8,6 +8,8 @@ import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
   styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent {
+  readonly MY_PROFILE = RouteConstants.myProfile;
+
   isLoggedIn$ = this._userService.isLoggedIn$;
 
   readonly systemLink = RouteConstants.system;
