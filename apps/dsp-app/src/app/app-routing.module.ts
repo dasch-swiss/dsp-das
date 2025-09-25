@@ -84,7 +84,7 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'data',
+        path: RouteConstants.data,
         component: ResourceClassBrowserPage2Component,
       },
       {
@@ -133,14 +133,14 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'search',
+        path: RouteConstants.search,
         component: ProjectFulltextSearchPageComponent,
       },
       {
         path: RouteConstants.advancedSearchResultsRelative,
         component: AdvancedSearchResultsPageComponent,
       },
-      { path: 'advanced-search', component: AdvancedSearchPageComponent },
+      { path: RouteConstants.advancedSearch, component: AdvancedSearchPageComponent },
       {
         path: RouteConstants.notFoundWildcard,
         component: StatusComponent,

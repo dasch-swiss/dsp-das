@@ -50,7 +50,7 @@ export class RouteConstants {
   static readonly legalSettings = 'legal-settings';
 
   static readonly myProfile = 'my-profile';
-
+  static readonly data = 'data';
   static readonly resource = 'resource';
 
   static readonly projectDescription = 'description';
