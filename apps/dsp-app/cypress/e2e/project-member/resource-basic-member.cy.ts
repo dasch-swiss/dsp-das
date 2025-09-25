@@ -49,14 +49,14 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('ThingPicture resource should not be deletable or erasable', () => {
-    project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
+    project0001Page.visitClass(Project0001Page.thingArchiveClass.label);
     cy.get('[data-cy=resource-list-item]').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
   });
 
   it('ThingPicture resource should be visible', () => {
     cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
     cy.should('not.contain', '[data-cy=close-restricted-button]');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
@@ -67,14 +67,13 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it('ThingPicture resource should be created and deleted', () => {
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+  it.only('ThingPicture resource should be created and deleted', () => {
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
-    cy.get('[data-cy=class-item]')
-      .contains(Project0001Page.thingPictureClass.label)
-      .closest('[data-cy=class-item]')
-      .find('[data-cy=add-class-instance]')
-      .click();
+    cy.get('[data-cy=sidenav-ontology-class]')
+      .filter(`:contains("${Project0001Page.thingPictureClass.label}")`)
+      .trigger('mouseenter');
+    cy.get('[data-cy=add-class-instance]').click();
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
     cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
@@ -115,7 +114,7 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('ThingPicture resource should be editable', () => {
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');

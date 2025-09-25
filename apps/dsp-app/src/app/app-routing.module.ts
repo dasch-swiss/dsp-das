@@ -34,12 +34,10 @@ import {
   UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { AccountComponent, ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
-import { CreateResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-creator';
 import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { AuthGuard } from './main/guard/auth.guard';
-import { OntologyClassInstanceGuard } from './main/guard/ontology-class-instance.guard';
 
 const routes: Routes = [
   {
@@ -86,11 +84,6 @@ const routes: Routes = [
       {
         path: RouteConstants.data,
         component: ResourceClassBrowserPage2Component,
-      },
-      {
-        canActivate: [OntologyClassInstanceGuard],
-        path: RouteConstants.OntologyClassAddRelative,
-        component: CreateResourcePageComponent,
       },
       {
         path: RouteConstants.JulienOntologyClassRelative,

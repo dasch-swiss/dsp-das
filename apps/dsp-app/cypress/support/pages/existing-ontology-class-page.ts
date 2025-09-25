@@ -15,7 +15,7 @@ export class ProjectAssertionPageBase {
     // cy.visit(`/project/${this.projectShortCode}/ontology/${this.ontologyName}/${ontoClassName}`);
     cy.visit(`/project/${this.projectShortCode}/data`);
     cy.get('[data-cy=sidenav-ontology]').eq(0).click();
-    cy.get('[data-cy=sidenav-ontology-class]').eq(0).click();
+    cy.get('[data-cy=sidenav-ontology-class]').filter(`:contains("${ontoClassName}")`).click();
     cy.get('[data-cy=resource-list-item]').eq(0).click();
   };
 }
