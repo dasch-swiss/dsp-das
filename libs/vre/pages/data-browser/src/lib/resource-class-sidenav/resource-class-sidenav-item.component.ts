@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, filter, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
@@ -23,7 +24,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
     justify-content: end;
     margin-right: 0;">
           @if ((hasProjectMemberRights$ | async) && isHovered) {
-            <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance()">
+            <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance($event)">
               <mat-icon>add_circle</mat-icon>
             </button>
           }
@@ -94,7 +95,9 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     this.destroyed.complete();
   }
 
-  goToAddClassInstance() {
+  goToAddClassInstance(event: MouseEvent) {
+    event.stopPropagation();
+
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
         ...DspDialogConfig.dialogDrawerConfig(
@@ -104,15 +107,12 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
           },
           true
         ),
+        minWidth: 800,
         viewContainerRef: this._viewContainerRef,
       })
       .afterClosed()
-      .pipe(
-        filter(resourceId => {
-          return true;
-        })
-      )
-      .subscribe(res => {
+      .pipe(filterUndefined())
+      .subscribe(() => {
         this._loadData();
         this._reloadSubject.next(null);
       });
