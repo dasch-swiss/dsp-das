@@ -18,7 +18,6 @@ import { ProjectPageService } from './project-page.service';
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;
-  sideNavOpened = true;
   currentOntologyName: undefined | string;
 
   destroyed: Subject<void> = new Subject<void>();

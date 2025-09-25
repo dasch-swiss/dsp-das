@@ -6,11 +6,11 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
   template: `
     <span style="display: flex; align-items: center; gap: 8px">
       <app-version-badge />
-      <a mat-button [routerLink]="['/', helpLink]">{{ 'ui.header.help' | translate }}</a>
+      <a mat-button [routerLink]="['/', HELP_LINK]">{{ 'ui.header.help' | translate }}</a>
       <app-user-menu />
     </span>
   `,
 })
 export class HeaderRightComponent {
-  helpLink = RouteConstants.help;
+  HELP_LINK = RouteConstants.help;
 }

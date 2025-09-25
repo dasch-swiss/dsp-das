@@ -9,4 +9,3 @@ export * from './lib/project-fulltext-search-page.component';
 export * from './lib/fulltext-search-results-page.component';
 export * from './lib/global-page.component';
 export * from './lib/search-tips.component';
-export * from './lib/fulltext-search-result.component';

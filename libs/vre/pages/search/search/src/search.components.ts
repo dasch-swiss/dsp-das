@@ -1,6 +1,5 @@
 import { AdvancedSearchPageComponent } from './lib/advanced-search/advanced-search-page.component';
 import { AdvancedSearchResultsPageComponent } from './lib/advanced-search-results-page.component';
-import { FulltextSearchResultComponent } from './lib/fulltext-search-result.component';
 import { FulltextSearchResultsPageComponent } from './lib/fulltext-search-results-page.component';
 import { GlobalPageComponent } from './lib/global-page.component';
 import { NoResultsFoundComponent } from './lib/no-results-found.component';
@@ -19,5 +18,4 @@ export const SearchComponents = [
   FulltextSearchResultsPageComponent,
   GlobalPageComponent,
   SearchTipsComponent,
-  FulltextSearchResultComponent,
 ];
