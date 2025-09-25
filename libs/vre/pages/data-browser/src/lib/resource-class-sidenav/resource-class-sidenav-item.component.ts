@@ -16,7 +16,8 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
-      (mouseleave)="isHovered = false">
+      (mouseleave)="isHovered = false"
+      data-cy="sidenav-ontology-class">
       <mat-expansion-panel-header style="padding-right: 16px">
         <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
         <mat-panel-description

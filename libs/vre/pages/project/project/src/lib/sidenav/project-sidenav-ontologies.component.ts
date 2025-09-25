@@ -6,7 +6,7 @@ import { ProjectPageService } from '../project-page.service';
   template: `
     @for (onto of projectOntologies$ | async; track onto) {
       <mat-accordion>
-        <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none">
+        <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none" data-cy="sidenav-ontology">
           <mat-expansion-panel-header>
             <mat-panel-title
               #ontoTitle

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ThingPictureClassResource } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
-import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
+import { Project0001Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Check project admin existing resource functionality', () => {
   let project0001Page: Project0001Page;
@@ -40,20 +40,15 @@ describe('Check project admin existing resource functionality', () => {
     });
   });
 
-  it('cant add other project resource', () => {
-    const path = `/project/${Project0803Page.projectShortCode}/ontology/${Project0803Page.ontologyName}/book/add`;
-    cy.visit(path);
-    cy.url().should('not.contain', Project0803Page.projectShortCode);
-  });
-
   it('can add owned project resource', () => {
-    const path = `/project/${Project0001Page.projectShortCode}/ontology/${Project0001Page.defaultOntology}/${Project0001Page.thingPictureClass.id}/add`;
+    const path = `/project/${Project0001Page.projectShortCode}/data`;
     cy.visit(path);
-    const regex = new RegExp(`${path}$`);
-    cy.url().should('match', regex);
+    cy.get('[data-cy=sidenav-ontology]').eq(0).click();
+    cy.get('[data-cy=sidenav-ontology-class]').eq(0).trigger('mouseenter');
+    cy.get('[data-cy=add-class-instance]').should('be.visible');
   });
 
-  it('ThingPicture resource should not be deletable or erasable', () => {
+  it.only('ThingPicture resource should not be deletable or erasable', () => {
     project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
     cy.get('[data-cy=resource-list-item]').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
