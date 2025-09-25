@@ -2,6 +2,7 @@ import { AdminImageDirective } from './lib/admin-image/admin-image.directive';
 import { AlternatedListComponent } from './lib/alternated-list.component';
 import { CenteredBoxComponent } from './lib/centered-box.component';
 import { CenteredLayoutComponent } from './lib/centered-layout.component';
+import { CenteredMessageComponent } from './lib/centered-message.component';
 import { ChipListInputComponent } from './lib/chip-list-input.component';
 import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.component';
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
@@ -53,5 +54,6 @@ export const UiComponents = [
   HumanReadableDatePipe,
   DoubleChipSelectorComponent,
   CenteredBoxComponent,
+  CenteredMessageComponent,
 ];
 export const UiStandaloneComponents = [PagerComponent];

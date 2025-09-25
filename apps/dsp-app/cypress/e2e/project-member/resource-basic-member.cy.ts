@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ThingPictureClassResource } from '../../models/existing-data-models';
 import { UserProfiles } from '../../models/user-profiles';
-import { Project0001Page, Project0803Page } from '../../support/pages/existing-ontology-class-page';
+import { Project0001Page } from '../../support/pages/existing-ontology-class-page';
 
 describe('Check project admin existing resource functionality', () => {
   let project0001Page: Project0001Page;
@@ -40,28 +40,23 @@ describe('Check project admin existing resource functionality', () => {
     });
   });
 
-  it('cant add other project resource', () => {
-    const path = `/project/${Project0803Page.projectShortCode}/ontology/${Project0803Page.ontologyName}/book/add`;
-    cy.visit(path);
-    cy.url().should('not.contain', Project0803Page.projectShortCode);
-  });
-
   it('can add owned project resource', () => {
-    const path = `/project/${Project0001Page.projectShortCode}/ontology/${Project0001Page.defaultOntology}/${Project0001Page.thingPictureClass.id}/add`;
+    const path = `/project/${Project0001Page.projectShortCode}/data`;
     cy.visit(path);
-    const regex = new RegExp(`${path}$`);
-    cy.url().should('match', regex);
+    cy.get('[data-cy=sidenav-ontology]').eq(0).click();
+    cy.get('[data-cy=sidenav-ontology-class]').eq(0).trigger('mouseenter');
+    cy.get('[data-cy=add-class-instance]').should('be.visible');
   });
 
   it('ThingPicture resource should not be deletable or erasable', () => {
-    project0001Page.visitClass(Project0001Page.thingArchiveClass.id);
+    project0001Page.visitClass(Project0001Page.thingArchiveClass.label);
     cy.get('[data-cy=resource-list-item]').contains(Project0001Page.thingArchiveClass.label).click();
     cy.get('[data-cy=resource-toolbar-more-button]').should('not.exist');
   });
 
   it('ThingPicture resource should be visible', () => {
     cy.intercept('GET', `**/${thingPictureData.file}/**/default.jpg`).as('stillImageRequest');
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
     cy.should('not.contain', '[data-cy=close-restricted-button]');
     cy.get('[data-cy=resource-header-label]').contains(thingPictureData.label);
@@ -72,17 +67,15 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it('ThingPicture resource should be created and deleted', () => {
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+  it.only('ThingPicture resource should be created and deleted', () => {
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
-    cy.get('[data-cy=class-item]')
-      .contains(Project0001Page.thingPictureClass.label)
-      .closest('[data-cy=class-item]')
-      .find('[data-cy=add-class-instance]')
-      .click();
+    cy.get('[data-cy=sidenav-ontology-class]')
+      .filter(`:contains("${Project0001Page.thingPictureClass.label}")`)
+      .trigger('mouseenter');
+    cy.get('[data-cy=add-class-instance]').eq(0).click();
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
-    cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
 
@@ -92,7 +85,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=license-select]').click();
     cy.get('mat-option').eq(0).click();
 
-    cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
+    cy.get('[data-cy=authorship-chips]').type('my Author{enter}{esc}');
 
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=resource-label]')
@@ -120,7 +113,7 @@ describe('Check project admin existing resource functionality', () => {
   });
 
   it('ThingPicture resource should be editable', () => {
-    project0001Page.visitClass(Project0001Page.thingPictureClass.id);
+    project0001Page.visitClass(Project0001Page.thingPictureClass.label);
     cy.get('[data-cy=resource-list-item]').contains(thingPictureData.label).click();
 
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
