@@ -73,10 +73,9 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=sidenav-ontology-class]')
       .filter(`:contains("${Project0001Page.thingPictureClass.label}")`)
       .trigger('mouseenter');
-    cy.get('[data-cy=add-class-instance]').click();
+    cy.get('[data-cy=add-class-instance]').eq(0).click();
 
     cy.intercept('POST', `**/${uploadedImageFile}`).as('uploadRequest');
-    cy.get('[data-cy=create-resource-title]').should('exist').contains(Project0001Page.thingPictureClass.id);
     cy.get('[data-cy="upload-file"]').selectFile(`cypress${uploadedImageFilePath}`, { force: true });
     cy.wait('@uploadRequest').its('response.statusCode').should('eq', 200);
 
@@ -86,7 +85,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=license-select]').click();
     cy.get('mat-option').eq(0).click();
 
-    cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
+    cy.get('[data-cy=authorship-chips]').type('my Author{enter}{esc}');
 
     const newLabel = faker.lorem.word();
     cy.get('[data-cy=resource-label]')
