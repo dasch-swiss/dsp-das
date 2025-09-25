@@ -83,7 +83,8 @@ export class HeaderSearchComponent {
     }
   }
   search() {
+    this.hideSearchTips();
     const query = this.formGroup.controls.search.value;
-    this._router.navigateByUrl('/').then(() => this._router.navigate([RouteConstants.search, query]));
+    this._router.navigate([RouteConstants.search, query]);
   }
 }

@@ -1,7 +1,8 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { map, startWith, Subject } from 'rxjs';
 import { SearchTipsComponent } from './search-tips.component';
 
@@ -33,7 +34,7 @@ import { SearchTipsComponent } from './search-tips.component';
     @if (query$ | async; as query) {
       <mat-divider />
 
-      <app-project-fulltext-search-result [query]="query" />
+      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" />
     }
   `,
   styles: [
@@ -49,7 +50,7 @@ import { SearchTipsComponent } from './search-tips.component';
     `,
   ],
 })
-export class ProjectFulltextSearchPageComponent implements AfterViewInit {
+export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit {
   querySubject = new Subject<string>();
   query$ = this.querySubject.asObservable();
   isNotQuerying$ = this.query$.pipe(
@@ -59,13 +60,19 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit {
 
   formGroup = this._fb.group({ query: [''] });
 
+  projectId!: string;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   private overlayRef: OverlayRef | null = null;
 
   constructor(
     private _fb: FormBuilder,
-    private overlay: Overlay
+    private overlay: Overlay,
+    public projectPageService: ProjectPageService
   ) {}
+
+  ngOnInit() {
+    this.projectId = this.projectPageService.currentProjectId;
+  }
 
   ngAfterViewInit() {
     this.searchInput.nativeElement.focus();
