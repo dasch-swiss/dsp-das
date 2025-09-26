@@ -1,5 +1,13 @@
 # Changelog
 
+## [11.45.2](https://github.com/dasch-swiss/dsp-das/compare/v11.45.1...v11.45.2) (2025-09-26)
+
+
+### Maintenances
+
+* **Angular:** Upgrade NX to v20.5.0 and Angular to v19.2.9 (DEV-5439) ([#2533](https://github.com/dasch-swiss/dsp-das/issues/2533)) ([2f4f8dd](https://github.com/dasch-swiss/dsp-das/commit/2f4f8dd101e91bfcd54de5484e3c67d43c016123))
+* **Saas Dart:** Migrate imports and global built-in functions (DEV-5445) ([#2539](https://github.com/dasch-swiss/dsp-das/issues/2539)) ([23a1e53](https://github.com/dasch-swiss/dsp-das/commit/23a1e53dabbc95f7ea48a5f14645c42835c40d67))
+
 ## [11.45.1](https://github.com/dasch-swiss/dsp-das/compare/v11.45.0...v11.45.1) (2025-09-24)
 
 
