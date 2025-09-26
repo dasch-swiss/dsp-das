@@ -35,6 +35,7 @@ import { UserForm } from './user-form.type';
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 export class UserFormComponent implements OnInit {
   @Input({ required: true }) data!: {

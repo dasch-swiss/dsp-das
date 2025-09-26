@@ -21,6 +21,7 @@ import { finalize } from 'rxjs';
       </button>
     </div>
   `,
+  standalone: false,
 })
 export class CreateUserDialogComponent implements OnInit {
   form = this._fb.group(
