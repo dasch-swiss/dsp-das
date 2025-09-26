@@ -1,5 +1,8 @@
-@use "responsive" as *;
-@use "config" as *;
+@use "sass:map";
+@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
+
+libs/vre/shared/app-common-to-move/src/lib/status/status.component.scss
 
 .status-page {
   background: $white;
@@ -58,7 +61,7 @@
 }
 
 // mobile device: phone
-@media (max-width: map-get($grid-breakpoints, phone)) {
+@media (max-width: map.get($grid-breakpoints, phone)) {
   .image {
     display: none;
   }
