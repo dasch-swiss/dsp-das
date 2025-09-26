@@ -117,6 +117,7 @@ import { combineLatest, filter, map, Observable, BehaviorSubject, switchMap } fr
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceEditMoreMenuComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
