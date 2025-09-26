@@ -8,15 +8,18 @@ import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/ap
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
+import { AbTestService } from './ab-test.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-expansion-panel
+      [disabled]="true"
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
       (mouseleave)="isHovered = false"
+      (click)="test()"
       data-cy="sidenav-ontology-class">
       <mat-expansion-panel-header style="padding-right: 16px">
         <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
@@ -43,6 +46,13 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       </ng-template>
     </mat-expansion-panel>
   `,
+  styles: [
+    `
+      :host ::ng-deep .mat-content {
+        color: black;
+      }
+    `,
+  ],
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
@@ -69,8 +79,14 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _abTestService: AbTestService
   ) {}
+
+  test() {
+    console.log('got it');
+    this._abTestService.resourceClasSelected = 'book';
+  }
 
   ngOnInit(): void {
     this.icon = this._getIcon();
