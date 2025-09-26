@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 //
 // responsive sizes
 $grid-breakpoints: (
@@ -9,7 +11,7 @@ $grid-breakpoints: (
 );
 
 // desktop devices
-@media (min-width: map-get($grid-breakpoints, tablet)) {
+@media (min-width: map.get($grid-breakpoints, tablet)) {
   .desktop-only {
     display: contents;
   }
@@ -26,7 +28,7 @@ $grid-breakpoints: (
 }
 
 // mobile device: tablet and phone
-@media (max-width: map-get($grid-breakpoints, tablet)) {
+@media (max-width: map.get($grid-breakpoints, tablet)) {
   .desktop-only {
     display: none;
   }
@@ -36,7 +38,7 @@ $grid-breakpoints: (
 }
 
 // mobile device: bigger than phone
-@media (min-width: map-get($grid-breakpoints, phone)) {
+@media (min-width: map.get($grid-breakpoints, phone)) {
   // override dsp-ui search panel style
   .app-fulltext-search.desktop-only {
     display: inline-flex !important;
@@ -48,7 +50,7 @@ $grid-breakpoints: (
 }
 
 // mobile device: tablet and smaller than a tablet
-@media (max-width: map-get($grid-breakpoints, tablet)) and (min-width: map-get($grid-breakpoints, phone)) {
+@media (max-width: map.get($grid-breakpoints, tablet)) and (min-width: map.get($grid-breakpoints, phone)) {
   .content {
     &.small,
     &.medium,
@@ -80,7 +82,7 @@ $grid-breakpoints: (
 }
 
 // mobile device: phone
-@media (max-width: map-get($grid-breakpoints, phone)) {
+@media (max-width: map.get($grid-breakpoints, phone)) {
   // general app layout
   .app {
     display: flex;
