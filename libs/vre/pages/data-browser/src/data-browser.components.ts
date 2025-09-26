@@ -11,6 +11,7 @@ import { ResourceClassBrowserPage3Component } from './lib/resource-class-browser
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav/resource-class-sidenav.component';
 import { ResourcesListFetcherComponent } from './lib/resource-class-sidenav/resources-list-fetcher.component';
+import { ResourceClassToggleComponent } from './lib/resource-class-toggle.component';
 
 export const DataBrowserComponents = [
   ResourceClassSidenavComponent,
@@ -26,4 +27,5 @@ export const DataBrowserComponents = [
   ResourcesListFetcherComponent,
   ResourceClassBrowserPage2Component,
   ResourceClassBrowserPage3Component,
+  ResourceClassToggleComponent,
 ];

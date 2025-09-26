@@ -29,6 +29,10 @@
   </a>
   }
 
+  <button mat-menu-item (click)="toggle()">
+    {{ abTesting.isFullNavigation ? 'Double navigation' : 'Normal navigation' }}
+  </button>
+
   <mat-divider />
 
   <button mat-menu-item (click)="logout()">{{ 'pages.userSettings.userMenu.logout' | translate }}</button>

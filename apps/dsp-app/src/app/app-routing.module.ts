@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import {
-  ResourceClassBrowserPage2Component,
-  ResourceClassBrowserPage3Component,
-} from '@dasch-swiss/vre/pages/data-browser';
+import { ResourceClassToggleComponent } from '@dasch-swiss/vre/pages/data-browser';
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
   DataModelsPageComponent,
@@ -86,11 +83,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.data,
-        component: ResourceClassBrowserPage2Component,
-      },
-      {
-        path: 'data2',
-        component: ResourceClassBrowserPage3Component,
+        component: ResourceClassToggleComponent,
       },
       {
         path: RouteConstants.JulienOntologyClassRelative,

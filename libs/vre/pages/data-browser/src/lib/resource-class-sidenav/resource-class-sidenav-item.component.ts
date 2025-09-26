@@ -14,7 +14,7 @@ import { AbTestService } from './ab-test.service';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-expansion-panel
-      [disabled]="true"
+      [disabled]="!_abTestService.isFullNavigation"
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
@@ -80,12 +80,15 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _projectPageService: ProjectPageService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _abTestService: AbTestService
+    public _abTestService: AbTestService
   ) {}
 
   test() {
-    console.log('got it');
-    this._abTestService.resourceClasSelected = 'book';
+    this._abTestService.resourceClasSelected = null;
+
+    setTimeout(() => {
+      this._abTestService.resourceClasSelected = { classLabel: this.classLabel, ontologyLabel: this.ontologyLabel };
+    }, 0);
   }
 
   ngOnInit(): void {

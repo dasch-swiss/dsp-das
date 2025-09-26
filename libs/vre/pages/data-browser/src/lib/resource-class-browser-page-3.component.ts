@@ -15,9 +15,13 @@ import { ResourceResultService } from './resource-result.service';
       <as-split-area [size]="25">
         <app-project-sidenav />
       </as-split-area>
-      @if (_abtestService.resourceClasSelected) {
+      @if (_abtestService.resourceClasSelected; as classSelected) {
         <as-split-area [size]="25" cdkScrollable>
-          <app-resources-list-fetcher [ontologyLabel]="'incunabula'" [classLabel]="'Book'" [reload$]="hasRight$" />
+          <h3 style="padding-left: 16px">{{ classSelected.classLabel }}</h3>
+          <app-resources-list-fetcher
+            [ontologyLabel]="classSelected.ontologyLabel"
+            [classLabel]="classSelected.classLabel"
+            [reload$]="hasRight$" />
         </as-split-area>
         <as-split-area [size]="50">
           <app-multiple-viewer />
@@ -38,9 +42,6 @@ import { ResourceResultService } from './resource-result.service';
   providers: [MultipleViewerService, ResourceResultService],
 })
 export class ResourceClassBrowserPage3Component implements OnInit {
-  get data() {
-    return { resources: [], selectFirstResource: false };
-  }
   hasRight$ = of(true);
   constructor(
     public multipleViewerService: MultipleViewerService,
