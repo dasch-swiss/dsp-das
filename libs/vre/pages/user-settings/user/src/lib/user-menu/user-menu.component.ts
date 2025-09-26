@@ -25,6 +25,7 @@ export class UserMenuComponent {
 
   toggle() {
     this.abTesting.isFullNavigation = !this.abTesting.isFullNavigation;
+    console.log('now', this.abTesting.isFullNavigation);
     this.abTesting.resourceClasSelected = null;
   }
 

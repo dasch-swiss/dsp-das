@@ -29,8 +29,10 @@
   </a>
   }
 
-  <button mat-menu-item (click)="toggle()">
-    {{ abTesting.isFullNavigation ? 'Double navigation' : 'Normal navigation' }}
+  <button mat-menu-item>
+    <mat-slide-toggle class="example-margin" [checked]="abTesting.isFullNavigation" (change)="toggle()"
+      >Double navigation
+    </mat-slide-toggle>
   </button>
 
   <mat-divider />
