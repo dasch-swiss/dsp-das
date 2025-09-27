@@ -14,14 +14,14 @@ describe('AppConfigService with dev config', () => {
   const devConfig = {
     dspRelease: '2022.01.01',
     apiProtocol: 'http',
-    apiHost: '0.0.0.0',
+    apiHost: '127.0.0.1',
     apiPort: 3333,
     apiPath: 'mypath',
     iiifProtocol: 'http',
-    iiifHost: '0.0.0.0',
+    iiifHost: '127.0.0.1',
     iiifPort: 1024,
     iiifPath: 'mypath',
-    ingestUrl: 'http://0.0.0.0:3340',
+    ingestUrl: 'http://127.0.0.1:3340',
     jsonWebToken: 'mytoken',
     logErrors: true,
     geonameToken: 'geoname_token',
@@ -58,11 +58,11 @@ describe('AppConfigService with dev config', () => {
     expect(service.dspConfig.color).toEqual('accent');
     expect(service.dspConfig.production).toEqual(false);
     expect(service.dspApiConfig.apiProtocol).toEqual('http');
-    expect(service.dspApiConfig.apiHost).toEqual('0.0.0.0');
+    expect(service.dspApiConfig.apiHost).toEqual('127.0.0.1');
     expect(service.dspApiConfig.apiPort).toEqual(3333);
     expect(service.dspApiConfig.apiPath).toEqual('mypath');
     expect(service.dspIiifConfig.iiifProtocol).toEqual('http');
-    expect(service.dspIiifConfig.iiifHost).toEqual('0.0.0.0');
+    expect(service.dspIiifConfig.iiifHost).toEqual('127.0.0.1');
     expect(service.dspIiifConfig.iiifPort).toEqual(1024);
     expect(service.dspIiifConfig.iiifPath).toEqual('mypath');
     expect(service.dspApiConfig.jsonWebToken).toEqual('mytoken');
@@ -82,14 +82,14 @@ describe('AppConfigService with prod config', () => {
   const prodConfig: AppConfig = {
     dspRelease: '2023.04.02',
     apiProtocol: 'https',
-    apiHost: '0.0.0.0',
+    apiHost: '127.0.0.1',
     apiPort: 3333,
     apiPath: '',
     iiifProtocol: 'https',
-    iiifHost: '0.0.0.0',
+    iiifHost: '127.0.0.1',
     iiifPort: 1024,
     iiifPath: '',
-    ingestUrl: 'http://0.0.0.0:3340',
+    ingestUrl: 'http://127.0.0.1:3340',
     jsonWebToken: 'mytoken',
     logErrors: true,
     geonameToken: 'geoname_token',
@@ -128,14 +128,14 @@ describe('AppConfigService with prod config', () => {
     expect(service.dspConfig.color).toEqual('primary');
     expect(service.dspConfig.production).toEqual(true);
     expect(service.dspApiConfig.apiProtocol).toEqual('https');
-    expect(service.dspApiConfig.apiHost).toEqual('0.0.0.0');
+    expect(service.dspApiConfig.apiHost).toEqual('127.0.0.1');
     expect(service.dspApiConfig.apiPort).toEqual(3333);
     expect(service.dspApiConfig.apiPath).toEqual('');
     expect(service.dspIiifConfig.iiifProtocol).toEqual('https');
-    expect(service.dspIiifConfig.iiifHost).toEqual('0.0.0.0');
+    expect(service.dspIiifConfig.iiifHost).toEqual('127.0.0.1');
     expect(service.dspIiifConfig.iiifPort).toEqual(1024);
     expect(service.dspIiifConfig.iiifPath).toEqual('');
-    expect(service.dspIngestConfig.url).toEqual('http://0.0.0.0:3340');
+    expect(service.dspIngestConfig.url).toEqual('http://127.0.0.1:3340');
     expect(service.dspApiConfig.jsonWebToken).toEqual('mytoken');
     expect(service.dspApiConfig.logErrors).toEqual(true);
     expect(service.dspAppConfig.geonameToken).toEqual('geoname_token');

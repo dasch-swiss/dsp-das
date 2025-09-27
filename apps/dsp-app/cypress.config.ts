@@ -14,11 +14,11 @@ export default defineConfig({
     baseUrl: 'http://localhost:4200',
     experimentalStudio: true,
     env: {
-      apiUrl: 'http://0.0.0.0:3333',
+      apiUrl: 'http://127.0.0.1:3333',
       authToken:
         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwLjAuMC4wOjMzMzMiLCJzdWIiOiJodHRwOi8vcmRmaC5jaC91c2Vycy9yb290IiwiYXVkIjpbIktub3JhIiwiU2lwaSIsImh0dHA6Ly9sb2NhbGhvc3Q6MzM0MCJdLCJleHAiOjE3MzE1NzAwNzcsImlhdCI6MTcyODk3ODA3NywianRpIjoiX09hYm15ZWFSSTZ0NlpzczNRQ0djUSIsInNjb3BlIjoiYWRtaW4ifQ.xZKAXIKfVk2F35CO1luzi1fZnZgyWUM65m0FZ7h67RA',
-      dspIngestUrl: 'http://0.0.0.0:3340',
-      sipiIIIfUrl: 'http://0.0.0.0:1024',
+      dspIngestUrl: 'http://127.0.0.1:3340',
+      sipiIIIfUrl: 'http://127.0.0.1:1024',
     },
     trashAssetsBeforeRuns: true,
     screenshotsFolder: 'cypress/fixtures/screenshots',
