@@ -32,6 +32,7 @@ import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
       }
     `,
   ],
+  standalone: false,
 })
 export class HeaderSearchComponent {
   formGroup = this._fb.group({

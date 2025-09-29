@@ -49,6 +49,7 @@ import { SearchTipsComponent } from './search-tips.component';
       }
     `,
   ],
+  standalone: false,
 })
 export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit {
   querySubject = new Subject<string>();

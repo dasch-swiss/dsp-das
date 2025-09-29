@@ -21,6 +21,7 @@ import { ProjectPageService } from './project-page.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class HeaderProjectComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));

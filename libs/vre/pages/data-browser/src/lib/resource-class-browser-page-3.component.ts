@@ -40,6 +40,7 @@ import { ResourceResultService } from './resource-result.service';
     </as-split>
   </div> `,
   providers: [MultipleViewerService, ResourceResultService],
+  standalone: false,
 })
 export class ResourceClassBrowserPage3Component implements OnInit {
   hasRight$ = of(true);

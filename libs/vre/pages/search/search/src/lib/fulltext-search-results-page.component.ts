@@ -8,6 +8,7 @@ import { map } from 'rxjs';
   template: `@if (query$ | async; as query) {
     <app-project-fulltext-search-result [query]="query" />
   } `,
+  standalone: false,
 })
 export class FulltextSearchResultsPageComponent {
   query$ = this._route.params.pipe(map(v => v[RouteConstants.qParameter]));

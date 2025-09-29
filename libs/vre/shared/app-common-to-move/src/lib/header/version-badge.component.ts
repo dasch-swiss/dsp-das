@@ -10,6 +10,7 @@ import { AppConfigService } from '@dasch-swiss/vre/core/config';
     </span>
   }`,
   styleUrls: ['version-badge.component.scss'],
+  standalone: false,
 })
 export class VersionBadgeComponent {
   dsp = this._appConfigService.dspConfig;

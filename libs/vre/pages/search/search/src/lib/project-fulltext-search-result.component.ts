@@ -24,6 +24,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
       }
     }
   `,
+  standalone: false,
   providers: [ResourceResultService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

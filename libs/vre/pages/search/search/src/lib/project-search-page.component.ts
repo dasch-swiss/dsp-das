@@ -11,5 +11,6 @@ import { Component } from '@angular/core';
       }
     `,
   ],
+  standalone: false,
 })
 export class ProjectSearchPageComponent {}

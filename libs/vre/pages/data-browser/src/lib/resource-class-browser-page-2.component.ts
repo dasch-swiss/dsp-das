@@ -18,6 +18,7 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
     </as-split>
   </div> `,
   providers: [MultipleViewerService],
+  standalone: false,
 })
 export class ResourceClassBrowserPage2Component implements OnInit {
   constructor(

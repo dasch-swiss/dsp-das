@@ -52,6 +52,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       }
     `,
   ],
+  standalone: false,
 })
 export class HeaderProjectTabsComponent {
   readonly DATA = RouteConstants.data;

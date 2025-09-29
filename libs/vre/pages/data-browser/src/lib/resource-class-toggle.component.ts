@@ -8,6 +8,7 @@ import { AbTestService } from './resource-class-sidenav/ab-test.service';
     } @else {
       <app-resource-class-browser-page-3 />
     }`,
+  standalone: false,
 })
 export class ResourceClassToggleComponent {
   constructor(public abTesting: AbTestService) {}

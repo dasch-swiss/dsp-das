@@ -10,6 +10,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       <app-user-menu />
     </span>
   `,
+  standalone: false,
 })
 export class HeaderRightComponent {
   HELP_LINK = RouteConstants.help;
