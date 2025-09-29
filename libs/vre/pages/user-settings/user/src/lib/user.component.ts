@@ -36,6 +36,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       }
     `,
   ],
+  standalone: false,
 })
 export class UserComponent {
   MY_PROFILE = RouteConstants.myProfile;

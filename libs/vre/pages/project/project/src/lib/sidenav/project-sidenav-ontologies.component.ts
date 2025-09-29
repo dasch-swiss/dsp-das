@@ -29,6 +29,7 @@ import { ProjectPageService } from '../project-page.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class ProjectSidenavOntologiesComponent {
   projectOntologies$ = this._projectPageService.ontologies$;

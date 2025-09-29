@@ -15,6 +15,7 @@ import { ProjectPageService } from './project-page.service';
   `,
   styleUrls: ['./project-page.component.scss'],
   providers: [ProjectPageService],
+  standalone: false,
 })
 export class ProjectPageComponent implements OnInit, OnDestroy {
   hasProjectAdminRights$ = this._projectPageService.hasProjectAdminRights$;

@@ -18,6 +18,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
     </div>
   `,
+  standalone: false,
 })
 export class ResourceListSelectionComponent {
   count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));

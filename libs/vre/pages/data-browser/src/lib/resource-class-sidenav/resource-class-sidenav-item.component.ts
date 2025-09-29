@@ -53,6 +53,7 @@ import { AbTestService } from './ab-test.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;

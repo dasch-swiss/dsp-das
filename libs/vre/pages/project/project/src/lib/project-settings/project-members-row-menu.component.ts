@@ -38,6 +38,7 @@ import { CollaborationPageService } from './collaboration/collaboration-page.ser
       </button>
     </mat-menu>
   `,
+  standalone: false,
 })
 export class ProjectMembersRowMenuComponent {
   @Input({ required: true }) user!: ReadUser;

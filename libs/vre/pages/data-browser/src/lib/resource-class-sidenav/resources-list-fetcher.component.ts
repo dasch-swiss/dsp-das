@@ -22,7 +22,7 @@ import { ResourceResultService } from '../resource-result.service';
     }
   `,
   providers: [ResourceResultService],
-  styles: [],
+  standalone: false,
 })
 export class ResourcesListFetcherComponent implements OnInit {
   @Input({ required: true }) ontologyLabel!: string;

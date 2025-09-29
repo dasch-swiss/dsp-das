@@ -62,6 +62,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;

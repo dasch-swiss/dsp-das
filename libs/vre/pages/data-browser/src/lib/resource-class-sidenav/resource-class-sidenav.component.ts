@@ -12,6 +12,7 @@ import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-
       }
     </mat-accordion>
   `,
+  standalone: false,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;

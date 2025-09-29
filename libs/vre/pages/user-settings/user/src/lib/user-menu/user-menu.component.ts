@@ -7,6 +7,7 @@ import { AbTestService } from '../../../../../data-browser/src/lib/resource-clas
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
+  standalone: false,
 })
 export class UserMenuComponent {
   readonly MY_PROFILE = RouteConstants.myProfile;
