@@ -4,6 +4,5 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AbTestService {
-  isFullNavigation = true;
   resourceClasSelected: { classLabel: string; ontologyLabel: string } | null = null;
 }

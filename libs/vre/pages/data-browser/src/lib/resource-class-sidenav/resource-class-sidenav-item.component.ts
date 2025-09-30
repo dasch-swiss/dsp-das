@@ -14,12 +14,12 @@ import { AbTestService } from './ab-test.service';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-expansion-panel
-      [disabled]="true"
+      [disabled]="false"
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
       (mouseleave)="isHovered = false"
-      (click)="test()"
+      (click)="selectResourceClass()"
       data-cy="sidenav-ontology-class">
       <mat-expansion-panel-header style="padding-right: 16px">
         <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
@@ -38,13 +38,6 @@ import { AbTestService } from './ab-test.service';
       </mat-expansion-panel-header>
     </mat-expansion-panel>
   `,
-  styles: [
-    `
-      :host ::ng-deep .mat-content {
-        color: black;
-      }
-    `,
-  ],
   standalone: false,
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
@@ -75,7 +68,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     public _abTestService: AbTestService
   ) {}
 
-  test() {
+  selectResourceClass() {
     this._abTestService.resourceClasSelected = null;
 
     setTimeout(() => {
