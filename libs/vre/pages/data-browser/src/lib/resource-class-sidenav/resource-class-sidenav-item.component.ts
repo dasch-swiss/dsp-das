@@ -1,33 +1,54 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { AbTestService } from './ab-test.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    {{ ontologiesLabel }}
-    <div
-      style="flex-grow: 0; flex-basis: 150px;
+    <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected }">
+      <span style="flex: 1">
+        {{ ontologiesLabel }}
+      </span>
+      <div
+        style="
     justify-content: end;
+    display: flex;
+    align-items: center;
     margin-right: 0;">
-      <span>{{ count$ | async }}</span>
-      <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
+        <span>{{ count$ | async }}</span>
+        <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
+      </div>
     </div>
   `,
+  styles: [
+    `
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #ebebeb;
+        }
+        &.selected {
+          border-left: 2px solid #33678f;
+          background-color: #d6e0e8;
+        }
+      }
+    `,
+  ],
   standalone: false,
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
-  private _reloadSubject = new BehaviorSubject<null>(null);
   destroyed = new Subject<void>();
-  hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   icon!: string;
   ontologiesLabel!: string;
   ontologiesDescription!: string;
@@ -38,6 +59,10 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ontologyLabel!: string;
   classLabel!: string;
 
+  get isSelected() {
+    return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
+  }
+
   constructor(
     private _cd: ChangeDetectorRef,
     private _localizationService: LocalizationService,
@@ -45,8 +70,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
-    private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef,
     public _abTestService: AbTestService
   ) {}
 

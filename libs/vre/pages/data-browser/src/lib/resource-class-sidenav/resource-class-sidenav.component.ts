@@ -3,16 +3,14 @@ import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-sidenav',
   template: `
-    <mat-accordion [multi]="true">
-      @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
-        <app-resource-class-sidenav-item [resClass]="classToDisplay" />
-      }
-    </mat-accordion>
+    @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
+      <app-resource-class-sidenav-item [resClass]="classToDisplay" />
+    }
   `,
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;

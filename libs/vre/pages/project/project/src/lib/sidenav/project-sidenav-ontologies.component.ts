@@ -17,7 +17,7 @@ import { ProjectPageService } from '../project-page.service';
               {{ onto.label }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 16px" />
+          <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
         </mat-expansion-panel>
       </mat-accordion>
     }
@@ -25,7 +25,7 @@ import { ProjectPageService } from '../project-page.service';
   styles: [
     `
       :host ::ng-deep .mat-expansion-panel-body {
-        padding: 0 8px;
+        padding: 0;
       }
     `,
   ],
