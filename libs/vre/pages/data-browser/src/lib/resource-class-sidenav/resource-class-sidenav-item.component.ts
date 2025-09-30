@@ -1,42 +1,24 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { AbTestService } from './ab-test.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    <mat-expansion-panel
-      [disabled]="false"
-      [togglePosition]="'before'"
-      style="box-shadow: none"
-      (mouseenter)="isHovered = true"
-      (mouseleave)="isHovered = false"
-      (click)="selectResourceClass()"
-      data-cy="sidenav-ontology-class">
-      <mat-expansion-panel-header style="padding-right: 16px">
-        <mat-panel-title style="flex: 1">{{ ontologiesLabel }}</mat-panel-title>
-        <mat-panel-description
-          style="flex-grow: 0; flex-basis: 150px;
+    {{ ontologiesLabel }}
+    <div
+      style="flex-grow: 0; flex-basis: 150px;
     justify-content: end;
     margin-right: 0;">
-          @if ((hasProjectMemberRights$ | async) && isHovered) {
-            <button mat-icon-button data-cy="add-class-instance" (click)="goToAddClassInstance($event)">
-              <mat-icon>add_circle</mat-icon>
-            </button>
-          }
-          <span>{{ count$ | async }}</span>
-          <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-    </mat-expansion-panel>
+      <span>{{ count$ | async }}</span>
+      <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
+    </div>
   `,
   standalone: false,
 })
@@ -72,7 +54,11 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     this._abTestService.resourceClasSelected = null;
 
     setTimeout(() => {
-      this._abTestService.resourceClasSelected = { classLabel: this.classLabel, ontologyLabel: this.ontologyLabel };
+      this._abTestService.resourceClasSelected = {
+        classLabel: this.classLabel,
+        ontologyLabel: this.ontologyLabel,
+        resClass: this.resClass,
+      };
     }, 0);
   }
 
@@ -98,29 +84,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
-  }
-
-  goToAddClassInstance(event: MouseEvent) {
-    event.stopPropagation();
-
-    this._dialog
-      .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
-        ...DspDialogConfig.dialogDrawerConfig(
-          {
-            resourceType: this.resClass.label!,
-            resourceClassIri: this.resClass.id,
-          },
-          true
-        ),
-        minWidth: 800,
-        viewContainerRef: this._viewContainerRef,
-      })
-      .afterClosed()
-      .pipe(filterUndefined())
-      .subscribe(() => {
-        this._loadData();
-        this._reloadSubject.next(null);
-      });
   }
 
   private _loadData() {

@@ -17,11 +17,7 @@ import { ResourceResultService } from './resource-result.service';
       </as-split-area>
       @if (_abtestService.resourceClasSelected; as classSelected) {
         <as-split-area [size]="25" cdkScrollable>
-          <h3 style="padding-left: 16px">{{ classSelected.classLabel }}</h3>
-          <app-resources-list-fetcher
-            [ontologyLabel]="classSelected.ontologyLabel"
-            [classLabel]="classSelected.classLabel"
-            [reload$]="hasRight$" />
+          <app-resource-class-panel [classSelected]="classSelected" />
         </as-split-area>
         <as-split-area [size]="50">
           <app-multiple-viewer />
