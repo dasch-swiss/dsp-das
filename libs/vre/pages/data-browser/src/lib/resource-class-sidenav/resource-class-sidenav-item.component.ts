@@ -14,7 +14,7 @@ import { AbTestService } from './ab-test.service';
   selector: 'app-resource-class-sidenav-item',
   template: `
     <mat-expansion-panel
-      [disabled]="!_abTestService.isFullNavigation"
+      [disabled]="true"
       [togglePosition]="'before'"
       style="box-shadow: none"
       (mouseenter)="isHovered = true"
@@ -36,14 +36,6 @@ import { AbTestService } from './ab-test.service';
           <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <ng-template matExpansionPanelContent>
-        <div style="padding-left: 24px">
-          <div style="padding: 0 16px; font-style: italic">{{ ontologiesDescription }}</div>
-          @if (ontologyLabel && classLabel) {
-            <app-resources-list-fetcher [ontologyLabel]="ontologyLabel" [classLabel]="classLabel" [reload$]="reload$" />
-          }
-        </div>
-      </ng-template>
     </mat-expansion-panel>
   `,
   styles: [
@@ -59,7 +51,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
 
   private _reloadSubject = new BehaviorSubject<null>(null);
-  reload$ = this._reloadSubject.asObservable();
   destroyed = new Subject<void>();
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
   icon!: string;

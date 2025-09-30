@@ -6,12 +6,10 @@ import { ResourceListItemComponent } from './lib/list-view/resource-list-item.co
 import { ResourceListSelectionComponent } from './lib/list-view/resource-list-selection.component';
 import { ResourceListComponent } from './lib/list-view/resource-list.component';
 import { ResourcesListComponent } from './lib/list-view/resources-list.component';
-import { ResourceClassBrowserPage2Component } from './lib/resource-class-browser-page-2.component';
 import { ResourceClassBrowserPage3Component } from './lib/resource-class-browser-page-3.component';
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
 import { ResourceClassSidenavComponent } from './lib/resource-class-sidenav/resource-class-sidenav.component';
 import { ResourcesListFetcherComponent } from './lib/resource-class-sidenav/resources-list-fetcher.component';
-import { ResourceClassToggleComponent } from './lib/resource-class-toggle.component';
 
 export const DataBrowserComponents = [
   ResourceClassSidenavComponent,
@@ -25,7 +23,5 @@ export const DataBrowserComponents = [
   ResourceListItemComponent,
   ResourceListSelectionComponent,
   ResourcesListFetcherComponent,
-  ResourceClassBrowserPage2Component,
   ResourceClassBrowserPage3Component,
-  ResourceClassToggleComponent,
 ];
