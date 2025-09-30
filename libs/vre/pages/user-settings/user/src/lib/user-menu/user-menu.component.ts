@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
-import { AbTestService } from '../../../../../data-browser/src/lib/resource-class-sidenav/ab-test.service';
 
 @Component({
   selector: 'app-user-menu',
@@ -20,15 +19,8 @@ export class UserMenuComponent {
 
   constructor(
     private _authService: AuthService,
-    private _userService: UserService,
-    public abTesting: AbTestService
+    private _userService: UserService
   ) {}
-
-  toggle() {
-    this.abTesting.isFullNavigation = !this.abTesting.isFullNavigation;
-    console.log('now', this.abTesting.isFullNavigation);
-    this.abTesting.resourceClasSelected = null;
-  }
 
   logout() {
     this._authService.logout();
