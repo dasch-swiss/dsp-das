@@ -41,6 +41,7 @@ export class ResourceClassPanelComponent {
     private _viewContainerRef: ViewContainerRef,
     private _projectPageService: ProjectPageService
   ) {}
+
   goToAddClassInstance() {
     this._dialog
       .open<CreateResourceDialogComponent, CreateResourceDialogProps, string>(CreateResourceDialogComponent, {
