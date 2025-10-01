@@ -72,4 +72,5 @@ apps/dsp-app/cypress/screenshots
 
 # OpenAPI generated files
 libs/vre/3rd-party-services/open-api/src/generated/
-
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
