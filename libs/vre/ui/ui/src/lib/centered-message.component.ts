@@ -17,6 +17,9 @@ import { Component, Input } from '@angular/core';
     `
       :host {
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
     `,
   ],

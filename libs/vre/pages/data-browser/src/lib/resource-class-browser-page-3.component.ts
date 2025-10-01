@@ -28,9 +28,10 @@ import { ResourceResultService } from './resource-result.service';
             <app-centered-message
               [icon]="'arrow_circle_left'"
               [title]="'Select a resource on the left panel'"
-              [message]="
-                'Choose one or more resources from the left panel to display and compare them here.'
-              " /> </app-centered-box
+              [message]="'Choose one or more resources from the left panel to display and compare them here.'" />
+
+            <app-project-short-description
+              style="display: block; max-width: 600px; border: 1px solid #ebebeb; margin-top: 40px" /> </app-centered-box
         ></as-split-area>
       }
     </as-split>

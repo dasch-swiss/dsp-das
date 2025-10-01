@@ -1,4 +1,5 @@
 import { ProjectDescriptionPageComponent } from './lib/description/project-description-page.component';
+import { ProjectShortDescriptionComponent } from './lib/description/project-short-description.component';
 import { HeaderProjectComponent } from './lib/header-project.component';
 import { ProjectPageComponent } from './lib/project-page.component';
 import { AddUserComponent } from './lib/project-settings/collaboration/add-user/add-user.component';
@@ -52,4 +53,5 @@ export const ProjectComponents = [
   ProjectSidenavLinksItemComponent,
   ProjectSidenavOntologiesComponent,
   HeaderProjectComponent,
+  ProjectShortDescriptionComponent,
 ];

@@ -15,7 +15,6 @@ import {
   EditProjectFormPageComponent,
   ImageSettingsComponent,
   LegalSettingsComponent,
-  ProjectDescriptionPageComponent,
   ProjectPageComponent,
   ResourceMetadataComponent,
   SettingsPageComponent,
@@ -47,11 +46,7 @@ const routes: Routes = [
       {
         path: RouteConstants.home,
         pathMatch: 'full',
-        redirectTo: RouteConstants.projectDescription,
-      },
-      {
-        path: RouteConstants.projectDescription,
-        component: ProjectDescriptionPageComponent,
+        redirectTo: RouteConstants.data,
       },
       {
         path: RouteConstants.dataModels,

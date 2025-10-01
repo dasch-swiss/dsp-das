@@ -12,10 +12,6 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       mat-align-tabs="start"
       animationDuration="0"
       style="background-color: inherit; padding-left: 16px">
-      <a mat-tab-link [routerLink]="[DESCRIPTION]" routerLinkActive="active-link">
-        <mat-icon class="tab-icon">description</mat-icon>
-        Description
-      </a>
       <a mat-tab-link [routerLink]="[DATA]" routerLinkActive="active-link">
         <mat-icon class="tab-icon">list</mat-icon>
         Data
