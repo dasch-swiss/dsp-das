@@ -57,8 +57,8 @@ export function periodStartEndValidator(
     MatFormFieldModule,
     MatIconModule,
     MatTooltipModule,
-    ReactiveFormsModule
-],
+    ReactiveFormsModule,
+  ],
   templateUrl: './date-value-handler.component.html',
   styleUrls: ['./date-value-handler.component.scss'],
   providers: [

@@ -1,4 +1,3 @@
-
 import { Inject, Injectable, DOCUMENT } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
