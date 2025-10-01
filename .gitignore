@@ -64,6 +64,7 @@ apps/dsp-app/.nyc_output/
 #E2E
 /.nx
 apps/dsp-app/cypress/screenshots
+apps/dsp-app/cypress/downloads
 
 # Sentry Config File
 .sentryclirc
