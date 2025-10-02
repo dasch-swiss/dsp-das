@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
+import { map, shareReplay } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
   selector: 'app-projects-sidenav-ontologies',
   template: `
-    @for (onto of projectOntologies$ | async; track onto) {
-      <mat-accordion>
-        <mat-expansion-panel [togglePosition]="'before'" style="box-shadow: none" data-cy="sidenav-ontology">
+    <mat-accordion>
+      @for (onto of projectOntologies$ | async; let first = $first; track onto) {
+        <mat-expansion-panel
+          [togglePosition]="'before'"
+          style="box-shadow: none"
+          data-cy="sidenav-ontology"
+          [expanded]="(singleOntology$ | async) && first">
           <mat-expansion-panel-header>
             <mat-panel-title
               #ontoTitle
@@ -19,8 +24,8 @@ import { ProjectPageService } from '../project-page.service';
           </mat-expansion-panel-header>
           <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
         </mat-expansion-panel>
-      </mat-accordion>
-    }
+      }
+    </mat-accordion>
   `,
   styles: [
     `
@@ -32,8 +37,9 @@ import { ProjectPageService } from '../project-page.service';
   standalone: false,
 })
 export class ProjectSidenavOntologiesComponent {
-  projectOntologies$ = this._projectPageService.ontologies$;
+  projectOntologies$ = this._projectPageService.ontologies$.pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
+  singleOntology$ = this.projectOntologies$.pipe(map(ontos => ontos.length === 1));
   constructor(private _projectPageService: ProjectPageService) {}
 
   compareElementHeights(elem: HTMLElement): boolean {
