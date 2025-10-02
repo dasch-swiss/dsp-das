@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { first } from 'rxjs';
 import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
@@ -70,7 +71,7 @@ export class ComparisonComponent implements OnChanges {
   }
 
   close(resourceIri: string) {
-    this.multipleViewerService.selectedResources$.subscribe(resources => {
+    this.multipleViewerService.selectedResources$.pipe(first()).subscribe(resources => {
       const resource = resources.find(r => r.id === resourceIri);
       if (resource) {
         this.multipleViewerService.removeResources([resource]);
