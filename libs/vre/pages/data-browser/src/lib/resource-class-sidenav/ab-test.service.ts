@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AbTestService {
   resourceClasSelected: {
     classLabel: string;
