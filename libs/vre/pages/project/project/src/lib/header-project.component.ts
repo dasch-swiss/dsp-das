@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
@@ -7,7 +8,7 @@ import { ProjectPageService } from './project-page.service';
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
       <span style="flex: 1; display: flex; align-items: center">
         <app-header-logo />
-        <h1 style="font-size: 18px">{{ currentProjectName$ | async }}</h1>
+        <h1 class="title" (click)="goToProjectPage()">{{ currentProjectName$ | async }}</h1>
       </span>
       <app-header-right />
     </mat-toolbar>
@@ -17,7 +18,17 @@ import { ProjectPageService } from './project-page.service';
       :host {
         display: block;
         border-bottom: 1px solid #ebebeb;
-        background-color: #fcfdff;
+        background-color: #f2f3f5;
+      }
+
+      .title {
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 8px;
+        &:hover {
+          background-color: #e8e9eb;
+        }
       }
     `,
   ],
@@ -25,5 +36,12 @@ import { ProjectPageService } from './project-page.service';
 })
 export class HeaderProjectComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));
-  constructor(private _projectService: ProjectPageService) {}
+  constructor(
+    private _projectService: ProjectPageService,
+    private _router: Router
+  ) {}
+
+  goToProjectPage() {
+    this._router.navigate(['/project', this._projectService.currentProjectId]);
+  }
 }

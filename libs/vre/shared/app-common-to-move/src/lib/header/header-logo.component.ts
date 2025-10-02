@@ -14,14 +14,20 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
     `
       .logo {
         display: flex;
-        padding-right: 12px;
+        margin-right: 12px;
         height: 100%;
         column-gap: 10px;
         cursor: pointer;
+        padding: 4px;
+        border-radius: 8px;
 
         .mat-icon {
           height: 32px;
           width: 32px;
+        }
+
+        &:hover {
+          background-color: #e8e9eb;
         }
       }
     `,
