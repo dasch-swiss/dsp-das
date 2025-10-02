@@ -16,13 +16,13 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
-      <a mat-tab-link [routerLink]="[DATA_MODELS]" [class.active-link]="isDataModelsRouteActive()">
-        <mat-icon class="tab-icon">lan</mat-icon>
-        Data models
-      </a>
       <a mat-tab-link [routerLink]="[SEARCH]" [class.active-link]="isSearchRouteActive()">
         <mat-icon class="tab-icon">search</mat-icon>
         Search
+      </a>
+      <a mat-tab-link [routerLink]="[DATA_MODELS]" [class.active-link]="isDataModelsRouteActive()">
+        <mat-icon class="tab-icon">lan</mat-icon>
+        Data models
       </a>
       <a mat-tab-link [routerLink]="[SETTINGS]" routerLinkActive="active-link">
         <mat-icon class="tab-icon">settings</mat-icon>
