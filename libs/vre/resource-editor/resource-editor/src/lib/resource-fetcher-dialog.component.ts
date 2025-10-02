@@ -9,12 +9,9 @@ export class ResourceFetcherDialogProps {
 @Component({
   selector: 'app-resource-fetcher-dialog',
   template: `
-    <div style="padding: 16px">
-      <div>
-        <button mat-icon-button (click)="_dialogRef.close()"><mat-icon>close</mat-icon></button>
-      </div>
+    <app-closing-dialog>
       <app-resource-fetcher [resourceIri]="data.resourceIri" />
-    </div>
+    </app-closing-dialog>
   `,
   standalone: false,
 })

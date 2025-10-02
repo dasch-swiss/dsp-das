@@ -1,5 +1,6 @@
 import { AlertInfoComponent } from './lib/alert-info.component';
 import { AnnotationTabComponent } from './lib/annotation-tab.component';
+import { ClosingDialogComponent } from './lib/closing-dialog.component';
 import { CompoundArrowNavigationComponent } from './lib/compound/compound-arrow-navigation.component';
 import { CompoundNavigationComponent } from './lib/compound/compound-navigation.component';
 import { CompoundSliderComponent } from './lib/compound/compound-slider.component';
@@ -51,4 +52,5 @@ export const ResourcePageComponents = [
   ResourceEditMoreMenuComponent,
   ResourceFetcherDialogComponent,
   ResourceExplorerButtonComponent,
+  ClosingDialogComponent,
 ];

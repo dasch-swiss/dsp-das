@@ -22,7 +22,19 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
         Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
       </h3>
 
-      <div [innerHtml]="project.description[0].value" style="max-height: 120px; padding: 16px; overflow: hidden"></div>
+      <div style="position: relative; max-height: 120px; padding: 16px; overflow: hidden">
+        <div [innerHtml]="project.description[0].value"></div>
+        <div
+          style="
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 32px;
+      background: linear-gradient(to bottom, transparent, white 80%);
+      pointer-events: none;
+    "></div>
+      </div>
       <button mat-stroked-button (click)="readMore()" style="margin: 16px">Read more</button>
     }
   `,
@@ -45,6 +57,7 @@ export class ProjectShortDescriptionComponent {
     this._dialog.open(ProjectDescriptionPageComponent, {
       ...DspDialogConfig.dialogDrawerConfig({}, true),
       viewContainerRef: this._viewContainerRef,
+      width: '800px',
     });
   }
 }
