@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { of } from 'rxjs';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
@@ -34,7 +34,7 @@ import { ResourceResultService } from './resource-result.service';
   providers: [MultipleViewerService, ResourceResultService, AbTestService],
   standalone: false,
 })
-export class ResourceClassBrowserPage3Component implements OnInit {
+export class ResourceClassBrowserPage3Component implements OnInit, OnChanges {
   hasRight$ = of(true);
   constructor(
     public multipleViewerService: MultipleViewerService,
@@ -42,6 +42,11 @@ export class ResourceClassBrowserPage3Component implements OnInit {
     public _abtestService: AbTestService
   ) {}
   ngOnInit() {
+    console.log('aaa on init');
     this.multipleViewerService.onInit(this._userService.isSysAdmin$);
+  }
+
+  ngOnChanges() {
+    console.log('aaa on change');
   }
 }

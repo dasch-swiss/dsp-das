@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
 @Component({
@@ -12,7 +12,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       mat-align-tabs="start"
       animationDuration="0"
       style="background-color: inherit; padding-left: 16px">
-      <a mat-tab-link [routerLink]="[DATA]" routerLinkActive="active-link">
+      <a mat-tab-link [routerLink]="[DATA]" routerLinkActive="active-link" (click)="reloadPage($event)">
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
@@ -60,7 +60,17 @@ export class HeaderProjectTabsComponent {
   get path() {
     return this._route.snapshot.children[0].url[0].path;
   }
-  constructor(private _route: ActivatedRoute) {}
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) {}
+
+  reloadPage(event: MouseEvent) {
+    event.preventDefault();
+    this._router.navigateByUrl('', { skipLocationChange: true }).then(() => {
+      this._router.navigate([RouteConstants.data], { relativeTo: this._route });
+    });
+  }
   isDataModelsRouteActive(): boolean {
     return this.path.startsWith('data-models') || this.path.startsWith('ontology');
   }
