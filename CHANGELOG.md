@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.46.1](https://github.com/dasch-swiss/dsp-das/compare/v11.46.0...v11.46.1) (2025-10-02)
+
+
+### Maintenances
+
+* disable Nx Cloud ([#2542](https://github.com/dasch-swiss/dsp-das/issues/2542)) ([e52775b](https://github.com/dasch-swiss/dsp-das/commit/e52775bc6206c6352c221413eb311dd15bae1449))
+
 ## [11.46.0](https://github.com/dasch-swiss/dsp-das/compare/v11.45.1...v11.46.0) (2025-09-29)
 
 
