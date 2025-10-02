@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { tap } from 'rxjs';
@@ -11,21 +11,22 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
   standalone: false,
   template: `
     @if (readProject$ | async; as project) {
-      <div>
-        <app-project-image-cover [project]="project" />
-        @if (hasManualLicense) {
-          <div class="mat-caption">{{ hasManualLicense }}</div>
-        }
-      </div>
-      <h2>{{ project.longname }}</h2>
-      <h3 class="mat-body subtitle" style="margin-bottom: 32px">
-        Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
-      </h3>
+      @if (test) {
+        <div>
+          <app-project-image-cover [project]="project" />
+          @if (hasManualLicense) {
+            <div class="mat-caption">{{ hasManualLicense }}</div>
+          }
+        </div>
+        <h2>{{ project.longname }}</h2>
+        <h3 class="mat-body subtitle" style="margin-bottom: 32px">
+          Project {{ project.shortcode }} | {{ project.shortname | uppercase }}
+        </h3>
 
-      <div style="position: relative; max-height: 120px; padding: 16px; overflow: hidden">
-        <div [innerHtml]="project.description[0].value"></div>
-        <div
-          style="
+        <div style="position: relative; max-height: 120px; padding: 16px; overflow: hidden">
+          <div [innerHtml]="project.description[0].value"></div>
+          <div
+            style="
       position: absolute;
       left: 0;
       right: 0;
@@ -34,24 +35,32 @@ import { ProjectDescriptionPageComponent } from './project-description-page.comp
       background: linear-gradient(to bottom, transparent, white 80%);
       pointer-events: none;
     "></div>
-      </div>
-      <button mat-stroked-button (click)="readMore()" style="margin: 16px">Read more</button>
+        </div>
+        <button mat-stroked-button (click)="readMore()" style="margin: 16px">Read more</button>
+      }
     }
   `,
 })
-export class ProjectShortDescriptionComponent {
+export class ProjectShortDescriptionComponent implements OnInit {
   hasManualLicense?: string;
   readProject$ = this._projectPageService.currentProject$.pipe(
     tap(project => {
       this.hasManualLicense = LicenseCaptionsMapping.get(project.shortcode);
     })
   );
+  test = false;
 
   constructor(
     private _projectPageService: ProjectPageService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef
   ) {}
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.test = true;
+    }, 0);
+  }
 
   readMore() {
     this._dialog.open(ProjectDescriptionPageComponent, {
