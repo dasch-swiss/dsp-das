@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, Input, ViewContainerRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
@@ -6,6 +6,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { of } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
+import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
   selector: 'app-resource-class-panel',
@@ -26,7 +27,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
   `,
   standalone: false,
 })
-export class ResourceClassPanelComponent {
+export class ResourceClassPanelComponent implements OnInit {
   hasRight$ = of(null);
   @Input() classSelected!: {
     classLabel: string;
@@ -39,8 +40,11 @@ export class ResourceClassPanelComponent {
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _multipleViewerService: MultipleViewerService
   ) {}
+
+  ngOnInit() {}
 
   goToAddClassInstance() {
     this._dialog

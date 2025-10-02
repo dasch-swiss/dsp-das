@@ -4,7 +4,8 @@ import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { combineLatest, map, Observable, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs';
+import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
 @Component({
@@ -52,7 +53,8 @@ export class ResourcesListFetcherComponent implements OnInit {
     protected _router: Router,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    public projectPageService: ProjectPageService
+    public projectPageService: ProjectPageService,
+    private _multipleViewerService: MultipleViewerService
   ) {}
 
   ngOnInit() {
@@ -87,11 +89,15 @@ export class ResourcesListFetcherComponent implements OnInit {
 
     this.data$ = this._resources$.pipe(
       withLatestFrom(this._classParam$),
-      startWith([null, [] as ReadResource[]]),
+      startWith([[] as ReadResource[], null]),
       pairwise(),
+      tap(v => console.log('current tap', v)),
       map(([[prevResources, prevClass], [currResources, currClass]]) => {
-        const classParamChanged = prevClass !== currClass;
-        return { resources: currResources!, selectFirstResource: classParamChanged };
+        const selectFirstResource = prevClass !== currClass;
+        if (selectFirstResource && !this._multipleViewerService.selectMode) {
+          this._multipleViewerService.selectOneResource(currResources![0]);
+        }
+        return { resources: currResources!, selectFirstResource };
       })
     );
   }
