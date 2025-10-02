@@ -4,7 +4,7 @@ import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, Observable, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs';
+import { combineLatest, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
@@ -91,10 +91,9 @@ export class ResourcesListFetcherComponent implements OnInit {
       withLatestFrom(this._classParam$),
       startWith([[] as ReadResource[], null]),
       pairwise(),
-      tap(v => console.log('current tap', v)),
       map(([[prevResources, prevClass], [currResources, currClass]]) => {
         const selectFirstResource = prevClass !== currClass;
-        if (selectFirstResource && !this._multipleViewerService.selectMode) {
+        if (selectFirstResource && !this._multipleViewerService.selectMode && currResources.length > 1) {
           this._multipleViewerService.selectOneResource(currResources![0]);
         }
         return { resources: currResources!, selectFirstResource };

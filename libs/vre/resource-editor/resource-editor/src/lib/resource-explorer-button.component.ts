@@ -12,7 +12,7 @@ import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.compon
     color: #646465;
     transform: scale(0.8);
     position: relative;
-    top: -11px;">
+    top: -15px;">
     <mat-icon>arrow_circle_right</mat-icon>
   </button>`,
   standalone: false,

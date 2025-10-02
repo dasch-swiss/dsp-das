@@ -19,9 +19,10 @@ import { AbTestService } from './ab-test.service';
     justify-content: end;
     display: flex;
     align-items: center;
+    color: #b9b9b9;
     margin-right: 0;">
         <span>{{ count$ | async }}</span>
-        <mat-icon style="margin-left: 8px; color: #d7d7d7">{{ icon }}</mat-icon>
+        <mat-icon style="margin-left: 8px">{{ icon }}</mat-icon>
       </div>
     </div>
   `,
