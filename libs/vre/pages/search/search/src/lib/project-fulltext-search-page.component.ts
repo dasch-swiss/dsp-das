@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { map, startWith, Subject } from 'rxjs';
@@ -51,7 +51,7 @@ import { SearchTipsComponent } from './search-tips.component';
   ],
   standalone: false,
 })
-export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit {
+export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit, OnDestroy {
   querySubject = new Subject<string>();
   query$ = this.querySubject.asObservable();
   isNotQuerying$ = this.query$.pipe(
@@ -123,5 +123,9 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
     this.searchInput.nativeElement.blur();
 
     this.querySubject.next(this.formGroup.controls.query.value!);
+  }
+
+  ngOnDestroy() {
+    this.hideSearchTips();
   }
 }

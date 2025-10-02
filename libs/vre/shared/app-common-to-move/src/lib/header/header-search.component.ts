@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -34,7 +34,7 @@ import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
   ],
   standalone: false,
 })
-export class HeaderSearchComponent {
+export class HeaderSearchComponent implements OnDestroy {
   formGroup = this._fb.group({
     search: ['', [Validators.required, Validators.minLength(3)]],
   });
@@ -87,5 +87,9 @@ export class HeaderSearchComponent {
     this.hideSearchTips();
     const query = this.formGroup.controls.search.value;
     this._router.navigate([RouteConstants.search, query]);
+  }
+
+  ngOnDestroy() {
+    this.hideSearchTips();
   }
 }
