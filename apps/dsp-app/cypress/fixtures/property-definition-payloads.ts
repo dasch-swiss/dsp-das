@@ -1,7 +1,7 @@
 export class ClassPropertyPayloads {
   private static baseData(lastModificationDate: string) {
     return {
-      '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2',
+      '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2',
       '@type': 'http://www.w3.org/2002/07/owl#Ontology',
       'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
         '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
@@ -15,7 +15,7 @@ export class ClassPropertyPayloads {
       '@language': 'de',
       '@value': 'property',
     },
-    '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+    '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#property',
     '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
   };
 
@@ -30,12 +30,12 @@ export class ClassPropertyPayloads {
       ...this.baseData(lastModificationDate),
       '@graph': [
         {
-          '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
+          '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#datamodelclass',
           '@type': 'http://www.w3.org/2002/07/owl#Class',
           'http://www.w3.org/2000/01/rdf-schema#subClassOf': {
             '@type': 'http://www.w3.org/2002/07/owl#Restriction',
             'http://www.w3.org/2002/07/owl#onProperty': {
-              '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+              '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#property',
             },
             'http://api.knora.org/ontology/salsah-gui/v2#guiOrder': 1,
             ...(required
@@ -156,7 +156,7 @@ export class ClassPropertyPayloads {
           'http://api.knora.org/ontology/salsah-gui/v2#guiElement': {
             '@id': 'http://api.knora.org/ontology/salsah-gui/v2#Geonames',
           },
-          '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+          '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#property',
           '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
         },
       ],
@@ -169,10 +169,10 @@ export class ClassPropertyPayloads {
       '@graph': [
         {
           'http://api.knora.org/ontology/knora-api/v2#subjectType': {
-            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#datamodelclass',
+            '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#datamodelclass',
           },
           'http://api.knora.org/ontology/knora-api/v2#objectType': {
-            '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#person',
+            '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#person',
           },
           'http://www.w3.org/2000/01/rdf-schema#label': {
             '@language': 'de',
@@ -184,7 +184,7 @@ export class ClassPropertyPayloads {
           'http://api.knora.org/ontology/salsah-gui/v2#guiElement': {
             '@id': 'http://api.knora.org/ontology/salsah-gui/v2#Searchbox',
           },
-          '@id': 'http://0.0.0.0:3333/ontology/00FF/images/v2#property',
+          '@id': 'http://127.0.0.1:3333/ontology/00FF/images/v2#property',
           '@type': 'http://www.w3.org/2002/07/owl#ObjectProperty',
         },
       ],

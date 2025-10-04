@@ -11,11 +11,11 @@ describe('app-config schema tests', () => {
     const validConfig = {
       dspRelease: '2023.04.02',
       apiProtocol: 'https',
-      apiHost: '0.0.0.0',
+      apiHost: '127.0.0.1',
       apiPort: 3333,
       apiPath: '',
       iiifProtocol: 'https',
-      iiifHost: '0.0.0.0',
+      iiifHost: '127.0.0.1',
       iiifPort: 1024,
       iiifPath: '',
       jsonWebToken: 'mytoken',
@@ -43,11 +43,11 @@ describe('app-config schema tests', () => {
     const invalidConfig = {
       dspRelease: '2023.04.02',
       apiProtocol: 'https',
-      apiHost: '0.0.0.0',
+      apiHost: '127.0.0.1',
       apiPort: null, // invalid as we expect either a number or an empty string
       apiPath: '',
       iiifProtocol: 'https',
-      iiifHost: '0.0.0.0',
+      iiifHost: '127.0.0.1',
       iiifPort: null, // invalid as we expect either a number or an empty string
       iiifPath: '',
       jsonWebToken: 'mytoken',

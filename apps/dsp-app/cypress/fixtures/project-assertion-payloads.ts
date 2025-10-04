@@ -9,7 +9,7 @@ export class ProjectAssertionPageBase {
 
   createClassPayload = (value, subClassOf: string = 'http://api.knora.org/ontology/knora-api/v2#Resource') => {
     return {
-      '@id': `http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2`,
+      '@id': `http://127.0.0.1:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2`,
       '@type': 'http://www.w3.org/2002/07/owl#Ontology',
       'http://api.knora.org/ontology/knora-api/v2#lastModificationDate': {
         '@type': 'http://www.w3.org/2001/XMLSchema#dateTimeStamp',
@@ -23,7 +23,7 @@ export class ProjectAssertionPageBase {
           'http://www.w3.org/2000/01/rdf-schema#subClassOf': {
             '@id': subClassOf,
           },
-          '@id': `http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${value}`,
+          '@id': `http://127.0.0.1:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${value}`,
         },
       ],
     };
@@ -35,7 +35,7 @@ export class ProjectAssertionPageBase {
 
   label(className: string, value: string) {
     return {
-      '@type': `http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${className}`,
+      '@type': `http://127.0.0.1:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${className}`,
       'http://www.w3.org/2000/01/rdf-schema#label': value,
       'http://api.knora.org/ontology/knora-api/v2#attachedToProject': {
         '@id': `http://rdfh.ch/projects/${this.projectShortCode}`,
@@ -45,7 +45,7 @@ export class ProjectAssertionPageBase {
 
   textValue(propertyName: string, value: string, comment: string) {
     return {
-      [`http://0.0.0.0:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${propertyName}`]: {
+      [`http://127.0.0.1:3333/ontology/${this.projectShortCode}/${this.ontologyName}/v2#${propertyName}`]: {
         '@type': 'http://api.knora.org/ontology/knora-api/v2#TextValue',
         'http://api.knora.org/ontology/knora-api/v2#valueHasComment': comment,
         'http://api.knora.org/ontology/knora-api/v2#valueAsString': value,

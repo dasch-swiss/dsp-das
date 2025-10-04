@@ -4,8 +4,8 @@ import { User, UserProfiles } from '../../models/user-profiles';
 function getApiUrl(): string {
   const baseUrl = Cypress.config('baseUrl');
 
-  if (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('0.0.0.0') || baseUrl.includes('4200')) {
-    return Cypress.env('apiUrl') || 'http://0.0.0.0:3333';
+  if (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1') || baseUrl.includes('4200')) {
+    return Cypress.env('apiUrl') || 'http://127.0.0.1:3333';
   }
 
   // For remote environments, derive API URL from app URL
@@ -22,7 +22,7 @@ function getApiUrl(): string {
     return 'https://api.dasch.swiss';
   }
 
-  return Cypress.env('apiUrl') || 'http://0.0.0.0:3333';
+  return Cypress.env('apiUrl') || 'http://127.0.0.1:3333';
 }
 
 Cypress.Commands.add('resetDatabase', () =>

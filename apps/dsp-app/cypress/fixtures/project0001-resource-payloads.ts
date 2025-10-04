@@ -17,7 +17,7 @@ export class Project0001ResourcePayloads extends ProjectAssertionPageBase {
 
   propertySegment(propertyName: string, textValues: Comment[], ontology = Project0001ResourcePayloads.defaultOntology) {
     return {
-      [`http://0.0.0.0:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${propertyName}`]: [
+      [`http://127.0.0.1:3333/ontology/${Project0001ResourcePayloads.project}/${ontology}/v2#${propertyName}`]: [
         ...textValues.map(textValue => {
           return { ...this.textValueSegment(textValue.text, textValue.comment) };
         }),

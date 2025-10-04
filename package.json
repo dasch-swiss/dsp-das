@@ -12,7 +12,7 @@
   "scripts": {
     "ng": "ng",
     "start": "nx run dsp-app:serve",
-    "start-local": "nx run dsp-app:serve:development --host 0.0.0.0",
+    "start-local": "nx run dsp-app:serve:development --host 127.0.0.1",
     "start-test": "nx run dsp-app:serve:test-server",
     "start-dev": "nx run dsp-app:serve:dev-server",
     "start-ls-test": "nx run dsp-app:serve:ls-test-server",
