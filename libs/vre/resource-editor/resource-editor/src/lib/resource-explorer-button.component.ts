@@ -16,6 +16,13 @@ import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.compon
     <mat-icon>arrow_circle_right</mat-icon>
   </button>`,
   standalone: false,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class ResourceExplorerButtonComponent {
   @Input({ required: true }) resourceIri!: string;
