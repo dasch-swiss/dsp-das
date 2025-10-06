@@ -14,7 +14,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
     `
       .logo {
         display: flex;
-        margin-right: 12px;
+        margin-right: 4px;
         height: 100%;
         column-gap: 10px;
         cursor: pointer;
