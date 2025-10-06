@@ -9,15 +9,15 @@ export class PropertiesDisplayService {
   showComments$ = this._showComments.asObservable();
 
   constructor() {
-    const defaultValue = localStorage.getItem(this.SHOW_ALL_PROPERTIES_KEY) === 'true';
-    this._showAllProperties = new BehaviorSubject(defaultValue);
+    const cachedValue = localStorage.getItem(this.SHOW_ALL_PROPERTIES_KEY) === 'true';
+    this._showAllProperties = new BehaviorSubject(cachedValue);
     this.showAllProperties$ = this._showAllProperties.asObservable();
   }
 
   toggleShowProperties() {
     const newValue = !this._showAllProperties.value;
     localStorage.setItem(this.SHOW_ALL_PROPERTIES_KEY, JSON.stringify(newValue));
-    this._showAllProperties.next(!this._showAllProperties.value);
+    this._showAllProperties.next(newValue);
   }
 
   toggleShowComments() {
