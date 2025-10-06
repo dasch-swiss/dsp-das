@@ -20,6 +20,7 @@ import { ResourceFetcherDialogComponent } from './resource-fetcher-dialog.compon
     `
       :host {
         display: block;
+        height: 0;
       }
     `,
   ],
