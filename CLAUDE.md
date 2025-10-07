@@ -29,7 +29,6 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### Local Development
 - `npm run start-local` or `nx run dsp-app:serve` - Start local development server
-- `npm run start-test` - Start with test server configuration
 - `npm run start-dev` - Start with dev server configuration
 
 ### Testing
@@ -88,10 +87,8 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 
 Multiple environment configurations available:
 - `development` - Local development
-- `test-server` - Test server environment
 - `dev-server` - Development server environment
 - `ls-test-server` - LS test server environment
-- `0845-test-server` - Specific test server environment
 - `stage-server` - Staging environment
 - `production` - Production environment
 
