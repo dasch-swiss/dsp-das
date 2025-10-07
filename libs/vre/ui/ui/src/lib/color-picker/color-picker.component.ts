@@ -31,7 +31,7 @@ export class ColorPickerErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
-
+// TODO REMOVE THIS!!!!
 @Component({
   selector: 'app-color-picker',
   templateUrl: './color-picker.component.html',
@@ -189,9 +189,5 @@ export class ColorPickerComponent implements ControlValueAccessor, MatFormFieldC
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-  }
-
-  _handleInput() {
-    this.onChange(this.value);
   }
 }

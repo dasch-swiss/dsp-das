@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -14,18 +14,16 @@ import { FormControl } from '@angular/forms';
           placeholder="Select a color"
           class="color-picker-input color"
           [formControl]="control"
-          [colorPicker]="control.value"
+          [(colorPicker)]="control.value"
           [style.background]="control.value"
           [style.color]="control.value"
-          (colorPickerChange)="control.patchValue($event)"
           [cpOutputFormat]="'hex'"
           [cpFallbackColor]="'#ff0000'"
-          [cpDisabled]="false"
           style="cursor: pointer"
           readonly />
       </mat-form-field>
     </app-nullable-editor>
-    @if (control.touched && control.errors; as errors) {
+    @if (control && control.errors; as errors) {
       <mat-error>
         {{ errors | humanReadableError }}
       </mat-error>
@@ -33,10 +31,11 @@ import { FormControl } from '@angular/forms';
   `,
   styles: [
     `
+      color-picker .open {
+        z-index: 100000 !important;
+        position: absolute !important;
+      }
       :host {
-        z-index: 1;
-        position: relative;
-
         ::ng-deep .mat-mdc-form-field-subscript-wrapper {
           display: none !important;
         }
@@ -45,6 +44,10 @@ import { FormControl } from '@angular/forms';
   ],
   standalone: false,
 })
-export class ColorValueComponent {
+export class ColorValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string | null>;
+
+  ngOnInit() {
+    console.log('Control is required for ColorValueComponent');
+  }
 }

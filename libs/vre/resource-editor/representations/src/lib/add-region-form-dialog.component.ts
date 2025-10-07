@@ -17,11 +17,7 @@ export interface AddRegionFormDialogProps {
         <app-common-input [label]="'Label'" [control]="regionForm.controls.label" />
 
         <app-ck-editor-control [control]="regionForm.controls.comment" [label]="'Comment'" />
-
-        <mat-form-field class="large-field without-border color-field">
-          <mat-label class="color-label">Color *</mat-label>
-          <app-color-picker #colorInput [formControl]="regionForm.controls.color" class="value" />
-        </mat-form-field>
+        <app-color-value [control]="regionForm.controls.color"></app-color-value>
       </form>
     </mat-dialog-content>
 
