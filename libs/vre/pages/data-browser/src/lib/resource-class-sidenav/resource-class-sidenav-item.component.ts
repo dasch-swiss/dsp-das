@@ -55,7 +55,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ontologiesDescription!: string;
   count$!: Observable<number>;
   loading = true;
-  isHovered = false;
 
   ontologyLabel!: string;
   classLabel!: string;
@@ -122,8 +121,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       const description = this.resClass.comments.find(
         l => l.language === this._localizationService.getCurrentLanguage()
       );
-      this.ontologiesDescription = description ? description.value : this.resClass.comments[0].value;
-      this._cd.markForCheck();
+      this.ontologiesDescription = description ? description.value : this.resClass.comments[0]?.value;
+      this._cd.detectChanges();
     }
   }
 

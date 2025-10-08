@@ -30,8 +30,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
   styles: [
     `
       .active-link {
-        color: var(--mat-tab-header-active-label-text-color) !important;
-        border-bottom: 2px solid var(--mat-tab-header-active-ripple-color);
+        border-bottom: 2px solid #336790;
         font-weight: 500;
       }
     `,

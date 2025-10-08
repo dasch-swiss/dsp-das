@@ -12,7 +12,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
       mat-align-tabs="start"
       animationDuration="0"
       style="background-color: inherit; padding-left: 16px">
-      <a mat-tab-link [routerLink]="[DATA]" routerLinkActive="active-link" (click)="reloadPage($event)">
+      <a mat-tab-link [routerLink]="[DATA]" (click)="reloadPage($event)" [class.active-link]="isDataRouteActive()">
         <mat-icon class="tab-icon">list</mat-icon>
         Data
       </a>
@@ -37,8 +37,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
         margin-right: 8px;
       }
       .active-link {
-        color: var(--mat-tab-header-active-label-text-color) !important;
-        border-bottom: 2px solid var(--mat-tab-header-active-ripple-color);
+        border-bottom: 2px solid #336790;
         font-weight: 500;
       }
 
@@ -71,6 +70,10 @@ export class HeaderProjectTabsComponent {
       this._router.navigate([RouteConstants.data], { relativeTo: this._route });
     });
   }
+  isDataRouteActive(): boolean {
+    return this.path === 'data' || this.path.startsWith('/data/');
+  }
+
   isDataModelsRouteActive(): boolean {
     return this.path.startsWith('data-models') || this.path.startsWith('ontology');
   }

@@ -4,7 +4,7 @@ import { KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@da
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, EMPTY, first, map } from 'rxjs';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
@@ -42,21 +42,26 @@ export class RcbpClassComponent {
     this._projectPageService.ontologies$,
   ]).pipe(
     map(([params, project, ontologies]) => {
+      console.log('start', params, project, ontologies);
       this.dataIsNotFound = false;
       const ontologyLabel = params['ontologyLabel'] as string;
       const classLabel = params['classLabel'] as string;
 
-      const ontology = ontologies.find(ontology => ontology.label === ontologyLabel);
+      const ontology = ontologies.find(
+        ontology_ => ontology_.id === this._ontologyService.getOntologyIriFromRoute(project.shortcode, ontologyLabel)
+      );
+
       if (!ontology) {
         this.dataIsNotFound = true;
-        return;
+        return EMPTY;
       }
 
       const classId = this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel);
-
       const resClass = Object.values(ontology.classes).find(cls => cls.id === classId);
+
       if (!resClass) {
         this.dataIsNotFound = true;
+        return EMPTY;
       }
 
       return { ontologyLabel, classLabel, ontology, resClass: resClass as ResourceClassDefinitionWithAllLanguages };
