@@ -1,5 +1,6 @@
 import { AdminImageDirective } from './lib/admin-image/admin-image.directive';
 import { AlternatedListComponent } from './lib/alternated-list.component';
+import { ColorPickerComponent } from './lib/app-color-picker.component';
 import { CenteredBoxComponent } from './lib/centered-box.component';
 import { CenteredLayoutComponent } from './lib/centered-layout.component';
 import { ChipListInputComponent } from './lib/chip-list-input.component';
@@ -48,6 +49,7 @@ export const UiComponents = [
   InternalLinkReplacerPipe,
   AddTargetBlankPipe,
   AlternatedListComponent,
+  ColorPickerComponent,
   HumanReadableDatePipe,
   DoubleChipSelectorComponent,
   CenteredBoxComponent,
