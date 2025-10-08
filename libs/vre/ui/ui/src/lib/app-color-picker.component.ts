@@ -4,17 +4,20 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'app-color-picker',
   template: `
-    <div
-      matTooltip="Click to select color"
-      #colorPickerTrigger="ngxColorPicker"
-      [colorPicker]="value ?? defaultColor"
-      [cpOutputFormat]="'hex'"
-      [cpToggle]="true"
-      [cpSaveClickOutside]="false"
-      [cpFallbackColor]="defaultColor"
-      [cpDialogDisplay]="'inline'"
-      [cpUseRootViewContainer]="true"
-      (colorPickerChange)="onColorChange($event)"></div>
+    <fieldset class="color-picker-fieldset">
+      <legend>Select a color</legend>
+      <div
+        matTooltip="Click to select color"
+        #colorPickerTrigger="ngxColorPicker"
+        [colorPicker]="value ?? defaultColor"
+        [cpOutputFormat]="'hex'"
+        [cpToggle]="true"
+        [cpSaveClickOutside]="false"
+        [cpFallbackColor]="defaultColor"
+        [cpDialogDisplay]="'inline'"
+        [cpUseRootViewContainer]="true"
+        (colorPickerChange)="onColorChange($event)"></div>
+    </fieldset>
   `,
   providers: [
     {
@@ -22,6 +25,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       useExisting: forwardRef(() => ColorPickerComponent),
       multi: true,
     },
+  ],
+  styles: [
+    `
+      .color-picker-fieldset {
+        border: 0.1rem solid currentColor;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .color-picker-fieldset legend {
+        padding: 0 0.5rem;
+      }
+    `,
   ],
   standalone: false,
 })

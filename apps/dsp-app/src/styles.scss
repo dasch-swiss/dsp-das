@@ -190,10 +190,3 @@ body {
 .mat-mdc-dialog-content { //prevent horizontal scrollbar in dialog
   overflow-x: hidden !important;
 }
-
-// ngx-color-picker custom styling
-color-picker .color-picker {
-  border: 1px solid grey !important;
-  padding: 4px;
-  border-radius: 8px;
-}
