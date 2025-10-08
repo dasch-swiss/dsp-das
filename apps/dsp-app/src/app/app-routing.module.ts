@@ -33,7 +33,7 @@ import {
   UsersTabComponent,
 } from '@dasch-swiss/vre/pages/system/system';
 import { AccountComponent, ProjectOverviewComponent, UserComponent } from '@dasch-swiss/vre/pages/user-settings/user';
-import { ResourcePageComponent, SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
+import { SingleResourcePageComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { StatusComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { AuthGuard } from './main/guard/auth.guard';
@@ -53,12 +53,7 @@ const routes: Routes = [
         component: DataModelsPageComponent,
       },
       {
-        path: RouteConstants.ontologyRelative,
-        redirectTo: RouteConstants.ontologyEditorRelative,
-        pathMatch: 'full',
-      },
-      {
-        path: RouteConstants.ontologyEditorRelative, // TODO this route should change to /data-models/
+        path: RouteConstants.ontologyEditorRelative,
         component: OntologyPageComponent,
         children: [
           {
@@ -79,10 +74,6 @@ const routes: Routes = [
       {
         path: RouteConstants.data,
         component: ResourceClassBrowserPage3Component,
-      },
-      {
-        path: RouteConstants.JulienOntologyClassRelative,
-        component: ResourcePageComponent,
       },
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,

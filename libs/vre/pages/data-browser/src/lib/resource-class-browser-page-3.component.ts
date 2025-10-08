@@ -42,11 +42,8 @@ export class ResourceClassBrowserPage3Component implements OnInit, OnChanges {
     public _abtestService: AbTestService
   ) {}
   ngOnInit() {
-    console.log('aaa on init');
     this.multipleViewerService.onInit(this._userService.isSysAdmin$);
   }
 
-  ngOnChanges() {
-    console.log('aaa on change');
-  }
+  ngOnChanges() {}
 }
