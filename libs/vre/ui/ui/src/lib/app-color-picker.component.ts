@@ -9,11 +9,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       <div
         matTooltip="Click to select color"
         #colorPickerTrigger="ngxColorPicker"
-        [colorPicker]="value ?? defaultColor"
+        [colorPicker]="value ?? hexColor"
         [cpOutputFormat]="'hex'"
         [cpToggle]="true"
         [cpSaveClickOutside]="false"
-        [cpFallbackColor]="defaultColor"
+        [cpFallbackColor]="hexColor"
         [cpDialogDisplay]="'inline'"
         [cpUseRootViewContainer]="true"
         (colorPickerChange)="onColorChange($event)"></div>
@@ -46,7 +46,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   standalone: false,
 })
 export class ColorPickerComponent implements ControlValueAccessor {
-  @Input() defaultColor = '#ff0000';
+  @Input() hexColor = '#ff0000';
 
   value: string | null = null;
   private onChange: (value: string | null) => void = () => {};
@@ -58,7 +58,6 @@ export class ColorPickerComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  // ControlValueAccessor implementation
   writeValue(value: string | null): void {
     this.value = value;
   }
@@ -69,9 +68,5 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-    // Handle disabled state if needed
   }
 }

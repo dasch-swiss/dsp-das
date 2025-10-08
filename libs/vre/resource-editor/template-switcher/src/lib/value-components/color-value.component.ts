@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
   selector: 'app-color-value',
   template: `
     <app-nullable-editor [formControl]="control" [defaultValue]="'#000000'">
-      <app-color-picker [formControl]="control" [defaultColor]="'#ff0000'"></app-color-picker>
+      <app-color-picker [formControl]="control" [hexColor]="'#ff0000'"></app-color-picker>
     </app-nullable-editor>
 
     @if (control && control.errors; as errors) {
