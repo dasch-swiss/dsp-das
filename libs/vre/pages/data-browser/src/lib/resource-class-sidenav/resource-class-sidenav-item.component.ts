@@ -5,12 +5,12 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { combineLatest, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
-    <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected }">
+    <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected$ | async }">
       <span style="flex: 1">
         {{ ontologiesLabel }}
       </span>
@@ -59,12 +59,24 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ontologyLabel!: string;
   classLabel!: string;
 
-  get isSelected() {
-    return false; // TODO return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
-  }
+  isSelected$ = combineLatest([
+    this._route.firstChild?.params,
+    this._projectPageService.currentProject$.pipe(first()),
+  ]).pipe(
+    map(([params, project]) => {
+      const selectedResClassId = this._ontologyService.getClassIdFromParams(
+        project.shortcode,
+        params['ontologyLabel'],
+        params['classLabel']
+      );
+      console.log('aaa', selectedResClassId);
+      return this.resClass.id === selectedResClassId;
+    })
+  );
 
   constructor(
     private _cd: ChangeDetectorRef,
+    private _ontologyService: OntologyService,
     private _localizationService: LocalizationService,
     private _translateService: TranslateService,
     @Inject(DspApiConnectionToken)

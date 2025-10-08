@@ -55,7 +55,7 @@ export class RcbpClassComponent {
         return EMPTY;
       }
 
-      const classId = this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel);
+      const classId = this._ontologyService.getClassIdFromParams(project.shortcode, ontologyLabel, classLabel);
       const resClass = Object.values(ontology.classes).find(cls => cls.id === classId);
 
       if (!resClass) {
@@ -73,9 +73,4 @@ export class RcbpClassComponent {
     private _ontologyService: OntologyService,
     @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
   ) {}
-
-  private _getClassIdFromParams(projectShortcode: string, ontologyLabel: string, classLabel: string) {
-    const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${projectShortcode}/${ontologyLabel}/v2`;
-    return `${ontoId}#${classLabel}`;
-  }
 }
