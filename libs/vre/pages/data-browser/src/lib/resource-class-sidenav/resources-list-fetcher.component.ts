@@ -6,6 +6,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
+import { DataBrowserPageService } from '../data-browser-page.service';
 import { ResourceResultService } from '../resource-result.service';
 
 @Component({
@@ -34,7 +35,6 @@ import { ResourceResultService } from '../resource-result.service';
 export class ResourcesListFetcherComponent implements OnChanges {
   @Input({ required: true }) ontologyLabel!: string;
   @Input({ required: true }) classLabel!: string;
-  @Input({ required: true }) reload$!: Observable<null>;
   userCanViewResources = true;
 
   private _resources$!: Observable<ReadResource[]>;
@@ -60,13 +60,14 @@ export class ResourcesListFetcherComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     public projectPageService: ProjectPageService,
-    private _multipleViewerService: MultipleViewerService
+    private _multipleViewerService: MultipleViewerService,
+    private _dataBrowserPageService: DataBrowserPageService
   ) {}
 
   ngOnChanges() {
     this._resourceResult.updatePageIndex(0);
 
-    this._resources$ = this.reload$.pipe(
+    this._resources$ = this._dataBrowserPageService.onNavigationReload$.pipe(
       switchMap(() => this.projectPageService.currentProject$.pipe(first())),
       switchMap(project => {
         const ontologyLabel = this.ontologyLabel;

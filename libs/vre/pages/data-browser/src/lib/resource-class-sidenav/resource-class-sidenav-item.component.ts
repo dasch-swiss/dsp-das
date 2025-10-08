@@ -18,6 +18,7 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
+import { DataBrowserPageService } from '../data-browser-page.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -101,7 +102,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _dataBrowserPageService: DataBrowserPageService
   ) {}
 
   selectResourceClass() {
@@ -131,7 +133,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   private _loadData() {
-    this.count$ = this._getCount(this.resClass.id).pipe(
+    this.count$ = this._dataBrowserPageService.onNavigationReload$.pipe(
+      switchMap(() => this._getCount(this.resClass.id)),
       finalize(() => {
         this.loading = false;
       })

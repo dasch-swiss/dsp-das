@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
+import { DataBrowserPageService } from './data-browser-page.service';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
@@ -15,7 +16,7 @@ import { ResourceResultService } from './resource-result.service';
       </as-split-area>
     </as-split>
   </div> `,
-  providers: [MultipleViewerService, ResourceResultService],
+  providers: [MultipleViewerService, ResourceResultService, DataBrowserPageService],
   standalone: false,
 })
 export class DataBrowserPageComponent implements OnInit {

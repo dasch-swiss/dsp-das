@@ -4,8 +4,8 @@ import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
-import { BehaviorSubject } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
+import { DataBrowserPageService } from './data-browser-page.service';
 
 @Component({
   selector: 'app-data-class-panel',
@@ -19,10 +19,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
       </div>
       <p style="font-style: italic">{{ classSelected.resClass.comment }}</p>
     </div>
-    <app-resources-list-fetcher
-      [ontologyLabel]="classSelected.ontologyLabel"
-      [classLabel]="classSelected.classLabel"
-      [reload$]="reloadResources$" />
+    <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
   standalone: false,
 })
@@ -32,15 +29,14 @@ export class DataClassPanelComponent {
     ontologyLabel: string;
     resClass: ResourceClassDefinitionWithAllLanguages;
   };
-  private _reloadResourcesSubject = new BehaviorSubject(null);
-  reloadResources$ = this._reloadResourcesSubject.asObservable();
 
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
 
   constructor(
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _projectPageService: ProjectPageService
+    private _projectPageService: ProjectPageService,
+    private _dataBrowserPageService: DataBrowserPageService
   ) {}
 
   goToAddClassInstance() {
@@ -59,7 +55,7 @@ export class DataClassPanelComponent {
       .afterClosed()
       .pipe(filterUndefined())
       .subscribe(() => {
-        this._reloadResourcesSubject.next(null);
+        this._dataBrowserPageService.reloadNavigation();
       });
   }
 }
