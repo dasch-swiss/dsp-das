@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { map, shareReplay } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { combineLatest, first, shareReplay } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
@@ -12,7 +15,7 @@ import { ProjectPageService } from '../project-page.service';
             [togglePosition]="'before'"
             style="box-shadow: none"
             data-cy="sidenav-ontology"
-            [expanded]="(singleOntology$ | async) && first">
+            [expanded]="shouldExpand(onto.id, projectOntologies.length === 1 && first)">
             <mat-expansion-panel-header>
               <mat-panel-title
                 #ontoTitle
@@ -40,11 +43,36 @@ import { ProjectPageService } from '../project-page.service';
   ],
   standalone: false,
 })
-export class ProjectSidenavOntologiesComponent {
+export class ProjectSidenavOntologiesComponent implements OnInit {
   projectOntologies$ = this._projectPageService.ontologies$.pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  initialExpandIri?: string;
 
-  singleOntology$ = this.projectOntologies$.pipe(map(ontos => ontos.length === 1));
-  constructor(private _projectPageService: ProjectPageService) {}
+  constructor(
+    private _projectPageService: ProjectPageService,
+    private _route: ActivatedRoute,
+    private _ontologyService: OntologyService
+  ) {}
+
+  ngOnInit() {
+    if (this._route.firstChild) {
+      combineLatest([this._route.firstChild.params, this._projectPageService.currentProject$])
+        .pipe(first())
+        .subscribe(([params, project]) => {
+          const ontologyLabel = params[RouteConstants.ontologyParameter];
+          if (!ontologyLabel) {
+            return;
+          }
+          this.initialExpandIri = this._ontologyService.getOntologyIriFromRoute(project.shortcode, ontologyLabel);
+        });
+    }
+  }
+
+  shouldExpand(ontologyId: string, fallback: boolean) {
+    if (this.initialExpandIri) {
+      return this.initialExpandIri === ontologyId;
+    }
+    return fallback;
+  }
 
   compareElementHeights(elem: HTMLElement): boolean {
     return !(elem.scrollHeight > elem.clientHeight);

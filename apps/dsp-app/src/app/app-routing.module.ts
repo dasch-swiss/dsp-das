@@ -87,10 +87,6 @@ const routes: Routes = [
         ],
       },
       {
-        path: RouteConstants.data,
-        component: DataBrowserPageComponent,
-      },
-      {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,
         component: ListPageComponent,
       },
