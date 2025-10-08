@@ -7,7 +7,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
 
 @Component({
-  selector: 'app-header-search',
+  selector: 'app-global-search',
   template: `
     <form
       [formGroup]="formGroup"
@@ -34,7 +34,7 @@ import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
   ],
   standalone: false,
 })
-export class HeaderSearchComponent implements OnDestroy {
+export class GlobalSearchComponent implements OnDestroy {
   formGroup = this._fb.group({
     search: ['', [Validators.required, Validators.minLength(3)]],
   });

@@ -4,15 +4,15 @@ import { map } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
-  selector: 'app-header-project',
+  selector: 'app-project-page-header',
   template: ` <mat-toolbar style="background-color: inherit; height: 56px">
       <span style="flex: 1; display: flex; align-items: center">
         <app-header-logo />
         <h1 class="title" (click)="goToProjectPage()">{{ currentProjectName$ | async }}</h1>
       </span>
-      <app-header-right />
+      <app-header-user-actions />
     </mat-toolbar>
-    <app-header-project-tabs />`,
+    <app-project-navigation-tabs />`,
   styles: [
     `
       :host {
@@ -34,7 +34,7 @@ import { ProjectPageService } from './project-page.service';
   ],
   standalone: false,
 })
-export class HeaderProjectComponent {
+export class ProjectPageHeaderComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));
   constructor(
     private _projectService: ProjectPageService,

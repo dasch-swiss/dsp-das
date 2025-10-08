@@ -1,9 +1,9 @@
 import { DialogHeaderComponent } from './lib/dialog-header.component';
+import { GlobalSearchComponent } from './lib/header/global-search.component';
 import { HeaderLogoComponent } from './lib/header/header-logo.component';
-import { HeaderProjectTabsComponent } from './lib/header/header-project-tabs.component';
-import { HeaderRightComponent } from './lib/header/header-right.component';
-import { HeaderSearchComponent } from './lib/header/header-search.component';
+import { HeaderUserActionsComponent } from './lib/header/header-user-actions.component';
 import { HeaderComponent } from './lib/header/header.component';
+import { ProjectNavigationTabsComponent } from './lib/header/project-navigation-tabs.component';
 import { VersionBadgeComponent } from './lib/header/version-badge.component';
 import { SplitPipe } from './lib/split.pipe';
 import { StatusComponent } from './lib/status/status.component';
@@ -13,9 +13,9 @@ export const CommonToMoveComponents = [
   SplitPipe,
   HeaderComponent,
   StatusComponent,
-  HeaderProjectTabsComponent,
-  HeaderRightComponent,
+  ProjectNavigationTabsComponent,
+  HeaderUserActionsComponent,
   HeaderLogoComponent,
   VersionBadgeComponent,
-  HeaderSearchComponent,
+  GlobalSearchComponent,
 ];

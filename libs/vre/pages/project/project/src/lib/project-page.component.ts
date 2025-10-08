@@ -7,7 +7,7 @@ import { ProjectPageService } from './project-page.service';
 @Component({
   selector: 'app-project-page',
   template: `
-    <app-header-project />
+    <app-project-page-header />
     <div class="content">
       <router-outlet />
     </div>

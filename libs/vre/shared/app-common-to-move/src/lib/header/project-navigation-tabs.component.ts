@@ -4,7 +4,7 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 
 @Component({
-  selector: 'app-header-project-tabs',
+  selector: 'app-project-navigation-tabs',
   template: `
     <nav
       mat-tab-nav-bar
@@ -52,7 +52,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
   ],
   standalone: false,
 })
-export class HeaderProjectTabsComponent {
+export class ProjectNavigationTabsComponent {
   readonly DATA = RouteConstants.data;
   readonly DATA_MODELS = RouteConstants.dataModels;
   readonly SETTINGS = RouteConstants.settings;

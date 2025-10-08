@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
         <app-header-logo />
         <h1 class="title" (click)="goToHomePage()">DaSCH Service Platform</h1>
       </span>
-      <app-header-search />
+      <app-global-search />
 
-      <app-header-right />
+      <app-header-user-actions />
     </mat-toolbar>
   `,
   styles: [

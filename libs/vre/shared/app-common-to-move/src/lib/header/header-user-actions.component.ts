@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 
 @Component({
-  selector: 'app-header-right',
+  selector: 'app-header-user-actions',
   template: `
     <span style="display: flex; align-items: center; gap: 8px">
       <app-version-badge />
@@ -12,6 +12,6 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
   `,
   standalone: false,
 })
-export class HeaderRightComponent {
+export class HeaderUserActionsComponent {
   HELP_LINK = RouteConstants.help;
 }
