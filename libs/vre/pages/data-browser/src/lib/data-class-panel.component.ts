@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { ResourceFetcherDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { DataBrowserPageService } from './data-browser-page.service';
@@ -54,8 +55,12 @@ export class DataClassPanelComponent {
       })
       .afterClosed()
       .pipe(filterUndefined())
-      .subscribe(() => {
+      .subscribe(resourceIri => {
         this._dataBrowserPageService.reloadNavigation();
+        this._dialog.open(ResourceFetcherDialogComponent, {
+          ...DspDialogConfig.dialogDrawerConfig({ resourceIri }, true),
+          width: `${1200 - this._dialog.openDialogs.length * 40}px`,
+        });
       });
   }
 }
