@@ -55,6 +55,7 @@ export class ProjectSidenavOntologiesComponent implements OnInit {
 
   ngOnInit() {
     if (this._route.firstChild) {
+      // if there is an ontology class displayed initially, find the ontology class Id and expand the corresponding panel
       combineLatest([this._route.firstChild.params, this._projectPageService.currentProject$])
         .pipe(first())
         .subscribe(([params, project]) => {
