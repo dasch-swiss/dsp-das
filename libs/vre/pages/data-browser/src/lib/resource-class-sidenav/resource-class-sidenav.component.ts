@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 
@@ -10,7 +10,6 @@ import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-
     }
   `,
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;

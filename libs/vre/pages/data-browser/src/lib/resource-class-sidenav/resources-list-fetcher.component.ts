@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -20,6 +20,8 @@ import { ResourceResultService } from '../resource-result.service';
           <p>Check with a project admin if you have the necessary permission or if you are logged in.</p>
         </div>
       }
+    } @else {
+      <app-progress-indicator />
     }
   `,
   providers: [ResourceResultService],

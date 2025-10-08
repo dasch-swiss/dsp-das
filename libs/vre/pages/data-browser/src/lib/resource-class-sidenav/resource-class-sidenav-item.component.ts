@@ -5,7 +5,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { finalize, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -61,7 +61,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   classLabel!: string;
 
   get isSelected() {
-    return false; //  return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
+    return false; // TODO return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
   }
 
   constructor(
@@ -87,13 +87,11 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       this.getOntologiesDescriptionInPreferredLanguage();
     });
 
-    this._projectPageService.currentProjectUuid$.pipe(first()).subscribe(projectUuid => {
-      const [ontologyIri, className] = this.resClass.id.split('#');
-      const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
+    const [ontologyIri, className] = this.resClass.id.split('#');
+    const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
-      this.ontologyLabel = ontologyName;
-      this.classLabel = className;
-    });
+    this.ontologyLabel = ontologyName;
+    this.classLabel = className;
 
     this._loadData();
   }
