@@ -6,6 +6,8 @@ import { ResourceListItemComponent } from './lib/list-view/resource-list-item.co
 import { ResourceListSelectionComponent } from './lib/list-view/resource-list-selection.component';
 import { ResourceListComponent } from './lib/list-view/resource-list.component';
 import { ResourcesListComponent } from './lib/list-view/resources-list.component';
+import { RcbpClassComponent } from './lib/rcbp-class.component';
+import { RcbpGlobalComponent } from './lib/rcbp-global.component';
 import { ResourceClassBrowserPage3Component } from './lib/resource-class-browser-page-3.component';
 import { ResourceClassPanelComponent } from './lib/resource-class-panel.component';
 import { ResourceClassSidenavItemComponent } from './lib/resource-class-sidenav/resource-class-sidenav-item.component';
@@ -26,4 +28,6 @@ export const DataBrowserComponents = [
   ResourcesListFetcherComponent,
   ResourceClassBrowserPage3Component,
   ResourceClassPanelComponent,
+  RcbpClassComponent,
+  RcbpGlobalComponent,
 ];

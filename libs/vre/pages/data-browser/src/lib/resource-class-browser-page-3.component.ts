@@ -12,7 +12,10 @@ import { ResourceResultService } from './resource-result.service';
       <as-split-area [size]="25">
         <app-project-sidenav />
       </as-split-area>
-      @if (_abtestService.resourceClasSelected; as classSelected) {
+      <as-split-area [size]="75">
+        <router-outlet />
+      </as-split-area>
+      @if (false && _abtestService.resourceClasSelected; as classSelected) {
         <as-split-area [size]="25" cdkScrollable>
           <app-resource-class-panel [classSelected]="classSelected" />
         </as-split-area>
@@ -22,7 +25,7 @@ import { ResourceResultService } from './resource-result.service';
           }
           <app-multiple-viewer />
         </as-split-area>
-      } @else {
+      } @else if (false) {
         <as-split-area [size]="75">
           <app-centered-box>
             <app-project-short-description

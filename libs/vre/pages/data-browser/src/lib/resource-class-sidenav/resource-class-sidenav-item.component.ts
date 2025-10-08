@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -71,7 +72,9 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
-    public _abTestService: AbTestService
+    public _abTestService: AbTestService,
+    private _router: Router,
+    private _route: ActivatedRoute
   ) {}
 
   selectResourceClass() {
@@ -83,6 +86,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
         ontologyLabel: this.ontologyLabel,
         resClass: this.resClass,
       };
+      this._router.navigate([this.ontologyLabel, this.classLabel], { relativeTo: this._route });
     }, 0);
   }
 
