@@ -1,11 +1,23 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  finalize,
+  first,
+  map,
+  Observable,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -59,18 +71,24 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ontologyLabel!: string;
   classLabel!: string;
 
-  isSelected$ = combineLatest([
-    this._route.firstChild?.params,
-    this._projectPageService.currentProject$.pipe(first()),
-  ]).pipe(
-    map(([params, project]) => {
-      const selectedResClassId = this._ontologyService.getClassIdFromParams(
-        project.shortcode,
-        params['ontologyLabel'],
-        params['classLabel']
+  isSelected$ = this._router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+    startWith(null),
+    switchMap(() => {
+      const firstChild = this._route.firstChild;
+      if (!firstChild) {
+        return of(false);
+      }
+      return combineLatest([firstChild.params, this._projectPageService.currentProject$.pipe(first())]).pipe(
+        map(([params, project]) => {
+          const selectedResClassId = this._ontologyService.getClassIdFromParams(
+            project.shortcode,
+            params['ontologyLabel'],
+            params['classLabel']
+          );
+          return this.resClass.id === selectedResClassId;
+        })
       );
-      console.log('aaa', selectedResClassId);
-      return this.resClass.id === selectedResClassId;
     })
   );
 
