@@ -21,4 +21,3 @@ export * from './lib/data-browser-page.component';
 export * from './lib/data-class-panel.component';
 export * from './lib/data-class-view.component';
 export * from './lib/data-overview.component';
-export * from './lib/data-tab-root.component';

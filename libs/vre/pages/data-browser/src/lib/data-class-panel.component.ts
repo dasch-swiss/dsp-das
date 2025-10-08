@@ -4,7 +4,7 @@ import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
@@ -22,7 +22,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
     <app-resources-list-fetcher
       [ontologyLabel]="classSelected.ontologyLabel"
       [classLabel]="classSelected.classLabel"
-      [reload$]="hasRight$" />
+      [reload$]="reloadResources$" />
   `,
   standalone: false,
 })
@@ -32,7 +32,8 @@ export class DataClassPanelComponent {
     ontologyLabel: string;
     resClass: ResourceClassDefinitionWithAllLanguages;
   };
-  hasRight$ = of(null); // TODO
+  private _reloadResourcesSubject = new BehaviorSubject(null);
+  reloadResources$ = this._reloadResourcesSubject.asObservable();
 
   hasProjectMemberRights$ = this._projectPageService.hasProjectMemberRights$;
 
@@ -58,11 +59,7 @@ export class DataClassPanelComponent {
       .afterClosed()
       .pipe(filterUndefined())
       .subscribe(() => {
-        // TODO
-        /**
-        this._loadData();
-        this._reloadSubject.next(null);
-          */
+        this._reloadResourcesSubject.next(null);
       });
   }
 }
