@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 
 @Component({
   selector: 'app-header-project-tabs',
@@ -24,10 +25,12 @@ import { RouteConstants } from '@dasch-swiss/vre/core/config';
         <mat-icon class="tab-icon">lan</mat-icon>
         Data models
       </a>
-      <a mat-tab-link [routerLink]="[SETTINGS]" routerLinkActive="active-link">
-        <mat-icon class="tab-icon">settings</mat-icon>
-        Settings
-      </a>
+      @if (_projectPageService.hasProjectAdminRights$ | async) {
+        <a mat-tab-link [routerLink]="[SETTINGS]" routerLinkActive="active-link">
+          <mat-icon class="tab-icon">settings</mat-icon>
+          Settings
+        </a>
+      }
     </nav>
     <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   `,
@@ -61,7 +64,8 @@ export class HeaderProjectTabsComponent {
   }
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router
+    private _router: Router,
+    public _projectPageService: ProjectPageService
   ) {}
 
   reloadPage(event: MouseEvent) {
