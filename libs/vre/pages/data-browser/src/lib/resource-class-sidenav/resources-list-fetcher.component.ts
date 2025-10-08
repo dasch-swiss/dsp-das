@@ -13,7 +13,11 @@ import { ResourceResultService } from '../resource-result.service';
   template: `
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
-        <app-resources-list [resources]="data.resources" [showBackToFormButton]="false" />
+        @if (data.resources.length > 0) {
+          <app-resources-list [resources]="data.resources" [showBackToFormButton]="false" />
+        } @else {
+          <app-centered-message [message]="'No resources found for this class.'" />
+        }
       } @else {
         <div style="margin-top: 80px; align-items: center; text-align: center">
           <h3>It seems like you don’t have the necessary permissions.</h3>

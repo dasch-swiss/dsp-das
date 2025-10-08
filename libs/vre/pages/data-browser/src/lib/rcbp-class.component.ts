@@ -42,7 +42,6 @@ export class RcbpClassComponent {
     this._projectPageService.ontologies$,
   ]).pipe(
     map(([params, project, ontologies]) => {
-      console.log('start', params, project, ontologies);
       this.dataIsNotFound = false;
       const ontologyLabel = params['ontologyLabel'] as string;
       const classLabel = params['classLabel'] as string;
