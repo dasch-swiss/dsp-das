@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { combineLatest, map } from 'rxjs';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { combineLatest, first, map } from 'rxjs';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
-import { AbTestService } from './resource-class-sidenav/ab-test.service';
 
 @Component({
   selector: 'app-rcbp-class',
@@ -27,9 +27,13 @@ import { AbTestService } from './resource-class-sidenav/ab-test.service';
   standalone: false,
 })
 export class RcbpClassComponent {
-  data$ = combineLatest([this._route.params, this._projectPageService.ontologies$]).pipe(
-    map(([params, ontologies]) => {
-      console.log(params, ontologies);
+  data$ = combineLatest([
+    this._route.params,
+    this._projectPageService.currentProject$.pipe(first()),
+    this._projectPageService.ontologies$,
+  ]).pipe(
+    map(([params, project, ontologies]) => {
+      console.log(params, project, ontologies);
       const ontologyLabel = params['ontologyLabel'] as string;
       const classLabel = params['classLabel'] as string;
 
@@ -37,7 +41,10 @@ export class RcbpClassComponent {
       if (!ontology) {
         throw new Error('TODO: guard');
       }
-      const resClass = Object.values(ontology.classes).find(cls => cls.label === classLabel);
+
+      const classId = this._getClassIdFromParams(project.shortcode, ontologyLabel, classLabel);
+
+      const resClass = Object.values(ontology.classes).find(cls => cls.id === classId);
       if (!resClass) {
         throw new Error('TODO: guard');
       }
@@ -46,9 +53,14 @@ export class RcbpClassComponent {
   );
   constructor(
     public multipleViewerService: MultipleViewerService,
-    public abtestService: AbTestService,
     private _projectPageService: ProjectPageService,
     private _route: ActivatedRoute,
+    private _ontologyService: OntologyService,
     @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
   ) {}
+
+  private _getClassIdFromParams(projectShortcode: string, ontologyLabel: string, classLabel: string) {
+    const ontoId = `${this._ontologyService.getIriBaseUrl()}/ontology/${projectShortcode}/${ontologyLabel}/v2`;
+    return `${ontoId}#${classLabel}`;
+  }
 }

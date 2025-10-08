@@ -6,7 +6,6 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { AbTestService } from './ab-test.service';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -62,7 +61,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   classLabel!: string;
 
   get isSelected() {
-    return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
+    return false; //  return this.resClass.id === this._abTestService.resourceClasSelected?.resClass.id;
   }
 
   constructor(
@@ -72,22 +71,12 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
-    public _abTestService: AbTestService,
     private _router: Router,
     private _route: ActivatedRoute
   ) {}
 
   selectResourceClass() {
-    this._abTestService.resourceClasSelected = null;
-
-    setTimeout(() => {
-      this._abTestService.resourceClasSelected = {
-        classLabel: this.classLabel,
-        ontologyLabel: this.ontologyLabel,
-        resClass: this.resClass,
-      };
-      this._router.navigate([this.ontologyLabel, this.classLabel], { relativeTo: this._route });
-    }, 0);
+    this._router.navigate([this.ontologyLabel, this.classLabel], { relativeTo: this._route });
   }
 
   ngOnInit(): void {

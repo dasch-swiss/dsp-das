@@ -1,10 +1,10 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KnoraApiConnection, ReadProject, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
+import { combineLatest, first, map, Observable, pairwise, startWith, switchMap, withLatestFrom } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceResultService } from '../resource-result.service';
 
@@ -25,7 +25,7 @@ import { ResourceResultService } from '../resource-result.service';
   providers: [ResourceResultService],
   standalone: false,
 })
-export class ResourcesListFetcherComponent implements OnInit {
+export class ResourcesListFetcherComponent implements OnChanges {
   @Input({ required: true }) ontologyLabel!: string;
   @Input({ required: true }) classLabel!: string;
   @Input({ required: true }) reload$!: Observable<null>;
@@ -57,15 +57,11 @@ export class ResourcesListFetcherComponent implements OnInit {
     private _multipleViewerService: MultipleViewerService
   ) {}
 
-  ngOnInit() {
-    this._classParam$.pipe(startWith(null), pairwise()).subscribe(([prev, current]) => {
-      if (prev && prev !== current) {
-        this._resourceResult.updatePageIndex(0);
-      }
-    });
+  ngOnChanges() {
+    this._resourceResult.updatePageIndex(0);
 
     this._resources$ = this.reload$.pipe(
-      switchMap(() => this.projectPageService.currentProject$),
+      switchMap(() => this.projectPageService.currentProject$.pipe(first())),
       switchMap(project => {
         const ontologyLabel = this.ontologyLabel;
         const classLabel = this.classLabel;
