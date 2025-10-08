@@ -1,5 +1,39 @@
 # Changelog
 
+## [11.47.2](https://github.com/dasch-swiss/dsp-das/compare/v11.47.1...v11.47.2) (2025-10-07)
+
+
+### Bug Fixes
+
+* display menu when user can edit (DEV-5468) ([#2552](https://github.com/dasch-swiss/dsp-das/issues/2552)) ([488768a](https://github.com/dasch-swiss/dsp-das/commit/488768aacdbe1a71268b0dbd159f6ef20d7d0543))
+
+## [11.47.1](https://github.com/dasch-swiss/dsp-das/compare/v11.47.0...v11.47.1) (2025-10-07)
+
+
+### Bug Fixes
+
+* do not subscribe to currentproject$ (DEV-5432) ([#2548](https://github.com/dasch-swiss/dsp-das/issues/2548)) ([78fde00](https://github.com/dasch-swiss/dsp-das/commit/78fde0076c2c9a28daf386cd084019c107d8efbc))
+* reintroduce edit label for pages (DEV-5468) ([#2550](https://github.com/dasch-swiss/dsp-das/issues/2550)) ([d2fc4d2](https://github.com/dasch-swiss/dsp-das/commit/d2fc4d23b6da56d3d40e4d3708aa864ab901126b))
+
+## [11.47.0](https://github.com/dasch-swiss/dsp-das/compare/v11.46.0...v11.47.0) (2025-10-06)
+
+
+### Enhancements
+
+* persist user preference for showing all comments ([#2546](https://github.com/dasch-swiss/dsp-das/issues/2546)) ([e26a77b](https://github.com/dasch-swiss/dsp-das/commit/e26a77bb6f5a7bf52773a175900932a033b1833e))
+* show all properties it should remember the choice of user ([#2544](https://github.com/dasch-swiss/dsp-das/issues/2544)) ([6136e47](https://github.com/dasch-swiss/dsp-das/commit/6136e47545f003e4b276d12302434a83f881d3b9))
+
+
+### Bug Fixes
+
+* reintroduce edit toolbar and remove duplicated header (DEV-5453) ([#2545](https://github.com/dasch-swiss/dsp-das/issues/2545)) ([9f69542](https://github.com/dasch-swiss/dsp-das/commit/9f69542deed414c214ff32c546fd717ad8d30bc9))
+
+
+### Maintenances
+
+* **Angular:** Upgrade NX to v21.5.1 and Angular to v20.2.4 ([#2541](https://github.com/dasch-swiss/dsp-das/issues/2541)) ([b976abd](https://github.com/dasch-swiss/dsp-das/commit/b976abd94ca8c8657108e3dad8da3b30be769d35))
+* disable Nx Cloud ([#2542](https://github.com/dasch-swiss/dsp-das/issues/2542)) ([e52775b](https://github.com/dasch-swiss/dsp-das/commit/e52775bc6206c6352c221413eb311dd15bae1449))
+
 ## [11.46.0](https://github.com/dasch-swiss/dsp-das/compare/v11.45.1...v11.46.0) (2025-09-29)
 
 

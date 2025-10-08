@@ -29,8 +29,8 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
       </button>
 
       <app-permission-info [resource]="resource" />
-      @if (userCanDelete$ | async) {
-        <app-resource-edit-more-menu [resource]="resource" />
+      @if ((!!(userCanEdit$ | async) && showEditLabel) || !!(userCanDelete$ | async)) {
+        <app-resource-edit-more-menu [resource]="resource" [showEditLabel]="showEditLabel" />
       }
     </span>
 
@@ -72,7 +72,9 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 })
 export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() showEditLabel = false;
 
+  userCanEdit$ = this._resourceFetcherService.userCanEdit$;
   userCanDelete$ = this._resourceFetcherService.userCanDelete$;
 
   constructor(
