@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import {
-  RcbpClassComponent,
-  RcbpGlobalComponent,
-  ResourceClassBrowserPage3Component,
+  DataBrowserPageComponent,
+  DataClassViewComponent,
+  DataOverviewComponent,
 } from '@dasch-swiss/vre/pages/data-browser';
 import { ListPageComponent } from '@dasch-swiss/vre/pages/ontology/list';
 import {
@@ -54,12 +54,12 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.data,
-        component: ResourceClassBrowserPage3Component,
+        component: DataBrowserPageComponent,
         children: [
-          { path: '', component: RcbpGlobalComponent },
+          { path: '', component: DataOverviewComponent },
           {
             path: `:${RouteConstants.ontologyParameter}/:${RouteConstants.classParameter}`,
-            component: RcbpClassComponent,
+            component: DataClassViewComponent,
           },
         ],
       },
@@ -88,7 +88,7 @@ const routes: Routes = [
       },
       {
         path: RouteConstants.data,
-        component: ResourceClassBrowserPage3Component,
+        component: DataBrowserPageComponent,
       },
       {
         path: `${RouteConstants.list}/:${RouteConstants.listParameter}`,

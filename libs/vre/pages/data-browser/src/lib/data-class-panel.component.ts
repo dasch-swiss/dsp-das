@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 
 @Component({
-  selector: 'app-resource-class-panel',
+  selector: 'app-data-class-panel',
   template: `
     <div style="padding-left: 16px; margin-bottom: 32px; padding-right: 16px">
       <div style="display: flex; align-items: center">
@@ -26,7 +26,7 @@ import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'templa
   `,
   standalone: false,
 })
-export class ResourceClassPanelComponent {
+export class DataClassPanelComponent {
   @Input() classSelected!: {
     classLabel: string;
     ontologyLabel: string;

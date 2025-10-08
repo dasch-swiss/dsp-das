@@ -4,7 +4,7 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { ResourceResultService } from './resource-result.service';
 
 @Component({
-  selector: 'app-resource-class-browser-page-3',
+  selector: 'app-data-browser-page',
   template: `<div style="display: flex; flex-direction: column; height: 100%">
     <as-split direction="horizontal">
       <as-split-area [size]="25">
@@ -18,7 +18,7 @@ import { ResourceResultService } from './resource-result.service';
   providers: [MultipleViewerService, ResourceResultService],
   standalone: false,
 })
-export class ResourceClassBrowserPage3Component implements OnInit {
+export class DataBrowserPageComponent implements OnInit {
   constructor(
     public multipleViewerService: MultipleViewerService,
     private _userService: UserService

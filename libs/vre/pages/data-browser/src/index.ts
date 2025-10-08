@@ -17,7 +17,8 @@ export * from './lib/list-view/resource-list-selection.component';
 
 export * from './lib/resource-result.service';
 export * from './lib/resource-class-sidenav/resources-list-fetcher.component';
-export * from './lib/resource-class-browser-page-3.component';
-export * from './lib/resource-class-panel.component';
-export * from './lib/rcbp-class.component';
-export * from './lib/rcbp-global.component';
+export * from './lib/data-browser-page.component';
+export * from './lib/data-class-panel.component';
+export * from './lib/data-class-view.component';
+export * from './lib/data-overview.component';
+export * from './lib/data-tab-root.component';

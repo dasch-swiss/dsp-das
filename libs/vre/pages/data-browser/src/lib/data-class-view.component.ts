@@ -8,7 +8,7 @@ import { combineLatest, EMPTY, first, map } from 'rxjs';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
-  selector: 'app-rcbp-class',
+  selector: 'app-data-class-view',
   template: `
     @if (data$ | async; as classSelected) {
       @if (dataIsNotFound) {
@@ -18,7 +18,7 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
       } @else {
         <as-split>
           <as-split-area [size]="34" cdkScrollable>
-            <app-resource-class-panel [classSelected]="classSelected" />
+            <app-data-class-panel [classSelected]="classSelected" />
           </as-split-area>
           <as-split-area [size]="66">
             @if (multipleViewerService.selectMode) {
@@ -34,7 +34,7 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
   `,
   standalone: false,
 })
-export class RcbpClassComponent {
+export class DataClassViewComponent {
   dataIsNotFound = false;
   data$ = combineLatest([
     this._route.params,
