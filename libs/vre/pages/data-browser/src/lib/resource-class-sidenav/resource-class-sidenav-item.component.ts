@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
@@ -83,8 +83,8 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
         map(([params, project]) => {
           const selectedResClassId = this._ontologyService.getClassIdFromParams(
             project.shortcode,
-            params['ontologyLabel'],
-            params['classLabel']
+            params[RouteConstants.ontologyParameter],
+            params[RouteConstants.classParameter]
           );
           return this.resClass.id === selectedResClassId;
         })

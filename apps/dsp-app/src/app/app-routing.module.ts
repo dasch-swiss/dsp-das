@@ -57,7 +57,10 @@ const routes: Routes = [
         component: ResourceClassBrowserPage3Component,
         children: [
           { path: '', component: RcbpGlobalComponent },
-          { path: ':ontologyLabel/:classLabel', component: RcbpClassComponent },
+          {
+            path: `:${RouteConstants.ontologyParameter}/:${RouteConstants.classParameter}`,
+            component: RcbpClassComponent,
+          },
         ],
       },
       {

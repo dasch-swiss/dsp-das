@@ -76,6 +76,7 @@ export class RouteConstants {
   static readonly resourceParameter = 'resource';
   static readonly modeParameter = 'mode';
   static readonly qParameter = 'q';
+  static readonly ontologyParameter = 'ontology';
   static readonly classParameter = 'class';
   static readonly instanceParameter = 'instance';
   static readonly listParameter = 'list';

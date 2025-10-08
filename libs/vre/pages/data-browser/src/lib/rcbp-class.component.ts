@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, EMPTY, first, map } from 'rxjs';
@@ -43,8 +43,8 @@ export class RcbpClassComponent {
   ]).pipe(
     map(([params, project, ontologies]) => {
       this.dataIsNotFound = false;
-      const ontologyLabel = params['ontologyLabel'] as string;
-      const classLabel = params['classLabel'] as string;
+      const ontologyLabel = params[RouteConstants.ontologyParameter] as string;
+      const classLabel = params[RouteConstants.classParameter] as string;
 
       const ontology = ontologies.find(
         ontology_ => ontology_.id === this._ontologyService.getOntologyIriFromRoute(project.shortcode, ontologyLabel)
