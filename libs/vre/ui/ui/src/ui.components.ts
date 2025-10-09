@@ -1,12 +1,12 @@
 import { AdminImageDirective } from './lib/admin-image/admin-image.directive';
 import { AlternatedListComponent } from './lib/alternated-list.component';
+import { ColorPickerComponent } from './lib/app-color-picker.component';
 import { CenteredBoxComponent } from './lib/centered-box.component';
 import { CenteredLayoutComponent } from './lib/centered-layout.component';
 import { CenteredMessageComponent } from './lib/centered-message.component';
 import { ChipListInputComponent } from './lib/chip-list-input.component';
 import { CkEditorControlComponent } from './lib/ck-editor/ck-editor-control.component';
 import { CkEditorComponent } from './lib/ck-editor/ck-editor.component';
-import { ColorPickerComponent } from './lib/color-picker/color-picker.component';
 import { CommonInputComponent } from './lib/common-input.component';
 import { ConfirmDialogComponent } from './lib/dialog/confirm-dialog.component';
 import { DragDropDirective } from './lib/directives/drag-drop.directive';
@@ -37,7 +37,6 @@ export const UiComponents = [
   InvalidControlScrollDirective,
   ChipListInputComponent,
   CommonInputComponent,
-  ColorPickerComponent,
   AdminImageDirective,
   CenteredLayoutComponent,
   DragDropDirective,
@@ -51,6 +50,7 @@ export const UiComponents = [
   InternalLinkReplacerPipe,
   AddTargetBlankPipe,
   AlternatedListComponent,
+  ColorPickerComponent,
   HumanReadableDatePipe,
   DoubleChipSelectorComponent,
   CenteredBoxComponent,
