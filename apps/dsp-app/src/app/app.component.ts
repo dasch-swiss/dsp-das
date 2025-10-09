@@ -10,7 +10,7 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
     <router-outlet />
     <app-cookie-banner />
   `,
-  standalone: false
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   constructor(
