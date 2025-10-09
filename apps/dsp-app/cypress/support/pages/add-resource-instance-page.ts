@@ -4,7 +4,7 @@ export class AddResourceInstancePage {
     cy.get('[data-cy=create-resource-btn]').click();
   };
 
-  getSubmitButton = () => cy.get('[data-cy=create-resource-dialog] [data-cy=submit-button]');
+  getSubmitButton = () => cy.get('[data-cy=submit-button]');
 
   clickOnSubmit = () => {
     this.getSubmitButton().click({ force: true });
