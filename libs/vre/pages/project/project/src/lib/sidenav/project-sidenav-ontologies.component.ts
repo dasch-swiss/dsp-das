@@ -9,27 +9,33 @@ import { ProjectPageService } from '../project-page.service';
   selector: 'app-projects-sidenav-ontologies',
   template: `
     @if (projectOntologies$ | async; as projectOntologies) {
-      <mat-accordion>
-        @for (onto of projectOntologies; let first = $first; track onto) {
-          <mat-expansion-panel
-            [togglePosition]="'before'"
-            style="box-shadow: none"
-            data-cy="sidenav-ontology"
-            [expanded]="shouldExpand(onto.id, projectOntologies.length === 1 && first)">
-            <mat-expansion-panel-header>
-              <mat-panel-title
-                #ontoTitle
-                matTooltip="{{ onto.label }}"
-                matTooltipShowDelay="500"
-                matTooltipPosition="right"
-                [matTooltipDisabled]="compareElementHeights(ontoTitle)">
-                {{ onto.label }}
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
-          </mat-expansion-panel>
-        }
-      </mat-accordion>
+      @if (projectOntologies.length === 0) {
+        <div class="mat-body-2" style="margin-top: 48px; text-align: center">
+          This project does not have any data yet.
+        </div>
+      } @else {
+        <mat-accordion>
+          @for (onto of projectOntologies; let first = $first; track onto) {
+            <mat-expansion-panel
+              [togglePosition]="'before'"
+              style="box-shadow: none"
+              data-cy="sidenav-ontology"
+              [expanded]="shouldExpand(onto.id, projectOntologies.length === 1 && first)">
+              <mat-expansion-panel-header>
+                <mat-panel-title
+                  #ontoTitle
+                  matTooltip="{{ onto.label }}"
+                  matTooltipShowDelay="500"
+                  matTooltipPosition="right"
+                  [matTooltipDisabled]="compareElementHeights(ontoTitle)">
+                  {{ onto.label }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      }
     } @else {
       <app-progress-indicator />
     }
