@@ -15,7 +15,9 @@ import { DataBrowserPageService } from './data-browser-page.service';
       <div style="display: flex; align-items: center">
         <h3 style="flex: 1">{{ classSelected.classLabel }}</h3>
         @if (hasProjectMemberRights$ | async) {
-          <button mat-stroked-button (click)="goToAddClassInstance()">Create a resource</button>
+          <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
+            Create a resource
+          </button>
         }
       </div>
       <p style="font-style: italic">{{ classSelected.resClass.comment }}</p>
