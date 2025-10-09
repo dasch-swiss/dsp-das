@@ -24,7 +24,6 @@ export class AddResourceInstancePage {
   }
 
   delete() {
-    cy.reload(); // TODO shouldnt reload
     this.mouseHover();
     cy.get('[data-cy=delete-button]').click();
     cy.get('[data-cy=confirm-button]').click();
