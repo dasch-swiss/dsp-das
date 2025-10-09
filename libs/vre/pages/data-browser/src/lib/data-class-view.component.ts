@@ -1,11 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, EMPTY, first, map } from 'rxjs';
-import { MultipleViewerService } from './comparison/multiple-viewer.service';
 
 @Component({
   selector: 'app-data-class-view',
@@ -21,9 +20,6 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
             <app-data-class-panel [classSelected]="classSelected" />
           </as-split-area>
           <as-split-area [size]="66">
-            @if (multipleViewerService.selectMode) {
-              <app-resource-list-selection />
-            }
             <app-multiple-viewer />
           </as-split-area>
         </as-split>
@@ -67,10 +63,8 @@ export class DataClassViewComponent {
     })
   );
   constructor(
-    public multipleViewerService: MultipleViewerService,
     private _projectPageService: ProjectPageService,
     private _route: ActivatedRoute,
-    private _ontologyService: OntologyService,
-    @Inject(DspApiConnectionToken) private _dspApiConnection: KnoraApiConnection
+    private _ontologyService: OntologyService
   ) {}
 }

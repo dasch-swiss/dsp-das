@@ -13,15 +13,20 @@ import { MultipleViewerService } from './multiple-viewer.service';
             [title]="'Select a resource on the left panel'"
             [message]="'Choose one or more resources from the left panel to display and compare them here.'" />
         </app-centered-box>
-      } @else if (selectedResourceIds.length <= MAX_RESOURCES) {
-        <app-comparison [resourceIds]="selectedResourceIds" />
-      } @else if (selectedResourceIds.length > MAX_RESOURCES) {
-        <app-centered-box>
-          <app-centered-message
-            [icon]="'warning'"
-            [title]="'Too many resources selected'"
-            [message]="'Maximum ' + MAX_RESOURCES + ' resources can be compared at the same time.'" />
-        </app-centered-box>
+      } @else {
+        @if (multipleViewerService.selectMode) {
+          <app-resource-list-selection />
+        }
+        @if (selectedResourceIds.length <= MAX_RESOURCES) {
+          <app-comparison [resourceIds]="selectedResourceIds" />
+        } @else {
+          <app-centered-box>
+            <app-centered-message
+              [icon]="'warning'"
+              [title]="'Too many resources selected'"
+              [message]="'Maximum ' + MAX_RESOURCES + ' resources can be compared at the same time.'" />
+          </app-centered-box>
+        }
       }
     }
   `,
