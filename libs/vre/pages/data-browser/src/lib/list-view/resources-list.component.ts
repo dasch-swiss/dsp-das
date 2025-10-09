@@ -26,7 +26,7 @@ import { ResourceResultService } from '../resource-result.service';
       }
     `,
   ],
-    standalone: false,
+  standalone: false,
 })
 export class ResourcesListComponent {
   @Input({ required: true }) resources!: ReadResource[];
