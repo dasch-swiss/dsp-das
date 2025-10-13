@@ -22,7 +22,7 @@ export class ProjectPageService {
 
   currentProject$ = this._reloadProjectSubject.pipe(
     switchMap(() => this._currentProjectUuidSubject),
-    switchMap(projectUuid => this.projectApiService.get(this._projectService.uuidToIri(projectUuid))),
+    switchMap(projectUuid => this._projectApiService.get(this._projectService.uuidToIri(projectUuid))),
     map(response => response.project),
     tap(project => {
       this._currentProjectId = project.id;
@@ -56,7 +56,7 @@ export class ProjectPageService {
     })
   );
   constructor(
-    private readonly projectApiService: ProjectApiService,
+    private readonly _projectApiService: ProjectApiService,
     private readonly _userService: UserService,
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,

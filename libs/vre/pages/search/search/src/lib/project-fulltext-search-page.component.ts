@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { map, startWith, Subject } from 'rxjs';
@@ -67,7 +67,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
 
   constructor(
     private readonly _fb: FormBuilder,
-    private readonly overlay: Overlay,
+    private readonly _overlay: Overlay,
     public readonly projectPageService: ProjectPageService
   ) {}
 
@@ -84,7 +84,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
       return;
     }
 
-    const positionStrategy = this.overlay
+    const positionStrategy = this._overlay
       .position()
       .flexibleConnectedTo(this.searchInput)
       .withPositions([
@@ -98,10 +98,10 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
         },
       ]);
 
-    this.overlayRef = this.overlay.create({
+    this.overlayRef = this._overlay.create({
       positionStrategy,
       hasBackdrop: false,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      scrollStrategy: this._overlay.scrollStrategies.reposition(),
       width: '570px',
     });
 

@@ -20,7 +20,7 @@ export class OpenSeaDragonService {
   }
 
   private readonly _OVERLAY_COLOR = 'rgba(255,0,0,0.3)';
-  private readonly ZOOM_FACTOR = 0.2;
+  private readonly _ZOOM_FACTOR = 0.2;
 
   private _viewer!: OpenSeadragon.Viewer;
 
@@ -88,7 +88,7 @@ export class OpenSeaDragonService {
   }
 
   zoom(direction: 1 | -1) {
-    this._viewer.viewport.zoomBy(1 + direction * this.ZOOM_FACTOR);
+    this._viewer.viewport.zoomBy(1 + direction * this._ZOOM_FACTOR);
   }
 
   private _addCustomHandlers(viewer: OpenSeadragon.Viewer): void {
