@@ -18,7 +18,7 @@ export class TimeFormatDirective implements ControlValueAccessor {
   private onChange!: (value: number | null) => void;
   private onTouched!: () => void;
 
-  constructor(private el: ElementRef) {}
+  constructor(private readonly el: ElementRef) {}
 
   @HostListener('input', ['$event.target.value'])
   onInput(value: string): void {

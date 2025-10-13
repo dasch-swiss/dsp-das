@@ -42,9 +42,9 @@ export class GlobalSearchComponent implements OnDestroy {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   constructor(
-    private _router: Router,
-    private _fb: FormBuilder,
-    private overlay: Overlay
+    private readonly _router: Router,
+    private readonly _fb: FormBuilder,
+    private readonly overlay: Overlay
   ) {}
 
   showSearchTips() {

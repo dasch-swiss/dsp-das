@@ -63,9 +63,9 @@ export class ProjectNavigationTabsComponent {
     return this._route.snapshot.children[0].url[0].path;
   }
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    public _projectPageService: ProjectPageService
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    public readonly _projectPageService: ProjectPageService
   ) {}
 
   reloadPage(event: MouseEvent) {

@@ -12,9 +12,9 @@ export class LoadingButtonDirective implements OnChanges {
   spinnerComponentRef!: any;
 
   constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
-    private viewContainerRef: ViewContainerRef
+    private readonly el: ElementRef,
+    private readonly renderer: Renderer2,
+    private readonly viewContainerRef: ViewContainerRef
   ) {
     this.attachSpinnerElement();
   }

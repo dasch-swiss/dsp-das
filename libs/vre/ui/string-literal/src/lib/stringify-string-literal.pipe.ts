@@ -7,7 +7,7 @@ import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services
   standalone: false,
 })
 export class StringifyStringLiteralPipe implements PipeTransform {
-  constructor(private localizationService: LocalizationService) {}
+  constructor(private readonly localizationService: LocalizationService) {}
 
   transform(value: StringLiteral[], allAsString = false): string {
     if (!value || value.length === 0) {

@@ -184,11 +184,11 @@ export class DateValueHandlerComponent
 
   constructor(
     fb: UntypedFormBuilder,
-    @Optional() @Self() public ngControl: NgControl,
-    @Optional() public _parentForm: NgForm,
-    @Optional() public _parentFormGroup: FormGroupDirective,
-    public _defaultErrorStateMatcher: ErrorStateMatcher,
-    private _valueService: ValueService
+    @Optional() @Self() public readonly ngControl: NgControl,
+    @Optional() public readonly _parentForm: NgForm,
+    @Optional() public readonly _parentFormGroup: FormGroupDirective,
+    public readonly _defaultErrorStateMatcher: ErrorStateMatcher,
+    private readonly _valueService: ValueService
   ) {
     if (this.ngControl != null) {
       // setting the value accessor directly (instead of using

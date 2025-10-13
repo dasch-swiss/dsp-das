@@ -27,7 +27,7 @@ export class LocalizationService {
     { locale: 'it-CH', localeData: it_CH },
   ] as const;
 
-  constructor(private translateService: TranslateService) {}
+  constructor(private readonly translateService: TranslateService) {}
 
   init() {
     this.setDefaultLanguage();
