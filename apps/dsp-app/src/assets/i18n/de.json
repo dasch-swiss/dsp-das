@@ -66,7 +66,8 @@
         "description": "Projektteam erweitern",
         "select": "Aus der Liste wählen ...",
         "usersLoading": "Konten werden geladen ...",
-        "newUser": "Neues Konto"
+        "newUser": "Neues Konto",
+        "noResults": "Keine Ergebnisse"
       },
       "reusableProjectForm": {
         "description": "Projektbeschreibung",
@@ -128,6 +129,23 @@
           "addCopyrightHolder": "Rechteinhaber:in hinzufügen",
           "text": "Text"
         }
+      },
+      "sidenav": {
+        "advancedSearch": "Erweiterte Suche",
+        "projectDescription": "Projektbeschreibung",
+        "projectSettings": "Projekteinstellungen",
+        "dataModel": "Datenmodell"
+      },
+      "collaboration": {
+        "permissionGroup": "Berechtigungsgruppe",
+        "noGroupDefined": "Noch keine Gruppe definiert.",
+        "admin": "Admin",
+        "addAsProjectAdmin": "Als Projekt-Admin hinzufügen",
+        "removeAsProjectAdmin": "Als Projekt-Admin entfernen",
+        "editMember": "Mitglied bearbeiten",
+        "changeMemberPassword": "Passwort des Mitglieds ändern",
+        "removeMemberFromProject": "Mitglied aus Projekt entfernen",
+        "confirmRemoveMember": "Möchten Sie diesen Benutzer aus dem Projekt entfernen?"
       }
     },
     "system": {

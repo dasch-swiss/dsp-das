@@ -66,7 +66,8 @@
         "description": "Augmenter votre équipe",
         "select": "Sélectionner dans la liste ...",
         "usersLoading": "Chargement des utilisateurs ...",
-        "newUser": "Nouvel utilisateur"
+        "newUser": "Nouvel utilisateur",
+        "noResults": "Aucun résultat"
       },
       "reusableProjectForm": {
         "description": "Description",
@@ -128,6 +129,23 @@
           "addCopyrightHolder": "Ajouter titulaire des droits",
           "text": "Texte"
         }
+      },
+      "sidenav": {
+        "advancedSearch": "Recherche avancée",
+        "projectDescription": "Description du projet",
+        "projectSettings": "Paramètres du projet",
+        "dataModel": "Modèle de données"
+      },
+      "collaboration": {
+        "permissionGroup": "Groupe de permissions",
+        "noGroupDefined": "Aucun groupe défini pour le moment.",
+        "admin": "Admin",
+        "addAsProjectAdmin": "Ajouter comme administrateur du projet",
+        "removeAsProjectAdmin": "Retirer comme administrateur du projet",
+        "editMember": "Modifier le membre",
+        "changeMemberPassword": "Changer le mot de passe du membre",
+        "removeMemberFromProject": "Retirer le membre du projet",
+        "confirmRemoveMember": "Voulez-vous retirer cet utilisateur du projet ?"
       }
     },
     "system": {

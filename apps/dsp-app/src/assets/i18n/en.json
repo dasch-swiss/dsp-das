@@ -66,7 +66,8 @@
         "description": "Increase your team",
         "select": "Select from list ...",
         "usersLoading": "Loading users ...",
-        "newUser": "New user"
+        "newUser": "New user",
+        "noResults": "No results"
       },
       "reusableProjectForm": {
         "description": "Description",
@@ -128,6 +129,23 @@
           "addCopyrightHolder": "Add copyright holder",
           "text": "Text"
         }
+      },
+      "sidenav": {
+        "advancedSearch": "Advanced Search",
+        "projectDescription": "Project Description",
+        "projectSettings": "Project Settings",
+        "dataModel": "Data Model"
+      },
+      "collaboration": {
+        "permissionGroup": "Permission group",
+        "noGroupDefined": "No group defined yet.",
+        "admin": "Admin",
+        "addAsProjectAdmin": "Add as project admin",
+        "removeAsProjectAdmin": "Remove as project admin",
+        "editMember": "Edit member",
+        "changeMemberPassword": "Change member's password",
+        "removeMemberFromProject": "Remove member from project",
+        "confirmRemoveMember": "Do you want to remove this user from the project?"
       }
     },
     "system": {
