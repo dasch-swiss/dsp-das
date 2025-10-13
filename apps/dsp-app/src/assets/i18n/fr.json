@@ -195,6 +195,42 @@
         "title": "Advanced Search",
         "usePreviousSearch": "Use Previous Search"
       }
+    },
+    "dataBrowser": {
+      "resourceLinkDialog": {
+        "linkResources": "Lier des ressources",
+        "collectionLabel": "Étiquettes de collection",
+        "comment": "Commentaire",
+        "resourcesWillBeConnected": "Les ressources suivantes seront connectées :",
+        "createCollection": "Créer une collection de {{count}} ressources"
+      },
+      "dataClassPanel": {
+        "createResource": "Créer une ressource"
+      },
+      "resourceListSelection": {
+        "resourcesSelected": "{{count}} ressources sélectionnées",
+        "createLinkObject": "Créer un objet de lien"
+      },
+      "resourcesList": {
+        "backToSearchForm": "Retour au formulaire de recherche"
+      },
+      "resourcesListFetcher": {
+        "noResourcesFound": "Aucune ressource trouvée pour cette classe.",
+        "noPermissions": "Il semble que vous n'ayez pas les autorisations nécessaires.",
+        "checkPermissions": "Vérifiez auprès d'un administrateur de projet si vous avez les autorisations nécessaires ou si vous êtes connecté."
+      },
+      "multipleViewer": {
+        "selectResource": "Sélectionnez une ressource dans le panneau de gauche",
+        "chooseResources": "Choisissez une ou plusieurs ressources dans le panneau de gauche pour les afficher et les comparer ici.",
+        "tooManyResources": "Trop de ressources sélectionnées.",
+        "maxResources": "Un maximum de {{count}} ressources peuvent être comparées en même temps."
+      },
+      "dataClassView": {
+        "noData": "Il n'y a pas de données correspondant à votre demande."
+      },
+      "resourceListItem": {
+        "foundIn": "Trouvé dans : "
+      }
     }
   },
   "resourceEditor": {

@@ -195,6 +195,42 @@
         "title": "Advanced Search",
         "usePreviousSearch": "Use Previous Search"
       }
+    },
+    "dataBrowser": {
+      "resourceLinkDialog": {
+        "linkResources": "Ressourcen verknüpfen",
+        "collectionLabel": "Sammlungsbezeichnungen",
+        "comment": "Kommentar",
+        "resourcesWillBeConnected": "Die folgenden Ressourcen werden verbunden:",
+        "createCollection": "Eine Sammlung von {{count}} Ressourcen erstellen"
+      },
+      "dataClassPanel": {
+        "createResource": "Eine Ressource erstellen"
+      },
+      "resourceListSelection": {
+        "resourcesSelected": "{{count}} Ressourcen ausgewählt",
+        "createLinkObject": "Ein Link-Objekt erstellen"
+      },
+      "resourcesList": {
+        "backToSearchForm": "Zurück zum Suchformular"
+      },
+      "resourcesListFetcher": {
+        "noResourcesFound": "Keine Ressourcen für diese Klasse gefunden.",
+        "noPermissions": "Es scheint, dass Sie nicht über die erforderlichen Berechtigungen verfügen.",
+        "checkPermissions": "Überprüfen Sie bei einem Projektadministrator, ob Sie über die erforderliche Berechtigung verfügen oder ob Sie angemeldet sind."
+      },
+      "multipleViewer": {
+        "selectResource": "Wählen Sie eine Ressource im linken Bereich aus",
+        "chooseResources": "Wählen Sie eine oder mehrere Ressourcen aus dem linken Bereich aus, um sie hier anzuzeigen und zu vergleichen.",
+        "tooManyResources": "Zu viele Ressourcen ausgewählt.",
+        "maxResources": "Maximal {{count}} Ressourcen können gleichzeitig verglichen werden."
+      },
+      "dataClassView": {
+        "noData": "Es gibt keine Daten, die Ihrer Anfrage entsprechen."
+      },
+      "resourceListItem": {
+        "foundIn": "Gefunden in: "
+      }
     }
   },
   "resourceEditor": {
