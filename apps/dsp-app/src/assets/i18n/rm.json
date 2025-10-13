@@ -211,7 +211,19 @@
       },
       "advancedSearch": {
         "title": "Advanced Search",
-        "usePreviousSearch": "Use Previous Search"
+        "usePreviousSearch": "Use Previous Search",
+        "addSearchCriteria": "Add Search Criteria",
+        "reset": "Reset",
+        "search": "Search",
+        "orderBy": "Order by",
+        "orderByTooltip": "Search cannot be ordered by a URI property or a property that links to a resource."
+      },
+      "noResultsFound": "No results found",
+      "searchTips": {
+        "title": "Search tips",
+        "exactPhrases": "Use quotation marks for exact phrases: \"down the rabbit hole\"",
+        "booleanSearch": "Use AND, OR, NOT for boolean searches: Alice AND Wonderland",
+        "wildcards": "Use wildcards: Alice* will match Alice, Alices, etc."
       }
     },
     "dataBrowser": {

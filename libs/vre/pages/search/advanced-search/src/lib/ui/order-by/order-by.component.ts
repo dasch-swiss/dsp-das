@@ -1,11 +1,12 @@
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateService } from '@ngx-translate/core';
 import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
@@ -26,6 +27,8 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
   standalone: true,
 })
 export class OrderByComponent {
+  private readonly _translateService = inject(TranslateService);
+
   @Input() orderByList: OrderByItem[] | null = [];
   @Input() orderByDisabled: boolean | null = false;
 
@@ -35,7 +38,7 @@ export class OrderByComponent {
   sortOrderSelectionList!: MatSelectionList;
 
   isOpen = false;
-  tooltipText = 'Search cannot be ordered by a URI property or a property that links to a resource.';
+  tooltipText = this._translateService.instant('pages.search.advancedSearch.orderByTooltip');
 
   drop(event: CdkDragDrop<string[]>) {
     if (!this.orderByList) return;

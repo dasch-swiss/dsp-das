@@ -211,7 +211,19 @@
       },
       "advancedSearch": {
         "title": "Advanced Search",
-        "usePreviousSearch": "Use Previous Search"
+        "usePreviousSearch": "Use Previous Search",
+        "addSearchCriteria": "Suchkriterium hinzufügen",
+        "reset": "Zurücksetzen",
+        "search": "Suchen",
+        "orderBy": "Sortieren nach",
+        "orderByTooltip": "Die Suche kann nicht nach einer URI-Eigenschaft oder einer Eigenschaft sortiert werden, die auf eine Ressource verweist."
+      },
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchTips": {
+        "title": "Suchtipps",
+        "exactPhrases": "Verwenden Sie Anführungszeichen für exakte Phrasen: \"down the rabbit hole\"",
+        "booleanSearch": "Verwenden Sie AND, OR, NOT für boolesche Suchen: Alice AND Wonderland",
+        "wildcards": "Verwenden Sie Platzhalter: Alice* findet Alice, Alices, etc."
       }
     },
     "dataBrowser": {

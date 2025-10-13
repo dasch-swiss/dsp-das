@@ -1,11 +1,11 @@
 <div class="add-property-button">
-  <button mat-button [disabled]="addButtonDisabled" (click)="onAddPropertyFormClicked()">Add Search Criteria</button>
+  <button mat-button [disabled]="addButtonDisabled" (click)="onAddPropertyFormClicked()">{{ 'pages.search.advancedSearch.addSearchCriteria' | translate }}</button>
 </div>
 <div class="action-buttons">
   <button mat-button class="reset-button" [disabled]="resetButtonDisabled" (click)="onResetButtonClicked()">
-    Reset
+    {{ 'pages.search.advancedSearch.reset' | translate }}
   </button>
   <button mat-button class="search-button" [disabled]="searchButtonDisabled" (click)="onSearchButtonClicked()">
-    Search
+    {{ 'pages.search.advancedSearch.search' | translate }}
   </button>
 </div>
