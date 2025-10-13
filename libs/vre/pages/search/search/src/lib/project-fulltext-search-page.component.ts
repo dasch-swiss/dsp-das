@@ -66,9 +66,9 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnInit
   private overlayRef: OverlayRef | null = null;
 
   constructor(
-    private _fb: FormBuilder,
-    private overlay: Overlay,
-    public projectPageService: ProjectPageService
+    private readonly _fb: FormBuilder,
+    private readonly overlay: Overlay,
+    public readonly projectPageService: ProjectPageService
   ) {}
 
   ngOnInit() {

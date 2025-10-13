@@ -56,11 +56,11 @@ export class ProjectPageService {
     })
   );
   constructor(
-    private projectApiService: ProjectApiService,
-    private _userService: UserService,
+    private readonly projectApiService: ProjectApiService,
+    private readonly _userService: UserService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _projectService: ProjectService
+    private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _projectService: ProjectService
   ) {}
 
   setCurrentProjectUuid(projectUuid: string): void {
