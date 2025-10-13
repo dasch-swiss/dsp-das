@@ -59,7 +59,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it.only('ThingPicture resource should be created and deleted', () => {
+  it('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=create-resource-btn]').click();
@@ -90,9 +90,9 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=row-Titel]').contains(newTitle);
 
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    cy.get('[data-cy=resource-toolbar-more-button]').eq(0).click();
-    cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').and('not.be.disabled').click();
-    cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
+    cy.get('[data-cy=resource-dialog]').find('[data-cy=resource-toolbar-more-button]').click();
+    cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').click();
+    cy.get('[data-cy=app-delete-resource-dialog-comment]').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
     cy.wait('@resourceDeleteRequest').its('response.statusCode').should('eq', 200);
   });
