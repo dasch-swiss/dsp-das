@@ -23,7 +23,7 @@ import { MultipleViewerService } from './multiple-viewer.service';
           <app-centered-box>
             <app-centered-message
               [icon]="'warning'"
-              [title]="'Too many resources selected'"
+              [title]="'Too many resources selected.'"
               [message]="'Maximum ' + MAX_RESOURCES + ' resources can be compared at the same time.'" />
           </app-centered-box>
         }
