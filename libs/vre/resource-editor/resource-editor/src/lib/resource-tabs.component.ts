@@ -60,14 +60,10 @@ import { CompoundService } from './compound/compound.service';
     `
       :host ::ng-deep {
         .mat-mdc-tab-body,
-        .mat-mcd-tab-body-content {
+        .mat-mdc-tab-body-content {
+          height: auto !important;
           overflow: visible !important;
         }
-      }
-
-      :host ::ng-deep .mat-mdc-tab-body-content {
-        height: auto !important;
-        overflow: visible !important;
       }
       .dots-container {
         margin-left: 1.5em;
