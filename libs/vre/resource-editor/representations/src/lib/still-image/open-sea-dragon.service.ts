@@ -39,7 +39,7 @@ export class OpenSeaDragonService {
   private _createdRectangleSubject = new Subject<Overlay>();
   createdRectangle$ = this._createdRectangleSubject.asObservable();
 
-  constructor(private _accessToken: AccessTokenService) {}
+  constructor(private readonly _accessToken: AccessTokenService) {}
 
   onInit(htmlElement: HTMLElement) {
     const viewerConfig: OpenSeadragon.Options = {
