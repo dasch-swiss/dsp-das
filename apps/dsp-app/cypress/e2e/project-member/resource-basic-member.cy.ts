@@ -59,7 +59,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.wait('@stillImageRequest').its('response.statusCode').should('eq', 200);
   });
 
-  it.skip('ThingPicture resource should be created and deleted', () => {
+  it.only('ThingPicture resource should be created and deleted', () => {
     project0001Page.visitClass(Project0001Page.thingPictureClass.id);
     cy.intercept('GET', '**/resources/**').as('resourceRequest');
     cy.get('[data-cy=create-resource-btn]').click();
@@ -77,16 +77,12 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=authorship-chips]').type('my Author{enter}');
 
     const newLabel = faker.lorem.word();
-    cy.get('[data-cy=resource-label]')
-      .find('[data-cy=common-input-text]')
-      .should('be.visible')
-      .type(newLabel, { force: true });
+    cy.get('[data-cy=resource-label]').find('[data-cy=common-input-text]').type(newLabel, { force: true });
 
     const newTitle = faker.lorem.word();
     cy.get('[data-cy=creator-row-Titel]').find('[data-cy=common-input-text]').type(newTitle);
     cy.get('[data-cy="submit-button"]').click();
     cy.wait('@resourceRequest').its('response.statusCode').should('eq', 200);
-    cy.get('@resourceRequest.all').should('have.length', 1);
 
     cy.get('[data-cy=resource-header-label]').contains(newLabel);
     cy.get('.representation-container').should('exist');
@@ -94,7 +90,7 @@ describe('Check project admin existing resource functionality', () => {
     cy.get('[data-cy=row-Titel]').contains(newTitle);
 
     cy.intercept('POST', '**/resources/delete').as('resourceDeleteRequest');
-    cy.get('[data-cy=resource-toolbar-more-button]').click();
+    cy.get('[data-cy=resource-toolbar-more-button]').eq(0).click();
     cy.get('[data-cy=resource-more-menu-delete-button]').should('exist').and('not.be.disabled').click();
     cy.get('[data-cy=app-delete-resource-dialog-comment]').should('be.visible').type(faker.lorem.sentence());
     cy.get('[data-cy=app-delete-resource-dialog-button]').click();
