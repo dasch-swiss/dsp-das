@@ -5,8 +5,9 @@ This documentation is intended for the internal DaSCH development team.
 ## For Users and Researchers
 
 If you need support or have questions about using the DSP platform:
-- Contact us at: support@dasch.swiss
-- Visit our website: https://dasch.swiss
+
+- Contact us at: <support@dasch.swiss>
+- Visit our website: <https://dasch.swiss>
 
 ## Source Code
 
