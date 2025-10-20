@@ -73,10 +73,24 @@
         "description": "Description",
         "shortcode": "Short code",
         "shortname": "Short name",
-        "longname": "Project name"
+        "longname": "Project name",
+        "errors": {
+          "shortcodePattern": "This field must contain letters from A to F and 0 to 9",
+          "shortcodeExists": "This shortcode already exists",
+          "whitespace": "no whitespace"
+        }
       },
       "editProjectFormPage": {
-        "editSuccess": "You have successfully updated the project information."
+        "editSuccess": "You have successfully updated the project information.",
+        "projectUpdated": "Project updated"
+      },
+      "projectDescriptionPage": {
+        "editProjectDescription": "Edit project description"
+      },
+      "settingsPage": {
+        "description": "Description",
+        "image": "Image",
+        "members": "Members"
       },
       "imageSettings": {
         "off": "Off",
@@ -94,7 +108,7 @@
         "title": "Export Resource Metadata",
         "text": {
           "description": "Export descriptive metadata for every resource in this project as CSV.",
-          "note": "Note: This file includes only metadata - not the project’s data.",
+          "note": "Note: This file includes only metadata - not the project's data.",
           "listTitle": "These metadata consist of:",
           "listContent": {
             "label": "Label",
@@ -108,7 +122,10 @@
             "deleted": "Deletion Date (if available)"
           }
         },
-        "button": "Export as CSV"
+        "button": "Export as CSV",
+        "downloadSuccess": "Metadata for project {{shortcode}} downloaded successfully.",
+        "downloadError": "Failed to download metadata for project {{shortcode}}.",
+        "downloadErrorWithMessage": "Error downloading metadata for project {{shortcode}}: {{errorMessage}}"
       },
       "legalSettings": {
         "tab": "Legal Settings",
@@ -145,7 +162,12 @@
         "editMember": "Edit member",
         "changeMemberPassword": "Change member's password",
         "removeMemberFromProject": "Remove member from project",
-        "confirmRemoveMember": "Do you want to remove this user from the project?"
+        "confirmRemoveMember": "Do you want to remove this user from the project?",
+        "activeUsers": "Active users",
+        "inactiveUsers": "Inactive users"
+      },
+      "projectShortDescription": {
+        "readMore": "Read more"
       }
     },
     "system": {

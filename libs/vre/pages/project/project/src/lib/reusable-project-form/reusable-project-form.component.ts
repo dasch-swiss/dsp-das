@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguages } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { ProjectForm } from './project-form.type';
 import { shortcodeExistsValidator } from './shortcode-exists.validator';
@@ -55,11 +56,17 @@ export class ReusableProjectFormComponent implements OnInit {
   @Output() afterFormInit = new EventEmitter<ProjectForm>();
 
   form?: ProjectForm;
+
+  private _translateService = inject(TranslateService);
+
   readonly shortcodePatternError = {
     errorKey: 'pattern',
-    message: 'This field must contain letters from A to F and 0 to 9',
+    message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodePattern'),
   };
-  readonly shortCodeExistsError = { errorKey: 'shortcodeExists', message: 'This shortcode already exists' };
+  readonly shortCodeExistsError = {
+    errorKey: 'shortcodeExists',
+    message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodeExists'),
+  };
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
 
@@ -78,7 +85,12 @@ export class ReusableProjectFormComponent implements OnInit {
   }
 
   public noWhitespaceValidator(control: FormControl) {
-    return (control.value || '').trim().length ? null : { errorKey: 'whitespace', message: 'no whitespace' };
+    return (control.value || '').trim().length
+      ? null
+      : {
+          errorKey: 'whitespace',
+          message: this._translateService.instant('pages.project.reusableProjectForm.errors.whitespace'),
+        };
   }
 
   private _buildForm(shortcodes: string[]) {

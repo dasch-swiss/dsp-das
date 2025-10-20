@@ -73,10 +73,24 @@
         "description": "Descrizione",
         "shortcode": "Codice breve",
         "shortname": "Nome breve",
-        "longname": "Nome del progetto"
+        "longname": "Nome del progetto",
+        "errors": {
+          "shortcodePattern": "Questo campo deve contenere lettere dalla A alla F e numeri da 0 a 9",
+          "shortcodeExists": "Questo codice breve esiste già",
+          "whitespace": "nessuno spazio"
+        }
       },
       "editProjectFormPage": {
-        "editSuccess": "Hai aggiornato con successo le informazioni del progetto."
+        "editSuccess": "Hai aggiornato con successo le informazioni del progetto.",
+        "projectUpdated": "Progetto aggiornato"
+      },
+      "projectDescriptionPage": {
+        "editProjectDescription": "Modifica descrizione del progetto"
+      },
+      "settingsPage": {
+        "description": "Descrizione",
+        "image": "Immagine",
+        "members": "Membri"
       },
       "imageSettings": {
         "off": "Spento",
@@ -108,7 +122,10 @@
             "deleted": "Data di eliminazione (se disponibile)"
           }
         },
-        "button": "Esporta in formato CSV"
+        "button": "Esporta in formato CSV",
+        "downloadSuccess": "Metadati per il progetto {{shortcode}} scaricati con successo.",
+        "downloadError": "Impossibile scaricare i metadati per il progetto {{shortcode}}.",
+        "downloadErrorWithMessage": "Errore durante il download dei metadati per il progetto {{shortcode}}: {{errorMessage}}"
       },
       "legalSettings": {
         "tab": "Legale",
@@ -145,7 +162,12 @@
         "editMember": "Modifica membro",
         "changeMemberPassword": "Cambia password del membro",
         "removeMemberFromProject": "Rimuovi membro dal progetto",
-        "confirmRemoveMember": "Vuoi rimuovere questo utente dal progetto?"
+        "confirmRemoveMember": "Vuoi rimuovere questo utente dal progetto?",
+        "activeUsers": "Utenti attivi",
+        "inactiveUsers": "Utenti inattivi"
+      },
+      "projectShortDescription": {
+        "readMore": "Leggi di più"
       }
     },
     "system": {

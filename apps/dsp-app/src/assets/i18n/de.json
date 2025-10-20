@@ -73,10 +73,24 @@
         "description": "Projektbeschreibung",
         "shortcode": "Shortcode",
         "shortname": "Kurzname",
-        "longname": "Projekttitel"
+        "longname": "Projekttitel",
+        "errors": {
+          "shortcodePattern": "Dieses Feld darf nur Buchstaben von A bis F und Zahlen von 0 bis 9 enthalten",
+          "shortcodeExists": "Dieser Shortcode existiert bereits",
+          "whitespace": "keine Leerzeichen"
+        }
       },
       "editProjectFormPage": {
-        "editSuccess": "Sie haben die Projektinformationen erfolgreich aktualisiert."
+        "editSuccess": "Sie haben die Projektinformationen erfolgreich aktualisiert.",
+        "projectUpdated": "Projekt aktualisiert"
+      },
+      "projectDescriptionPage": {
+        "editProjectDescription": "Projektbeschreibung bearbeiten"
+      },
+      "settingsPage": {
+        "description": "Beschreibung",
+        "image": "Bild",
+        "members": "Mitglieder"
       },
       "imageSettings": {
         "off": "Aus",
@@ -108,7 +122,10 @@
             "deleted": "Löschdatum (falls vorhanden)"
           }
         },
-        "button": "Exportieren als CSV"
+        "button": "Exportieren als CSV",
+        "downloadSuccess": "Metadaten für Projekt {{shortcode}} erfolgreich heruntergeladen.",
+        "downloadError": "Fehler beim Herunterladen der Metadaten für Projekt {{shortcode}}.",
+        "downloadErrorWithMessage": "Fehler beim Herunterladen der Metadaten für Projekt {{shortcode}}: {{errorMessage}}"
       },
       "legalSettings": {
         "tab": "Rechtliches",
@@ -145,7 +162,12 @@
         "editMember": "Mitglied bearbeiten",
         "changeMemberPassword": "Passwort des Mitglieds ändern",
         "removeMemberFromProject": "Mitglied aus Projekt entfernen",
-        "confirmRemoveMember": "Möchten Sie diesen Benutzer aus dem Projekt entfernen?"
+        "confirmRemoveMember": "Möchten Sie diesen Benutzer aus dem Projekt entfernen?",
+        "activeUsers": "Aktive Benutzer",
+        "inactiveUsers": "Inaktive Benutzer"
+      },
+      "projectShortDescription": {
+        "readMore": "Mehr lesen"
       }
     },
     "system": {

@@ -73,10 +73,24 @@
         "description": "Description",
         "shortcode": "Code court",
         "shortname": "Nom court",
-        "longname": "Nom du projet"
+        "longname": "Nom du projet",
+        "errors": {
+          "shortcodePattern": "Ce champ doit contenir des lettres de A à F et des chiffres de 0 à 9",
+          "shortcodeExists": "Ce code court existe déjà",
+          "whitespace": "aucun espace"
+        }
       },
       "editProjectFormPage": {
-        "editSuccess": "Vous avez mis à jour avec succès les informations du projet."
+        "editSuccess": "Vous avez mis à jour avec succès les informations du projet.",
+        "projectUpdated": "Projet mis à jour"
+      },
+      "projectDescriptionPage": {
+        "editProjectDescription": "Modifier la description du projet"
+      },
+      "settingsPage": {
+        "description": "Description",
+        "image": "Image",
+        "members": "Membres"
       },
       "imageSettings": {
         "off": "Éteint",
@@ -108,7 +122,10 @@
             "deleted": "Datte de suppression (si disponible)"
           }
         },
-        "button": "Exporter au format CSV"
+        "button": "Exporter au format CSV",
+        "downloadSuccess": "Métadonnées du projet {{shortcode}} téléchargées avec succès.",
+        "downloadError": "Échec du téléchargement des métadonnées du projet {{shortcode}}.",
+        "downloadErrorWithMessage": "Erreur lors du téléchargement des métadonnées du projet {{shortcode}} : {{errorMessage}}"
       },
       "legalSettings": {
         "tab": "Légal",
@@ -145,7 +162,12 @@
         "editMember": "Modifier le membre",
         "changeMemberPassword": "Changer le mot de passe du membre",
         "removeMemberFromProject": "Retirer le membre du projet",
-        "confirmRemoveMember": "Voulez-vous retirer cet utilisateur du projet ?"
+        "confirmRemoveMember": "Voulez-vous retirer cet utilisateur du projet ?",
+        "activeUsers": "Utilisateurs actifs",
+        "inactiveUsers": "Utilisateurs inactifs"
+      },
+      "projectShortDescription": {
+        "readMore": "Lire la suite"
       }
     },
     "system": {
