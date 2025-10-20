@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import {
   ApiResponseError,
   CanDoResponse,
@@ -20,6 +20,7 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
+import { TranslateService } from '@ngx-translate/core';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -175,6 +176,8 @@ export class OntologyEditService {
     };
   }
 
+  private readonly _translate = inject(TranslateService);
+
   constructor(
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
@@ -239,7 +242,9 @@ export class OntologyEditService {
         this.lastModificationDate = resClass.lastModificationDate;
         this._loadOntology(this.ontologyId, resClass.id);
         const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
-        this._notification.openSnackBar(`Successfully created the class ${classLabel}.`);
+        this._notification.openSnackBar(
+          this._translate.instant('pages.ontology.service.classCreated', { classLabel })
+        );
       })
     );
   }

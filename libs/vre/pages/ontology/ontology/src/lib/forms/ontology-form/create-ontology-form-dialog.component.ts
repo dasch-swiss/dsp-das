@@ -53,12 +53,12 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
   readonly ontoNamePatternErrorMsg = {
     errorKey: 'pattern',
     message:
-      "Name shouldn't start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.",
+      'pages.ontology.ontologyForm.namePatternError',
   };
 
   readonly ontoNameExistsErrorMsg = {
     errorKey: 'pattern',
-    message: 'This name is not allowed or exists already.',
+    message: 'pages.ontology.ontologyForm.nameExistsError',
   };
 
   get blackListedNames() {

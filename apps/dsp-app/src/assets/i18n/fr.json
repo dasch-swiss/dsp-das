@@ -190,10 +190,172 @@
       "ontologyForm": {
         "create": "Créer un nouveau modèle de données",
         "edit": "Personnaliser le modèle de données",
-        "name": "Définir un nom unique"
+        "name": "Définir un nom unique",
+        "label": "Label",
+        "comment": "Commentaire",
+        "nameValidation": "Le nom ne doit pas commencer par un chiffre ou v + chiffre, et les espaces ou caractères spéciaux (sauf tiret, point et trait de soulignement) ne sont pas autorisés.",
+        "nameExists": "Ce nom n'est pas autorisé ou existe déjà."
       },
       "list": {
-        "deleteList": "Supprimer le vocabulaire contrôlé"
+        "deleteList": "Supprimer le vocabulaire contrôlé",
+        "backToDataModels": "Retour aux modèles de données",
+        "editInfo": "Modifier les informations du vocabulaire contrôlé",
+        "editButton": "Modifier",
+        "deleteButton": "Supprimer",
+        "deleteConfirmation": "Voulez-vous supprimer ce vocabulaire contrôlé ?",
+        "actionBubble": {
+          "moveUp": "déplacer vers le haut",
+          "moveDown": "déplacer vers le bas",
+          "insertChild": "insérer un nouveau nœud enfant au-dessus",
+          "edit": "modifier",
+          "delete": "supprimer",
+          "deleteNode": "Voulez-vous supprimer ce nœud ?"
+        },
+        "listItemForm": {
+          "appendItem": "Ajouter un élément à {{parent}}"
+        },
+        "listInfoForm": {
+          "labelPlaceholder": "Label du vocabulaire contrôlé",
+          "commentPlaceholder": "Description du vocabulaire contrôlé",
+          "editTitle": "Modifier les informations du vocabulaire contrôlé",
+          "createTitle": "Créer un nouveau vocabulaire contrôlé"
+        },
+        "createDialog": {
+          "title": "Insérer un nouveau nœud enfant"
+        },
+        "editDialog": {
+          "subtitle": "Modifier le nœud enfant"
+        },
+        "reusableForm": {
+          "labelPlaceholder": "Label du nœud enfant",
+          "commentPlaceholder": "Description du nœud enfant"
+        }
+      },
+      "dataModels": {
+        "title": "Tous les modèles de données",
+        "info": "Un modèle de données organise les éléments de données et spécifie comment ils se rapportent les uns aux autres et par quelles propriétés ils sont décrits.",
+        "createNew": "Créer nouveau",
+        "documentation": "Lire la documentation sur la création de modèles de données",
+        "vocabularies": {
+          "title": "Vocabulaires contrôlés",
+          "info": "Les vocabulaires contrôlés sont des lexiques hiérarchiques ou non hiérarchiques de termes de référence. En raison de leur nature normative ou normalisée, les vocabulaires contrôlés améliorent la qualité des données et rendent les recherches dans les bases de données plus efficaces que les champs de texte libre.",
+          "createNew": "Créer nouveau"
+        }
+      },
+      "editor": {
+        "backToDataModels": "Retour aux modèles de données",
+        "updatedOn": "Mis à jour le :",
+        "editInfo": "Modifier les informations du modèle de données",
+        "editButton": "Modifier",
+        "deleteButton": "Supprimer",
+        "deleteTooltip": "Supprimer le modèle de données",
+        "cannotDelete": "Ce modèle de données ne peut pas être supprimé car il est utilisé !",
+        "deleteConfirmation": "Voulez-vous supprimer ce modèle de données ?"
+      },
+      "sidenav": {
+        "classes": "Classes",
+        "properties": "Propriétés",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer",
+        "createNewClass": "Créer une nouvelle classe",
+        "addProperty": "Ajouter une propriété"
+      },
+      "property": {
+        "editDialog": {
+          "editTitle": "Modifier la propriété",
+          "createTitle": "Créer une nouvelle propriété"
+        },
+        "form": {
+          "propertyType": "Type de propriété",
+          "propertyName": "Nom de la propriété",
+          "propertyLabel": "Label de la propriété",
+          "comment": "Commentaire",
+          "guiAttr": {
+            "selectResourceClass": "Sélectionner une classe de ressource",
+            "selectList": "Sélectionner une liste"
+          }
+        },
+        "info": {
+          "usedIn": "> Propriété utilisée dans :",
+          "restrictedToClass": "Cette propriété ne peut être utilisée que par la classe {{className}}",
+          "notUsed": "> Cette propriété n'est pas utilisée dans une classe.",
+          "editTooltip": "Modifier la propriété",
+          "cannotEdit": "La propriété ne peut pas être modifiée ; Aucune autre information disponible",
+          "deleteTooltip": "Supprimer la propriété",
+          "cannotDelete": "La propriété ne peut pas être supprimée car elle est utilisée dans une classe",
+          "deleteConfirmation": "Voulez-vous supprimer cette classe de ressource ?"
+        },
+        "menu": {
+          "edit": "Modifier la propriété",
+          "remove": "retirer la propriété de la classe",
+          "copy": "Copier l'ID de la propriété"
+        },
+        "notifications": {
+          "idCopied": "ID de la propriété copié dans le presse-papiers.",
+          "inherited": "La propriété est héritée d'une autre classe"
+        }
+      },
+      "resourceClass": {
+        "createDialog": {
+          "subtitle": "Créer une classe de ressource"
+        },
+        "editDialog": {
+          "subtitle": "Personnaliser la classe de ressource"
+        },
+        "form": {
+          "className": "Nom de la classe",
+          "patternError": "Ce modèle n'est pas pris en charge",
+          "labelPlaceholder": "Label",
+          "commentPlaceholder": "Commentaire"
+        },
+        "info": {
+          "noProperties": "Aucune propriété n'est encore assignée à cette classe.",
+          "collapseTooltip": "Réduire la classe",
+          "expandTooltip": "Développer la classe",
+          "menu": {
+            "edit": "Modifier les informations de la classe de ressource",
+            "openInstances": "Ouvrir les instances de ressource",
+            "copy": "Copier l'ID de la classe de ressource",
+            "delete": "Supprimer la classe de ressource",
+            "cannotDelete": "Cette classe ne peut pas être supprimée car elle est utilisée"
+          },
+          "deleteConfirmation": "Voulez-vous supprimer cette classe de ressource ?",
+          "notifications": {
+            "idCopied": "ID de la classe de ressource copié dans le presse-papiers.",
+            "created": "Classe {{classLabel}} créée avec succès."
+          }
+        },
+        "addProperty": {
+          "add": "Ajouter une propriété",
+          "createNew": "Créer nouveau à partir du type",
+          "addExisting": "Ajouter une propriété existante"
+        },
+        "cardinality": {
+          "multipleValues": "Valeurs multiples",
+          "required": "Requis",
+          "updateDialog": {
+            "title": "Mettre à jour la cardinalité",
+            "subtitle": "Définir la cardinalité pour la propriété {{propertyLabel}}",
+            "cannotChange": "La modification de la cardinalité n'est pas possible.",
+            "attention": "Attention",
+            "warning": "Veuillez noter que cette modification peut ne pas être réversible. Voulez-vous modifier la cardinalité ?",
+            "no": "Non",
+            "yes": "Oui",
+            "errors": {
+              "multipleValues": {
+                "detail": "Au moins une ressource de la classe \"{{classLabel}}\" a plusieurs propriétés \"{{propertyLabel}}\" dans vos données.",
+                "hint": "Pour définir la cardinalité de \"{{propertyLabel}}\" sur unique, chaque ressource \"{{classLabel}}\" doit avoir une seule valeur \"{{propertyLabel}}\" avant cette modification."
+              },
+              "required": {
+                "detail": "Au moins une ressource de la classe \"{{classLabel}}\" n'a pas de propriété \"{{propertyLabel}}\" dans vos données.",
+                "hint": "Pour définir la cardinalité de \"{{propertyLabel}}\" sur requis, chaque ressource \"{{classLabel}}\" doit avoir une valeur \"{{propertyLabel}}\" avant cette modification."
+              }
+            }
+          }
+        }
+      },
+      "objectType": {
+        "region": "Région"
       }
     },
     "search": {

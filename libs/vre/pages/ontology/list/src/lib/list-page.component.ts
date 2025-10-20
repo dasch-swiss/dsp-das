@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { ListNodeInfo, ListResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -38,6 +39,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
   isListsLoading$ = of(false);
 
   private _destroy = new Subject<void>();
+  private readonly _translate = inject(TranslateService);
 
   constructor(
     private _dialog: DialogService,
@@ -72,7 +74,10 @@ export class ListPageComponent implements OnInit, OnDestroy {
 
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
-      .afterConfirmation('Do you want to delete this controlled vocabulary?', list.labels[0].value)
+      .afterConfirmation(
+        this._translate.instant('pages.ontology.list.deleteConfirmation'),
+        list.labels[0].value
+      )
       .pipe(switchMap(() => this._listApiService.deleteListNode(list.id)))
       .subscribe(() => {
         this.navigateToDataModels();

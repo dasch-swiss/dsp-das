@@ -190,10 +190,172 @@
       "ontologyForm": {
         "create": "Crea nuovo modello di dati",
         "edit": "Personalizza modello di dati",
-        "name": "Imposta un nome univoco"
+        "name": "Imposta un nome univoco",
+        "label": "Etichetta",
+        "comment": "Commento",
+        "nameValidation": "Il nome non deve iniziare con un numero o v + numero e spazi o caratteri speciali (tranne trattino, punto e trattino basso) non sono ammessi.",
+        "nameExists": "Questo nome non è consentito o esiste già."
       },
       "list": {
-        "deleteList": "Elimina vocabolario controllato"
+        "deleteList": "Elimina vocabolario controllato",
+        "backToDataModels": "Torna ai modelli di dati",
+        "editInfo": "Modifica info del vocabolario controllato",
+        "editButton": "Modifica",
+        "deleteButton": "Elimina",
+        "deleteConfirmation": "Vuoi eliminare questo vocabolario controllato?",
+        "actionBubble": {
+          "moveUp": "sposta su",
+          "moveDown": "sposta giù",
+          "insertChild": "inserisci nuovo nodo figlio sopra",
+          "edit": "modifica",
+          "delete": "elimina",
+          "deleteNode": "Vuoi eliminare questo nodo?"
+        },
+        "listItemForm": {
+          "appendItem": "Aggiungi elemento a {{parent}}"
+        },
+        "listInfoForm": {
+          "labelPlaceholder": "Etichetta del vocabolario controllato",
+          "commentPlaceholder": "Descrizione del vocabolario controllato",
+          "editTitle": "Modifica info del vocabolario controllato",
+          "createTitle": "Crea nuovo vocabolario controllato"
+        },
+        "createDialog": {
+          "title": "Inserisci nuovo nodo figlio"
+        },
+        "editDialog": {
+          "subtitle": "Modifica nodo figlio"
+        },
+        "reusableForm": {
+          "labelPlaceholder": "Etichetta del nodo figlio",
+          "commentPlaceholder": "Descrizione del nodo figlio"
+        }
+      },
+      "dataModels": {
+        "title": "Tutti i modelli di dati",
+        "info": "Un modello di dati organizza gli elementi di dati e specifica come si relazionano tra loro e da quali proprietà sono descritti.",
+        "createNew": "Crea nuovo",
+        "documentation": "Leggi la documentazione su come creare modelli di dati",
+        "vocabularies": {
+          "title": "Vocabolari controllati",
+          "info": "I vocabolari controllati sono lessici gerarchici o non gerarchici di termini di riferimento. Grazie alla loro natura normativa o standardizzata, i vocabolari controllati migliorano la qualità dei dati e rendono la ricerca nel database più efficiente rispetto ai campi di testo libero.",
+          "createNew": "Crea nuovo"
+        }
+      },
+      "editor": {
+        "backToDataModels": "Torna ai modelli di dati",
+        "updatedOn": "Aggiornato il:",
+        "editInfo": "Modifica info del modello di dati",
+        "editButton": "Modifica",
+        "deleteButton": "Elimina",
+        "deleteTooltip": "Elimina modello di dati",
+        "cannotDelete": "Questo modello di dati non può essere eliminato perché è in uso!",
+        "deleteConfirmation": "Vuoi eliminare questo modello di dati?"
+      },
+      "sidenav": {
+        "classes": "Classi",
+        "properties": "Proprietà",
+        "collapseAll": "Riduci tutto",
+        "expandAll": "Espandi tutto",
+        "createNewClass": "Crea nuova classe",
+        "addProperty": "Aggiungi proprietà"
+      },
+      "property": {
+        "editDialog": {
+          "editTitle": "Modifica proprietà",
+          "createTitle": "Crea nuova proprietà"
+        },
+        "form": {
+          "propertyType": "Tipo di proprietà",
+          "propertyName": "Nome della proprietà",
+          "propertyLabel": "Etichetta della proprietà",
+          "comment": "Commento",
+          "guiAttr": {
+            "selectResourceClass": "Seleziona classe di risorsa",
+            "selectList": "Seleziona una lista"
+          }
+        },
+        "info": {
+          "usedIn": "> Proprietà usata in:",
+          "restrictedToClass": "Questa proprietà può essere usata solo dalla classe {{className}}",
+          "notUsed": "> Questa proprietà non è usata in una classe.",
+          "editTooltip": "Modifica proprietà",
+          "cannotEdit": "La proprietà non può essere modificata; Nessuna ulteriore informazione disponibile",
+          "deleteTooltip": "Elimina proprietà",
+          "cannotDelete": "La proprietà non può essere eliminata perché è usata in una classe",
+          "deleteConfirmation": "Vuoi eliminare questa classe di risorsa?"
+        },
+        "menu": {
+          "edit": "Modifica proprietà",
+          "remove": "rimuovi proprietà dalla classe",
+          "copy": "Copia ID proprietà"
+        },
+        "notifications": {
+          "idCopied": "ID proprietà copiato negli appunti.",
+          "inherited": "La proprietà è ereditata da un'altra classe"
+        }
+      },
+      "resourceClass": {
+        "createDialog": {
+          "subtitle": "Crea classe di risorsa"
+        },
+        "editDialog": {
+          "subtitle": "Personalizza classe di risorsa"
+        },
+        "form": {
+          "className": "Nome della classe",
+          "patternError": "Questo pattern non è supportato",
+          "labelPlaceholder": "Etichetta",
+          "commentPlaceholder": "Commento"
+        },
+        "info": {
+          "noProperties": "Ancora nessuna proprietà assegnata a questa classe.",
+          "collapseTooltip": "Riduci classe",
+          "expandTooltip": "Espandi classe",
+          "menu": {
+            "edit": "Modifica info classe di risorsa",
+            "openInstances": "Apri istanze di risorsa",
+            "copy": "Copia ID classe di risorsa",
+            "delete": "Elimina classe di risorsa",
+            "cannotDelete": "Questa classe non può essere eliminata perché è in uso"
+          },
+          "deleteConfirmation": "Vuoi eliminare questa classe di risorsa?",
+          "notifications": {
+            "idCopied": "ID classe di risorsa copiato negli appunti.",
+            "created": "Classe {{classLabel}} creata con successo."
+          }
+        },
+        "addProperty": {
+          "add": "Aggiungi proprietà",
+          "createNew": "Crea nuovo da tipo",
+          "addExisting": "Aggiungi proprietà esistente"
+        },
+        "cardinality": {
+          "multipleValues": "Valori multipli",
+          "required": "Richiesto",
+          "updateDialog": {
+            "title": "Aggiorna cardinalità",
+            "subtitle": "Imposta la cardinalità per la proprietà {{propertyLabel}}",
+            "cannotChange": "La modifica della cardinalità non è possibile.",
+            "attention": "Attenzione",
+            "warning": "Si prega di notare che questa modifica potrebbe non essere reversibile. Vuoi modificare la cardinalità?",
+            "no": "No",
+            "yes": "Sì",
+            "errors": {
+              "multipleValues": {
+                "detail": "Almeno una risorsa della classe \"{{classLabel}}\" ha più proprietà \"{{propertyLabel}}\" nei tuoi dati.",
+                "hint": "Per impostare la cardinalità di \"{{propertyLabel}}\" su singolo, ogni risorsa \"{{classLabel}}\" deve avere solo un valore \"{{propertyLabel}}\" prima di questa modifica."
+              },
+              "required": {
+                "detail": "Almeno una risorsa della classe \"{{classLabel}}\" non ha una proprietà \"{{propertyLabel}}\" nei tuoi dati.",
+                "hint": "Per impostare la cardinalità di \"{{propertyLabel}}\" su richiesto, ogni risorsa \"{{classLabel}}\" deve avere un valore \"{{propertyLabel}}\" prima di questa modifica."
+              }
+            }
+          }
+        }
+      },
+      "objectType": {
+        "region": "Regione"
       }
     },
     "search": {

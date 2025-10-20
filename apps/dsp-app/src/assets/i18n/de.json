@@ -190,10 +190,172 @@
       "ontologyForm": {
         "create": "Neues Datenmodell erstellen",
         "edit": "Datenmodell anpassen",
-        "name": "Eindeutigen Namen festlegen"
+        "name": "Eindeutigen Namen festlegen",
+        "label": "Bezeichnung",
+        "comment": "Kommentar",
+        "nameValidation": "Der Name darf nicht mit einer Zahl oder v + Zahl beginnen, und Leerzeichen oder Sonderzeichen (außer Bindestrich, Punkt und Unterstrich) sind nicht erlaubt.",
+        "nameExists": "Dieser Name ist nicht erlaubt oder existiert bereits."
       },
       "list": {
-        "deleteList": "Kontrolliertes Vokabular löschen"
+        "deleteList": "Kontrolliertes Vokabular löschen",
+        "backToDataModels": "Zurück zu Datenmodellen",
+        "editInfo": "Info zu kontrolliertem Vokabular bearbeiten",
+        "editButton": "Bearbeiten",
+        "deleteButton": "Löschen",
+        "deleteConfirmation": "Möchten Sie dieses kontrollierte Vokabular löschen?",
+        "actionBubble": {
+          "moveUp": "nach oben verschieben",
+          "moveDown": "nach unten verschieben",
+          "insertChild": "neuen untergeordneten Knoten einfügen",
+          "edit": "bearbeiten",
+          "delete": "löschen",
+          "deleteNode": "Möchten Sie diesen Knoten löschen?"
+        },
+        "listItemForm": {
+          "appendItem": "Element anhängen an {{parent}}"
+        },
+        "listInfoForm": {
+          "labelPlaceholder": "Bezeichnung des kontrollierten Vokabulars",
+          "commentPlaceholder": "Beschreibung des kontrollierten Vokabulars",
+          "editTitle": "Info zu kontrolliertem Vokabular bearbeiten",
+          "createTitle": "Neues kontrolliertes Vokabular erstellen"
+        },
+        "createDialog": {
+          "title": "Neuen untergeordneten Knoten einfügen"
+        },
+        "editDialog": {
+          "subtitle": "Untergeordneten Knoten bearbeiten"
+        },
+        "reusableForm": {
+          "labelPlaceholder": "Bezeichnung des untergeordneten Knotens",
+          "commentPlaceholder": "Beschreibung des untergeordneten Knotens"
+        }
+      },
+      "dataModels": {
+        "title": "Alle Datenmodelle",
+        "info": "Ein Datenmodell organisiert Datenelemente und spezifiziert, wie sie miteinander in Beziehung stehen und durch welche Eigenschaften sie beschrieben werden.",
+        "createNew": "Neu erstellen",
+        "documentation": "Dokumentation zum Erstellen von Datenmodellen lesen",
+        "vocabularies": {
+          "title": "Kontrollierte Vokabulare",
+          "info": "Kontrollierte Vokabulare sind hierarchische oder nicht-hierarchische Lexika von Referenzbegriffen. Aufgrund ihrer normativen oder standardisierten Natur verbessern kontrollierte Vokabulare die Datenqualität und machen die Datenbanksuche effizienter als Freitextfelder.",
+          "createNew": "Neu erstellen"
+        }
+      },
+      "editor": {
+        "backToDataModels": "Zurück zu Datenmodellen",
+        "updatedOn": "Aktualisiert am:",
+        "editInfo": "Datenmodell-Info bearbeiten",
+        "editButton": "Bearbeiten",
+        "deleteButton": "Löschen",
+        "deleteTooltip": "Datenmodell löschen",
+        "cannotDelete": "Dieses Datenmodell kann nicht gelöscht werden, da es verwendet wird!",
+        "deleteConfirmation": "Möchten Sie dieses Datenmodell löschen?"
+      },
+      "sidenav": {
+        "classes": "Klassen",
+        "properties": "Eigenschaften",
+        "collapseAll": "Alle einklappen",
+        "expandAll": "Alle ausklappen",
+        "createNewClass": "Neue Klasse erstellen",
+        "addProperty": "Eigenschaft hinzufügen"
+      },
+      "property": {
+        "editDialog": {
+          "editTitle": "Eigenschaft bearbeiten",
+          "createTitle": "Neue Eigenschaft erstellen"
+        },
+        "form": {
+          "propertyType": "Eigenschaftstyp",
+          "propertyName": "Eigenschaftsname",
+          "propertyLabel": "Eigenschaftsbezeichnung",
+          "comment": "Kommentar",
+          "guiAttr": {
+            "selectResourceClass": "Ressourcenklasse auswählen",
+            "selectList": "Liste auswählen"
+          }
+        },
+        "info": {
+          "usedIn": "> Eigenschaft wird verwendet in:",
+          "restrictedToClass": "Diese Eigenschaft kann nur von der Klasse {{className}} verwendet werden",
+          "notUsed": "> Diese Eigenschaft wird in keiner Klasse verwendet.",
+          "editTooltip": "Eigenschaft bearbeiten",
+          "cannotEdit": "Die Eigenschaft kann nicht bearbeitet werden; Keine weiteren Informationen verfügbar",
+          "deleteTooltip": "Eigenschaft löschen",
+          "cannotDelete": "Die Eigenschaft kann nicht gelöscht werden, da sie in einer Klasse verwendet wird",
+          "deleteConfirmation": "Möchten Sie diese Ressourcenklasse löschen?"
+        },
+        "menu": {
+          "edit": "Eigenschaft bearbeiten",
+          "remove": "Eigenschaft aus Klasse entfernen",
+          "copy": "Eigenschafts-ID kopieren"
+        },
+        "notifications": {
+          "idCopied": "Eigenschafts-ID in die Zwischenablage kopiert.",
+          "inherited": "Die Eigenschaft wird von einer anderen Klasse geerbt"
+        }
+      },
+      "resourceClass": {
+        "createDialog": {
+          "subtitle": "Ressourcenklasse erstellen"
+        },
+        "editDialog": {
+          "subtitle": "Ressourcenklasse anpassen"
+        },
+        "form": {
+          "className": "Klassenname",
+          "patternError": "Dieses Muster wird nicht unterstützt",
+          "labelPlaceholder": "Bezeichnung",
+          "commentPlaceholder": "Kommentar"
+        },
+        "info": {
+          "noProperties": "Dieser Klasse sind noch keine Eigenschaften zugewiesen.",
+          "collapseTooltip": "Klasse einklappen",
+          "expandTooltip": "Klasse ausklappen",
+          "menu": {
+            "edit": "Ressourcenklassen-Info bearbeiten",
+            "openInstances": "Ressourceninstanzen öffnen",
+            "copy": "Ressourcenklassen-ID kopieren",
+            "delete": "Ressourcenklasse löschen",
+            "cannotDelete": "Diese Klasse kann nicht gelöscht werden, da sie verwendet wird"
+          },
+          "deleteConfirmation": "Möchten Sie diese Ressourcenklasse löschen?",
+          "notifications": {
+            "idCopied": "Ressourcenklassen-ID in die Zwischenablage kopiert.",
+            "created": "Klasse {{classLabel}} erfolgreich erstellt."
+          }
+        },
+        "addProperty": {
+          "add": "Eigenschaft hinzufügen",
+          "createNew": "Neue von Typ erstellen",
+          "addExisting": "Vorhandene Eigenschaft hinzufügen"
+        },
+        "cardinality": {
+          "multipleValues": "Mehrere Werte",
+          "required": "Erforderlich",
+          "updateDialog": {
+            "title": "Kardinalität aktualisieren",
+            "subtitle": "Kardinalität für Eigenschaft {{propertyLabel}} festlegen",
+            "cannotChange": "Die Kardinalität kann nicht geändert werden.",
+            "attention": "Achtung",
+            "warning": "Bitte beachten Sie, dass diese Änderung möglicherweise nicht rückgängig gemacht werden kann. Möchten Sie die Kardinalität ändern?",
+            "no": "Nein",
+            "yes": "Ja",
+            "errors": {
+              "multipleValues": {
+                "detail": "Mindestens eine Ressource der Klasse \"{{classLabel}}\" hat mehrere \"{{propertyLabel}}\"-Eigenschaften in Ihren Daten.",
+                "hint": "Um die Kardinalität von \"{{propertyLabel}}\" auf einzeln zu setzen, muss jede Ressource \"{{classLabel}}\" vor dieser Änderung nur einen \"{{propertyLabel}}\"-Wert haben."
+              },
+              "required": {
+                "detail": "Mindestens eine Ressource der Klasse \"{{classLabel}}\" hat keine \"{{propertyLabel}}\"-Eigenschaft in Ihren Daten.",
+                "hint": "Um die Kardinalität von \"{{propertyLabel}}\" auf erforderlich zu setzen, muss jede Ressource \"{{classLabel}}\" vor dieser Änderung einen \"{{propertyLabel}}\"-Wert haben."
+              }
+            }
+          }
+        }
+      },
+      "objectType": {
+        "region": "Region"
       }
     },
     "search": {

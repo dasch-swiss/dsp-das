@@ -190,10 +190,172 @@
       "ontologyForm": {
         "create": "Create new data model",
         "edit": "Customize data model",
-        "name": "Set a unique name"
+        "name": "Set a unique name",
+        "label": "Label",
+        "comment": "Comment",
+        "nameValidation": "Name shouldn't start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.",
+        "nameExists": "This name is not allowed or exists already."
       },
       "list": {
-        "deleteList": "Delete controlled vocabulary"
+        "deleteList": "Delete controlled vocabulary",
+        "backToDataModels": "Back to data models",
+        "editInfo": "Edit controlled vocabulary info",
+        "editButton": "Edit",
+        "deleteButton": "Delete",
+        "deleteConfirmation": "Do you want to delete this controlled vocabulary?",
+        "actionBubble": {
+          "moveUp": "move up",
+          "moveDown": "move down",
+          "insertChild": "insert new child above",
+          "edit": "edit",
+          "delete": "delete",
+          "deleteNode": "Do you want to delete this node?"
+        },
+        "listItemForm": {
+          "appendItem": "Append item to {{parent}}"
+        },
+        "listInfoForm": {
+          "labelPlaceholder": "Controlled vocabulary label",
+          "commentPlaceholder": "Controlled vocabulary description",
+          "editTitle": "Edit controlled vocabulary info",
+          "createTitle": "Create new controlled vocabulary"
+        },
+        "createDialog": {
+          "title": "Insert new child node"
+        },
+        "editDialog": {
+          "subtitle": "Edit child node"
+        },
+        "reusableForm": {
+          "labelPlaceholder": "Child node label",
+          "commentPlaceholder": "Child node description"
+        }
+      },
+      "dataModels": {
+        "title": "All Data Models",
+        "info": "A data model organizes data elements and specifies how they relate to one another and by which properties they are described.",
+        "createNew": "Create New",
+        "documentation": "Read Documentation About How To Create Data Models",
+        "vocabularies": {
+          "title": "Controlled Vocabularies",
+          "info": "Controlled vocabularies are hierarchical or non-hierarchical lexica of reference terms. Due to their normative or standardized nature, controlled vocabularies improve data quality and make database searching more efficient than free-text fields.",
+          "createNew": "Create New"
+        }
+      },
+      "editor": {
+        "backToDataModels": "Back to data models",
+        "updatedOn": "Updated on:",
+        "editInfo": "Edit data model info",
+        "editButton": "Edit",
+        "deleteButton": "Delete",
+        "deleteTooltip": "Delete data model",
+        "cannotDelete": "This data model cant be deleted because it is in use!",
+        "deleteConfirmation": "Do you want to delete this data model ?"
+      },
+      "sidenav": {
+        "classes": "Classes",
+        "properties": "Properties",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all",
+        "createNewClass": "Create new class",
+        "addProperty": "Add Property"
+      },
+      "property": {
+        "editDialog": {
+          "editTitle": "Edit property",
+          "createTitle": "Create new property"
+        },
+        "form": {
+          "propertyType": "Property type",
+          "propertyName": "Property name",
+          "propertyLabel": "Property label",
+          "comment": "Comment",
+          "guiAttr": {
+            "selectResourceClass": "Select resource class",
+            "selectList": "Select a list"
+          }
+        },
+        "info": {
+          "usedIn": "> Property is used in:",
+          "restrictedToClass": "This property can only be used by the class {{className}}",
+          "notUsed": "> This property is not used in a class.",
+          "editTooltip": "Edit property",
+          "cannotEdit": "The property can't be edited; No further information available",
+          "deleteTooltip": "Delete property",
+          "cannotDelete": "The property can't be deleted because it is used in a class",
+          "deleteConfirmation": "Do you want to delete this resource class ?"
+        },
+        "menu": {
+          "edit": "Edit property",
+          "remove": "remove property from class",
+          "copy": "Copy property id"
+        },
+        "notifications": {
+          "idCopied": "Property ID copied to clipboard.",
+          "inherited": "The property is inherited from another class"
+        }
+      },
+      "resourceClass": {
+        "createDialog": {
+          "subtitle": "Create resource class"
+        },
+        "editDialog": {
+          "subtitle": "Customize resource class"
+        },
+        "form": {
+          "className": "Class name",
+          "patternError": "This pattern is not supported",
+          "labelPlaceholder": "Label",
+          "commentPlaceholder": "Comment"
+        },
+        "info": {
+          "noProperties": "There are no properties assigned to this class yet.",
+          "collapseTooltip": "Collapse class",
+          "expandTooltip": "Expand class",
+          "menu": {
+            "edit": "Edit resource class info",
+            "openInstances": "Open resource instances",
+            "copy": "Copy resource class id",
+            "delete": "Delete resource class",
+            "cannotDelete": "This class can't be deleted because it is in use"
+          },
+          "deleteConfirmation": "Do you want to delete this resource class ?",
+          "notifications": {
+            "idCopied": "Resource class ID copied to clipboard.",
+            "created": "Successfully created the class {{classLabel}}."
+          }
+        },
+        "addProperty": {
+          "add": "Add property",
+          "createNew": "Create new from type",
+          "addExisting": "Add existing property"
+        },
+        "cardinality": {
+          "multipleValues": "Multiple values",
+          "required": "Required",
+          "updateDialog": {
+            "title": "Update cardinality",
+            "subtitle": "Set the cardinality for property {{propertyLabel}}",
+            "cannotChange": "Changing the cardinality is not possible.",
+            "attention": "Attention",
+            "warning": "Please note that this change may not be reversible. Do you want to change the cardinality?",
+            "no": "No",
+            "yes": "Yes",
+            "errors": {
+              "multipleValues": {
+                "detail": "At least one resource of the class \"{{classLabel}}\" has multiple \"{{propertyLabel}}\" properties in your data.",
+                "hint": "In order to set the cardinality of \"{{propertyLabel}}\" to single, every resource \"{{classLabel}}\" must have only one \"{{propertyLabel}}\" value prior to this change."
+              },
+              "required": {
+                "detail": "At least one resource of the class \"{{classLabel}}\" does not have a \"{{propertyLabel}}\" property in your data.",
+                "hint": "In order to set the cardinality of \"{{propertyLabel}}\" to required every resource \"{{classLabel}}\" needs to have a \"{{propertyLabel}}\" value prior to this change."
+              }
+            }
+          }
+        }
+      },
+      "objectType": {
+        "region": "Region"
       }
     },
     "search": {

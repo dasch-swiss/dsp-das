@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -35,6 +36,9 @@ export class PropertyInfoComponent {
 
   isLockHovered = false;
   project$ = this._projectPageService.currentProject$;
+
+  protected readonly _translate = inject(TranslateService);
+
   constructor(
     private _dialog: MatDialog,
     private _oes: OntologyEditService,
@@ -62,7 +66,7 @@ export class PropertyInfoComponent {
 
   openDeleteProperty(id: string) {
     this._dialogService
-      .afterConfirmation('Do you want to delete this resource class ?')
+      .afterConfirmation(this._translate.instant('pages.ontology.propertyInfo.deleteConfirmation'))
       .pipe(switchMap(_del => this._oes.deleteProperty$(id)))
       .subscribe();
   }

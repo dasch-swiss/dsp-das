@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ListInfoResponse,
   ListNodeInfo,
@@ -22,17 +23,17 @@ import { ListInfoForm } from './list-info-form.type';
     <div mat-dialog-content>
       <app-multi-language-input
         [formArray]="form.controls.labels"
-        placeholder="Controlled vocabulary label"
+        [placeholder]="_translate.instant('pages.ontology.list.listInfoForm.labelPlaceholder')"
         [isRequired]="true"
         data-cy="label-input" />
 
       <app-multi-language-textarea
         [formArray]="form.controls.comments"
-        placeholder="Controlled vocabulary description"
+        [placeholder]="_translate.instant('pages.ontology.list.listInfoForm.commentPlaceholder')"
         [isRequired]="true"
         data-cy="comments-input" />
       <div mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
         <button
           mat-raised-button
           type="submit"
@@ -51,11 +52,14 @@ import { ListInfoForm } from './list-info-form.type';
 })
 export class ListInfoFormComponent implements OnInit {
   form!: ListInfoForm;
-
   loading = false;
 
+  protected readonly _translate = inject(TranslateService);
+
   get title() {
-    return this.data ? 'Edit controlled vocabulary info' : 'Create new controlled vocabulary';
+    return this.data
+      ? this._translate.instant('pages.ontology.list.listInfoForm.editTitle')
+      : this._translate.instant('pages.ontology.list.listInfoForm.createTitle');
   }
 
   constructor(
