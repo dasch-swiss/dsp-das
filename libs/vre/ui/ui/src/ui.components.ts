@@ -27,39 +27,33 @@ import { TimeFormatPipe } from './lib/time-format.pipe';
 import { TimeFormatDirective } from './lib/time-input/time-format.directive';
 import { TimeInputComponent } from './lib/time-input/time-input.component';
 
-/**
- * @deprecated All UI components are now standalone. Import components directly instead.
- * This array is kept for backwards compatibility but will be removed in a future version.
- */
-export const UiComponents = [];
-
-export const UiStandaloneComponents = [
-  AddTargetBlankPipe,
-  AdminImageDirective,
-  AlternatedListComponent,
-  CenteredBoxComponent,
-  CenteredLayoutComponent,
-  CenteredMessageComponent,
-  ChipListInputComponent,
-  CkEditorComponent,
-  CkEditorControlComponent,
-  ColorPickerComponent,
-  CommonInputComponent,
+export const UiComponents = [
   ConfirmDialogComponent,
-  DoubleChipSelectorComponent,
-  DragDropDirective,
-  HintComponent,
-  HumanReadableDatePipe,
-  InternalLinkReplacerPipe,
-  InvalidControlScrollDirective,
-  IsFalsyPipe,
-  KnoraDatePipe,
-  LinkifyPipe,
-  PagerComponent,
+  TimeInputComponent,
   TimeFormatDirective,
   TimeFormatPipe,
-  TimeInputComponent,
+  CkEditorComponent,
+  CkEditorControlComponent,
+  InvalidControlScrollDirective,
+  ChipListInputComponent,
+  CommonInputComponent,
+  AdminImageDirective,
+  CenteredLayoutComponent,
+  DragDropDirective,
+  KnoraDatePipe,
+  IsFalsyPipe,
   TimePipe,
   TitleFromCamelCasePipe,
+  LinkifyPipe,
   TruncatePipe,
+  HintComponent,
+  InternalLinkReplacerPipe,
+  AddTargetBlankPipe,
+  AlternatedListComponent,
+  ColorPickerComponent,
+  HumanReadableDatePipe,
+  DoubleChipSelectorComponent,
+  CenteredBoxComponent,
+  CenteredMessageComponent,
 ];
+export const UiStandaloneComponents = [PagerComponent];

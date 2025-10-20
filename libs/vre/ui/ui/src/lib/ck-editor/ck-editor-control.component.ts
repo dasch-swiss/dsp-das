@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { CkEditorComponent } from './ck-editor.component';
 
 @Component({
   selector: 'app-ck-editor-control',
@@ -26,8 +25,7 @@ import { CkEditorComponent } from './ck-editor.component';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CkEditorComponent],
-  standalone: true,
+  standalone: false,
 })
 export class CkEditorControlComponent {
   @Input({ required: true }) label!: string;

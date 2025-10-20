@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
   name: 'addTargetBlank',
-  standalone: true,
+  standalone: false,
 })
 export class AddTargetBlankPipe implements PipeTransform {
   constructor(private readonly _sanitizer: DomSanitizer) {}

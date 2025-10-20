@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { TimeFormatDirective } from './time-format.directive';
+import { FormControl } from '@angular/forms';
 import { ValidatorError } from '../validator-error.interface';
 import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
 
@@ -27,8 +23,7 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
     </mat-form-field>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HumanReadableErrorPipe, MatFormFieldModule, MatInputModule, ReactiveFormsModule, TimeFormatDirective],
-  standalone: true,
+  standalone: false,
 })
 export class TimeInputComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<number | null>;

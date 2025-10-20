@@ -9,6 +9,7 @@ import { SplitPipe } from './lib/split.pipe';
 import { StatusComponent } from './lib/status/status.component';
 
 export const CommonToMoveComponents = [
+  DialogHeaderComponent,
   SplitPipe,
   HeaderComponent,
   StatusComponent,
@@ -17,8 +18,4 @@ export const CommonToMoveComponents = [
   HeaderLogoComponent,
   VersionBadgeComponent,
   GlobalSearchComponent,
-];
-
-export const CommonToMoveStandaloneComponents = [
-  DialogHeaderComponent,
 ];

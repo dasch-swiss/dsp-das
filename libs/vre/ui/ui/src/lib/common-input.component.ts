@@ -1,9 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-common-input',
@@ -29,8 +25,7 @@ import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
     </mat-form-field>
   `,
   styles: [':host { display: block;}'],
-  imports: [HumanReadableErrorPipe, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule],
-  standalone: true,
+  standalone: false,
 })
 export class CommonInputComponent {
   @Input({ required: true }) control!: FormControl<string | number>;

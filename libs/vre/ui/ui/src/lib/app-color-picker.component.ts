@@ -1,7 +1,5 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ColorPickerDirective } from 'ngx-color-picker';
 
 @Component({
   selector: 'app-color-picker',
@@ -45,8 +43,7 @@ import { ColorPickerDirective } from 'ngx-color-picker';
       }
     `,
   ],
-  imports: [ColorPickerDirective, MatTooltipModule],
-  standalone: true,
+  standalone: false,
 })
 export class ColorPickerComponent implements ControlValueAccessor {
   @Input() hexColor = '#ff0000';

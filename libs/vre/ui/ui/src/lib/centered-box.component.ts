@@ -9,6 +9,6 @@ import { Component } from '@angular/core';
       </div>
     </div>
   `,
-  standalone: true,
+  standalone: false,
 })
 export class CenteredBoxComponent {}
