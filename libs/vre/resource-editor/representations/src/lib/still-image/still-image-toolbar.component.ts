@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Inject, Input, Output, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Inject, inject, Input, Output, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import {
   Constants,
   KnoraApiConnection,
@@ -82,6 +83,8 @@ export class StillImageToolbarComponent {
   get userCanView() {
     return this.imageFileValue && ResourceUtil.userCanView(this.imageFileValue);
   }
+
+  readonly _translateService = inject(TranslateService);
 
   constructor(
     public notification: NotificationService,

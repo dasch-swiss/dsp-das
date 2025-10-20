@@ -528,20 +528,87 @@
     "unauthorized": "You do not have access to this resource.",
     "segmentSupport": {
       "createSegmentDialog": {
-        "createAnnotation": "Annotation hinzufügen"
+        "createAnnotation": "Annotation erstellen",
+        "label": "Bezeichnung",
+        "start": "Start",
+        "end": "Ende",
+        "title": "Titel",
+        "description": "Beschreibung"
       }
     },
     "representations": {
       "addRegionFormDialog": {
-        "createAnnotation": "Annotation hinzufügen"
+        "createAnnotation": "Annotation erstellen",
+        "subtitle": "Weitere Eigenschaften hinzufügen",
+        "label": "Bezeichnung"
       },
       "labelAnnotations": "Annotationen",
       "video": {
-        "createAnnotation": "Annotation hinzufügen"
+        "createAnnotation": "Annotation erstellen",
+        "playbackAborted": "Videowiedergabe abgebrochen.",
+        "networkError": "Netzwerkfehler beim Laden des Videos.",
+        "decodingError": "Video-Dekodierungsfehler.",
+        "formatNotSupported": "Das Videoformat wird nicht unterstützt.",
+        "unknownError": "Ein unbekannter Videofehler ist aufgetreten.",
+        "cannotPlay": "Das Video kann derzeit nicht abgespielt werden.",
+        "openInNewTab": "Video in neuem Tab öffnen",
+        "urlCopied": "URL in Zwischenablage kopiert!",
+        "copyUrl": "Video-URL in Zwischenablage kopieren",
+        "download": "Video herunterladen",
+        "title": "Video",
+        "updateSubtitle": "Die Videodatei dieser Ressource aktualisieren",
+        "pause": "Pausieren",
+        "play": "Abspielen",
+        "stop": "Stoppen und zum Anfang gehen",
+        "defaultView": "Standardansicht",
+        "cinemaMode": "Kinomodus"
       },
       "stillImage": {
-        "createAnnotation": "Annotation hinzufügen",
-        "labelAnnotations": "Annotationen"
+        "createAnnotation": "Annotation erstellen",
+        "labelAnnotations": "Annotationen",
+        "more": "Mehr",
+        "share": "Teilen",
+        "download": "Herunterladen",
+        "settings": "Einstellungen",
+        "openFullscreen": "Im Vollbild öffnen",
+        "openIiifUrl": "IIIF-URL in neuem Tab öffnen",
+        "iiifUrlCopied": "IIIF-URL in Zwischenablage kopiert!",
+        "copyIiifUrl": "IIIF-URL in Zwischenablage kopieren",
+        "jpg": "JPG",
+        "png": "PNG"
+      },
+      "downloadFile": "Datei herunterladen",
+      "replaceFile": "Datei ersetzen",
+      "noValidFileUrl": "Keine gültige Datei-URL für diese Ressource gefunden.",
+      "archive": {
+        "title": "Archiv",
+        "updateSubtitle": "Die Archivdatei dieser Ressource aktualisieren"
+      },
+      "audio": {
+        "createAnnotation": "Annotation erstellen",
+        "notSupported": "Ihr Browser unterstützt das Audio-Element nicht.",
+        "cannotPlay": "Das Video kann derzeit nicht abgespielt werden.",
+        "openInNewTab": "Audio in neuem Tab öffnen",
+        "copyUrl": "Audio-URL in Zwischenablage kopieren",
+        "download": "Audio herunterladen",
+        "title": "Audio",
+        "updateSubtitle": "Die Audiodatei dieser Ressource aktualisieren"
+      },
+      "document": {
+        "searchPlaceholder": "In PDF suchen...",
+        "zoomOut": "Herauszoomen",
+        "resetZoom": "Zoom zurücksetzen",
+        "zoomIn": "Hineinzoomen",
+        "fullscreen": "Vollbild",
+        "title": "Dokument",
+        "updateSubtitle": "Die Dokumentdatei dieser Ressource aktualisieren"
+      },
+      "text": {
+        "title": "Text (csv, txt, xml)",
+        "updateSubtitle": "Die Textdatei dieser Ressource aktualisieren"
+      },
+      "replaceFileDialog": {
+        "willBeReplaced": " wird ersetzt."
       }
     },
     "propertiesDisplay": {
@@ -550,7 +617,15 @@
       "standoffLinkTooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
       "standoffLinkLabel": "hat Standoff-Link",
       "annotationToolbar": {
-        "delete": "Diese Ressource löschen"
+        "delete": "Diese Ressource löschen",
+        "highlightRegion": "Region hervorheben"
+      },
+      "deleteDialog": {
+        "title": "Möchten Sie diese Ressource löschen?",
+        "commentLabel": "Kommentieren Sie, warum die Ressource gelöscht wird",
+        "placeholder": "Z.B. Ressource wurde versehentlich erstellt...",
+        "keepIt": "Nein, behalten",
+        "confirmDelete": "Ja, löschen"
       }
     },
     "permissionInfo": {
@@ -567,7 +642,8 @@
         "modify": "Schreibberechtigung (M)",
         "delete": "Löschberechtigung (D)",
         "changeRights": "Administrationsberechtigung (CR)"
-      }
+      },
+      "tooltip": "Ressourcenberechtigungen"
     },
     "resourceProperties": {
       "comment": "Kommentar",
@@ -575,7 +651,106 @@
       "footnotes": "Fußnoten",
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
+      },
+      "deleteValueDialog": {
+        "title": "Sind Sie sicher, dass Sie diesen Wert löschen möchten von ",
+        "explanation": "Sie können einen Kommentar hinterlassen, um Ihre Wahl zu erklären.",
+        "reason": "Grund",
+        "placeholder": "Bitte erläutern Sie den Grund für Ihre Löschung.",
+        "keepValue": "Nein, Wert behalten",
+        "confirmDelete": "Ja, Wert löschen"
+      },
+      "editLabelDialog": {
+        "subtitle": "Ressourcenbezeichnung bearbeiten",
+        "label": "Bezeichnung"
+      },
+      "eraseDialog": {
+        "title": "Möchten Sie diese Ressource endgültig löschen?",
+        "subtitle": "Ressourceninstanz löschen",
+        "warning": "WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden, verwenden Sie sie daher mit Vorsicht.",
+        "reason": "Grund",
+        "keepIt": "Nein, behalten",
+        "confirmErase": "Ja, löschen"
+      },
+      "valueAlreadyExists": "Der eingegebene Wert existiert bereits."
+    },
+    "toolbar": {
+      "openInNewTab": "Ressource in neuem Tab öffnen",
+      "shareResource": "Ressource teilen: {{arkUrl}}",
+      "copyArkUrl": "ARK-URL kopieren",
+      "copyArkUrlToClipboard": "ARK-URL in Zwischenablage kopieren",
+      "arkUrlCopied": "ARK-URL in Zwischenablage kopiert!",
+      "copyInternalLink": "Internen Link kopieren",
+      "copyInternalLinkToClipboard": "Internen Link in Zwischenablage kopieren",
+      "internalLinkCopied": "Interner Link in Zwischenablage kopiert!"
+    },
+    "moreMenu": {
+      "more": "Mehr",
+      "editLabel": "Bezeichnung bearbeiten",
+      "editLabelTooltip": "Die Bezeichnung dieser Ressource bearbeiten",
+      "moveToTrash": "Ressource in Papierkorb verschieben.",
+      "checkingPermission": "Prüfen, ob die Ressource gelöscht werden kann...",
+      "checkingPermissionErase": "Prüfen, ob die Ressource gelöscht werden kann...",
+      "eraseResource": "Ressource löschen",
+      "eraseResourceTooltip": "Ressource unwiderruflich löschen. Dies kann nicht rückgängig gemacht werden.",
+      "noPermission": "Sie haben keine Berechtigung, diese Ressource zu löschen."
+    },
+    "infoBar": {
+      "resourceOfProject": "Ressource des Projekts",
+      "created": "erstellt",
+      "by": "von",
+      "on": "am"
+    },
+    "legal": {
+      "copyrightHolder": "Urheberrechtsinhaber",
+      "authorship": "Autorenschaft"
+    },
+    "navigation": {
+      "firstPage": "Erste Seite",
+      "previousPage": "Vorherige Seite",
+      "of": " von ",
+      "nextPage": "Nächste Seite",
+      "lastPage": "Letzte Seite"
+    },
+    "resourceCreator": {
+      "file": "Datei",
+      "properties": "Eigenschaften",
+      "resourceLabel": "Ressourcenbezeichnung *",
+      "resourceLabelTooltip": "Jede Ressource benötigt eine (vorzugsweise eindeutige) Bezeichnung. Sie dient als Art Ressourcenkennung.",
+      "resourceLabelPlaceholder": "z.B. Lorem ipsum ...",
+      "legal": {
+        "copyrightHolder": "Urheberrechtsinhaber",
+        "choose": "Auswählen",
+        "loading": "Laden...",
+        "none": "Keine",
+        "license": "Lizenz/Erklärung",
+        "authorship": "Autorenschaft"
+      },
+      "authorship": {
+        "label": "Autorenschaft",
+        "placeholder": "Neue Autorenschaft...",
+        "instruction": "Drücken Sie die Eingabetaste oder Tab, um ein Element hinzuzufügen. ",
+        "aiGenerated": "KI-generierte Inhalte – Nicht urheberrechtlich geschützt",
+        "publicDomain": "Gemeinfrei – Nicht urheberrechtlich geschützt"
+      },
+      "upload": {
+        "dragDrop": "Ziehen und Ablegen oder Klicken zum Hochladen.",
+        "fileTypesSupported": "Unterstützte Dateitypen: {{types}}",
+        "uploaded": " hochgeladen",
+        "processing": "Datei wird auf dem Server verarbeitet...",
+        "extensionNotSupported": "Die Erweiterung {{extension}} wird nicht unterstützt.",
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
+      },
+      "createDialog": {
+        "title": "Neue Ressource vom Typ erstellen: "
       }
+    },
+    "templateSwitcher": {
+      "nothingToShow": "Nichts anzuzeigen",
+      "remove": "Entfernen",
+      "removeValue": "Diesen Wert entfernen",
+      "add": "Hinzufügen",
+      "setValue": "Einen Wert festlegen"
     }
   },
   "ui": {

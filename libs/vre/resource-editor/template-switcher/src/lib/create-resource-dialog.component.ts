@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, inject, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
@@ -13,7 +14,7 @@ export interface CreateResourceDialogProps {
 @Component({
   selector: 'app-create-resource-dialog',
   template: `
-    <app-dialog-header [title]="'Create new resource of type: ' + data.resourceType" />
+    <app-dialog-header [title]="_translateService.instant('resourceEditor.templateSwitcher.createResourceDialog.title', { type: data.resourceType })" />
     <div mat-dialog-content style="max-height: 100%" data-cy="create-resource-dialog">
       @if (projectShortcode$ | async; as projectShortcode) {
         @if (projectIri$ | async; as projectIri) {
@@ -31,6 +32,8 @@ export interface CreateResourceDialogProps {
 export class CreateResourceDialogComponent implements OnInit {
   projectShortcode$!: Observable<string>;
   projectIri$!: Observable<string>;
+
+  private readonly _translateService = inject(TranslateService);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateResourceDialogProps,

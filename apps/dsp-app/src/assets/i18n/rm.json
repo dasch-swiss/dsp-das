@@ -526,22 +526,127 @@
     "notFound": "This resource is not found.",
     "deleted": "This resource has been deleted.",
     "unauthorized": "You do not have access to this resource.",
+    "toolbar": {
+      "openInNewTab": "Open resource in new tab",
+      "shareResource": "Share resource: {{arkUrl}}",
+      "copyArkUrl": "Copy ARK url",
+      "copyArkUrlToClipboard": "Copy ARK url to clipboard",
+      "arkUrlCopied": "ARK URL copied to clipboard!",
+      "copyInternalLink": "Copy internal link",
+      "copyInternalLinkToClipboard": "Copy internal link to clipboard",
+      "internalLinkCopied": "Internal link copied to clipboard!"
+    },
+    "moreMenu": {
+      "more": "More",
+      "editLabel": "Edit label",
+      "editLabelTooltip": "Edit the label of this resource",
+      "moveToTrash": "Move resource to trash bin.",
+      "checkingPermission": "Checking if the resource can be deleted...",
+      "checkingPermissionErase": "Checking if resource can be deleted...",
+      "eraseResource": "Erase resource",
+      "eraseResourceTooltip": "Erase resource forever. This cannot be undone.",
+      "noPermission": "You do not have permission to delete this resource."
+    },
+    "infoBar": {
+      "resourceOfProject": "Resource of the project",
+      "created": "created",
+      "by": "by",
+      "on": "on"
+    },
+    "legal": {
+      "copyrightHolder": "Copyright holder",
+      "authorship": "Authorship"
+    },
+    "navigation": {
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "of": " of ",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
     "segmentSupport": {
       "createSegmentDialog": {
-        "createAnnotation": "Create Annotation"
+        "createAnnotation": "Create Annotation",
+        "label": "Label",
+        "start": "Start",
+        "end": "End",
+        "title": "Title",
+        "description": "Description"
       }
     },
     "representations": {
       "addRegionFormDialog": {
-        "createAnnotation": "Create Annotation"
+        "createAnnotation": "Create Annotation",
+        "subtitle": "Add further properties",
+        "label": "Label"
       },
       "labelAnnotations": "Annotations",
+      "downloadFile": "Download file",
+      "replaceFile": "Replace file",
+      "noValidFileUrl": "No valid file url found for this resource.",
+      "archive": {
+        "title": "Archive",
+        "updateSubtitle": "Update the archive file of this resource"
+      },
+      "audio": {
+        "createAnnotation": "Create Annotation",
+        "notSupported": "Your browser does not support the audio element.",
+        "cannotPlay": "The video cannot be played at this time.",
+        "openInNewTab": "Open audio in new tab",
+        "copyUrl": "Copy audio URL to clipboard",
+        "download": "Download audio",
+        "title": "Audio",
+        "updateSubtitle": "Update the audio file of this resource"
+      },
       "video": {
-        "createAnnotation": "Create Annotation"
+        "createAnnotation": "Create Annotation",
+        "playbackAborted": "Video playback aborted.",
+        "networkError": "Network error occurred while loading the video.",
+        "decodingError": "Video decoding error.",
+        "formatNotSupported": "The video format is not supported.",
+        "unknownError": "An unknown video error occurred.",
+        "cannotPlay": "The video cannot be played at this time.",
+        "openInNewTab": "Open video in new tab",
+        "urlCopied": "URL copied to clipboard!",
+        "copyUrl": "Copy video URL to clipboard",
+        "download": "Download video",
+        "title": "Video",
+        "updateSubtitle": "Update the video file of this resource",
+        "pause": "Pause",
+        "play": "Play",
+        "stop": "Stop and go to start",
+        "defaultView": "Default view",
+        "cinemaMode": "Cinema mode"
+      },
+      "document": {
+        "searchPlaceholder": "Search in pdf...",
+        "zoomOut": "Zoom out",
+        "resetZoom": "Reset zoom",
+        "zoomIn": "Zoom in",
+        "fullscreen": "Fullscreen",
+        "title": "Document",
+        "updateSubtitle": "Update the document file of this resource"
+      },
+      "text": {
+        "title": "Text (csv, txt, xml)",
+        "updateSubtitle": "Update the text file of this resource"
       },
       "stillImage": {
         "createAnnotation": "Create Annotation",
-        "labelAnnotations": "Annotations"
+        "labelAnnotations": "Annotations",
+        "more": "More",
+        "share": "Share",
+        "download": "Download",
+        "settings": "Settings",
+        "openFullscreen": "Open in fullscreen",
+        "openIiifUrl": "Open IIIF URL in new tab",
+        "iiifUrlCopied": "IIIF URL copied to clipboard!",
+        "copyIiifUrl": "Copy IIIF URL to clipboard",
+        "jpg": "JPG",
+        "png": "PNG"
+      },
+      "replaceFileDialog": {
+        "willBeReplaced": " will be replaced."
       }
     },
     "propertiesDisplay": {
@@ -550,11 +655,20 @@
       "standoffLinkTooltip": "Represent a link in standoff markup from one resource to another",
       "standoffLinkLabel": "has Standoff link",
       "annotationToolbar": {
-        "delete": "Delete this resource"
+        "delete": "Delete this resource",
+        "highlightRegion": "Highlight Region"
+      },
+      "deleteDialog": {
+        "title": "Do you want to delete this resource ?",
+        "commentLabel": "Comment why resource is being deleted",
+        "placeholder": "Ex. Resource was created by mistake...",
+        "keepIt": "No, keep it",
+        "confirmDelete": "Yes, delete"
       }
     },
     "permissionInfo": {
       "label": "Permissions",
+      "tooltip": "Resource permissions",
       "projectAdmin": "Project Admin",
       "creator": "Creator",
       "projectMember": "Project Member",
@@ -575,7 +689,68 @@
       "footnotes": "Footnotes",
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."
+      },
+      "deleteValueDialog": {
+        "title": "Are you sure you want to delete this value from ",
+        "explanation": "You can leave a comment to explain your choice.",
+        "reason": "Reason",
+        "placeholder": "Please explain the reason for your deletion.",
+        "keepValue": "No, keep the value",
+        "confirmDelete": "Yes, delete the value"
+      },
+      "editLabelDialog": {
+        "subtitle": "Edit resource's label",
+        "label": "Label"
+      },
+      "eraseDialog": {
+        "title": "Do you want to erase this resource forever?",
+        "subtitle": "Erase resource instance",
+        "warning": "WARNING: This action cannot be undone, so use it with care.",
+        "reason": "Reason",
+        "keepIt": "No, keep it",
+        "confirmErase": "Yes, erase"
+      },
+      "valueAlreadyExists": "The value entered already exists."
+    },
+    "resourceCreator": {
+      "file": "File",
+      "properties": "Properties",
+      "resourceLabel": "Resource label *",
+      "resourceLabelTooltip": "Each resource needs a (preferably unique) label. It will be a kind of resource identifier.",
+      "resourceLabelPlaceholder": "e.g. Lorem ipsum ...",
+      "legal": {
+        "copyrightHolder": "Copyright holder",
+        "choose": "Choose",
+        "loading": "Loading...",
+        "none": "None",
+        "license": "License/Statement",
+        "authorship": "Authorship"
+      },
+      "authorship": {
+        "label": "Authorship",
+        "placeholder": "New authorship...",
+        "instruction": "Press Enter or Tab to add an item. ",
+        "aiGenerated": "AI-Generated Content – Not Protected by Copyright",
+        "publicDomain": "Public Domain – Not Protected by Copyright"
+      },
+      "upload": {
+        "dragDrop": "Drag and drop or click to upload.",
+        "fileTypesSupported": "File types supported: {{types}}",
+        "uploaded": " uploaded",
+        "processing": "Processing file on server...",
+        "extensionNotSupported": "The extension {{extension}} is not supported.",
+        "uploadFailed": "Upload failed. Please try again."
+      },
+      "createDialog": {
+        "title": "Create new resource of type: "
       }
+    },
+    "templateSwitcher": {
+      "nothingToShow": "Nothing to show",
+      "remove": "Remove",
+      "removeValue": "Remove that value",
+      "add": "Add",
+      "setValue": "Set a value"
     }
   },
   "ui": {

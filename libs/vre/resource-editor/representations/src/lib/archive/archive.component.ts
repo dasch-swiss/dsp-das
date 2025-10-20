@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadArchiveFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import {
@@ -21,6 +22,8 @@ export class ArchiveComponent implements OnChanges {
   originalFilename?: string;
 
   failedToLoad = false;
+
+  private readonly _translateService = inject(TranslateService);
 
   constructor(
     private _dialog: MatDialog,
@@ -49,8 +52,8 @@ export class ArchiveComponent implements OnChanges {
   openReplaceFileDialog() {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
       ...DspDialogConfig.mediumDialog({
-        title: 'Archive',
-        subtitle: 'Update the archive file of this resource',
+        title: this._translateService.instant('resourceEditor.representations.archive.title'),
+        subtitle: this._translateService.instant('resourceEditor.representations.archive.updateFile'),
         representation: Constants.HasArchiveFileValue,
         resource: this.parentResource,
       }),

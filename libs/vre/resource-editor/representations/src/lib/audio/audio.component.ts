@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -28,6 +29,8 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
 
   isPlayerReady = false;
   private _ngUnsubscribe = new Subject<void>();
+
+  private readonly _translateService = inject(TranslateService);
 
   constructor(
     private _sanitizer: DomSanitizer,
@@ -92,7 +95,9 @@ export class AudioComponent implements OnInit, OnChanges, OnDestroy {
   private _watchForMediaEvents() {
     this._mediaControl.play$.pipe(takeUntil(this._ngUnsubscribe)).subscribe(seconds => {
       if (seconds >= this.duration) {
-        this._notification.openSnackBar('The video cannot be played at this time.');
+        this._notification.openSnackBar(
+          this._translateService.instant('resourceEditor.representations.audio.cannotPlay')
+        );
         return;
       }
       this.mediaPlayer.navigate(seconds);

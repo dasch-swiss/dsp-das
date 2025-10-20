@@ -13,12 +13,12 @@ import { IIIFUrl } from './third-party-iiif';
     }
 
     <mat-form-field style="width: 100%">
-      <mat-label>IIIF Image URL</mat-label>
+      <mat-label>{{ 'resourceEditor.representations.iiifControl.label' | translate }}</mat-label>
       <input
         matInput
         [formControl]="control"
         data-cy="external-iiif-input"
-        placeholder="https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
+        [placeholder]="'resourceEditor.representations.iiifControl.placeholder' | translate" />
 
       @if (control.errors; as errors) {
         <mat-error> {{ errors | humanReadableError: validatorErrors }}</mat-error>
@@ -51,10 +51,10 @@ export class IiifControlComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
 
   readonly validatorErrors = [
-    { errorKey: 'invalidIiifUrl', message: 'The provided URL is not a valid IIIF image URL.' },
-    { errorKey: 'previewImageError', message: 'The image cannot be loaded from the third party server.' },
-    { errorKey: 'infoJsonError', message: 'The IIIF info JSON can not be loaded from the third party server.' },
-    { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
+    { errorKey: 'invalidIiifUrl', translationKey: 'resourceEditor.representations.iiifControl.errors.invalidUrl' },
+    { errorKey: 'previewImageError', translationKey: 'resourceEditor.representations.iiifControl.errors.previewImageError' },
+    { errorKey: 'infoJsonError', translationKey: 'resourceEditor.representations.iiifControl.errors.infoJsonError' },
+    { errorKey: 'invalidHost', translationKey: 'resourceEditor.representations.iiifControl.errors.invalidHost' },
   ];
 
   constructor(private readonly _cdr: ChangeDetectorRef) {}

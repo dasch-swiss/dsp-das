@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  inject,
   Input,
   OnChanges,
   SimpleChanges,
@@ -8,6 +9,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
@@ -37,6 +39,8 @@ export class DocumentComponent implements OnChanges {
   pdfQuery = '';
 
   failedToLoad = false;
+
+  private readonly _translateService = inject(TranslateService);
 
   get isPdf(): boolean {
     return this.src.filename.split('.').pop() === 'pdf';
@@ -76,8 +80,8 @@ export class DocumentComponent implements OnChanges {
   openReplaceFileDialog() {
     this._dialog.open<ReplaceFileDialogComponent, ReplaceFileDialogProps>(ReplaceFileDialogComponent, {
       ...DspDialogConfig.mediumDialog({
-        title: 'Document',
-        subtitle: 'Update the document file of this resource',
+        title: this._translateService.instant('resourceEditor.representations.document.title'),
+        subtitle: this._translateService.instant('resourceEditor.representations.document.updateFile'),
         representation: Constants.HasDocumentFileValue,
         resource: this.parentResource,
       }),

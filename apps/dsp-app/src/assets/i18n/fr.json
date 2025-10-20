@@ -526,22 +526,127 @@
     "notFound": "This resource is not found.",
     "deleted": "This resource has been deleted.",
     "unauthorized": "You do not have access to this resource.",
+    "toolbar": {
+      "openInNewTab": "Ouvrir la ressource dans un nouvel onglet",
+      "shareResource": "Partager la ressource : {{arkUrl}}",
+      "copyArkUrl": "Copier l'URL ARK",
+      "copyArkUrlToClipboard": "Copier l'URL ARK dans le presse-papiers",
+      "arkUrlCopied": "URL ARK copiée dans le presse-papiers !",
+      "copyInternalLink": "Copier le lien interne",
+      "copyInternalLinkToClipboard": "Copier le lien interne dans le presse-papiers",
+      "internalLinkCopied": "Lien interne copié dans le presse-papiers !"
+    },
+    "moreMenu": {
+      "more": "Plus",
+      "editLabel": "Modifier l'étiquette",
+      "editLabelTooltip": "Modifier l'étiquette de cette ressource",
+      "moveToTrash": "Déplacer la ressource dans la corbeille.",
+      "checkingPermission": "Vérification si la ressource peut être supprimée...",
+      "checkingPermissionErase": "Vérification si la ressource peut être supprimée...",
+      "eraseResource": "Effacer la ressource",
+      "eraseResourceTooltip": "Effacer définitivement la ressource. Cette action ne peut pas être annulée.",
+      "noPermission": "Vous n'avez pas l'autorisation de supprimer cette ressource."
+    },
+    "infoBar": {
+      "resourceOfProject": "Ressource du projet",
+      "created": "créé",
+      "by": "par",
+      "on": "le"
+    },
+    "legal": {
+      "copyrightHolder": "Titulaire des droits d'auteur",
+      "authorship": "Auteur·ice"
+    },
+    "navigation": {
+      "firstPage": "Première page",
+      "previousPage": "Page précédente",
+      "of": " de ",
+      "nextPage": "Page suivante",
+      "lastPage": "Dernière page"
+    },
     "segmentSupport": {
       "createSegmentDialog": {
-        "createAnnotation": "Créer une annotation"
+        "createAnnotation": "Créer une annotation",
+        "label": "Étiquette",
+        "start": "Début",
+        "end": "Fin",
+        "title": "Titre",
+        "description": "Description"
       }
     },
     "representations": {
       "addRegionFormDialog": {
-        "createAnnotation": "Créer une annotation"
+        "createAnnotation": "Créer une annotation",
+        "subtitle": "Ajouter d'autres propriétés",
+        "label": "Étiquette"
       },
       "labelAnnotations": "Annotations",
+      "downloadFile": "Télécharger le fichier",
+      "replaceFile": "Remplacer le fichier",
+      "noValidFileUrl": "Aucune URL de fichier valide trouvée pour cette ressource.",
+      "archive": {
+        "title": "Archive",
+        "updateSubtitle": "Mettre à jour le fichier d'archive de cette ressource"
+      },
+      "audio": {
+        "createAnnotation": "Créer une annotation",
+        "notSupported": "Votre navigateur ne prend pas en charge l'élément audio.",
+        "cannotPlay": "La vidéo ne peut pas être lue pour le moment.",
+        "openInNewTab": "Ouvrir l'audio dans un nouvel onglet",
+        "copyUrl": "Copier l'URL audio dans le presse-papiers",
+        "download": "Télécharger l'audio",
+        "title": "Audio",
+        "updateSubtitle": "Mettre à jour le fichier audio de cette ressource"
+      },
       "video": {
-        "createAnnotation": "Créer une annotation"
+        "createAnnotation": "Créer une annotation",
+        "playbackAborted": "Lecture vidéo interrompue.",
+        "networkError": "Erreur réseau lors du chargement de la vidéo.",
+        "decodingError": "Erreur de décodage vidéo.",
+        "formatNotSupported": "Le format vidéo n'est pas pris en charge.",
+        "unknownError": "Une erreur vidéo inconnue s'est produite.",
+        "cannotPlay": "La vidéo ne peut pas être lue pour le moment.",
+        "openInNewTab": "Ouvrir la vidéo dans un nouvel onglet",
+        "urlCopied": "URL copiée dans le presse-papiers !",
+        "copyUrl": "Copier l'URL vidéo dans le presse-papiers",
+        "download": "Télécharger la vidéo",
+        "title": "Vidéo",
+        "updateSubtitle": "Mettre à jour le fichier vidéo de cette ressource",
+        "pause": "Pause",
+        "play": "Lire",
+        "stop": "Arrêter et revenir au début",
+        "defaultView": "Vue par défaut",
+        "cinemaMode": "Mode cinéma"
+      },
+      "document": {
+        "searchPlaceholder": "Rechercher dans le pdf...",
+        "zoomOut": "Dézoomer",
+        "resetZoom": "Réinitialiser le zoom",
+        "zoomIn": "Zoomer",
+        "fullscreen": "Plein écran",
+        "title": "Document",
+        "updateSubtitle": "Mettre à jour le fichier document de cette ressource"
+      },
+      "text": {
+        "title": "Texte (csv, txt, xml)",
+        "updateSubtitle": "Mettre à jour le fichier texte de cette ressource"
       },
       "stillImage": {
         "createAnnotation": "Créer une annotation",
-        "labelAnnotations": "Annotations"
+        "labelAnnotations": "Annotations",
+        "more": "Plus",
+        "share": "Partager",
+        "download": "Télécharger",
+        "settings": "Paramètres",
+        "openFullscreen": "Ouvrir en plein écran",
+        "openIiifUrl": "Ouvrir l'URL IIIF dans un nouvel onglet",
+        "iiifUrlCopied": "URL IIIF copiée dans le presse-papiers !",
+        "copyIiifUrl": "Copier l'URL IIIF dans le presse-papiers",
+        "jpg": "JPG",
+        "png": "PNG"
+      },
+      "replaceFileDialog": {
+        "willBeReplaced": " sera remplacé."
       }
     },
     "propertiesDisplay": {
@@ -550,11 +655,20 @@
       "standoffLinkTooltip": "Représente un lien en balisage standoff d'une ressource à une autre",
       "standoffLinkLabel": "a un lien standoff",
       "annotationToolbar": {
-        "delete": "Supprimer cette ressource"
+        "delete": "Supprimer cette ressource",
+        "highlightRegion": "Surligner la région"
+      },
+      "deleteDialog": {
+        "title": "Voulez-vous supprimer cette ressource ?",
+        "commentLabel": "Commentez pourquoi la ressource est supprimée",
+        "placeholder": "Ex. La ressource a été créée par erreur...",
+        "keepIt": "Non, la conserver",
+        "confirmDelete": "Oui, supprimer"
       }
     },
     "permissionInfo": {
       "label": "Autorisations",
+      "tooltip": "Autorisations de la ressource",
       "projectAdmin": "Administrateur du projet",
       "creator": "Créateur",
       "projectMember": "Membre du projet",
@@ -575,7 +689,68 @@
       "footnotes": "Notes de bas de page",
       "valueComponents": {
         "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."
+      },
+      "deleteValueDialog": {
+        "title": "Êtes-vous sûr de vouloir supprimer cette valeur de ",
+        "explanation": "Vous pouvez laisser un commentaire pour expliquer votre choix.",
+        "reason": "Raison",
+        "placeholder": "Veuillez expliquer la raison de votre suppression.",
+        "keepValue": "Non, conserver la valeur",
+        "confirmDelete": "Oui, supprimer la valeur"
+      },
+      "editLabelDialog": {
+        "subtitle": "Modifier l'étiquette de la ressource",
+        "label": "Étiquette"
+      },
+      "eraseDialog": {
+        "title": "Voulez-vous effacer définitivement cette ressource ?",
+        "subtitle": "Effacer l'instance de ressource",
+        "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec prudence.",
+        "reason": "Raison",
+        "keepIt": "Non, la conserver",
+        "confirmErase": "Oui, effacer"
+      },
+      "valueAlreadyExists": "La valeur saisie existe déjà."
+    },
+    "resourceCreator": {
+      "file": "Fichier",
+      "properties": "Propriétés",
+      "resourceLabel": "Étiquette de ressource *",
+      "resourceLabelTooltip": "Chaque ressource a besoin d'une étiquette (de préférence unique). Ce sera une sorte d'identifiant de ressource.",
+      "resourceLabelPlaceholder": "par ex. Lorem ipsum ...",
+      "legal": {
+        "copyrightHolder": "Titulaire des droits d'auteur",
+        "choose": "Choisir",
+        "loading": "Chargement...",
+        "none": "Aucun",
+        "license": "Licence/Déclaration",
+        "authorship": "Auteur·ice"
+      },
+      "authorship": {
+        "label": "Auteur·ice",
+        "placeholder": "Nouvel·le auteur·ice...",
+        "instruction": "Appuyez sur Entrée ou Tab pour ajouter un élément. ",
+        "aiGenerated": "Contenu généré par IA – Non protégé par le droit d'auteur",
+        "publicDomain": "Domaine public – Non protégé par le droit d'auteur"
+      },
+      "upload": {
+        "dragDrop": "Glissez-déposez ou cliquez pour télécharger.",
+        "fileTypesSupported": "Types de fichiers pris en charge : {{types}}",
+        "uploaded": " téléchargé",
+        "processing": "Traitement du fichier sur le serveur...",
+        "extensionNotSupported": "L'extension {{extension}} n'est pas prise en charge.",
+        "uploadFailed": "Le téléchargement a échoué. Veuillez réessayer."
+      },
+      "createDialog": {
+        "title": "Créer une nouvelle ressource de type : "
       }
+    },
+    "templateSwitcher": {
+      "nothingToShow": "Rien à afficher",
+      "remove": "Retirer",
+      "removeValue": "Retirer cette valeur",
+      "add": "Ajouter",
+      "setValue": "Définir une valeur"
     }
   },
   "ui": {

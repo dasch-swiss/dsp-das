@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import {
   KnoraApiConnection,
   ReadResource,
@@ -31,7 +32,7 @@ export interface ReplaceFileDialogProps {
           <div class="icon">
             <mat-icon>warning</mat-icon>
           </div>
-          <div class="message">{{ data.title }} will be replaced.</div>
+          <div class="message">{{ _translateService.instant('resourceEditor.representations.replaceFileDialog.willBeReplaced', { title: data.title }) }}</div>
         </div>
       </div>
 
@@ -62,6 +63,8 @@ export interface ReplaceFileDialogProps {
 })
 export class ReplaceFileDialogComponent {
   form!: FileForm;
+
+  readonly _translateService = inject(TranslateService);
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
