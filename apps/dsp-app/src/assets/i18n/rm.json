@@ -7,15 +7,19 @@
       "filterProjects": "Filter projects"
     },
     "userSettings": {
+      "title": "Your account",
       "loginForm": {
         "login": "Login"
       },
       "account": {
         "danger": "Danger zone",
         "deleteButton": "Suspend user account now",
+        "deleteConfirmation": "Do you want to suspend your own account?",
         "delete": "Suspend user account",
         "password": "Update password",
-        "edit": "Edit profile"
+        "edit": "Edit profile",
+        "editMyProfile": "Edit my profile",
+        "editMyPassword": "Edit my password"
       },
       "userForm": {
         "emailValidation": "This email address appears to be invalid.",
@@ -41,7 +45,14 @@
         "confirmPassword": "Confirm password",
         "requesterPassword": "Your password",
         "ownPasswordSuccess": "You have successfully updated your password.",
-        "userPasswordSuccess": "You have successfully updated the user's password."
+        "userPasswordSuccess": "You have successfully updated the user's password.",
+        "currentPasswordStep": "For security reasons, please enter your current password",
+        "currentPasswordPlaceholder": "Your current password",
+        "incorrectPassword": "The password entered is incorrect",
+        "newPasswordStep": "Enter the new password",
+        "next": "Next",
+        "update": "Update",
+        "cancel": "Cancel"
       },
       "navigation": {
         "myProjects": "My Projects",
@@ -58,6 +69,10 @@
         "login": "LOGIN",
         "home": "DSP-APP Home Page",
         "myAccount": "My Account"
+      },
+      "editUserDialog": {
+        "editMyProfile": "Edit my profile",
+        "editUser": "Edit user"
       }
     },
     "project": {

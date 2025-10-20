@@ -16,7 +16,12 @@ export interface EditUserDialogProps {
 @Component({
   selector: 'app-edit-user-dialog',
   template: `
-    <app-dialog-header [title]="data.isOwnAccount ? 'Edit my profile' : 'Edit user'" />
+    <app-dialog-header
+      [title]="
+        data.isOwnAccount
+          ? ('pages.userSettings.editUserDialog.editMyProfile' | translate)
+          : ('pages.userSettings.editUserDialog.editUser' | translate)
+      " />
     @if (data.user; as user) {
       <div mat-dialog-content>
         <app-user-form [data]="user" (afterFormInit)="afterFormInit($event)" />

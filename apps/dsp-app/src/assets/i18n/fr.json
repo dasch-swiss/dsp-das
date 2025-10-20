@@ -7,15 +7,19 @@
       "filterProjects": "Filter projects"
     },
     "userSettings": {
+      "title": "Votre compte",
       "loginForm": {
         "login": "Connexion"
       },
       "account": {
         "danger": "Zone dangereuse",
         "deleteButton": "Suspendre le compte utilisateur maintenant",
+        "deleteConfirmation": "Voulez-vous suspendre votre propre compte ?",
         "delete": "Suspendre le compte utilisateur",
         "password": "Mettre à jour le mot de passe",
-        "edit": "Modifier le profil"
+        "edit": "Modifier le profil",
+        "editMyProfile": "Modifier mon profil",
+        "editMyPassword": "Modifier mon mot de passe"
       },
       "userForm": {
         "emailValidation": "Cette adresse e-mail semble invalide.",
@@ -41,7 +45,14 @@
         "confirmPassword": "Confirmer le mot de passe",
         "requesterPassword": "Votre mot de passe",
         "ownPasswordSuccess": "Vous avez mis à jour avec succès votre mot de passe.",
-        "userPasswordSuccess": "Vous avez mis à jour avec succès le mot de passe de l'utilisateur."
+        "userPasswordSuccess": "Vous avez mis à jour avec succès le mot de passe de l'utilisateur.",
+        "currentPasswordStep": "Pour des raisons de sécurité, veuillez saisir votre mot de passe actuel",
+        "currentPasswordPlaceholder": "Votre mot de passe actuel",
+        "incorrectPassword": "Le mot de passe saisi est incorrect",
+        "newPasswordStep": "Entrez le nouveau mot de passe",
+        "next": "Suivant",
+        "update": "Mettre à jour",
+        "cancel": "Annuler"
       },
       "navigation": {
         "myProjects": "Mes projets",
@@ -58,6 +69,10 @@
         "login": "CONNEXION",
         "home": "Page d'accueil DSP-APP",
         "myAccount": "Mon compte"
+      },
+      "editUserDialog": {
+        "editMyProfile": "Modifier mon profil",
+        "editUser": "Modifier l'utilisateur"
       }
     },
     "project": {
