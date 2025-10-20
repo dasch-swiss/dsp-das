@@ -4,6 +4,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
 import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
@@ -18,6 +19,7 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
     MatAutocompleteModule,
     MatAutocompleteOptionsScrollDirective,
     AppProgressIndicatorComponent,
+    TranslateModule,
   ],
   templateUrl: './property-form-link-value.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

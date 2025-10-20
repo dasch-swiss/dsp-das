@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Constants } from '@dasch-swiss/dsp-js';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   ApiData,
   PropertyData,
@@ -37,6 +38,7 @@ import { PropertyFormValueComponent } from '../property-form-value/property-form
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
+    TranslateModule,
     PropertyFormValueComponent,
     PropertyFormListValueComponent,
     PropertyFormLinkValueComponent,

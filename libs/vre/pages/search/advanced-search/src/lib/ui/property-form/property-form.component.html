@@ -3,7 +3,7 @@
     <div class="dropdown-container">
       <div class="content">
         <mat-form-field>
-          <mat-label>Property</mat-label>
+          <mat-label>{{ 'pages.search.advancedSearch.property' | translate }}</mat-label>
           <mat-select
             #propertiesList
             (selectionChange)="onSelectedPropertyChanged($event)"
@@ -12,7 +12,7 @@
             data-cy="property-select"
             [compareWith]="compareObjects">
             @if (propertiesLoading) {
-            <mat-option disabled="true">Loading...</mat-option>
+            <mat-option disabled="true">{{ 'pages.search.advancedSearch.loading' | translate }}</mat-option>
             } @if (!propertiesLoading) {
             <mat-option [value]="resourceLabelObj" [attr.data-cy]="resourceLabelObj.label"
               >{{ resourceLabelObj.label }}
@@ -27,7 +27,7 @@
     <div class="dropdown-container">
       <div class="content">
         <mat-form-field class="operator">
-          <mat-label>Comparison Operator</mat-label>
+          <mat-label>{{ 'pages.search.advancedSearch.comparisonOperator' | translate }}</mat-label>
           <mat-select
             #operatorsList
             (selectionChange)="onSelectedOperatorChanged($event)"
@@ -46,7 +46,7 @@
     <div class="dropdown-container match-resource-class">
       <div class="content">
         <mat-form-field class="resource-class">
-          <mat-label>Resource Class</mat-label>
+          <mat-label>{{ 'pages.search.advancedSearch.resourceClass' | translate }}</mat-label>
           <mat-select
             #resourceClassList
             (selectionChange)="
@@ -57,7 +57,7 @@
             data-cy="resource-class-select"
             [compareWith]="compareObjects">
             @if (matchResourceClassesLoading) {
-            <mat-option disabled="true">Loading...</mat-option>
+            <mat-option disabled="true">{{ 'pages.search.advancedSearch.loading' | translate }}</mat-option>
             } @if (!matchResourceClassesLoading) { @for (resClass of propertyFormItem?.matchPropertyResourceClasses;
             track resClass) {
             <mat-option [attr.data-cy]="resClass.label" [value]="resClass"> {{ resClass.label }} </mat-option>

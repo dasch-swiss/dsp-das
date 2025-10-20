@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
 
 @Component({
   selector: 'app-ontology-resource-form',
-  imports: [FormsModule, ReactiveFormsModule, MatSelectModule],
+  imports: [FormsModule, ReactiveFormsModule, MatSelectModule, TranslateModule],
   templateUrl: './ontology-resource-form.component.html',
   styleUrls: ['./ontology-resource-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
