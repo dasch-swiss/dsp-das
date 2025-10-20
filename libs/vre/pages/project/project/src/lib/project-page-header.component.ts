@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
@@ -44,7 +43,6 @@ export class ProjectPageHeaderComponent {
   ) {}
 
   goToProjectPage() {
-    const projectUuid = ProjectService.IriToUuid(this._projectService.currentProjectId);
-    this._router.navigate(['/project', projectUuid]);
+    this._router.navigate(['/project', this._projectService.currentProjectUuid]);
   }
 }
