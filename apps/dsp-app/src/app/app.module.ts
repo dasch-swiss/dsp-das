@@ -35,7 +35,7 @@ import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/reso
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonToMoveComponents, CommonToMoveStandaloneComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
@@ -47,7 +47,7 @@ import {
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
 } from '@dasch-swiss/vre/ui/string-literal';
-import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
+import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
@@ -91,7 +91,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...StringLiteralComponents,
     ...SystemComponents,
     ...TemplateSwitcherComponents,
-    ...UiComponents,
     ...UserComponents,
   ],
   imports: [
@@ -117,8 +116,9 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,
-    PagerComponent,
     PdfViewerModule,
+    ...CommonToMoveStandaloneComponents,
+    ...UiStandaloneComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
