@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { map } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
@@ -36,12 +37,14 @@ import { ProjectPageService } from './project-page.service';
 })
 export class ProjectPageHeaderComponent {
   currentProjectName$ = this._projectService.currentProject$.pipe(map(project => project.longname));
+
   constructor(
-    private _projectService: ProjectPageService,
-    private _router: Router
+    private readonly _projectService: ProjectPageService,
+    private readonly _router: Router
   ) {}
 
   goToProjectPage() {
-    this._router.navigate(['/project', this._projectService.currentProjectId]);
+    const projectUuid = ProjectService.IriToUuid(this._projectService.currentProjectId);
+    this._router.navigate(['/project', projectUuid]);
   }
 }
