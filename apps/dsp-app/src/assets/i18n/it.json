@@ -171,12 +171,31 @@
       }
     },
     "system": {
+      "title": "Amministrazione del sistema",
+      "allProjects": "Tutti i progetti",
+      "allUsers": "Tutti gli utenti",
+      "yourProjects": "I tuoi progetti",
+      "allProjectsFromDSP": "Tutti i progetti da DSP",
+      "activeUsersCount": "Utenti attivi ({{count}})",
+      "inactiveUsersCount": "Utenti inattivi ({{count}})",
+      "allUsersInDSP": "Tutti gli utenti in DSP",
       "usersList": {
         "sortFamilyName": "Cognome",
-        "sortGivenName": "Nome"
+        "sortGivenName": "Nome",
+        "sortEmail": "E-mail",
+        "sortUsername": "Nome utente",
+        "user": "Utente",
+        "users": "Utenti",
+        "member": "Membro",
+        "members": "Membri",
+        "createNewUser": "Crea un nuovo utente"
       },
       "users": {
         "changePassword": "Cambia password"
+      },
+      "createUserDialog": {
+        "title": "Crea un nuovo utente",
+        "isSystemAdmin": "È un utente amministratore di sistema"
       },
       "projectsList": {
         "project": "Progetto",
@@ -192,9 +211,9 @@
         "reactivate": "Riattiva il progetto",
         "deactivate": "Disattiva il progetto",
         "erase": "Cancella progetto",
-        "eraseConfirmation": "Il progetto “{{0}}” è stato cancellato.",
-        "deactivateConfirmation": "Vuoi disattivare il progetto “{{0}}”?",
-        "reactivateConfirmation": "Vuoi riattivare il progetto “{{0}}”?",
+        "eraseConfirmation": "Il progetto \"{{0}}\" è stato cancellato.",
+        "deactivateConfirmation": "Vuoi disattivare il progetto \"{{0}}\"?",
+        "reactivateConfirmation": "Vuoi riattivare il progetto \"{{0}}\"?",
         "eraseConfirmationDialog": {
           "title": "Inserisci le informazioni richieste per cancellare il progetto.",
           "subtitle": "Cancella progetto",
@@ -206,6 +225,16 @@
           "shortCodeValidation": "Il codice breve non corrisponde",
           "passwordValidation": "Password errata"
         }
+      },
+      "cookiePolicy": {
+        "back": "Indietro",
+        "title": "Politica sui cookie per l'applicazione web DSP-API",
+        "whatAreCookies": "Cosa sono i cookie",
+        "howWeUseCookies": "Come utilizziamo i cookie",
+        "disablingCookies": "Disabilitare i cookie",
+        "cookiesWeSet": "I cookie che impostiamo",
+        "thirdPartyCookies": "Cookie di terze parti",
+        "moreInformation": "Ulteriori informazioni"
       }
     },
     "ontology": {

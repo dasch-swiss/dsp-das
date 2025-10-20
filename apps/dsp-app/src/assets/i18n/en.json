@@ -171,12 +171,31 @@
       }
     },
     "system": {
+      "title": "System administration",
+      "allProjects": "All Projects",
+      "allUsers": "All Users",
+      "yourProjects": "Your projects",
+      "allProjectsFromDSP": "All projects from DSP",
+      "activeUsersCount": "Active users ({{count}})",
+      "inactiveUsersCount": "Inactive users ({{count}})",
+      "allUsersInDSP": "All users in DSP",
       "usersList": {
         "sortFamilyName": "Last name",
-        "sortGivenName": "First name"
+        "sortGivenName": "First name",
+        "sortEmail": "E-mail",
+        "sortUsername": "Username",
+        "user": "User",
+        "users": "Users",
+        "member": "Member",
+        "members": "Members",
+        "createNewUser": "Create a new user"
       },
       "users": {
         "changePassword": "Change password"
+      },
+      "createUserDialog": {
+        "title": "Create a new user",
+        "isSystemAdmin": "Is a system admin user"
       },
       "projectsList": {
         "project": "Project",
@@ -192,9 +211,9 @@
         "reactivate": "Reactivate project",
         "deactivate": "Deactivate project",
         "erase": "Erase project",
-        "eraseConfirmation": "Project “{{0}}” has been erased.",
-        "deactivateConfirmation": "Do you want to deactivate project “{{0}}” ?",
-        "reactivateConfirmation": "Do you want to reactivate project “{{0}}” ?",
+        "eraseConfirmation": "Project \"{{0}}\" has been erased.",
+        "deactivateConfirmation": "Do you want to deactivate project \"{{0}}\" ?",
+        "reactivateConfirmation": "Do you want to reactivate project \"{{0}}\" ?",
         "eraseConfirmationDialog": {
           "title": "Please enter required information to erase the project.",
           "subtitle": "Erase project",
@@ -206,6 +225,16 @@
           "shortCodeValidation": "Short code does not match",
           "passwordValidation": "Password incorrect"
         }
+      },
+      "cookiePolicy": {
+        "back": "Back",
+        "title": "Cookie Policy for DSP-API web application",
+        "whatAreCookies": "What Are Cookies",
+        "howWeUseCookies": "How We Use Cookies",
+        "disablingCookies": "Disabling Cookies",
+        "cookiesWeSet": "The Cookies We Set",
+        "thirdPartyCookies": "Third Party Cookies",
+        "moreInformation": "More Information"
       }
     },
     "ontology": {

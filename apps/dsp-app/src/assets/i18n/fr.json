@@ -171,12 +171,31 @@
       }
     },
     "system": {
+      "title": "Administration système",
+      "allProjects": "Tous les projets",
+      "allUsers": "Tous les utilisateurs",
+      "yourProjects": "Vos projets",
+      "allProjectsFromDSP": "Tous les projets de DSP",
+      "activeUsersCount": "Utilisateurs actifs ({{count}})",
+      "inactiveUsersCount": "Utilisateurs inactifs ({{count}})",
+      "allUsersInDSP": "Tous les utilisateurs dans DSP",
       "usersList": {
         "sortFamilyName": "Nom de famille",
-        "sortGivenName": "Prénom"
+        "sortGivenName": "Prénom",
+        "sortEmail": "E-mail",
+        "sortUsername": "Nom d'utilisateur",
+        "user": "Utilisateur",
+        "users": "Utilisateurs",
+        "member": "Membre",
+        "members": "Membres",
+        "createNewUser": "Créer un nouvel utilisateur"
       },
       "users": {
         "changePassword": "Changer le mot de passe"
+      },
+      "createUserDialog": {
+        "title": "Créer un nouvel utilisateur",
+        "isSystemAdmin": "Est un utilisateur administrateur système"
       },
       "projectsList": {
         "project": "Projet",
@@ -192,9 +211,9 @@
         "reactivate": "Réactiver le projet",
         "deactivate": "Désactiver le projet",
         "erase": "Effacer le projet",
-        "eraseConfirmation": "Le projet “{{0}}” a été effacé.",
-        "deactivateConfirmation": "Voulez-vous désactiver le projet “{{0}}” ?",
-        "reactivateConfirmation": "Voulez-vous réactiver le projet “{{0}}” ?",
+        "eraseConfirmation": "Le projet \"{{0}}\" a été effacé.",
+        "deactivateConfirmation": "Voulez-vous désactiver le projet \"{{0}}\" ?",
+        "reactivateConfirmation": "Voulez-vous réactiver le projet \"{{0}}\" ?",
         "eraseConfirmationDialog": {
           "title": "Veuillez entrer les informations requises pour effacer le projet.",
           "subtitle": "Effacer le projet",
@@ -206,6 +225,16 @@
           "shortCodeValidation": "Le code court ne correspond pas",
           "passwordValidation": "Mot de passe incorrect"
         }
+      },
+      "cookiePolicy": {
+        "back": "Retour",
+        "title": "Politique de cookies pour l'application web DSP-API",
+        "whatAreCookies": "Que sont les cookies",
+        "howWeUseCookies": "Comment nous utilisons les cookies",
+        "disablingCookies": "Désactiver les cookies",
+        "cookiesWeSet": "Les cookies que nous utilisons",
+        "thirdPartyCookies": "Cookies tiers",
+        "moreInformation": "Plus d'informations"
       }
     },
     "ontology": {
