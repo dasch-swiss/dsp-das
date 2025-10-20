@@ -57,7 +57,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
             data-cy="submit-button"
             [isLoading]="loading"
             (click)="submitData()">
-            {{ 'ui.form.action.submit' | translate }}
+            {{ 'ui.common.actions.submit' | translate }}
           </button>
         </div>
       </form>

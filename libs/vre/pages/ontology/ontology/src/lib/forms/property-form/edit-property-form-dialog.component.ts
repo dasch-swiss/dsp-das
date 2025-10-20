@@ -18,7 +18,7 @@ import {
   template: ` <app-dialog-header [title]="title" [subtitle]="data.propType.group + ': ' + data.propType.label || ''" />
     <app-property-form mat-dialog-content (afterFormInit)="form = $event" [propertyData]="data" />
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         color="primary"
@@ -27,7 +27,7 @@ import {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="onSubmit()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
   standalone: false,

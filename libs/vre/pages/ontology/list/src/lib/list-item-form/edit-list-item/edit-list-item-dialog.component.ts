@@ -24,7 +24,7 @@ export interface EditListItemDialogProps {
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
         mat-raised-button
@@ -33,7 +33,7 @@ export interface EditListItemDialogProps {
         [isLoading]="loading"
         [disabled]="form.invalid"
         (click)="updateChildNode()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>
   `,

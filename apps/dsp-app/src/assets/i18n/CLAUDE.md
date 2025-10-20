@@ -129,8 +129,96 @@ After making translation changes:
 3. Switch between languages in the UI to verify functionality
 4. Check that no translation keys show as raw keys (e.g., `"pages.project.legalSettings.tab"`)
 
-## File Structure Notes
+## Translation Structure
 
-check @dasch-swiss/dsp-app/apps/dsp-app/src/assets/i18n/en.json for the English reference file structure.
+### Overview
 
-When referencing keys in the application code, they use dot notation: `pages.project.legalSettings.tab`
+The translation files follow a hierarchical structure with two main top-level sections:
+
+1. **`pages.*`** - Feature-specific translations organized by page/module
+2. **`ui.*`** - Reusable UI component translations
+
+### New `ui.common` Structure (Refactored)
+
+A centralized `ui.common` structure has been introduced to eliminate duplication and improve maintainability:
+
+```
+ui.common/
+├── actions/          # Common action button labels (cancel, save, update, delete, etc.)
+├── fields/           # Common form field labels (username, email, password, etc.)
+├── status/           # Status indicators (active, inactive, loading, etc.)
+├── states/           # UI states (loading, empty, noResults, etc.)
+├── entities/         # Common entity names (user/users, project/projects, etc.)
+├── confirmations/    # Reusable confirmation message templates with interpolation
+└── sort/             # Sort option labels (byName, byDate, ascending, descending)
+```
+
+### Decision Tree: `ui.common` vs `pages.*`
+
+**Use `ui.common` when:**
+- The text is used in 3+ different feature areas
+- It's a standard action/field/status label
+- The text is generic and context-independent
+- It's a reusable confirmation message template
+
+**Use `pages.*` when:**
+- The text has business domain-specific context
+- The text is unique to one feature
+- The text includes feature-specific terminology
+
+**Examples:**
+
+✅ **Good:**
+```typescript
+'ui.common.actions.cancel'              // Generic action button
+'ui.common.fields.username'             // Generic field label
+'ui.common.status.active'               // Generic status
+'pages.search.advancedSearch.title'     // Feature-specific title
+```
+
+❌ **Bad:**
+```typescript
+'pages.search.cancel'                   // Don't duplicate common actions!
+'pages.system.loading'                  // Don't duplicate common states!
+```
+
+### Key Referencing in Code
+
+Keys use dot notation in the application code:
+
+**Template usage (HTML):**
+```html
+<button mat-button>{{ 'ui.common.actions.cancel' | translate }}</button>
+<mat-label>{{ 'ui.common.fields.username' | translate }}</mat-label>
+```
+
+**TypeScript usage:**
+```typescript
+const message = this._translateService.instant('ui.common.confirmations.deleteItem', { item: 'user' });
+```
+
+### Validation Scripts
+
+Automated validation scripts are available in the `scripts/` directory:
+
+```bash
+# Validate JSON syntax
+./scripts/validate-translations.sh
+
+# Check key parity across all languages
+./scripts/compare-translation-keys.sh
+
+# Migrate legacy ui.form.action keys
+./scripts/migrate-ui-actions.sh
+```
+
+### Further Reading
+
+For detailed information about the refactored structure, see:
+- `docs/TRANSLATION_REFACTORING.md` - Complete refactoring guide and usage patterns
+- Migration guide and decision trees
+- Benefits and impact analysis
+
+### File Structure Notes
+
+Check `apps/dsp-app/src/assets/i18n/en.json` for the English reference file structure

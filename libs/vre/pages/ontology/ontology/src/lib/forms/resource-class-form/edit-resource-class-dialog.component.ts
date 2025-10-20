@@ -20,7 +20,7 @@ export interface EditResourceClassDialogProps {
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>
     <div mat-dialog-actions align="end">
-      <button data-cy="cancel-button" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button data-cy="cancel-button" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         data-cy="submit-button"
         mat-raised-button
@@ -29,7 +29,7 @@ export interface EditResourceClassDialogProps {
         [isLoading]="loading"
         [disabled]="form?.invalid"
         (click)="onSubmit()">
-        {{ 'ui.form.action.update' | translate }}
+        {{ 'ui.common.actions.update' | translate }}
       </button>
     </div>
   `,

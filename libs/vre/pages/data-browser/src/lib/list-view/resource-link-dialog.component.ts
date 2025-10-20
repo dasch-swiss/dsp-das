@@ -48,7 +48,7 @@ export interface ResourceLinkDialogProps {
       </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="dialogRef.close()">{{ 'ui.form.action.cancel' | translate }}</button>
+      <button mat-button type="button" (click)="dialogRef.close()">{{ 'ui.common.actions.cancel' | translate }}</button>
 
       <button
         mat-raised-button
@@ -58,7 +58,7 @@ export interface ResourceLinkDialogProps {
         [isLoading]="isLoading"
         [disabled]="form.invalid"
         (click)="submitData()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </mat-dialog-actions>
   `,

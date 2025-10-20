@@ -45,7 +45,7 @@ export interface ReplaceFileDialogProps {
 
     <mat-dialog-actions align="end">
       <button mat-button type="button" data-cy="replace-file-cancel-button" (click)="dialogRef.close()">
-        {{ 'ui.form.action.cancel' | translate }}
+        {{ 'ui.common.actions.cancel' | translate }}
       </button>
       <button
         mat-raised-button
@@ -53,7 +53,7 @@ export interface ReplaceFileDialogProps {
         data-cy="replace-file-submit-button"
         [color]="'primary'"
         (click)="replaceFile()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </mat-dialog-actions>
   `,

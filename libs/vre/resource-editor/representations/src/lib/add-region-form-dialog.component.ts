@@ -21,7 +21,7 @@ export interface AddRegionFormDialogProps {
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button type="button" mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button mat-button type="button" mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button
         mat-raised-button
         [mat-dialog-close]="regionForm.value"

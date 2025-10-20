@@ -33,7 +33,7 @@ import { ListInfoForm } from './list-info-form.type';
         [isRequired]="true"
         data-cy="comments-input" />
       <div mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+        <button mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
         <button
           mat-raised-button
           type="submit"
@@ -43,7 +43,7 @@ import { ListInfoForm } from './list-info-form.type';
           appLoadingButton
           [isLoading]="loading"
           data-cy="submit-button">
-          {{ 'ui.form.action.submit' | translate }}
+          {{ 'ui.common.actions.submit' | translate }}
         </button>
       </div>
     </div>

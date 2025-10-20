@@ -24,7 +24,7 @@ import { ProjectForm } from './project-form.type';
         appLoadingButton
         [isLoading]="loading"
         data-cy="submit-button">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>
   `,

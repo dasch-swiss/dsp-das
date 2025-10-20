@@ -19,9 +19,9 @@ import { finalize } from 'rxjs';
     </div>
 
     <div mat-dialog-actions align="end">
-      <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
+      <button color="primary" mat-button mat-dialog-close>{{ 'ui.common.actions.cancel' | translate }}</button>
       <button mat-raised-button color="primary" appLoadingButton [isLoading]="isLoading" (click)="createUser()">
-        {{ 'ui.form.action.submit' | translate }}
+        {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>
   `,

@@ -32,7 +32,7 @@ export interface EditPasswordDialogProps {
             ]" />
 
           <button mat-raised-button color="primary" (click)="checkAdminPassword()">
-            {{ 'pages.userSettings.passwordForm.next' | translate }}
+            {{ 'ui.common.actions.next' | translate }}
           </button>
         </mat-step>
 
@@ -46,14 +46,14 @@ export interface EditPasswordDialogProps {
             [isLoading]="updateLoading"
             (click)="updateNewPassword()"
             style="margin-top: 16px">
-            {{ 'pages.userSettings.passwordForm.update' | translate }}
+            {{ 'ui.common.actions.update' | translate }}
           </button>
         </mat-step>
       </mat-stepper>
     </div>
 
     <div mat-dialog-actions align="end">
-      <button mat-button color="primary" matDialogClose>{{ 'pages.userSettings.passwordForm.cancel' | translate }}</button>
+      <button mat-button color="primary" matDialogClose>{{ 'ui.common.actions.cancel' | translate }}</button>
     </div>
   `,
   styles: [

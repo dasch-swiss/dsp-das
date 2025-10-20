@@ -50,16 +50,16 @@ export interface CardinalityInfo {
       }
       <div mat-dialog-actions align="end">
         @if (canSetCardinality) {
-          <button mat-button (click)="dialogRef.close(false)">{{ 'ui.form.action.no' | translate }}</button>
+          <button mat-button (click)="dialogRef.close(false)">{{ 'ui.common.actions.no' | translate }}</button>
         }
         @if (canSetCardinality) {
           <button mat-raised-button (click)="dialogRef.close(true)" data-cy="confirmation-button">
-            {{ 'ui.form.action.yes' | translate }}
+            {{ 'ui.common.actions.yes' | translate }}
           </button>
         }
         @if (canSetCardinality === false) {
           <button mat-button (click)="dialogRef.close(false)">
-            {{ 'ui.form.action.close' | translate }}
+            {{ 'ui.common.actions.close' | translate }}
           </button>
         }
       </div>
