@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 
 export interface ConfirmDialogProps {
   message: string;
@@ -20,7 +22,8 @@ export interface ConfirmDialogProps {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [DialogHeaderComponent, MatButtonModule, MatDialogModule],
+  standalone: true,
 })
 export class ConfirmDialogComponent {
   constructor(
