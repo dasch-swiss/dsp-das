@@ -1,7 +1,6 @@
 {
   "pages": {
     "landingPage": {
-      "title": "Forschungsprojekte",
       "usersProjects": "Meine Projekte",
       "notUsersProjects": "Andere Forschungsprojekte",
       "filterProjects": "Filter projects"
@@ -16,7 +15,6 @@
         "deleteButton": "Konto sperren",
         "deleteConfirmation": "Möchten Sie Ihr eigenes Konto sperren?",
         "delete": "Konto löschen",
-        "password": "Passwort aktualisieren",
         "edit": "Profil anpassen",
         "editMyProfile": "Mein Profil bearbeiten",
         "editMyPassword": "Mein Passwort bearbeiten"
@@ -25,21 +23,12 @@
         "emailValidation": "Das ist keine gültige Email Adresse",
         "usernameHint": "Der Anzeigename darf keine Sonder- oder Leerzeichen beinhalten.",
         "language": "Sprache",
-        "sysAdmin": "System-Admin-Rechte",
         "updateSuccess": "Das Profil wurde erfolgreich aktualisiert.",
-        "new": "Neues Konto anlegen",
-        "profile": "Profil",
         "email": "Email Adresse"
       },
       "passwordForm": {
-        "passwordLengthHint": "Verwenden Sie mindestens 8 Zeichen.",
-        "passwordPatternHint": "Das Passwort muss mindestens einen Grossbuchstaben und eine Zahl enthalten.",
-        "oldPassword": "Altes Passwort",
         "newPassword": "Neues Passwort",
         "confirmPassword": "Passwort bestätigen",
-        "requesterPassword": "Dein Passwort",
-        "ownPasswordSuccess": "Sie haben Ihr Passwort erfolgreich aktualisiert.",
-        "userPasswordSuccess": "Sie haben das Passwort erfolgreich aktualisiert.",
         "currentPasswordStep": "Aus Sicherheitsgründen geben Sie bitte Ihr aktuelles Passwort ein",
         "currentPasswordPlaceholder": "Ihr aktuelles Passwort",
         "incorrectPassword": "Das eingegebene Passwort ist falsch",
@@ -50,15 +39,13 @@
         "myAccount": "Mein Konto"
       },
       "profile": {
-        "systemAdmin": "System-Admin",
-        "editMyProfile": "Mein Profil bearbeiten"
+        "systemAdmin": "System-Admin"
       },
       "userMenu": {
         "signedInAs": "Angemeldet als",
         "systemAdministration": "Systemadministration",
         "logout": "Abmelden",
         "login": "ANMELDEN",
-        "home": "DSP-APP Startseite",
         "myAccount": "Mein Konto"
       },
       "editUserDialog": {
@@ -69,9 +56,7 @@
     "project": {
       "addUser": {
         "title": "Projektmitglied hinzufügen",
-        "description": "Projektteam erweitern",
         "select": "Aus der Liste wählen ...",
-        "usersLoading": "Konten werden geladen ...",
         "newUser": "Neues Konto",
         "noResults": "Keine Ergebnisse"
       },
@@ -86,7 +71,6 @@
         }
       },
       "editProjectFormPage": {
-        "editSuccess": "Sie haben die Projektinformationen erfolgreich aktualisiert.",
         "projectUpdated": "Projekt aktualisiert"
       },
       "projectDescriptionPage": {
@@ -143,8 +127,6 @@
         "add": "Hinzufügen",
         "copyrightHolder": "Rechteinhaber:in",
         "enabled": "Aktiviert",
-        "authorshipOverview": "Urheber:innen - Übersicht",
-        "authorshipReadOnly": "Diese Übersicht der Urheber:innen ist lediglich zur Ansicht. Neue Urheber:innen fügen sie bitte direkt über die Ressourcen hinzu.",
         "dialog": {
           "addCopyrightHolder": "Rechteinhaber:in hinzufügen",
           "text": "Text"
@@ -234,7 +216,6 @@
         "name": "Eindeutigen Namen festlegen",
         "label": "Bezeichnung",
         "comment": "Kommentar",
-        "nameValidation": "Der Name darf nicht mit einer Zahl oder v + Zahl beginnen, und Leerzeichen oder Sonderzeichen (außer Bindestrich, Punkt und Unterstrich) sind nicht erlaubt.",
         "nameExists": "Dieser Name ist nicht erlaubt oder existiert bereits."
       },
       "list": {
@@ -296,115 +277,10 @@
         "expandAll": "Alle ausklappen",
         "createNewClass": "Neue Klasse erstellen",
         "addProperty": "Eigenschaft hinzufügen"
-      },
-      "property": {
-        "editDialog": {
-          "editTitle": "Eigenschaft bearbeiten",
-          "createTitle": "Neue Eigenschaft erstellen"
-        },
-        "form": {
-          "propertyType": "Eigenschaftstyp",
-          "propertyName": "Eigenschaftsname",
-          "propertyLabel": "Eigenschaftsbezeichnung",
-          "guiAttr": {
-            "selectResourceClass": "Ressourcenklasse auswählen",
-            "selectList": "Liste auswählen"
-          }
-        },
-        "info": {
-          "usedIn": "> Eigenschaft wird verwendet in:",
-          "restrictedToClass": "Diese Eigenschaft kann nur von der Klasse {{className}} verwendet werden",
-          "notUsed": "> Diese Eigenschaft wird in keiner Klasse verwendet.",
-          "editTooltip": "Eigenschaft bearbeiten",
-          "cannotEdit": "Die Eigenschaft kann nicht bearbeitet werden; Keine weiteren Informationen verfügbar",
-          "deleteTooltip": "Eigenschaft löschen",
-          "cannotDelete": "Die Eigenschaft kann nicht gelöscht werden, da sie in einer Klasse verwendet wird",
-          "deleteConfirmation": "Möchten Sie diese Ressourcenklasse löschen?"
-        },
-        "menu": {
-          "edit": "Eigenschaft bearbeiten",
-          "remove": "Eigenschaft aus Klasse entfernen",
-          "copy": "Eigenschafts-ID kopieren"
-        },
-        "notifications": {
-          "idCopied": "Eigenschafts-ID in die Zwischenablage kopiert.",
-          "inherited": "Die Eigenschaft wird von einer anderen Klasse geerbt"
-        }
-      },
-      "resourceClass": {
-        "createDialog": {
-          "subtitle": "Ressourcenklasse erstellen"
-        },
-        "editDialog": {
-          "subtitle": "Ressourcenklasse anpassen"
-        },
-        "form": {
-          "className": "Klassenname",
-          "patternError": "Dieses Muster wird nicht unterstützt"
-        },
-        "info": {
-          "noProperties": "Dieser Klasse sind noch keine Eigenschaften zugewiesen.",
-          "collapseTooltip": "Klasse einklappen",
-          "expandTooltip": "Klasse ausklappen",
-          "menu": {
-            "edit": "Ressourcenklassen-Info bearbeiten",
-            "openInstances": "Ressourceninstanzen öffnen",
-            "copy": "Ressourcenklassen-ID kopieren",
-            "delete": "Ressourcenklasse löschen",
-            "cannotDelete": "Diese Klasse kann nicht gelöscht werden, da sie verwendet wird"
-          },
-          "deleteConfirmation": "Möchten Sie diese Ressourcenklasse löschen?",
-          "notifications": {
-            "idCopied": "Ressourcenklassen-ID in die Zwischenablage kopiert.",
-            "created": "Klasse {{classLabel}} erfolgreich erstellt."
-          }
-        },
-        "addProperty": {
-          "add": "Eigenschaft hinzufügen",
-          "createNew": "Neue von Typ erstellen",
-          "addExisting": "Vorhandene Eigenschaft hinzufügen"
-        },
-        "cardinality": {
-          "multipleValues": "Mehrere Werte",
-          "required": "Erforderlich",
-          "updateDialog": {
-            "title": "Kardinalität aktualisieren",
-            "subtitle": "Kardinalität für Eigenschaft {{propertyLabel}} festlegen",
-            "cannotChange": "Die Kardinalität kann nicht geändert werden.",
-            "attention": "Achtung",
-            "warning": "Bitte beachten Sie, dass diese Änderung möglicherweise nicht rückgängig gemacht werden kann. Möchten Sie die Kardinalität ändern?",
-            "no": "Nein",
-            "yes": "Ja",
-            "errors": {
-              "multipleValues": {
-                "detail": "Mindestens eine Ressource der Klasse \"{{classLabel}}\" hat mehrere \"{{propertyLabel}}\"-Eigenschaften in Ihren Daten.",
-                "hint": "Um die Kardinalität von \"{{propertyLabel}}\" auf einzeln zu setzen, muss jede Ressource \"{{classLabel}}\" vor dieser Änderung nur einen \"{{propertyLabel}}\"-Wert haben."
-              },
-              "required": {
-                "detail": "Mindestens eine Ressource der Klasse \"{{classLabel}}\" hat keine \"{{propertyLabel}}\"-Eigenschaft in Ihren Daten.",
-                "hint": "Um die Kardinalität von \"{{propertyLabel}}\" auf erforderlich zu setzen, muss jede Ressource \"{{classLabel}}\" vor dieser Änderung einen \"{{propertyLabel}}\"-Wert haben."
-              }
-            }
-          }
-        }
-      },
-      "objectType": {
-        "region": "Region"
       }
     },
     "search": {
       "propertyFormListValue": "Wählen Sie eine Option",
-      "searchPanel": {
-        "howToSearch": "Wie suchen?",
-        "expert": "Experte",
-        "advancedSearch": "Erweiterte Suche",
-        "expertSearch": "Expertensuche"
-      },
-      "fullTextSearch": {
-        "filterByProject": "Nach Projekt filtern",
-        "search": "Alle Daten durchsuchen",
-        "allProjects": "Alle Projekte"
-      },
       "advancedSearch": {
         "title": "Erweiterte Suche",
         "usePreviousSearch": "Vorherige Suche verwenden",
@@ -508,18 +384,12 @@
       },
       "video": {
         "createAnnotation": "Annotation erstellen",
-        "playbackAborted": "Videowiedergabe abgebrochen.",
-        "networkError": "Netzwerkfehler beim Laden des Videos.",
-        "decodingError": "Video-Dekodierungsfehler.",
-        "formatNotSupported": "Das Videoformat wird nicht unterstützt.",
-        "unknownError": "Ein unbekannter Videofehler ist aufgetreten.",
         "cannotPlay": "Das Video kann derzeit nicht abgespielt werden.",
         "openInNewTab": "Video in neuem Tab öffnen",
         "urlCopied": "URL in Zwischenablage kopiert!",
         "copyUrl": "Video-URL in Zwischenablage kopieren",
         "download": "Video herunterladen",
         "title": "Video",
-        "updateSubtitle": "Die Videodatei dieser Ressource aktualisieren",
         "pause": "Pausieren",
         "play": "Abspielen",
         "stop": "Stoppen und zum Anfang gehen",
@@ -528,34 +398,24 @@
       },
       "stillImage": {
         "createAnnotation": "Annotation erstellen",
-        "labelAnnotations": "Annotationen",
         "more": "Mehr",
         "share": "Teilen",
         "download": "Herunterladen",
         "settings": "Einstellungen",
-        "openFullscreen": "Im Vollbild öffnen",
-        "openIiifUrl": "IIIF-URL in neuem Tab öffnen",
         "iiifUrlCopied": "IIIF-URL in Zwischenablage kopiert!",
-        "copyIiifUrl": "IIIF-URL in Zwischenablage kopieren",
-        "jpg": "JPG",
-        "png": "PNG"
+        "copyIiifUrl": "IIIF-URL in Zwischenablage kopieren"
       },
       "downloadFile": "Datei herunterladen",
       "replaceFile": "Datei ersetzen",
-      "noValidFileUrl": "Keine gültige Datei-URL für diese Ressource gefunden.",
       "archive": {
-        "title": "Archiv",
-        "updateSubtitle": "Die Archivdatei dieser Ressource aktualisieren"
+        "title": "Archiv"
       },
       "audio": {
-        "createAnnotation": "Annotation erstellen",
-        "notSupported": "Ihr Browser unterstützt das Audio-Element nicht.",
         "cannotPlay": "Das Video kann derzeit nicht abgespielt werden.",
         "openInNewTab": "Audio in neuem Tab öffnen",
         "copyUrl": "Audio-URL in Zwischenablage kopieren",
         "download": "Audio herunterladen",
-        "title": "Audio",
-        "updateSubtitle": "Die Audiodatei dieser Ressource aktualisieren"
+        "title": "Audio"
       },
       "document": {
         "searchPlaceholder": "In PDF suchen...",
@@ -563,12 +423,10 @@
         "resetZoom": "Zoom zurücksetzen",
         "zoomIn": "Hineinzoomen",
         "fullscreen": "Vollbild",
-        "title": "Dokument",
-        "updateSubtitle": "Die Dokumentdatei dieser Ressource aktualisieren"
+        "title": "Dokument"
       },
       "text": {
-        "title": "Text (csv, txt, xml)",
-        "updateSubtitle": "Die Textdatei dieser Ressource aktualisieren"
+        "title": "Text (csv, txt, xml)"
       },
       "replaceFileDialog": {
         "willBeReplaced": " wird ersetzt."
@@ -580,24 +438,11 @@
       "standoffLinkTooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
       "standoffLinkLabel": "hat Standoff-Link",
       "annotationToolbar": {
-        "delete": "Diese Ressource löschen",
         "highlightRegion": "Region hervorheben"
-      },
-      "deleteDialog": {
-        "title": "Möchten Sie diese Ressource löschen?",
-        "commentLabel": "Kommentieren Sie, warum die Ressource gelöscht wird",
-        "placeholder": "Z.B. Ressource wurde versehentlich erstellt...",
-        "keepIt": "Nein, behalten",
-        "confirmDelete": "Ja, löschen"
       }
     },
     "permissionInfo": {
       "label": "Berechtigungen",
-      "projectAdmin": "Projektadministrator:in",
-      "creator": "Ersteller:in",
-      "projectMember": "Projektmitglied",
-      "knownUser": "Angemeldet",
-      "unknownUser": "Nicht angemeldet",
       "usersPermissions": "Ihre Berechtigungen",
       "interactions": {
         "restrictedView": "Leseberechtigung mit Restriktion (RV)",
@@ -614,24 +459,6 @@
       "footnotes": "Fußnoten",
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
-      },
-      "deleteValueDialog": {
-        "title": "Sind Sie sicher, dass Sie diesen Wert löschen möchten von ",
-        "explanation": "Sie können einen Kommentar hinterlassen, um Ihre Wahl zu erklären.",
-        "reason": "Grund",
-        "placeholder": "Bitte erläutern Sie den Grund für Ihre Löschung.",
-        "keepValue": "Nein, Wert behalten",
-        "confirmDelete": "Ja, Wert löschen"
-      },
-      "editLabelDialog": {
-        "subtitle": "Ressourcenbezeichnung bearbeiten"
-      },
-      "eraseDialog": {
-        "title": "Möchten Sie diese Ressource endgültig löschen?",
-        "subtitle": "Ressourceninstanz löschen",
-        "reason": "Grund",
-        "keepIt": "Nein, behalten",
-        "confirmErase": "Ja, löschen"
       },
       "valueAlreadyExists": "Der eingegebene Wert existiert bereits."
     },
@@ -674,10 +501,6 @@
       "lastPage": "Letzte Seite"
     },
     "resourceCreator": {
-      "file": "Datei",
-      "resourceLabel": "Ressourcenbezeichnung *",
-      "resourceLabelTooltip": "Jede Ressource benötigt eine (vorzugsweise eindeutige) Bezeichnung. Sie dient als Art Ressourcenkennung.",
-      "resourceLabelPlaceholder": "z.B. Lorem ipsum ...",
       "legal": {
         "copyrightHolder": "Urheberrechtsinhaber",
         "choose": "Auswählen",
@@ -687,27 +510,13 @@
       },
       "authorship": {
         "label": "Autorenschaft",
-        "placeholder": "Neue Autorenschaft...",
-        "instruction": "Drücken Sie die Eingabetaste oder Tab, um ein Element hinzuzufügen. ",
-        "aiGenerated": "KI-generierte Inhalte – Nicht urheberrechtlich geschützt",
-        "publicDomain": "Gemeinfrei – Nicht urheberrechtlich geschützt"
+        "placeholder": "Neue Autorenschaft..."
       },
       "upload": {
-        "dragDrop": "Ziehen und Ablegen oder Klicken zum Hochladen.",
         "fileTypesSupported": "Unterstützte Dateitypen: {{types}}",
-        "uploaded": " hochgeladen",
         "processing": "Datei wird auf dem Server verarbeitet...",
-        "extensionNotSupported": "Die Erweiterung {{extension}} wird nicht unterstützt.",
-        "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
-      },
-      "createDialog": {
-        "title": "Neue Ressource vom Typ erstellen: "
+        "extensionNotSupported": "Die Erweiterung {{extension}} wird nicht unterstützt."
       }
-    },
-    "templateSwitcher": {
-      "nothingToShow": "Nichts anzuzeigen",
-      "removeValue": "Diesen Wert entfernen",
-      "setValue": "Einen Wert festlegen"
     }
   },
   "ui": {

@@ -1,7 +1,6 @@
 {
   "pages": {
     "landingPage": {
-      "title": "Progetti di ricerca",
       "usersProjects": "I miei progetti",
       "notUsersProjects": "Altri progetti di ricerca",
       "filterProjects": "Filter projects"
@@ -16,7 +15,6 @@
         "deleteButton": "Sospendi account utente ora",
         "deleteConfirmation": "Vuoi sospendere il tuo account?",
         "delete": "Sospendi account utente",
-        "password": "Aggiorna password",
         "edit": "Modifica profilo",
         "editMyProfile": "Modifica il mio profilo",
         "editMyPassword": "Modifica la mia password"
@@ -25,21 +23,12 @@
         "emailValidation": "Questo indirizzo email sembra non essere valido.",
         "usernameHint": "Spazi e caratteri speciali non sono ammessi nel nome utente.",
         "language": "Lingua predefinita",
-        "sysAdmin": "Diritti di amministratore di sistema",
         "updateSuccess": "Hai aggiornato con successo il profilo dell'utente.",
-        "new": "Crea nuovo",
-        "profile": "Profilo utente",
         "email": "Indirizzo email"
       },
       "passwordForm": {
-        "passwordLengthHint": "Usa almeno 8 caratteri.",
-        "passwordPatternHint": "La password dovrebbe avere almeno una lettera maiuscola e un numero.",
-        "oldPassword": "Vecchia password",
         "newPassword": "Nuova password",
         "confirmPassword": "Conferma password",
-        "requesterPassword": "La tua password",
-        "ownPasswordSuccess": "Hai aggiornato con successo la tua password.",
-        "userPasswordSuccess": "Hai aggiornato con successo la password dell'utente.",
         "currentPasswordStep": "Per motivi di sicurezza, inserisci la tua password attuale",
         "currentPasswordPlaceholder": "La tua password attuale",
         "incorrectPassword": "La password inserita non è corretta",
@@ -50,15 +39,13 @@
         "myAccount": "Il mio account"
       },
       "profile": {
-        "systemAdmin": "Amministratore di sistema",
-        "editMyProfile": "Modifica il mio profilo"
+        "systemAdmin": "Amministratore di sistema"
       },
       "userMenu": {
         "signedInAs": "Connesso come",
         "systemAdministration": "Amministrazione di sistema",
         "logout": "Disconnetti",
         "login": "ACCEDI",
-        "home": "Pagina iniziale DSP-APP",
         "myAccount": "Il mio account"
       },
       "editUserDialog": {
@@ -69,9 +56,7 @@
     "project": {
       "addUser": {
         "title": "Aggiungi membro del progetto",
-        "description": "Aumenta il tuo team",
         "select": "Seleziona dalla lista ...",
-        "usersLoading": "Caricamento utenti ...",
         "newUser": "Nuovo utente",
         "noResults": "Nessun risultato"
       },
@@ -86,7 +71,6 @@
         }
       },
       "editProjectFormPage": {
-        "editSuccess": "Hai aggiornato con successo le informazioni del progetto.",
         "projectUpdated": "Progetto aggiornato"
       },
       "projectDescriptionPage": {
@@ -143,8 +127,6 @@
         "add": "Aggiungere",
         "copyrightHolder": "Titulare de dritti",
         "enabled": "Attivato",
-        "authorshipOverview": "Panoramica di autori/autrici",
-        "authorshipReadOnly": "Questa panoramica di autori/autrici è in modalità sola lettura. Per aggiungere un nuovo autore, aggiungerlo direttamente nella risorsa.",
         "dialog": {
           "addCopyrightHolder": "Aggiungere titolare dei diritti",
           "text": "Testo"
@@ -234,7 +216,6 @@
         "name": "Imposta un nome univoco",
         "label": "Etichetta",
         "comment": "Commento",
-        "nameValidation": "Il nome non deve iniziare con un numero o v + numero e spazi o caratteri speciali (tranne trattino, punto e trattino basso) non sono ammessi.",
         "nameExists": "Questo nome non è consentito o esiste già."
       },
       "list": {
@@ -296,115 +277,10 @@
         "expandAll": "Espandi tutto",
         "createNewClass": "Crea nuova classe",
         "addProperty": "Aggiungi proprietà"
-      },
-      "property": {
-        "editDialog": {
-          "editTitle": "Modifica proprietà",
-          "createTitle": "Crea nuova proprietà"
-        },
-        "form": {
-          "propertyType": "Tipo di proprietà",
-          "propertyName": "Nome della proprietà",
-          "propertyLabel": "Etichetta della proprietà",
-          "guiAttr": {
-            "selectResourceClass": "Seleziona classe di risorsa",
-            "selectList": "Seleziona una lista"
-          }
-        },
-        "info": {
-          "usedIn": "> Proprietà usata in:",
-          "restrictedToClass": "Questa proprietà può essere usata solo dalla classe {{className}}",
-          "notUsed": "> Questa proprietà non è usata in una classe.",
-          "editTooltip": "Modifica proprietà",
-          "cannotEdit": "La proprietà non può essere modificata; Nessuna ulteriore informazione disponibile",
-          "deleteTooltip": "Elimina proprietà",
-          "cannotDelete": "La proprietà non può essere eliminata perché è usata in una classe",
-          "deleteConfirmation": "Vuoi eliminare questa classe di risorsa?"
-        },
-        "menu": {
-          "edit": "Modifica proprietà",
-          "remove": "rimuovi proprietà dalla classe",
-          "copy": "Copia ID proprietà"
-        },
-        "notifications": {
-          "idCopied": "ID proprietà copiato negli appunti.",
-          "inherited": "La proprietà è ereditata da un'altra classe"
-        }
-      },
-      "resourceClass": {
-        "createDialog": {
-          "subtitle": "Crea classe di risorsa"
-        },
-        "editDialog": {
-          "subtitle": "Personalizza classe di risorsa"
-        },
-        "form": {
-          "className": "Nome della classe",
-          "patternError": "Questo pattern non è supportato"
-        },
-        "info": {
-          "noProperties": "Ancora nessuna proprietà assegnata a questa classe.",
-          "collapseTooltip": "Riduci classe",
-          "expandTooltip": "Espandi classe",
-          "menu": {
-            "edit": "Modifica info classe di risorsa",
-            "openInstances": "Apri istanze di risorsa",
-            "copy": "Copia ID classe di risorsa",
-            "delete": "Elimina classe di risorsa",
-            "cannotDelete": "Questa classe non può essere eliminata perché è in uso"
-          },
-          "deleteConfirmation": "Vuoi eliminare questa classe di risorsa?",
-          "notifications": {
-            "idCopied": "ID classe di risorsa copiato negli appunti.",
-            "created": "Classe {{classLabel}} creata con successo."
-          }
-        },
-        "addProperty": {
-          "add": "Aggiungi proprietà",
-          "createNew": "Crea nuovo da tipo",
-          "addExisting": "Aggiungi proprietà esistente"
-        },
-        "cardinality": {
-          "multipleValues": "Valori multipli",
-          "required": "Richiesto",
-          "updateDialog": {
-            "title": "Aggiorna cardinalità",
-            "subtitle": "Imposta la cardinalità per la proprietà {{propertyLabel}}",
-            "cannotChange": "La modifica della cardinalità non è possibile.",
-            "attention": "Attenzione",
-            "warning": "Si prega di notare che questa modifica potrebbe non essere reversibile. Vuoi modificare la cardinalità?",
-            "no": "No",
-            "yes": "Sì",
-            "errors": {
-              "multipleValues": {
-                "detail": "Almeno una risorsa della classe \"{{classLabel}}\" ha più proprietà \"{{propertyLabel}}\" nei tuoi dati.",
-                "hint": "Per impostare la cardinalità di \"{{propertyLabel}}\" su singolo, ogni risorsa \"{{classLabel}}\" deve avere solo un valore \"{{propertyLabel}}\" prima di questa modifica."
-              },
-              "required": {
-                "detail": "Almeno una risorsa della classe \"{{classLabel}}\" non ha una proprietà \"{{propertyLabel}}\" nei tuoi dati.",
-                "hint": "Per impostare la cardinalità di \"{{propertyLabel}}\" su richiesto, ogni risorsa \"{{classLabel}}\" deve avere un valore \"{{propertyLabel}}\" prima di questa modifica."
-              }
-            }
-          }
-        }
-      },
-      "objectType": {
-        "region": "Regione"
       }
     },
     "search": {
       "propertyFormListValue": "Seleziona un elemento",
-      "searchPanel": {
-        "howToSearch": "Come cercare",
-        "expert": "Esperto",
-        "advancedSearch": "Ricerca avanzata",
-        "expertSearch": "Ricerca esperta"
-      },
-      "fullTextSearch": {
-        "filterByProject": "Filtra per progetto",
-        "search": "Cerca in tutti i dati",
-        "allProjects": "Tutti i progetti"
-      },
       "advancedSearch": {
         "title": "Ricerca avanzata",
         "usePreviousSearch": "Usa la ricerca precedente",
@@ -546,35 +422,24 @@
       },
       "downloadFile": "Scarica file",
       "replaceFile": "Sostituisci file",
-      "noValidFileUrl": "Nessun URL file valido trovato per questa risorsa.",
       "archive": {
-        "title": "Archivio",
-        "updateSubtitle": "Aggiorna il file di archivio di questa risorsa"
+        "title": "Archivio"
       },
       "audio": {
-        "createAnnotation": "Crea annotazione",
-        "notSupported": "Il tuo browser non supporta l'elemento audio.",
         "cannotPlay": "Il video non può essere riprodotto in questo momento.",
         "openInNewTab": "Apri audio in una nuova scheda",
         "copyUrl": "Copia URL audio negli appunti",
         "download": "Scarica audio",
-        "title": "Audio",
-        "updateSubtitle": "Aggiorna il file audio di questa risorsa"
+        "title": "Audio"
       },
       "video": {
         "createAnnotation": "Crea annotazione",
-        "playbackAborted": "Riproduzione video interrotta.",
-        "networkError": "Errore di rete durante il caricamento del video.",
-        "decodingError": "Errore di decodifica video.",
-        "formatNotSupported": "Il formato video non è supportato.",
-        "unknownError": "Si è verificato un errore video sconosciuto.",
         "cannotPlay": "Il video non può essere riprodotto in questo momento.",
         "openInNewTab": "Apri video in una nuova scheda",
         "urlCopied": "URL copiato negli appunti!",
         "copyUrl": "Copia URL video negli appunti",
         "download": "Scarica video",
         "title": "Video",
-        "updateSubtitle": "Aggiorna il file video di questa risorsa",
         "pause": "Pausa",
         "play": "Riproduci",
         "stop": "Ferma e torna all'inizio",
@@ -587,26 +452,19 @@
         "resetZoom": "Reimposta zoom",
         "zoomIn": "Aumenta zoom",
         "fullscreen": "Schermo intero",
-        "title": "Documento",
-        "updateSubtitle": "Aggiorna il file documento di questa risorsa"
+        "title": "Documento"
       },
       "text": {
-        "title": "Testo (csv, txt, xml)",
-        "updateSubtitle": "Aggiorna il file di testo di questa risorsa"
+        "title": "Testo (csv, txt, xml)"
       },
       "stillImage": {
         "createAnnotation": "Crea annotazione",
-        "labelAnnotations": "Annotazioni",
         "more": "Altro",
         "share": "Condividi",
         "download": "Scarica",
         "settings": "Impostazioni",
-        "openFullscreen": "Apri a schermo intero",
-        "openIiifUrl": "Apri URL IIIF in una nuova scheda",
         "iiifUrlCopied": "URL IIIF copiato negli appunti!",
-        "copyIiifUrl": "Copia URL IIIF negli appunti",
-        "jpg": "JPG",
-        "png": "PNG"
+        "copyIiifUrl": "Copia URL IIIF negli appunti"
       },
       "replaceFileDialog": {
         "willBeReplaced": " sarà sostituito."
@@ -618,25 +476,12 @@
       "standoffLinkTooltip": "Rappresenta un link in markup standoff da una risorsa a un'altra",
       "standoffLinkLabel": "ha un link standoff",
       "annotationToolbar": {
-        "delete": "Elimina questa risorsa",
         "highlightRegion": "Evidenzia regione"
-      },
-      "deleteDialog": {
-        "title": "Vuoi eliminare questa risorsa?",
-        "commentLabel": "Commenta perché la risorsa viene eliminata",
-        "placeholder": "Es. La risorsa è stata creata per errore...",
-        "keepIt": "No, mantienila",
-        "confirmDelete": "Sì, elimina"
       }
     },
     "permissionInfo": {
       "label": "Permessi",
       "tooltip": "Permessi della risorsa",
-      "projectAdmin": "Amministratore del progetto",
-      "creator": "Creatore",
-      "projectMember": "Membro del progetto",
-      "knownUser": "Utente conosciuto",
-      "unknownUser": "Utente sconosciuto",
       "usersPermissions": "I tuoi permessi",
       "interactions": {
         "restrictedView": "Permesso di visualizzazione limitata (RV)",
@@ -653,31 +498,9 @@
       "valueComponents": {
         "searchHelp": "Digita 3 lettere per cercare una risorsa esistente."
       },
-      "deleteValueDialog": {
-        "title": "Sei sicuro di voler eliminare questo valore da ",
-        "explanation": "Puoi lasciare un commento per spiegare la tua scelta.",
-        "reason": "Motivo",
-        "placeholder": "Spiega il motivo della tua eliminazione.",
-        "keepValue": "No, mantieni il valore",
-        "confirmDelete": "Sì, elimina il valore"
-      },
-      "editLabelDialog": {
-        "subtitle": "Modifica l'etichetta della risorsa"
-      },
-      "eraseDialog": {
-        "title": "Vuoi cancellare definitivamente questa risorsa?",
-        "subtitle": "Cancella istanza di risorsa",
-        "reason": "Motivo",
-        "keepIt": "No, mantienila",
-        "confirmErase": "Sì, cancella"
-      },
       "valueAlreadyExists": "Il valore inserito esiste già."
     },
     "resourceCreator": {
-      "file": "File",
-      "resourceLabel": "Etichetta risorsa *",
-      "resourceLabelTooltip": "Ogni risorsa ha bisogno di un'etichetta (preferibilmente unica). Sarà una sorta di identificatore della risorsa.",
-      "resourceLabelPlaceholder": "es. Lorem ipsum ...",
       "legal": {
         "copyrightHolder": "Titolare del copyright",
         "choose": "Scegli",
@@ -687,27 +510,13 @@
       },
       "authorship": {
         "label": "Autore",
-        "placeholder": "Nuovo autore...",
-        "instruction": "Premi Invio o Tab per aggiungere un elemento. ",
-        "aiGenerated": "Contenuto generato da AI – Non protetto da copyright",
-        "publicDomain": "Dominio pubblico – Non protetto da copyright"
+        "placeholder": "Nuovo autore..."
       },
       "upload": {
-        "dragDrop": "Trascina e rilascia o clicca per caricare.",
         "fileTypesSupported": "Tipi di file supportati: {{types}}",
-        "uploaded": " caricato",
         "processing": "Elaborazione file sul server...",
-        "extensionNotSupported": "L'estensione {{extension}} non è supportata.",
-        "uploadFailed": "Caricamento fallito. Riprova."
-      },
-      "createDialog": {
-        "title": "Crea nuova risorsa di tipo: "
+        "extensionNotSupported": "L'estensione {{extension}} non è supportata."
       }
-    },
-    "templateSwitcher": {
-      "nothingToShow": "Niente da mostrare",
-      "removeValue": "Rimuovi questo valore",
-      "setValue": "Imposta un valore"
     }
   },
   "ui": {

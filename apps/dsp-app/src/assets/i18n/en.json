@@ -1,7 +1,6 @@
 {
   "pages": {
     "landingPage": {
-      "title": "Research Projects",
       "usersProjects": "My Projects",
       "notUsersProjects": "Other Research Projects",
       "filterProjects": "Filter projects"
@@ -16,7 +15,6 @@
         "deleteButton": "Suspend user account now",
         "deleteConfirmation": "Do you want to suspend your own account?",
         "delete": "Suspend user account",
-        "password": "Update password",
         "edit": "Edit profile",
         "editMyProfile": "Edit my profile",
         "editMyPassword": "Edit my password"
@@ -25,21 +23,12 @@
         "emailValidation": "This email address appears to be invalid.",
         "usernameHint": "Spaces and special characters are not allowed in username.",
         "language": "Default language",
-        "sysAdmin": "System administrator rights",
         "updateSuccess": "You have successfully updated the user's profile.",
-        "new": "Create new",
-        "profile": "User profile",
         "email": "Email address"
       },
       "passwordForm": {
-        "passwordLengthHint": "Use at least 8 characters.",
-        "passwordPatternHint": "The password should have at least one uppercase letter and one number.",
-        "oldPassword": "Old password",
         "newPassword": "New password",
         "confirmPassword": "Confirm password",
-        "requesterPassword": "Your password",
-        "ownPasswordSuccess": "You have successfully updated your password.",
-        "userPasswordSuccess": "You have successfully updated the user's password.",
         "currentPasswordStep": "For security reasons, please enter your current password",
         "currentPasswordPlaceholder": "Your current password",
         "incorrectPassword": "The password entered is incorrect",
@@ -50,15 +39,13 @@
         "myAccount": "My Account"
       },
       "profile": {
-        "systemAdmin": "System admin",
-        "editMyProfile": "Edit my profile"
+        "systemAdmin": "System admin"
       },
       "userMenu": {
         "signedInAs": "Signed in as",
         "systemAdministration": "System Administration",
         "logout": "Logout",
         "login": "LOGIN",
-        "home": "DSP-APP Home Page",
         "myAccount": "My Account"
       },
       "editUserDialog": {
@@ -69,9 +56,7 @@
     "project": {
       "addUser": {
         "title": "Add project member",
-        "description": "Increase your team",
         "select": "Select from list ...",
-        "usersLoading": "Loading users ...",
         "newUser": "New user",
         "noResults": "No results"
       },
@@ -86,7 +71,6 @@
         }
       },
       "editProjectFormPage": {
-        "editSuccess": "You have successfully updated the project information.",
         "projectUpdated": "Project updated"
       },
       "projectDescriptionPage": {
@@ -143,8 +127,6 @@
         "add": "Add",
         "copyrightHolder": "Copyright holder",
         "enabled": "Enabled",
-        "authorshipOverview": "Authorship - Overview",
-        "authorshipReadOnly": "This authorship overview is read-only. To add a new authorship, please update them directly in the resource.",
         "dialog": {
           "addCopyrightHolder": "Add copyright holder",
           "text": "Text"
@@ -234,7 +216,6 @@
         "name": "Set a unique name",
         "label": "Label",
         "comment": "Comment",
-        "nameValidation": "Name shouldn't start with a number or v + number and spaces or special characters (except dash, dot and underscore) are not allowed.",
         "nameExists": "This name is not allowed or exists already."
       },
       "list": {
@@ -296,115 +277,10 @@
         "expandAll": "Expand all",
         "createNewClass": "Create new class",
         "addProperty": "Add Property"
-      },
-      "property": {
-        "editDialog": {
-          "editTitle": "Edit property",
-          "createTitle": "Create new property"
-        },
-        "form": {
-          "propertyType": "Property type",
-          "propertyName": "Property name",
-          "propertyLabel": "Property label",
-          "guiAttr": {
-            "selectResourceClass": "Select resource class",
-            "selectList": "Select a list"
-          }
-        },
-        "info": {
-          "usedIn": "> Property is used in:",
-          "restrictedToClass": "This property can only be used by the class {{className}}",
-          "notUsed": "> This property is not used in a class.",
-          "editTooltip": "Edit property",
-          "cannotEdit": "The property can't be edited; No further information available",
-          "deleteTooltip": "Delete property",
-          "cannotDelete": "The property can't be deleted because it is used in a class",
-          "deleteConfirmation": "Do you want to delete this resource class ?"
-        },
-        "menu": {
-          "edit": "Edit property",
-          "remove": "remove property from class",
-          "copy": "Copy property id"
-        },
-        "notifications": {
-          "idCopied": "Property ID copied to clipboard.",
-          "inherited": "The property is inherited from another class"
-        }
-      },
-      "resourceClass": {
-        "createDialog": {
-          "subtitle": "Create resource class"
-        },
-        "editDialog": {
-          "subtitle": "Customize resource class"
-        },
-        "form": {
-          "className": "Class name",
-          "patternError": "This pattern is not supported"
-        },
-        "info": {
-          "noProperties": "There are no properties assigned to this class yet.",
-          "collapseTooltip": "Collapse class",
-          "expandTooltip": "Expand class",
-          "menu": {
-            "edit": "Edit resource class info",
-            "openInstances": "Open resource instances",
-            "copy": "Copy resource class id",
-            "delete": "Delete resource class",
-            "cannotDelete": "This class can't be deleted because it is in use"
-          },
-          "deleteConfirmation": "Do you want to delete this resource class ?",
-          "notifications": {
-            "idCopied": "Resource class ID copied to clipboard.",
-            "created": "Successfully created the class {{classLabel}}."
-          }
-        },
-        "addProperty": {
-          "add": "Add property",
-          "createNew": "Create new from type",
-          "addExisting": "Add existing property"
-        },
-        "cardinality": {
-          "multipleValues": "Multiple values",
-          "required": "Required",
-          "updateDialog": {
-            "title": "Update cardinality",
-            "subtitle": "Set the cardinality for property {{propertyLabel}}",
-            "cannotChange": "Changing the cardinality is not possible.",
-            "attention": "Attention",
-            "warning": "Please note that this change may not be reversible. Do you want to change the cardinality?",
-            "no": "No",
-            "yes": "Yes",
-            "errors": {
-              "multipleValues": {
-                "detail": "At least one resource of the class \"{{classLabel}}\" has multiple \"{{propertyLabel}}\" properties in your data.",
-                "hint": "In order to set the cardinality of \"{{propertyLabel}}\" to single, every resource \"{{classLabel}}\" must have only one \"{{propertyLabel}}\" value prior to this change."
-              },
-              "required": {
-                "detail": "At least one resource of the class \"{{classLabel}}\" does not have a \"{{propertyLabel}}\" property in your data.",
-                "hint": "In order to set the cardinality of \"{{propertyLabel}}\" to required every resource \"{{classLabel}}\" needs to have a \"{{propertyLabel}}\" value prior to this change."
-              }
-            }
-          }
-        }
-      },
-      "objectType": {
-        "region": "Region"
       }
     },
     "search": {
       "propertyFormListValue": "Select an item",
-      "searchPanel": {
-        "howToSearch": "How to search",
-        "expert": "Expert",
-        "advancedSearch": "Advanced search",
-        "expertSearch": "Expert search"
-      },
-      "fullTextSearch": {
-        "filterByProject": "Filter by project",
-        "search": "Search all data",
-        "allProjects": "All projects"
-      },
       "advancedSearch": {
         "title": "Advanced Search",
         "usePreviousSearch": "Use Previous Search",
@@ -546,35 +422,24 @@
       },
       "downloadFile": "Download file",
       "replaceFile": "Replace file",
-      "noValidFileUrl": "No valid file url found for this resource.",
       "archive": {
-        "title": "Archive",
-        "updateSubtitle": "Update the archive file of this resource"
+        "title": "Archive"
       },
       "audio": {
-        "createAnnotation": "Create Annotation",
-        "notSupported": "Your browser does not support the audio element.",
         "cannotPlay": "The video cannot be played at this time.",
         "openInNewTab": "Open audio in new tab",
         "copyUrl": "Copy audio URL to clipboard",
         "download": "Download audio",
-        "title": "Audio",
-        "updateSubtitle": "Update the audio file of this resource"
+        "title": "Audio"
       },
       "video": {
         "createAnnotation": "Create Annotation",
-        "playbackAborted": "Video playback aborted.",
-        "networkError": "Network error occurred while loading the video.",
-        "decodingError": "Video decoding error.",
-        "formatNotSupported": "The video format is not supported.",
-        "unknownError": "An unknown video error occurred.",
         "cannotPlay": "The video cannot be played at this time.",
         "openInNewTab": "Open video in new tab",
         "urlCopied": "URL copied to clipboard!",
         "copyUrl": "Copy video URL to clipboard",
         "download": "Download video",
         "title": "Video",
-        "updateSubtitle": "Update the video file of this resource",
         "pause": "Pause",
         "play": "Play",
         "stop": "Stop and go to start",
@@ -587,26 +452,19 @@
         "resetZoom": "Reset zoom",
         "zoomIn": "Zoom in",
         "fullscreen": "Fullscreen",
-        "title": "Document",
-        "updateSubtitle": "Update the document file of this resource"
+        "title": "Document"
       },
       "text": {
-        "title": "Text (csv, txt, xml)",
-        "updateSubtitle": "Update the text file of this resource"
+        "title": "Text (csv, txt, xml)"
       },
       "stillImage": {
         "createAnnotation": "Create Annotation",
-        "labelAnnotations": "Annotations",
         "more": "More",
         "share": "Share",
         "download": "Download",
         "settings": "Settings",
-        "openFullscreen": "Open in fullscreen",
-        "openIiifUrl": "Open IIIF URL in new tab",
         "iiifUrlCopied": "IIIF URL copied to clipboard!",
-        "copyIiifUrl": "Copy IIIF URL to clipboard",
-        "jpg": "JPG",
-        "png": "PNG"
+        "copyIiifUrl": "Copy IIIF URL to clipboard"
       },
       "replaceFileDialog": {
         "willBeReplaced": " will be replaced."
@@ -618,25 +476,12 @@
       "standoffLinkTooltip": "Represent a link in standoff markup from one resource to another",
       "standoffLinkLabel": "has Standoff link",
       "annotationToolbar": {
-        "delete": "Delete this resource",
         "highlightRegion": "Highlight Region"
-      },
-      "deleteDialog": {
-        "title": "Do you want to delete this resource ?",
-        "commentLabel": "Comment why resource is being deleted",
-        "placeholder": "Ex. Resource was created by mistake...",
-        "keepIt": "No, keep it",
-        "confirmDelete": "Yes, delete"
       }
     },
     "permissionInfo": {
       "label": "Permissions",
       "tooltip": "Resource permissions",
-      "projectAdmin": "Project Admin",
-      "creator": "Creator",
-      "projectMember": "Project Member",
-      "knownUser": "Known User",
-      "unknownUser": "Unknown User",
       "usersPermissions": "Your permissions",
       "interactions": {
         "restrictedView": "Restricted view permission (RV)",
@@ -653,31 +498,9 @@
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."
       },
-      "deleteValueDialog": {
-        "title": "Are you sure you want to delete this value from ",
-        "explanation": "You can leave a comment to explain your choice.",
-        "reason": "Reason",
-        "placeholder": "Please explain the reason for your deletion.",
-        "keepValue": "No, keep the value",
-        "confirmDelete": "Yes, delete the value"
-      },
-      "editLabelDialog": {
-        "subtitle": "Edit resource's label"
-      },
-      "eraseDialog": {
-        "title": "Do you want to erase this resource forever?",
-        "subtitle": "Erase resource instance",
-        "reason": "Reason",
-        "keepIt": "No, keep it",
-        "confirmErase": "Yes, erase"
-      },
       "valueAlreadyExists": "The value entered already exists."
     },
     "resourceCreator": {
-      "file": "File",
-      "resourceLabel": "Resource label *",
-      "resourceLabelTooltip": "Each resource needs a (preferably unique) label. It will be a kind of resource identifier.",
-      "resourceLabelPlaceholder": "e.g. Lorem ipsum ...",
       "legal": {
         "copyrightHolder": "Copyright holder",
         "choose": "Choose",
@@ -687,27 +510,13 @@
       },
       "authorship": {
         "label": "Authorship",
-        "placeholder": "New authorship...",
-        "instruction": "Press Enter or Tab to add an item. ",
-        "aiGenerated": "AI-Generated Content – Not Protected by Copyright",
-        "publicDomain": "Public Domain – Not Protected by Copyright"
+        "placeholder": "New authorship..."
       },
       "upload": {
-        "dragDrop": "Drag and drop or click to upload.",
         "fileTypesSupported": "File types supported: {{types}}",
-        "uploaded": " uploaded",
         "processing": "Processing file on server...",
-        "extensionNotSupported": "The extension {{extension}} is not supported.",
-        "uploadFailed": "Upload failed. Please try again."
-      },
-      "createDialog": {
-        "title": "Create new resource of type: "
+        "extensionNotSupported": "The extension {{extension}} is not supported."
       }
-    },
-    "templateSwitcher": {
-      "nothingToShow": "Nothing to show",
-      "removeValue": "Remove that value",
-      "setValue": "Set a value"
     }
   },
   "ui": {
