@@ -891,5 +891,18 @@
     "grid": {
       "readMore": "En savoir plus"
     }
+  },
+  "core": {
+    "errorHandler": {
+      "noInternet": "Il semble que vous ne soyez pas connecté à Internet.",
+      "iiifServerError": "Erreur du serveur IIIF : L'image n'a pas pu être chargée. Veuillez réessayer plus tard.",
+      "noPermission": "Vous n'avez pas la permission de voir une ou plusieurs ressources.",
+      "notFound": "La ressource demandée n'a pas été trouvée.",
+      "timeout": "Il y a eu un problème de délai d'attente avec une ou plusieurs requêtes. La ou les ressource(s) ou une partie de celle-ci ne peuvent pas être affichées correctement. Échec sur {{url}}",
+      "contactSupport": "Il y a une erreur de notre côté. Veuillez contacter support@dasch.swiss"
+    },
+    "auth": {
+      "invalidCredentials": "Le nom d'utilisateur et / ou le mot de passe ne correspondent pas."
+    }
   }
 }
