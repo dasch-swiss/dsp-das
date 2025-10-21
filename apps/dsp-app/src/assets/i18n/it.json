@@ -29,7 +29,6 @@
         "updateSuccess": "Hai aggiornato con successo il profilo dell'utente.",
         "new": "Crea nuovo",
         "profile": "Profilo utente",
-        "edit": "Modifica profilo",
         "email": "Indirizzo email"
       },
       "passwordForm": {
@@ -307,7 +306,6 @@
           "propertyType": "Tipo di proprietà",
           "propertyName": "Nome della proprietà",
           "propertyLabel": "Etichetta della proprietà",
-          "comment": "Commento",
           "guiAttr": {
             "selectResourceClass": "Seleziona classe di risorsa",
             "selectList": "Seleziona una lista"
@@ -342,9 +340,7 @@
         },
         "form": {
           "className": "Nome della classe",
-          "patternError": "Questo pattern non è supportato",
-          "labelPlaceholder": "Etichetta",
-          "commentPlaceholder": "Commento"
+          "patternError": "Questo pattern non è supportato"
         },
         "info": {
           "noProperties": "Ancora nessuna proprietà assegnata a questa classe.",
@@ -548,7 +544,6 @@
         "subtitle": "Aggiungi ulteriori proprietà",
         "label": "Etichetta"
       },
-      "labelAnnotations": "Annotazioni",
       "downloadFile": "Scarica file",
       "replaceFile": "Sostituisci file",
       "noValidFileUrl": "Nessun URL file valido trovato per questa risorsa.",
@@ -667,13 +662,11 @@
         "confirmDelete": "Sì, elimina il valore"
       },
       "editLabelDialog": {
-        "subtitle": "Modifica l'etichetta della risorsa",
-        "label": "Etichetta"
+        "subtitle": "Modifica l'etichetta della risorsa"
       },
       "eraseDialog": {
         "title": "Vuoi cancellare definitivamente questa risorsa?",
         "subtitle": "Cancella istanza di risorsa",
-        "warning": "ATTENZIONE: Questa azione non può essere annullata, usala con cautela.",
         "reason": "Motivo",
         "keepIt": "No, mantienila",
         "confirmErase": "Sì, cancella"
@@ -682,7 +675,6 @@
     },
     "resourceCreator": {
       "file": "File",
-      "properties": "Proprietà",
       "resourceLabel": "Etichetta risorsa *",
       "resourceLabelTooltip": "Ogni risorsa ha bisogno di un'etichetta (preferibilmente unica). Sarà una sorta di identificatore della risorsa.",
       "resourceLabelPlaceholder": "es. Lorem ipsum ...",
@@ -715,7 +707,6 @@
     "templateSwitcher": {
       "nothingToShow": "Niente da mostrare",
       "removeValue": "Rimuovi questo valore",
-      "add": "Aggiungi",
       "setValue": "Imposta un valore"
     }
   },

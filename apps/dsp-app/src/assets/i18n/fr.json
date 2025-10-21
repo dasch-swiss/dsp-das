@@ -29,7 +29,6 @@
         "updateSuccess": "Vous avez mis à jour avec succès le profil de l'utilisateur.",
         "new": "Créer nouveau",
         "profile": "Profil utilisateur",
-        "edit": "Modifier le profil",
         "email": "Adresse e-mail"
       },
       "passwordForm": {
@@ -307,7 +306,6 @@
           "propertyType": "Type de propriété",
           "propertyName": "Nom de la propriété",
           "propertyLabel": "Label de la propriété",
-          "comment": "Commentaire",
           "guiAttr": {
             "selectResourceClass": "Sélectionner une classe de ressource",
             "selectList": "Sélectionner une liste"
@@ -342,9 +340,7 @@
         },
         "form": {
           "className": "Nom de la classe",
-          "patternError": "Ce modèle n'est pas pris en charge",
-          "labelPlaceholder": "Label",
-          "commentPlaceholder": "Commentaire"
+          "patternError": "Ce modèle n'est pas pris en charge"
         },
         "info": {
           "noProperties": "Aucune propriété n'est encore assignée à cette classe.",
@@ -548,7 +544,6 @@
         "subtitle": "Ajouter d'autres propriétés",
         "label": "Étiquette"
       },
-      "labelAnnotations": "Annotations",
       "downloadFile": "Télécharger le fichier",
       "replaceFile": "Remplacer le fichier",
       "noValidFileUrl": "Aucune URL de fichier valide trouvée pour cette ressource.",
@@ -667,13 +662,11 @@
         "confirmDelete": "Oui, supprimer la valeur"
       },
       "editLabelDialog": {
-        "subtitle": "Modifier l'étiquette de la ressource",
-        "label": "Étiquette"
+        "subtitle": "Modifier l'étiquette de la ressource"
       },
       "eraseDialog": {
         "title": "Voulez-vous effacer définitivement cette ressource ?",
         "subtitle": "Effacer l'instance de ressource",
-        "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec prudence.",
         "reason": "Raison",
         "keepIt": "Non, la conserver",
         "confirmErase": "Oui, effacer"
@@ -682,7 +675,6 @@
     },
     "resourceCreator": {
       "file": "Fichier",
-      "properties": "Propriétés",
       "resourceLabel": "Étiquette de ressource *",
       "resourceLabelTooltip": "Chaque ressource a besoin d'une étiquette (de préférence unique). Ce sera une sorte d'identifiant de ressource.",
       "resourceLabelPlaceholder": "par ex. Lorem ipsum ...",
@@ -715,7 +707,6 @@
     "templateSwitcher": {
       "nothingToShow": "Rien à afficher",
       "removeValue": "Retirer cette valeur",
-      "add": "Ajouter",
       "setValue": "Définir une valeur"
     }
   },

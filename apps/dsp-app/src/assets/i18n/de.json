@@ -29,7 +29,6 @@
         "updateSuccess": "Das Profil wurde erfolgreich aktualisiert.",
         "new": "Neues Konto anlegen",
         "profile": "Profil",
-        "edit": "Profil anpassen",
         "email": "Email Adresse"
       },
       "passwordForm": {
@@ -307,7 +306,6 @@
           "propertyType": "Eigenschaftstyp",
           "propertyName": "Eigenschaftsname",
           "propertyLabel": "Eigenschaftsbezeichnung",
-          "comment": "Kommentar",
           "guiAttr": {
             "selectResourceClass": "Ressourcenklasse auswählen",
             "selectList": "Liste auswählen"
@@ -342,9 +340,7 @@
         },
         "form": {
           "className": "Klassenname",
-          "patternError": "Dieses Muster wird nicht unterstützt",
-          "labelPlaceholder": "Bezeichnung",
-          "commentPlaceholder": "Kommentar"
+          "patternError": "Dieses Muster wird nicht unterstützt"
         },
         "info": {
           "noProperties": "Dieser Klasse sind noch keine Eigenschaften zugewiesen.",
@@ -510,7 +506,6 @@
         "subtitle": "Weitere Eigenschaften hinzufügen",
         "label": "Bezeichnung"
       },
-      "labelAnnotations": "Annotationen",
       "video": {
         "createAnnotation": "Annotation erstellen",
         "playbackAborted": "Videowiedergabe abgebrochen.",
@@ -629,13 +624,11 @@
         "confirmDelete": "Ja, Wert löschen"
       },
       "editLabelDialog": {
-        "subtitle": "Ressourcenbezeichnung bearbeiten",
-        "label": "Bezeichnung"
+        "subtitle": "Ressourcenbezeichnung bearbeiten"
       },
       "eraseDialog": {
         "title": "Möchten Sie diese Ressource endgültig löschen?",
         "subtitle": "Ressourceninstanz löschen",
-        "warning": "WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden, verwenden Sie sie daher mit Vorsicht.",
         "reason": "Grund",
         "keepIt": "Nein, behalten",
         "confirmErase": "Ja, löschen"
@@ -682,7 +675,6 @@
     },
     "resourceCreator": {
       "file": "Datei",
-      "properties": "Eigenschaften",
       "resourceLabel": "Ressourcenbezeichnung *",
       "resourceLabelTooltip": "Jede Ressource benötigt eine (vorzugsweise eindeutige) Bezeichnung. Sie dient als Art Ressourcenkennung.",
       "resourceLabelPlaceholder": "z.B. Lorem ipsum ...",
@@ -715,7 +707,6 @@
     "templateSwitcher": {
       "nothingToShow": "Nichts anzuzeigen",
       "removeValue": "Diesen Wert entfernen",
-      "add": "Hinzufügen",
       "setValue": "Einen Wert festlegen"
     }
   },
