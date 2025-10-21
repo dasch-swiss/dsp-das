@@ -49,8 +49,8 @@ function findCoverageFiles(dir, files = []) {
   const entries = fs.readdirSync(dir);
   for (const entry of entries) {
     const entryPath = path.join(dir, entry);
-    // Skip the temp folder to avoid circular references
-    if (entry === '.temp') {
+    // Skip the temp folder and root-level coverage files (merged outputs)
+    if (entry === '.temp' || entryPath === path.join(TEST_RESULTS_FOLDER, FINAL_JSON_COVERAGE_FILENAME)) {
       continue;
     }
     if (fs.statSync(entryPath).isDirectory()) {

@@ -37,3 +37,4 @@ ignore:
   - "tools/**"
   - "scripts/**"
   - "docs/**"
+  - "libs/vre/3rd-party-services/open-api/**"  # Auto-generated OpenAPI client
