@@ -40,7 +40,7 @@ export class SettingsPageComponent {
 
   navigation = [
     {
-      label: this._translateService.instant('pages.project.settingsPage.description'),
+      label: this._translateService.instant('ui.common.fields.description'),
       route: RouteConstants.edit,
       icon: 'edit_square',
     },
@@ -60,7 +60,7 @@ export class SettingsPageComponent {
       icon: 'gavel',
     },
     {
-      label: this._translateService.instant('pages.project.settingsPage.members'),
+      label: this._translateService.instant('ui.common.entities.members'),
       route: RouteConstants.collaboration,
       icon: 'group',
     },

@@ -53,7 +53,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
                 [disabled]="(project$ | async)?.status !== true"
                 (click)="$event.stopPropagation(); editOntology(ontology)">
                 <mat-icon>edit</mat-icon>
-                {{ _translate.instant('pages.ontology.editor.editButton') }}
+                {{ _translate.instant('ui.common.actions.edit') }}
               </button>
               <button
                 color="warn"
@@ -66,7 +66,7 @@ import { OntologyEditService } from './services/ontology-edit.service';
                 [disabled]="(currentOntologyCanBeDeleted$ | async) !== true"
                 (click)="deleteOntology(ontology.id)">
                 <mat-icon>delete</mat-icon>
-                {{ _translate.instant('pages.ontology.editor.deleteButton') }}
+                {{ _translate.instant('ui.common.actions.delete') }}
               </button>
             </div>
           }

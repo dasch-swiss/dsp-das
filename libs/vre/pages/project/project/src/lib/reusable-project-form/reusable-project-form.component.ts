@@ -31,7 +31,7 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
           [control]="form.controls.longname"
           data-cy="longname-input" />
         <app-multi-language-textarea
-          [placeholder]="'pages.project.reusableProjectForm.description' | translate"
+          [placeholder]="'ui.common.fields.description' | translate"
           [formArray]="form.controls.description"
           [validators]="descriptionValidators"
           [isRequired]="true"

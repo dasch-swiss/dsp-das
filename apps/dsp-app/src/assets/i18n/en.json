@@ -30,14 +30,9 @@
         "new": "Create new",
         "profile": "User profile",
         "edit": "Edit profile",
-        "givenName": "First name",
-        "familyName": "Last name",
-        "email": "Email address",
-        "username": "Username"
+        "email": "Email address"
       },
       "passwordForm": {
-        "username": "Username",
-        "password": "Password",
         "passwordLengthHint": "Use at least 8 characters.",
         "passwordPatternHint": "The password should have at least one uppercase letter and one number.",
         "oldPassword": "Old password",
@@ -49,10 +44,7 @@
         "currentPasswordStep": "For security reasons, please enter your current password",
         "currentPasswordPlaceholder": "Your current password",
         "incorrectPassword": "The password entered is incorrect",
-        "newPasswordStep": "Enter the new password",
-        "next": "Next",
-        "update": "Update",
-        "cancel": "Cancel"
+        "newPasswordStep": "Enter the new password"
       },
       "navigation": {
         "myProjects": "My Projects",
@@ -85,7 +77,6 @@
         "noResults": "No results"
       },
       "reusableProjectForm": {
-        "description": "Description",
         "shortcode": "Short code",
         "shortname": "Short name",
         "longname": "Project name",
@@ -103,9 +94,7 @@
         "editProjectDescription": "Edit project description"
       },
       "settingsPage": {
-        "description": "Description",
-        "image": "Image",
-        "members": "Members"
+        "image": "Image"
       },
       "imageSettings": {
         "off": "Off",
@@ -195,14 +184,7 @@
       "inactiveUsersCount": "Inactive users ({{count}})",
       "allUsersInDSP": "All users in DSP",
       "usersList": {
-        "sortFamilyName": "Last name",
-        "sortGivenName": "First name",
         "sortEmail": "E-mail",
-        "sortUsername": "Username",
-        "user": "User",
-        "users": "Users",
-        "member": "Member",
-        "members": "Members",
         "createNewUser": "Create a new user"
       },
       "users": {
@@ -213,12 +195,9 @@
         "isSystemAdmin": "Is a system admin user"
       },
       "projectsList": {
-        "project": "Project",
-        "projects": "Projects",
         "sortShortCode": "Short code",
         "sortShortName": "Short name",
         "sortProjectName": "Project name",
-        "statusActive": "Active",
         "statusDeactivated": "Deactivated",
         "createNew": "Create new project",
         "projectAdmin": "Project Administrator",
@@ -235,14 +214,11 @@
           "warning": "WARNING: This action cannot be undone, so use it with care.",
           "shortCode": "Project short code",
           "systemAdminPassword": "System administrator password",
-          "cancel": "Cancel",
-          "confirm": "Confirm",
           "shortCodeValidation": "Short code does not match",
           "passwordValidation": "Password incorrect"
         }
       },
       "cookiePolicy": {
-        "back": "Back",
         "title": "Cookie Policy for DSP-API web application",
         "whatAreCookies": "What Are Cookies",
         "howWeUseCookies": "How We Use Cookies",
@@ -266,8 +242,6 @@
         "deleteList": "Delete controlled vocabulary",
         "backToDataModels": "Back to data models",
         "editInfo": "Edit controlled vocabulary info",
-        "editButton": "Edit",
-        "deleteButton": "Delete",
         "deleteConfirmation": "Do you want to delete this controlled vocabulary?",
         "actionBubble": {
           "moveUp": "move up",
@@ -312,8 +286,6 @@
         "backToDataModels": "Back to data models",
         "updatedOn": "Updated on:",
         "editInfo": "Edit data model info",
-        "editButton": "Edit",
-        "deleteButton": "Delete",
         "deleteTooltip": "Delete data model",
         "cannotDelete": "This data model cant be deleted because it is in use!",
         "deleteConfirmation": "Do you want to delete this data model ?"
@@ -441,8 +413,6 @@
         "title": "Advanced Search",
         "usePreviousSearch": "Use Previous Search",
         "addSearchCriteria": "Add Search Criteria",
-        "reset": "Reset",
-        "search": "Search",
         "orderBy": "Order by",
         "orderByTooltip": "Search cannot be ordered by a URI property or a property that links to a resource.",
         "switchToRegularSearch": "Switch to regular search",
@@ -450,7 +420,6 @@
         "dataModel": "Data model",
         "resourceClass": "Resource class (optional)",
         "resourceClassNone": "None",
-        "loading": "Loading...",
         "property": "Property",
         "comparisonOperator": "Comparison Operator",
         "searchForResource": "Search for a resource",
@@ -570,8 +539,7 @@
         "label": "Label",
         "start": "Start",
         "end": "End",
-        "title": "Title",
-        "description": "Description"
+        "title": "Title"
       }
     },
     "representations": {
@@ -721,7 +689,6 @@
       "legal": {
         "copyrightHolder": "Copyright holder",
         "choose": "Choose",
-        "loading": "Loading...",
         "none": "None",
         "license": "License/Statement",
         "authorship": "Authorship"
@@ -747,7 +714,6 @@
     },
     "templateSwitcher": {
       "nothingToShow": "Nothing to show",
-      "remove": "Remove",
       "removeValue": "Remove that value",
       "add": "Add",
       "setValue": "Set a value"
@@ -784,9 +750,7 @@
         "status": "Status",
         "description": "Description",
         "name": "Name",
-        "role": "Role",
-        "project": "Project",
-        "user": "User"
+        "role": "Role"
       },
       "status": {
         "active": "Active",
@@ -799,7 +763,6 @@
       "states": {
         "empty": "No items found",
         "noResults": "No results",
-        "loading": "Loading...",
         "savingChanges": "Saving changes..."
       },
       "entities": {
@@ -829,21 +792,9 @@
         "descending": "Descending"
       }
     },
-    "form": {
-      "action": {
-        "cancel": "Cancel",
-        "close": "Close",
-        "submit": "Save",
-        "retry": "Retry",
-        "update": "Update",
-        "next": "Next",
-        "reset": "Reset"
-      }
-    },
     "pager": {
       "of": "of",
       "previous": "Previous",
-      "next": "Next",
       "firstPage": "First page",
       "lastPage": "Last page",
       "nextPage": "Next page",
@@ -874,9 +825,6 @@
       "placeholder": "hh:mm:ss",
       "invalidFormat": "Please enter a valid time in format hh:mm:ss"
     },
-    "multiLanguage": {
-      "language": "Language"
-    },
     "datePicker": {
       "clickToSelect": "Click to select a date",
       "calendar": "Calendar",
@@ -898,7 +846,6 @@
       "searchEverywhere": "Search everywhere",
       "projectTabs": {
         "data": "Data",
-        "search": "Search",
         "dataModels": "Data models",
         "settings": "Settings"
       }

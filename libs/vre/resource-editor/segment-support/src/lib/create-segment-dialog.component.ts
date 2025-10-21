@@ -22,7 +22,7 @@ export interface CreateSegmentDialogProps {
       <app-time-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.start' | translate" [control]="form.controls.start" data-cy="start-input" />
       <app-time-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.end' | translate" [control]="form.controls.end" data-cy="end-input" />
       <app-common-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.title' | translate" [control]="form.controls.title" data-cy="title-input" />
-      <app-common-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.description' | translate" [control]="form.controls.description" data-cy="description-input" />
+      <app-common-input [label]="'ui.common.fields.description' | translate" [control]="form.controls.description" data-cy="description-input" />
       <app-chip-list-input
         [formArray]="form.controls.keywords"
         data-cy="keywords-input"

@@ -19,7 +19,7 @@ import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
       </a>
       <a mat-tab-link [routerLink]="[SEARCH]" [class.active-link]="isSearchRouteActive()">
         <mat-icon class="tab-icon">search</mat-icon>
-        {{ 'shared.header.projectTabs.search' | translate }}
+        {{ 'ui.common.actions.search' | translate }}
       </a>
       <a mat-tab-link [routerLink]="[DATA_MODELS]" [class.active-link]="isDataModelsRouteActive()">
         <mat-icon class="tab-icon">lan</mat-icon>

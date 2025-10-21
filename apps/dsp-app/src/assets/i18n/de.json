@@ -30,14 +30,9 @@
         "new": "Neues Konto anlegen",
         "profile": "Profil",
         "edit": "Profil anpassen",
-        "givenName": "Vorname",
-        "familyName": "Nachname",
-        "email": "Email Adresse",
-        "username": "Anzeigename"
+        "email": "Email Adresse"
       },
       "passwordForm": {
-        "username": "Anzeigename",
-        "password": "Passwort",
         "passwordLengthHint": "Verwenden Sie mindestens 8 Zeichen.",
         "passwordPatternHint": "Das Passwort muss mindestens einen Grossbuchstaben und eine Zahl enthalten.",
         "oldPassword": "Altes Passwort",
@@ -49,10 +44,7 @@
         "currentPasswordStep": "Aus Sicherheitsgründen geben Sie bitte Ihr aktuelles Passwort ein",
         "currentPasswordPlaceholder": "Ihr aktuelles Passwort",
         "incorrectPassword": "Das eingegebene Passwort ist falsch",
-        "newPasswordStep": "Neues Passwort eingeben",
-        "next": "Weiter",
-        "update": "Aktualisieren",
-        "cancel": "Abbrechen"
+        "newPasswordStep": "Neues Passwort eingeben"
       },
       "navigation": {
         "myProjects": "Meine Projekte",
@@ -85,7 +77,6 @@
         "noResults": "Keine Ergebnisse"
       },
       "reusableProjectForm": {
-        "description": "Projektbeschreibung",
         "shortcode": "Shortcode",
         "shortname": "Kurzname",
         "longname": "Projekttitel",
@@ -103,9 +94,7 @@
         "editProjectDescription": "Projektbeschreibung bearbeiten"
       },
       "settingsPage": {
-        "description": "Beschreibung",
-        "image": "Bild",
-        "members": "Mitglieder"
+        "image": "Bild"
       },
       "imageSettings": {
         "off": "Aus",
@@ -195,14 +184,7 @@
       "inactiveUsersCount": "Inaktive Benutzer ({{count}})",
       "allUsersInDSP": "Alle Benutzer in DSP",
       "usersList": {
-        "sortFamilyName": "Nachname",
-        "sortGivenName": "Vorname",
         "sortEmail": "E-Mail",
-        "sortUsername": "Benutzername",
-        "user": "Benutzer",
-        "users": "Benutzer",
-        "member": "Mitglied",
-        "members": "Mitglieder",
         "createNewUser": "Neuen Benutzer erstellen"
       },
       "users": {
@@ -213,12 +195,9 @@
         "isSystemAdmin": "Ist ein Systemadministrator"
       },
       "projectsList": {
-        "project": "Projekt",
-        "projects": "Projekte",
         "sortShortCode": "Shortcode",
         "sortShortName": "Kurzname",
         "sortProjectName": "Projektname",
-        "statusActive": "Aktiv",
         "statusDeactivated": "Deaktiviert",
         "createNew": "Neues Projekt erstellen",
         "projectAdmin": "Projekt-Admin",
@@ -235,14 +214,11 @@
           "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden.",
           "shortCode": "Projekt-Shortcode",
           "systemAdminPassword": "System-Admin-Passwort",
-          "cancel": "Abbrechen",
-          "confirm": "Bestätigen",
           "shortCodeValidation": "Der Shortcode stimmt nicht überein",
           "passwordValidation": "Falsches Passwort"
         }
       },
       "cookiePolicy": {
-        "back": "Zurück",
         "title": "Cookie-Richtlinie für DSP-API-Webanwendung",
         "whatAreCookies": "Was sind Cookies",
         "howWeUseCookies": "Wie wir Cookies verwenden",
@@ -266,8 +242,6 @@
         "deleteList": "Kontrolliertes Vokabular löschen",
         "backToDataModels": "Zurück zu Datenmodellen",
         "editInfo": "Info zu kontrolliertem Vokabular bearbeiten",
-        "editButton": "Bearbeiten",
-        "deleteButton": "Löschen",
         "deleteConfirmation": "Möchten Sie dieses kontrollierte Vokabular löschen?",
         "actionBubble": {
           "moveUp": "nach oben verschieben",
@@ -312,8 +286,6 @@
         "backToDataModels": "Zurück zu Datenmodellen",
         "updatedOn": "Aktualisiert am:",
         "editInfo": "Datenmodell-Info bearbeiten",
-        "editButton": "Bearbeiten",
-        "deleteButton": "Löschen",
         "deleteTooltip": "Datenmodell löschen",
         "cannotDelete": "Dieses Datenmodell kann nicht gelöscht werden, da es verwendet wird!",
         "deleteConfirmation": "Möchten Sie dieses Datenmodell löschen?"
@@ -441,8 +413,6 @@
         "title": "Erweiterte Suche",
         "usePreviousSearch": "Vorherige Suche verwenden",
         "addSearchCriteria": "Suchkriterium hinzufügen",
-        "reset": "Zurücksetzen",
-        "search": "Suchen",
         "orderBy": "Sortieren nach",
         "orderByTooltip": "Die Suche kann nicht nach einer URI-Eigenschaft oder einer Eigenschaft sortiert werden, die auf eine Ressource verweist.",
         "switchToRegularSearch": "Zur regulären Suche wechseln",
@@ -450,7 +420,6 @@
         "dataModel": "Datenmodell",
         "resourceClass": "Ressourcenklasse (optional)",
         "resourceClassNone": "Keine",
-        "loading": "Laden...",
         "property": "Eigenschaft",
         "comparisonOperator": "Vergleichsoperator",
         "searchForResource": "Nach einer Ressource suchen",
@@ -532,8 +501,7 @@
         "label": "Bezeichnung",
         "start": "Start",
         "end": "Ende",
-        "title": "Titel",
-        "description": "Beschreibung"
+        "title": "Titel"
       }
     },
     "representations": {
@@ -721,7 +689,6 @@
       "legal": {
         "copyrightHolder": "Urheberrechtsinhaber",
         "choose": "Auswählen",
-        "loading": "Laden...",
         "none": "Keine",
         "license": "Lizenz/Erklärung",
         "authorship": "Autorenschaft"
@@ -747,7 +714,6 @@
     },
     "templateSwitcher": {
       "nothingToShow": "Nichts anzuzeigen",
-      "remove": "Entfernen",
       "removeValue": "Diesen Wert entfernen",
       "add": "Hinzufügen",
       "setValue": "Einen Wert festlegen"
@@ -784,9 +750,7 @@
         "status": "Status",
         "description": "Beschreibung",
         "name": "Name",
-        "role": "Rolle",
-        "project": "Projekt",
-        "user": "Benutzer"
+        "role": "Rolle"
       },
       "status": {
         "active": "Aktiv",
@@ -799,7 +763,6 @@
       "states": {
         "empty": "Keine Elemente gefunden",
         "noResults": "Keine Ergebnisse",
-        "loading": "Laden...",
         "savingChanges": "Änderungen werden gespeichert..."
       },
       "entities": {
@@ -829,21 +792,9 @@
         "descending": "Absteigend"
       }
     },
-    "form": {
-      "action": {
-        "cancel": "Abbrechen",
-        "close": "Schliessen",
-        "submit": "Speichern",
-        "retry": "Erneut versuchen",
-        "update": "Aktualisieren",
-        "next": "Weiter",
-        "reset": "Zurücksetzen"
-      }
-    },
     "pager": {
       "of": "von",
       "previous": "Zurück",
-      "next": "Weiter",
       "firstPage": "Erste Seite",
       "lastPage": "Letzte Seite",
       "nextPage": "Nächste Seite",
@@ -874,9 +825,6 @@
       "placeholder": "hh:mm:ss",
       "invalidFormat": "Bitte geben Sie eine gültige Zeit im Format hh:mm:ss ein"
     },
-    "multiLanguage": {
-      "language": "Sprache"
-    },
     "datePicker": {
       "clickToSelect": "Klicken Sie, um ein Datum auszuwählen",
       "calendar": "Kalender",
@@ -898,7 +846,6 @@
       "searchEverywhere": "Überall suchen",
       "projectTabs": {
         "data": "Daten",
-        "search": "Suche",
         "dataModels": "Datenmodelle",
         "settings": "Einstellungen"
       }

@@ -16,7 +16,7 @@ import { finalize, map } from 'rxjs/operators';
           [formControl]="formGroup.controls.copyrightHolder"
           data-cy="copyright-holder-select">
           @if (copyrightHoldersLoading) {
-            <mat-option>{{ 'resourceEditor.resourceCreator.legal.loading' | translate }}</mat-option>
+            <mat-option>{{ 'ui.common.status.loading' | translate }}</mat-option>
           }
           @if (!copyrightHoldersLoading) {
             <mat-option [value]="undefined">{{ 'resourceEditor.resourceCreator.legal.none' | translate }}</mat-option>
@@ -32,7 +32,7 @@ import { finalize, map } from 'rxjs/operators';
       <mat-form-field>
         <mat-select [placeholder]="'resourceEditor.resourceCreator.legal.choose' | translate" [formControl]="formGroup.controls.license" data-cy="license-select">
           @if (licensesLoading) {
-            <mat-option>{{ 'resourceEditor.resourceCreator.legal.loading' | translate }}</mat-option>
+            <mat-option>{{ 'ui.common.status.loading' | translate }}</mat-option>
           }
           @if (!licensesLoading) {
             <mat-option [value]="undefined">{{ 'resourceEditor.resourceCreator.legal.none' | translate }}</mat-option>

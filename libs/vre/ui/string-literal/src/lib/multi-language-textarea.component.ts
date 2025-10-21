@@ -56,7 +56,7 @@ import { MultiLanguageFormService } from './multi-language-form.service';
       @if (formService.formArray.invalid && formService.formArray.touched) {
         <mat-error>
           @if (formService.invalidErrors?.language) {
-            {{ 'ui.multiLanguage.language' | translate }} {{ formService.invalidErrors.language }}:
+            {{ 'ui.common.fields.language' | translate }} {{ formService.invalidErrors.language }}:
             {{ formService.invalidErrors.error | humanReadableError }}
           }
           @if (!formService.invalidErrors?.language) {

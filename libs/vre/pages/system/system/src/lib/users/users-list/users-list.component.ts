@@ -64,24 +64,24 @@ export class UsersListComponent {
   itemPluralMapping = {
     user: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': `1 ${this._ts.instant('pages.system.usersList.user')}`,
-      other: `# ${this._ts.instant('pages.system.usersList.users')}`,
+      '=1': `1 ${this._ts.instant('ui.common.entities.user')}`,
+      other: `# ${this._ts.instant('ui.common.entities.users')}`,
     },
     member: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      '=1': `1 ${this._ts.instant('pages.system.usersList.member')}`,
-      other: `# ${this._ts.instant('pages.system.usersList.members')}`,
+      '=1': `1 ${this._ts.instant('ui.common.entities.member')}`,
+      other: `# ${this._ts.instant('ui.common.entities.members')}`,
     },
   };
 
   readonly sortProps: SortProperty[] = [
     {
       key: 'familyName',
-      label: this._ts.instant('pages.system.usersList.sortFamilyName'),
+      label: this._ts.instant('ui.common.fields.lastName'),
     },
     {
       key: 'givenName',
-      label: this._ts.instant('pages.system.usersList.sortGivenName'),
+      label: this._ts.instant('ui.common.fields.firstName'),
     },
     {
       key: 'email',
@@ -89,7 +89,7 @@ export class UsersListComponent {
     },
     {
       key: 'username',
-      label: this._ts.instant('pages.system.usersList.sortUsername'),
+      label: this._ts.instant('ui.common.fields.username'),
     },
   ];
 

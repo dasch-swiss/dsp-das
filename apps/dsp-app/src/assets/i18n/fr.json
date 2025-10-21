@@ -30,14 +30,9 @@
         "new": "Créer nouveau",
         "profile": "Profil utilisateur",
         "edit": "Modifier le profil",
-        "givenName": "Prénom",
-        "familyName": "Nom de famille",
-        "email": "Adresse e-mail",
-        "username": "Nom d'utilisateur"
+        "email": "Adresse e-mail"
       },
       "passwordForm": {
-        "username": "Nom d'utilisateur",
-        "password": "Mot de passe",
         "passwordLengthHint": "Utilisez au moins 8 caractères.",
         "passwordPatternHint": "Le mot de passe doit contenir au moins une lettre majuscule et un chiffre.",
         "oldPassword": "Ancien mot de passe",
@@ -49,10 +44,7 @@
         "currentPasswordStep": "Pour des raisons de sécurité, veuillez saisir votre mot de passe actuel",
         "currentPasswordPlaceholder": "Votre mot de passe actuel",
         "incorrectPassword": "Le mot de passe saisi est incorrect",
-        "newPasswordStep": "Entrez le nouveau mot de passe",
-        "next": "Suivant",
-        "update": "Mettre à jour",
-        "cancel": "Annuler"
+        "newPasswordStep": "Entrez le nouveau mot de passe"
       },
       "navigation": {
         "myProjects": "Mes projets",
@@ -85,7 +77,6 @@
         "noResults": "Aucun résultat"
       },
       "reusableProjectForm": {
-        "description": "Description",
         "shortcode": "Code court",
         "shortname": "Nom court",
         "longname": "Nom du projet",
@@ -103,9 +94,7 @@
         "editProjectDescription": "Modifier la description du projet"
       },
       "settingsPage": {
-        "description": "Description",
-        "image": "Image",
-        "members": "Membres"
+        "image": "Image"
       },
       "imageSettings": {
         "off": "Éteint",
@@ -195,14 +184,7 @@
       "inactiveUsersCount": "Utilisateurs inactifs ({{count}})",
       "allUsersInDSP": "Tous les utilisateurs dans DSP",
       "usersList": {
-        "sortFamilyName": "Nom de famille",
-        "sortGivenName": "Prénom",
         "sortEmail": "E-mail",
-        "sortUsername": "Nom d'utilisateur",
-        "user": "Utilisateur",
-        "users": "Utilisateurs",
-        "member": "Membre",
-        "members": "Membres",
         "createNewUser": "Créer un nouvel utilisateur"
       },
       "users": {
@@ -213,12 +195,9 @@
         "isSystemAdmin": "Est un utilisateur administrateur système"
       },
       "projectsList": {
-        "project": "Projet",
-        "projects": "Projets",
         "sortShortCode": "Code court",
         "sortShortName": "Nom court",
         "sortProjectName": "Nom du projet",
-        "statusActive": "Actif",
         "statusDeactivated": "Désactivé",
         "createNew": "Créer un nouveau projet",
         "projectAdmin": "Administrateur du projet",
@@ -235,14 +214,11 @@
           "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec précaution.",
           "shortCode": "Code court du projet",
           "systemAdminPassword": "Mot de passe de l'administrateur système",
-          "cancel": "Annuler",
-          "confirm": "Confirmer",
           "shortCodeValidation": "Le code court ne correspond pas",
           "passwordValidation": "Mot de passe incorrect"
         }
       },
       "cookiePolicy": {
-        "back": "Retour",
         "title": "Politique de cookies pour l'application web DSP-API",
         "whatAreCookies": "Que sont les cookies",
         "howWeUseCookies": "Comment nous utilisons les cookies",
@@ -266,8 +242,6 @@
         "deleteList": "Supprimer le vocabulaire contrôlé",
         "backToDataModels": "Retour aux modèles de données",
         "editInfo": "Modifier les informations du vocabulaire contrôlé",
-        "editButton": "Modifier",
-        "deleteButton": "Supprimer",
         "deleteConfirmation": "Voulez-vous supprimer ce vocabulaire contrôlé ?",
         "actionBubble": {
           "moveUp": "déplacer vers le haut",
@@ -312,8 +286,6 @@
         "backToDataModels": "Retour aux modèles de données",
         "updatedOn": "Mis à jour le :",
         "editInfo": "Modifier les informations du modèle de données",
-        "editButton": "Modifier",
-        "deleteButton": "Supprimer",
         "deleteTooltip": "Supprimer le modèle de données",
         "cannotDelete": "Ce modèle de données ne peut pas être supprimé car il est utilisé !",
         "deleteConfirmation": "Voulez-vous supprimer ce modèle de données ?"
@@ -441,8 +413,6 @@
         "title": "Recherche avancée",
         "usePreviousSearch": "Utiliser la recherche précédente",
         "addSearchCriteria": "Ajouter des critères de recherche",
-        "reset": "Réinitialiser",
-        "search": "Rechercher",
         "orderBy": "Trier par",
         "orderByTooltip": "La recherche ne peut pas être triée par une propriété URI ou une propriété qui pointe vers une ressource.",
         "switchToRegularSearch": "Passer à la recherche standard",
@@ -450,7 +420,6 @@
         "dataModel": "Modèle de données",
         "resourceClass": "Classe de ressource (facultatif)",
         "resourceClassNone": "Aucune",
-        "loading": "Chargement...",
         "property": "Propriété",
         "comparisonOperator": "Opérateur de comparaison",
         "searchForResource": "Rechercher une ressource",
@@ -570,8 +539,7 @@
         "label": "Étiquette",
         "start": "Début",
         "end": "Fin",
-        "title": "Titre",
-        "description": "Description"
+        "title": "Titre"
       }
     },
     "representations": {
@@ -721,7 +689,6 @@
       "legal": {
         "copyrightHolder": "Titulaire des droits d'auteur",
         "choose": "Choisir",
-        "loading": "Chargement...",
         "none": "Aucun",
         "license": "Licence/Déclaration",
         "authorship": "Auteur·ice"
@@ -747,7 +714,6 @@
     },
     "templateSwitcher": {
       "nothingToShow": "Rien à afficher",
-      "remove": "Retirer",
       "removeValue": "Retirer cette valeur",
       "add": "Ajouter",
       "setValue": "Définir une valeur"
@@ -784,9 +750,7 @@
         "status": "Statut",
         "description": "Description",
         "name": "Nom",
-        "role": "Rôle",
-        "project": "Projet",
-        "user": "Utilisateur"
+        "role": "Rôle"
       },
       "status": {
         "active": "Actif",
@@ -799,7 +763,6 @@
       "states": {
         "empty": "Aucun élément trouvé",
         "noResults": "Aucun résultat",
-        "loading": "Chargement...",
         "savingChanges": "Enregistrement des modifications..."
       },
       "entities": {
@@ -829,21 +792,9 @@
         "descending": "Décroissant"
       }
     },
-    "form": {
-      "action": {
-        "cancel": "Annuler",
-        "close": "Fermer",
-        "submit": "Enregistrer",
-        "retry": "Réessayer",
-        "update": "Mettre à jour",
-        "next": "Suivant",
-        "reset": "Réinitialiser"
-      }
-    },
     "pager": {
       "of": "de",
       "previous": "Précédent",
-      "next": "Suivant",
       "firstPage": "Première page",
       "lastPage": "Dernière page",
       "nextPage": "Page suivante",
@@ -874,9 +825,6 @@
       "placeholder": "hh:mm:ss",
       "invalidFormat": "Veuillez entrer une heure valide au format hh:mm:ss"
     },
-    "multiLanguage": {
-      "language": "Langue"
-    },
     "datePicker": {
       "clickToSelect": "Cliquez pour sélectionner une date",
       "calendar": "Calendrier",
@@ -898,7 +846,6 @@
       "searchEverywhere": "Rechercher partout",
       "projectTabs": {
         "data": "Données",
-        "search": "Recherche",
         "dataModels": "Modèles de données",
         "settings": "Paramètres"
       }
