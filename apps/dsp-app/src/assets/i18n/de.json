@@ -523,7 +523,6 @@
     "common": {
       "actions": {
         "cancel": "Abbrechen",
-        "save": "Speichern",
         "update": "Aktualisieren",
         "delete": "Löschen",
         "edit": "Bearbeiten",
@@ -535,61 +534,26 @@
         "submit": "Absenden",
         "confirm": "Bestätigen",
         "search": "Suchen",
-        "clear": "Löschen",
-        "apply": "Anwenden",
-        "remove": "Entfernen",
         "retry": "Erneut versuchen"
       },
       "fields": {
         "username": "Benutzername",
-        "email": "E-Mail",
-        "password": "Passwort",
         "firstName": "Vorname",
         "lastName": "Nachname",
         "language": "Sprache",
-        "status": "Status",
-        "description": "Beschreibung",
-        "name": "Name",
-        "role": "Rolle"
+        "description": "Beschreibung"
       },
       "status": {
         "active": "Aktiv",
-        "inactive": "Inaktiv",
-        "loading": "Laden...",
-        "success": "Erfolg",
-        "error": "Fehler",
-        "pending": "Ausstehend"
-      },
-      "states": {
-        "empty": "Keine Elemente gefunden",
-        "noResults": "Keine Ergebnisse",
-        "savingChanges": "Änderungen werden gespeichert..."
+        "loading": "Laden..."
       },
       "entities": {
         "user": "Benutzer",
         "users": "Benutzer",
         "project": "Projekt",
         "projects": "Projekte",
-        "group": "Gruppe",
-        "groups": "Gruppen",
-        "ontology": "Ontologie",
-        "ontologies": "Ontologien",
-        "resource": "Ressource",
-        "resources": "Ressourcen",
         "member": "Mitglied",
         "members": "Mitglieder"
-      },
-      "confirmations": {
-        "deleteItem": "Sind Sie sicher, dass Sie dieses {{item}} löschen möchten?",
-        "unsavedChanges": "Sie haben ungespeicherte Änderungen. Möchten Sie fortfahren?",
-        "removeFromProject": "Sind Sie sicher, dass Sie {{name}} aus diesem Projekt entfernen möchten?",
-        "permanentAction": "Diese Aktion kann nicht rückgängig gemacht werden. Fortfahren?"
-      },
-      "sort": {
-        "byName": "Nach Name sortieren",
-        "byDate": "Nach Datum sortieren",
-        "ascending": "Aufsteigend",
-        "descending": "Absteigend"
       }
     },
     "pager": {
@@ -597,7 +561,6 @@
       "previous": "Zurück",
       "firstPage": "Erste Seite",
       "lastPage": "Letzte Seite",
-      "nextPage": "Nächste Seite",
       "inputTooltip": "Seitennummer eingeben und über Enter zur gewählten Seite springen.",
       "previousPage": "Vorherige Seite",
       "rangeLabelOf": "von",

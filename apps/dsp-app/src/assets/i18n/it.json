@@ -523,7 +523,6 @@
     "common": {
       "actions": {
         "cancel": "Annulla",
-        "save": "Salva",
         "update": "Aggiorna",
         "delete": "Elimina",
         "edit": "Modifica",
@@ -535,61 +534,26 @@
         "submit": "Invia",
         "confirm": "Conferma",
         "search": "Cerca",
-        "clear": "Cancella",
-        "apply": "Applica",
-        "remove": "Rimuovi",
         "retry": "Riprova"
       },
       "fields": {
         "username": "Nome utente",
-        "email": "Email",
-        "password": "Password",
         "firstName": "Nome",
         "lastName": "Cognome",
         "language": "Lingua",
-        "status": "Stato",
-        "description": "Descrizione",
-        "name": "Nome",
-        "role": "Ruolo"
+        "description": "Descrizione"
       },
       "status": {
         "active": "Attivo",
-        "inactive": "Inattivo",
-        "loading": "Caricamento...",
-        "success": "Successo",
-        "error": "Errore",
-        "pending": "In attesa"
-      },
-      "states": {
-        "empty": "Nessun elemento trovato",
-        "noResults": "Nessun risultato",
-        "savingChanges": "Salvataggio modifiche..."
+        "loading": "Caricamento..."
       },
       "entities": {
         "user": "Utente",
         "users": "Utenti",
         "project": "Progetto",
         "projects": "Progetti",
-        "group": "Gruppo",
-        "groups": "Gruppi",
-        "ontology": "Ontologia",
-        "ontologies": "Ontologie",
-        "resource": "Risorsa",
-        "resources": "Risorse",
         "member": "Membro",
         "members": "Membri"
-      },
-      "confirmations": {
-        "deleteItem": "Sei sicuro di voler eliminare questo {{item}}?",
-        "unsavedChanges": "Hai modifiche non salvate. Vuoi continuare?",
-        "removeFromProject": "Sei sicuro di voler rimuovere {{name}} da questo progetto?",
-        "permanentAction": "Questa azione non può essere annullata. Continuare?"
-      },
-      "sort": {
-        "byName": "Ordina per nome",
-        "byDate": "Ordina per data",
-        "ascending": "Crescente",
-        "descending": "Decrescente"
       }
     },
     "pager": {
@@ -597,7 +561,6 @@
       "previous": "Precedente",
       "firstPage": "Prima pagina",
       "lastPage": "Ultima pagina",
-      "nextPage": "Pagina successiva",
       "inputTooltip": "Inserisci il numero della pagina e applica con il tasto Invio.",
       "previousPage": "Pagina precedente",
       "rangeLabelOf": "di",

@@ -523,7 +523,6 @@
     "common": {
       "actions": {
         "cancel": "Cancel",
-        "save": "Save",
         "update": "Update",
         "delete": "Delete",
         "edit": "Edit",
@@ -535,61 +534,26 @@
         "submit": "Submit",
         "confirm": "Confirm",
         "search": "Search",
-        "clear": "Clear",
-        "apply": "Apply",
-        "remove": "Remove",
         "retry": "Retry"
       },
       "fields": {
         "username": "Username",
-        "email": "Email",
-        "password": "Password",
         "firstName": "First name",
         "lastName": "Last name",
         "language": "Language",
-        "status": "Status",
-        "description": "Description",
-        "name": "Name",
-        "role": "Role"
+        "description": "Description"
       },
       "status": {
         "active": "Active",
-        "inactive": "Inactive",
-        "loading": "Loading...",
-        "success": "Success",
-        "error": "Error",
-        "pending": "Pending"
-      },
-      "states": {
-        "empty": "No items found",
-        "noResults": "No results",
-        "savingChanges": "Saving changes..."
+        "loading": "Loading..."
       },
       "entities": {
         "user": "User",
         "users": "Users",
         "project": "Project",
         "projects": "Projects",
-        "group": "Group",
-        "groups": "Groups",
-        "ontology": "Ontology",
-        "ontologies": "Ontologies",
-        "resource": "Resource",
-        "resources": "Resources",
         "member": "Member",
         "members": "Members"
-      },
-      "confirmations": {
-        "deleteItem": "Are you sure you want to delete this {{item}}?",
-        "unsavedChanges": "You have unsaved changes. Do you want to continue?",
-        "removeFromProject": "Are you sure you want to remove {{name}} from this project?",
-        "permanentAction": "This action cannot be undone. Continue?"
-      },
-      "sort": {
-        "byName": "Sort by Name",
-        "byDate": "Sort by Date",
-        "ascending": "Ascending",
-        "descending": "Descending"
       }
     },
     "pager": {
@@ -597,7 +561,6 @@
       "previous": "Previous",
       "firstPage": "First page",
       "lastPage": "Last page",
-      "nextPage": "Next page",
       "inputTooltip": "Enter the page number and apply with the Enter key.",
       "previousPage": "Previous page",
       "rangeLabelOf": "of",
