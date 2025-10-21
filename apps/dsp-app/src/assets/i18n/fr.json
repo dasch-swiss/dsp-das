@@ -933,5 +933,13 @@
     "auth": {
       "invalidCredentials": "Le nom d'utilisateur et / ou le mot de passe ne correspondent pas."
     }
+  },
+  "app": {
+    "title": "DaSCH Service Platform",
+    "cookieBanner": {
+      "message": "Cette application web utilise des cookies pour vous offrir une meilleure expérience utilisateur. En utilisant l'application, vous acceptez notre",
+      "useOfCookies": "utilisation des cookies",
+      "accept": "ACCEPTER"
+    }
   }
 }
