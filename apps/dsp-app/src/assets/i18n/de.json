@@ -849,13 +849,42 @@
       "nextPage": "Nächste Seite",
       "inputTooltip": "Seitennummer eingeben und über Enter zur gewählten Seite springen.",
       "previousPage": "Vorherige Seite",
-      "rangeLabelOf": "von"
+      "rangeLabelOf": "von",
+      "showing": "Anzeigen"
     },
     "header": {
       "help": "Hilfe"
     },
     "chipListInput": {
       "keywords": "Schlagworte"
+    },
+    "dialog": {
+      "confirmationNeeded": "Bestätigung erforderlich",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "hint": {
+      "useSpecialSyntax": "Verwenden Sie spezielle Syntax:",
+      "questionMark": "Fragezeichen<strong>?</strong> kann als Platzhalter für ein einzelnes Zeichen verwendet werden.<br /><code>Beispiel: <i>Be?r</i> findet <i>Bier</i> aber auch <i>Bär</i></code>",
+      "asterisk": "Sternchen<strong>*</strong> kann als Platzhalter für null, ein oder mehrere Zeichen verwendet werden.<br /><code>Beispiel: <i>B*r</i> findet <i>Bier</i> aber auch <i>Bär</i></code>",
+      "quotationMarks": "<strong>\"</strong>Anführungszeichen<strong>\"</strong> suchen nach dem gesamten Muster.<br /><code class=\"\">Beispiel: <i>\"Lorem ipsum\"</i> findet Texte mit exaktem Inhalt <i>Lorem ipsum</i></code>",
+      "readMore": "Mehr dazu in der Benutzeranleitung"
+    },
+    "timeInput": {
+      "placeholder": "hh:mm:ss",
+      "invalidFormat": "Bitte geben Sie eine gültige Zeit im Format hh:mm:ss ein"
+    },
+    "multiLanguage": {
+      "language": "Sprache"
+    },
+    "datePicker": {
+      "clickToSelect": "Klicken Sie, um ein Datum auszuwählen",
+      "calendar": "Kalender",
+      "today": "Heute",
+      "month": "Monat",
+      "none": "Keine",
+      "year": "Jahr",
+      "bceWarning": "Achtung: Datum <strong>vor der Zeitrechnung</strong>."
     }
   },
   "shared": {

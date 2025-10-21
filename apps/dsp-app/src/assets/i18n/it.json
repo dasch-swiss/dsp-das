@@ -849,13 +849,42 @@
       "nextPage": "Pagina successiva",
       "inputTooltip": "Inserisci il numero della pagina e applica con il tasto Invio.",
       "previousPage": "Pagina precedente",
-      "rangeLabelOf": "di"
+      "rangeLabelOf": "di",
+      "showing": "Visualizzazione"
     },
     "header": {
       "help": "Aiuto"
     },
     "chipListInput": {
       "keywords": "Parole chiave"
+    },
+    "dialog": {
+      "confirmationNeeded": "Conferma richiesta",
+      "yes": "Sì",
+      "no": "No"
+    },
+    "hint": {
+      "useSpecialSyntax": "Usa la sintassi speciale:",
+      "questionMark": "punto interrogativo<strong>?</strong> può essere utilizzato come carattere jolly per un singolo carattere.<br /><code>Esempio: <i>bi?ra</i> troverà <i>birra</i> ma anche <i>biera</i></code>",
+      "asterisk": "asterisco<strong>*</strong> può essere utilizzato come carattere jolly per zero, uno o più caratteri.<br /><code>Esempio: <i>b*r</i> troverà <i>birra</i> ma anche <i>bar</i></code>",
+      "quotationMarks": "<strong>\"</strong>virgolette<strong>\"</strong> cerca l'intero motivo.<br /><code class=\"\">Esempio: <i>\"Lorem ipsum\"</i> troverà testi con contenuto esatto <i>Lorem ipsum</i></code>",
+      "readMore": "Leggi di più nella guida per l'utente"
+    },
+    "timeInput": {
+      "placeholder": "hh:mm:ss",
+      "invalidFormat": "Inserisci un orario valido nel formato hh:mm:ss"
+    },
+    "multiLanguage": {
+      "language": "Lingua"
+    },
+    "datePicker": {
+      "clickToSelect": "Clicca per selezionare una data",
+      "calendar": "Calendario",
+      "today": "Oggi",
+      "month": "Mese",
+      "none": "Nessuno",
+      "year": "Anno",
+      "bceWarning": "Attenzione: Data <strong>prima dell'era comune</strong>."
     }
   },
   "shared": {

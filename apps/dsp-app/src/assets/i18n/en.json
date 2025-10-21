@@ -849,13 +849,42 @@
       "nextPage": "Next page",
       "inputTooltip": "Enter the page number and apply with the Enter key.",
       "previousPage": "Previous page",
-      "rangeLabelOf": "of"
+      "rangeLabelOf": "of",
+      "showing": "Showing"
     },
     "header": {
       "help": "Help"
     },
     "chipListInput": {
       "keywords": "Keywords"
+    },
+    "dialog": {
+      "confirmationNeeded": "Confirmation needed",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "hint": {
+      "useSpecialSyntax": "Use special syntax:",
+      "questionMark": "question mark<strong>?</strong> can be used as wildcard symbol for a single character.<br /><code>Example: <i>be?r</i> will find <i>beer</i> but also <i>bear</i></code>",
+      "asterisk": "asterisk<strong>*</strong> can be used as a wildcard symbol for zero, one or multiple characters.<br /><code>Example: <i>b*r</i> will find <i>beer</i> but also <i>bear</i></code>",
+      "quotationMarks": "<strong>\"</strong>quotation marks<strong>\"</strong> searches for the whole pattern.<br /><code class=\"\">Example: <i>\"Lorem ipsum\"</i> will find texts with exact content <i>Lorem ipsum</i></code>",
+      "readMore": "Read more in the user guide"
+    },
+    "timeInput": {
+      "placeholder": "hh:mm:ss",
+      "invalidFormat": "Please enter a valid time in format hh:mm:ss"
+    },
+    "multiLanguage": {
+      "language": "Language"
+    },
+    "datePicker": {
+      "clickToSelect": "Click to select a date",
+      "calendar": "Calendar",
+      "today": "Today",
+      "month": "Month",
+      "none": "None",
+      "year": "Year",
+      "bceWarning": "Attention: Date <strong>before common era</strong>."
     }
   },
   "shared": {

@@ -849,13 +849,42 @@
       "nextPage": "Page suivante",
       "inputTooltip": "Entrez le numéro de la page et appuyez sur Entrée pour aller à la page.",
       "previousPage": "Page précédente",
-      "rangeLabelOf": "de"
+      "rangeLabelOf": "de",
+      "showing": "Affichage"
     },
     "header": {
       "help": "Aide"
     },
     "chipListInput": {
       "keywords": "Mots clés"
+    },
+    "dialog": {
+      "confirmationNeeded": "Confirmation requise",
+      "yes": "Oui",
+      "no": "Non"
+    },
+    "hint": {
+      "useSpecialSyntax": "Utilisez une syntaxe spéciale :",
+      "questionMark": "point d'interrogation<strong>?</strong> peut être utilisé comme caractère de remplacement pour un seul caractère.<br /><code>Exemple : <i>bi?re</i> trouvera <i>bière</i> mais aussi <i>boire</i></code>",
+      "asterisk": "astérisque<strong>*</strong> peut être utilisé comme caractère de remplacement pour zéro, un ou plusieurs caractères.<br /><code>Exemple : <i>b*r</i> trouvera <i>bière</i> mais aussi <i>bar</i></code>",
+      "quotationMarks": "<strong>\"</strong>guillemets<strong>\"</strong> recherche le motif entier.<br /><code class=\"\">Exemple : <i>\"Lorem ipsum\"</i> trouvera des textes avec le contenu exact <i>Lorem ipsum</i></code>",
+      "readMore": "En savoir plus dans le guide d'utilisation"
+    },
+    "timeInput": {
+      "placeholder": "hh:mm:ss",
+      "invalidFormat": "Veuillez entrer une heure valide au format hh:mm:ss"
+    },
+    "multiLanguage": {
+      "language": "Langue"
+    },
+    "datePicker": {
+      "clickToSelect": "Cliquez pour sélectionner une date",
+      "calendar": "Calendrier",
+      "today": "Aujourd'hui",
+      "month": "Mois",
+      "none": "Aucun",
+      "year": "Année",
+      "bceWarning": "Attention : Date <strong>avant l'ère commune</strong>."
     }
   },
   "shared": {
