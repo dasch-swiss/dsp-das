@@ -857,5 +857,39 @@
     "chipListInput": {
       "keywords": "Parole chiave"
     }
+  },
+  "shared": {
+    "status": {
+      "representationError": "Si è verificato un errore durante il caricamento della rappresentazione del file {{type}}. Prova ad aprirlo direttamente cliccando sull'URL del file qui sotto:",
+      "responseInDetail": "Risposta in dettaglio",
+      "goBackToStartPage": "Torna alla pagina iniziale.",
+      "reloadPrompt": "Torna tra qualche minuto e prova a <a (click)=\"reload()\">ricaricare la pagina</a>."
+    },
+    "header": {
+      "searchEverywhere": "Cerca ovunque",
+      "projectTabs": {
+        "data": "Dati",
+        "search": "Ricerca",
+        "dataModels": "Modelli di dati",
+        "settings": "Impostazioni"
+      }
+    },
+    "footer": {
+      "aboutDspApp": "DSP-APP è costruito con <a href=\"https://angular.io\" target=\"_blank\">Angular</a> ed è un'applicazione client per interagire con l'<a href=\"https://docs.dasch.swiss/latest/DSP-API\" target=\"_blank\">API</a> del <a href=\"https://dasch.swiss\" target=\"_blank\">Swiss National Data and Service Center for the Humanities DaSCH</a>. DSP-APP, come tutte le altre applicazioni DaSCH, è open source e disponibile su <a href=\"https://github.com/dasch-swiss\" target=\"_blank\">Github</a>.",
+      "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
+      "address": "Kornhausgasse 7, 4051 Basilea, Svizzera",
+      "emailSubject": "Ottieni informazioni sull'applicazione DSP"
+    },
+    "helpPage": {
+      "developmentVersion": "Questa è una versione di sviluppo di DSP (release <strong>{{release}}</strong>) in esecuzione nell'ambiente <strong>{{environment}}</strong>",
+      "needHelp": "Hai bisogno di aiuto?",
+      "userGuideExplore": "Leggi la guida utente: Esplora per argomento",
+      "exploreSoftware": "Esplora i nostri prodotti software",
+      "dspDescription": "La DaSCH Service Platform (DSP) è il nostro prodotto principale. Per maggiori informazioni su come può aiutarti a gestire le tue ricerche, consulta <a class=\"link\" href=\"https://docs.dasch.swiss/latest\" target=\"_blank\">docs.dasch.swiss</a>. Le note di rilascio di questa versione (<strong>{{release}}</strong>) sono disponibili <a class=\"link\" href=\"{{releaseNotesUrl}}\" target=\"_blank\">qui</a>.",
+      "getSupportOrImprove": "Ottieni più supporto o aiuta a migliorare"
+    },
+    "grid": {
+      "readMore": "Leggi di più"
+    }
   }
 }

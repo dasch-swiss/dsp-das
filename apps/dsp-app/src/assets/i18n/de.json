@@ -857,5 +857,39 @@
     "chipListInput": {
       "keywords": "Schlagworte"
     }
+  },
+  "shared": {
+    "status": {
+      "representationError": "Beim Laden der {{type}}-Dateidarstellung ist ein Fehler aufgetreten. Versuchen Sie, sie direkt über die unten stehende Datei-URL zu öffnen:",
+      "responseInDetail": "Antwort im Detail",
+      "goBackToStartPage": "Bitte kehren Sie zur Startseite zurück.",
+      "reloadPrompt": "Bitte kommen Sie in ein paar Minuten zurück und versuchen Sie, <a (click)=\"reload()\">die Seite neu zu laden</a>."
+    },
+    "header": {
+      "searchEverywhere": "Überall suchen",
+      "projectTabs": {
+        "data": "Daten",
+        "search": "Suche",
+        "dataModels": "Datenmodelle",
+        "settings": "Einstellungen"
+      }
+    },
+    "footer": {
+      "aboutDspApp": "DSP-APP ist mit <a href=\"https://angular.io\" target=\"_blank\">Angular</a> erstellt, gestaltet mit <a href=\"https://material.angular.io\" target=\"_blank\">Material</a> &middot; <a href=\"https://github.com/dasch-swiss/dsp-api/\" target=\"_blank\">DSP-API</a> und <a href=\"https://sipi.io\" target=\"_blank\">Sipi</a> unter der Haube<br /><br />Unterstützt von <a href=\"http://sagw.ch\" target=\"_blank\">Schweizerische Akademie der Geistes- und Sozialwissenschaften</a>, <a href=\"http://swissuniversities.ch\" target=\"_blank\">Swissuniversities</a> und <a href=\"http://snf.ch\" target=\"_blank\">Schweizerischer Nationalfonds</a>.",
+      "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
+      "address": "Kornhausgasse 7, 4051 Basel, Schweiz",
+      "emailSubject": "Informationen zur DSP-Anwendung erhalten"
+    },
+    "helpPage": {
+      "developmentVersion": "Dies ist eine Entwicklungsversion von DSP (Release <strong>{{release}}</strong>), die in der Umgebung <strong>{{environment}}</strong> läuft",
+      "needHelp": "Brauchen Sie Hilfe?",
+      "userGuideExplore": "Lesen Sie die Benutzeranleitung: Nach Themen erkunden",
+      "exploreSoftware": "Entdecken Sie unsere Softwareprodukte",
+      "dspDescription": "Die DaSCH Service Platform (DSP) ist unser Hauptprodukt mit der aktuellen Version<br /><strong>{{release}}</strong><br /><a href=\"{{releaseNotesUrl}}\" target=\"_blank\">Klicken Sie hier für die neuesten Informationen zu dieser Hauptversion <mat-icon class=\"suffix\">launch</mat-icon></a><br /><br />Wenn Sie an weiteren Details zu den einzelnen Anwendungen von DSP interessiert sind, werfen Sie einen Blick auf die folgenden Softwareprodukte &mdash; alle entwickelt vom DaSCH-Team in der Schweiz.",
+      "getSupportOrImprove": "Holen Sie sich mehr Unterstützung oder helfen Sie bei der Verbesserung"
+    },
+    "grid": {
+      "readMore": "Mehr erfahren"
+    }
   }
 }
