@@ -14,11 +14,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22.12.0
-      - name: "Run unit tests"
+      - name: "Run unit tests with coverage"
         run: |
           npm install
           npx nx run-many --all --target=lint --skip-nx-cache
-          npx nx run-many --all --target=test --configuration=ci --skip-nx-cache
+          npm run unit-test-coverage-ci
         env:
           TZ: Europe/Zurich
       - name: Upload coverage to Codecov

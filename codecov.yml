@@ -1,7 +1,5 @@
 codecov:
-  # Require CI to pass before considering coverage status
   require_ci_to_pass: yes
-  # Don't wait for multiple CI builds
   notify:
     wait_for_ci: no
 
@@ -10,18 +8,15 @@ coverage:
   status:
     project:
       default:
-        # Informational only - don't fail the build
         informational: true
         target: auto
         threshold: 0%
     patch:
       default:
-        # Informational only - don't fail the build
         informational: true
         target: auto
         threshold: 0%
 
-# Comment on PRs with coverage information
 comment:
   layout: "header, diff, files, footer"
   behavior: default
@@ -29,7 +24,6 @@ comment:
   require_base: false
   require_head: true
 
-# Ignore paths that shouldn't count toward coverage
 ignore:
   - "**/*.spec.ts"
   - "**/*.cy.ts"
