@@ -281,6 +281,10 @@
     },
     "search": {
       "propertyFormListValue": "Sélectionner un élément",
+      "fullTextSearch": {
+        "switchToAdvancedSearch": "Passer à la recherche avancée",
+        "placeholder": "Entrez un terme de recherche..."
+      },
       "advancedSearch": {
         "title": "Recherche avancée",
         "usePreviousSearch": "Utiliser la recherche précédente",
@@ -477,7 +481,16 @@
       "standoffLinkLabel": "a un lien standoff",
       "annotationToolbar": {
         "highlightRegion": "Surligner la région"
-      }
+      },
+      "comments": "Commentaires",
+      "properties": "Propriétés",
+      "hide": "Masquer",
+      "hideComments": "Masquer les commentaires",
+      "hideEmpty": "Masquer les vides",
+      "hideEmptyProperties": "Masquer les propriétés vides",
+      "showAll": "Tout afficher",
+      "showAllComments": "Afficher tous les commentaires",
+      "showAllProperties": "Afficher toutes les propriétés"
     },
     "permissionInfo": {
       "label": "Autorisations",
