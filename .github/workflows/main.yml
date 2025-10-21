@@ -21,6 +21,15 @@ jobs:
           npx nx run-many --all --target=test --configuration=ci --skip-nx-cache
         env:
           TZ: Europe/Zurich
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: unit-test-coverage
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   dsp-app-e2e-tests:
     name: DSP-APP E2E
