@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { startWith, Subscription } from 'rxjs';
 import { IIIFUrl } from './third-party-iiif';
 
@@ -49,12 +50,13 @@ export class IiifControlComponent implements OnInit, OnDestroy {
   previewImageUrl?: string;
 
   private subscription!: Subscription;
+  private readonly _translateService = inject(TranslateService);
 
   readonly validatorErrors = [
-    { errorKey: 'invalidIiifUrl', translationKey: 'resourceEditor.representations.iiifControl.errors.invalidUrl' },
-    { errorKey: 'previewImageError', translationKey: 'resourceEditor.representations.iiifControl.errors.previewImageError' },
-    { errorKey: 'infoJsonError', translationKey: 'resourceEditor.representations.iiifControl.errors.infoJsonError' },
-    { errorKey: 'invalidHost', translationKey: 'resourceEditor.representations.iiifControl.errors.invalidHost' },
+    { errorKey: 'invalidIiifUrl', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidUrl') },
+    { errorKey: 'previewImageError', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.previewImageError') },
+    { errorKey: 'infoJsonError', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.infoJsonError') },
+    { errorKey: 'invalidHost', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidHost') },
   ];
 
   constructor(private readonly _cdr: ChangeDetectorRef) {}

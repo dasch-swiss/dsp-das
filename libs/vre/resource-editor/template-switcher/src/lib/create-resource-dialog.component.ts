@@ -33,7 +33,7 @@ export class CreateResourceDialogComponent implements OnInit {
   projectShortcode$!: Observable<string>;
   projectIri$!: Observable<string>;
 
-  private readonly _translateService = inject(TranslateService);
+  protected readonly _translateService = inject(TranslateService);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateResourceDialogProps,

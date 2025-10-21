@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
 
 @Component({
@@ -20,6 +20,7 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
     MatListModule,
     MatTooltipModule,
     OverlayModule,
+    TranslateModule,
   ],
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
