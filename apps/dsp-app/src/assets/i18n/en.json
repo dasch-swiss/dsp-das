@@ -59,7 +59,7 @@
         "noResults": "No results"
       },
       "reusableProjectForm": {
-        "shortcode": "Short code",
+        "shortcode": "Shortcode",
         "shortname": "Short name",
         "longname": "Project name",
         "errors": {

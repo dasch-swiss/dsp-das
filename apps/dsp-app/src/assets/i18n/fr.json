@@ -11,7 +11,7 @@
       },
       "account": {
         "danger": "Zone dangereuse",
-        "deleteButton": "Suspendre le compte utilisateur maintenant",
+        "deleteButton": "Suspendre le compte utilisateur",
         "deleteConfirmation": "Voulez-vous suspendre votre propre compte ?",
         "delete": "Suspendre le compte utilisateur",
         "editMyProfile": "Modifier mon profil",
@@ -59,7 +59,7 @@
         "noResults": "Aucun résultat"
       },
       "reusableProjectForm": {
-        "shortcode": "Code court",
+        "shortcode": "Shortcode",
         "shortname": "Nom court",
         "longname": "Nom du projet",
         "errors": {
@@ -138,7 +138,7 @@
       },
       "collaboration": {
         "permissionGroup": "Groupe de permissions",
-        "noGroupDefined": "Aucun groupe défini pour le moment.",
+        "noGroupDefined": "Aucun groupe défini pour le moment",
         "admin": "Admin",
         "addAsProjectAdmin": "Ajouter comme administrateur du projet",
         "removeAsProjectAdmin": "Retirer comme administrateur du projet",
@@ -194,7 +194,7 @@
         }
       },
       "cookiePolicy": {
-        "title": "Politique de cookies pour l'application web DSP-API",
+        "title": "Politique de cookies pour l'application web DSP-APP",
         "whatAreCookies": "Que sont les cookies",
         "howWeUseCookies": "Comment nous utilisons les cookies",
         "disablingCookies": "Désactiver les cookies",
