@@ -6,7 +6,6 @@
       "filterProjects": "Filter projects"
     },
     "userSettings": {
-      "title": "Ihr Konto",
       "loginForm": {
         "login": "Anmelden"
       },
@@ -156,14 +155,10 @@
       }
     },
     "system": {
-      "title": "Systemverwaltung",
       "allProjects": "Alle Projekte",
       "allUsers": "Alle Benutzer",
-      "yourProjects": "Ihre Projekte",
-      "allProjectsFromDSP": "Alle Projekte von DSP",
       "activeUsersCount": "Aktive Benutzer ({{count}})",
       "inactiveUsersCount": "Inaktive Benutzer ({{count}})",
-      "allUsersInDSP": "Alle Benutzer in DSP",
       "usersList": {
         "sortEmail": "E-Mail",
         "createNewUser": "Neuen Benutzer erstellen"
@@ -613,7 +608,6 @@
     }
   },
   "app": {
-    "title": "DaSCH Service Platform",
     "cookieBanner": {
       "message": "Diese Webanwendung verwendet Cookies, um Ihnen ein besseres Benutzererlebnis zu bieten. Durch die Nutzung der Anwendung akzeptieren Sie unsere",
       "useOfCookies": "Verwendung von Cookies",
