@@ -7,6 +7,7 @@ import { Injectable, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
 import { v5 as uuidv5 } from 'uuid';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { AuthService, AccessTokenService } from '@dasch-swiss/vre/core/session';
@@ -32,8 +33,8 @@ export class GrafanaFaroService {
     }
 
     try {
-      this._faroInstance = initializeFaro({
-        url: faroConfig.collectorUrl,
+      // Build base config
+      const baseConfig = {
         app: {
           name: faroConfig.appName,
           version: this._appConfig.dspConfig.release,
@@ -48,7 +49,26 @@ export class GrafanaFaroService {
           new TracingInstrumentation(),
         ],
         sessionTracking: faroConfig.sessionTracking,
-      });
+      };
+
+      // Use OTLP transport for local development with grafana/otel-lgtm
+      if (faroConfig.otlp?.logsUrl && faroConfig.otlp?.tracesUrl) {
+        this._faroInstance = initializeFaro({
+          ...baseConfig,
+          transports: [
+            new OtlpHttpTransport({
+              logsURL: faroConfig.otlp.logsUrl,
+              tracesURL: faroConfig.otlp.tracesUrl,
+            }),
+          ],
+        });
+      } else {
+        // Use default Faro transport for Grafana Cloud
+        this._faroInstance = initializeFaro({
+          ...baseConfig,
+          url: faroConfig.collectorUrl,
+        });
+      }
 
       this._setupUserTracking();
     } catch (error) {

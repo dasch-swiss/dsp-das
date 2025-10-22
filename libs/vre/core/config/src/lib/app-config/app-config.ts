@@ -26,6 +26,12 @@ export const Faro = z.object({
     enabled: z.boolean(),
     disabledLevels: z.array(z.enum(['log', 'info', 'warn', 'error', 'debug'])),
   }),
+  otlp: z
+    .object({
+      logsUrl: z.string(),
+      tracesUrl: z.string(),
+    })
+    .optional(),
 });
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type Faro = z.infer<typeof Faro>;

@@ -25,6 +25,10 @@ export class DspFaroConfig {
     public readonly console: {
       enabled: boolean;
       disabledLevels: ('log' | 'info' | 'warn' | 'error' | 'debug')[];
+    },
+    public readonly otlp?: {
+      logsUrl?: string;
+      tracesUrl?: string;
     }
   ) {}
 }

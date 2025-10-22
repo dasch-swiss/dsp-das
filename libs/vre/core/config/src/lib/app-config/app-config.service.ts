@@ -86,7 +86,8 @@ export class AppConfigService {
             {
               enabled: c.instrumentation.faro.console.enabled,
               disabledLevels: c.instrumentation.faro.console.disabledLevels,
-            }
+            },
+            c.instrumentation.faro.otlp
           )
         : // Provide safe default when faro config is missing (e.g., old config files)
           new DspFaroConfig(
@@ -94,7 +95,8 @@ export class AppConfigService {
             '',
             'dsp-app',
             { enabled: false, persistent: false, samplingRate: 0 },
-            { enabled: false, disabledLevels: [] }
+            { enabled: false, disabledLevels: [] },
+            undefined
           )
     );
 
