@@ -595,12 +595,6 @@
         "settings": "Impostazioni"
       }
     },
-    "footer": {
-      "aboutDspApp": "DSP-APP è costruito con <a href=\"https://angular.io\" target=\"_blank\">Angular</a> ed è un'applicazione client per interagire con l'<a href=\"https://docs.dasch.swiss/latest/DSP-API\" target=\"_blank\">API</a> del <a href=\"https://dasch.swiss\" target=\"_blank\">Swiss National Data and Service Center for the Humanities DaSCH</a>. DSP-APP, come tutte le altre applicazioni DaSCH, è open source e disponibile su <a href=\"https://github.com/dasch-swiss\" target=\"_blank\">Github</a>.",
-      "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
-      "address": "Kornhausgasse 7, 4051 Basilea, Svizzera",
-      "emailSubject": "Ottieni informazioni sull'applicazione DSP"
-    },
     "grid": {
       "readMore": "Leggi di più"
     }

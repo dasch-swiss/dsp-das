@@ -595,12 +595,6 @@
         "settings": "Paramètres"
       }
     },
-    "footer": {
-      "aboutDspApp": "DSP-APP est construit avec <a href=\"https://angular.io\" target=\"_blank\">Angular</a>, stylisé avec <a href=\"https://material.angular.io\" target=\"_blank\">Material</a> &middot; <a href=\"https://github.com/dasch-swiss/dsp-api/\" target=\"_blank\">DSP-API</a> et <a href=\"https://sipi.io\" target=\"_blank\">Sipi</a> sous le capot<br /><br />Soutenu par <a href=\"http://sagw.ch\" target=\"_blank\">Académie suisse des sciences humaines et sociales</a>, <a href=\"http://swissuniversities.ch\" target=\"_blank\">Swissuniversities</a> et <a href=\"http://snf.ch\" target=\"_blank\">Fonds national suisse</a>.",
-      "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
-      "address": "Kornhausgasse 7, 4051 Bâle, Suisse",
-      "emailSubject": "Obtenir des informations sur l'application DSP"
-    },
     "grid": {
       "readMore": "En savoir plus"
     }
