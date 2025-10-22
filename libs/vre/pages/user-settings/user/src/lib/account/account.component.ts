@@ -68,7 +68,7 @@ export class AccountComponent {
     private _authService: AuthService,
     private _translateService: TranslateService
   ) {
-    this._titleService.setTitle(this._translateService.instant('pages.userSettings.title'));
+    this._titleService.setTitle('Your account');
   }
 
   onEditProfile(user: ReadUser) {

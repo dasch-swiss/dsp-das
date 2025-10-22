@@ -44,6 +44,6 @@ export class UsersTabComponent {
   showActiveUsers = true;
 
   constructor() {
-    this._titleService.setTitle(this._translateService.instant('pages.system.allUsersInDSP'));
+    this._titleService.setTitle('All users in DSP');
   }
 }

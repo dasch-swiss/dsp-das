@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     this._pendo.setup();
     this._autoLoginService.setup();
     this._localStorageWatcher.watchAccessToken();
-    this._titleService.setTitle(this._translateService.instant('app.title'));
+    this._titleService.setTitle('DaSCH Service Platform');
   }
 
   ngOnInit() {

@@ -52,6 +52,6 @@ export class SystemPageComponent {
   activeLink = '';
 
   constructor() {
-    this._titleService.setTitle(this._translateService.instant('pages.system.title'));
+    this._titleService.setTitle('System administration');
   }
 }

@@ -74,11 +74,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this._titleService.setTitle(
-      this.isUsersProjects
-        ? this._translateService.instant('pages.system.yourProjects')
-        : this._translateService.instant('pages.system.allProjectsFromDSP')
-    );
+    this._titleService.setTitle(this.isUsersProjects ? 'Your projects' : 'All projects from DSP');
   }
 
   ngOnDestroy() {
