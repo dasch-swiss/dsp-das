@@ -435,6 +435,16 @@
       },
       "replaceFileDialog": {
         "willBeReplaced": " sarà sostituito."
+      },
+      "iiifControl": {
+        "label": "URL IIIF",
+        "placeholder": "Inserisci URL IIIF (es. https://example.com/iiif/2/image.jp2/info.json)",
+        "errors": {
+          "invalidUrl": "Formato URL IIIF non valido",
+          "previewImageError": "Impossibile caricare l'immagine di anteprima",
+          "infoJsonError": "Impossibile caricare info.json",
+          "invalidHost": "Host esterno non consentito"
+        }
       }
     },
     "propertiesDisplay": {
@@ -489,6 +499,7 @@
         "choose": "Scegli",
         "none": "Nessuno",
         "license": "Licenza/Dichiarazione",
+        "licenseStatement": "Licenza/Dichiarazione",
         "authorship": "Autore"
       },
       "authorship": {
@@ -510,6 +521,12 @@
     "templateSwitcher": {
       "createResourceDialog": {
         "title": "Crea nuova risorsa di tipo: {{type}}"
+      },
+      "linkValue": {
+        "label": "Collegamento alla risorsa",
+        "placeholder": "Cerca risorsa da collegare...",
+        "noResults": "Nessun risultato trovato",
+        "createNew": "Crea nuovo"
       }
     }
   },

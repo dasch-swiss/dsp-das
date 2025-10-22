@@ -397,6 +397,16 @@
       },
       "replaceFileDialog": {
         "willBeReplaced": " wird ersetzt."
+      },
+      "iiifControl": {
+        "label": "IIIF-URL",
+        "placeholder": "IIIF-URL eingeben (z.B. https://example.com/iiif/2/image.jp2/info.json)",
+        "errors": {
+          "invalidUrl": "Ungültiges IIIF-URL-Format",
+          "previewImageError": "Vorschaubild kann nicht geladen werden",
+          "infoJsonError": "info.json kann nicht geladen werden",
+          "invalidHost": "Externer Host ist nicht erlaubt"
+        }
       }
     },
     "propertiesDisplay": {
@@ -489,6 +499,7 @@
         "choose": "Auswählen",
         "none": "Keine",
         "license": "Lizenz/Erklärung",
+        "licenseStatement": "Lizenz/Erklärung",
         "authorship": "Autorenschaft"
       },
       "authorship": {
@@ -510,6 +521,12 @@
     "templateSwitcher": {
       "createResourceDialog": {
         "title": "Neue Ressource vom Typ erstellen: {{type}}"
+      },
+      "linkValue": {
+        "label": "Link zur Ressource",
+        "placeholder": "Ressource zum Verknüpfen suchen...",
+        "noResults": "Keine Ergebnisse gefunden",
+        "createNew": "Neu erstellen"
       }
     }
   },
