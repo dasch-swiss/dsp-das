@@ -33,7 +33,7 @@ import { CreateResourceFormInterface } from './create-resource-form.interface';
           <h3>{{ 'resourceEditor.resourceCreator.form.properties' | translate }}</h3>
         }
         <app-create-resource-form-row
-          [label]="'resourceEditor.resourceCreator.form.resourceLabel' | translate"
+          [label]="('resourceEditor.resourceCreator.form.resourceLabel' | translate) + ' *'"
           [tooltip]="'resourceEditor.resourceCreator.form.resourceLabelTooltip' | translate"
           data-cy="resource-label">
           <app-common-input

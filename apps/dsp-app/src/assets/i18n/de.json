@@ -477,6 +477,13 @@
       "lastPage": "Letzte Seite"
     },
     "resourceCreator": {
+      "form": {
+        "file": "Datei",
+        "properties": "Eigenschaften",
+        "resourceLabel": "Ressourcen-Label",
+        "resourceLabelTooltip": "Jede Ressource benötigt ein (vorzugsweise eindeutiges) Label. Es dient als eine Art Ressourcen-Identifikator.",
+        "resourceLabelPlaceholder": "z.B. Lorem ipsum ..."
+      },
       "legal": {
         "copyrightHolder": "Urheberrechtsinhaber",
         "choose": "Auswählen",

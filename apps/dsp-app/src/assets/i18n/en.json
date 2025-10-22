@@ -477,6 +477,13 @@
       "valueAlreadyExists": "The value entered already exists."
     },
     "resourceCreator": {
+      "form": {
+        "file": "File",
+        "properties": "Properties",
+        "resourceLabel": "Resource label",
+        "resourceLabelTooltip": "Each resource needs a (preferably unique) label. It will be a kind of resource identifier.",
+        "resourceLabelPlaceholder": "e.g. Lorem ipsum ..."
+      },
       "legal": {
         "copyrightHolder": "Copyright holder",
         "choose": "Choose",

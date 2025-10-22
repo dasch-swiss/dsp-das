@@ -477,6 +477,13 @@
       "valueAlreadyExists": "La valeur saisie existe déjà."
     },
     "resourceCreator": {
+      "form": {
+        "file": "Fichier",
+        "properties": "Propriétés",
+        "resourceLabel": "Label de la ressource",
+        "resourceLabelTooltip": "Chaque ressource nécessite un label (de préférence unique). Il servira d'identifiant de ressource.",
+        "resourceLabelPlaceholder": "p.ex. Lorem ipsum ..."
+      },
       "legal": {
         "copyrightHolder": "Titulaire des droits d'auteur",
         "choose": "Choisir",

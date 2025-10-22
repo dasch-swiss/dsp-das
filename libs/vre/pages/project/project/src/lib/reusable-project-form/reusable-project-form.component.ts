@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AllProjectsService } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
@@ -57,8 +57,6 @@ export class ReusableProjectFormComponent implements OnInit {
 
   form?: ProjectForm;
 
-  private _translateService = inject(TranslateService);
-
   readonly shortcodePatternError = {
     errorKey: 'pattern',
     message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodePattern'),
@@ -72,7 +70,8 @@ export class ReusableProjectFormComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _allProjectsService: AllProjectsService
+    private _allProjectsService: AllProjectsService,
+    private _translateService: TranslateService
   ) {}
 
   ngOnInit() {
