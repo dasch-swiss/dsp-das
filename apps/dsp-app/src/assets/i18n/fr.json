@@ -285,37 +285,6 @@
         "switchToAdvancedSearch": "Passer à la recherche avancée",
         "placeholder": "Entrez un terme de recherche..."
       },
-      "advancedSearch": {
-        "title": "Recherche avancée",
-        "usePreviousSearch": "Utiliser la recherche précédente",
-        "addSearchCriteria": "Ajouter des critères de recherche",
-        "orderBy": "Trier par",
-        "orderByTooltip": "La recherche ne peut pas être triée par une propriété URI ou une propriété qui pointe vers une ressource.",
-        "switchToRegularSearch": "Passer à la recherche standard",
-        "confirmReset": "Êtes-vous sûr de vouloir réinitialiser le formulaire ?",
-        "dataModel": "Modèle de données",
-        "resourceClass": "Classe de ressource (facultatif)",
-        "resourceClassNone": "Aucune",
-        "property": "Propriété",
-        "comparisonOperator": "Opérateur de comparaison",
-        "searchForResource": "Rechercher une ressource",
-        "noResults": "Aucun résultat trouvé",
-        "resultsFound": "{{count}} résultats trouvés",
-        "selectProperty": "Sélectionner une propriété",
-        "selectValue": "Sélectionner une valeur",
-        "addSubcriteria": "Ajouter un sous-critère",
-        "propertyLabel": "Libellé de propriété",
-        "textValue": "Valeur de texte",
-        "value": "Valeur",
-        "trueValue": "Vrai",
-        "falseValue": "Faux",
-        "uriValue": "Valeur URI",
-        "uriValueError": "La valeur doit être une valeur URI.",
-        "integerValue": "Valeur entière",
-        "integerValueError": "La valeur doit être un entier.",
-        "decimalValue": "Valeur décimale",
-        "decimalValueError": "La valeur doit être un nombre décimal."
-      },
       "noResultsFound": "Aucun résultat trouvé",
       "searchTips": {
         "title": "Conseils de recherche",
@@ -631,14 +600,6 @@
       "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
       "address": "Kornhausgasse 7, 4051 Bâle, Suisse",
       "emailSubject": "Obtenir des informations sur l'application DSP"
-    },
-    "helpPage": {
-      "developmentVersion": "Ceci est une version de développement de DSP (version <strong>{{release}}</strong>) fonctionnant dans l'environnement <strong>{{environment}}</strong>",
-      "needHelp": "Besoin d'aide?",
-      "userGuideExplore": "Lire le guide de l'utilisateur: Explorer par sujet",
-      "exploreSoftware": "Découvrez nos produits logiciels",
-      "dspDescription": "La plateforme de services DaSCH (DSP) est notre produit principal avec la version actuelle<br /><strong>{{release}}</strong><br /><a href=\"{{releaseNotesUrl}}\" target=\"_blank\">Cliquez ici pour obtenir les dernières nouvelles sur cette version principale <mat-icon class=\"suffix\">launch</mat-icon></a><br /><br />Si vous êtes intéressé par plus de détails sur les applications individuelles de DSP, jetez un œil aux produits logiciels suivants &mdash; tous développés par l'équipe DaSCH en Suisse.",
-      "getSupportOrImprove": "Obtenez plus de support ou aidez à améliorer"
     },
     "grid": {
       "readMore": "En savoir plus"

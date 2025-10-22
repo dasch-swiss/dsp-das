@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiData } from '../../data-access/advanced-search-service/advanced-search.service';
@@ -57,7 +57,6 @@ export class AdvancedSearchComponent implements OnInit {
 
   store: AdvancedSearchStoreService = inject(AdvancedSearchStoreService);
   route: ActivatedRoute = inject(ActivatedRoute);
-  private readonly _translateService = inject(TranslateService);
 
   ontologies$ = this.store.ontologies$;
   ontologiesLoading$ = this.store.ontologiesLoading$;
@@ -197,11 +196,9 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   handleResetButtonClicked(): void {
-    this._dialogService
-      .afterConfirmation(this._translateService.instant('pages.search.advancedSearch.confirmReset'))
-      .subscribe(() => {
-        this.store.onReset();
-      });
+    this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
+      this.store.onReset();
+    });
   }
 
   handleBackButtonClicked(): void {

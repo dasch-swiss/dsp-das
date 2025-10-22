@@ -285,37 +285,6 @@
         "switchToAdvancedSearch": "Switch to advanced search",
         "placeholder": "Enter search term..."
       },
-      "advancedSearch": {
-        "title": "Advanced Search",
-        "usePreviousSearch": "Use Previous Search",
-        "addSearchCriteria": "Add Search Criteria",
-        "orderBy": "Order by",
-        "orderByTooltip": "Search cannot be ordered by a URI property or a property that links to a resource.",
-        "switchToRegularSearch": "Switch to regular search",
-        "confirmReset": "Are you sure you want to reset the form?",
-        "dataModel": "Data model",
-        "resourceClass": "Resource class (optional)",
-        "resourceClassNone": "None",
-        "property": "Property",
-        "comparisonOperator": "Comparison Operator",
-        "searchForResource": "Search for a resource",
-        "noResults": "No results found",
-        "resultsFound": "{{count}} results found",
-        "selectProperty": "Select a property",
-        "selectValue": "Select a value",
-        "addSubcriteria": "Add Subcriteria",
-        "propertyLabel": "Property Label",
-        "textValue": "Text Value",
-        "value": "Value",
-        "trueValue": "True",
-        "falseValue": "False",
-        "uriValue": "URI Value",
-        "uriValueError": "Value must be a URI value.",
-        "integerValue": "Integer Value",
-        "integerValueError": "Value must be an integer value.",
-        "decimalValue": "Decimal Value",
-        "decimalValueError": "Value must be a decimal value."
-      },
       "noResultsFound": "No results found",
       "searchTips": {
         "title": "Search tips",
@@ -631,14 +600,6 @@
       "daschName": "DaSCH - Swiss National Data and Service Center for the Humanities",
       "address": "Kornhausgasse 7, 4051 Basel, Switzerland",
       "emailSubject": "Get information on the DSP application"
-    },
-    "helpPage": {
-      "developmentVersion": "This is a development version of DSP (release <strong>{{release}}</strong>) running in the environment <strong>{{environment}}</strong>",
-      "needHelp": "Need help?",
-      "userGuideExplore": "Read the user guide: Explore by topic",
-      "exploreSoftware": "Explore our software products",
-      "dspDescription": "The DaSCH Service Platform (DSP) is our main product. To learn more about how it can help you manage your research, visit <a class=\"link\" href=\"https://docs.dasch.swiss/latest\" target=\"_blank\">docs.dasch.swiss</a>. Release notes for this version (<strong>{{release}}</strong>) can be found <a class=\"link\" href=\"{{releaseNotesUrl}}\" target=\"_blank\">here</a>.",
-      "getSupportOrImprove": "Get more support or help to improve"
     },
     "grid": {
       "readMore": "Read more"
