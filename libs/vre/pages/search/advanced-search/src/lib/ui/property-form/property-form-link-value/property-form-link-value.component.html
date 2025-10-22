@@ -1,7 +1,8 @@
 <mat-form-field>
+  <!-- <mat-label>Search for a resource</mat-label> -->
   <input
     matInput
-    [placeholder]="'pages.search.advancedSearch.searchForResource' | translate"
+    placeholder="Search for a resource"
     [matAutocomplete]="auto"
     [formControl]="inputControl"
     (focus)="onInputFocused()" />
@@ -12,9 +13,9 @@
     (optionsScroll)="onScroll()"
     (optionSelected)="onResourceSelected($event)">
     @if (resourcesSearchNoResults && !resourcesSearchResultsLoading) {
-    <mat-option [disabled]="true"> {{ 'pages.search.advancedSearch.noResults' | translate }} </mat-option>
+    <mat-option [disabled]="true"> No results found </mat-option>
     } @if (!resourcesSearchNoResults && !resourcesSearchResultsLoading && resourcesSearchResultsCount) {
-    <mat-option [disabled]="true"> {{ 'pages.search.advancedSearch.resultsFound' | translate: { count: resourcesSearchResultsCount } }} </mat-option>
+    <mat-option [disabled]="true"> {{ resourcesSearchResultsCount }} results found </mat-option>
     } @for (res of resourcesSearchResults; track res) {
     <mat-option [value]="res"> {{ res?.label }}</mat-option>
     } @if (resourcesSearchResultsLoading) {

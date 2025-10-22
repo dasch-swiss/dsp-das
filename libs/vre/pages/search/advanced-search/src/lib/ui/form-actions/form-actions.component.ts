@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-form-actions',
-  imports: [MatButtonModule, MatIconModule, TranslateModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './form-actions.component.html',
   styleUrls: ['./form-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
