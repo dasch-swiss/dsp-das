@@ -3,7 +3,7 @@
     "landingPage": {
       "usersProjects": "Mes projets",
       "notUsersProjects": "Autres projets de recherche",
-      "filterProjects": "Filter projects"
+      "filterProjects": "Filtrer les projects"
     },
     "userSettings": {
       "loginForm": {
@@ -14,7 +14,6 @@
         "deleteButton": "Suspendre le compte utilisateur maintenant",
         "deleteConfirmation": "Voulez-vous suspendre votre propre compte ?",
         "delete": "Suspendre le compte utilisateur",
-        "edit": "Modifier le profil",
         "editMyProfile": "Modifier mon profil",
         "editMyPassword": "Modifier mon mot de passe"
       },
