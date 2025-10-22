@@ -21,7 +21,7 @@
     },
     "faro": {
       "enabled": true,
-      "collectorUrl": "https://faro-collector-prod-eu-west-2.grafana.net/collect/YOUR_APP_KEY_HERE",
+      "collectorUrl": "http://localhost:12345/collect",
       "appName": "dsp-app",
       "sessionTracking": {
         "enabled": true,
