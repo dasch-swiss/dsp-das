@@ -527,7 +527,8 @@
         "placeholder": "Cerca risorsa da collegare...",
         "noResults": "Nessun risultato trovato",
         "createNew": "Crea nuovo"
-      }
+      },
+      "example": "es."
     }
   },
   "ui": {

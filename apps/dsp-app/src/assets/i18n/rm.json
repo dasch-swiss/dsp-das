@@ -527,7 +527,8 @@
         "placeholder": "Search for resource to link...",
         "noResults": "No results found",
         "createNew": "Create new"
-      }
+      },
+      "example": "e.g."
     }
   },
   "ui": {
