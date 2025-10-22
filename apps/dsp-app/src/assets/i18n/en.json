@@ -495,10 +495,21 @@
         "label": "Authorship",
         "placeholder": "New authorship..."
       },
+      "image": {
+        "label": "Image",
+        "uploadFile": "Upload file",
+        "linkExternalIIIF": "Link external IIIF"
+      },
       "upload": {
+        "dragAndDrop": "Drag and drop file here or click to browse",
         "fileTypesSupported": "File types supported: {{types}}",
         "processing": "Processing file on server...",
         "extensionNotSupported": "The extension {{extension}} is not supported."
+      }
+    },
+    "templateSwitcher": {
+      "createResourceDialog": {
+        "title": "Create new resource of type: {{type}}"
       }
     }
   },

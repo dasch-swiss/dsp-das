@@ -495,10 +495,21 @@
         "label": "Autore",
         "placeholder": "Nuovo autore..."
       },
+      "image": {
+        "label": "Immagine",
+        "uploadFile": "Carica file",
+        "linkExternalIIIF": "Collega IIIF esterno"
+      },
       "upload": {
+        "dragAndDrop": "Trascina e rilascia il file qui o clicca per sfogliare",
         "fileTypesSupported": "Tipi di file supportati: {{types}}",
         "processing": "Elaborazione file sul server...",
         "extensionNotSupported": "L'estensione {{extension}} non è supportata."
+      }
+    },
+    "templateSwitcher": {
+      "createResourceDialog": {
+        "title": "Crea nuova risorsa di tipo: {{type}}"
       }
     }
   },

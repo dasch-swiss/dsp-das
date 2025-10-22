@@ -495,10 +495,21 @@
         "label": "Auteur·ice",
         "placeholder": "Nouvel·le auteur·ice..."
       },
+      "image": {
+        "label": "Image",
+        "uploadFile": "Télécharger un fichier",
+        "linkExternalIIIF": "Lier un IIIF externe"
+      },
       "upload": {
+        "dragAndDrop": "Glissez-déposez le fichier ici ou cliquez pour parcourir",
         "fileTypesSupported": "Types de fichiers pris en charge : {{types}}",
         "processing": "Traitement du fichier sur le serveur...",
         "extensionNotSupported": "L'extension {{extension}} n'est pas prise en charge."
+      }
+    },
+    "templateSwitcher": {
+      "createResourceDialog": {
+        "title": "Créer une nouvelle ressource de type : {{type}}"
       }
     }
   },

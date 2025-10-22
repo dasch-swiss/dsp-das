@@ -495,10 +495,21 @@
         "label": "Autorenschaft",
         "placeholder": "Neue Autorenschaft..."
       },
+      "image": {
+        "label": "Bild",
+        "uploadFile": "Datei hochladen",
+        "linkExternalIIIF": "Externes IIIF verlinken"
+      },
       "upload": {
+        "dragAndDrop": "Datei hier ablegen oder klicken zum Durchsuchen",
         "fileTypesSupported": "Unterstützte Dateitypen: {{types}}",
         "processing": "Datei wird auf dem Server verarbeitet...",
         "extensionNotSupported": "Die Erweiterung {{extension}} wird nicht unterstützt."
+      }
+    },
+    "templateSwitcher": {
+      "createResourceDialog": {
+        "title": "Neue Ressource vom Typ erstellen: {{type}}"
       }
     }
   },
