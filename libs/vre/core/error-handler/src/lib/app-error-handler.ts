@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import * as Sentry from '@sentry/angular';
 import { AjaxError } from 'rxjs/ajax';
@@ -14,12 +15,16 @@ export class AppErrorHandler implements ErrorHandler {
   constructor(
     private readonly _notification: NotificationService,
     private readonly _appConfig: AppConfigService,
-    private readonly _ngZone: NgZone
+    private readonly _ngZone: NgZone,
+    private readonly _faroService: GrafanaFaroService
   ) {}
 
   badRequestRegexMatch = /dsp\.errors\.BadRequestException:(.*)$/;
 
   handleError(error: any): void {
+    // Send to Faro for monitoring (alongside Sentry)
+    this.sendErrorToFaro(error);
+
     if (error instanceof ApiResponseError && error.error instanceof AjaxError) {
       // JS-LIB
       this.handleGenericError(error.error, error.url);
@@ -104,5 +109,45 @@ export class AppErrorHandler implements ErrorHandler {
 
   private sendErrorToSentry(error: any) {
     Sentry.captureException(error);
+  }
+
+  /**
+   * Send error to Faro for frontend observability
+   * Runs alongside Sentry for complementary monitoring
+   */
+  private sendErrorToFaro(error: any): void {
+    try {
+      const context: Record<string, string> = {
+        errorType: error.constructor.name,
+      };
+
+      // Add HTTP-specific context
+      if (error instanceof HttpErrorResponse) {
+        context.httpStatus = String(error.status);
+        context.httpUrl = error.url || 'unknown';
+        context.httpStatusText = error.statusText;
+      }
+
+      // Add API-specific context
+      if (error instanceof ApiResponseError) {
+        context.apiError = 'true';
+        context.apiUrl = error.url;
+        context.apiStatus = String(error.status);
+      }
+
+      // Add Ajax-specific context
+      if (error instanceof AjaxError) {
+        context.ajaxError = 'true';
+        context.ajaxStatus = String(error.status);
+      }
+
+      // Don't send user feedback errors to Faro (not bugs, just user notifications)
+      if (!(error instanceof UserFeedbackError)) {
+        this._faroService.trackError(error, context);
+      }
+    } catch (faroError) {
+      // Fail silently - don't break error handling if Faro fails
+      console.error('Failed to send error to Faro:', faroError);
+    }
   }
 }

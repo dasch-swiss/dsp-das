@@ -13,9 +13,27 @@ export const Rollbar = z.discriminatedUnion('enabled', [
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type Rollbar = z.infer<typeof Rollbar>;
 
+export const Faro = z.object({
+  enabled: z.boolean(),
+  collectorUrl: z.string(),
+  appName: z.string(),
+  sessionTracking: z.object({
+    enabled: z.boolean(),
+    persistent: z.boolean(),
+    samplingRate: z.number().min(0).max(1),
+  }),
+  console: z.object({
+    enabled: z.boolean(),
+    disabledLevels: z.array(z.enum(['log', 'info', 'warn', 'error', 'debug'])),
+  }),
+});
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type Faro = z.infer<typeof Faro>;
+
 export const Instrumentation = z.object({
   environment: z.string(),
   rollbar: Rollbar,
+  faro: Faro.optional(),
 });
 
 export type InstrumentationType = z.infer<typeof Instrumentation>;

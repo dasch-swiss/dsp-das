@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import {
   ComponentCommunicationEventService,
   EmitEvent,
@@ -20,7 +21,8 @@ export class AuthService {
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _componentCommsService: ComponentCommunicationEventService,
-    private readonly _localizationsService: LocalizationService
+    private readonly _localizationsService: LocalizationService,
+    private readonly _faroService: GrafanaFaroService
   ) {}
 
   isCredentialsValid$() {
@@ -56,14 +58,29 @@ export class AuthService {
         return this._userService.loadUser(identifier, identifierType).pipe(
           tap(user => {
             this._localizationsService.setLanguage(user.lang);
+            // Track successful login event
+            this._faroService.trackEvent('auth.login', {
+              success: 'true',
+              identifierType,
+            });
           })
         );
+      }),
+      catchError(error => {
+        // Track failed login event
+        this._faroService.trackEvent('auth.login', {
+          success: 'false',
+          identifierType,
+        });
+        throw error;
       })
     );
   }
 
   logout() {
     this._dspApiConnection.v2.auth.logout().subscribe(() => {
+      // Track logout event
+      this._faroService.trackEvent('auth.logout');
       this._userService.logout();
       this._accessTokenService.removeTokens();
       this._dspApiConnection.v2.jsonWebToken = '';

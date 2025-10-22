@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -10,7 +10,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import {
+  PendoAnalyticsService,
+  GrafanaFaroService,
+  faroInitializer,
+} from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -131,6 +135,13 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   providers: [
     AppConfigService,
     PendoAnalyticsService,
+    GrafanaFaroService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: faroInitializer,
+      deps: [GrafanaFaroService],
+      multi: true,
+    },
     {
       provide: DspApiConfigToken,
       useFactory: (appConfigService: AppConfigService) => appConfigService.dspApiConfig,
@@ -160,7 +171,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler,
-      deps: [NotificationService, AppConfigService, NgZone],
+      deps: [NotificationService, AppConfigService, NgZone, GrafanaFaroService],
     },
     {
       provide: HTTP_INTERCEPTORS,

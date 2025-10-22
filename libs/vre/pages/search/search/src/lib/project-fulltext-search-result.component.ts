@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@a
 import { KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
-import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-project-fulltext-search-result',
@@ -42,7 +43,8 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _resourceResultService: ResourceResultService,
-    private readonly _userService: UserService
+    private readonly _userService: UserService,
+    private readonly _faroService: GrafanaFaroService
   ) {}
 
   ngOnChanges() {
@@ -68,6 +70,14 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
         this.loading = false;
         this._resourceResultService.numberOfResults = countResponse.numberOfResults;
         return resourceResponse.resources;
+      }),
+      tap(resources => {
+        // Track search event with results
+        this._faroService.trackEvent('search.fulltext', {
+          query: this.query,
+          resultCount: String(resources.length),
+          projectId: this.projectId || 'all',
+        });
       })
     );
   }

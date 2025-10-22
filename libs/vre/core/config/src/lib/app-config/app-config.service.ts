@@ -12,7 +12,7 @@ import { DspConfig } from './dsp-config';
 import { DspFeatureFlagsConfig } from './dsp-feature-config';
 import { DspIiifConfig } from './dsp-iiif-config';
 import { DspIngestConfig } from './dsp-ingest-config';
-import { DspInstrumentationConfig, DspRollbarConfig } from './dsp-instrumentation-config';
+import { DspInstrumentationConfig, DspRollbarConfig, DspFaroConfig } from './dsp-instrumentation-config';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +72,30 @@ export class AppConfigService {
     // init instrumentation configuration
     this._dspInstrumentationConfig = new DspInstrumentationConfig(
       c.instrumentation.environment,
-      new DspRollbarConfig(c.instrumentation.rollbar.enabled, c.instrumentation.rollbar.accessToken)
+      new DspRollbarConfig(c.instrumentation.rollbar.enabled, c.instrumentation.rollbar.accessToken),
+      c.instrumentation.faro
+        ? new DspFaroConfig(
+            c.instrumentation.faro.enabled,
+            c.instrumentation.faro.collectorUrl,
+            c.instrumentation.faro.appName,
+            {
+              enabled: c.instrumentation.faro.sessionTracking.enabled,
+              persistent: c.instrumentation.faro.sessionTracking.persistent,
+              samplingRate: c.instrumentation.faro.sessionTracking.samplingRate,
+            },
+            {
+              enabled: c.instrumentation.faro.console.enabled,
+              disabledLevels: c.instrumentation.faro.console.disabledLevels,
+            }
+          )
+        : // Provide safe default when faro config is missing (e.g., old config files)
+          new DspFaroConfig(
+            false, // disabled by default
+            '',
+            'dsp-app',
+            { enabled: false, persistent: false, samplingRate: 0 },
+            { enabled: false, disabledLevels: [] }
+          )
     );
 
     this._dspFeatureFlagsConfig = new DspFeatureFlagsConfig(c.featureFlags.allowEraseProjects);
