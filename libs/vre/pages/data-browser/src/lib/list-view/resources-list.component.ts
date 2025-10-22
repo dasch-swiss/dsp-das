@@ -18,7 +18,7 @@ import { ResourceResultService } from '../resource-result.service';
         [numberOfAllResults]="resourceResultService.numberOfResults" />
     }
 
-    <app-resource-list [resources]="resources" />`,
+    <app-resource-image-list [resources]="resources" />`,
   styles: [
     `
       app-pager {
