@@ -299,6 +299,10 @@
         "addProperty": "Eigenschaft hinzufügen",
         "createNewFromType": "Neue von Typ erstellen",
         "addExistingProperty": "Bestehende Eigenschaft hinzufügen"
+      },
+      "resourceClassForm": {
+        "createSubtitle": "Ressourcenklasse erstellen",
+        "editSubtitle": "Ressourcenklasse anpassen"
       }
     },
     "search": {
