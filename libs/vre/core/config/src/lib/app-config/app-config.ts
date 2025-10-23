@@ -39,7 +39,7 @@ export type Faro = z.infer<typeof Faro>;
 export const Instrumentation = z.object({
   environment: z.string(),
   rollbar: Rollbar,
-  faro: Faro.optional(),
+  faro: Faro,
 });
 
 export type InstrumentationType = z.infer<typeof Instrumentation>;

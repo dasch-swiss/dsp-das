@@ -73,31 +73,21 @@ export class AppConfigService {
     this._dspInstrumentationConfig = new DspInstrumentationConfig(
       c.instrumentation.environment,
       new DspRollbarConfig(c.instrumentation.rollbar.enabled, c.instrumentation.rollbar.accessToken),
-      c.instrumentation.faro
-        ? new DspFaroConfig(
-            c.instrumentation.faro.enabled,
-            c.instrumentation.faro.collectorUrl,
-            c.instrumentation.faro.appName,
-            {
-              enabled: c.instrumentation.faro.sessionTracking.enabled,
-              persistent: c.instrumentation.faro.sessionTracking.persistent,
-              samplingRate: c.instrumentation.faro.sessionTracking.samplingRate,
-            },
-            {
-              enabled: c.instrumentation.faro.console.enabled,
-              disabledLevels: c.instrumentation.faro.console.disabledLevels,
-            },
-            c.instrumentation.faro.otlp
-          )
-        : // Provide safe default when faro config is missing (e.g., old config files)
-          new DspFaroConfig(
-            false, // disabled by default
-            '',
-            'dsp-app',
-            { enabled: false, persistent: false, samplingRate: 0 },
-            { enabled: false, disabledLevels: [] },
-            undefined
-          )
+      new DspFaroConfig(
+        c.instrumentation.faro.enabled,
+        c.instrumentation.faro.collectorUrl,
+        c.instrumentation.faro.appName,
+        c.instrumentation.faro.sessionTracking as {
+          enabled: boolean;
+          persistent: boolean;
+          samplingRate: number;
+        },
+        c.instrumentation.faro.console as {
+          enabled: boolean;
+          disabledLevels: ('log' | 'info' | 'warn' | 'error' | 'debug')[];
+        },
+        c.instrumentation.faro.otlp
+      )
     );
 
     this._dspFeatureFlagsConfig = new DspFeatureFlagsConfig(c.featureFlags.allowEraseProjects);
