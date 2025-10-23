@@ -18,6 +18,20 @@
     "rollbar": {
       "enabled": false,
       "accessToken": ""
+    },
+    "faro": {
+      "enabled": true,
+      "collectorUrl": "https://faro-collector-prod-eu-west-2.grafana.net/collect/YOUR_APP_KEY_HERE",
+      "appName": "dsp-app",
+      "sessionTracking": {
+        "enabled": true,
+        "persistent": true,
+        "samplingRate": 1.0
+      },
+      "console": {
+        "enabled": true,
+        "disabledLevels": []
+      }
     }
   },
   "featureFlags": {
