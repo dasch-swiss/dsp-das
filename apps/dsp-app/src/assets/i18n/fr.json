@@ -306,7 +306,11 @@
       },
       "resourceClassForm": {
         "createSubtitle": "Créer une classe de ressource",
-        "editSubtitle": "Personnaliser la classe de ressource"
+        "editSubtitle": "Personnaliser la classe de ressource",
+        "name": "Nom de la classe",
+        "patternError": "Ce modèle n'est pas pris en charge",
+        "labelPlaceholder": "Label",
+        "commentPlaceholder": "Commentaire"
       }
     },
     "search": {

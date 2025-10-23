@@ -306,7 +306,11 @@
       },
       "resourceClassForm": {
         "createSubtitle": "Ressourcenklasse erstellen",
-        "editSubtitle": "Ressourcenklasse anpassen"
+        "editSubtitle": "Ressourcenklasse anpassen",
+        "name": "Klassenname",
+        "patternError": "Dieses Muster wird nicht unterstützt",
+        "labelPlaceholder": "Bezeichnung",
+        "commentPlaceholder": "Kommentar"
       }
     },
     "search": {
