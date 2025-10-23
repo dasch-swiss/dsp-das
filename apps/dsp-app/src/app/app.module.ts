@@ -10,11 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import {
-  PendoAnalyticsService,
-  GrafanaFaroService,
-  faroInitializer,
-} from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { PendoAnalyticsService, GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -138,7 +134,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     GrafanaFaroService,
     {
       provide: APP_INITIALIZER,
-      useFactory: faroInitializer,
+      useFactory: (faroService: GrafanaFaroService) => () => faroService.setup(),
       deps: [GrafanaFaroService],
       multi: true,
     },
