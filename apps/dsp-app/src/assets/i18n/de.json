@@ -294,6 +294,11 @@
       "propertyForm": {
         "editTitle": "Eigenschaft bearbeiten",
         "createTitle": "Eigenschaft erstellen"
+      },
+      "addPropertyMenu": {
+        "addProperty": "Eigenschaft hinzufügen",
+        "createNewFromType": "Neue von Typ erstellen",
+        "addExistingProperty": "Bestehende Eigenschaft hinzufügen"
       }
     },
     "search": {

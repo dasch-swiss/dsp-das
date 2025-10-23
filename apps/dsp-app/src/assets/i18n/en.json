@@ -294,6 +294,11 @@
       "propertyForm": {
         "editTitle": "Edit property",
         "createTitle": "Create property"
+      },
+      "addPropertyMenu": {
+        "addProperty": "Add property",
+        "createNewFromType": "Create new from type",
+        "addExistingProperty": "Add existing property"
       }
     },
     "search": {
