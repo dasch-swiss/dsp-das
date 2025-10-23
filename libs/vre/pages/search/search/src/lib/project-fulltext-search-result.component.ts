@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@angular/core';
 import { KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
 import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
 

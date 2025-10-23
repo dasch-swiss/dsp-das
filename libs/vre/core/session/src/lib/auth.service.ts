@@ -1,8 +1,8 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
-import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import {
   ComponentCommunicationEventService,
   EmitEvent,

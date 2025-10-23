@@ -5,12 +5,12 @@
 
 import { Injectable, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
-import { TracingInstrumentation } from '@grafana/faro-web-tracing';
-import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
-import { v5 as uuidv5 } from 'uuid';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { AuthService, AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
+import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
+import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+import { v5 as uuidv5 } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class GrafanaFaroService {

@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
-import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import * as Sentry from '@sentry/angular';
 import { AjaxError } from 'rxjs/ajax';

@@ -4,10 +4,10 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { GrafanaFaroService } from './grafana-faro.service';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { AuthService, AccessTokenService } from '@dasch-swiss/vre/core/session';
+import { of } from 'rxjs';
+import { GrafanaFaroService } from './grafana-faro.service';
 
 // Mock Faro SDK
 jest.mock('@grafana/faro-web-sdk', () => ({
