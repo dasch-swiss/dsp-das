@@ -167,7 +167,7 @@
       },
       "createUserDialog": {
         "title": "Créer un nouvel utilisateur",
-        "isSystemAdmin": "Est un utilisateur administrateur système"
+        "isSystemAdmin": "Est un administrateur système"
       },
       "projectsList": {
         "sortShortCode": "Code court",
@@ -248,12 +248,12 @@
       "dataModels": {
         "title": "Tous les modèles de données",
         "info": "Un modèle de données organise les éléments de données et spécifie comment ils se rapportent les uns aux autres et par quelles propriétés ils sont décrits.",
-        "createNew": "Créer nouveau",
+        "createNew": "Ajouter",
         "documentation": "Lire la documentation sur la création de modèles de données",
         "vocabularies": {
           "title": "Vocabulaires contrôlés",
           "info": "Les vocabulaires contrôlés sont des lexiques hiérarchiques ou non hiérarchiques de termes de référence. En raison de leur nature normative ou normalisée, les vocabulaires contrôlés améliorent la qualité des données et rendent les recherches dans les bases de données plus efficaces que les champs de texte libre.",
-          "createNew": "Créer nouveau"
+          "createNew": "Ajouter"
         }
       },
       "editor": {
@@ -271,6 +271,29 @@
         "expandAll": "Tout développer",
         "createNewClass": "Créer une nouvelle classe",
         "addProperty": "Ajouter une propriété"
+      },
+      "cardinality": {
+        "multipleValues": "Valeurs multiples",
+        "required": "Requis"
+      },
+      "propertyItem": {
+        "edit": "Modifier",
+        "removeFromClass": "Retirer de la classe",
+        "copyId": "Copier l'ID de la propriété"
+      },
+      "resourceClassInfo": {
+        "collapse": "Réduire",
+        "expand": "Développer",
+        "noProperties": "Aucune propriété définie pour le moment.",
+        "edit": "Modifier",
+        "openInstances": "Ouvrir les instances",
+        "copyId": "Copier l'ID de la classe",
+        "cannotDelete": "Cette classe ne peut pas être supprimée car elle est utilisée !",
+        "delete": "Supprimer"
+      },
+      "propertyForm": {
+        "editTitle": "Modifier la propriété",
+        "createTitle": "Créer une propriété"
       }
     },
     "search": {
@@ -526,7 +549,7 @@
         "label": "Lien vers la ressource",
         "placeholder": "Rechercher une ressource à lier...",
         "noResults": "Aucun résultat trouvé",
-        "createNew": "Créer nouveau"
+        "createNew": "Ajouter"
       },
       "example": "p.ex."
     }

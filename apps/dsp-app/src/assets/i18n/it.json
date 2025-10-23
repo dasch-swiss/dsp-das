@@ -271,6 +271,29 @@
         "expandAll": "Espandi tutto",
         "createNewClass": "Crea nuova classe",
         "addProperty": "Aggiungi proprietà"
+      },
+      "cardinality": {
+        "multipleValues": "Valori multipli",
+        "required": "Obbligatorio"
+      },
+      "propertyItem": {
+        "edit": "Modifica",
+        "removeFromClass": "Rimuovi dalla classe",
+        "copyId": "Copia ID della proprietà"
+      },
+      "resourceClassInfo": {
+        "collapse": "Riduci",
+        "expand": "Espandi",
+        "noProperties": "Nessuna proprietà definita ancora.",
+        "edit": "Modifica",
+        "openInstances": "Apri istanze",
+        "copyId": "Copia ID della classe",
+        "cannotDelete": "Questa classe non può essere eliminata perché è in uso!",
+        "delete": "Elimina"
+      },
+      "propertyForm": {
+        "editTitle": "Modifica proprietà",
+        "createTitle": "Crea proprietà"
       }
     },
     "search": {

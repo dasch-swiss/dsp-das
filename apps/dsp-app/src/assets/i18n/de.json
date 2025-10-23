@@ -271,6 +271,29 @@
         "expandAll": "Alle ausklappen",
         "createNewClass": "Neue Klasse erstellen",
         "addProperty": "Eigenschaft hinzufügen"
+      },
+      "cardinality": {
+        "multipleValues": "Mehrere Werte",
+        "required": "Erforderlich"
+      },
+      "propertyItem": {
+        "edit": "Bearbeiten",
+        "removeFromClass": "Aus Klasse entfernen",
+        "copyId": "Eigenschafts-ID kopieren"
+      },
+      "resourceClassInfo": {
+        "collapse": "Einklappen",
+        "expand": "Ausklappen",
+        "noProperties": "Noch keine Eigenschaften definiert.",
+        "edit": "Bearbeiten",
+        "openInstances": "Instanzen öffnen",
+        "copyId": "Klassen-ID kopieren",
+        "cannotDelete": "Diese Klasse kann nicht gelöscht werden, da sie verwendet wird!",
+        "delete": "Löschen"
+      },
+      "propertyForm": {
+        "editTitle": "Eigenschaft bearbeiten",
+        "createTitle": "Eigenschaft erstellen"
       }
     },
     "search": {
