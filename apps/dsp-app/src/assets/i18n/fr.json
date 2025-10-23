@@ -293,7 +293,11 @@
       },
       "propertyForm": {
         "editTitle": "Modifier la propriété",
-        "createTitle": "Créer une propriété"
+        "createTitle": "Créer une propriété",
+        "type": "Type de propriété",
+        "name": "Nom de la propriété",
+        "labelPlaceholder": "Label de la propriété",
+        "commentPlaceholder": "Commentaire"
       },
       "addPropertyMenu": {
         "addProperty": "Ajouter une propriété",
