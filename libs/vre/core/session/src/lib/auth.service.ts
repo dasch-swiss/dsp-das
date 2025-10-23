@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -15,9 +15,6 @@ import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // Lazy-loaded reference to avoid circular dependency
-  private _faroService?: GrafanaFaroService;
-
   constructor(
     private readonly _userService: UserService,
     private readonly _accessTokenService: AccessTokenService,
@@ -25,18 +22,8 @@ export class AuthService {
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _componentCommsService: ComponentCommunicationEventService,
     private readonly _localizationsService: LocalizationService,
-    private readonly _injector: Injector
+    private readonly _grafanaFaroService: GrafanaFaroService
   ) {}
-
-  /**
-   * Lazy-load GrafanaFaroService to break circular dependency
-   */
-  private get faroService(): GrafanaFaroService {
-    if (!this._faroService) {
-      this._faroService = this._injector.get(GrafanaFaroService);
-    }
-    return this._faroService;
-  }
 
   isCredentialsValid$() {
     return this._dspApiConnection.v2.auth.checkCredentials().pipe(
@@ -72,7 +59,7 @@ export class AuthService {
           tap(user => {
             this._localizationsService.setLanguage(user.lang);
             // Track successful login event
-            this.faroService.trackEvent('auth.login', {
+            this._grafanaFaroService.trackEvent('auth.login', {
               success: 'true',
               identifierType,
             });
@@ -81,7 +68,7 @@ export class AuthService {
       }),
       catchError(error => {
         // Track failed login event
-        this.faroService.trackEvent('auth.login', {
+        this._grafanaFaroService.trackEvent('auth.login', {
           success: 'false',
           identifierType,
         });
@@ -93,7 +80,7 @@ export class AuthService {
   logout() {
     this._dspApiConnection.v2.auth.logout().subscribe(() => {
       // Track logout event
-      this.faroService.trackEvent('auth.logout');
+      this._grafanaFaroService.trackEvent('auth.logout');
       this._userService.logout();
       this._accessTokenService.removeTokens();
       this._dspApiConnection.v2.jsonWebToken = '';
