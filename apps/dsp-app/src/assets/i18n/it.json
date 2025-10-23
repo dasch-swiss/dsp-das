@@ -43,7 +43,7 @@
         "signedInAs": "Connesso come",
         "systemAdministration": "Amministrazione di sistema",
         "logout": "Disconnetti",
-        "login": "ACCEDI",
+        "login": "Accedi",
         "myAccount": "Il mio account"
       },
       "editUserDialog": {
@@ -367,12 +367,12 @@
   "resourceEditor": {
     "properties": "Proprietà",
     "labelAnnotations": "Annotazioni",
-    "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
-    "versioned": "You are watching a resource dating from",
-    "seeCurrentVersion": "See current version",
-    "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
-    "notFound": "This resource is not found.",
-    "deleted": "This resource has been deleted.",
+    "restricted": "Accesso limitato: le immagini potrebbero essere mostrate in bassa risoluzione e alcuni contenuti potrebbero essere nascosti.",
+    "versioned": "Questa è una versione obsoleta di questa risorsa.",
+    "seeCurrentVersion": "Vai alla versione più recente",
+    "versionNotValid": "La versione richiesta non è valida. Verrà mostrata la versione più recente.",
+    "notFound": "Risorsa non trovata. Potrebbe essere stata eliminata dal progetto.",
+    "deleted": "Questa risorsa è stata contrassegnata come eliminata.",
     "unauthorized": "You do not have access to this resource.",
     "toolbar": {
       "openInNewTab": "Apri risorsa in una nuova scheda",
@@ -519,7 +519,7 @@
     },
     "resourceProperties": {
       "comment": "Commento",
-      "delete": "Elimina questa risorsa",
+      "delete": "Contrassegna come eliminata",
       "footnotes": "Note a piè di pagina",
       "valueComponents": {
         "searchHelp": "Digita 3 lettere per cercare una risorsa esistente."

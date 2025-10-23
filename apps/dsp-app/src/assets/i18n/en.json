@@ -43,7 +43,7 @@
         "signedInAs": "Signed in as",
         "systemAdministration": "System Administration",
         "logout": "Logout",
-        "login": "LOGIN",
+        "login": "Login",
         "myAccount": "My Account"
       },
       "editUserDialog": {
@@ -367,13 +367,13 @@
   "resourceEditor": {
     "properties": "Properties",
     "labelAnnotations": "Annotations",
-    "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
-    "versioned": "You are watching a resource dating from",
-    "seeCurrentVersion": "See current version",
+    "restricted": "Access restricted: Images may be of lower quality and some values may be hidden.",
+    "versioned": "This is an outdated version of the resource.",
+    "seeCurrentVersion": "Go to current version",
     "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
-    "notFound": "This resource is not found.",
-    "deleted": "This resource has been deleted.",
-    "unauthorized": "You do not have access to this resource.",
+    "notFound": "Resource not found. The resource may have been deleted by the project.",
+    "deleted": "This resource has been marked as deleted.",
+    "unauthorized": "You do not have permission to access this resource.",
     "toolbar": {
       "openInNewTab": "Open resource in new tab",
       "shareResource": "Share resource: {{arkUrl}}",
@@ -519,7 +519,7 @@
     },
     "resourceProperties": {
       "comment": "Comment",
-      "delete": "Delete this resource",
+      "delete": "Mark as deleted",
       "footnotes": "Footnotes",
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."

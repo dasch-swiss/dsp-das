@@ -43,7 +43,7 @@
         "signedInAs": "Connecté en tant que",
         "systemAdministration": "Administration système",
         "logout": "Déconnexion",
-        "login": "CONNEXION",
+        "login": "Connexion",
         "myAccount": "Mon compte"
       },
       "editUserDialog": {
@@ -367,12 +367,12 @@
   "resourceEditor": {
     "properties": "Propriétés",
     "labelAnnotations": "Annotations",
-    "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
-    "versioned": "You are watching a resource dating from",
-    "seeCurrentVersion": "See current version",
-    "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
-    "notFound": "This resource is not found.",
-    "deleted": "This resource has been deleted.",
+    "restricted": "Accès restreint : les images sont susceptibles d'être de qualité inférieure et certaines valeurs d'être masquées.",
+    "versioned": "Ceci est une version obsolète de cette ressource.",
+    "seeCurrentVersion": "Aller à la version actuelle",
+    "versionNotValid": "La version que vous avez demandée n'est pas valide. La dernière version est affichée.",
+    "notFound": "Ressource introuvable. Cette ressource a peut-être été supprimée par le projet.",
+    "deleted": "Cette ressource a été supprimée.",
     "unauthorized": "You do not have access to this resource.",
     "toolbar": {
       "openInNewTab": "Ouvrir la ressource dans un nouvel onglet",
@@ -519,7 +519,7 @@
     },
     "resourceProperties": {
       "comment": "Commentaire",
-      "delete": "Supprimer cette ressource",
+      "delete": "Marquer comme supprimé",
       "footnotes": "Notes de bas de page",
       "valueComponents": {
         "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."

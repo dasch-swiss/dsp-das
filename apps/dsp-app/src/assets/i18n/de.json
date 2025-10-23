@@ -10,7 +10,7 @@
         "login": "Anmelden"
       },
       "account": {
-        "danger": "Gefahrenzone",
+        "danger": "Achtung",
         "deleteButton": "Konto sperren",
         "deleteConfirmation": "Möchten Sie Ihr eigenes Konto sperren?",
         "delete": "Konto löschen",
@@ -43,7 +43,7 @@
         "signedInAs": "Angemeldet als",
         "systemAdministration": "Systemadministration",
         "logout": "Abmelden",
-        "login": "ANMELDEN",
+        "login": "Anmelden",
         "myAccount": "Mein Konto"
       },
       "editUserDialog": {
@@ -367,12 +367,12 @@
   "resourceEditor": {
     "properties": "Eigenschaften",
     "labelAnnotations": "Annotationen",
-    "restricted": "This resource is restricted, file representations may be of lower quality and some properties may be hidden.",
-    "versioned": "You are watching a resource dating from",
-    "seeCurrentVersion": "See current version",
-    "versionNotValid": "The version you requested is not valid. The latest version is displayed.",
-    "notFound": "This resource is not found.",
-    "deleted": "This resource has been deleted.",
+    "restricted": "Nur eingeschränkte Anzeige verfügbar. Bilder werden möglicherweise nicht in voller Qualität angezeigt und gewisse Werte sind eventuell ausgeblendet.",
+    "versioned": "Dies ist eine ältere Version der Ressource.",
+    "seeCurrentVersion": "Zur aktuellen Version",
+    "versionNotValid": "Die angeforderte Version ist ungültig. Die aktuelle Version wird angezeigt.",
+    "notFound": "Ressource nicht gefunden. Eventuell wurde sie vom Projekt gelöscht.",
+    "deleted": "Diese Ressource wurde als gelöscht markiert.",
     "unauthorized": "You do not have access to this resource.",
     "segmentSupport": {
       "createSegmentDialog": {
@@ -481,8 +481,8 @@
     },
     "resourceProperties": {
       "comment": "Kommentar",
-      "delete": "Diese Ressource löschen",
-      "footnotes": "Fußnoten",
+      "delete": "Als gelöscht markieren",
+      "footnotes": "Fussnoten",
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
       },
