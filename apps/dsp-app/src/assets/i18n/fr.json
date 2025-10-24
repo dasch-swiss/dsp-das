@@ -113,7 +113,7 @@
         "downloadErrorWithMessage": "Erreur lors du téléchargement des métadonnées du projet {{shortcode}} : {{errorMessage}}"
       },
       "legalSettings": {
-        "tab": "Légal",
+        "tab": "Paramètres légaux",
         "warning": "Attention: Toute action effectuée ici est permanente.",
         "copyrightHolders": "Titulaires des droits",
         "licenses": "Licences/Déclarations",

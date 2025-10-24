@@ -113,7 +113,7 @@
         "downloadErrorWithMessage": "Error downloading metadata for project {{shortcode}}: {{errorMessage}}"
       },
       "legalSettings": {
-        "tab": "Legal",
+        "tab": "Legal Settings",
         "warning": "Attention: any action you do here is permanent",
         "copyrightHolders": "Copyright holders",
         "licenses": "Licenses/Statements",
