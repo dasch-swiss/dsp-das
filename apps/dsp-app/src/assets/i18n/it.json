@@ -391,8 +391,8 @@
       "moveToTrash": "Sposta risorsa nel cestino.",
       "checkingPermission": "Verifica se la risorsa può essere eliminata...",
       "checkingPermissionErase": "Verifica se la risorsa può essere eliminata...",
-      "eraseResource": "Cancella risorsa",
-      "eraseResourceTooltip": "Cancella definitivamente la risorsa. Questa azione non può essere annullata.",
+      "eraseResource": "Elimina definitivamente",
+      "eraseResourceTooltip": "Elimina definitivamente la risorsa. Questa azione non può essere annullata.",
       "noPermission": "Non hai il permesso di eliminare questa risorsa."
     },
     "infoBar": {
