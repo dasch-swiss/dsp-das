@@ -48,7 +48,7 @@ export class AutoLoginService {
             throw new AppError('Decoded user in JWT token is not valid.');
           }
 
-          return this._authService.afterSuccessfulLogin(userIri, 'iri');
+          return this._authService.afterSuccessfulLogin$(userIri, 'iri');
         }),
         finalize(() => this.hasCheckedCredentials$.next(true))
       )
