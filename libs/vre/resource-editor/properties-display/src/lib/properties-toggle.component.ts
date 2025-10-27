@@ -25,10 +25,9 @@ import { TranslateService } from '@ngx-translate/core';
           <mat-icon>comment</mat-icon>
           {{
             (showAllComments$ | async)
-              ? ('resourceEditor.propertiesDisplay.hide' | translate)
-              : ('resourceEditor.propertiesDisplay.showAll' | translate)
+              ? ('resourceEditor.propertiesDisplay.hideComments' | translate)
+              : ('resourceEditor.propertiesDisplay.showAllComments' | translate)
           }}
-          {{ 'resourceEditor.propertiesDisplay.comments' | translate }}
         </button>
       } @else {
         <button
@@ -67,10 +66,9 @@ import { TranslateService } from '@ngx-translate/core';
         <mat-icon>unfold_more</mat-icon>
         {{
           (propertiesDisplayService.showAllProperties$ | async)
-            ? ('resourceEditor.propertiesDisplay.hideEmpty' | translate)
-            : ('resourceEditor.propertiesDisplay.showAll' | translate)
+            ? ('resourceEditor.propertiesDisplay.hideEmptyProperties' | translate)
+            : ('resourceEditor.propertiesDisplay.showAllProperties' | translate)
         }}
-        {{ 'resourceEditor.propertiesDisplay.properties' | translate }}
       </button>
     } @else {
       <button
