@@ -29,7 +29,7 @@ export class AutoLoginService {
     const decodedToken = this._accessTokenService.decodedAccessToken(encodedJWT);
     if (!decodedToken || this._accessTokenService.isValidToken(decodedToken)) {
       this.hasCheckedCredentials$.next(true);
-      this._accessTokenService.removeTokens();
+      this._authService.cleanupAuthState({ clearJwt: false });
       return;
     }
 
@@ -54,8 +54,7 @@ export class AutoLoginService {
       )
       .subscribe({
         error: () => {
-          this._accessTokenService.removeTokens();
-          this._dspApiConnection.v2.jsonWebToken = '';
+          this._authService.cleanupAuthState();
         },
       });
   }

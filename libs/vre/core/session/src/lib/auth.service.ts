@@ -64,12 +64,43 @@ export class AuthService {
     );
   }
 
+  /**
+   * Cleanup authentication state with configurable options
+   * @param options cleanup configuration
+   * @param options.clearUserState whether to clear user state (default: false)
+   * @param options.clearJwt whether to clear JWT token from connection (default: true)
+   * @param options.reloadPage whether to reload the page (default: false)
+   */
+  cleanupAuthState(
+    options: {
+      clearUserState?: boolean;
+      clearJwt?: boolean;
+      reloadPage?: boolean;
+    } = {}
+  ): void {
+    const { clearUserState = false, clearJwt = true, reloadPage = false } = options;
+
+    if (clearUserState) {
+      this._userService.logout();
+    }
+
+    this._accessTokenService.removeTokens();
+
+    if (clearJwt) {
+      this._dspApiConnection.v2.jsonWebToken = '';
+    }
+
+    if (reloadPage) {
+      window.location.reload();
+    }
+  }
+
+  /**
+   * Logout user - performs API logout and full cleanup
+   */
   logout() {
     this._dspApiConnection.v2.auth.logout().subscribe(() => {
-      this._userService.logout();
-      this._accessTokenService.removeTokens();
-      this._dspApiConnection.v2.jsonWebToken = '';
-      window.location.reload();
+      this.cleanupAuthState({ clearUserState: true, clearJwt: true, reloadPage: true });
     });
   }
 }
