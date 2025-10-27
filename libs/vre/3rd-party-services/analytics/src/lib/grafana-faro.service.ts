@@ -3,10 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Injectable, inject, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { inject, Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
-import { AuthService, AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
 import { Faro, getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
@@ -15,9 +13,6 @@ import { v5 as uuidv5 } from 'uuid';
 @Injectable({ providedIn: 'root' })
 export class GrafanaFaroService {
   private readonly _appConfig = inject(AppConfigService);
-  private readonly _authService = inject(AuthService);
-  private readonly _accessTokenService = inject(AccessTokenService);
-  private readonly _destroyRef = inject(DestroyRef);
 
   private _faroInstance?: Faro;
 
@@ -69,8 +64,6 @@ export class GrafanaFaroService {
           url: faroConfig.collectorUrl,
         });
       }
-
-      this._setupUserTracking();
     } catch (error) {
       // Fail silently - don't break the app if Faro fails to initialize
       console.error('Faro initialization failed:', error);
@@ -109,27 +102,6 @@ export class GrafanaFaroService {
     } catch (faroError) {
       console.error('Faro trackError failed:', faroError);
     }
-  }
-
-  /**
-   * Set up user tracking based on authentication state
-   * Uses hashed user IDs to protect privacy
-   */
-  private _setupUserTracking(): void {
-    this._authService
-      .isCredentialsValid$()
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(isValid => {
-        if (!isValid) {
-          this._removeUser();
-          return;
-        }
-
-        const userIri = this._accessTokenService.getTokenUser();
-        if (userIri) {
-          this._setUser(userIri);
-        }
-      });
   }
 
   /**
