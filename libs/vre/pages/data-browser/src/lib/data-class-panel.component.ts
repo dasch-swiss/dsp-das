@@ -16,11 +16,11 @@ import { DataBrowserPageService } from './data-browser-page.service';
         <h3 style="flex: 1">{{ classSelected.classLabel }}</h3>
         @if (hasProjectMemberRights$ | async) {
           <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
-            Create a resource
+            {{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
           </button>
         }
       </div>
-      <p style="font-style: italic">{{ classSelected.resClass.comment }}</p>
+      <p style="font-style: italic">{{ classSelected.resClass.comments | appStringifyStringLiteral }}</p>
     </div>
     <app-resources-list-fetcher [ontologyLabel]="classSelected.ontologyLabel" [classLabel]="classSelected.classLabel" />
   `,
