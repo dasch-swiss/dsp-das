@@ -33,7 +33,7 @@ export class AuthService {
    * @param identifierOrIri can be email, username, or user IRI
    * @param identifierType type of identifier: 'email', 'username', or 'iri'
    */
-  completeAuthentication$(identifierOrIri: string, identifierType: 'email' | 'username' | 'iri') {
+  afterSuccessfulLogin(identifierOrIri: string, identifierType: 'email' | 'username' | 'iri') {
     return this._userService.loadUser(identifierOrIri, identifierType).pipe(
       tap(user => {
         this._localizationsService.setLanguage(user.lang);
@@ -60,7 +60,7 @@ export class AuthService {
         }
         throw error;
       }),
-      switchMap(() => this.completeAuthentication$(identifier, identifierType))
+      switchMap(() => this.afterSuccessfulLogin(identifier, identifierType))
     );
   }
 
