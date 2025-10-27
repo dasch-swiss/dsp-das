@@ -520,9 +520,7 @@
       "properties": "Proprietà",
       "hide": "Nascondi",
       "hideComments": "Nascondi commenti",
-      "hideEmpty": "Nascondi vuoti",
       "hideEmptyProperties": "Nascondi proprietà vuote",
-      "showAll": "Mostra tutto",
       "showAllComments": "Mostra tutti i commenti",
       "showAllProperties": "Mostra tutte le proprietà"
     },

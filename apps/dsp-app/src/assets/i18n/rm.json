@@ -520,9 +520,7 @@
       "properties": "Properties",
       "hide": "Hide",
       "hideComments": "Hide comments",
-      "hideEmpty": "Hide empty",
       "hideEmptyProperties": "Hide empty properties",
-      "showAll": "Show all",
       "showAllComments": "Show all comments",
       "showAllProperties": "Show all properties"
     },
