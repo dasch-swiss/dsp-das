@@ -23,7 +23,9 @@ import { TranslateService } from '@ngx-translate/core';
         color="primary"
         mat-icon-button
         data-cy="share-button"
-        [matTooltip]="_translateService.instant('resourceEditor.toolbar.shareResource', { arkUrl: resource.versionArkUrl })"
+        [matTooltip]="
+          _translateService.instant('resourceEditor.toolbar.shareResource', { arkUrl: resource.versionArkUrl })
+        "
         matTooltipPosition="above"
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>

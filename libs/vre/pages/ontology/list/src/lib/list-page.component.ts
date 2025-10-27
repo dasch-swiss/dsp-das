@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { ListNodeInfo, ListResponse } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ListInfoFormComponent } from './list-info-form/list-info-form.component';
 import { ListItemService } from './list-item/list-item.service';
@@ -74,10 +74,7 @@ export class ListPageComponent implements OnInit, OnDestroy {
 
   askToDeleteList(list: ListNodeInfo): void {
     this._dialog
-      .afterConfirmation(
-        this._translate.instant('pages.ontology.list.deleteConfirmation'),
-        list.labels[0].value
-      )
+      .afterConfirmation(this._translate.instant('pages.ontology.list.deleteConfirmation'), list.labels[0].value)
       .pipe(switchMap(() => this._listApiService.deleteListNode(list.id)))
       .subscribe(() => {
         this.navigateToDataModels();

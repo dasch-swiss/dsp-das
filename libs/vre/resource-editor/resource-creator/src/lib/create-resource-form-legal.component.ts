@@ -1,8 +1,8 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { CreateResourceFormLegal } from '@dasch-swiss/vre/resource-editor/representations';
 import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
@@ -30,7 +30,10 @@ import { finalize, map } from 'rxjs/operators';
 
     <app-create-resource-form-row [label]="'resourceEditor.resourceCreator.legal.licenseStatement' | translate">
       <mat-form-field>
-        <mat-select [placeholder]="'resourceEditor.resourceCreator.legal.choose' | translate" [formControl]="formGroup.controls.license" data-cy="license-select">
+        <mat-select
+          [placeholder]="'resourceEditor.resourceCreator.legal.choose' | translate"
+          [formControl]="formGroup.controls.license"
+          data-cy="license-select">
           @if (licensesLoading) {
             <mat-option>{{ 'ui.common.status.loading' | translate }}</mat-option>
           }

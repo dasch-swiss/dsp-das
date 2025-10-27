@@ -15,7 +15,9 @@ export interface EditResourceClassDialogProps {
 @Component({
   selector: 'app-edit-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.labels | appStringifyStringLiteral" [subtitle]="'pages.ontology.resourceClassForm.editSubtitle' | translate" />
+    <app-dialog-header
+      [title]="data.labels | appStringifyStringLiteral"
+      [subtitle]="'pages.ontology.resourceClassForm.editSubtitle' | translate" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>

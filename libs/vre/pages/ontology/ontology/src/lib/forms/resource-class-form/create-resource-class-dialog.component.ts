@@ -9,7 +9,9 @@ import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.
 @Component({
   selector: 'app-create-resource-class-dialog',
   template: `
-    <app-dialog-header [title]="data.label" [subtitle]="'pages.ontology.resourceClassForm.createSubtitle' | translate" />
+    <app-dialog-header
+      [title]="data.label"
+      [subtitle]="'pages.ontology.resourceClassForm.createSubtitle' | translate" />
     <div mat-dialog-content>
       <app-resource-class-form [formData]="formData" (afterFormInit)="afterFormInit($event)" />
     </div>

@@ -20,13 +20,13 @@ import {
   UpdateResourcePropertyGuiElement,
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
-import { TranslateService } from '@ngx-translate/core';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -242,9 +242,7 @@ export class OntologyEditService {
         this.lastModificationDate = resClass.lastModificationDate;
         this._loadOntology(this.ontologyId, resClass.id);
         const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
-        this._notification.openSnackBar(
-          this._translate.instant('pages.ontology.service.classCreated', { classLabel })
-        );
+        this._notification.openSnackBar(this._translate.instant('pages.ontology.service.classCreated', { classLabel }));
       })
     );
   }

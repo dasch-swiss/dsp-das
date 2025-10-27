@@ -3,8 +3,8 @@ import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit, ViewChi
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
-import { TranslateService } from '@ngx-translate/core';
 import { PaginatedApiService } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -17,7 +17,11 @@ import { finalize } from 'rxjs/operators';
         @for (authorship of selectedItems; track authorship) {
           <mat-chip-row (removed)="removeItem(authorship)">
             {{ authorship }}
-            <button matChipRemove [attr.aria-label]="_translateService.instant('resourceEditor.resourceCreator.authorship.removeItem', { name: authorship })">
+            <button
+              matChipRemove
+              [attr.aria-label]="
+                _translateService.instant('resourceEditor.resourceCreator.authorship.removeItem', { name: authorship })
+              ">
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>

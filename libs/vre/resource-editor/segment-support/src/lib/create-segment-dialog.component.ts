@@ -2,8 +2,8 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { TranslateService } from '@ngx-translate/core';
 import { SegmentApiService } from './segment-api.service';
 import { SegmentsService } from './segments.service';
 
@@ -18,16 +18,32 @@ export interface CreateSegmentDialogProps {
   template: ` <app-dialog-header
       [title]="'resourceEditor.segmentSupport.createSegmentDialog.createAnnotation' | translate" />
     <div mat-dialog-content>
-      <app-common-input [control]="form.controls.label" [label]="'resourceEditor.segmentSupport.createSegmentDialog.label' | translate" />
-      <app-time-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.start' | translate" [control]="form.controls.start" data-cy="start-input" />
-      <app-time-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.end' | translate" [control]="form.controls.end" data-cy="end-input" />
-      <app-common-input [label]="'resourceEditor.segmentSupport.createSegmentDialog.title' | translate" [control]="form.controls.title" data-cy="title-input" />
-      <app-common-input [label]="'ui.common.fields.description' | translate" [control]="form.controls.description" data-cy="description-input" />
+      <app-common-input
+        [control]="form.controls.label"
+        [label]="'resourceEditor.segmentSupport.createSegmentDialog.label' | translate" />
+      <app-time-input
+        [label]="'resourceEditor.segmentSupport.createSegmentDialog.start' | translate"
+        [control]="form.controls.start"
+        data-cy="start-input" />
+      <app-time-input
+        [label]="'resourceEditor.segmentSupport.createSegmentDialog.end' | translate"
+        [control]="form.controls.end"
+        data-cy="end-input" />
+      <app-common-input
+        [label]="'resourceEditor.segmentSupport.createSegmentDialog.title' | translate"
+        [control]="form.controls.title"
+        data-cy="title-input" />
+      <app-common-input
+        [label]="'ui.common.fields.description' | translate"
+        [control]="form.controls.description"
+        data-cy="description-input" />
       <app-chip-list-input
         [formArray]="form.controls.keywords"
         data-cy="keywords-input"
         [validators]="keywordsValidators" />
-      <app-ck-editor-control [control]="form.controls.comment" [label]="'resourceEditor.resourceProperties.comment' | translate" />
+      <app-ck-editor-control
+        [control]="form.controls.comment"
+        [label]="'resourceEditor.resourceProperties.comment' | translate" />
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close data-cy="cancel-button">{{ 'ui.common.actions.cancel' | translate }}</button>

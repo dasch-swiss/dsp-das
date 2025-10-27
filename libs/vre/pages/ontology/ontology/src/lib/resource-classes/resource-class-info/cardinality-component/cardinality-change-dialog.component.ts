@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Cardinality, Constants, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 import { PropertyInfo } from '../../../ontology.types';
 
@@ -21,7 +21,7 @@ export interface CardinalityInfo {
       [subtitle]="
         _translate.instant('pages.ontology.cardinalityDialog.subtitle', {
           group: data.propertyInfo.propType.group,
-          label: data.propertyInfo.propType.label
+          label: data.propertyInfo.propType.label,
         })
       " />
     <mat-dialog-content>

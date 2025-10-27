@@ -5,7 +5,11 @@ import { CompoundService } from './compound.service';
 @Component({
   selector: 'app-compound-navigation',
   template: ` <span style="display: flex; align-items: center">
-    <button mat-icon-button [disabled]="compoundNavigation.page <= 1" [matTooltip]="'resourceEditor.navigation.firstPage' | translate" (click)="openPage(1)">
+    <button
+      mat-icon-button
+      [disabled]="compoundNavigation.page <= 1"
+      [matTooltip]="'resourceEditor.navigation.firstPage' | translate"
+      (click)="openPage(1)">
       <mat-icon>first_page</mat-icon>
     </button>
     <button
@@ -15,7 +19,10 @@ import { CompoundService } from './compound.service';
       (click)="openPage(compoundNavigation.page - 1)">
       <mat-icon>navigate_before</mat-icon>
     </button>
-    <span class="range">{{ compoundNavigation.page }} {{ 'resourceEditor.navigation.of' | translate }} {{ compoundNavigation.totalPages }}</span>
+    <span class="range"
+      >{{ compoundNavigation.page }} {{ 'resourceEditor.navigation.of' | translate }}
+      {{ compoundNavigation.totalPages }}</span
+    >
     <button
       mat-icon-button
       [disabled]="isForwardButtonDisabled"

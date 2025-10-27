@@ -52,8 +52,7 @@ export class CreateOntologyFormDialogComponent implements OnDestroy {
 
   readonly ontoNamePatternErrorMsg = {
     errorKey: 'pattern',
-    message:
-      'pages.ontology.ontologyForm.namePatternError',
+    message: 'pages.ontology.ontologyForm.namePatternError',
   };
 
   readonly ontoNameExistsErrorMsg = {

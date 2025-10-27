@@ -1,15 +1,17 @@
 import { Component, Inject, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { KnoraApiConnection, ReadResource, UpdateResourceMetadata } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-edit-resource-label-dialog',
-  template: ` <app-dialog-header [title]="initialValue" [subtitle]="'resourceEditor.resourceProperties.editLabel.subtitle' | translate" />
+  template: ` <app-dialog-header
+      [title]="initialValue"
+      [subtitle]="'resourceEditor.resourceProperties.editLabel.subtitle' | translate" />
 
     <div mat-dialog-content>
       <app-common-input [control]="control" [label]="'resourceEditor.resourceProperties.editLabel.label' | translate" />

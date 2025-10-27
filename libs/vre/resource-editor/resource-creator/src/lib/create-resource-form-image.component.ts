@@ -10,13 +10,15 @@ import {
 
 @Component({
   selector: 'app-create-resource-form-image',
-  template: ` <app-create-resource-form-row [label]="'resourceEditor.resourceCreator.image.label' | translate" style="display: block; margin-bottom: 16px">
+  template: ` <app-create-resource-form-row
+    [label]="'resourceEditor.resourceCreator.image.label' | translate"
+    style="display: block; margin-bottom: 16px">
     <div style="margin-bottom: 8px; margin-top: 8px">
       <app-double-chip-selector
         data-cy="image-source-selector"
         [options]="[
           'resourceEditor.resourceCreator.image.uploadFile' | translate,
-          'resourceEditor.resourceCreator.image.linkExternalIIIF' | translate
+          'resourceEditor.resourceCreator.image.linkExternalIIIF' | translate,
         ]"
         [(value)]="isUploadFileTab"
         (valueChange)="onChange($event)" />

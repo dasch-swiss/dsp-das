@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { DeleteValue, KnoraApiConnection, ReadResource, UpdateResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateService } from '@ngx-translate/core';
 import { tap } from 'rxjs';
 import { PropertyValueService } from './property-value.service';
 
@@ -15,7 +15,11 @@ export interface DeleteValueDialogProps {
   selector: 'app-delete-value-dialog',
   template: `
     <app-dialog-header
-      [title]="_translateService.instant('resourceEditor.resourceProperties.deleteValue.title', { label: propertyValueService.propertyDefinition.label })" />
+      [title]="
+        _translateService.instant('resourceEditor.resourceProperties.deleteValue.title', {
+          label: propertyValueService.propertyDefinition.label,
+        })
+      " />
     <div mat-dialog-content>
       {{ 'resourceEditor.resourceProperties.deleteValue.explanation' | translate }}
 
@@ -30,7 +34,9 @@ export interface DeleteValueDialogProps {
       </mat-form-field>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close (click)="dialogRef.close()">{{ 'resourceEditor.resourceProperties.deleteValue.noKeep' | translate }}</button>
+      <button mat-button mat-dialog-close (click)="dialogRef.close()">
+        {{ 'resourceEditor.resourceProperties.deleteValue.noKeep' | translate }}
+      </button>
       <button
         mat-raised-button
         color="primary"

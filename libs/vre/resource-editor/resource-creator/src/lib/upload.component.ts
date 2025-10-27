@@ -1,6 +1,14 @@
 import { HttpEventType } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Constants } from '@dasch-swiss/dsp-js';
 import {
   FileRepresentationType,
@@ -8,6 +16,7 @@ import {
   UploadFileService,
 } from '@dasch-swiss/vre/resource-editor/representations';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -18,13 +27,25 @@ import { finalize } from 'rxjs';
         <input hidden type="file" data-cy="upload-file" (change)="addFileFromClick($event)" #fileInput />
         <mat-icon style="transform: scale(1.6); margin: 8px 0; color: gray">cloud_upload</mat-icon>
         <div class="mat-subtitle-1">{{ 'resourceEditor.resourceCreator.upload.dragAndDrop' | translate }}</div>
-        <div class="mat-subtitle-2">{{ _translateService.instant('resourceEditor.resourceCreator.upload.fileTypesSupported', { types: allowedFileTypes.join(', ') }) }}</div>
+        <div class="mat-subtitle-2">
+          {{
+            _translateService.instant('resourceEditor.resourceCreator.upload.fileTypesSupported', {
+              types: allowedFileTypes.join(', '),
+            })
+          }}
+        </div>
       </div>
     } @else {
       <div class="upload-progress">
         @if (!processing) {
           <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
-          <div class="progress-text">{{ _translateService.instant('resourceEditor.resourceCreator.upload.percentUploaded', { percent: uploadProgress }) }}</div>
+          <div class="progress-text">
+            {{
+              _translateService.instant('resourceEditor.resourceCreator.upload.percentUploaded', {
+                percent: uploadProgress,
+              })
+            }}
+          </div>
         } @else {
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           <div class="progress-text">{{ 'resourceEditor.resourceCreator.upload.processingFile' | translate }}</div>
@@ -104,7 +125,9 @@ export class UploadComponent {
     const fileExtension = supportedExtensions![1].toLowerCase();
     if (!supportedExtensions || !this.allowedFileTypes.some(extensions => fileExtension === extensions)) {
       this._notification.openSnackBar(
-        this._translateService.instant('resourceEditor.resourceCreator.upload.extensionNotSupported', { extension: fileExtension })
+        this._translateService.instant('resourceEditor.resourceCreator.upload.extensionNotSupported', {
+          extension: fileExtension,
+        })
       );
       return;
     }
