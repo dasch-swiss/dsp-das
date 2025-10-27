@@ -1,8 +1,8 @@
 import { Component, inject, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { TranslateService } from '@ngx-translate/core';
 import { getFileValue } from '../get-file-value';
 import {
   ReplaceFileDialogComponent,
@@ -17,11 +17,19 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #more="matMenu" class="representation-menu">
-      <button mat-menu-item (click)="openIIIFnewTab()">{{ 'resourceEditor.representations.audio.openInNewTab' | translate }}</button>
-      <button mat-menu-item [cdkCopyToClipboard]="fileValue.fileUrl">{{ 'resourceEditor.representations.audio.copyUrl' | translate }}</button>
-      <button mat-menu-item (click)="download()">{{ 'resourceEditor.representations.audio.download' | translate }}</button>
+      <button mat-menu-item (click)="openIIIFnewTab()">
+        {{ 'resourceEditor.representations.audio.openInNewTab' | translate }}
+      </button>
+      <button mat-menu-item [cdkCopyToClipboard]="fileValue.fileUrl">
+        {{ 'resourceEditor.representations.audio.copyUrl' | translate }}
+      </button>
+      <button mat-menu-item (click)="download()">
+        {{ 'resourceEditor.representations.audio.download' | translate }}
+      </button>
       @if (resourceFetcherService.userCanEdit$ | async) {
-        <button mat-menu-item (click)="openReplaceFileDialog()">{{ 'resourceEditor.representations.replaceFile' | translate }}</button>
+        <button mat-menu-item (click)="openReplaceFileDialog()">
+          {{ 'resourceEditor.representations.replaceFile' | translate }}
+        </button>
       }
     </mat-menu>`,
   standalone: false,

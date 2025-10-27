@@ -1,9 +1,18 @@
-import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
 import { ReadAudioFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
 import { RepresentationService } from '../representation.service';
 import { MediaPlayerService } from '../video/media-player.service';

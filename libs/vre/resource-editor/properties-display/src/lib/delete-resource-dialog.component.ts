@@ -1,13 +1,15 @@
 import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-resource-dialog',
-  template: ` <app-dialog-header [title]="'resourceEditor.propertiesDisplay.deleteResource.title' | translate" [subtitle]="data.label" />
+  template: ` <app-dialog-header
+      [title]="'resourceEditor.propertiesDisplay.deleteResource.title' | translate"
+      [subtitle]="data.label" />
     <mat-dialog-content class="form-content">
       <mat-form-field class="large-field">
         <mat-label>{{ 'resourceEditor.propertiesDisplay.deleteResource.label' | translate }}</mat-label>
@@ -20,7 +22,9 @@ import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/represe
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button color="primary" mat-dialog-close class="cancel-button center">{{ 'resourceEditor.propertiesDisplay.deleteResource.noKeep' | translate }}</button>
+      <button mat-button color="primary" mat-dialog-close class="cancel-button center">
+        {{ 'resourceEditor.propertiesDisplay.deleteResource.noKeep' | translate }}
+      </button>
       <span class="fill-remaining-space"></span>
       <button
         data-cy="app-delete-resource-dialog-button"

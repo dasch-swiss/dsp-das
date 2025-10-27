@@ -1,9 +1,9 @@
 import { Component, inject, Input, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import {
   ReplaceFileDialogComponent,
@@ -28,9 +28,13 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         (click)="openSnackBar(_translateService.instant('resourceEditor.representations.video.urlCopied'))">
         {{ 'resourceEditor.representations.video.copyUrl' | translate }}
       </button>
-      <button mat-menu-item class="menu-content" (click)="downloadVideo()">{{ 'resourceEditor.representations.video.download' | translate }}</button>
+      <button mat-menu-item class="menu-content" (click)="downloadVideo()">
+        {{ 'resourceEditor.representations.video.download' | translate }}
+      </button>
       @if (resourceFetcherService.userCanEdit$ | async) {
-        <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">{{ 'resourceEditor.representations.replaceFile' | translate }}</button>
+        <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">
+          {{ 'resourceEditor.representations.replaceFile' | translate }}
+        </button>
       }
     </mat-menu>`,
   standalone: false,

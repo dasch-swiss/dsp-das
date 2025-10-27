@@ -21,9 +21,13 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #more="matMenu" class="representation-menu">
-          <button class="menu-content" mat-menu-item (click)="download()">{{ 'resourceEditor.representations.downloadFile' | translate }}</button>
+          <button class="menu-content" mat-menu-item (click)="download()">
+            {{ 'resourceEditor.representations.downloadFile' | translate }}
+          </button>
           @if (resourceFetcherService.userCanEdit$ | async) {
-          <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">{{ 'resourceEditor.representations.replaceFile' | translate }}</button>
+          <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+            {{ 'resourceEditor.representations.replaceFile' | translate }}
+          </button>
           }
         </mat-menu>
       </span>
@@ -58,7 +62,12 @@
           [disabled]="failedToLoad">
           <mat-icon>adjust</mat-icon>
         </button>
-        <button mat-icon-button id="DSP_PDF_ZOOM_IN" [matTooltip]="'resourceEditor.representations.document.zoomIn' | translate" (click)="zoom(+1)" [disabled]="failedToLoad">
+        <button
+          mat-icon-button
+          id="DSP_PDF_ZOOM_IN"
+          [matTooltip]="'resourceEditor.representations.document.zoomIn' | translate"
+          (click)="zoom(+1)"
+          [disabled]="failedToLoad">
           <mat-icon>add_circle_outline</mat-icon>
         </button>
       </span>
@@ -102,9 +111,13 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #more="matMenu" class="mat-menu-custom-black">
-        <button class="menu-content" mat-menu-item (click)="download()" [disabled]="failedToLoad">{{ 'resourceEditor.representations.downloadFile' | translate }}</button>
+        <button class="menu-content" mat-menu-item (click)="download()" [disabled]="failedToLoad">
+          {{ 'resourceEditor.representations.downloadFile' | translate }}
+        </button>
         @if (resourceFetcherService.userCanEdit$ | async) {
-        <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">{{ 'resourceEditor.representations.replaceFile' | translate }}</button>
+        <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+          {{ 'resourceEditor.representations.replaceFile' | translate }}
+        </button>
         }
       </mat-menu>
     </div>

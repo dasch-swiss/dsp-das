@@ -11,10 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
 import { ReadMovingImageFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { MediaControlService, SegmentsService } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { RepresentationService } from '../representation.service';

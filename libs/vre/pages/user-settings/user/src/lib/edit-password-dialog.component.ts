@@ -28,7 +28,7 @@ export interface EditPasswordDialogProps {
             [placeholder]="'pages.userSettings.passwordForm.currentPasswordPlaceholder' | translate"
             [showToggleVisibility]="true"
             [validatorErrors]="[
-              { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate }
+              { errorKey: 'incorrect', message: 'pages.userSettings.passwordForm.incorrectPassword' | translate },
             ]" />
 
           <button mat-raised-button color="primary" (click)="checkAdminPassword()">

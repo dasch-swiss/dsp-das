@@ -9,9 +9,9 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadDocumentFileValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspDialogConfig } from '@dasch-swiss/vre/core/config';
+import { TranslateService } from '@ngx-translate/core';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 import {
   ReplaceFileDialogComponent,

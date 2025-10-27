@@ -1,10 +1,10 @@
 import { Component, inject, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Constants, ReadColorValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { RegionService, ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs';
 
 @Component({
@@ -39,7 +39,11 @@ import { take } from 'rxjs';
         mat-icon-button
         class="share-res"
         data-cy="share-button"
-        [matTooltip]="_translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.shareResource', { arkUrl: resource.versionArkUrl })"
+        [matTooltip]="
+          _translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.shareResource', {
+            arkUrl: resource.versionArkUrl,
+          })
+        "
         matTooltipPosition="above"
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
@@ -61,7 +65,11 @@ import { take } from 'rxjs';
         matTooltipPosition="above"
         data-cy="copy-ark-url-button"
         [cdkCopyToClipboard]="resource.versionArkUrl"
-        (click)="this.notification.openSnackBar(_translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.arkUrlCopied'))">
+        (click)="
+          this.notification.openSnackBar(
+            _translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.arkUrlCopied')
+          )
+        ">
         <mat-icon>content_copy</mat-icon>
         {{ 'resourceEditor.propertiesDisplay.annotationToolbar.copyArkUrlToClipboard' | translate }}
       </button>
@@ -71,7 +79,11 @@ import { take } from 'rxjs';
         data-cy="copy-internal-link-button"
         matTooltipPosition="above"
         [cdkCopyToClipboard]="resource.id"
-        (click)="this.notification.openSnackBar(_translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.internalLinkCopied'))">
+        (click)="
+          this.notification.openSnackBar(
+            _translateService.instant('resourceEditor.propertiesDisplay.annotationToolbar.internalLinkCopied')
+          )
+        ">
         <mat-icon>content_copy</mat-icon>
         {{ 'resourceEditor.propertiesDisplay.annotationToolbar.copyInternalLinkToClipboard' | translate }}
       </button>

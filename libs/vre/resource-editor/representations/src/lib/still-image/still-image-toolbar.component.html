@@ -54,15 +54,27 @@
       <mat-icon>settings</mat-icon>
     </div>
 
-    <div class="clickable-icon" data-cy="zoom-out" [matTooltip]="'resourceEditor.representations.stillImage.zoomOut' | translate" (click)="osd.zoom(-1)">
+    <div
+      class="clickable-icon"
+      data-cy="zoom-out"
+      [matTooltip]="'resourceEditor.representations.stillImage.zoomOut' | translate"
+      (click)="osd.zoom(-1)">
       <mat-icon>zoom_out</mat-icon>
     </div>
 
-    <div class="clickable-icon" data-cy="zoom-in" [matTooltip]="'resourceEditor.representations.stillImage.zoomIn' | translate" (click)="osd.zoom(1)">
+    <div
+      class="clickable-icon"
+      data-cy="zoom-in"
+      [matTooltip]="'resourceEditor.representations.stillImage.zoomIn' | translate"
+      (click)="osd.zoom(1)">
       <mat-icon>zoom_in</mat-icon>
     </div>
 
-    <div class="clickable-icon" data-cy="zoom-reset" [matTooltip]="'resourceEditor.representations.stillImage.resetZoom' | translate" (click)="osd.viewer.viewport.goHome()">
+    <div
+      class="clickable-icon"
+      data-cy="zoom-reset"
+      [matTooltip]="'resourceEditor.representations.stillImage.resetZoom' | translate"
+      (click)="osd.viewer.viewport.goHome()">
       <mat-icon>other_houses</mat-icon>
     </div>
 

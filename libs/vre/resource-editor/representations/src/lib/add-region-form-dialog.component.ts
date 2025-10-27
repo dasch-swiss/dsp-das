@@ -14,8 +14,12 @@ export interface AddRegionFormDialogProps {
       [subtitle]="'resourceEditor.representations.addRegionFormDialog.subtitle' | translate" />
     <mat-dialog-content>
       <form [formGroup]="regionForm" class="form-content">
-        <app-common-input [label]="'resourceEditor.representations.addRegionFormDialog.label' | translate" [control]="regionForm.controls.label" />
-        <app-ck-editor-control [control]="regionForm.controls.comment" [label]="'resourceEditor.representations.addRegionFormDialog.comment' | translate" />
+        <app-common-input
+          [label]="'resourceEditor.representations.addRegionFormDialog.label' | translate"
+          [control]="regionForm.controls.label" />
+        <app-ck-editor-control
+          [control]="regionForm.controls.comment"
+          [label]="'resourceEditor.representations.addRegionFormDialog.comment' | translate" />
         <app-color-picker [formControl]="regionForm.controls.color"></app-color-picker>
       </form>
     </mat-dialog-content>

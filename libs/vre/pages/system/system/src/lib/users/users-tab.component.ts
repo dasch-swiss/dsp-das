@@ -17,7 +17,7 @@ import { UsersTabService } from './users-tab.service';
         <app-double-chip-selector
           [options]="[
             _translateService.instant('pages.system.activeUsersCount', { count: users[0].length }),
-            _translateService.instant('pages.system.inactiveUsersCount', { count: users[1].length })
+            _translateService.instant('pages.system.inactiveUsersCount', { count: users[1].length }),
           ]"
           [(value)]="showActiveUsers" />
       </div>

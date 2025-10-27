@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnChanges } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-properties-toggle',
@@ -13,11 +13,22 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
           color="primary"
           class="toggle-props"
           data-cy="show-all-comments"
-          [matTooltip]="_translateService.instant((showAllComments$ | async) ? 'resourceEditor.propertiesDisplay.hideComments' : 'resourceEditor.propertiesDisplay.showAllComments')"
+          [matTooltip]="
+            _translateService.instant(
+              (showAllComments$ | async)
+                ? 'resourceEditor.propertiesDisplay.hideComments'
+                : 'resourceEditor.propertiesDisplay.showAllComments'
+            )
+          "
           matTooltipPosition="above"
           (click)="toggleShowAllComments()">
           <mat-icon>comment</mat-icon>
-          {{ (showAllComments$ | async) ? ('resourceEditor.propertiesDisplay.hide' | translate) : ('resourceEditor.propertiesDisplay.showAll' | translate) }} {{ 'resourceEditor.propertiesDisplay.comments' | translate }}
+          {{
+            (showAllComments$ | async)
+              ? ('resourceEditor.propertiesDisplay.hide' | translate)
+              : ('resourceEditor.propertiesDisplay.showAll' | translate)
+          }}
+          {{ 'resourceEditor.propertiesDisplay.comments' | translate }}
         </button>
       } @else {
         <button
@@ -25,7 +36,13 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
           color="primary"
           class="toggle-props"
           data-cy="show-all-comments"
-          [matTooltip]="_translateService.instant((showAllComments$ | async) ? 'resourceEditor.propertiesDisplay.hideComments' : 'resourceEditor.propertiesDisplay.showAllComments')"
+          [matTooltip]="
+            _translateService.instant(
+              (showAllComments$ | async)
+                ? 'resourceEditor.propertiesDisplay.hideComments'
+                : 'resourceEditor.propertiesDisplay.showAllComments'
+            )
+          "
           matTooltipPosition="above"
           (click)="toggleShowAllComments()">
           <mat-icon>comment</mat-icon>
@@ -38,11 +55,22 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
         color="primary"
         class="toggle-props"
         data-cy="show-all-properties"
-        [matTooltip]="_translateService.instant((propertiesDisplayService.showAllProperties$ | async) ? 'resourceEditor.propertiesDisplay.hideEmptyProperties' : 'resourceEditor.propertiesDisplay.showAllProperties')"
+        [matTooltip]="
+          _translateService.instant(
+            (propertiesDisplayService.showAllProperties$ | async)
+              ? 'resourceEditor.propertiesDisplay.hideEmptyProperties'
+              : 'resourceEditor.propertiesDisplay.showAllProperties'
+          )
+        "
         matTooltipPosition="above"
         (click)="toggleShowAllProps()">
         <mat-icon>unfold_more</mat-icon>
-        {{ (propertiesDisplayService.showAllProperties$ | async) ? ('resourceEditor.propertiesDisplay.hideEmpty' | translate) : ('resourceEditor.propertiesDisplay.showAll' | translate) }} {{ 'resourceEditor.propertiesDisplay.properties' | translate }}
+        {{
+          (propertiesDisplayService.showAllProperties$ | async)
+            ? ('resourceEditor.propertiesDisplay.hideEmpty' | translate)
+            : ('resourceEditor.propertiesDisplay.showAll' | translate)
+        }}
+        {{ 'resourceEditor.propertiesDisplay.properties' | translate }}
       </button>
     } @else {
       <button
@@ -50,7 +78,13 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
         color="primary"
         class="toggle-props"
         data-cy="show-all-properties"
-        [matTooltip]="_translateService.instant((propertiesDisplayService.showAllProperties$ | async) ? 'resourceEditor.propertiesDisplay.hideEmptyProperties' : 'resourceEditor.propertiesDisplay.showAllProperties')"
+        [matTooltip]="
+          _translateService.instant(
+            (propertiesDisplayService.showAllProperties$ | async)
+              ? 'resourceEditor.propertiesDisplay.hideEmptyProperties'
+              : 'resourceEditor.propertiesDisplay.showAllProperties'
+          )
+        "
         matTooltipPosition="above"
         (click)="toggleShowAllProps()">
         <mat-icon>unfold_more</mat-icon>

@@ -1,6 +1,5 @@
 import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import {
   KnoraApiConnection,
   ReadResource,
@@ -10,6 +9,7 @@ import {
   UpdateStillImageFileValue,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { TranslateService } from '@ngx-translate/core';
 import { FileForm } from '../file-form.type';
 import { FileRepresentationType } from '../file-representation.type';
 import { fileValueMapping } from '../file-value-mapping';
@@ -32,7 +32,13 @@ export interface ReplaceFileDialogProps {
           <div class="icon">
             <mat-icon>warning</mat-icon>
           </div>
-          <div class="message">{{ _translateService.instant('resourceEditor.representations.replaceFileDialog.willBeReplaced', { title: data.title }) }}</div>
+          <div class="message">
+            {{
+              _translateService.instant('resourceEditor.representations.replaceFileDialog.willBeReplaced', {
+                title: data.title,
+              })
+            }}
+          </div>
         </div>
       </div>
 

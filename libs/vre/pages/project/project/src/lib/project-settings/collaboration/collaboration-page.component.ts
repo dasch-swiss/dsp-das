@@ -22,7 +22,10 @@ import { CollaborationPageService } from './collaboration-page.service';
               <app-double-chip-selector
                 [options]="[
                   ('pages.project.collaboration.activeUsers' | translate) + ' (' + activeProjectMembers.length + ')',
-                  ('pages.project.collaboration.inactiveUsers' | translate) + ' (' + inactiveProjectMembers.length + ')',
+                  ('pages.project.collaboration.inactiveUsers' | translate) +
+                    ' (' +
+                    inactiveProjectMembers.length +
+                    ')',
                 ]"
                 [(value)]="showActiveUsers" />
             </div>

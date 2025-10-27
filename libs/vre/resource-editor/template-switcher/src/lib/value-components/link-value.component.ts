@@ -42,7 +42,9 @@ import { LinkValueDataService } from './link-value-data.service';
         [displayWith]="displayResource.bind(this)"
         (closed)="handleNonSelectedValues()">
         @if (resources.length === 0 && !loading) {
-          <mat-option [disabled]="true">{{ 'resourceEditor.templateSwitcher.linkValue.noResults' | translate }}</mat-option>
+          <mat-option [disabled]="true">{{
+            'resourceEditor.templateSwitcher.linkValue.noResults' | translate
+          }}</mat-option>
         }
         @for (rc of _linkValueDataService.resourceClasses; track trackByResourceClassFn($index, rc)) {
           <mat-option (click)="openCreateResourceDialog($event, rc.id, rc.label)">

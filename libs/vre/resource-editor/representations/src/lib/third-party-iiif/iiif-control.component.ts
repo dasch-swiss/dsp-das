@@ -53,10 +53,22 @@ export class IiifControlComponent implements OnInit, OnDestroy {
   private readonly _translateService = inject(TranslateService);
 
   readonly validatorErrors = [
-    { errorKey: 'invalidIiifUrl', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidUrl') },
-    { errorKey: 'previewImageError', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.previewImageError') },
-    { errorKey: 'infoJsonError', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.infoJsonError') },
-    { errorKey: 'invalidHost', message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidHost') },
+    {
+      errorKey: 'invalidIiifUrl',
+      message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidUrl'),
+    },
+    {
+      errorKey: 'previewImageError',
+      message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.previewImageError'),
+    },
+    {
+      errorKey: 'infoJsonError',
+      message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.infoJsonError'),
+    },
+    {
+      errorKey: 'invalidHost',
+      message: this._translateService.instant('resourceEditor.representations.iiifControl.errors.invalidHost'),
+    },
   ];
 
   constructor(private readonly _cdr: ChangeDetectorRef) {}

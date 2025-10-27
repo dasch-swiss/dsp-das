@@ -14,7 +14,12 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
   template: `
     <ng-template #intEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
-        <input matInput [formControl]="item" type="number" data-cy="int-input" [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' 42'" />
+        <input
+          matInput
+          [formControl]="item"
+          type="number"
+          data-cy="int-input"
+          [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' 42'" />
         @if (item.errors; as errors) {
           <mat-error>
             {{ errors | humanReadableError }}
@@ -25,7 +30,12 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
 
     <ng-template #decimalEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
-        <input matInput [formControl]="item" type="number" step="0.05" [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' 3.14'" />
+        <input
+          matInput
+          [formControl]="item"
+          type="number"
+          step="0.05"
+          [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' 3.14'" />
       </mat-form-field>
       @if (item.touched && item.errors; as errors) {
         <mat-error>
@@ -63,7 +73,11 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
 
     <ng-template #paragraphEditorTpl let-item="item">
       <mat-form-field style="width: 100%">
-        <textarea matInput [formControl]="item" rows="9" [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' Lorem ipsum ...'"></textarea>
+        <textarea
+          matInput
+          [formControl]="item"
+          rows="9"
+          [placeholder]="('resourceEditor.templateSwitcher.example' | translate) + ' Lorem ipsum ...'"></textarea>
       </mat-form-field>
       @if (item.touched && item.errors; as errors) {
         <mat-error>

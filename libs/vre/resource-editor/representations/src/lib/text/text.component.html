@@ -27,7 +27,9 @@
             {{ 'resourceEditor.representations.downloadFile' | translate }}
           </button>
           @if (resourceFetcherService.userCanEdit$ | async) {
-          <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">{{ 'resourceEditor.representations.replaceFile' | translate }}</button>
+          <button class="menu-content" mat-menu-item (click)="openReplaceFileDialog()">
+            {{ 'resourceEditor.representations.replaceFile' | translate }}
+          </button>
           }
         </mat-menu>
       </div>
