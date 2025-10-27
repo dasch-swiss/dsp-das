@@ -17,7 +17,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
           <button
             mat-flat-button
             (click)="openCreateLinkDialog(selectedResources)"
-            [disabled]="isCreateLinkDisabled$ | async">
+            [disabled]="isCreateLinkButtonDisabled$ | async">
             {{ 'pages.dataBrowser.resourceListSelection.createLinkObject' | translate }}
           </button>
         }
@@ -33,7 +33,7 @@ export class ResourceListSelectionComponent {
     map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
   );
 
-  isCreateLinkDisabled$ = this.multipleViewerService.selectedResources$.pipe(
+  isCreateLinkButtonDisabled$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
       if (resources.length === 0) return true;
       const projectUuid = resources[0].attachedToProject;
