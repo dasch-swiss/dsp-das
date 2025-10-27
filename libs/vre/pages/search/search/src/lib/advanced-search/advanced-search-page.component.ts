@@ -12,7 +12,7 @@ import { QueryObject, provideAdvancedSearch } from '@dasch-swiss/vre/pages/searc
   providers: [...provideAdvancedSearch()],
 })
 export class AdvancedSearchPageComponent implements OnInit {
-  uuid: string;
+  uuid!: string;
 
   constructor(
     private _router: Router,

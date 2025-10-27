@@ -23,7 +23,7 @@ export interface GravsearchPropertyString {
 export class PropertyFormItem {
   readonly id = uuidv4();
   private _selectedProperty: PropertyData | undefined;
-  private _selectedOperator: Operator | undefined;
+  private _selectedOperator: Operator = Operator.Equals;
   private _searchValue: string | PropertyFormItem[] | undefined;
   private _searchValueLabel: string | undefined;
   list: ListNodeV2 | undefined;
@@ -36,9 +36,9 @@ export class PropertyFormItem {
     return this._selectedProperty;
   }
 
-  set selectedProperty(prop: PropertyData | undefined) {
+  set selectedProperty(prop: PropertyData) {
     this._selectedProperty = prop;
-    this.selectedOperator = undefined;
+    this.selectedOperator = Operator.Equals; // default operator when property changes
   }
 
   get searchValueLabel(): string | undefined {
@@ -67,7 +67,7 @@ export class PropertyFormItem {
     return this._selectedOperator;
   }
 
-  set selectedOperator(operator: Operator | undefined) {
+  set selectedOperator(operator: Operator) {
     this._selectedOperator = operator;
     this.searchValue = undefined;
     this._searchValueLabel = undefined; // Todo: not needed currently -> remove after proper refactor?

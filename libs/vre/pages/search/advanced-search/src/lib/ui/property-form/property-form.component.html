@@ -48,11 +48,7 @@
       *ngIf="propertyFormItem.selectedOperator && !existanceOps.includes(propertyFormItem.selectedOperator)"
       class="adv-property-form">
       <app-property-form-value
-        *ngIf="
-          (!propertyFormItem.selectedProperty?.isLinkProperty ||
-            propertyFormItem.selectedProperty?.objectType === constants.Label) &&
-          propertyFormItem.selectedProperty?.objectType !== constants.ListValue
-        "
+        *ngIf="!propertyFormItem.selectedProperty?.isLinkProperty && propertyFormItem.selectedProperty?.objectType !== constants.ListValue"
         [objectType]="propertyFormItem.selectedProperty?.objectType"
         [value]="propertyFormItem.searchValue"
         (emitValueChanged)="onValueChanged($event)" />

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { tap, map, distinctUntilChanged, filter } from 'rxjs';
+import { map } from 'rxjs';
 import { PropertyFormItem, PropertyData, ApiData, ParentChildPropertyPair, SearchItem, OrderByItem } from '../model';
 import { Operator } from './operators.config';
 import { SearchStateService } from './search-state.service';
@@ -115,10 +115,5 @@ export class PropertyFormManager {
     }
     property.searchValue = searchValue;
     this.searchStateService.updatePropertyForm(property);
-  }
-
-  // Type guard function to check if the value adheres to ApiData interface
-  private _isApiData(value: any): value is ApiData {
-    return value && typeof value === 'object' && 'iri' in value && 'label' in value;
   }
 }

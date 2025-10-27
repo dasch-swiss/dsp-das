@@ -1,7 +1,7 @@
 <div class="value-form-container" *ngIf="objectType" [ngSwitch]="objectType">
   <!-- property label -->
   <mat-form-field *ngSwitchCase="resourceLabel">
-    <mat-label>Property Label</mat-label>
+    <mat-label>Label's value</mat-label>
     <input matInput type="text" [formControl]="inputControl" data-cy="label-input" />
   </mat-form-field>
 
