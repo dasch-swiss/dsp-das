@@ -65,7 +65,7 @@
         "errors": {
           "shortcodePattern": "This field must contain letters from A to F and 0 to 9",
           "shortcodeExists": "This shortcode already exists",
-          "whitespace": "no whitespace"
+          "whitespace": "No whitespace is allowed."
         }
       },
       "editProjectFormPage": {

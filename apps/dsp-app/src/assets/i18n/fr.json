@@ -65,7 +65,7 @@
         "errors": {
           "shortcodePattern": "Ce champ doit contenir des lettres de A à F et des chiffres de 0 à 9",
           "shortcodeExists": "Ce code court existe déjà",
-          "whitespace": "aucun espace"
+          "whitespace": "Aucun espace n'est autorisé."
         }
       },
       "editProjectFormPage": {

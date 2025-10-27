@@ -65,7 +65,7 @@
         "errors": {
           "shortcodePattern": "Dieses Feld darf nur Buchstaben von A bis F und Zahlen von 0 bis 9 enthalten",
           "shortcodeExists": "Dieser Shortcode existiert bereits",
-          "whitespace": "keine Leerzeichen"
+          "whitespace": "Leerzeichen sind nicht erlaubt."
         }
       },
       "editProjectFormPage": {
