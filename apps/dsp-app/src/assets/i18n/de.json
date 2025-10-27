@@ -281,6 +281,10 @@
         "removeFromClass": "Aus Klasse entfernen",
         "copyId": "Eigenschafts-ID kopieren"
       },
+      "propertyInfo": {
+        "usedIn": "Verwendet in",
+        "notUsed": "Nicht verwendet"
+      },
       "resourceClassInfo": {
         "collapse": "Einklappen",
         "expand": "Ausklappen",
@@ -297,7 +301,8 @@
         "type": "Eigenschaftstyp",
         "name": "Eigenschaftsname",
         "labelPlaceholder": "Eigenschaftsbezeichnung",
-        "commentPlaceholder": "Kommentar"
+        "commentPlaceholder": "Kommentar",
+        "selectResourceClass": "Ressourcen-Klasse auswählen"
       },
       "addPropertyMenu": {
         "addProperty": "Eigenschaft hinzufügen",
@@ -455,7 +460,15 @@
       "standoffLinkTooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
       "standoffLinkLabel": "hat Standoff-Link",
       "annotationToolbar": {
-        "highlightRegion": "Region hervorheben"
+        "highlightRegion": "Region hervorheben",
+        "openInNewTab": "Annotation in neuem Tab öffnen",
+        "shareResource": "Annotation teilen: {{arkUrl}}",
+        "copyArkUrl": "ARK-URL kopieren",
+        "copyArkUrlToClipboard": "ARK-URL in Zwischenablage kopieren",
+        "arkUrlCopied": "ARK-URL in Zwischenablage kopiert!",
+        "copyInternalLink": "Internen Link kopieren",
+        "copyInternalLinkToClipboard": "Internen Link in Zwischenablage kopieren",
+        "internalLinkCopied": "Interner Link in Zwischenablage kopiert!"
       },
       "comments": "Kommentare",
       "properties": "Eigenschaften",
@@ -469,6 +482,11 @@
     },
     "permissionInfo": {
       "label": "Berechtigungen",
+      "tooltip": "Ressourcenberechtigungen",
+      "projectAdmin": "Projekt-Admin",
+      "projectMember": "Projektmitglied",
+      "knownUser": "Bekannte:r Nutzer:in",
+      "unknownUser": "Unbekannte:r Nutzer:in",
       "usersPermissions": "Ihre Berechtigungen",
       "interactions": {
         "restrictedView": "Leseberechtigung mit Restriktion (RV)",
@@ -476,13 +494,22 @@
         "modify": "Schreibberechtigung (M)",
         "delete": "Löschberechtigung (D)",
         "changeRights": "Administrationsberechtigung (CR)"
-      },
-      "tooltip": "Ressourcenberechtigungen"
+      }
     },
     "resourceProperties": {
       "comment": "Kommentar",
       "delete": "Als gelöscht markieren",
       "footnotes": "Fussnoten",
+      "actions": {
+        "creationInfo": "Erstellt am {{date}} von {{creator}}",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "cannotDeleteRequired": "Erforderliche Eigenschaft kann nicht gelöscht werden",
+        "undo": "Rückgängig",
+        "addComment": "Kommentar hinzufügen",
+        "removeComment": "Kommentar entfernen",
+        "save": "Speichern"
+      },
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
       },

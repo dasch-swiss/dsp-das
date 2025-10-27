@@ -281,6 +281,10 @@
         "removeFromClass": "Rimuovi dalla classe",
         "copyId": "Copia ID della proprietà"
       },
+      "propertyInfo": {
+        "usedIn": "Usato in",
+        "notUsed": "Non usato"
+      },
       "resourceClassInfo": {
         "collapse": "Riduci",
         "expand": "Espandi",
@@ -297,7 +301,8 @@
         "type": "Tipo di proprietà",
         "name": "Nome della proprietà",
         "labelPlaceholder": "Etichetta della proprietà",
-        "commentPlaceholder": "Commento"
+        "commentPlaceholder": "Commento",
+        "selectResourceClass": "Seleziona classe di risorsa"
       },
       "addPropertyMenu": {
         "addProperty": "Aggiungi proprietà",
@@ -493,7 +498,15 @@
       "standoffLinkTooltip": "Rappresenta un link in markup standoff da una risorsa a un'altra",
       "standoffLinkLabel": "ha un link standoff",
       "annotationToolbar": {
-        "highlightRegion": "Evidenzia regione"
+        "highlightRegion": "Evidenzia regione",
+        "openInNewTab": "Apri annotazione in nuova scheda",
+        "shareResource": "Condividi annotazione: {{arkUrl}}",
+        "copyArkUrl": "Copia URL ARK",
+        "copyArkUrlToClipboard": "Copia URL ARK negli appunti",
+        "arkUrlCopied": "URL ARK copiato negli appunti!",
+        "copyInternalLink": "Copia link interno",
+        "copyInternalLinkToClipboard": "Copia link interno negli appunti",
+        "internalLinkCopied": "Link interno copiato negli appunti!"
       },
       "comments": "Commenti",
       "properties": "Proprietà",
@@ -508,6 +521,10 @@
     "permissionInfo": {
       "label": "Permessi",
       "tooltip": "Permessi della risorsa",
+      "projectAdmin": "Amministratore del progetto",
+      "projectMember": "Membro del progetto",
+      "knownUser": "Utente conosciuto",
+      "unknownUser": "Utente sconosciuto",
       "usersPermissions": "I tuoi permessi",
       "interactions": {
         "restrictedView": "Permesso di visualizzazione limitata (RV)",
@@ -521,6 +538,16 @@
       "comment": "Commento",
       "delete": "Contrassegna come eliminata",
       "footnotes": "Note a piè di pagina",
+      "actions": {
+        "creationInfo": "Creato il {{date}} da {{creator}}",
+        "edit": "Modifica",
+        "delete": "Elimina",
+        "cannotDeleteRequired": "Impossibile eliminare la proprietà richiesta",
+        "undo": "Annulla",
+        "addComment": "Aggiungi commento",
+        "removeComment": "Rimuovi commento",
+        "save": "Salva"
+      },
       "valueComponents": {
         "searchHelp": "Digita 3 lettere per cercare una risorsa esistente."
       },

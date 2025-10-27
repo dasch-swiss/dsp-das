@@ -281,6 +281,10 @@
         "removeFromClass": "Remove from class",
         "copyId": "Copy property ID"
       },
+      "propertyInfo": {
+        "usedIn": "Used in",
+        "notUsed": "Not used"
+      },
       "resourceClassInfo": {
         "collapse": "Collapse",
         "expand": "Expand",
@@ -297,7 +301,8 @@
         "type": "Property type",
         "name": "Property name",
         "labelPlaceholder": "Property label",
-        "commentPlaceholder": "Comment"
+        "commentPlaceholder": "Comment",
+        "selectResourceClass": "Select resource class"
       },
       "addPropertyMenu": {
         "addProperty": "Add property",
@@ -493,7 +498,15 @@
       "standoffLinkTooltip": "Represent a link in standoff markup from one resource to another",
       "standoffLinkLabel": "has Standoff link",
       "annotationToolbar": {
-        "highlightRegion": "Highlight Region"
+        "highlightRegion": "Highlight Region",
+        "openInNewTab": "Open annotation in new tab",
+        "shareResource": "Share annotation: {{arkUrl}}",
+        "copyArkUrl": "Copy ARK url",
+        "copyArkUrlToClipboard": "Copy ARK url to clipboard",
+        "arkUrlCopied": "ARK URL copied to clipboard!",
+        "copyInternalLink": "Copy internal link",
+        "copyInternalLinkToClipboard": "Copy internal link to clipboard",
+        "internalLinkCopied": "Internal link copied to clipboard!"
       },
       "comments": "Comments",
       "properties": "Properties",
@@ -508,6 +521,10 @@
     "permissionInfo": {
       "label": "Permissions",
       "tooltip": "Resource permissions",
+      "projectAdmin": "Project Admin",
+      "projectMember": "Project Member",
+      "knownUser": "Known User",
+      "unknownUser": "Unknown User",
       "usersPermissions": "Your permissions",
       "interactions": {
         "restrictedView": "Restricted view permission (RV)",
@@ -519,8 +536,18 @@
     },
     "resourceProperties": {
       "comment": "Comment",
-      "delete": "Delete this resource",
+      "delete": "Mark as deleted",
       "footnotes": "Footnotes",
+      "actions": {
+        "creationInfo": "Created on {{date}} by {{creator}}",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cannotDeleteRequired": "Cannot delete required property",
+        "undo": "Undo",
+        "addComment": "Add comment",
+        "removeComment": "Remove comment",
+        "save": "Save"
+      },
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."
       },

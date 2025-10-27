@@ -281,6 +281,10 @@
         "removeFromClass": "Retirer de la classe",
         "copyId": "Copier l'ID de la propriété"
       },
+      "propertyInfo": {
+        "usedIn": "Utilisé dans",
+        "notUsed": "Non utilisé"
+      },
       "resourceClassInfo": {
         "collapse": "Réduire",
         "expand": "Développer",
@@ -297,7 +301,8 @@
         "type": "Type de propriété",
         "name": "Nom de la propriété",
         "labelPlaceholder": "Label de la propriété",
-        "commentPlaceholder": "Commentaire"
+        "commentPlaceholder": "Commentaire",
+        "selectResourceClass": "Sélectionner la classe de ressource"
       },
       "addPropertyMenu": {
         "addProperty": "Ajouter une propriété",
@@ -493,7 +498,15 @@
       "standoffLinkTooltip": "Représente un lien en balisage standoff d'une ressource à une autre",
       "standoffLinkLabel": "a un lien standoff",
       "annotationToolbar": {
-        "highlightRegion": "Surligner la région"
+        "highlightRegion": "Surligner la région",
+        "openInNewTab": "Ouvrir l'annotation dans un nouvel onglet",
+        "shareResource": "Partager l'annotation : {{arkUrl}}",
+        "copyArkUrl": "Copier l'URL ARK",
+        "copyArkUrlToClipboard": "Copier l'URL ARK dans le presse-papier",
+        "arkUrlCopied": "URL ARK copiée dans le presse-papier !",
+        "copyInternalLink": "Copier le lien interne",
+        "copyInternalLinkToClipboard": "Copier le lien interne dans le presse-papier",
+        "internalLinkCopied": "Lien interne copié dans le presse-papier !"
       },
       "comments": "Commentaires",
       "properties": "Propriétés",
@@ -508,6 +521,10 @@
     "permissionInfo": {
       "label": "Autorisations",
       "tooltip": "Autorisations de la ressource",
+      "projectAdmin": "Administrateur de projet",
+      "projectMember": "Membre du projet",
+      "knownUser": "Utilisateur connu",
+      "unknownUser": "Utilisateur inconnu",
       "usersPermissions": "Vos autorisations",
       "interactions": {
         "restrictedView": "Autorisation de vue restreinte (RV)",
@@ -521,6 +538,16 @@
       "comment": "Commentaire",
       "delete": "Marquer comme supprimé",
       "footnotes": "Notes de bas de page",
+      "actions": {
+        "creationInfo": "Créé le {{date}} par {{creator}}",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "cannotDeleteRequired": "Impossible de supprimer la propriété requise",
+        "undo": "Annuler",
+        "addComment": "Ajouter un commentaire",
+        "removeComment": "Supprimer le commentaire",
+        "save": "Enregistrer"
+      },
       "valueComponents": {
         "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."
       },

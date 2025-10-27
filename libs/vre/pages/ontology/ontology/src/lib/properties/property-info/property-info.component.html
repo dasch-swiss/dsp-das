@@ -50,7 +50,7 @@
     <span class="white-space">
       @if (property.usedByClasses.length) {
       <span>
-        <span class="mat-caption">&gt; {{ 'pages.ontology.propertyInfo.usedIn' | translate }}</span>
+        <span class="mat-caption">&gt; {{ 'pages.ontology.propertyInfo.usedIn' | translate }} </span>
         @for (c of property.usedByClasses; track trackByFn($index, c); let last = $last) {
         <span>
           <span
