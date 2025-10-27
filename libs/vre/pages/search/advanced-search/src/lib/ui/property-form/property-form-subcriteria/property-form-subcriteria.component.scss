@@ -1,0 +1,32 @@
+.parent-property-container {
+  margin-left: 4em;
+
+  &.child-property-list {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+
+    .form-fields-container {
+      display: flex;
+      flex: 1;
+      gap: 1rem;
+      align-items: flex-end;
+
+      .dropdown-container,
+      .value-container {
+        flex: 1;
+        min-width: 200px;
+      }
+    }
+
+    .side-container {
+      flex-shrink: 0;
+    }
+  }
+
+  .add-property-button {
+    margin-top: 1rem;
+  }
+}

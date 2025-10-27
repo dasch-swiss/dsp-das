@@ -1,12 +1,13 @@
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
-
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OrderByItem } from '../../data-access/advanced-search-store/advanced-search-store.service';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { SearchStateService } from '../../service/search-state.service';
 
 @Component({
   selector: 'app-order-by',
@@ -19,6 +20,7 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
     MatListModule,
     MatTooltipModule,
     OverlayModule,
+    AsyncPipe,
   ],
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
@@ -26,35 +28,40 @@ import { OrderByItem } from '../../data-access/advanced-search-store/advanced-se
   standalone: true,
 })
 export class OrderByComponent {
-  @Input() orderByList: OrderByItem[] | null = [];
-  @Input() orderByDisabled: boolean | null = false;
+  private searchService: SearchStateService = inject(SearchStateService);
 
-  @Output() emitPropertyOrderByChanged = new EventEmitter<OrderByItem[]>();
+  readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
   @ViewChild('sortOrderSelectionList')
   sortOrderSelectionList!: MatSelectionList;
 
+  orderByList$ = this.searchService.propertiesOrderBy$.pipe(distinctUntilChanged());
+
+  orderByDisabled$ = combineLatest([this.searchService.propertyForms$, this.searchService.propertiesOrderBy$]).pipe(
+    map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
+    distinctUntilChanged()
+  );
+
   isOpen = false;
-  tooltipText = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
   drop(event: CdkDragDrop<string[]>) {
-    if (!this.orderByList) return;
+    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
+    if (!currentOrderByList) return;
 
-    moveItemInArray(this.orderByList, event.previousIndex, event.currentIndex);
-
-    this.emitPropertyOrderByChanged.emit(this.orderByList);
+    moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
+    this.searchService.updatePropertyOrderBy(currentOrderByList);
   }
 
   onSelectionChange(event: MatSelectionListChange) {
-    if (!this.orderByList) return;
+    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
+    if (!currentOrderByList) return;
 
     event.options.forEach(option => {
-      const selectedItem = this.orderByList?.find(item => item.id === option.value);
+      const selectedItem = currentOrderByList.find(item => item.id === option.value);
       if (selectedItem) {
         selectedItem.orderBy = option.selected;
       }
     });
-
-    this.emitPropertyOrderByChanged.emit(this.orderByList);
+    this.searchService.updatePropertyOrderBy(currentOrderByList);
   }
 }

@@ -1,0 +1,45 @@
+<div class="advanced-search-container">
+  <div class="advanced-search-header">
+    <h2>{{ 'pages.search.advancedSearch.title' | translate }}</h2>
+    <button
+      [disabled]="!previousSearchService.hasPreviousSearch()"
+      mat-stroked-button
+      color="primary"
+      (click)="loadPreviousSearch()">
+      {{ 'pages.search.advancedSearch.usePreviousSearch' | translate }}
+    </button>
+  </div>
+  <app-ontology-form class="advanced-search-item" *ngIf="(ontologies$ | async).length" />
+  <app-resource-class-form class="advanced-search-item" />
+  <mat-progress-bar mode="query" *ngIf="(ontologyLoading$ | async) === true" class="advanced-search-item" />
+  <div class="advanced-search-content" *ngIf="(ontologyLoading$ | async) === false">
+    <ng-container *ngFor="let propertyForm of searchState.propertyForms$ | async; let isLast = last">
+      <div style="display: flex; width: 100%">
+        <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
+        <button
+          *ngIf="!isLast && propertyForm.selectedProperty"
+          mat-icon-button
+          (click)="removePropertyForm(propertyForm)"
+          class="remove-property-button"
+          matTooltip="Remove search criteria">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+      </div>
+      <app-property-form-subcriteria class="advanced-search-item" [parentProperty]="propertyForm" />
+    </ng-container>
+    <div class="advanced-search-bottom-selections advanced-search-item">
+      <app-order-by />
+      <div class="action-buttons">
+        <button mat-button mat-stroked-button color="primary" (click)="resetSearch()">Reset</button>
+        <button
+          mat-button
+          mat-raised-button
+          color="primary"
+          [disabled]="(searchState.isFormStateValid$ | async) === false"
+          (click)="doSearch()">
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,17 +1,28 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { ApiData } from '../../../data-access/advanced-search-service/advanced-search.service';
-import { PropertyFormItem } from '../../../data-access/advanced-search-store/advanced-search-store.service';
+import { debounceTime, distinctUntilChanged, of, take } from 'rxjs';
+import { ApiData, PropertyFormItem } from '../../../model';
+import { PropertyFormManager } from '../../../service/property-form.manager';
 
 @Component({
-  standalone: true,
   selector: 'app-property-form-link-value',
+  standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -23,22 +34,26 @@ import { PropertyFormItem } from '../../../data-access/advanced-search-store/adv
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
+  private _formsManager = inject(PropertyFormManager);
+
+  @Input() objectType: string | undefined = undefined;
   @Input() value: string | PropertyFormItem[] | undefined = undefined;
   @Input() label: string | undefined = undefined;
-  @Input() resourcesSearchResultsLoading: boolean | null = false;
-  @Input() resourcesSearchResultsCount: number | null = 0;
-  @Input() resourcesSearchResults: ApiData[] | null = null;
-  @Input() resourcesSearchNoResults: boolean | null = false;
 
-  @Output() emitResourceSearchValueChanged = new EventEmitter<string>();
-  @Output() emitLoadMoreSearchResults = new EventEmitter<string>();
   @Output() emitResourceSelected = new EventEmitter<ApiData>();
+
+  // Get search-related data directly from service instead of prop-drilling
+  resourcesSearchResultsLoading$ = of(true);
+  resourcesSearchResultsCount$ = of(true);
+  resourcesSearchResults$ = of(true);
+  resourcesSearchNoResults$ = of(true);
 
   inputControl = new FormControl();
 
   ngOnInit() {
     this.inputControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
-      this.emitResourceSearchValueChanged.emit(value);
+      console.error('do sth with', { value, objectType: this.objectType });
+      throw new Error('Method not implemented.');
     });
   }
 
@@ -54,13 +69,25 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
   }
 
   onInputFocused() {
-    this.emitResourceSearchValueChanged.emit(this.inputControl.value);
+    if (this.objectType && this.inputControl.value) {
+      console.error('do sth with', {
+        value: this.inputControl.value,
+        objectType: this.objectType,
+      });
+    }
+    throw new Error('Method not implemented.');
   }
 
   onScroll() {
-    if (!this.resourcesSearchResultsLoading) {
-      this.emitLoadMoreSearchResults.emit(this.inputControl.value);
-    }
+    // Check the observable value directly
+    this.resourcesSearchResultsLoading$.pipe(take(1)).subscribe(loading => {
+      if (!loading && this.objectType && this.inputControl.value) {
+        this._formsManager.loadMoreResourcesSearchResults({
+          value: this.inputControl.value,
+          objectType: this.objectType,
+        });
+      }
+    });
   }
 
   /**
