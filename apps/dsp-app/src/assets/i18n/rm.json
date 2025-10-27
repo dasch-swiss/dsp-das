@@ -302,7 +302,8 @@
         "name": "Property name",
         "labelPlaceholder": "Property label",
         "commentPlaceholder": "Comment",
-        "selectResourceClass": "Select resource class"
+        "selectResourceClass": "Select resource class",
+        "selectList": "Select list"
       },
       "addPropertyMenu": {
         "addProperty": "Add property",
@@ -476,7 +477,14 @@
         "download": "Download",
         "settings": "Settings",
         "iiifUrlCopied": "IIIF URL copied to clipboard!",
-        "copyIiifUrl": "Copy IIIF URL to clipboard"
+        "copyIiifUrl": "Copy IIIF URL to clipboard",
+        "openIiifInNewTab": "Open IIIF in new tab",
+        "copyArkUrl": "Copy ARK URL",
+        "arkUrlCopied": "ARK URL copied to clipboard!",
+        "zoomOut": "Zoom out",
+        "zoomIn": "Zoom in",
+        "resetZoom": "Reset zoom",
+        "openInFullscreen": "Open in fullscreen"
       },
       "replaceFileDialog": {
         "willBeReplaced": " will be replaced."
@@ -547,6 +555,18 @@
         "addComment": "Add comment",
         "removeComment": "Remove comment",
         "save": "Save"
+      },
+      "deleteValue": {
+        "title": "Delete {{label}}",
+        "explanation": "This will permanently delete the value. Please provide a reason for deletion.",
+        "reason": "Reason",
+        "reasonPlaceholder": "Enter reason for deletion...",
+        "noKeep": "No, keep it",
+        "yesDelete": "Yes, delete"
+      },
+      "editLabel": {
+        "subtitle": "Edit resource label",
+        "label": "Label"
       },
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."

@@ -302,7 +302,8 @@
         "name": "Eigenschaftsname",
         "labelPlaceholder": "Eigenschaftsbezeichnung",
         "commentPlaceholder": "Kommentar",
-        "selectResourceClass": "Ressourcen-Klasse auswählen"
+        "selectResourceClass": "Ressourcen-Klasse auswählen",
+        "selectList": "Liste auswählen"
       },
       "addPropertyMenu": {
         "addProperty": "Eigenschaft hinzufügen",
@@ -415,7 +416,14 @@
         "download": "Herunterladen",
         "settings": "Einstellungen",
         "iiifUrlCopied": "IIIF-URL in Zwischenablage kopiert!",
-        "copyIiifUrl": "IIIF-URL in Zwischenablage kopieren"
+        "copyIiifUrl": "IIIF-URL in Zwischenablage kopieren",
+        "openIiifInNewTab": "IIIF in neuem Tab öffnen",
+        "copyArkUrl": "ARK-URL kopieren",
+        "arkUrlCopied": "ARK-URL in Zwischenablage kopiert!",
+        "zoomOut": "Herauszoomen",
+        "zoomIn": "Hineinzoomen",
+        "resetZoom": "Zoom zurücksetzen",
+        "openInFullscreen": "Im Vollbildmodus öffnen"
       },
       "downloadFile": "Datei herunterladen",
       "replaceFile": "Datei ersetzen",
@@ -509,6 +517,18 @@
         "addComment": "Kommentar hinzufügen",
         "removeComment": "Kommentar entfernen",
         "save": "Speichern"
+      },
+      "deleteValue": {
+        "title": "{{label}} löschen",
+        "explanation": "Dadurch wird der Wert dauerhaft gelöscht. Bitte geben Sie einen Grund für die Löschung an.",
+        "reason": "Grund",
+        "reasonPlaceholder": "Grund für die Löschung eingeben...",
+        "noKeep": "Nein, behalten",
+        "yesDelete": "Ja, löschen"
+      },
+      "editLabel": {
+        "subtitle": "Ressourcen-Label bearbeiten",
+        "label": "Label"
       },
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."

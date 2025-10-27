@@ -302,7 +302,8 @@
         "name": "Nome della proprietà",
         "labelPlaceholder": "Etichetta della proprietà",
         "commentPlaceholder": "Commento",
-        "selectResourceClass": "Seleziona classe di risorsa"
+        "selectResourceClass": "Seleziona classe di risorsa",
+        "selectList": "Seleziona lista"
       },
       "addPropertyMenu": {
         "addProperty": "Aggiungi proprietà",
@@ -476,7 +477,14 @@
         "download": "Scarica",
         "settings": "Impostazioni",
         "iiifUrlCopied": "URL IIIF copiato negli appunti!",
-        "copyIiifUrl": "Copia URL IIIF negli appunti"
+        "copyIiifUrl": "Copia URL IIIF negli appunti",
+        "openIiifInNewTab": "Apri IIIF in nuova scheda",
+        "copyArkUrl": "Copia URL ARK",
+        "arkUrlCopied": "URL ARK copiato negli appunti!",
+        "zoomOut": "Riduci zoom",
+        "zoomIn": "Aumenta zoom",
+        "resetZoom": "Reimposta zoom",
+        "openInFullscreen": "Apri a schermo intero"
       },
       "replaceFileDialog": {
         "willBeReplaced": " sarà sostituito."
@@ -547,6 +555,18 @@
         "addComment": "Aggiungi commento",
         "removeComment": "Rimuovi commento",
         "save": "Salva"
+      },
+      "deleteValue": {
+        "title": "Elimina {{label}}",
+        "explanation": "Questo eliminerà definitivamente il valore. Si prega di fornire una ragione per l'eliminazione.",
+        "reason": "Ragione",
+        "reasonPlaceholder": "Inserire la ragione dell'eliminazione...",
+        "noKeep": "No, mantieni",
+        "yesDelete": "Sì, elimina"
+      },
+      "editLabel": {
+        "subtitle": "Modifica etichetta della risorsa",
+        "label": "Etichetta"
       },
       "valueComponents": {
         "searchHelp": "Digita 3 lettere per cercare una risorsa esistente."

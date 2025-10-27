@@ -302,7 +302,8 @@
         "name": "Nom de la propriété",
         "labelPlaceholder": "Label de la propriété",
         "commentPlaceholder": "Commentaire",
-        "selectResourceClass": "Sélectionner la classe de ressource"
+        "selectResourceClass": "Sélectionner la classe de ressource",
+        "selectList": "Sélectionner la liste"
       },
       "addPropertyMenu": {
         "addProperty": "Ajouter une propriété",
@@ -476,7 +477,14 @@
         "download": "Télécharger",
         "settings": "Paramètres",
         "iiifUrlCopied": "URL IIIF copiée dans le presse-papiers !",
-        "copyIiifUrl": "Copier l'URL IIIF dans le presse-papiers"
+        "copyIiifUrl": "Copier l'URL IIIF dans le presse-papiers",
+        "openIiifInNewTab": "Ouvrir IIIF dans un nouvel onglet",
+        "copyArkUrl": "Copier l'URL ARK",
+        "arkUrlCopied": "URL ARK copiée dans le presse-papiers !",
+        "zoomOut": "Dézoomer",
+        "zoomIn": "Zoomer",
+        "resetZoom": "Réinitialiser le zoom",
+        "openInFullscreen": "Ouvrir en plein écran"
       },
       "replaceFileDialog": {
         "willBeReplaced": " sera remplacé."
@@ -547,6 +555,18 @@
         "addComment": "Ajouter un commentaire",
         "removeComment": "Supprimer le commentaire",
         "save": "Enregistrer"
+      },
+      "deleteValue": {
+        "title": "Supprimer {{label}}",
+        "explanation": "Cela supprimera définitivement la valeur. Veuillez indiquer une raison pour la suppression.",
+        "reason": "Raison",
+        "reasonPlaceholder": "Entrer la raison de la suppression...",
+        "noKeep": "Non, conserver",
+        "yesDelete": "Oui, supprimer"
+      },
+      "editLabel": {
+        "subtitle": "Modifier le label de la ressource",
+        "label": "Label"
       },
       "valueComponents": {
         "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."
