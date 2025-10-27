@@ -57,14 +57,18 @@ export class ReusableProjectFormComponent implements OnInit {
 
   form?: ProjectForm;
 
-  readonly shortcodePatternError = {
-    errorKey: 'pattern',
-    message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodePattern'),
-  };
-  readonly shortCodeExistsError = {
-    errorKey: 'shortcodeExists',
-    message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodeExists'),
-  };
+  get shortcodePatternError() {
+    return {
+      errorKey: 'pattern',
+      message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodePattern'),
+    };
+  }
+  get shortCodeExistsError() {
+    return {
+      errorKey: 'shortcodeExists',
+      message: this._translateService.instant('pages.project.reusableProjectForm.errors.shortcodeExists'),
+    };
+  }
   readonly keywordsValidators = [Validators.minLength(3), Validators.maxLength(64)];
   readonly descriptionValidators = [Validators.minLength(3), Validators.maxLength(40960)];
 
@@ -83,14 +87,14 @@ export class ReusableProjectFormComponent implements OnInit {
       });
   }
 
-  public noWhitespaceValidator(control: FormControl) {
+  public noWhitespaceValidator = (control: FormControl) => {
     return (control.value || '').trim().length
       ? null
       : {
           errorKey: 'whitespace',
           message: this._translateService.instant('pages.project.reusableProjectForm.errors.whitespace'),
         };
-  }
+  };
 
   private _buildForm(shortcodes: string[]) {
     this.form = this._fb.group({
