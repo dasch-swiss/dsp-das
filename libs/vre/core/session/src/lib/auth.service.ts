@@ -29,6 +29,19 @@ export class AuthService {
   }
 
   /**
+   * Complete authentication by loading user and setting language preferences
+   * @param identifierOrIri can be email, username, or user IRI
+   * @param identifierType type of identifier: 'email', 'username', or 'iri'
+   */
+  completeAuthentication$(identifierOrIri: string, identifierType: 'email' | 'username' | 'iri') {
+    return this._userService.loadUser(identifierOrIri, identifierType).pipe(
+      tap(user => {
+        this._localizationsService.setLanguage(user.lang);
+      })
+    );
+  }
+
+  /**
    * Login user
    * @param identifier can be the email or the username
    * @param password the password of the user
@@ -47,13 +60,7 @@ export class AuthService {
         }
         throw error;
       }),
-      switchMap(() => {
-        return this._userService.loadUser(identifier, identifierType).pipe(
-          tap(user => {
-            this._localizationsService.setLanguage(user.lang);
-          })
-        );
-      })
+      switchMap(() => this.completeAuthentication$(identifier, identifierType))
     );
   }
 
