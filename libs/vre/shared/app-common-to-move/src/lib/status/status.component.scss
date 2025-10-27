@@ -1,5 +1,6 @@
-@use "responsive" as *;
-@use "config" as *;
+@use "sass:map";
+@use "../../../../../../../apps/dsp-app/src/styles/responsive" as *;
+@use "../../../../../../../apps/dsp-app/src/styles/config" as *;
 
 .status-page {
   background: $white;
@@ -16,6 +17,7 @@
     padding-top: 16px;
     max-width: 480px;
     margin: 0 auto;
+    text-align: center;
 
     .image,
     .text {
@@ -58,7 +60,7 @@
 }
 
 // mobile device: phone
-@media (max-width: map-get($grid-breakpoints, phone)) {
+@media (max-width: map.get($grid-breakpoints, phone)) {
   .image {
     display: none;
   }

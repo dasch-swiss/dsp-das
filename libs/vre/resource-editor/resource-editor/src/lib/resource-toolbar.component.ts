@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ReadResource } from '@dasch-swiss/dsp-js';
+import { Constants, ReadLinkValue, ReadResource } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
@@ -28,7 +29,9 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
       </button>
 
       <app-permission-info [resource]="resource" />
-      <app-resource-edit-more-menu *ngIf="userCanDelete$ | async" [resource]="resource" />
+      @if ((!!(userCanEdit$ | async) && showEditLabel) || !!(userCanDelete$ | async)) {
+        <app-resource-edit-more-menu [resource]="resource" [showEditLabel]="showEditLabel" />
+      }
     </span>
 
     <mat-menu #share="matMenu" class="res-share-menu">
@@ -65,10 +68,13 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
+  @Input() showEditLabel = false;
 
+  userCanEdit$ = this._resourceFetcherService.userCanEdit$;
   userCanDelete$ = this._resourceFetcherService.userCanDelete$;
 
   constructor(
@@ -78,6 +84,15 @@ export class ResourceToolbarComponent {
   ) {}
 
   openResource() {
-    window.open(`/resource${this._resourceService.getResourcePath(this.resource.id)}`, '_blank');
+    let resourceId = this.resource.id;
+    let qParam = '';
+    if (this.resource.entityInfo.classes[Constants.Region]) {
+      const linkedResource = this.resource.getValues(Constants.IsRegionOfValue)[0] as ReadLinkValue | undefined;
+      resourceId = linkedResource?.linkedResourceIri || resourceId;
+      const annotationId = encodeURIComponent(this.resource.id);
+      qParam = `?${RouteConstants.annotationQueryParam}=${annotationId}`;
+    }
+    const resPath = this._resourceService.getResourcePath(resourceId);
+    window.open(`/${RouteConstants.resource}${resPath}${qParam}`, '_blank');
   }
 }

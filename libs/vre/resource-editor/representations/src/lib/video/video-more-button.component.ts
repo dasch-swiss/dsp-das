@@ -28,14 +28,11 @@ import { ResourceFetcherService } from '../resource-fetcher.service';
         Copy video URL to clipboard
       </button>
       <button mat-menu-item class="menu-content" (click)="downloadVideo()">Download video</button>
-      <button
-        *ngIf="resourceFetcherService.userCanEdit$ | async"
-        mat-menu-item
-        class="menu-content"
-        (click)="openReplaceFileDialog()">
-        Replace file
-      </button>
+      @if (resourceFetcherService.userCanEdit$ | async) {
+        <button mat-menu-item class="menu-content" (click)="openReplaceFileDialog()">Replace file</button>
+      }
     </mat-menu>`,
+  standalone: false,
 })
 export class VideoMoreButtonComponent {
   @Input({ required: true }) src!: ReadMovingImageFileValue;

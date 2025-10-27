@@ -1,63 +1,69 @@
 import { Inject, Injectable } from '@angular/core';
-import { KnoraApiConnection, ReadUser, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
+import { KnoraApiConnection, SystemPropertyDefinition } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminProjectsApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DspResource, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
-import { BehaviorSubject, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { AppError } from '@dasch-swiss/vre/core/error-handler';
+import { DspResource, filterUndefined, GenerateProperty } from '@dasch-swiss/vre/shared/app-common';
+import { BehaviorSubject, map, shareReplay, Subject, switchMap } from 'rxjs';
 import { ResourceUtil } from './resource.util';
 
 @Injectable()
 export class ResourceFetcherService {
-  private _reloadSubject = new BehaviorSubject(null);
+  private _resourceSubject = new BehaviorSubject<DspResource | undefined>(undefined);
+  resource$ = this._resourceSubject.asObservable();
 
-  resource$!: Observable<DspResource>;
-  projectShortcode$!: Observable<string>;
+  resourceVersion?: string | null = null;
 
-  userCanEdit$!: Observable<boolean>;
-  userCanDelete$!: Observable<boolean>;
-  resourceVersion?: string;
+  userCanEdit$ = this.resource$.pipe(
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanEdit(resource.res))
+  );
 
-  attachedUser$!: Observable<ReadUser>;
+  userCanDelete$ = this.resource$.pipe(
+    map(resource => resource && !this.resourceVersion && ResourceUtil.userCanDelete(resource.res))
+  );
+
+  attachedUser$ = this.resource$.pipe(
+    filterUndefined(),
+    switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
+  );
+
+  project$ = this.resource$.pipe(
+    filterUndefined(),
+    switchMap(resource => this._adminApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)),
+    map(v => v.project),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  projectIri$ = this.project$.pipe(map(project => project.id as unknown as string));
+  projectShortcode$ = this.project$.pipe(map(project => project.shortcode as unknown as string));
+
+  _scrollToTop = new Subject<void>();
+  scrollToTop$ = this._scrollToTop.asObservable();
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _adminProjectsApiService: AdminProjectsApiService,
-    private _userApiService: UserApiService
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _userApiService: UserApiService
   ) {}
 
-  onInit(resourceIri: string, resourceVersion?: string) {
-    this.resource$ = this._reloadSubject.asObservable().pipe(
-      switchMap(() => this._getResource(resourceIri, resourceVersion)),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
-    this.attachedUser$ = this.resource$.pipe(
-      switchMap(resource => this._userApiService.get(resource.res.attachedToUser).pipe(map(response => response.user)))
-    );
-
-    this.projectShortcode$ = this.resource$.pipe(
-      switchMap(resource =>
-        this._adminProjectsApiService.getAdminProjectsIriProjectiri(resource.res.attachedToProject)
-      ),
-      map(v => v.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
+  loadResource(resourceIri: string, resourceVersion?: string) {
     this.resourceVersion = resourceVersion;
-
-    this.userCanEdit$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanEdit(resource.res))
-    );
-
-    this.userCanDelete$ = this.resource$.pipe(
-      map(resource => resourceVersion === undefined && ResourceUtil.userCanDelete(resource.res))
-    );
+    this._getResource(resourceIri, resourceVersion).subscribe(resource => {
+      this._resourceSubject.next(resource);
+    });
   }
 
   reload() {
-    this._reloadSubject.next(null);
+    const resourceIri = this._resourceSubject.value?.res.id;
+    if (!resourceIri) {
+      throw new AppError('Resource IRI is not found');
+    }
+    this.loadResource(resourceIri);
+  }
+
+  scrollToTop() {
+    this._scrollToTop.next();
   }
 
   private _getResource(resourceIri: string, resourceVersion?: string) {

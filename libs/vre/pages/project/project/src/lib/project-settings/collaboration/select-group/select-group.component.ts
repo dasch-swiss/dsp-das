@@ -1,28 +1,33 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { CollaborationPageService } from '../collaboration-page.service';
 
 @Component({
   selector: 'app-select-group',
   template: `
-    <ng-container *ngIf="groups$ | async as groups">
-      <mat-form-field *ngIf="groups.length > 0">
-        <mat-select
-          placeholder="Permission group"
-          [formControl]="groupCtrl"
-          multiple
-          (selectionChange)="updateGroupsMembership($event.value)">
-          <mat-option *ngFor="let group of groups" [value]="group.id" [disabled]="!user.status">
-            {{ group.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div *ngIf="groups.length === 0" class="center">No group defined yet.</div>
-    </ng-container>
+    @if (groups$ | async; as groups) {
+      @if (groups.length > 0) {
+        <mat-form-field>
+          <mat-select
+            placeholder="Permission group"
+            [formControl]="groupCtrl"
+            multiple
+            (selectionChange)="updateGroupsMembership($event.value)">
+            @for (group of groups; track group) {
+              <mat-option [value]="group.id" [disabled]="!user.status">
+                {{ group.name }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      @if (groups.length === 0) {
+        <div class="center">No group defined yet.</div>
+      }
+    }
   `,
   styles: [
     `
@@ -32,6 +37,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SelectGroupComponent implements OnInit {
   @Input({ required: true }) projectId!: string;
@@ -41,8 +47,8 @@ export class SelectGroupComponent implements OnInit {
   groupCtrl!: FormControl<string[] | null>;
 
   constructor(
-    private _adminUsersApiService: AdminUsersApiService,
-    private _collaborationPageService: CollaborationPageService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _collaborationPageService: CollaborationPageService
   ) {}
 
   ngOnInit() {
@@ -58,7 +64,7 @@ export class SelectGroupComponent implements OnInit {
       if (!groupIdAdded) {
         throw new AppError('Group should exist');
       }
-      this._adminUsersApiService
+      this._adminApiService
         .postAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdAdded)
         .subscribe(() => {
           this._collaborationPageService.reloadProjectMembers();
@@ -69,7 +75,7 @@ export class SelectGroupComponent implements OnInit {
       if (!groupIdRemoved) {
         throw new AppError('Group should exist');
       }
-      this._adminUsersApiService
+      this._adminApiService
         .deleteAdminUsersIriUseririGroupMembershipsGroupiri(this.user.id, groupIdRemoved.id)
         .subscribe(() => {
           this._collaborationPageService.reloadProjectMembers();

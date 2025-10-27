@@ -3,7 +3,12 @@ import { ReadResource } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-resource-list',
-  template: ` <app-resource-list-item *ngFor="let resource of resources" [resource]="resource" /> `,
+  template: `
+    @for (resource of resources; track resource) {
+      <app-resource-list-item [resource]="resource" data-cy="resource-list-item" />
+    }
+  `,
+  standalone: false,
 })
 export class ResourceListComponent {
   @Input({ required: true }) resources: ReadResource[] = [];

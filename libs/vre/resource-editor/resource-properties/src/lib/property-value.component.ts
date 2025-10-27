@@ -6,9 +6,14 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-value',
   template: `
-    <app-property-value-display [index]="index" *ngIf="displayMode" />
-    <app-property-value-update [index]="index" *ngIf="!displayMode" />
+    @if (displayMode) {
+      <app-property-value-display [index]="index" />
+    }
+    @if (!displayMode) {
+      <app-property-value-update [index]="index" />
+    }
   `,
+  standalone: false,
 })
 export class PropertyValueComponent implements OnInit, OnDestroy {
   @Input({ required: true }) index!: number;
@@ -16,7 +21,7 @@ export class PropertyValueComponent implements OnInit, OnDestroy {
   displayMode = false;
   private _subscription!: Subscription;
 
-  constructor(public propertyValueService: PropertyValueService) {}
+  constructor(public readonly propertyValueService: PropertyValueService) {}
 
   ngOnInit() {
     this._subscription = this.propertyValueService.lastOpenedItem$.pipe(distinctUntilChanged()).subscribe(value => {

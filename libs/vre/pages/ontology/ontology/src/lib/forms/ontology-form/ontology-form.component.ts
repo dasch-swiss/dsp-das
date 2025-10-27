@@ -21,6 +21,7 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
       </mat-form-field>
     </form>
   `,
+  standalone: false,
 })
 export class OntologyFormComponent implements OnInit {
   @Input({ required: true }) mode!: 'create' | 'edit';
@@ -29,7 +30,7 @@ export class OntologyFormComponent implements OnInit {
 
   ontologyForm!: OntologyForm;
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this._buildForm();

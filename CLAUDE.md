@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important: Permission Protocol
+## Important: Permission Protocol and rules to follow
 
 **ALWAYS ask for explicit permission before:**
 - Making any code changes or modifications
@@ -12,11 +12,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Installing or updating dependencies
 - Making commits or pushing changes
 
-Only proceed with changes after receiving clear approval from the user.
+
+**Only proceed with changes after receiving clear approval from the user.**
+
+**While refactoring and/or moving code, always perform the cleanup afterwards.**
+
+**Try to propose the best practices approach instead of quick fixes. In list of solutions clearly mark which is which.**
 
 ## Project Overview
 
-This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 18.2.9, NX 19.8.9, and Node.js 20.11.1.
+This is DaSCH Service Platform (DSP) monorepo - a digital humanities platform for storing, sharing, and working with primary research resources and data. Built with Angular 20.2.4, NX 21.5.1, and Node.js 22.12.0.
 
 The main application is **DSP-APP** - a user interface for the Swiss National Data and Service Center for the Humanities (DaSCH) research data repository, connecting to DSP-API backend and implementing DSP-JS client library.
 
@@ -24,7 +29,6 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 
 ### Local Development
 - `npm run start-local` or `nx run dsp-app:serve` - Start local development server
-- `npm run start-test` - Start with test server configuration
 - `npm run start-dev` - Start with dev server configuration
 
 ### Testing
@@ -72,11 +76,6 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 - **shared/** - Common utilities and services
 - **ui/** - Reusable UI components
 
-### State Management
-Uses **NGXS** for state management with domain-specific states:
-- User, Projects, Ontologies, Lists, OntologyClass, Resource, Config states
-- Actions and selectors co-located with state files
-
 ### Key Patterns
 - **Barrel exports** via `*.components.ts` files
 - **exposing exported files** via `*.index.ts` files
@@ -88,10 +87,8 @@ Uses **NGXS** for state management with domain-specific states:
 
 Multiple environment configurations available:
 - `development` - Local development
-- `test-server` - Test server environment
 - `dev-server` - Development server environment
 - `ls-test-server` - LS test server environment
-- `0845-test-server` - Specific test server environment
 - `stage-server` - Staging environment
 - `production` - Production environment
 
@@ -103,11 +100,12 @@ Multiple environment configurations available:
 - Import ordering enforced alphabetically
 - Focus tests (fit, fdescribe) are banned in CI
 - Self-closing tags for component selectors in templates
+- no usage of ::ng-deep
+- Control Flow syntax
 
 ### Testing Framework
 - **Jest** for unit tests with Angular-specific preset
 - **Cypress** for E2E tests with multiple configurations
-- **Karma** as fallback test runner for some configurations
 - Code coverage reporting available
 
 ### NX Integration  
@@ -129,7 +127,7 @@ Application handles various file types and representations:
 
 ## DSP-JS Client Library (Most Crucial Dependency)
 
-**@dasch-swiss/dsp-js v10.8.0** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations.
+**@dasch-swiss/dsp-js v10.9.0** is the primary API client library for communicating with DSP-API backend. It's deeply integrated throughout the application and essential for all data operations.
 
 ### Configuration and Setup
 
@@ -248,7 +246,7 @@ DSP-JS is integrated with NGXS state management:
 ### Development Commands for DSP-JS
 
 - `npm run yalc-add-lib` - Add local DSP-JS development version
-- Check `package.json` for current version: `@dasch-swiss/dsp-js: 10.8.0`
+- Check `package.json` for current version: `@dasch-swiss/dsp-js: 10.9.0`
 
 ## Working with APIs
 
@@ -262,7 +260,6 @@ DSP-JS is integrated with NGXS state management:
 Key external libraries:
 - **@dasch-swiss/dsp-js** - DSP API client library (see detailed section above)
 - **@angular/material** - UI components
-- **@ngxs/store** - State management
 - **openseadragon** - Image viewer
 - **ckeditor5-custom-build** - Rich text editing
 - **cypress** - E2E testing

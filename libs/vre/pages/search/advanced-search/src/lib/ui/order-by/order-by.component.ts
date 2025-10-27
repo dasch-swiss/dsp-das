@@ -2,18 +2,10 @@ import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } fro
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { combineLatest, distinctUntilChanged, map, tap } from 'rxjs';
-import { SearchStateService } from '../../service/search-state.service';
 
 @Component({
   selector: 'app-order-by',
-  standalone: true,
   imports: [
-    CommonModule,
     CdkDrag,
     CdkDragHandle,
     CdkDropList,
@@ -26,6 +18,7 @@ import { SearchStateService } from '../../service/search-state.service';
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class OrderByComponent {
   private searchService = inject(SearchStateService);

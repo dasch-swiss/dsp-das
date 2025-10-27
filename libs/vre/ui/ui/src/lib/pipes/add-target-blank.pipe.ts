@@ -3,9 +3,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
   name: 'addTargetBlank',
+  standalone: false,
 })
 export class AddTargetBlankPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private readonly _sanitizer: DomSanitizer) {}
 
   transform(value: null | string | SafeHtml): SafeHtml | null {
     if (value === null) {
@@ -34,6 +35,6 @@ export class AddTargetBlankPipe implements PipeTransform {
     });
 
     // Return the modified HTML string
-    return this.sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
+    return this._sanitizer.bypassSecurityTrustHtml(tempDiv.innerHTML);
   }
 }

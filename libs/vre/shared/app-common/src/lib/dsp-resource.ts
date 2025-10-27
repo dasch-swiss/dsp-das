@@ -8,19 +8,11 @@ export class DspResource {
 
   systemProps: SystemPropertyDefinition[] = []; // array of system properties
 
-  // regions or sequences
-  incomingAnnotations: ReadResource[] = [];
-
   // incoming stillImages, movingImages, audio etc.
   incomingRepresentations: ReadResource[] = [];
 
   constructor(resource: ReadResource) {
     this.res = resource;
-  }
-
-  // return whether the main resource is a region;
-  get isRegion() {
-    return this.res.entityInfo.classes[Constants.Region];
   }
 }
 

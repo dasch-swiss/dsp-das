@@ -1,6 +1,5 @@
 // Include non-theme styles for core.
 @use '@angular/material' as mat;
-@use "styles/config" as *;
 @use "styles/config";
 @use "styles/font";
 @use "styles/theme";
@@ -11,7 +10,8 @@
 @use "styles/viewer";
 @use "styles/ontology";
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Include all typography configurations for the components (Angular Material 18 compatible)
 @include mat.all-component-typographies(t.$dsp-typography-config);
@@ -36,8 +36,8 @@ $theme: mat.m2-define-light-theme((
 // Global snack-bar theme override for Angular Material v18
 :root {
   --mat-snack-bar-button-color: rgba(51, 103, 144, 1);
-  --mdc-snackbar-container-color: rgba(51, 103, 144, 0.9);
-  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255);
+  --mat-snackbar-container-color: rgba(51, 103, 144, 0.9);
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255);
 }
 
 body {

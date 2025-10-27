@@ -1,83 +1,102 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiResponseError, ReadResource } from '@dasch-swiss/dsp-js';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponseError, Constants, ReadResource } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { DspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 type HideReason = 'NotFound' | 'Deleted' | 'Unauthorized' | null;
 
 @Component({
   selector: 'app-resource-fetcher',
   template: `
-    <app-resource-version-warning
-      *ngIf="resourceVersion"
-      [resourceVersion]="resourceVersion"
-      (navigateToCurrentVersion)="navigateToCurrentVersion()" />
+    <div #scrollTarget>
+      @if (resourceVersion) {
+        <app-resource-version-warning
+          [resourceVersion]="resourceVersion"
+          (navigateToCurrentVersion)="navigateToCurrentVersion()" />
+      }
 
-    <ng-container *ngIf="!hideStatus; else hideTpl">
-      <app-resource *ngIf="resource; else loadingTpl" [resource]="resource" />
-    </ng-container>
-
-    <ng-template #hideTpl>
-      <div style="display: flex; justify-content: center; padding: 16px">
-        <h3 *ngIf="hideStatus === 'NotFound'">{{ 'resourceEditor.notFound' | translate }}</h3>
-
-        <h3 *ngIf="hideStatus === 'Unauthorized'">{{ 'resourceEditor.unauthorized' | translate }}</h3>
-
-        <div *ngIf="hideStatus === 'Deleted'" style="text-align: center">
-          <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
-          <h4 *ngIf="resource?.res.deleteComment as comment">"{{ comment }}"</h4>
+      @if (!hideStatus) {
+        @if (resource) {
+          <app-resource [resource]="resource" />
+        } @else {
+          <app-progress-indicator />
+        }
+      } @else {
+        <div style="display: flex; justify-content: center; padding: 16px">
+          @if (hideStatus === 'NotFound') {
+            <h3>{{ 'resourceEditor.notFound' | translate }}</h3>
+          }
+          @if (hideStatus === 'Unauthorized') {
+            <h3>{{ 'resourceEditor.unauthorized' | translate }}</h3>
+          }
+          @if (hideStatus === 'Deleted') {
+            <div style="text-align: center">
+              <h3>{{ 'resourceEditor.deleted' | translate }}</h3>
+              @if (resource?.res.deleteComment; as comment) {
+                <h4>"{{ comment }}"</h4>
+              }
+            </div>
+          }
         </div>
-      </div>
-    </ng-template>
-
-    <ng-template #loadingTpl>
-      <app-progress-indicator />
-    </ng-template>
+      }
+    </div>
   `,
   providers: [ResourceFetcherService],
+  standalone: false,
 })
-export class ResourceFetcherComponent implements OnChanges {
+export class ResourceFetcherComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ required: true }) resourceIri!: string;
-  @Input() resourceVersion?: string;
   @Output() afterResourceDeleted = new EventEmitter<ReadResource>();
+  @ViewChild('scrollTarget') scrollTarget!: ElementRef;
 
   resource?: DspResource;
   hideStatus: HideReason = null;
 
-  subscription!: Subscription;
+  private _destroy$ = new Subject<void>();
+
+  get resourceVersion() {
+    return this._route.snapshot.queryParamMap.get('version') || undefined;
+  }
 
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
     private _notification: NotificationService,
+    private _route: ActivatedRoute,
     private _router: Router,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _cdr: ChangeDetectorRef
   ) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['resourceIri'] || changes['resourceVersion']) {
-      this.hideStatus = null;
-      this.resource = undefined;
+  ngOnInit() {
+    if (this.resourceVersion && !ResourceUtil.versionIsValid(this.resourceVersion)) {
+      this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
+        this._notification.openSnackBar(v);
+      });
+    }
 
-      if (
-        changes['resourceVersion']?.currentValue !== undefined &&
-        !ResourceUtil.versionIsValid(changes['resourceVersion'].currentValue)
-      ) {
-        this.resourceVersion = undefined;
-        this._translateService.get('resourceEditor.versionNotValid').subscribe(v => {
-          this._notification.openSnackBar(v);
-        });
-      }
-
-      this._resourceFetcherService.onInit(this.resourceIri, this.resourceVersion);
-
-      this.subscription?.unsubscribe();
-      this.subscription = this._resourceFetcherService.resource$.subscribe(
-        resource => {
-          if (resource.res.type === 'http://api.knora.org/ontology/knora-api/v2#DeletedResource') {
+    this._resourceFetcherService.resource$
+      .pipe(
+        filter(resource => !!resource),
+        takeUntil(this._destroy$)
+      )
+      .subscribe({
+        next: resource => {
+          if (resource?.res.type === Constants.DeletedResource) {
             this.hideStatus = 'Deleted';
             this.resource = resource;
             this.afterResourceDeleted.emit(resource.res);
@@ -87,11 +106,22 @@ export class ResourceFetcherComponent implements OnChanges {
           this.hideStatus = null;
           this.resource = resource;
 
-          if (this.resourceVersion !== undefined) {
-            this._reloadIfCurrentVersion(this.resourceVersion, resource.res.lastModificationDate);
+          this._cdr.detectChanges();
+
+          const normalizeToCompactFormat = (isoDate: string): string => {
+            return isoDate.replace(/[-:.]/g, '');
+          };
+
+          const hasResourceVersionOfLatestVersion =
+            (!!this.resourceVersion &&
+              this.resourceVersion === normalizeToCompactFormat(resource?.res.lastModificationDate || '')) ||
+            (!!this.resourceVersion && !resource?.res.lastModificationDate);
+
+          if (hasResourceVersionOfLatestVersion) {
+            this._purgeVersionParam();
           }
         },
-        err => {
+        error: err => {
           if (err instanceof ApiResponseError && err.status === 404) {
             this.hideStatus = 'NotFound';
             return;
@@ -103,25 +133,37 @@ export class ResourceFetcherComponent implements OnChanges {
           }
 
           throw err;
-        }
-      );
-    }
+        },
+      });
+
+    this._resourceFetcherService.scrollToTop$.pipe(takeUntil(this._destroy$)).subscribe(() => {
+      this.scrollTarget?.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+  }
+
+  ngOnChanges() {
+    this.hideStatus = null;
+    this.resource = undefined;
+    this._resourceFetcherService.loadResource(this.resourceIri, this.resourceVersion);
   }
 
   navigateToCurrentVersion() {
-    this._router
-      .navigate([], {
-        queryParams: { version: null }, // Set parameter to null to remove it
-        queryParamsHandling: 'merge',
-      })
-      .then(() => {
-        this._resourceFetcherService.reload();
-      });
+    this._purgeVersionParam();
+    this._resourceFetcherService.loadResource(this.resourceIri);
   }
 
-  private _reloadIfCurrentVersion(resourceVersion: string, lastModificationDate?: string) {
-    if (lastModificationDate === undefined || resourceVersion === lastModificationDate) {
-      this.navigateToCurrentVersion();
-    }
+  private _purgeVersionParam() {
+    this._router.navigate([], {
+      queryParams: { version: null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

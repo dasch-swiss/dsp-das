@@ -10,40 +10,39 @@ import { shortcodeExistsValidator } from './shortcode-exists.validator';
 @Component({
   selector: 'app-reusable-project-form',
   template: `
-    <form *ngIf="form" [formGroup]="form">
-      <div style="display: flex">
+    @if (form) {
+      <form [formGroup]="form">
+        <div style="display: flex">
+          <app-common-input
+            [control]="form.controls.shortcode"
+            [label]="'pages.project.reusableProjectForm.shortcode' | translate"
+            [validatorErrors]="[shortcodePatternError, shortCodeExistsError]"
+            data-cy="shortcode-input"
+            style="flex: 1; margin-right: 16px" />
+          <app-common-input
+            [control]="form.controls.shortname"
+            [label]="'pages.project.reusableProjectForm.shortname' | translate"
+            data-cy="shortname-input"
+            style="flex: 1" />
+        </div>
         <app-common-input
-          [control]="form.controls.shortcode"
-          [label]="'pages.project.reusableProjectForm.shortcode' | translate"
-          [validatorErrors]="[shortcodePatternError, shortCodeExistsError]"
-          data-cy="shortcode-input"
-          style="flex: 1; margin-right: 16px" />
-
-        <app-common-input
-          [control]="form.controls.shortname"
-          [label]="'pages.project.reusableProjectForm.shortname' | translate"
-          data-cy="shortname-input"
-          style="flex: 1" />
-      </div>
-
-      <app-common-input
-        [label]="'pages.project.reusableProjectForm.longname' | translate"
-        [control]="form.controls.longname"
-        data-cy="longname-input" />
-
-      <app-multi-language-textarea
-        [placeholder]="'pages.project.reusableProjectForm.description' | translate"
-        [formArray]="form.controls.description"
-        [validators]="descriptionValidators"
-        [isRequired]="true"
-        data-cy="description-input" />
-
-      <app-chip-list-input
-        [formArray]="form.controls.keywords"
-        data-cy="keywords-input"
-        [validators]="keywordsValidators" />
-    </form>
+          [label]="'pages.project.reusableProjectForm.longname' | translate"
+          [control]="form.controls.longname"
+          data-cy="longname-input" />
+        <app-multi-language-textarea
+          [placeholder]="'pages.project.reusableProjectForm.description' | translate"
+          [formArray]="form.controls.description"
+          [validators]="descriptionValidators"
+          [isRequired]="true"
+          data-cy="description-input" />
+        <app-chip-list-input
+          [formArray]="form.controls.keywords"
+          data-cy="keywords-input"
+          [validators]="keywordsValidators" />
+      </form>
+    }
   `,
+  standalone: false,
 })
 export class ReusableProjectFormComponent implements OnInit {
   @Input({ required: true }) formData!: {
@@ -55,7 +54,7 @@ export class ReusableProjectFormComponent implements OnInit {
   };
   @Output() afterFormInit = new EventEmitter<ProjectForm>();
 
-  form: ProjectForm;
+  form?: ProjectForm;
   readonly shortcodePatternError = {
     errorKey: 'pattern',
     message: 'This field must contain letters from A to F and 0 to 9',
@@ -114,6 +113,6 @@ export class ReusableProjectFormComponent implements OnInit {
         }),
         Validators.required
       ),
-    });
+    }) as unknown as ProjectForm;
   }
 }

@@ -34,7 +34,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     </ng-template>
 
     <ng-template #booleanDisplayTpl let-item="item">
-      <mat-slide-toggle [checked]="item" [disabled]="true" />
+      <mat-slide-toggle [checked]="item.bool" [disabled]="true" />
     </ng-template>
 
     <ng-template #intervalDisplayTpl let-item="item">
@@ -80,6 +80,7 @@ import { JsLibPotentialError } from '@dasch-swiss/vre/resource-editor/resource-p
     <ng-template #defaultDisplayTpl><span style="width: 100%">Nothing to show</span></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplateViewerSwitcherComponent implements AfterViewInit {
   @Input({ required: true }) value!: ReadValue | undefined;

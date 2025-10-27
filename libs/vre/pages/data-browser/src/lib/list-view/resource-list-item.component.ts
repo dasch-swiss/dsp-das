@@ -8,38 +8,48 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
   selector: 'app-resource-list-item',
   template: `
     <div
-      style="padding: 8px 16px; cursor: pointer; border-bottom: 1px solid #ebebeb"
-      [ngStyle]="{
-        'background-color': (isHighlighted$ | async) ? '#D6E0E8' : 'inherit',
-      }"
+      class="item"
+      [ngClass]="{ highlighted: isHighlighted$ | async, search: multipleViewerService.searchKeyword !== undefined }"
       data-cy="resource-list-item"
       (mouseenter)="showCheckbox = true"
       (mouseleave)="showCheckbox = false"
       (click)="multipleViewerService.selectOneResource(resource)">
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          <div
-            style="    color: #979797;
-    font-size: 12px">
-            {{ resource.resourceClassLabel }}
-          </div>
           <div style="color: black">
             {{ resource.label }}
           </div>
-          <div *ngIf="foundIn.length > 0" class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+          @if (foundIn.length > 0) {
+            <div class="found-in">Found in: {{ foundIn.join(', ') }}</div>
+          }
         </div>
 
-        <mat-checkbox
-          *ngIf="showCheckbox || multipleViewerService.selectMode"
-          [checked]="isSelected$ | async"
-          (change)="onCheckboxChanged($event)"
-          (click)="$event.stopPropagation()" />
+        @if (showCheckbox || multipleViewerService.selectMode) {
+          <mat-checkbox
+            [checked]="isSelected$ | async"
+            (change)="onCheckboxChanged($event)"
+            (click)="$event.stopPropagation()" />
+        }
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
+      .item {
+        padding: 0 16px;
+        cursor: pointer;
+        &:hover {
+          background-color: #ebebeb;
+        }
+        &.search {
+          padding: 8px 16px;
+        }
+      }
+      .highlighted {
+        border-left: 2px solid #33678f;
+        background-color: #d6e0e8;
+      }
       mat-list-item {
         border-bottom: 1px solid #ebebeb;
       }
@@ -52,6 +62,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
@@ -73,7 +84,7 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  constructor(public multipleViewerService: MultipleViewerService) {}
+  constructor(public readonly multipleViewerService: MultipleViewerService) {}
 
   ngOnInit() {
     if (this.multipleViewerService.searchKeyword) {
@@ -94,7 +105,7 @@ export class ResourceListItemComponent implements OnInit {
       values.forEach(value => {
         if (
           value.strval &&
-          value.strval.toLowerCase().includes(keyword) &&
+          value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
           !this.foundIn.includes(value.propertyLabel!)
         ) {
           this.foundIn.push(value.propertyLabel!);

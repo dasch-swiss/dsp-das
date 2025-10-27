@@ -27,6 +27,7 @@ import { CompoundService } from './compound.service';
       "
       #ngSliderThumb="matSliderThumb" />
   </mat-slider>`,
+  standalone: false,
 })
 export class CompoundSliderComponent {
   get compoundNavigation() {
@@ -37,5 +38,5 @@ export class CompoundSliderComponent {
     this.compoundService.openPage(page);
   }
 
-  constructor(public compoundService: CompoundService) {}
+  constructor(public readonly compoundService: CompoundService) {}
 }

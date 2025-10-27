@@ -9,14 +9,17 @@ export interface ManageProjectMembershipDialogProps {
 @Component({
   selector: 'app-manage-project-membership-dialog',
   template: ` <app-dialog-header [title]="data.user.username" [subtitle]="'Manage project membership'" />
-    <app-membership [userId]="data.user.id" (closeDialog)="dialogRef.close()" />
+    <div mat-dialog-content>
+      <app-membership [userId]="data.user.id" (closeDialog)="dialogRef.close()" />
+    </div>
     <mat-dialog-actions>
       <button mat-button color="primary" matDialogClose>{{ 'ui.form.action.close' | translate }}</button>
     </mat-dialog-actions>`,
+  standalone: false,
 })
 export class ManageProjectMembershipDialogComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ManageProjectMembershipDialogProps,
-    public dialogRef: MatDialogRef<ManageProjectMembershipDialogComponent, boolean>
+    @Inject(MAT_DIALOG_DATA) public readonly data: ManageProjectMembershipDialogProps,
+    public readonly dialogRef: MatDialogRef<ManageProjectMembershipDialogComponent, boolean>
   ) {}
 }

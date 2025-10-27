@@ -9,7 +9,9 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
   selector: 'app-edit-ontology-form-dialog',
   template: ` <app-dialog-header [title]="data.id" [subtitle]="'pages.ontology.ontologyForm.edit' | translate" />
 
-    <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
+    <div mat-dialog-content>
+      <app-ontology-form [data]="data" [mode]="'edit'" (afterFormInit)="afterFormInit($event)" />
+    </div>
 
     <div mat-dialog-actions align="end">
       <button color="primary" mat-button mat-dialog-close>{{ 'ui.form.action.cancel' | translate }}</button>
@@ -24,6 +26,7 @@ import { OntologyForm, UpdateOntologyData } from './ontology-form.type';
       </button>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class EditOntologyFormDialogComponent {
   loading = false;
@@ -31,9 +34,9 @@ export class EditOntologyFormDialogComponent {
   form!: OntologyForm;
 
   constructor(
-    private _oes: OntologyEditService,
-    @Inject(MAT_DIALOG_DATA) public data: UpdateOntologyData,
-    public dialogRef: MatDialogRef<EditOntologyFormDialogComponent, OntologyMetadata>
+    private readonly _oes: OntologyEditService,
+    @Inject(MAT_DIALOG_DATA) public readonly data: UpdateOntologyData,
+    public readonly dialogRef: MatDialogRef<EditOntologyFormDialogComponent, OntologyMetadata>
   ) {}
 
   afterFormInit(form: OntologyForm) {

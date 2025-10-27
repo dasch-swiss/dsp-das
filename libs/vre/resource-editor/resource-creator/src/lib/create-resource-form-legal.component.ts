@@ -14,11 +14,15 @@ import { finalize, map } from 'rxjs/operators';
           placeholder="Choose"
           [formControl]="formGroup.controls.copyrightHolder"
           data-cy="copyright-holder-select">
-          <mat-option *ngIf="copyrightHoldersLoading">Loading...</mat-option>
-          <mat-option *ngIf="!copyrightHoldersLoading" [value]="undefined">None</mat-option>
-          <mat-option *ngFor="let copyrightHolder of copyrightHolders$ | async" [value]="copyrightHolder"
-            >{{ copyrightHolder }}
-          </mat-option>
+          @if (copyrightHoldersLoading) {
+            <mat-option>Loading...</mat-option>
+          }
+          @if (!copyrightHoldersLoading) {
+            <mat-option [value]="undefined">None</mat-option>
+          }
+          @for (copyrightHolder of copyrightHolders$ | async; track copyrightHolder) {
+            <mat-option [value]="copyrightHolder">{{ copyrightHolder }} </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>
@@ -26,9 +30,15 @@ import { finalize, map } from 'rxjs/operators';
     <app-create-resource-form-row [label]="'License/Statement'">
       <mat-form-field>
         <mat-select placeholder="Choose" [formControl]="formGroup.controls.license" data-cy="license-select">
-          <mat-option *ngIf="licensesLoading">Loading...</mat-option>
-          <mat-option *ngIf="!licensesLoading" [value]="undefined">None</mat-option>
-          <mat-option *ngFor="let license of licenses$ | async" [value]="license">{{ license.labelEn }}</mat-option>
+          @if (licensesLoading) {
+            <mat-option>Loading...</mat-option>
+          }
+          @if (!licensesLoading) {
+            <mat-option [value]="undefined">None</mat-option>
+          }
+          @for (license of licenses$ | async; track license) {
+            <mat-option [value]="license">{{ license.labelEn }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </app-create-resource-form-row>
@@ -44,6 +54,7 @@ import { finalize, map } from 'rxjs/operators';
       }
     `,
   ],
+  standalone: false,
 })
 export class CreateResourceFormLegalComponent implements OnInit {
   @Input({ required: true }) formGroup!: CreateResourceFormLegal;
@@ -56,7 +67,7 @@ export class CreateResourceFormLegalComponent implements OnInit {
   licenses$!: Observable<ProjectLicenseDto[]>;
   authorship$!: Observable<string[]>;
 
-  constructor(private _paginatedApi: PaginatedApiService) {}
+  constructor(private readonly _paginatedApi: PaginatedApiService) {}
 
   ngOnInit() {
     this.copyrightHolders$ = this._paginatedApi.getCopyrightHolders(this.projectShortcode).pipe(

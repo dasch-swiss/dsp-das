@@ -1,85 +1,39 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Cardinality, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
-import { PropertiesDisplayService } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { DspResource, PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
   selector: 'app-properties-display',
   template: `
-    <div style="display: flex; flex-direction: row-reverse; align-items: center; background: #EAEFF3">
-      <div style="display: flex; flex: 0 0 auto">
-        <app-properties-toolbar
-          [showToggleProperties]="true"
-          [showOnlyIcons]="displayLabel"
-          [numberOfComments]="numberOfComments"
-          style="flex-shrink: 0" />
-        <app-annotation-toolbar *ngIf="displayLabel" [resource]="resource.res" [parentResourceId]="parentResourceId" />
-      </div>
-
-      <h3
-        style="margin: 0 16px; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
-        *ngIf="displayLabel"
-        data-cy="property-header">
-        {{ resource.res.label }}
-      </h3>
-    </div>
-
-    <div
-      class="infobar mat-caption"
-      *ngIf="displayLabel && ((resourceAttachedUser$ | async) !== undefined || resource.res.creationDate)">
-      Created
-      <span *ngIf="resourceAttachedUser$ | async as resourceAttachedUser">
-        by
-        {{
-          resourceAttachedUser.username
-            ? resourceAttachedUser.username
-            : resourceAttachedUser.givenName + ' ' + resourceAttachedUser.familyName
-        }}
-      </span>
-      <span *ngIf="resource.res.creationDate"> on {{ resource.res.creationDate | date }}</span>
-    </div>
-
-    <!-- list of properties -->
-    <ng-container *ngIf="editableProperties && editableProperties.length > 0; else noProperties">
-      <app-property-row
-        [isEmptyRow]="prop.values.length === 0"
-        *ngFor="let prop of editableProperties; let last = last; trackBy: trackByPropertyInfoFn"
-        [borderBottom]="true"
-        [tooltip]="prop.propDef.comment"
-        [prop]="prop"
-        [singleRow]="false"
-        [attr.data-cy]="'row-' + prop.propDef.label"
-        [label]="
-          prop.propDef.label +
-          (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
-        ">
-        <app-property-values-with-footnotes [prop]="prop" [resource]="resource.res" />
-      </app-property-row>
-    </ng-container>
-
-    <app-standoff-links-property [resource]="resource" />
-    <app-incoming-links-property [resource]="resource.res" />
-
-    <ng-template #noProperties>
+    @if (editableProperties && editableProperties.length > 0) {
+      @for (prop of editableProperties; track $index; let last = $last) {
+        <app-property-row
+          [isEmptyRow]="prop.values.length === 0"
+          [borderBottom]="true"
+          [tooltip]="prop.propDef.comment"
+          [prop]="prop"
+          [singleRow]="false"
+          [attr.data-cy]="'row-' + prop.propDef.label"
+          [label]="
+            prop.propDef.label +
+            (prop.guiDef.cardinality === cardinality._1 || prop.guiDef.cardinality === cardinality._1_n ? '*' : '')
+          ">
+          <app-property-values-with-footnotes [prop]="prop" [resource]="resource.res" />
+        </app-property-row>
+      }
+    } @else {
       <app-property-row label="info" [borderBottom]="false" [isEmptyRow]="false">
         <div>This resource has no defined properties.</div>
       </app-property-row>
-    </ng-template>
+    }
+
+    <app-standoff-links-property [resource]="resource" />
+    <app-incoming-links-property [resource]="resource.res" />
   `,
-  styles: [
-    `
-      .infobar {
-        text-align: right;
-        padding-right: 6px;
-      }
-    `,
-  ],
-  providers: [PropertiesDisplayService],
+  standalone: false,
 })
 export class PropertiesDisplayComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
-  @Input() displayLabel = false;
   @Input() linkToNewTab?: string;
   @Input() parentResourceId = '';
 
@@ -87,24 +41,9 @@ export class PropertiesDisplayComponent implements OnChanges {
 
   editableProperties: PropertyInfoValues[] = [];
 
-  numberOfComments!: number;
-  resourceAttachedUser$ = this._resourceFetcherService.attachedUser$;
-
-  constructor(private _resourceFetcherService: ResourceFetcherService) {}
-
   ngOnChanges() {
     this.editableProperties = this.resource.resProps.filter(
       prop => (prop.propDef as ResourcePropertyDefinition).isEditable
     );
-
-    this.numberOfComments = this.resource.resProps.reduce((acc, prop) => {
-      const valuesWithComments = prop.values.reduce(
-        (_acc, value) => _acc + (value.valueHasComment === undefined ? 0 : 1),
-        0
-      );
-      return acc + valuesWithComments;
-    }, 0);
   }
-
-  trackByPropertyInfoFn = (index: number, item: PropertyInfoValues) => `${index}-${item.propDef.id}`;
 }

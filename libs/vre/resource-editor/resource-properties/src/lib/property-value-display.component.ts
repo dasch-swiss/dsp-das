@@ -24,27 +24,29 @@ import { PropertyValueService } from './property-value.service';
       class="pos-relative row"
       (mouseenter)="showBubble = true"
       (mouseleave)="showBubble = false">
-      <app-property-value-action-bubble
-        *ngIf="showBubble && (propertyValueService.lastOpenedItem$ | async) !== index"
-        [date]="propertyValueService.editModeData.values[index].valueCreationDate"
-        [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
-        (editAction)="propertyValueService.toggleOpenedValue(index)"
-        (deleteAction)="askToDelete()" />
+      @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
+        <app-property-value-action-bubble
+          [date]="propertyValueService.editModeData.values[index].valueCreationDate"
+          [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
+          (editAction)="propertyValueService.toggleOpenedValue(index)"
+          (deleteAction)="askToDelete()" />
+      }
 
       <div class="value" [ngClass]="{ highlighted: isHighlighted }">
-        <ng-container *ngIf="template">
+        @if (template) {
           <ng-container
             *ngTemplateOutlet="
               template;
               context: { item: propertyValueService.editModeData.values[index], index: index }
             "></ng-container>
-        </ng-container>
+        }
       </div>
 
       <app-property-value-display-comment [index]="index" />
     </div>`,
   styleUrls: ['./property-value-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PropertyValueDisplayComponent implements OnInit {
   @Input({ required: true }) index!: number;

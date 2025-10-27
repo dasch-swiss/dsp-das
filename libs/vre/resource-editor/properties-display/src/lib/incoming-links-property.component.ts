@@ -14,18 +14,22 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
       [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
       [borderBottom]="true"
       [isEmptyRow]="!loading && allIncomingLinks.length === 0">
-      <ng-container *ngIf="allIncomingLinks.length > 0">
+      @if (allIncomingLinks.length > 0) {
         <app-incoming-standoff-link-value [links]="slidedLinks" />
-        <app-incoming-resource-pager
-          *ngIf="allIncomingLinks.length > pageSize"
-          [pageIndex]="pageIndex"
-          [pageSize]="pageSize"
-          [itemsNumber]="allIncomingLinks.length"
-          (pageChanged)="pageChanged($event)" />
-      </ng-container>
-      <app-progress-indicator *ngIf="loading" />
+        @if (allIncomingLinks.length > pageSize) {
+          <app-incoming-resource-pager
+            [pageIndex]="pageIndex"
+            [pageSize]="pageSize"
+            [itemsNumber]="allIncomingLinks.length"
+            (pageChanged)="pageChanged($event)" />
+        }
+      }
+      @if (loading) {
+        <app-progress-indicator />
+      }
     </app-property-row>
   `,
+  standalone: false,
 })
 export class IncomingLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: ReadResource;
@@ -51,8 +55,8 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     this._getIncomingLinksRecursively$(this.resource.id)
       .pipe(take(1))
       .subscribe(incomingLinks => {
-        this.loading = false;
         this.allIncomingLinks = incomingLinks;
+        this.loading = false;
       });
   }
 
@@ -93,6 +97,7 @@ export class IncomingLinksPropertyComponent implements OnChanges {
     return {
       label: resource.label,
       uri: `/resource/${resourceIdPathOnly[0]}`,
+      iri: resource.id,
       project: resource.resourceClassLabel ? resource.resourceClassLabel : '',
     };
   }

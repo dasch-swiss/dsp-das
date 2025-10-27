@@ -17,6 +17,7 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  standalone: false,
 })
 export class AppComponent {
   form: UntypedFormGroup;
@@ -78,11 +79,14 @@ export class AppComponent {
   selector: 'app-calendar-header',
   template: `
     <mat-select placeholder="Calendar" [formControl]="calendar">
-      <mat-option *ngFor="let cal of supportedCalendars" [value]="cal">{{ cal }}</mat-option>
+      @for (cal of supportedCalendars; track cal) {
+        <mat-option [value]="cal">{{ cal }}</mat-option>
+      }
     </mat-select>
     <mat-calendar-header />
   `,
   styleUrls: [],
+  standalone: false,
 })
 export class HeaderComponent implements OnInit {
   constructor(
@@ -146,6 +150,7 @@ const makeCalToken = () => {
       deps: [MAT_DATE_LOCALE, ACTIVE_CALENDAR],
     },
   ],
+  standalone: false,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class JdnDatepicker implements OnChanges, OnDestroy {

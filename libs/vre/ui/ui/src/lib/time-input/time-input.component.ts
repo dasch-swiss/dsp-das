@@ -15,12 +15,15 @@ import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';
         [formControl]="control"
         appTimeFormat
         placeholder="hh:mm:ss" />
-      <mat-error *ngIf="control.errors as errors">
-        {{ errors | humanReadableError: possibleErrors }}
-      </mat-error>
+      @if (control.errors; as errors) {
+        <mat-error>
+          {{ errors | humanReadableError: possibleErrors }}
+        </mat-error>
+      }
     </mat-form-field>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TimeInputComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<number | null>;

@@ -6,7 +6,7 @@ import { ProjectPageService } from '../../project-page.service';
 import {
   CreateCopyrightHolderDialogComponent,
   CreateCopyrightHolderDialogProps,
-} from './create-copyright-holder-dialog.component';
+} from '../create-copyright-holder-dialog.component';
 
 @Component({
   selector: 'app-legal-settings',
@@ -22,7 +22,9 @@ import {
         </button>
       </h2>
       <app-alternated-list>
-        <div *ngFor="let item of copyrightHolders$ | async">{{ item }}</div>
+        @for (item of copyrightHolders$ | async; track item) {
+          <div>{{ item }}</div>
+        }
       </app-alternated-list>
     </section>
 
@@ -38,15 +40,18 @@ import {
         </mat-icon>
       </h2>
 
-      <ng-container *ngIf="authorships$ | async as authorship">
+      @if (authorships$ | async; as authorship) {
         <app-alternated-list>
-          <div *ngFor="let item of authorship">{{ item }}</div>
+          @for (item of authorship; track item) {
+            <div>{{ item }}</div>
+          }
         </app-alternated-list>
-
-        <div *ngIf="authorship.length === 0">
-          {{ 'pages.project.legalSettings.noAuthorship' | translate }}
-        </div>
-      </ng-container>
+        @if (authorship.length === 0) {
+          <div>
+            {{ 'pages.project.legalSettings.noAuthorship' | translate }}
+          </div>
+        }
+      }
     </section>
   `,
   styles: [
@@ -56,6 +61,7 @@ import {
       }
     `,
   ],
+  standalone: false,
 })
 export class LegalSettingsComponent {
   private readonly _reloadSubject = new BehaviorSubject<void>(undefined);

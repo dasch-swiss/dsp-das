@@ -3,9 +3,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
   name: 'withBreaks',
+  standalone: false,
 })
 export class WithBreaksPipe implements PipeTransform {
-  constructor(private _sanitizer: DomSanitizer) {}
+  constructor(private readonly _sanitizer: DomSanitizer) {}
 
   transform(value: string) {
     const withBreaks = value.replace(/\n/g, '<br>');

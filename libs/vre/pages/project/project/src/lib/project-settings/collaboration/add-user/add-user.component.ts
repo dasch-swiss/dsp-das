@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { AdminUsersApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, DspDialogConfig } from '@dasch-swiss/vre/core/config';
 import { CreateUserDialogComponent } from '@dasch-swiss/vre/pages/system/system';
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -21,16 +21,21 @@ import { CollaborationPageService } from '../collaboration-page.service';
         <input matInput [matAutocomplete]="user" [formControl]="usernameControl" />
 
         <mat-autocomplete #user="matAutocomplete" (optionSelected)="addUser($event.option.value)">
-          <mat-option *ngIf="loading" [disabled]="true">
-            <app-progress-indicator />
-          </mat-option>
-          <ng-container *ngIf="!loading && (filteredUsers$ | async) as filteredUsers">
-            <mat-option *ngFor="let user of filteredUsers" [value]="user.id" [disabled]="isMember(user)">
-              {{ getLabel(user) }}
+          @if (loading) {
+            <mat-option [disabled]="true">
+              <app-progress-indicator />
             </mat-option>
-
-            <mat-option *ngIf="filteredUsers.length === 0" [disabled]="true">No results</mat-option>
-          </ng-container>
+          }
+          @if (!loading && (filteredUsers$ | async); as filteredUsers) {
+            @for (user of filteredUsers; track user) {
+              <mat-option [value]="user.id" [disabled]="isMember(user)">
+                {{ getLabel(user) }}
+              </mat-option>
+            }
+            @if (filteredUsers.length === 0) {
+              <mat-option [disabled]="true">No results</mat-option>
+            }
+          }
         </mat-autocomplete>
       </mat-form-field>
 
@@ -40,6 +45,7 @@ import { CollaborationPageService } from '../collaboration-page.service';
     </div>
   `,
   styleUrls: ['./add-user.component.scss'],
+  standalone: false,
 })
 export class AddUserComponent {
   @Input({ required: true }) projectUuid!: string;
@@ -72,14 +78,13 @@ export class AddUserComponent {
   ]).pipe(map(([filterVal, users_]) => (filterVal ? this._filter(users_, filterVal) : users_)));
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
-    private _userApiService: UserApiService,
-    private _projectService: ProjectService,
-    private readonly _adminUsersApi: AdminUsersApiService,
-    public collaborationPageService: CollaborationPageService,
-    private _cdr: ChangeDetectorRef
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _dialog: MatDialog,
+    private readonly _projectService: ProjectService,
+    private readonly _userApiService: UserApiService,
+    public readonly collaborationPageService: CollaborationPageService
   ) {}
 
   getLabel(user: ReadUser): string {
@@ -112,7 +117,7 @@ export class AddUserComponent {
       .pipe(
         filter(result => result !== undefined),
         switchMap(userId =>
-          this._adminUsersApi.postAdminUsersIriUseririProjectMembershipsProjectiri(userId!, this.projectIri)
+          this._adminApiService.postAdminUsersIriUseririProjectMembershipsProjectiri(userId!, this.projectIri)
         )
       )
       .subscribe(() => {

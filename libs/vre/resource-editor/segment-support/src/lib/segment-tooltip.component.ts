@@ -25,11 +25,12 @@ import { SegmentsService } from './segments.service';
       }
     `,
   ],
+  standalone: false,
 })
 export class SegmentTooltipComponent {
   segment!: Segment;
 
-  constructor(public segmentsService: SegmentsService) {}
+  constructor(public readonly segmentsService: SegmentsService) {}
 
   @Output() mouseEnter = new EventEmitter<void>();
   @Output() mouseLeave = new EventEmitter<void>();

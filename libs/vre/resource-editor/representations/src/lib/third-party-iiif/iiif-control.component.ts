@@ -6,9 +6,11 @@ import { IIIFUrl } from './third-party-iiif';
 @Component({
   selector: 'app-iiif-control',
   template: `
-    <div class="third-party-iiif-preview" *ngIf="previewImageUrl">
-      <img [src]="previewImageUrl" alt="IIIF Preview" height="240" />
-    </div>
+    @if (previewImageUrl) {
+      <div class="third-party-iiif-preview">
+        <img [src]="previewImageUrl" alt="IIIF Preview" height="240" />
+      </div>
+    }
 
     <mat-form-field style="width: 100%">
       <mat-label>IIIF Image URL</mat-label>
@@ -18,7 +20,9 @@ import { IIIFUrl } from './third-party-iiif';
         data-cy="external-iiif-input"
         placeholder="https://example.org/image-service/abcd1234/full/max/0/default.jpg" />
 
-      <mat-error *ngIf="control.errors as errors"> {{ errors | humanReadableError: validatorErrors }}</mat-error>
+      @if (control.errors; as errors) {
+        <mat-error> {{ errors | humanReadableError: validatorErrors }}</mat-error>
+      }
     </mat-form-field>
   `,
   styles: [
@@ -37,6 +41,7 @@ import { IIIFUrl } from './third-party-iiif';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class IiifControlComponent implements OnInit, OnDestroy {
   @Input({ required: true }) control!: FormControl<string | null>;
@@ -52,7 +57,7 @@ export class IiifControlComponent implements OnInit, OnDestroy {
     { errorKey: 'invalidHost', message: 'The provided URL is not from an external source.' },
   ];
 
-  constructor(private _cdr: ChangeDetectorRef) {}
+  constructor(private readonly _cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.subscription = this.control.valueChanges.pipe(startWith(this.control.value)).subscribe(urlStr => {

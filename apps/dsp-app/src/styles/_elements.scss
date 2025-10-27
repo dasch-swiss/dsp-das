@@ -204,22 +204,6 @@ a,
 // --------------------------------------
 
 //
-// status badge
-.badge {
-  padding: 4px 6px;
-  font-weight: bolder;
-  border-radius: 4px;
-
-  &.status {
-    color: white;
-    background: $red;
-
-    &.active {
-      background: $green;
-    }
-  }
-}
-
 // status class alone is only for colorized text
 .status.text-only {
   color: $red;
@@ -554,6 +538,7 @@ $gc-small: $form-width - $gc-large - 4;
   inset: 0;
   z-index: 999;
   pointer-events: all; // catch all events, no interaction possible
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 // overlay the progress indicator and block all user interaction
@@ -620,20 +605,20 @@ nav.mat-mdc-tab-nav-bar,
 
 // Angular Material v18 snack-bar styles - Using correct CSS custom properties
 .mat-mdc-snack-bar-container.success {
-  --mdc-snackbar-container-color: rgba(51, 103, 144, 0.9) !important;
-  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snackbar-container-color: rgba(51, 103, 144, 0.9) !important;
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
   --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
 }
 
 .mat-mdc-snack-bar-container.error {
-  --mdc-snackbar-container-color: rgba(225, 29, 72, 0.9) !important;
-  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snackbar-container-color: rgba(225, 29, 72, 0.9) !important;
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
   --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
 }
 
 .mat-mdc-snack-bar-container.note {
-  --mdc-snackbar-container-color: rgba(251, 191, 36, 0.9) !important;
-  --mdc-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
+  --mat-snackbar-container-color: rgba(251, 191, 36, 0.9) !important;
+  --mat-snackbar-supporting-text-color: rgb(255, 255, 255) !important;
   --mat-snack-bar-button-color: rgb(255, 255, 255) !important;
 }
 
@@ -658,25 +643,6 @@ simple-snack-bar .mdc-button__label {
   }
 }
 
-
-// --------------------------------------
-
-//
-// dialog box / material overlay
-
-.cdk-overlay-pane {
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-
-  .mat-mdc-dialog-container {
-    overflow-y: auto;
-
-    .mat-mdc-dialog-surface {
-      padding: 24px;
-      background-color: rgba(white, 0.8);
-    }
-  }
-}
 
 // action bubble
 .action-bubble {
@@ -778,26 +744,6 @@ simple-snack-bar .mdc-button__label {
     white-space: normal;
     text-overflow: ellipsis;
   }
-}
-
-.region {
-  filter: alpha(opacity=40);
-  opacity: 0.4;
-  fill: transparent;
-  stroke: #00695c;
-  stroke-width: 2px;
-}
-
-.region:hover,
-.region:focus {
-  filter: alpha(opacity=100);
-  opacity: 1;
-  cursor: pointer;
-}
-
-.region.active {
-  filter: alpha(opacity=100);
-  opacity: 1;
 }
 
 // --------------------------------------

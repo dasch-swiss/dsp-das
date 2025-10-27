@@ -12,12 +12,13 @@ import { timeStringToSeconds } from './time-string-to-seconds';
       multi: true,
     },
   ],
+  standalone: false,
 })
 export class TimeFormatDirective implements ControlValueAccessor {
   private onChange!: (value: number | null) => void;
   private onTouched!: () => void;
 
-  constructor(private el: ElementRef) {}
+  constructor(private readonly _el: ElementRef) {}
 
   @HostListener('input', ['$event.target.value'])
   onInput(value: string): void {
@@ -35,7 +36,7 @@ export class TimeFormatDirective implements ControlValueAccessor {
 
   writeValue(value: number | null): void {
     const formattedValue = value ? secondsToTimeString(value) : '';
-    this.el.nativeElement.value = formattedValue;
+    this._el.nativeElement.value = formattedValue;
   }
 
   registerOnChange(fn: (value: number | null) => void): void {
@@ -47,6 +48,6 @@ export class TimeFormatDirective implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.el.nativeElement.disabled = isDisabled;
+    this._el.nativeElement.disabled = isDisabled;
   }
 }

@@ -1,22 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Constants, ReadOntology, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
 import { LocalizationService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-resource-class-sidenav',
   template: `
-    <div *ngFor="let classToDisplay of classesToDisplay; trackBy: trackByFn">
+    @for (classToDisplay of classesToDisplay; track trackByFn($index, classToDisplay)) {
       <app-resource-class-sidenav-item [resClass]="classToDisplay" />
-    </div>
+    }
   `,
+  standalone: false,
 })
 export class ResourceClassSidenavComponent implements OnChanges {
   @Input({ required: true }) ontology!: ReadOntology;
 
   classesToDisplay: ResourceClassDefinitionWithAllLanguages[] = [];
 
-  constructor(private _localizationService: LocalizationService) {}
+  constructor(private readonly _localizationService: LocalizationService) {}
 
   ngOnChanges() {
     const classes = this.ontology.getClassDefinitionsByType(ResourceClassDefinitionWithAllLanguages);

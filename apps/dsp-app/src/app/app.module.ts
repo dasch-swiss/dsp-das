@@ -1,9 +1,10 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone } from '@angular/core';
+import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -20,7 +21,6 @@ import {
   DspInstrumentationToken,
 } from '@dasch-swiss/vre/core/config';
 import { AppErrorHandler } from '@dasch-swiss/vre/core/error-handler';
-import { NgxsStoreModule } from '@dasch-swiss/vre/core/state';
 import { DataBrowserComponents } from '@dasch-swiss/vre/pages/data-browser';
 import { ListComponents } from '@dasch-swiss/vre/pages/ontology/list';
 import { OntologyComponents } from '@dasch-swiss/vre/pages/ontology/ontology';
@@ -38,23 +38,23 @@ import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segme
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { AppDatePickerComponent, DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   HumanReadableErrorPipe,
-  MultiLanguageTextareaComponent,
-  MutiLanguageInputComponent,
   StringLiteralComponents,
+  MultiLanguageInputComponent,
+  MultiLanguageTextareaComponent,
 } from '@dasch-swiss/vre/ui/string-literal';
-import { UiComponents, UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
+import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
 import { IMaskModule } from 'angular-imask';
 import { AngularSplitModule } from 'angular-split';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { TemplateSwitcherComponents } from 'template-switcher';
 import { AppRoutingModule } from './app-routing.module';
@@ -73,49 +73,53 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   declarations: [
     AppComponent,
     CookieBannerComponent,
-    ...TemplateSwitcherComponents,
-    ...ResourcePropertiesComponents,
-    ...ResourceCreatorComponents,
-    ...SegmentSupportComponents,
-    ...ResourcePageComponents,
-    ...RepresentationsComponents,
-    ...PropertiesDisplayComponents,
     ...CommonToMoveComponents,
-    ...ListComponents,
-    ...UiComponents,
-    ...HelpPageComponents,
-    ...ProjectComponents,
-    ...UserComponents,
-    ...SearchComponents,
     ...DataBrowserComponents,
-    ...OntologyComponents,
-    ...SystemComponents,
-    ...ProgressIndicatorComponents,
     ...DatePickerComponents,
+    ...HelpPageComponents,
+    ...ListComponents,
+    ...OntologyComponents,
+    ...ProgressIndicatorComponents,
+    ...ProjectComponents,
+    ...PropertiesDisplayComponents,
+    ...RepresentationsComponents,
+    ...ResourceCreatorComponents,
+    ...ResourcePageComponents,
+    ...ResourcePropertiesComponents,
+    ...SearchComponents,
+    ...SegmentSupportComponents,
     ...StringLiteralComponents,
+    ...SystemComponents,
+    ...TemplateSwitcherComponents,
+    ...UiComponents,
+    ...UserComponents,
   ],
   imports: [
+    AdvancedSearchComponent,
     AngularSplitModule,
-    AppDatePickerComponent,
     AppProgressIndicatorComponent,
-    HumanReadableErrorPipe,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     CKEditorModule,
     ClipboardModule,
-    ColorPickerModule,
+    ColorPickerDirective,
     CommonModule,
+    DateValueHandlerComponent,
     FormsModule,
     HttpClientModule,
+    HumanReadableErrorPipe,
     IMaskModule,
+    MultiLanguageInputComponent,
+    MultiLanguageTextareaComponent,
     MaterialModule,
     MatJDNConvertibleCalendarDateAdapterModule,
     MatRippleModule,
+    MatStepperModule,
     NgxSkeletonLoaderModule,
+    PagerComponent,
     PdfViewerModule,
     ReactiveFormsModule,
-    AdvancedSearchComponent,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -123,10 +127,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    MultiLanguageTextareaComponent,
-    MutiLanguageInputComponent,
-    NgxsStoreModule,
-    ...UiStandaloneComponents,
   ],
   providers: [
     AppConfigService,
@@ -177,12 +177,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
       provide: Sentry.TraceService,
       deps: [Router],
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = (() => () => {})();
+      inject(Sentry.TraceService);
+      return initializerFn();
+    }),
     LocalizationService,
   ],
   bootstrap: [AppComponent],

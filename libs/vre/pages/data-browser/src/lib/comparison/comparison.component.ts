@@ -1,32 +1,48 @@
 import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
+import { first } from 'rxjs';
+import { MultipleViewerService } from './multiple-viewer.service';
 
 @Component({
   selector: 'app-comparison',
   template: ` <as-split direction="vertical">
       <as-split-area>
         <!-- note: This part is repeating twice (not added as component) because angular-split
-                                                                                                                          library does not support addition div inside as-split -->
+          library does not support addition div inside as-split -->
         <as-split direction="horizontal">
-          <as-split-area *ngFor="let res of topRow">
-            <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
-          </as-split-area>
+          @for (res of topRow; track res) {
+            <as-split-area>
+              <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
+            </as-split-area>
+          }
         </as-split>
       </as-split-area>
-      <as-split-area *ngIf="resourcesNumber > 3">
-        <as-split direction="horizontal">
-          <as-split-area *ngFor="let res of bottomRow">
-            <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
-          </as-split-area>
-        </as-split>
-      </as-split-area>
+      @if (resourcesNumber > 3) {
+        <as-split-area>
+          <as-split direction="horizontal">
+            @for (res of bottomRow; track res) {
+              <as-split-area>
+                <ng-container *ngTemplateOutlet="resourceTemplate; context: { res: res }" />
+              </as-split-area>
+            }
+          </as-split>
+        </as-split-area>
+      }
     </as-split>
 
     <ng-template #resourceTemplate let-res="res">
       <div style="max-width: 960px; margin: auto; margin-top: 32px; margin-bottom: 32px; padding: 0 16px">
+        @if (multipleViewerService.selectMode) {
+          <div style="display: flex; justify-content: end">
+            <button mat-icon-button (click)="close(res)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
         <app-resource-fetcher [resourceIri]="res" (afterResourceDeleted)="updateResourceCount()" />
       </div>
     </ng-template>`,
+  standalone: false,
 })
 export class ComparisonComponent implements OnChanges {
   @Input({ required: true }) resourceIds!: string[];
@@ -38,7 +54,10 @@ export class ComparisonComponent implements OnChanges {
     return this.resourceIds.length;
   }
 
-  constructor(@Optional() private _projectPageService: ProjectPageService) {}
+  constructor(
+    @Optional() private _projectPageService: ProjectPageService,
+    public multipleViewerService: MultipleViewerService
+  ) {}
 
   ngOnChanges(): void {
     const resourceIds = this.resourceIds;
@@ -49,6 +68,15 @@ export class ComparisonComponent implements OnChanges {
       this.topRow = resourceIds.slice(0, this.resourcesNumber / 2);
       this.bottomRow = resourceIds.slice(this.resourcesNumber / 2);
     }
+  }
+
+  close(resourceIri: string) {
+    this.multipleViewerService.selectedResources$.pipe(first()).subscribe(resources => {
+      const resource = resources.find(r => r.id === resourceIri);
+      if (resource) {
+        this.multipleViewerService.removeResources([resource]);
+      }
+    });
   }
 
   updateResourceCount() {

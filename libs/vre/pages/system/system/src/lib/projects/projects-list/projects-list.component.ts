@@ -5,13 +5,13 @@ import { Constants, StoredProject } from '@dasch-swiss/dsp-js';
 import { ProjectApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { AppConfigService, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
+import { UserService } from '@dasch-swiss/vre/core/session';
+import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { ProjectService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { combineLatest, filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { filter, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { SortProp } from '../../sort-button/sort-button.component';
 import {
   EraseProjectDialogComponent,
@@ -23,6 +23,7 @@ import {
   selector: 'app-projects-list',
   templateUrl: './projects-list.component.html',
   styleUrls: ['./projects-list.component.scss'],
+  standalone: false,
 })
 export class ProjectsListComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe = new Subject<void>();
@@ -62,19 +63,19 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   sortBy = 'longname';
 
-  user$ = this._store.select(UserSelectors.user);
-  userProjectAdminGroups$ = this._store.select(UserSelectors.userProjectAdminGroups);
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  user$ = this._userService.user$;
+  isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
-    private _appConfigService: AppConfigService,
-    private _dialog: MatDialog,
-    private _dialogService: DialogService,
-    private _notification: NotificationService,
-    private _projectApiService: ProjectApiService,
-    private _router: Router,
-    private _store: Store,
-    private _translateService: TranslateService
+    private readonly _appConfigService: AppConfigService,
+    private readonly _dialog: MatDialog,
+    private readonly _dialogService: DialogService,
+    private readonly _notification: NotificationService,
+    private readonly _projectApiService: ProjectApiService,
+    private readonly _router: Router,
+    private readonly _userService: UserService,
+    private readonly _translateService: TranslateService,
+    private readonly _projectService: ProjectService
   ) {}
 
   ngOnInit() {
@@ -90,17 +91,25 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
   trackByFn = (index: number, item: StoredProject) => `${index}-${item.id}`;
 
   userHasPermission$(projectIri: string): Observable<boolean> {
-    return combineLatest([this.user$.pipe(filter(user => !!user)), this.userProjectAdminGroups$]).pipe(
+    return this.user$.pipe(
+      filter(user => !!user),
       takeUntil(this._ngUnsubscribe),
-      map(([user, userProjectGroups]) => ProjectService.IsProjectAdminOrSysAdmin(user, userProjectGroups, projectIri))
+      map(user => UserPermissions.hasProjectAdminRights(user, projectIri))
     );
   }
 
   userIsProjectAdmin$(projectIri: string): Observable<boolean> {
-    return combineLatest([this.user$, this.userProjectAdminGroups$]).pipe(
+    return this.user$.pipe(
       takeUntil(this._ngUnsubscribe),
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      map(([_, userProjectGroups]) => ProjectService.IsInProjectGroup(userProjectGroups, projectIri))
+      map(user => {
+        if (!user || !user.permissions.groupsPerProject) {
+          return false;
+        }
+        return ProjectService.IsMemberOfProjectAdminGroup(
+          user.permissions.groupsPerProject,
+          ProjectService.IriToUuid(projectIri)
+        );
+      })
     );
   }
 
@@ -114,7 +123,7 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
 
   createNewProject() {
     const queryParams = this.isUsersProjects ? { [RouteConstants.assignCurrentUser]: true } : {};
-    this._router.navigate([RouteConstants.project, RouteConstants.createNew], { queryParams });
+    this._router.navigate([RouteConstants.createNew, RouteConstants.project], { queryParams });
   }
 
   editProject(iri: string) {

@@ -8,23 +8,23 @@ import { PropertyValueService } from './property-value.service';
 @Component({
   selector: 'app-property-values',
   template: `
-    <app-property-value
-      *ngFor="let group of propertyValueService.editModeData.values; let index = index"
-      [index]="index"
-      style="width: 100%" />
+    @for (group of propertyValueService.editModeData.values; track group; let index = $index) {
+      <app-property-value [index]="index" style="width: 100%" />
+    }
 
-    <button
-      mat-icon-button
-      (click)="currentlyAdding = true"
-      data-cy="add-property-value-button"
-      *ngIf="userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)">
-      <mat-icon class="add-icon">add_box</mat-icon>
-    </button>
+    @if (userCanAdd && !currentlyAdding && (editModeData.values.length === 0 || matchesCardinality)) {
+      <button mat-icon-button (click)="currentlyAdding = true" data-cy="add-property-value-button">
+        <mat-icon class="add-icon">add_box</mat-icon>
+      </button>
+    }
 
-    <app-property-value-add *ngIf="currentlyAdding" (stopAdding)="currentlyAdding = false" />
+    @if (currentlyAdding) {
+      <app-property-value-add (stopAdding)="currentlyAdding = false" />
+    }
   `,
   providers: [PropertyValueService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PropertyValuesComponent implements OnChanges {
   @Input({ required: true }) editModeData!: { resource: ReadResource; values: ReadValue[] };
@@ -44,7 +44,7 @@ export class PropertyValuesComponent implements OnChanges {
 
   currentlyAdding = false;
 
-  constructor(public propertyValueService: PropertyValueService) {}
+  constructor(public readonly propertyValueService: PropertyValueService) {}
 
   ngOnChanges() {
     this._setupData();

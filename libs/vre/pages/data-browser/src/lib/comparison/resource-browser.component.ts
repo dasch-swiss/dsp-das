@@ -7,16 +7,17 @@ import { MultipleViewerService } from './multiple-viewer.service';
   selector: 'app-resource-browser',
   template: ` <div class="whole-height">
     <as-split direction="horizontal">
-      <as-split-area [size]="40">
+      <as-split-area [size]="30">
         <app-resources-list [resources]="data.resources" [showBackToFormButton]="showBackToFormButton" />
       </as-split-area>
-      <as-split-area [size]="60" cdkScrollable>
+      <as-split-area [size]="70" cdkScrollable>
         <app-multiple-viewer />
       </as-split-area>
     </as-split>
   </div>`,
   styleUrls: ['./resource-browser.component.scss'],
   providers: [MultipleViewerService],
+  standalone: false,
 })
 export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input({ required: true }) data!: { resources: ReadResource[]; selectFirstResource: boolean };
@@ -24,7 +25,7 @@ export class ResourceBrowserComponent implements OnInit, OnChanges {
   @Input() showBackToFormButton = false;
   @Input() searchKeyword?: string;
 
-  constructor(private _multipleViewerService: MultipleViewerService) {}
+  constructor(private readonly _multipleViewerService: MultipleViewerService) {}
 
   ngOnInit() {
     this._multipleViewerService.searchKeyword = this.searchKeyword;

@@ -30,6 +30,7 @@ import { CompoundService } from './compound.service';
       <mat-icon>last_page</mat-icon>
     </button>
   </span>`,
+  standalone: false,
 })
 export class CompoundNavigationComponent {
   get compoundNavigation() {
@@ -44,5 +45,5 @@ export class CompoundNavigationComponent {
     this.compoundService.openPage(page);
   }
 
-  constructor(public compoundService: CompoundService) {}
+  constructor(public readonly compoundService: CompoundService) {}
 }

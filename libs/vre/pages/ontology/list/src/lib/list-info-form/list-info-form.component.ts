@@ -47,6 +47,7 @@ import { ListInfoForm } from './list-info-form.type';
       </div>
     </div>
   `,
+  standalone: false,
 })
 export class ListInfoFormComponent implements OnInit {
   form!: ListInfoForm;
@@ -95,16 +96,12 @@ export class ListInfoFormComponent implements OnInit {
   }
 
   submitCreateList() {
-    this._projectPageService.currentProject$
-      .pipe(
-        switchMap(project =>
-          this._listApiService.create({
-            projectIri: project.id,
-            labels: this.form.value.labels as StringLiteral[],
-            comments: this.form.value.comments as StringLiteral[],
-          })
-        )
-      )
+    this._listApiService
+      .create({
+        projectIri: this._projectPageService.currentProjectId,
+        labels: this.form.value.labels as StringLiteral[],
+        comments: this.form.value.comments as StringLiteral[],
+      })
       .subscribe(response => {
         this.loading = false;
         this.dialogRef.close(response);

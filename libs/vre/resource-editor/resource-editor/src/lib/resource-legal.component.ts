@@ -1,44 +1,45 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-resource-legal',
   template: `
-    <div
-      *ngIf="fileValue.copyrightHolder || fileValue.authorship?.length > 0 || fileValue.license"
-      class="mat-caption"
-      style="border: 1px solid #292929;
+    @if (fileValue.copyrightHolder || fileValue.authorship?.length > 0 || fileValue.license) {
+      <div
+        class="mat-caption"
+        style="border: 1px solid #292929;
     background: #292929; border-radius: 8px;
     color: #e4e9ed; padding: 8px; padding-bottom: 16px; margin-top: 8px; position: relative; top: 12px">
-      <div style="display: flex; justify-content: space-between">
-        <div>
-          <div *ngIf="fileValue.copyrightHolder">
-            <span class="label">Copyright holder</span>{{ fileValue.copyrightHolder }}
+        <div style="display: flex; justify-content: space-between">
+          <div>
+            @if (fileValue.copyrightHolder) {
+              <div><span class="label">Copyright holder</span>{{ fileValue.copyrightHolder }}</div>
+            }
+            @if (fileValue.authorship.length > 0) {
+              <div style="display: flex">
+                <span class="label">Authorship</span>
+                <div style="max-width: 400px">
+                  @for (author of fileValue.authorship; track author; let last = $last) {
+                    <span>{{ author }}{{ last ? '' : ', ' }}</span>
+                  }
+                </div>
+              </div>
+            }
           </div>
-
-          <div *ngIf="fileValue.authorship.length > 0" style="display: flex">
-            <span class="label">Authorship</span>
-            <div style="max-width: 400px">
-              <span *ngFor="let author of fileValue.authorship; let last = last"
-                >{{ author }}{{ last ? '' : ', ' }}</span
-              >
-            </div>
-          </div>
-        </div>
-        <div>
           <div style="display: flex; justify-content: flex-end">
-            <app-resource-legal-license *ngIf="license" [license]="license" />
+            @if (license) {
+              <app-resource-legal-license [license]="license" />
+            }
           </div>
-
-          <div>Licensed on {{ fileValue.valueCreationDate | humanReadableDate }}</div>
         </div>
       </div>
-    </div>
+    }
   `,
   styles: ['.label { display: inline-block; width: 120px; font-weight: bold}'],
+  standalone: false,
 })
 export class ResourceLegalComponent implements OnInit {
   @Input({ required: true }) fileValue!: ReadFileValue;
@@ -50,8 +51,8 @@ export class ResourceLegalComponent implements OnInit {
   }
 
   constructor(
-    private _resourceFetcher: ResourceFetcherService,
-    private _copyrightApi: AdminProjectsLegalInfoApiService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _resourceFetcher: ResourceFetcherService
   ) {}
 
   ngOnInit() {
@@ -62,7 +63,7 @@ export class ResourceLegalComponent implements OnInit {
     this._resourceFetcher.projectShortcode$
       .pipe(
         switchMap(projectShortcode =>
-          this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
+          this._adminApiService.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
         ),
         take(1)
       )

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,11 +30,10 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-property-form-value',
   standalone: true,
+  selector: 'app-property-form-value',
   imports: [
     AppDatePickerComponent,
-    CommonModule,
     MatButtonModule,
     MatInputModule,
     MatMenuModule,

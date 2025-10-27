@@ -12,6 +12,7 @@ import { Segment } from './segment';
       (click)="playMedia()"></div>
   `,
   styleUrls: ['./segment.component.scss'],
+  standalone: false,
 })
 export class SegmentComponent implements OnInit {
   @Input({ required: true }) segment!: Segment;
@@ -24,7 +25,7 @@ export class SegmentComponent implements OnInit {
 
   play = false;
 
-  constructor(public mediaControl: MediaControlService) {}
+  constructor(public readonly mediaControl: MediaControlService) {}
 
   ngOnInit() {
     this.width =

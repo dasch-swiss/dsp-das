@@ -3,9 +3,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
   name: 'internalLinkReplacer',
+  standalone: false,
 })
 export class InternalLinkReplacerPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private readonly _sanitizer: DomSanitizer) {}
 
   transform(value: null | string | SafeHtml): SafeHtml | null {
     if (value === null) {
@@ -37,6 +38,6 @@ export class InternalLinkReplacerPipe implements PipeTransform {
     const updatedHtml = div.innerHTML;
 
     // Sanitize and return the updated HTML string as SafeHtml
-    return this.sanitizer.bypassSecurityTrustHtml(updatedHtml);
+    return this._sanitizer.bypassSecurityTrustHtml(updatedHtml);
   }
 }

@@ -1,7 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { StoredProject } from '@dasch-swiss/dsp-js';
-import { UserSelectors } from '@dasch-swiss/vre/core/state';
-import { Store } from '@ngxs/store';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { AllProjectsService } from './all-projects.service';
 
@@ -10,6 +9,7 @@ import { AllProjectsService } from './all-projects.service';
   selector: 'app-project-overview',
   templateUrl: './project-overview.component.html',
   styleUrls: ['./project-overview.component.scss'],
+  standalone: false,
 })
 export class ProjectOverviewComponent implements AfterViewInit {
   @ViewChild('filterInput') filterInput!: ElementRef;
@@ -24,7 +24,7 @@ export class ProjectOverviewComponent implements AfterViewInit {
     })
   );
 
-  usersActiveProjects$ = combineLatest([this._store.select(UserSelectors.userActiveProjects), this._filter$]).pipe(
+  usersActiveProjects$ = combineLatest([this._userService.userActiveProjects$, this._filter$]).pipe(
     map(([projects, searchTerm]) => projects.filter(p => this.matchesSearchTerm(p, searchTerm)))
   );
 
@@ -36,10 +36,10 @@ export class ProjectOverviewComponent implements AfterViewInit {
   );
 
   userHasProjects$ = this.usersActiveProjects$.pipe(map(projects => projects.length > 0));
-  isSysAdmin$ = this._store.select(UserSelectors.isSysAdmin);
+  isSysAdmin$ = this._userService.isSysAdmin$;
 
   constructor(
-    private _store: Store,
+    private _userService: UserService,
     private _allProjectsService: AllProjectsService
   ) {}
 

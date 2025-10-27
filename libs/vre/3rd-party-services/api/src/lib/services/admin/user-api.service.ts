@@ -18,8 +18,8 @@ export type UserIdentifier = 'iri' | 'email' | 'username';
 })
 export class UserApiService extends BaseApi {
   constructor(
-    private _http: HttpClient,
-    private _appConfig: AppConfigService
+    private readonly _http: HttpClient,
+    private readonly _appConfig: AppConfigService
   ) {
     super('admin/users', _appConfig.dspApiConfig);
   }
@@ -62,7 +62,7 @@ export class UserApiService extends BaseApi {
     });
   }
 
-  updatePassword(iri: string, currentPassword: boolean, newPassword: boolean) {
+  updatePassword(iri: string, currentPassword: string, newPassword: string) {
     return this._http.put<UserResponse>(`${this._userRoute(iri)}/Password`, {
       requesterPassword: currentPassword,
       newPassword,

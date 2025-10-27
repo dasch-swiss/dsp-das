@@ -18,6 +18,7 @@ import { ListItemForm } from './list-item-form.type';
       [validators]="commentsValidators"
       [isRequired]="false" />
   `,
+  standalone: false,
 })
 export class ReusableListItemFormComponent implements OnInit {
   @Input() formData: {
@@ -31,7 +32,7 @@ export class ReusableListItemFormComponent implements OnInit {
   readonly labelsValidators = [Validators.required, Validators.maxLength(2000)];
   readonly commentsValidators = [Validators.required, Validators.maxLength(2000)];
 
-  constructor(private _fb: FormBuilder) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     this.form = this._fb.group({

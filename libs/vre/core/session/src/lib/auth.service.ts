@@ -2,32 +2,23 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
-import { LoadUserAction, LogUserOutAction } from '@dasch-swiss/vre/core/state';
-import {
-  ComponentCommunicationEventService,
-  EmitEvent,
-  Events as CommsEvents,
-  LocalizationService,
-} from '@dasch-swiss/vre/shared/app-helper-services';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
-import { catchError, map, of, switchMap, take, tap } from 'rxjs';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(
-    private store: Store,
-    private _accessTokenService: AccessTokenService,
+    private readonly _userService: UserService,
+    private readonly _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _componentCommsService: ComponentCommunicationEventService,
-    private _actions$: Actions,
-    private _localizationsService: LocalizationService
+    private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _localizationsService: LocalizationService
   ) {}
 
   isCredentialsValid$() {
     return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-      take(1),
       map(() => true),
       catchError(() => {
         return of(false);
@@ -47,7 +38,6 @@ export class AuthService {
         const encodedJWT = response.body.token;
         this._accessTokenService.storeToken(encodedJWT);
         this._dspApiConnection.v2.jsonWebToken = encodedJWT;
-        this._componentCommsService.emit(new EmitEvent(CommsEvents.loginSuccess));
       }),
       catchError(error => {
         if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
@@ -56,26 +46,21 @@ export class AuthService {
         throw error;
       }),
       switchMap(() => {
-        this._actions$.pipe(ofActionSuccessful(LoadUserAction), take(1)).subscribe(() => {
-          this._localizationsService.setLanguage(this.store.selectSnapshot(state => state.user.user).lang);
-        });
-        return this.store.dispatch(new LoadUserAction(identifier, identifierType));
+        return this._userService.loadUser(identifier, identifierType).pipe(
+          tap(user => {
+            this._localizationsService.setLanguage(user.lang);
+          })
+        );
       })
     );
   }
 
   logout() {
-    this._dspApiConnection.v2.auth
-      .logout()
-      .pipe(switchMap(() => this.clearState()))
-      .subscribe(() => {
-        this._accessTokenService.removeTokens();
-        this._dspApiConnection.v2.jsonWebToken = '';
-        window.location.reload();
-      });
-  }
-
-  private clearState() {
-    return this.store.dispatch([new LogUserOutAction()]);
+    this._dspApiConnection.v2.auth.logout().subscribe(() => {
+      this._userService.logout();
+      this._accessTokenService.removeTokens();
+      this._dspApiConnection.v2.jsonWebToken = '';
+      window.location.reload();
+    });
   }
 }

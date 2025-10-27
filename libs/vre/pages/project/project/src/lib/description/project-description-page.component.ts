@@ -9,6 +9,7 @@ import { LicenseCaptionsMapping } from './license-captions-mapping';
   selector: 'app-project-description-page',
   templateUrl: './project-description-page.component.html',
   styleUrls: ['./project-description-page.component.scss'],
+  standalone: false,
 })
 export class ProjectDescriptionPageComponent {
   readonly routeConstants = RouteConstants;
@@ -25,14 +26,14 @@ export class ProjectDescriptionPageComponent {
 
   hasManualLicense?: string;
 
-  constructor(private _projectPageService: ProjectPageService) {}
+  constructor(private readonly _projectPageService: ProjectPageService) {}
 
   private _sortDescriptionsByLanguage(descriptions: StringLiteral[]): StringLiteral[] {
-    const languageOrder = AvailableLanguages.map(l => l.language);
+    const languageOrder = AvailableLanguages.map(l => l.language) as string[];
 
     return descriptions.sort((a, b) => {
-      const indexA = languageOrder.indexOf(a.language);
-      const indexB = languageOrder.indexOf(b.language);
+      const indexA = languageOrder.indexOf(a.language!);
+      const indexB = languageOrder.indexOf(b.language!);
 
       return indexA - indexB;
     });

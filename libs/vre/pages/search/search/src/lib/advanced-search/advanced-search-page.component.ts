@@ -10,6 +10,7 @@ import { QueryObject, provideAdvancedSearch } from '@dasch-swiss/vre/pages/searc
   </app-centered-layout>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [...provideAdvancedSearch()],
+  standalone: false,
 })
 export class AdvancedSearchPageComponent implements OnInit {
   uuid!: string;
@@ -27,7 +28,6 @@ export class AdvancedSearchPageComponent implements OnInit {
     const route = `./${RouteConstants.advancedSearch}/${RouteConstants.gravSearch}/${encodeURIComponent(
       queryObject.query
     )}`;
-
     this._router.navigate([route], { relativeTo: this._route.parent });
   }
 }

@@ -18,11 +18,12 @@ export function makeCalendarToken() {
     },
     { provide: ACTIVE_CALENDAR, useFactory: makeCalendarToken },
   ],
+  standalone: false,
 })
 export class JDNDatepickerDirective implements OnChanges, OnDestroy {
   private _activeCalendar!: 'Gregorian' | 'Julian' | 'Islamic';
 
-  constructor(@Inject(ACTIVE_CALENDAR) private _activeCalendarToken: any) {}
+  constructor(@Inject(ACTIVE_CALENDAR) private readonly _activeCalendarToken: any) {}
 
   get activeCalendar() {
     return this._activeCalendar;

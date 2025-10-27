@@ -14,6 +14,7 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
     [borderBottom]="true">
     <app-incoming-standoff-link-value [links]="standoffLinks" />
   </app-property-row>`,
+  standalone: false,
 })
 export class StandoffLinksPropertyComponent implements OnChanges {
   @Input({ required: true }) resource!: DspResource;
@@ -35,6 +36,7 @@ export class StandoffLinksPropertyComponent implements OnChanges {
       return {
         label: link.strval ?? '',
         uri: `/resource/${resourceIdPathOnly}`,
+        iri: this.resource.res.id,
         project: link.linkedResource?.resourceClassLabel ?? '',
       };
     });

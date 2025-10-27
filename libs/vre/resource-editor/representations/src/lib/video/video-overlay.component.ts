@@ -8,6 +8,7 @@ import { MediaPlayerService } from './media-player.service';
     <mat-icon (click)="videoPlayer.togglePlay()">{{ play ? 'pause' : 'play_arrow' }}</mat-icon>
     <mat-icon (click)="updateTimeFromButton(10)">forward_10</mat-icon>
   </div>`,
+  standalone: false,
 })
 export class VideoOverlayComponent {
   // todo change following variables
@@ -15,7 +16,7 @@ export class VideoOverlayComponent {
   duration = 0;
   play = true;
 
-  constructor(public videoPlayer: MediaPlayerService) {}
+  constructor(public readonly videoPlayer: MediaPlayerService) {}
 
   updateTimeFromButton(range: number) {
     if (range > 0 && this.currentTime > this.duration - 10) {

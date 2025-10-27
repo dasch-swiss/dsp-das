@@ -11,51 +11,87 @@ import { CompoundService } from './compound/compound.service';
   template: `
     <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedTab" (selectedTabChange)="onTabChange($event)">
       <mat-tab #matTabProperties [label]="'resourceEditor.properties' | translate">
-        <app-properties-display *ngIf="resource" [resource]="resource" />
+        @if (resource) {
+          <app-properties-toggle [properties]="resource.resProps" />
+          <app-properties-display [resource]="resource" />
+        }
       </mat-tab>
 
-      <mat-tab *ngIf="incomingResource" #matTabIncoming [label]="resourceClassLabel(incomingResource.res)">
-        <app-properties-display
-          [resource]="incomingResource"
-          [displayLabel]="true"
-          [parentResourceId]="resource.res.id" />
-      </mat-tab>
+      @if (incomingResource) {
+        <mat-tab #matTabIncoming [label]="resourceClassLabel(incomingResource.res)">
+          <app-incoming-resource-header [resource]="incomingResource.res" />
+          <app-properties-display [resource]="incomingResource" [parentResourceId]="resource.res.id" />
+        </mat-tab>
+      }
 
       <!-- image annotations -->
-      <mat-tab label="Annotations" *ngIf="displayAnnotations">
-        <ng-template matTabLabel>
-          {{ 'resourceEditor.labelAnnotations' | translate }}
-          <span *ngIf="regionsCount > 0" [matBadge]="regionsCount" matBadgeColor="primary" matBadgeOverlap="false">
-          </span>
-        </ng-template>
-        <app-annotation-tab [resource]="resource.res" />
-      </mat-tab>
+      @if (displayAnnotations) {
+        <mat-tab label="Annotations">
+          <ng-template matTabLabel>
+            <span>{{ 'resourceEditor.labelAnnotations' | translate }}</span>
+            @if (regionsCount > 0) {
+              <span
+                style="margin-left: 0.5em;"
+                [matBadge]="regionsCount"
+                matBadgeColor="primary"
+                matBadgeOverlap="false">
+              </span>
+            }
+            <span [ngClass]="['dots-container', (regionService.regionsLoading$ | async) ? 'dots' : '']"> </span>
+          </ng-template>
+          <app-annotation-tab [resource]="resource.res" />
+        </mat-tab>
+      }
 
       <!-- audio & video annotations -->
-      <mat-tab label="Segments" *ngIf="segmentsService.segments.length > 0">
-        <ng-template matTabLabel>
-          <span [matBadge]="segmentsService.segments.length" matBadgeColor="primary" matBadgeOverlap="false">
-            {{ 'resourceEditor.labelAnnotations' | translate }}
-          </span>
-        </ng-template>
-        <app-segment-tab [resource]="resource.res" />
-      </mat-tab>
+      @if (segmentsService.segments.length > 0) {
+        <mat-tab label="Segments">
+          <ng-template matTabLabel>
+            <span [matBadge]="segmentsService.segments.length" matBadgeColor="primary" matBadgeOverlap="false">
+              {{ 'resourceEditor.labelAnnotations' | translate }}
+            </span>
+          </ng-template>
+          <app-segment-tab [resource]="resource.res" />
+        </mat-tab>
+      }
     </mat-tab-group>
   `,
   styles: [
     `
       :host ::ng-deep {
-        .mat-mdc-tab-body {
-          width: 100%;
+        .mat-mdc-tab-body,
+        .mat-mdc-tab-body-content {
+          height: auto !important;
+          overflow: visible !important;
         }
-        .mat-mdc-tab-body.mat-mdc-tab-body-active,
-        .mat-mdc-tab-body-content,
-        .mat-mdc-tab-body-wrapper {
-          overflow: visible;
+      }
+      .dots-container {
+        margin-left: 1.5em;
+        min-width: 3ch;
+      }
+      .dots {
+        position: relative;
+        display: inline-block;
+        color: var(--primary);
+      }
+      .dots::after {
+        content: '...';
+        display: inline-block;
+        overflow: hidden;
+        width: 0;
+        vertical-align: bottom;
+
+        animation: dots 1s steps(3, end) infinite;
+      }
+
+      @keyframes dots {
+        to {
+          width: 3ch;
         }
       }
     `,
   ],
+  standalone: false,
 })
 export class ResourceTabsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) resource!: DspResource;
