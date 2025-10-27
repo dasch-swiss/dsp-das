@@ -613,6 +613,10 @@
         "noResults": "Nessun risultato trovato",
         "createNew": "Crea nuovo"
       },
+      "intervalValue": {
+        "start": "Inizio",
+        "end": "Fine"
+      },
       "example": "es."
     }
   },
