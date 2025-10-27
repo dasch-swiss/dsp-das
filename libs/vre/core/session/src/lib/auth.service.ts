@@ -1,4 +1,4 @@
-import { Inject, Injectable, inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
@@ -67,23 +67,18 @@ export class AuthService {
   /**
    * Cleanup authentication state with configurable options
    * @param options cleanup configuration
-   * @param options.clearUserState whether to clear user state (default: false)
    * @param options.clearJwt whether to clear JWT token from connection (default: true)
    * @param options.reloadPage whether to reload the page (default: false)
    */
-  cleanupAuthState(
+  afterLogout(
     options: {
-      clearUserState?: boolean;
       clearJwt?: boolean;
       reloadPage?: boolean;
     } = {}
   ): void {
-    const { clearUserState = false, clearJwt = true, reloadPage = false } = options;
+    const { clearJwt = true, reloadPage = false } = options;
 
-    if (clearUserState) {
-      this._userService.logout();
-    }
-
+    this._userService.logout();
     this._accessTokenService.removeTokens();
 
     if (clearJwt) {
@@ -100,7 +95,7 @@ export class AuthService {
    */
   logout() {
     this._dspApiConnection.v2.auth.logout().subscribe(() => {
-      this.cleanupAuthState({ clearUserState: true, clearJwt: true, reloadPage: true });
+      this.afterLogout({ clearJwt: true, reloadPage: true });
     });
   }
 }
