@@ -1,12 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { map } from 'rxjs';
 import { PropertyFormItem, PropertyData, ApiData, ParentChildPropertyPair, SearchItem, OrderByItem } from '../model';
+import { AdvancedSearchDataService } from './advanced-search-data.service';
 import { Operator } from './operators.config';
 import { SearchStateService } from './search-state.service';
 
 @Injectable()
 export class PropertyFormManager {
   private searchStateService = inject(SearchStateService);
+  private _dataService = inject(AdvancedSearchDataService);
 
   constructor() {
     this.searchStateService.propertyForms$
@@ -92,7 +94,10 @@ export class PropertyFormManager {
 
   onOperatorSelectionChanged(property: PropertyFormItem, selectedOperator: Operator): void {
     property.selectedOperator = selectedOperator;
-    this.searchStateService.updatePropertyForm(property);
+    this._dataService.getObjectsForProperty$(property.selectedProperty!.iri).subscribe(objects => {
+      property.matchPropertyResourceClasses = objects;
+      this.searchStateService.updatePropertyForm(property);
+    });
   }
 
   /**

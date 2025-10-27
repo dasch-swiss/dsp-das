@@ -7,7 +7,7 @@ import {
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { BehaviorSubject, filter, map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
 import { ResourceLabelPropertyData } from '../constants';
 import { ApiData, PropertyData } from '../model';
 
@@ -76,12 +76,31 @@ export class AdvancedSearchDataService {
 
   resourceClasses$: Observable<ApiData[]> = this._resourceClassDefinitions$.pipe(
     startWith([]),
+    tap(resClasses => console.log('resource classes', resClasses)),
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
         return { iri: resClassDef.id, label: resClassDef.label || '' };
       })
     )
   );
+
+  getObjectsForProperty$ = (propertyIri: string): Observable<ApiData[]> =>
+    combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
+      map(([resClasses, propDefs]) => {
+        const propDef = propDefs.find(p => p.id === propertyIri);
+        if (!propDef) {
+          return [];
+        }
+        const objectType = propDef.objectType;
+        if (!objectType) {
+          return [];
+        }
+        console.log('object type', objectType);
+        console.log('propDef', propDef);
+        console.log('propDef.label', propertyIri);
+        return resClasses.filter(rc => rc.iri === objectType);
+      })
+    );
 
   getSubclassesOfResourceClass$ = (classIri: string): Observable<ApiData[]> =>
     this._resourceClassDefinitions$.pipe(
@@ -114,8 +133,18 @@ export class AdvancedSearchDataService {
   }
 
   private _getPropertiesOfResourceClass$ = (classIri: string): Observable<PropertyData[]> =>
-    this._propertyDefinitions$.pipe(
-      map(props => props.filter(p => p.subjectType === classIri).map(this._createPropertyData))
+    combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
+      tap(([c, p]) => console.log('class properties', c, p)),
+      map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))
+    );
+
+  private _getPropertyIrisForClass$ = (classIri: string): Observable<string[]> =>
+    this._resourceClassDefinitions$.pipe(
+      map(resClasses => resClasses.find(r => r.id === classIri)),
+      filter((resClass): resClass is ResourceClassDefinitionWithAllLanguages => resClass !== undefined),
+      map((resClass: ResourceClassDefinitionWithAllLanguages) =>
+        resClass.propertiesList.map(property => property.propertyIndex)
+      )
     );
 
   private _createPropertyData(propDef: ResourcePropertyDefinition): PropertyData {

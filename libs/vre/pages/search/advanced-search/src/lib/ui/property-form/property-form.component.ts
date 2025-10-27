@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +11,6 @@ import { ApiData, PropertyData, PropertyFormItem } from '../../model';
 import { AdvancedSearchDataService } from '../../service/advanced-search-data.service';
 import { EXISTENCE_OPS, Operator } from '../../service/operators.config';
 import { PropertyFormManager } from '../../service/property-form.manager';
-import { SearchStateService } from '../../service/search-state.service';
 import { PropertyFormLinkMatchPropertyComponent } from './property-form-link-match-property/property-form-link-match-property.component';
 import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
 import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
@@ -38,7 +37,7 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
   styleUrls: ['./property-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormComponent {
+export class PropertyFormComponent implements OnInit {
   @Input() propertyFormItem: PropertyFormItem = new PropertyFormItem();
 
   private _dataService = inject(AdvancedSearchDataService);
@@ -50,6 +49,10 @@ export class PropertyFormComponent {
   constants = Constants;
 
   existanceOps = EXISTENCE_OPS;
+
+  ngOnInit(): void {
+    console.log(this.propertyFormItem);
+  }
 
   onSelectedPropertyChanged(event: MatSelectChange): void {
     this._formManager.onPropertySelectionChanged(this.propertyFormItem, event.value);
