@@ -12,7 +12,9 @@
     [displayWith]="displayResource"
     (optionsScroll)="onScroll()"
     (optionSelected)="onResourceSelected($event)">
-    <mat-option *ngIf="(resourcesSearchNoResults$ | async) && !(resourcesSearchResultsLoading$ | async)" [disabled]="true">
+    <mat-option
+      *ngIf="(resourcesSearchNoResults$ | async) && !(resourcesSearchResultsLoading$ | async)"
+      [disabled]="true">
       No results found
     </mat-option>
     <mat-option

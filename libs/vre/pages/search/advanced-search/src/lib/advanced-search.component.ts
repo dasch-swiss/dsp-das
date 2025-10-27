@@ -6,10 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { PropertyFormItem, QueryObject } from './model';
+import { provideAdvancedSearch } from './providers';
 import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
 import { PreviousSearchService } from './service/previous-search.service';
@@ -43,6 +43,7 @@ import { INITIAL_FORMS_STATE } from './util';
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideAdvancedSearch()],
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;

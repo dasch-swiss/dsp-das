@@ -1,7 +1,13 @@
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { SearchStateService } from '../../service/search-state.service';
 
 @Component({
   selector: 'app-order-by',
@@ -14,6 +20,7 @@ import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/
     MatListModule,
     MatTooltipModule,
     OverlayModule,
+    AsyncPipe,
   ],
   templateUrl: './order-by.component.html',
   styleUrls: ['./order-by.component.scss'],
@@ -21,7 +28,7 @@ import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/
   standalone: true,
 })
 export class OrderByComponent {
-  private searchService = inject(SearchStateService);
+  private searchService: SearchStateService = inject(SearchStateService);
 
   readonly TOOLTIP_TEXT = 'Search cannot be ordered by a URI property or a property that links to a resource.';
 
