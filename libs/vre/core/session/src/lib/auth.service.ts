@@ -66,9 +66,6 @@ export class AuthService {
 
   /**
    * Cleanup authentication state with configurable options
-   * @param options cleanup configuration
-   * @param options.clearJwt whether to clear JWT token from connection (default: true)
-   * @param options.reloadPage whether to reload the page (default: false)
    */
   afterLogout(): void {
     this._userService.logout();
