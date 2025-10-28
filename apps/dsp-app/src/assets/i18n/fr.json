@@ -281,7 +281,11 @@
         "subtitle": "Définir la cardinalité pour la propriété {{group}}: {{label}}",
         "notPossible": "La modification de la cardinalité n'est pas possible.",
         "attention": "Attention",
-        "confirmMessage": "Veuillez noter que cette modification peut être irréversible. Voulez-vous modifier la cardinalité ?"
+        "confirmMessage": "Veuillez noter que cette modification peut être irréversible. Voulez-vous modifier la cardinalité ?",
+        "multiplePropertiesError": "Au moins une ressource de la classe \"{{className}}\" possède plusieurs propriétés \"{{propertyLabel}}\" dans vos données.",
+        "multiplePropertiesHint": "Pour définir la cardinalité de \"{{propertyLabel}}\" sur unique, chaque ressource \"{{className}}\" doit avoir une seule valeur \"{{propertyLabel}}\" avant cette modification.",
+        "missingPropertyError": "Au moins une ressource de la classe \"{{className}}\" ne possède pas de propriété \"{{propertyLabel}}\" dans vos données.",
+        "missingPropertyHint": "Pour définir la cardinalité de \"{{propertyLabel}}\" sur obligatoire, chaque ressource \"{{className}}\" doit avoir une valeur \"{{propertyLabel}}\" avant cette modification."
       },
       "propertyItem": {
         "edit": "Modifier",
