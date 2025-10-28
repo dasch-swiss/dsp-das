@@ -192,7 +192,8 @@ export class LinkValueComponent implements OnInit {
       )
       .subscribe(response => {
         // Filter resources to only include those from the same project
-        this.resources = response.resources.filter(res => res.attachedToProject === this.projectIri);
+        const filtered = response.resources.filter(res => res.attachedToProject === this.projectIri);
+        this.resources = [...this.resources, ...filtered];
         this._cd.detectChanges();
       });
   }
