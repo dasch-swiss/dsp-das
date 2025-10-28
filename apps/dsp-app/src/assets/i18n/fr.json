@@ -617,6 +617,9 @@
         "processing": "Traitement du fichier sur le serveur...",
         "processingFile": "Traitement du fichier sur le serveur...",
         "extensionNotSupported": "L'extension {{extension}} n'est pas prise en charge."
+      },
+      "representation": {
+        "file": "Fichier"
       }
     },
     "templateSwitcher": {

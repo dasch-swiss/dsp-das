@@ -617,6 +617,9 @@
         "processing": "Processing file on server...",
         "processingFile": "Processing file on server...",
         "extensionNotSupported": "The extension {{extension}} is not supported."
+      },
+      "representation": {
+        "file": "File"
       }
     },
     "templateSwitcher": {
