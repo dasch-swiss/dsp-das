@@ -298,78 +298,24 @@ describe('AuthService', () => {
   });
 
   describe('afterLogout()', () => {
-    it('should always clear user state and remove tokens', () => {
+    it('should clear user state and remove tokens', () => {
       service.afterLogout();
 
       expect(mockUserService.logout).toHaveBeenCalled();
       expect(mockAccessTokenService.removeTokens).toHaveBeenCalled();
     });
 
-    it('should clear JWT by default', () => {
+    it('should clear JWT token', () => {
       mockDspApiConnection.v2!.jsonWebToken = 'some-token';
 
       service.afterLogout();
 
       expect(mockDspApiConnection.v2!.jsonWebToken).toBe('');
-    });
-
-    it('should clear JWT when clearJwt option is true', () => {
-      mockDspApiConnection.v2!.jsonWebToken = 'some-token';
-
-      service.afterLogout({ clearJwt: true });
-
-      expect(mockDspApiConnection.v2!.jsonWebToken).toBe('');
-    });
-
-    it('should not clear JWT when clearJwt option is false', () => {
-      mockDspApiConnection.v2!.jsonWebToken = 'some-token';
-
-      service.afterLogout({ clearJwt: false });
-
-      expect(mockDspApiConnection.v2!.jsonWebToken).toBe('some-token');
-    });
-
-    it('should not reload page by default', () => {
-      const { reloadMock, restore } = mockWindowReload();
-
-      service.afterLogout();
-
-      expect(reloadMock).not.toHaveBeenCalled();
-      restore();
-    });
-
-    it('should not reload page when reloadPage option is false', () => {
-      const { reloadMock, restore } = mockWindowReload();
-
-      service.afterLogout({ reloadPage: false });
-
-      expect(reloadMock).not.toHaveBeenCalled();
-      restore();
-    });
-
-    it('should reload page when reloadPage option is true', () => {
-      const { reloadMock, restore } = mockWindowReload();
-
-      service.afterLogout({ reloadPage: true });
-
-      expect(reloadMock).toHaveBeenCalled();
-      restore();
-    });
-
-    it('should handle all options together', () => {
-      const { reloadMock, restore } = mockWindowReload();
-      mockDspApiConnection.v2!.jsonWebToken = 'some-token';
-
-      service.afterLogout({ clearJwt: false, reloadPage: true });
-
-      expect(mockDspApiConnection.v2!.jsonWebToken).toBe('some-token');
-      expect(reloadMock).toHaveBeenCalled();
-      restore();
     });
   });
 
   describe('logout()', () => {
-    it('should call API logout then execute afterLogout with full cleanup', () => {
+    it('should call API logout, execute afterLogout, and reload page', () => {
       const { reloadMock, restore } = mockWindowReload();
       mockDspApiConnection.v2!.auth!.logout = jest.fn().mockReturnValue(of({}));
       const afterLogoutSpy = jest.spyOn(service, 'afterLogout');
@@ -377,7 +323,7 @@ describe('AuthService', () => {
       service.logout();
 
       expect(mockDspApiConnection.v2!.auth!.logout).toHaveBeenCalled();
-      expect(afterLogoutSpy).toHaveBeenCalledWith({ clearJwt: true, reloadPage: true });
+      expect(afterLogoutSpy).toHaveBeenCalled();
       expect(reloadMock).toHaveBeenCalled();
       restore();
     });
@@ -391,7 +337,6 @@ describe('AuthService', () => {
       service.logout();
 
       expect(mockDspApiConnection.v2!.auth!.logout).toHaveBeenCalled();
-      // afterLogout should not be called if API logout fails
       expect(afterLogoutSpy).not.toHaveBeenCalled();
       expect(reloadMock).not.toHaveBeenCalled();
       restore();
