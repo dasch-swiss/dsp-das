@@ -2,13 +2,15 @@ import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { BehaviorSubject, finalize, switchMap } from 'rxjs';
+import { BehaviorSubject, finalize, Subscription, switchMap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AutoLoginService {
   hasCheckedCredentials$ = new BehaviorSubject(false);
+  private _isInitialized = false;
+  private _subscription?: Subscription;
 
   constructor(
     private readonly _accessTokenService: AccessTokenService,
@@ -18,6 +20,12 @@ export class AutoLoginService {
   ) {}
 
   setup(): void {
+    if (this._isInitialized) {
+      console.warn('AutoLoginService.setup() has already been called. Ignoring duplicate call.');
+      return;
+    }
+    this._isInitialized = true;
+
     const encodedJWT = this._accessTokenService.getAccessToken();
     if (!encodedJWT) {
       this.hasCheckedCredentials$.next(true);
@@ -33,7 +41,8 @@ export class AutoLoginService {
 
     this._dspApiConnection.v2.jsonWebToken = encodedJWT;
 
-    this._authService
+    this._subscription?.unsubscribe();
+    this._subscription = this._authService
       .isCredentialsValid$()
       .pipe(
         switchMap(isValid => {

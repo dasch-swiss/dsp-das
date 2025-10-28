@@ -4,7 +4,7 @@ import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserFeedbackError } from '@dasch-swiss/vre/core/error-handler';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, map, of, switchMap, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { UserService } from './user.service';
 
@@ -77,9 +77,14 @@ export class AuthService {
    * Logout user - performs API logout and full cleanup
    */
   logout() {
-    this._dspApiConnection.v2.auth.logout().subscribe(() => {
-      this.afterLogout();
-      window.location.reload();
-    });
+    this._dspApiConnection.v2.auth
+      .logout()
+      .pipe(
+        finalize(() => {
+          this.afterLogout();
+          window.location.reload();
+        })
+      )
+      .subscribe();
   }
 }
