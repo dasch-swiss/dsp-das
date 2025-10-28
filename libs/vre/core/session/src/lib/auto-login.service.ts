@@ -1,16 +1,15 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { BehaviorSubject, finalize, Subscription, switchMap } from 'rxjs';
+import { BehaviorSubject, finalize, switchMap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AutoLoginService implements OnDestroy {
+export class AutoLoginService {
   hasCheckedCredentials$ = new BehaviorSubject(false);
   private _isInitialized = false;
-  private _subscription?: Subscription;
 
   constructor(
     private readonly _accessTokenService: AccessTokenService,
@@ -41,8 +40,7 @@ export class AutoLoginService implements OnDestroy {
 
     this._dspApiConnection.v2.jsonWebToken = encodedJWT;
 
-    this._subscription?.unsubscribe();
-    this._subscription = this._authService
+    this._authService
       .isCredentialsValid$()
       .pipe(
         switchMap(isValid => {
@@ -64,9 +62,5 @@ export class AutoLoginService implements OnDestroy {
           this._authService.afterLogout();
         },
       });
-  }
-
-  ngOnDestroy(): void {
-    this._subscription?.unsubscribe();
   }
 }
