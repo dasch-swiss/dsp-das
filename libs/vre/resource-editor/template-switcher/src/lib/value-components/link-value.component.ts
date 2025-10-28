@@ -192,6 +192,7 @@ export class LinkValueComponent implements OnInit {
       )
       .subscribe(response => {
         // Filter resources to only include those from the same project
+        // TODO: remove once backend supports limiting to project
         this.resources = response.resources.filter(res => res.attachedToProject === this.projectIri);
         this._cd.detectChanges();
       });
@@ -200,7 +201,8 @@ export class LinkValueComponent implements OnInit {
   private _searchApi = (searchTerm: string, offset: number, resourceClassIri: string) =>
     this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, offset, {
       limitToResourceClass: resourceClassIri,
-      limitToProject: this.projectIri,
+      //   Uncomment the following line to limit after fixing it on the backend
+      //   limitToProject: this.projectIri,
     });
 
   private _getRestrictToResourceClass(resource: ReadResource) {
