@@ -10,7 +10,6 @@ export class AccessTokenService {
 
   storeToken(token: string): void {
     localStorage.setItem(Auth.AccessToken, token);
-    this.startTokenRefresh();
   }
 
   removeTokens(): void {
@@ -25,7 +24,9 @@ export class AccessTokenService {
       return false;
     }
 
-    return date.setSeconds(date.getSeconds() - 30).valueOf() <= new Date().valueOf();
+    // Token is expired if expiration time (minus 30s buffer) is in the past
+    const expirationWithBuffer = date.getTime() - 30 * 1000; // 30 seconds buffer
+    return expirationWithBuffer <= Date.now();
   }
 
   private getTokenExpirationDate(decoded: JwtPayload): Date | null {
@@ -37,28 +38,6 @@ export class AccessTokenService {
     date.setUTCSeconds(decoded.exp);
 
     return date;
-  }
-
-  private getTokenExp(token: string): number {
-    const decoded = jwt_decode<JwtPayload>(token);
-
-    if (decoded.exp === undefined) {
-      return 0;
-    }
-
-    return decoded.exp;
-  }
-
-  private startTokenRefresh() {
-    const token = this.getAccessToken();
-
-    if (!token) {
-      return;
-    }
-
-    const exp = this.getTokenExp(token);
-    const date = new Date(0);
-    date.setUTCSeconds(exp);
   }
 
   getTokenUser(): string | null {
@@ -87,6 +66,6 @@ export class AccessTokenService {
     if (decoded === null) {
       return false;
     }
-    return this.isTokenExpired(decoded) && decoded.sub !== undefined;
+    return !this.isTokenExpired(decoded) && decoded.sub !== undefined;
   }
 }
