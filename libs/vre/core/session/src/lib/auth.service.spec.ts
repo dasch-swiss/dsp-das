@@ -337,8 +337,8 @@ describe('AuthService', () => {
       service.logout();
 
       expect(mockDspApiConnection.v2!.auth!.logout).toHaveBeenCalled();
-      expect(afterLogoutSpy).not.toHaveBeenCalled();
-      expect(reloadMock).not.toHaveBeenCalled();
+      expect(afterLogoutSpy).toHaveBeenCalled();
+      expect(reloadMock).toHaveBeenCalled();
       restore();
     });
   });
