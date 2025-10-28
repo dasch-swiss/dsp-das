@@ -276,6 +276,13 @@
         "multipleValues": "Mehrere Werte",
         "required": "Erforderlich"
       },
+      "cardinalityDialog": {
+        "title": "Kardinalität aktualisieren",
+        "subtitle": "Kardinalität für Eigenschaft {{group}}: {{label}} festlegen",
+        "notPossible": "Die Änderung der Kardinalität ist nicht möglich.",
+        "attention": "Achtung",
+        "confirmMessage": "Bitte beachten Sie, dass diese Änderung möglicherweise nicht rückgängig gemacht werden kann. Möchten Sie die Kardinalität ändern?"
+      },
       "propertyItem": {
         "edit": "Bearbeiten",
         "removeFromClass": "Aus Klasse entfernen",
@@ -317,6 +324,9 @@
         "patternError": "Dieses Muster wird nicht unterstützt",
         "labelPlaceholder": "Bezeichnung",
         "commentPlaceholder": "Kommentar"
+      },
+      "service": {
+        "classCreated": "Die Klasse {{classLabel}} wurde erfolgreich erstellt."
       }
     },
     "search": {
@@ -589,7 +599,8 @@
       },
       "authorship": {
         "label": "Autorenschaft",
-        "placeholder": "Neue Autorenschaft..."
+        "placeholder": "Neue Autorenschaft...",
+        "pressEnterOrTab": "Drücken Sie Enter oder Tab, um ein Element hinzuzufügen."
       },
       "image": {
         "label": "Bild",
@@ -600,6 +611,7 @@
         "dragAndDrop": "Datei hier ablegen oder klicken zum Durchsuchen",
         "fileTypesSupported": "Unterstützte Dateitypen: {{types}}",
         "processing": "Datei wird auf dem Server verarbeitet...",
+        "processingFile": "Datei wird auf dem Server verarbeitet...",
         "extensionNotSupported": "Die Erweiterung {{extension}} wird nicht unterstützt."
       }
     },
@@ -635,7 +647,9 @@
         "submit": "Absenden",
         "confirm": "Bestätigen",
         "search": "Suchen",
-        "retry": "Erneut versuchen"
+        "retry": "Erneut versuchen",
+        "yes": "Ja",
+        "no": "Nein"
       },
       "fields": {
         "username": "Benutzername",

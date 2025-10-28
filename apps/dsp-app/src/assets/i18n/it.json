@@ -276,6 +276,13 @@
         "multipleValues": "Valori multipli",
         "required": "Obbligatorio"
       },
+      "cardinalityDialog": {
+        "title": "Aggiorna la cardinalità",
+        "subtitle": "Imposta la cardinalità per la proprietà {{group}}: {{label}}",
+        "notPossible": "La modifica della cardinalità non è possibile.",
+        "attention": "Attenzione",
+        "confirmMessage": "Si prega di notare che questa modifica potrebbe non essere reversibile. Vuoi modificare la cardinalità?"
+      },
       "propertyItem": {
         "edit": "Modifica",
         "removeFromClass": "Rimuovi dalla classe",
@@ -317,6 +324,9 @@
         "patternError": "Questo pattern non è supportato",
         "labelPlaceholder": "Etichetta",
         "commentPlaceholder": "Commento"
+      },
+      "service": {
+        "classCreated": "La classe {{classLabel}} è stata creata con successo."
       }
     },
     "search": {
@@ -589,7 +599,8 @@
       },
       "authorship": {
         "label": "Autore",
-        "placeholder": "Nuovo autore..."
+        "placeholder": "Nuovo autore...",
+        "pressEnterOrTab": "Premere Invio o Tab per aggiungere un elemento."
       },
       "image": {
         "label": "Immagine",
@@ -600,6 +611,7 @@
         "dragAndDrop": "Trascina e rilascia il file qui o clicca per sfogliare",
         "fileTypesSupported": "Tipi di file supportati: {{types}}",
         "processing": "Elaborazione file sul server...",
+        "processingFile": "Elaborazione file sul server...",
         "extensionNotSupported": "L'estensione {{extension}} non è supportata."
       }
     },
@@ -635,7 +647,9 @@
         "submit": "Invia",
         "confirm": "Conferma",
         "search": "Cerca",
-        "retry": "Riprova"
+        "retry": "Riprova",
+        "yes": "Sì",
+        "no": "No"
       },
       "fields": {
         "username": "Nome utente",
