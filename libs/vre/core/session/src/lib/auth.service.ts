@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 export class AuthService {
   constructor(
     private readonly _userService: UserService,
-    private _translateService: TranslateService,
+    private readonly _translateService: TranslateService,
     private readonly _accessTokenService: AccessTokenService,
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
