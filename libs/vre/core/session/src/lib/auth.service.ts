@@ -70,24 +70,10 @@ export class AuthService {
    * @param options.clearJwt whether to clear JWT token from connection (default: true)
    * @param options.reloadPage whether to reload the page (default: false)
    */
-  afterLogout(
-    options: {
-      clearJwt?: boolean;
-      reloadPage?: boolean;
-    } = {}
-  ): void {
-    const { clearJwt = true, reloadPage = false } = options;
-
+  afterLogout(): void {
     this._userService.logout();
     this._accessTokenService.removeTokens();
-
-    if (clearJwt) {
-      this._dspApiConnection.v2.jsonWebToken = '';
-    }
-
-    if (reloadPage) {
-      window.location.reload();
-    }
+    this._dspApiConnection.v2.jsonWebToken = '';
   }
 
   /**
@@ -95,7 +81,8 @@ export class AuthService {
    */
   logout() {
     this._dspApiConnection.v2.auth.logout().subscribe(() => {
-      this.afterLogout({ clearJwt: true, reloadPage: true });
+      this.afterLogout();
+      window.location.reload();
     });
   }
 }
