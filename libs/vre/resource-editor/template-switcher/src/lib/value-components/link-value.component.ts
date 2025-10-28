@@ -77,6 +77,7 @@ export class LinkValueComponent implements OnInit {
   @Input({ required: true }) control!: FormControl<string | null>;
   @Input({ required: true }) propIri!: string;
   @Input({ required: true }) resourceClassIri!: string;
+  @Input({ required: true }) projectIri!: string;
   @Input() defaultValue?: ReadValue;
   @ViewChild(MatAutocompleteTrigger) autoComplete!: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) auto!: MatAutocomplete;
@@ -198,6 +199,7 @@ export class LinkValueComponent implements OnInit {
   private _searchApi = (searchTerm: string, offset: number, resourceClassIri: string) =>
     this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, offset, {
       limitToResourceClass: resourceClassIri,
+      limitToProject: this.projectIri,
     });
 
   private _getRestrictToResourceClass(resource: ReadResource) {
