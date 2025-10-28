@@ -13,7 +13,7 @@ import { DataBrowserPageService } from './data-browser-page.service';
   template: `
     <div style="padding-left: 16px; margin-bottom: 32px; padding-right: 16px">
       <div style="display: flex; align-items: center">
-        <h3 style="flex: 1">{{ classSelected.classLabel }}</h3>
+        <h3 style="flex: 1">{{ classSelected.resClass.labels | appStringifyStringLiteral }}</h3>
         @if (hasProjectMemberRights$ | async) {
           <button mat-stroked-button (click)="goToAddClassInstance()" data-cy="create-resource-btn">
             {{ 'pages.dataBrowser.dataClassPanel.createResource' | translate }}
