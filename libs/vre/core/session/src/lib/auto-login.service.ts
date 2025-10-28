@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
@@ -7,7 +7,7 @@ import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AutoLoginService {
+export class AutoLoginService implements OnDestroy {
   hasCheckedCredentials$ = new BehaviorSubject(false);
   private _isInitialized = false;
   private _subscription?: Subscription;
@@ -64,5 +64,9 @@ export class AutoLoginService {
           this._authService.afterLogout();
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this._subscription?.unsubscribe();
   }
 }
