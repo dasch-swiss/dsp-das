@@ -63,7 +63,7 @@ export class AccessTokenService {
   private _isTokenExpired(token: JwtPayload): boolean {
     const date = this._getTokenExpirationDate(token);
     if (date == null) {
-      return false;
+      return true;
     }
 
     return date.getTime() < Date.now();
