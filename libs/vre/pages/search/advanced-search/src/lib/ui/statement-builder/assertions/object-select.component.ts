@@ -2,44 +2,38 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { PropertyObjectType, StatementElement } from '../../../model';
 import { PropertyFormManager } from '../../../service/property-form.manager';
-import { PropertyFormLinkValueComponent } from '../property-form-link-value/property-form-link-value.component';
-import { PropertyFormListValueComponent } from '../property-form-list-value/property-form-list-value.component';
-import { PropertyFormResourceComponent } from '../property-form-resource/property-form-resource.component';
-import { PropertyFormValueComponent } from '../property-form-value/property-form-value.component';
+import { LinkValueComponent } from '../object-values/link-value/link-value.component';
+import { ListValueComponent } from '../object-values/list-value/list-value.component';
+import { ResourceValueComponent } from '../object-values/resource-value/resource-value.component';
+import { StringValueComponent } from '../object-values/string-value/string-value.component';
 
 @Component({
   selector: 'app-object-select',
   standalone: true,
-  imports: [
-    CommonModule,
-    PropertyFormValueComponent,
-    PropertyFormLinkValueComponent,
-    PropertyFormListValueComponent,
-    PropertyFormResourceComponent,
-  ],
+  imports: [CommonModule, StringValueComponent, LinkValueComponent, ListValueComponent, ResourceValueComponent],
   template: `
     <div class="adv-statement-form right-hand-form">
       @switch (statementElement.objectType) {
         @case (PROPERTY_OBJECT_TYPES.ResourceObject) {
-          <app-property-form-resource
+          <app-resource-value
             [availableResources]="statementElement.availableObjects"
             [selectedResource]="statementElement.selectedObjectNode?.value"
             (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ValueObject) {
-          <app-property-form-value
+          <app-string-value
             [valueType]="statementElement.selectedPredicate!.objectValueType"
             [value]="statementElement.selectedObjectWriteValue"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.ListValueObject) {
-          <app-property-form-list-value
+          <app-list-value
             [rootListNode]="statementElement.listObject"
             [selectedListNode]="statementElement.selectedObjectNode?.value"
             (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
-          <app-property-form-link-value
+          <app-link-value
             [resourceClass]="statementElement.objectType"
             (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />
         }

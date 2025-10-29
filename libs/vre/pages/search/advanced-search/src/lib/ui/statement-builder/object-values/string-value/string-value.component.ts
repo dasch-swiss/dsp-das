@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { ResourceLabel } from '../../../constants';
+import { ResourceLabel } from '../../../../constants';
 
 class CustomRegex {
   public static readonly INT_REGEX = /^-?\d+$/;
@@ -30,7 +30,7 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
   standalone: true,
-  selector: 'app-property-form-value',
+  selector: 'app-string-value',
   imports: [
     AppDatePickerComponent,
     MatButtonModule,
@@ -40,10 +40,10 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
     FormsModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './property-form-value.component.html',
-  styleUrls: ['./property-form-value.component.scss'],
+  templateUrl: './string-value.component.html',
+  styleUrls: ['./string-value.component.scss'],
 })
-export class PropertyFormValueComponent implements OnInit, AfterViewInit {
+export class StringValueComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) valueType!: string;
   @Input() value?: string;
 

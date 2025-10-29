@@ -15,11 +15,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { debounceTime, distinctUntilChanged, of, take } from 'rxjs';
-import { IriLabelPair } from '../../../model';
-import { PropertyFormManager } from '../../../service/property-form.manager';
+import { IriLabelPair } from '../../../../model';
+import { PropertyFormManager } from '../../../../service/property-form.manager';
 
 @Component({
-  selector: 'app-property-form-link-value',
+  selector: 'app-link-value',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +30,10 @@ import { PropertyFormManager } from '../../../service/property-form.manager';
     MatAutocompleteOptionsScrollDirective,
     AppProgressIndicatorComponent,
   ],
-  templateUrl: './property-form-link-value.component.html',
+  templateUrl: './link-value.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
+export class LinkValueComponent implements OnInit, AfterViewInit {
   private _formsManager = inject(PropertyFormManager);
 
   @Input({ required: true }) resourceClass!: string;

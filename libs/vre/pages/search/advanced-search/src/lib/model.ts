@@ -122,7 +122,7 @@ export class StatementElement {
     return this._selectedObjectNode;
   }
 
-  set selectedObjectNode(value: StringValue | NodeValue) {
+  set selectedObjectNode(value: StringValue | NodeValue | undefined) {
     this._selectedObjectNode = value;
   }
 

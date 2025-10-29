@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PropertyFormValueComponent } from './property-form-value.component';
+import { StringValueComponent } from './string-value.component';
 
 describe('PropertyFormValueComponent', () => {
-  let component: PropertyFormValueComponent;
-  let fixture: ComponentFixture<PropertyFormValueComponent>;
+  let component: StringValueComponent;
+  let fixture: ComponentFixture<StringValueComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PropertyFormValueComponent],
+      imports: [StringValueComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PropertyFormValueComponent);
+    fixture = TestBed.createComponent(StringValueComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

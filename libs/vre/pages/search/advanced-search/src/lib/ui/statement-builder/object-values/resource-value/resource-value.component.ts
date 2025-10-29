@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
-import { IriLabelPair } from '../../../model';
+import { IriLabelPair } from '../../../../model';
 
 @Component({
-  selector: 'app-property-form-resource',
+  selector: 'app-resource-value',
   standalone: true,
   imports: [MatSelectModule],
   template: `
@@ -31,7 +31,7 @@ import { IriLabelPair } from '../../../model';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyFormResourceComponent {
+export class ResourceValueComponent {
   @Input() selectedResource?: IriLabelPair;
   @Input() availableResources: IriLabelPair[] = [];
 

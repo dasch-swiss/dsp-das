@@ -9,11 +9,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReplaySubject } from 'rxjs';
-import { NodeValue } from '../../../model';
+import { NodeValue } from '../../../../model';
 
 @Component({
   standalone: true,
-  selector: 'app-property-form-list-value',
+  selector: 'app-list-value',
   imports: [
     CommonModule,
     MatFormFieldModule,
@@ -54,9 +54,15 @@ import { NodeValue } from '../../../model';
       </mat-autocomplete>
     </mat-form-field>
   `,
-  styleUrls: ['./property-form-list-value.component.scss'],
+  styles: `
+    .dropdown {
+      width: 44.2%;
+      cursor: pointer;
+      color: #737373;
+    }
+  `,
 })
-export class PropertyFormListValueComponent implements OnInit {
+export class ListValueComponent implements OnInit {
   @Input({ required: true }) rootListNode!: ListNodeV2;
   @Input() selectedListNode?: NodeValue | undefined;
 

@@ -5,9 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StatementElement } from '../../model';
 import { PropertyFormManager } from '../../service/property-form.manager';
-import { ComparisonOperatorComponent } from './comparison-operator/comparison-operator.component';
-import { ObjectSelectComponent } from './object-select/object-select.component';
-import { PredicateSelectComponent } from './predicate-select/predicate-select.component';
+import { ComparisonOperatorComponent } from './assertions/comparison-operator.component';
+import { ObjectSelectComponent } from './assertions/object-select.component';
+import { PredicateSelectComponent } from './assertions/predicate-select.component';
 
 @Component({
   selector: 'app-statement-builder',

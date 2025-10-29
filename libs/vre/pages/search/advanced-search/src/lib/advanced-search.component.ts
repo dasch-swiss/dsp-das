@@ -18,7 +18,7 @@ import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { OntologyFormComponent } from './ui/ontology-form.component';
 import { OrderByComponent } from './ui/order-by/order-by.component';
-import { PropertyFormResourceComponent } from './ui/statement-builder/property-form-resource/property-form-resource.component';
+import { ResourceValueComponent } from './ui/statement-builder/object-values/resource-value/resource-value.component';
 import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
 
 @Component({
@@ -36,7 +36,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
     MatTooltipModule,
     TranslateModule,
     MatProgressBar,
-    PropertyFormResourceComponent,
+    ResourceValueComponent,
   ],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],

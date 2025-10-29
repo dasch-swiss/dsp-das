@@ -10,7 +10,7 @@
     </button>
   </div>
   <app-ontology-form class="advanced-search-item" *ngIf="(ontologies$ | async).length" />
-  <app-property-form-resource
+  <app-resource-value
     [availableResources]="resourceClasses$ | async"
     (selectedResourceChange)="onSelectedResourceClassChanged($event)"
     class="advanced-search-item" />
