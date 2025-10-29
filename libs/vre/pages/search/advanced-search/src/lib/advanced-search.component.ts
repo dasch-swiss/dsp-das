@@ -8,7 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { PropertyFormItem, QueryObject } from './model';
+import { map, startWith } from 'rxjs';
+import { INITIAL_FORMS_STATE, SEARCH_ALL_RESOURCE_CLASSES_OPTION } from './constants';
+import { StatementElement, QueryObject, IriLabelPair } from './model';
 import { provideAdvancedSearch } from './providers';
 import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
@@ -17,10 +19,8 @@ import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { OntologyFormComponent } from './ui/ontology-form.component';
 import { OrderByComponent } from './ui/order-by/order-by.component';
-import { PropertyFormSubcriteriaComponent } from './ui/property-form/property-form-subcriteria/property-form-subcriteria.component';
-import { PropertyFormComponent } from './ui/property-form/property-form.component';
-import { ResourceClassFormComponent } from './ui/resource-class-form.component';
-import { INITIAL_FORMS_STATE } from './util';
+import { PropertyFormResourceComponent } from './ui/statement-builder/property-form-resource/property-form-resource.component';
+import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
 
 @Component({
   selector: 'app-advanced-search',
@@ -29,9 +29,7 @@ import { INITIAL_FORMS_STATE } from './util';
     CommonModule,
     OrderByComponent,
     OntologyFormComponent,
-    ResourceClassFormComponent,
-    PropertyFormComponent,
-    PropertyFormSubcriteriaComponent,
+    StatementBuilderComponent,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
@@ -39,6 +37,7 @@ import { INITIAL_FORMS_STATE } from './util';
     MatTooltipModule,
     TranslateModule,
     MatProgressBar,
+    PropertyFormResourceComponent,
   ],
   templateUrl: './advanced-search.component.html',
   styleUrls: ['./advanced-search.component.scss'],
@@ -59,6 +58,11 @@ export class AdvancedSearchComponent implements OnInit {
   ontologyLoading$ = this._dataService.ontologyLoading$;
   ontologies$ = this._dataService.ontologies$;
 
+  resourceClasses$ = this._dataService.resourceClasses$.pipe(
+    map(classes => [SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
+    startWith([SEARCH_ALL_RESOURCE_CLASSES_OPTION])
+  );
+
   get projectIri() {
     return `http://rdfh.ch/projects/${this.projectUuid}`;
   }
@@ -70,25 +74,31 @@ export class AdvancedSearchComponent implements OnInit {
     this._dataService.init(this.projectIri, previousOntology, previousResourceClass);
   }
 
-  removePropertyForm(property: PropertyFormItem): void {
-    this._formManager.deletePropertyForm(property);
+  onSelectedResourceClassChanged(resourceClass: IriLabelPair = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
+    this._formManager.updateSelectedResourceClass(resourceClass);
+  }
+
+  removePropertyForm(statementElement: StatementElement): void {
+    this._formManager.deleteStatement(statementElement);
   }
 
   doSearch(): void {
     const state = this.searchState.currentState;
-    this.previousSearchService.storeSearchSnapshot(this.projectIri, this._dataService.selectedOntology, state);
-
-    const nonEmptyProperties = state.propertyFormList.filter(prop => prop.selectedProperty);
+    this.previousSearchService.storeSearchSnapshot(
+      this.projectIri,
+      this._dataService.selectedOntology,
+      this.searchState.currentState
+    );
 
     const query = this._gravsearchService.generateGravSearchQuery(
       state.selectedResourceClass?.iri,
-      nonEmptyProperties,
+      this.searchState.nonEmptyStatementElements,
       state.propertiesOrderBy
     );
 
     const queryObject: QueryObject = {
       query,
-      properties: nonEmptyProperties,
+      properties: this.searchState.nonEmptyStatementElements,
     };
     this.gravesearchQuery.emit(queryObject);
   }

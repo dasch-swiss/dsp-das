@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { debounceTime, distinctUntilChanged, of, take } from 'rxjs';
-import { ApiData, PropertyFormItem } from '../../../model';
+import { IriLabelPair } from '../../../model';
 import { PropertyFormManager } from '../../../service/property-form.manager';
 
 @Component({
@@ -36,11 +36,10 @@ import { PropertyFormManager } from '../../../service/property-form.manager';
 export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
   private _formsManager = inject(PropertyFormManager);
 
-  @Input() objectType: string | undefined = undefined;
-  @Input() value: string | PropertyFormItem[] | undefined = undefined;
-  @Input() label: string | undefined = undefined;
+  @Input({ required: true }) resourceClass!: string;
+  @Input() selectedResource?: IriLabelPair;
 
-  @Output() emitResourceSelected = new EventEmitter<ApiData>();
+  @Output() emitResourceSelected = new EventEmitter<IriLabelPair>();
 
   // Get search-related data directly from service instead of prop-drilling
   resourcesSearchResultsLoading$ = of(true);
@@ -52,39 +51,31 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.inputControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
-      console.error('do sth with', { value, objectType: this.objectType });
+      console.error('do sth with', { value, objectType: this.selectedResource });
       throw new Error('Method not implemented.');
     });
   }
 
   ngAfterViewInit(): void {
-    if (this.value && typeof this.value === 'string' && this.label) {
-      this.inputControl.setValue({ label: this.label, iri: this.value });
+    if (this.selectedResource) {
+      this.inputControl.setValue(this.selectedResource);
     }
   }
 
   onResourceSelected(event: MatAutocompleteSelectedEvent) {
-    const data = event.option.value as ApiData;
+    const data = event.option.value as IriLabelPair;
     this.emitResourceSelected.emit(data);
   }
 
-  onInputFocused() {
-    if (this.objectType && this.inputControl.value) {
-      console.error('do sth with', {
-        value: this.inputControl.value,
-        objectType: this.objectType,
-      });
-    }
-    throw new Error('Method not implemented.');
-  }
+  onInputFocused() {}
 
   onScroll() {
     // Check the observable value directly
     this.resourcesSearchResultsLoading$.pipe(take(1)).subscribe(loading => {
-      if (!loading && this.objectType && this.inputControl.value) {
+      if (!loading && this.inputControl.value) {
         this._formsManager.loadMoreResourcesSearchResults({
           value: this.inputControl.value,
-          objectType: this.objectType,
+          objectType: this.resourceClass,
         });
       }
     });
@@ -96,7 +87,7 @@ export class PropertyFormLinkValueComponent implements OnInit, AfterViewInit {
    *
    * @param resource the resource containing the label to be displayed (or no selection yet).
    */
-  displayResource(resource: ApiData | null): string {
+  displayResource(resource: IriLabelPair | null): string {
     // null is the initial value (no selection yet)
     if (resource !== null) {
       return resource.label;

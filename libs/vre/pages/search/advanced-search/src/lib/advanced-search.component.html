@@ -10,14 +10,17 @@
     </button>
   </div>
   <app-ontology-form class="advanced-search-item" *ngIf="(ontologies$ | async).length" />
-  <app-resource-class-form class="advanced-search-item" />
+  <app-property-form-resource
+    [availableResources]="resourceClasses$ | async"
+    (selectedResourceChange)="onSelectedResourceClassChanged($event)"
+    class="advanced-search-item" />
   <mat-progress-bar mode="query" *ngIf="(ontologyLoading$ | async) === true" class="advanced-search-item" />
   <div class="advanced-search-content" *ngIf="(ontologyLoading$ | async) === false">
-    <ng-container *ngFor="let propertyForm of searchState.propertyForms$ | async; let isLast = last">
+    <ng-container *ngFor="let propertyForm of searchState.statementElements$ | async; let isLast = last">
       <div style="display: flex; width: 100%">
-        <app-property-form class="advanced-search-item" [propertyFormItem]="propertyForm" />
+        <app-statement-builder class="advanced-search-item" [statementElement]="propertyForm" />
         <button
-          *ngIf="!isLast && propertyForm.selectedProperty"
+          *ngIf="!isLast && propertyForm.selectedPredicate"
           mat-icon-button
           (click)="removePropertyForm(propertyForm)"
           class="remove-property-button"
@@ -25,7 +28,6 @@
           <mat-icon>remove_circle</mat-icon>
         </button>
       </div>
-      <app-property-form-subcriteria class="advanced-search-item" [parentProperty]="propertyForm" />
     </ng-container>
     <div class="advanced-search-bottom-selections advanced-search-item">
       <app-order-by />

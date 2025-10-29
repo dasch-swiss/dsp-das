@@ -9,7 +9,6 @@ import { Constants, KnoraDate } from '@dasch-swiss/dsp-js';
 import { AppDatePickerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ResourceLabel } from '../../../constants';
-import { PropertyFormItem } from '../../../model';
 
 class CustomRegex {
   public static readonly INT_REGEX = /^-?\d+$/;
@@ -45,8 +44,8 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./property-form-value.component.scss'],
 })
 export class PropertyFormValueComponent implements OnInit, AfterViewInit {
-  @Input() objectType: string | undefined = '';
-  @Input() value: string | PropertyFormItem[] | undefined = '';
+  @Input({ required: true }) valueType!: string;
+  @Input() value?: string;
 
   @Output() emitValueChanged = new EventEmitter<string>();
 
@@ -65,12 +64,11 @@ export class PropertyFormValueComponent implements OnInit, AfterViewInit {
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe(value => this._emitValueChanged(value));
 
-    this.inputControl.setValidators(this._getValidators(this.objectType));
+    this.inputControl.setValidators(this._getValidators(this.valueType));
   }
 
   ngAfterViewInit(): void {
-    if (!this.value || typeof this.value !== 'string') return;
-    if (this.objectType !== Constants.DateValue) {
+    if (this.valueType !== Constants.DateValue) {
       this.inputControl.setValue(this.value);
     } else {
       const knoraDate = this._transformDateStringToKnoraDateObject(this.value as string);

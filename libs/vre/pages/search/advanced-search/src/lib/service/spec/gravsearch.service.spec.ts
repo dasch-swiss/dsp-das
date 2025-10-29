@@ -28,13 +28,13 @@ describe('GravsearchService', () => {
             id: 'd708083b-d670-46d8-a4ea-5c106ffa49b4',
             operators: [Operator.Equals, Operator.NotEquals, Operator.IsLike, Operator.Matches],
             selectedOperator: 'equals',
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'resourceLabel',
               label: 'Resource Label',
-              objectType: ResourceLabel,
+              objectRange: ResourceLabel,
               isLinkProperty: false,
             },
-            searchValue: 'test',
+            selectedObjectNode: 'test',
             list: undefined,
           },
           {
@@ -50,13 +50,13 @@ describe('GravsearchService', () => {
               Operator.LessThanEquals,
             ],
             selectedOperator: Operator.Exists,
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
               label: 'int',
-              objectType: Constants.IntValue,
+              objectRange: Constants.IntValue,
               isLinkProperty: false,
             },
-            searchValue: 'test',
+            selectedObjectNode: 'test',
             list: undefined,
           },
           {
@@ -72,13 +72,13 @@ describe('GravsearchService', () => {
               Operator.LessThanEquals,
             ],
             selectedOperator: Operator.LessThan,
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
               label: 'dectest',
-              objectType: Constants.DecimalValue,
+              objectRange: Constants.DecimalValue,
               isLinkProperty: false,
             },
-            searchValue: '1',
+            selectedObjectNode: '1',
             list: undefined,
           },
         ],
@@ -122,7 +122,7 @@ OFFSET 0`
               Operator.NotExists,
               Operator.Matches,
             ],
-            searchValue: [
+            selectedObjectNode: [
               {
                 id: 'eccada6d-30ac-4e39-8a3a-540181ceac3c',
                 isChildProperty: true,
@@ -137,13 +137,13 @@ OFFSET 0`
                   Operator.LessThan,
                   Operator.LessThanEquals,
                 ],
-                searchValue: undefined,
+                selectedObjectNode: undefined,
                 selectedOperator: Operator.Exists,
-                selectedProperty: {
+                selectedPredicate: {
                   iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
                   isLinkProperty: false,
                   label: 'int',
-                  objectType: Constants.IntValue,
+                  objectRange: Constants.IntValue,
                 },
               },
               {
@@ -160,21 +160,21 @@ OFFSET 0`
                   Operator.LessThan,
                   Operator.LessThanEquals,
                 ],
-                searchValue: '1',
+                selectedObjectNode: '1',
                 selectedOperator: Operator.LessThan,
-                selectedProperty: {
+                selectedPredicate: {
                   iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
                   isLinkProperty: false,
                   label: 'dectest',
-                  objectType: Constants.DecimalValue,
+                  objectRange: Constants.DecimalValue,
                 },
               },
             ],
             selectedOperator: Operator.Matches,
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#linkToTest',
               label: 'Link to Test',
-              objectType: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test',
+              objectRange: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#test',
               isLinkProperty: true,
             },
           },
@@ -213,13 +213,13 @@ OFFSET 0`
             id: '83fa06a4-a7bf-4e23-bcda-30c70777d761',
             operators: [Operator.Equals, Operator.NotEquals, Operator.IsLike, Operator.Matches],
             selectedOperator: 'equals',
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'resourceLabel',
               label: 'Resource Label',
-              objectType: ResourceLabel,
+              objectRange: ResourceLabel,
               isLinkProperty: false,
             },
-            searchValue: 'test',
+            selectedObjectNode: 'test',
             list: undefined,
           },
           {
@@ -235,13 +235,13 @@ OFFSET 0`
               Operator.LessThanEquals,
             ],
             selectedOperator: Operator.Exists,
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#int',
               label: 'int',
-              objectType: Constants.IntValue,
+              objectRange: Constants.IntValue,
               isLinkProperty: false,
             },
-            searchValue: 'test',
+            selectedObjectNode: 'test',
             list: undefined,
           },
           {
@@ -257,13 +257,13 @@ OFFSET 0`
               Operator.LessThanEquals,
             ],
             selectedOperator: Operator.LessThan,
-            selectedProperty: {
+            selectedPredicate: {
               iri: 'http://api.test.dasch.swiss/ontology/0420/eric-onto/v2#dectest',
               label: 'dectest',
-              objectType: Constants.DecimalValue,
+              objectRange: Constants.DecimalValue,
               isLinkProperty: false,
             },
-            searchValue: '1',
+            selectedObjectNode: '1',
             list: undefined,
           },
         ],

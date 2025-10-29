@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { PropertyFormItem } from '../../../model';
+import { ReplaySubject } from 'rxjs';
+import { NodeValue } from '../../../model';
 
 @Component({
   standalone: true,
@@ -56,34 +56,35 @@ import { PropertyFormItem } from '../../../model';
   `,
   styleUrls: ['./property-form-list-value.component.scss'],
 })
-export class PropertyFormListValueComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() list: ListNodeV2 | undefined = undefined;
-  @Input() value: string | PropertyFormItem[] | undefined = undefined;
+export class PropertyFormListValueComponent implements OnInit {
+  @Input({ required: true }) rootListNode!: ListNodeV2;
+  @Input() selectedListNode?: NodeValue | undefined;
 
   @Output() emitValueChanged = new EventEmitter<string>();
-
-  destroyed: Subject<void> = new Subject<void>();
 
   valueFilterCtrl: FormControl<string | null> = new FormControl<string | null>(null);
 
   constants = Constants;
 
-  selectedItem: ListNodeV2 | undefined = undefined;
-
   filteredList$: ReplaySubject<ListNodeV2[]> = new ReplaySubject<ListNodeV2[]>(1);
 
-  get sortedLabelList(): ListNodeV2[] | undefined {
-    return this.list?.children.sort((a, b) => a.label.localeCompare(b.label));
+  get sortedLabelList(): ListNodeV2[] {
+    return this.rootListNode ? [...this.rootListNode.children].sort((a, b) => a.label.localeCompare(b.label)) : [];
   }
 
   ngOnInit(): void {
-    this.initAutocompleteControl();
-  }
-
-  ngAfterViewInit(): void {
-    if (this.list && this.value && typeof this.value === 'string') {
-      this.selectedItem = this.findItemById(this.list, this.value);
-    }
+    const list = [...(this.sortedLabelList || [])];
+    this.filteredList$.next(list);
+    this.valueFilterCtrl.valueChanges.subscribe((value: any) => {
+      let filtered = [];
+      if (value) {
+        const label = typeof value === 'object' ? value.label : value.toLowerCase();
+        filtered = this._filterItems(this.sortedLabelList || [], label);
+      } else {
+        filtered = [...(this.sortedLabelList || [])];
+      }
+      this.filteredList$.next(filtered);
+    });
   }
 
   trackByFn = (index: number, item: any) => `${index}-${item.label}`;
@@ -93,48 +94,12 @@ export class PropertyFormListValueComponent implements OnInit, AfterViewInit, On
   }
 
   onSelectionChange(node: ListNodeV2) {
-    this.selectedItem = node;
     this.emitValueChanged.emit(node.id);
   }
-
-  ngOnDestroy(): void {
-    this.destroyed.next();
-    this.destroyed.complete();
-  }
-
-  private findItemById(node: ListNodeV2, targetId: string): ListNodeV2 | undefined {
-    if (node.id === targetId) {
-      return node;
-    }
-    for (const child of node.children) {
-      const found = this.findItemById(child, targetId);
-      if (found) {
-        return found;
-      }
-    }
-    return undefined;
-  }
-
-  private initAutocompleteControl() {
-    const list = [...(this.sortedLabelList || [])];
-    this.filteredList$.next(list);
-    this.valueFilterCtrl.valueChanges.pipe(takeUntil(this.destroyed)).subscribe((value: any) => {
-      let filtered = [];
-      if (value) {
-        const label = typeof value === 'object' ? value.label : value.toLowerCase();
-        filtered = this.filterItems(this.sortedLabelList || [], label);
-      } else {
-        filtered = [...(this.sortedLabelList || [])];
-      }
-
-      this.filteredList$.next(filtered);
-    });
-  }
-
-  private filterItems(nodes: ListNodeV2[], searchText: string): ListNodeV2[] {
+  private _filterItems(nodes: ListNodeV2[], searchText: string): ListNodeV2[] {
     return nodes
       .map(node => {
-        const matchedChildren = this.filterItems(node.children || [], searchText);
+        const matchedChildren = this._filterItems(node.children || [], searchText);
         const isMatch = node.label.toLowerCase().includes(searchText);
 
         if (isMatch || matchedChildren.length > 0) {

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { filter, map } from 'rxjs';
-import { ApiData } from '../model';
+import { IriLabelPair } from '../model';
 import { AdvancedSearchDataService } from '../service/advanced-search-data.service';
 import { SearchStateService } from '../service/search-state.service';
 
@@ -39,7 +39,7 @@ export class OntologyFormComponent {
   ontologies$ = this.dataService.ontologies$;
   selectedOntology$ = this.dataService.selectedOntology$.pipe(
     filter(o => o !== null),
-    map(o => ({ iri: o.id, label: o.label }) as ApiData)
+    map(o => ({ iri: o.id, label: o.label }) as IriLabelPair)
   );
 
   onSelectedOntologyChanged(ontologyIri: string): void {

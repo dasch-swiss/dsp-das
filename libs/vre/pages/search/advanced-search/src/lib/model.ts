@@ -1,66 +1,137 @@
-import { ListNodeV2 } from '@dasch-swiss/dsp-js';
+import { Constants, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { v4 as uuidv4 } from 'uuid';
-import { getOperatorsForObjectType, Operator } from './service/operators.config';
+import { getOperatorsForObjectType, Operator } from './operators.config';
 
-export interface ApiData {
+export enum PropertyObjectType {
+  None = 'NONE',
+  ValueObject = 'VALUE_OBJECT',
+  ListValueObject = 'LIST_VALUE',
+  LinkValueObject = 'LINK_VALUE',
+  ResourceObject = 'RESOURCE_OBJECT',
+}
+
+export interface IriLabelPair {
   iri: string;
   label: string;
 }
 
-export interface PropertyData {
-  iri: string;
-  label: string;
-  objectType: string;
+abstract class StatementValue {
+  constructor(public statementId: string) {}
+  abstract writeValue(): string | undefined; // always a string
+}
+
+export class NodeValue extends StatementValue {
+  constructor(
+    statementId: string,
+    private _value?: IriLabelPair
+  ) {
+    super(statementId);
+  }
+
+  get value(): IriLabelPair | undefined {
+    return this._value;
+  }
+
+  get label(): string | undefined {
+    return this._value?.label;
+  }
+
+  set value(val: IriLabelPair) {
+    this._value = val;
+  }
+
+  writeValue(): string | undefined {
+    return this._value?.iri;
+  }
+}
+
+export class StringValue extends StatementValue {
+  constructor(
+    statementId: string,
+    private _value?: string
+  ) {
+    super(statementId);
+  }
+  get value(): string | undefined {
+    return this._value;
+  }
+  set value(val: string) {
+    this._value = val;
+  }
+
+  writeValue(): string | undefined {
+    return this._value;
+  }
+}
+
+export class ListNodeValue extends StatementValue {
+  constructor(
+    statementId: string,
+    private _value?: ListNodeV2
+  ) {
+    super(statementId);
+  }
+  get value(): ListNodeV2 | undefined {
+    return this._value;
+  }
+  set value(val: ListNodeV2) {
+    this._value = val;
+  }
+
+  writeValue(): string | undefined {
+    return this._value?.id;
+  }
+}
+
+export interface Predicate extends IriLabelPair {
+  objectRange: string;
   isLinkProperty: boolean;
   listIri?: string; // only for list values
 }
 
-export interface GravsearchPropertyString {
+export interface GravsearchStatement {
   constructString: string;
   whereString: string;
 }
 
-export class PropertyFormItem {
+export class StatementElement {
   readonly id = uuidv4();
-  private _selectedProperty: PropertyData | undefined;
+  private _selectedPredicate: Predicate | undefined;
   private _selectedOperator: Operator = Operator.Equals;
-  private _searchValue: string | PropertyFormItem[] | undefined;
-  private _searchValueLabel: string | undefined;
-  list: ListNodeV2 | undefined;
-  matchPropertyResourceClasses?: any[] | undefined; // Todo: Set those
-  selectedMatchPropertyResourceClass?: any | undefined;
-  isChildProperty?: boolean;
-  childPropertiesList?: PropertyData[];
+  private _selectedObjectNode?: NodeValue | StringValue;
+  listObject?: ListNodeV2;
+  availableObjects?: IriLabelPair[] = []; // Todo: Set those
+  statementLevel = 0;
+  parentStatementObject?: NodeValue;
+  subjectNode?: NodeValue;
 
-  get selectedProperty(): PropertyData | undefined {
-    return this._selectedProperty;
+  get selectedPredicate(): Predicate | undefined {
+    return this._selectedPredicate;
   }
 
-  set selectedProperty(prop: PropertyData) {
-    this._selectedProperty = prop;
+  get isChildProperty(): boolean {
+    return this.statementLevel > 0;
+  }
+
+  set selectedPredicate(prop: Predicate) {
+    this._selectedPredicate = prop;
     this.selectedOperator = Operator.Equals; // default operator when property changes
   }
 
-  get searchValueLabel(): string | undefined {
-    return this._searchValueLabel;
+  get selectedObjectNode(): NodeValue | StringValue | undefined {
+    return this._selectedObjectNode;
   }
 
-  get searchValue(): string | PropertyFormItem[] | undefined {
-    return this._searchValue;
+  set selectedObjectNode(value: StringValue | NodeValue | undefined) {
+    this._selectedObjectNode = value;
   }
 
-  set searchValue(value: string | PropertyFormItem[] | ApiData | undefined) {
-    if (this._isApiData(value)) {
-      this._searchValue = value.iri;
-      this._searchValueLabel = value.label;
-    } else {
-      this._searchValue = value;
-      this._searchValueLabel = undefined;
-    }
+  get selectedObjectWriteValue(): string | undefined {
+    return this._selectedObjectNode?.writeValue();
   }
 
   get operators(): Operator[] {
-    return this._selectedProperty ? getOperatorsForObjectType(this._selectedProperty) : [];
+    return this._selectedPredicate ? getOperatorsForObjectType(this._selectedPredicate) : [];
   }
 
   get selectedOperator(): Operator | undefined {
@@ -69,31 +140,65 @@ export class PropertyFormItem {
 
   set selectedOperator(operator: Operator) {
     this._selectedOperator = operator;
-    this.searchValue = undefined;
-    this._searchValueLabel = undefined; // Todo: not needed currently -> remove after proper refactor?
-    this.matchPropertyResourceClasses = undefined;
-    this.selectedMatchPropertyResourceClass = undefined;
-    this.list = undefined;
+    this.selectedObjectNode = undefined;
+    this.availableObjects = undefined;
+    this.listObject = undefined;
   }
 
-  addChildProperty(): void {
-    if (!Array.isArray(this.searchValue)) {
-      this.searchValue = [];
-    }
-    this.searchValue.push(new PropertyFormItem());
-    if (!this.childPropertiesList) {
-      this.childPropertiesList = [];
-    }
+  get operatorRequiresValueInput(): boolean {
+    return this.selectedOperator !== Operator.Exists && this.selectedOperator !== Operator.NotExists;
   }
 
-  updateChildProperty(childProperty: PropertyData): void {
-    if (this.childPropertiesList) {
-      this.childPropertiesList = this.childPropertiesList.map(c => (c.iri === childProperty.iri ? childProperty : c));
+  get objectType(): PropertyObjectType {
+    // No property selected
+    if (!this.selectedPredicate) {
+      return PropertyObjectType.None;
     }
-  }
 
-  private _isApiData(value: any): value is ApiData {
-    return value && typeof value === 'object' && 'iri' in value && 'label' in value;
+    // Existence operators don't need value input
+    if (this.selectedOperator === Operator.Exists || this.selectedOperator === Operator.NotExists) {
+      return PropertyObjectType.None;
+    }
+
+    // Resource class selector for Matches operator (non-Knora types)
+    if (
+      !this.selectedPredicate.objectRange?.includes(Constants.KnoraApiV2) &&
+      this.selectedOperator === Operator.Matches
+    ) {
+      return PropertyObjectType.ResourceObject;
+    }
+
+    // Link Match Property - when Matches operator with link and resource class selected
+    /*
+    if (
+      this.selectedPredicate.isLinkProperty &&
+      this.selectedPredicate.objectRange !== Constants.Label &&
+      this.selectedOperator === Operator.Matches &&
+      this.selectedObject
+    ) {
+      return PropertyObjectType.LinkMatchProperty;
+    } */
+
+    // Link Value - link properties (not Label, not Matches)
+    if (
+      this.selectedPredicate.isLinkProperty &&
+      this.selectedPredicate.objectRange !== Constants.Label &&
+      this.selectedOperator !== Operator.Matches
+    ) {
+      return PropertyObjectType.LinkValueObject;
+    }
+
+    // List Value
+    if (this.selectedPredicate.objectRange === Constants.ListValue) {
+      return PropertyObjectType.ListValueObject;
+    }
+
+    // Default: simple value object (text, int, decimal, date, etc.)
+    if (!this.selectedPredicate.isLinkProperty) {
+      return PropertyObjectType.ValueObject;
+    }
+
+    return PropertyObjectType.None;
   }
 }
 
@@ -107,8 +212,8 @@ export class OrderByItem {
 }
 
 export interface ParentChildPropertyPair {
-  parentProperty: PropertyFormItem;
-  childProperty: PropertyFormItem;
+  parentProperty: StatementElement;
+  childProperty: StatementElement;
 }
 
 export interface SearchItem {
@@ -118,19 +223,19 @@ export interface SearchItem {
 
 export interface QueryObject {
   query: string;
-  properties: PropertyFormItem[];
+  properties: StatementElement[];
 }
 
 export interface SearchFormsState {
-  selectedResourceClass: ApiData | undefined;
-  propertyFormList: PropertyFormItem[];
+  selectedResourceClass: IriLabelPair | undefined;
+  statementElements: StatementElement[];
   propertiesOrderBy: OrderByItem[];
 }
 
 export type AdvancedSearchStateSnapshot = Pick<
   SearchFormsState,
-  'selectedResourceClass' | 'propertyFormList' | 'propertiesOrderBy'
+  'selectedResourceClass' | 'statementElements' | 'propertiesOrderBy'
 > & {
   selectedProject: string;
-  selectedOntology: ApiData | undefined;
+  selectedOntology: IriLabelPair | undefined;
 };

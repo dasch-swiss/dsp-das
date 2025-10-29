@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection, ListNodeV2 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { catchError, map, Observable, of, Subject, takeUntil } from 'rxjs';
-import { ApiData } from '../model';
+import { IriLabelPair } from '../model';
 
 @Injectable()
 export class DynamicFormsDataService {
@@ -32,7 +32,7 @@ export class DynamicFormsDataService {
       );
   }
 
-  searchResourcesByLabel$(searchValue: string, resourceClassIri: string, offset = 0): Observable<ApiData[]> {
+  searchResourcesByLabel$(searchValue: string, resourceClassIri: string, offset = 0): Observable<IriLabelPair[]> {
     // Cancel the previous search request
     this.cancelPreviousSearchRequest$.next();
 

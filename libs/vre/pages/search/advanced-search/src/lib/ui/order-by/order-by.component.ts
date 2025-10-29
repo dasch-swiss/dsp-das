@@ -37,7 +37,7 @@ export class OrderByComponent {
 
   orderByList$ = this.searchService.propertiesOrderBy$.pipe(distinctUntilChanged());
 
-  orderByDisabled$ = combineLatest([this.searchService.propertyForms$, this.searchService.propertiesOrderBy$]).pipe(
+  orderByDisabled$ = combineLatest([this.searchService.statementElements$, this.searchService.propertiesOrderBy$]).pipe(
     map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
     distinctUntilChanged()
   );
@@ -49,7 +49,7 @@ export class OrderByComponent {
     if (!currentOrderByList) return;
 
     moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
-    this.searchService.updatePropertyOrderBy(currentOrderByList);
+    this.searchService.updateOrderBy(currentOrderByList);
   }
 
   onSelectionChange(event: MatSelectionListChange) {
@@ -62,6 +62,6 @@ export class OrderByComponent {
         selectedItem.orderBy = option.selected;
       }
     });
-    this.searchService.updatePropertyOrderBy(currentOrderByList);
+    this.searchService.updateOrderBy(currentOrderByList);
   }
 }

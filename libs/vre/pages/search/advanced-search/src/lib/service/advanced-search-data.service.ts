@@ -9,11 +9,11 @@ import {
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
 import { ResourceLabelPropertyData } from '../constants';
-import { ApiData, PropertyData } from '../model';
+import { IriLabelPair, Predicate } from '../model';
 
 @Injectable()
 export class AdvancedSearchDataService {
-  private _ontologies = new BehaviorSubject<ApiData[]>([]);
+  private _ontologies = new BehaviorSubject<IriLabelPair[]>([]);
   ontologies$ = this._ontologies.asObservable();
 
   private _selectedOntology = new BehaviorSubject<ReadOntology | null>(null);
@@ -22,10 +22,10 @@ export class AdvancedSearchDataService {
   private _ontologyLoading = new BehaviorSubject<boolean>(true);
   ontologyLoading$ = this._ontologyLoading.asObservable();
 
-  private _selectedResourceClass = new BehaviorSubject<ApiData | undefined>(undefined);
+  private _selectedResourceClass = new BehaviorSubject<IriLabelPair | undefined>(undefined);
   selectedResourceClass$ = this._selectedResourceClass.asObservable();
 
-  private _availableProperties = new BehaviorSubject<PropertyData[]>([]);
+  private _availableProperties = new BehaviorSubject<Predicate[]>([]);
   availableProperties$ = this._availableProperties.asObservable();
 
   constructor(
@@ -33,7 +33,7 @@ export class AdvancedSearchDataService {
     private _dspApiConnection: KnoraApiConnection
   ) {}
 
-  init(projectIri: string, ontology?: ApiData, resourceClass?: ApiData) {
+  init(projectIri: string, ontology?: IriLabelPair, resourceClass?: IriLabelPair) {
     this._dspApiConnection.v2.onto
       .getOntologiesByProjectIri(projectIri)
       .pipe(map(r => r.ontologies.map(o => ({ iri: o.id, label: o.label }))))
@@ -48,7 +48,7 @@ export class AdvancedSearchDataService {
       });
   }
 
-  setOntology(ontologyIri: string, resourceClass?: ApiData) {
+  setOntology(ontologyIri: string, resourceClass?: IriLabelPair) {
     this._ontologyLoading.next(true);
     this._dspApiConnection.v2.onto.getOntology(ontologyIri, true).subscribe({
       next: ontology => {
@@ -59,7 +59,7 @@ export class AdvancedSearchDataService {
     });
   }
 
-  setSelectedResourceClass(resourceClass?: ApiData) {
+  setSelectedResourceClass(resourceClass?: IriLabelPair) {
     this._selectedResourceClass.next(resourceClass);
     this._setAvailableProperties(resourceClass?.iri);
   }
@@ -74,7 +74,7 @@ export class AdvancedSearchDataService {
     )
   );
 
-  resourceClasses$: Observable<ApiData[]> = this._resourceClassDefinitions$.pipe(
+  resourceClasses$: Observable<IriLabelPair[]> = this._resourceClassDefinitions$.pipe(
     startWith([]),
     tap(resClasses => console.log('resource classes', resClasses)),
     map(resClasses =>
@@ -84,7 +84,7 @@ export class AdvancedSearchDataService {
     )
   );
 
-  getObjectsForProperty$ = (propertyIri: string): Observable<ApiData[]> =>
+  getObjectsForProperty$ = (propertyIri: string): Observable<IriLabelPair[]> =>
     combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
       map(([resClasses, propDefs]) => {
         const propDef = propDefs.find(p => p.id === propertyIri);
@@ -95,14 +95,11 @@ export class AdvancedSearchDataService {
         if (!objectType) {
           return [];
         }
-        console.log('object type', objectType);
-        console.log('propDef', propDef);
-        console.log('propDef.label', propertyIri);
         return resClasses.filter(rc => rc.iri === objectType);
       })
     );
 
-  getSubclassesOfResourceClass$ = (classIri: string): Observable<ApiData[]> =>
+  getSubclassesOfResourceClass$ = (classIri: string): Observable<IriLabelPair[]> =>
     this._resourceClassDefinitions$.pipe(
       map(resClasses =>
         resClasses.filter(r => r.subClassOf.includes(classIri)).map(r => ({ iri: r.id, label: r.label || '' }))
@@ -132,7 +129,7 @@ export class AdvancedSearchDataService {
     });
   }
 
-  private _getPropertiesOfResourceClass$ = (classIri: string): Observable<PropertyData[]> =>
+  private _getPropertiesOfResourceClass$ = (classIri: string): Observable<Predicate[]> =>
     combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
       tap(([c, p]) => console.log('class properties', c, p)),
       map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))
@@ -147,11 +144,11 @@ export class AdvancedSearchDataService {
       )
     );
 
-  private _createPropertyData(propDef: ResourcePropertyDefinition): PropertyData {
-    const propertyData: PropertyData = {
+  private _createPropertyData(propDef: ResourcePropertyDefinition): Predicate {
+    const propertyData: Predicate = {
       iri: propDef.id,
       label: propDef.label || '',
-      objectType: propDef.objectType || '',
+      objectRange: propDef.objectType || '',
       isLinkProperty: propDef.isLinkProperty,
     };
 
@@ -166,10 +163,10 @@ export class AdvancedSearchDataService {
     return propertyData;
   }
 
-  get selectedOntology(): ApiData {
+  get selectedOntology(): IriLabelPair {
     return this._selectedOntology.value
       ? { iri: this._selectedOntology.value.id, label: this._selectedOntology.value.label || '' }
-      : ({} as ApiData);
+      : ({} as IriLabelPair);
   }
 
   get classIris(): string[] {
