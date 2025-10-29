@@ -8,7 +8,7 @@ export class SearchStateService {
   private readonly INITIAL_FORMS_STATE: SearchFormsState = {
     selectedResourceClass: undefined,
     statementElements: [new StatementElement()],
-    propertiesOrderBy: [],
+    orderBy: [],
   } as const;
 
   private _state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
@@ -24,14 +24,14 @@ export class SearchStateService {
     distinctUntilChanged()
   );
 
-  propertiesOrderBy$ = this._state.pipe(
-    map(state => state.propertiesOrderBy),
+  orderByItems$ = this._state.pipe(
+    map(state => state.orderBy),
     distinctUntilChanged()
   );
 
   isFormStateValid$ = this.statementElements$.pipe(
     map(elements => {
-      return elements.every(prop => prop.isValidAndComplete);
+      return elements.every(statement => statement.isValidAndComplete);
     }),
     distinctUntilChanged()
   );
@@ -40,8 +40,8 @@ export class SearchStateService {
     return this._state.value;
   }
 
-  get nonEmptyStatementElements() {
-    return this._state.value.statementElements.filter(prop => prop.selectedPredicate);
+  get validStatementElements() {
+    return this._state.value.statementElements.filter(statement => statement.isValidAndComplete);
   }
 
   patchState(partialState: Partial<SearchFormsState>): void {
@@ -51,21 +51,21 @@ export class SearchStateService {
 
   clearAllSelections() {
     this.patchState({ selectedResourceClass: undefined });
-    this.clearPropertySelections();
+    this.clearStatements();
   }
 
-  clearPropertySelections() {
+  clearStatements() {
     this.patchState({ statementElements: [new StatementElement()] });
-    this.patchState({ propertiesOrderBy: [] });
+    this.patchState({ orderBy: [] });
   }
 
-  updateStatement(property: StatementElement): void {
+  updateStatement(statement: StatementElement): void {
     this.patchState({
-      statementElements: this._state.value.statementElements.map(p => (p.id === property.id ? property : p)),
+      statementElements: this._state.value.statementElements.map(p => (p.id === statement.id ? statement : p)),
     });
   }
 
   updateOrderBy(orderByList: OrderByItem[]): void {
-    this.patchState({ propertiesOrderBy: orderByList });
+    this.patchState({ orderBy: orderByList });
   }
 }

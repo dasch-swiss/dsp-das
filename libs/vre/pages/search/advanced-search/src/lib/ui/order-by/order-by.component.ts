@@ -35,17 +35,17 @@ export class OrderByComponent {
   @ViewChild('sortOrderSelectionList')
   sortOrderSelectionList!: MatSelectionList;
 
-  orderByList$ = this.searchService.propertiesOrderBy$.pipe(distinctUntilChanged());
+  orderByItems$ = this.searchService.orderByItems$.pipe(distinctUntilChanged());
 
-  orderByDisabled$ = combineLatest([this.searchService.statementElements$, this.searchService.propertiesOrderBy$]).pipe(
-    map(([propertyFormList, orderBylist]) => !orderBylist.length || !propertyFormList.length),
+  orderByDisabled$ = combineLatest([this.searchService.statementElements$, this.searchService.orderByItems$]).pipe(
+    map(([statements, orderBylist]) => !orderBylist.length || !statements.length),
     distinctUntilChanged()
   );
 
   isOpen = false;
 
   drop(event: CdkDragDrop<string[]>) {
-    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
+    const currentOrderByList = this.searchService.currentState.orderBy;
     if (!currentOrderByList) return;
 
     moveItemInArray(currentOrderByList, event.previousIndex, event.currentIndex);
@@ -53,7 +53,7 @@ export class OrderByComponent {
   }
 
   onSelectionChange(event: MatSelectionListChange) {
-    const currentOrderByList = this.searchService.currentState.propertiesOrderBy;
+    const currentOrderByList = this.searchService.currentState.orderBy;
     if (!currentOrderByList) return;
 
     event.options.forEach(option => {

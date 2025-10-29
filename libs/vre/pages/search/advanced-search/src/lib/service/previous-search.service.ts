@@ -23,7 +23,7 @@ export class PreviousSearchService {
       selectedOntology: ontology,
       selectedResourceClass: state.selectedResourceClass,
       statementElements: state.statementElements,
-      propertiesOrderBy: state.propertiesOrderBy,
+      orderBy: state.orderBy,
     };
 
     const storedSearch = localStorage.getItem(this.STORAGE_KEY);

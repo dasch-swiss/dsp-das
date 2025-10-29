@@ -28,8 +28,8 @@
     class="sort-list"
     (cdkDropListDropped)="drop($event)"
     (selectionChange)="onSelectionChange($event)">
+    @for (item of orderByItems$ | async; track item.id) {
     <mat-list-option
-      *ngFor="let item of orderByList$ | async"
       class="sort-item"
       [selected]="item.orderBy"
       [value]="item.id"
@@ -42,5 +42,6 @@
       </span>
       <span matListItemTitle> {{ item.label }} </span>
     </mat-list-option>
+    }
   </mat-selection-list>
 </ng-template>

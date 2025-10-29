@@ -18,9 +18,7 @@ export class PropertyFormManager {
             forms.map(({ selectedPredicate }) => [selectedPredicate!.iri, selectedPredicate!.label])
           );
 
-          const toKeep = this.searchStateService.currentState.propertiesOrderBy.filter(item =>
-            distinctFormsById.has(item.id)
-          );
+          const toKeep = this.searchStateService.currentState.orderBy.filter(item => distinctFormsById.has(item.id));
 
           const toAdd = [...distinctFormsById]
             .filter(([id]) => !toKeep.some(i => i.id === id))
@@ -36,7 +34,7 @@ export class PropertyFormManager {
 
   updateSelectedResourceClass(resourceClass: IriLabelPair): void {
     this._dataService.setSelectedResourceClass(resourceClass);
-    this.searchStateService.clearPropertySelections();
+    this.searchStateService.clearStatements();
   }
 
   loadMoreResourcesSearchResults(searchItem: SearchItem): void {
@@ -46,11 +44,11 @@ export class PropertyFormManager {
   deleteStatement(statement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
     const updatedPropertyFormList = currentState.statementElements.filter(item => item !== statement);
-    const updatedOrderByList = currentState.propertiesOrderBy.filter(item => item.id !== statement.id);
+    const updatedOrderByList = currentState.orderBy.filter(item => item.id !== statement.id);
 
     this.searchStateService.patchState({
       statementElements: updatedPropertyFormList,
-      propertiesOrderBy: updatedOrderByList,
+      orderBy: updatedOrderByList,
     });
   }
 

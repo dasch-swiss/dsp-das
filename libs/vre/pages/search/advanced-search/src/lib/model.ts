@@ -240,12 +240,12 @@ export interface QueryObject {
 export interface SearchFormsState {
   selectedResourceClass: IriLabelPair | undefined;
   statementElements: StatementElement[];
-  propertiesOrderBy: OrderByItem[];
+  orderBy: OrderByItem[];
 }
 
 export type AdvancedSearchStateSnapshot = Pick<
   SearchFormsState,
-  'selectedResourceClass' | 'statementElements' | 'propertiesOrderBy'
+  'selectedResourceClass' | 'statementElements' | 'orderBy'
 > & {
   selectedProject: string;
   selectedOntology: IriLabelPair | undefined;
