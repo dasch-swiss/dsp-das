@@ -1,52 +1,64 @@
-<div class="adv-statement-forms-container">
-  <mat-form-field class="adv-statement-form">
-    <mat-label>{{predicateSelectionLabel}}</mat-label>
-    <mat-select
-      [value]="statementElement.selectedPredicate"
-      (selectionChange)="formManager.onPredicateSelectionChanged(statementElement, $event.value)"
-      data-cy="predicate-select"
-      [compareWith]="compareObjects">
-      @for (prop of properties$ | async; track prop.iri) {
-      <mat-option [value]="prop" [attr.data-cy]="prop.label"> {{ prop.label }} </mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+<ng-container *ngFor="let statementElement of statementElements; let isLast = last">
+  <div style="display: flex; width: 100%">
+    <div class="adv-statement-forms-container">
+      <mat-form-field class="adv-statement-form">
+        <mat-label>{{getPredicateSelectionLabel(statementElement)}}</mat-label>
+        <mat-select
+          [value]="statementElement.selectedPredicate"
+          (selectionChange)="formManager.onPredicateSelectionChanged(statementElement, $event.value)"
+          data-cy="predicate-select"
+          [compareWith]="compareObjects">
+          @for (prop of properties$ | async; track prop.iri) {
+          <mat-option [value]="prop" [attr.data-cy]="prop.label"> {{ prop.label }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field class="adv-statement-form right-hand-form">
-    <mat-label>Comparison Operator</mat-label>
-    <mat-select
-      [value]="statementElement.selectedOperator"
-      (selectionChange)="formManager.onOperatorSelectionChanged(this.statementElement, $event.value)"
-      data-cy="comparison-operator-select">
-      @for (operator of statementElement.operators; track operator) {
-      <mat-option [value]="operator" [attr.data-cy]="operator"> {{ operator }} </mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field class="adv-statement-form right-hand-form">
+        <mat-label>Comparison Operator</mat-label>
+        <mat-select
+          [value]="statementElement.selectedOperator"
+          (selectionChange)="formManager.onOperatorSelectionChanged(statementElement, $event.value)"
+          data-cy="comparison-operator-select">
+          @for (operator of statementElement.operators; track operator) {
+          <mat-option [value]="operator" [attr.data-cy]="operator"> {{ operator }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-  <div class="adv-statement-form right-hand-form">
-    @switch (statementElement.objectType) { @case (PROPERTY_OBJECT_TYPES.ResourceObject) {
-    <app-property-form-resource
-      [availableResources]="statementElement.availableObjects"
-      [selectedResource]="statementElement.selectedObjectNode?.value"
-      (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)"
-      ) />
-    } @case (PROPERTY_OBJECT_TYPES.ValueObject) {
-    <app-property-form-value
-      [valueType]="statementElement.objectType"
-      [value]="statementElement.selectedObjectWriteValue"
-      (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
-    } @case (PROPERTY_OBJECT_TYPES.ListValueObject) {
-    <app-property-form-list-value
-      [rootListNode]="statementElement.listObject"
-      [selectedListNode]="statementElement.selectedObjectNode?.value"
-      (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
-    } @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
-    <app-property-form-link-value
-      [resourceClass]="statementElement.objectType"
-      (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />
-    } @case (PROPERTY_OBJECT_TYPES.None) {
-    <!-- No input needed -->
-    } }
+      <div class="adv-statement-form right-hand-form">
+        @switch (statementElement.objectType) { @case (PROPERTY_OBJECT_TYPES.ResourceObject) {
+        <app-property-form-resource
+          [availableResources]="statementElement.availableObjects"
+          [selectedResource]="statementElement.selectedObjectNode?.value"
+          (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)"
+          ) />
+        } @case (PROPERTY_OBJECT_TYPES.ValueObject) {
+        <app-property-form-value
+          [valueType]="statementElement.selectedPredicate!.objectValueType"
+          [value]="statementElement.selectedObjectWriteValue"
+          (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
+        } @case (PROPERTY_OBJECT_TYPES.ListValueObject) {
+        <app-property-form-list-value
+          [rootListNode]="statementElement.listObject"
+          [selectedListNode]="statementElement.selectedObjectNode?.value"
+          (emitValueChanged)="formManager.setObjectValue(statementElement, $event)" />
+        } @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
+        <app-property-form-link-value
+          [resourceClass]="statementElement.objectType"
+          (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />
+        } @case (PROPERTY_OBJECT_TYPES.None) {
+        <!-- No input needed -->
+        } }
+      </div>
+    </div>
+    <button
+      *ngIf="!isLast && statementElement.selectedPredicate"
+      mat-icon-button
+      (click)="formManager.deleteStatement(statementElement)"
+      class="remove-property-button"
+      matTooltip="Remove search criteria">
+      <mat-icon>remove_circle</mat-icon>
+    </button>
   </div>
-</div>
+</ng-container>

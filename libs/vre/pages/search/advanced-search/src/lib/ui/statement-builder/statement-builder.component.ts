@@ -36,14 +36,14 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementBuilderComponent {
-  @Input() statementElement: StatementElement = new StatementElement();
+  @Input({ required: true }) statementElements: StatementElement[] = [new StatementElement()];
 
   private _dataService = inject(AdvancedSearchDataService);
   public formManager = inject(PropertyFormManager);
 
-  get predicateSelectionLabel(): string {
-    return this.statementElement.parentStatementObject?.value?.label
-      ? `Select a property of ${this.statementElement.parentStatementObject?.value?.label}`
+  getPredicateSelectionLabel(statementElement: StatementElement): string {
+    return statementElement.parentStatementObject?.value?.label
+      ? `Select a property of ${statementElement.parentStatementObject?.value?.label}`
       : `Select property`;
   }
 

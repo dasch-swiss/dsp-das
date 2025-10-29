@@ -84,7 +84,7 @@ export class ListNodeValue extends StatementValue {
 }
 
 export interface Predicate extends IriLabelPair {
-  objectRange: string;
+  objectValueType: string;
   isLinkProperty: boolean;
   listIri?: string; // only for list values
 }
@@ -122,8 +122,16 @@ export class StatementElement {
     return this._selectedObjectNode;
   }
 
-  set selectedObjectNode(value: StringValue | NodeValue | undefined) {
+  set selectedObjectNode(value: StringValue | NodeValue) {
     this._selectedObjectNode = value;
+  }
+
+  set selectedObjectValue(value: string | IriLabelPair) {
+    if (typeof value === 'string') {
+      this._selectedObjectNode = new StringValue(this.id, value);
+    } else {
+      this._selectedObjectNode = new NodeValue('', value);
+    }
   }
 
   get selectedObjectWriteValue(): string | undefined {
@@ -162,7 +170,7 @@ export class StatementElement {
 
     // Resource class selector for Matches operator (non-Knora types)
     if (
-      !this.selectedPredicate.objectRange?.includes(Constants.KnoraApiV2) &&
+      !this.selectedPredicate.objectValueType?.includes(Constants.KnoraApiV2) &&
       this.selectedOperator === Operator.Matches
     ) {
       return PropertyObjectType.ResourceObject;
@@ -172,7 +180,7 @@ export class StatementElement {
     /*
     if (
       this.selectedPredicate.isLinkProperty &&
-      this.selectedPredicate.objectRange !== Constants.Label &&
+      this.selectedPredicate.  objectValueType !== Constants.Label &&
       this.selectedOperator === Operator.Matches &&
       this.selectedObject
     ) {
@@ -182,14 +190,14 @@ export class StatementElement {
     // Link Value - link properties (not Label, not Matches)
     if (
       this.selectedPredicate.isLinkProperty &&
-      this.selectedPredicate.objectRange !== Constants.Label &&
+      this.selectedPredicate.objectValueType !== Constants.Label &&
       this.selectedOperator !== Operator.Matches
     ) {
       return PropertyObjectType.LinkValueObject;
     }
 
     // List Value
-    if (this.selectedPredicate.objectRange === Constants.ListValue) {
+    if (this.selectedPredicate.objectValueType === Constants.ListValue) {
       return PropertyObjectType.ListValueObject;
     }
 
@@ -209,11 +217,6 @@ export class OrderByItem {
     public label?: string,
     public disabled?: boolean
   ) {}
-}
-
-export interface ParentChildPropertyPair {
-  parentProperty: StatementElement;
-  childProperty: StatementElement;
 }
 
 export interface SearchItem {

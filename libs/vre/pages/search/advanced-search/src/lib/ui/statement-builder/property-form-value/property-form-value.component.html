@@ -1,21 +1,15 @@
 <div class="value-form-container">
-  @switch (valueType) {
-  <!-- property label -->
-  @case (resourceLabel) {
+  @switch (valueType) { @case (resourceLabel) {
   <mat-form-field>
     <mat-label>Label's value</mat-label>
     <input matInput type="text" [formControl]="inputControl" data-cy="label-input" />
   </mat-form-field>
-  }
-  <!-- text value -->
-  @case (constants.TextValue) {
+  } @case (constants.TextValue) {
   <mat-form-field>
     <mat-label>Text Value</mat-label>
     <input matInput type="text" [formControl]="inputControl" data-cy="text-value-input" />
   </mat-form-field>
-  }
-  <!-- boolean value -->
-  @case (constants.BooleanValue) {
+  } @case (constants.BooleanValue) {
   <mat-form-field>
     <mat-label>Value</mat-label>
     <mat-select [formControl]="inputControl" data-cy="value-select">
@@ -23,9 +17,7 @@
       <mat-option value="false"> False</mat-option>
     </mat-select>
   </mat-form-field>
-  }
-  <!-- uri value -->
-  @case (constants.UriValue) {
+  } @case (constants.UriValue) {
   <mat-form-field>
     <mat-label>URI Value</mat-label>
     <input matInput [formControl]="inputControl" [errorStateMatcher]="matcher" data-cy="uri-value-input" />

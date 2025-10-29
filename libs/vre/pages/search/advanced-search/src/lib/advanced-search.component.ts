@@ -9,8 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogService } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
-import { INITIAL_FORMS_STATE, SEARCH_ALL_RESOURCE_CLASSES_OPTION } from './constants';
-import { StatementElement, QueryObject, IriLabelPair } from './model';
+import { QueryObject, IriLabelPair } from './model';
 import { provideAdvancedSearch } from './providers';
 import { AdvancedSearchDataService } from './service/advanced-search-data.service';
 import { GravsearchService } from './service/gravsearch.service';
@@ -48,6 +47,11 @@ export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
   @Output() gravesearchQuery = new EventEmitter<QueryObject>();
 
+  private readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
+    iri: 'all-resource-classes',
+    label: 'All resource classes',
+  } as const;
+
   searchState: SearchStateService = inject(SearchStateService);
   private _dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
   private _dialogService: DialogService = inject(DialogService);
@@ -59,8 +63,8 @@ export class AdvancedSearchComponent implements OnInit {
   ontologies$ = this._dataService.ontologies$;
 
   resourceClasses$ = this._dataService.resourceClasses$.pipe(
-    map(classes => [SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
-    startWith([SEARCH_ALL_RESOURCE_CLASSES_OPTION])
+    map(classes => [this.SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
+    startWith([this.SEARCH_ALL_RESOURCE_CLASSES_OPTION])
   );
 
   get projectIri() {
@@ -74,12 +78,8 @@ export class AdvancedSearchComponent implements OnInit {
     this._dataService.init(this.projectIri, previousOntology, previousResourceClass);
   }
 
-  onSelectedResourceClassChanged(resourceClass: IriLabelPair = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
+  onSelectedResourceClassChanged(resourceClass: IriLabelPair): void {
     this._formManager.updateSelectedResourceClass(resourceClass);
-  }
-
-  removePropertyForm(statementElement: StatementElement): void {
-    this._formManager.deleteStatement(statementElement);
   }
 
   doSearch(): void {
@@ -113,7 +113,6 @@ export class AdvancedSearchComponent implements OnInit {
   loadPreviousSearch(): void {
     const previousSearch = this.previousSearchService.previousSearchObject;
     this.searchState.patchState({
-      ...INITIAL_FORMS_STATE,
       ...previousSearch,
     });
     this._dataService.setOntology(previousSearch.selectedOntology?.iri || '');

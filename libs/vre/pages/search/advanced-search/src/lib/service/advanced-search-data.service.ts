@@ -8,11 +8,18 @@ import {
 } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, tap } from 'rxjs';
-import { ResourceLabelPropertyData } from '../constants';
+import { ResourceLabel } from '../constants';
 import { IriLabelPair, Predicate } from '../model';
 
 @Injectable()
 export class AdvancedSearchDataService {
+  private readonly ResourceLabelPropertyData: Predicate = {
+    iri: ResourceLabel,
+    label: 'Resource Label',
+    objectValueType: ResourceLabel,
+    isLinkProperty: false,
+  } as const;
+
   private _ontologies = new BehaviorSubject<IriLabelPair[]>([]);
   ontologies$ = this._ontologies.asObservable();
 
@@ -76,7 +83,7 @@ export class AdvancedSearchDataService {
 
   resourceClasses$: Observable<IriLabelPair[]> = this._resourceClassDefinitions$.pipe(
     startWith([]),
-    tap(resClasses => console.log('resource classes', resClasses)),
+    // tap(resClasses => console.log('resource classes', resClasses)),
     map(resClasses =>
       resClasses.map((resClassDef: ResourceClassDefinitionWithAllLanguages) => {
         return { iri: resClassDef.id, label: resClassDef.label || '' };
@@ -121,7 +128,7 @@ export class AdvancedSearchDataService {
     const props$ =
       !classIri || classIri === 'all-resource-classes'
         ? this._propertyDefinitions$.pipe(
-            map(props => [ResourceLabelPropertyData, ...props.map(this._createPropertyData)])
+            map(props => [this.ResourceLabelPropertyData, ...props.map(this._createPropertyData)])
           )
         : this._getPropertiesOfResourceClass$(classIri);
     props$.subscribe(props => {
@@ -131,7 +138,7 @@ export class AdvancedSearchDataService {
 
   private _getPropertiesOfResourceClass$ = (classIri: string): Observable<Predicate[]> =>
     combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
-      tap(([c, p]) => console.log('class properties', c, p)),
+      // tap(([c, p]) => console.log('class properties', c, p)),
       map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))
     );
 
@@ -148,7 +155,7 @@ export class AdvancedSearchDataService {
     const propertyData: Predicate = {
       iri: propDef.id,
       label: propDef.label || '',
-      objectRange: propDef.objectType || '',
+      objectValueType: propDef.objectType || '',
       isLinkProperty: propDef.isLinkProperty,
     };
 

@@ -43,4 +43,4 @@ const SPECIAL_VALUE_OPERATORS = {
 export const getOperatorsForObjectType = (property: Predicate) =>
   property.isLinkProperty
     ? (LINKED_RESOURCE_OPS as Operator[])
-    : ((SPECIAL_VALUE_OPERATORS[property.objectRange] ?? EXISTENCE_OPS) as Operator[]);
+    : ((SPECIAL_VALUE_OPERATORS[property.objectValueType] ?? EXISTENCE_OPS) as Operator[]);

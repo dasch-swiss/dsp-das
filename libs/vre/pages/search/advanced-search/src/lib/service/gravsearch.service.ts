@@ -49,7 +49,7 @@ export class GravsearchService {
       .forEach(orderByItem => {
         const index = properties.findIndex(prop => prop.id === orderByItem.id);
         if (index > -1) {
-          if (properties[index].selectedPredicate?.objectRange === ResourceLabel) {
+          if (properties[index].selectedPredicate?.objectValueType === ResourceLabel) {
             // add first 8 characters of the property id to create unique identifier for the variable name when searching for a resource label
             // it's sliced because gravsearch doesn't allow minus signs in variable names
             orderByProps.push(`?label${properties[index].id.slice(0, 8)}`);
@@ -84,8 +84,8 @@ export class GravsearchService {
 
     // not a linked resource, not a resource label
     if (
-      property.selectedPredicate?.objectRange.includes(Constants.KnoraApiV2) &&
-      property.selectedPredicate?.objectRange !== ResourceLabel
+      property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
+      property.selectedPredicate?.objectValueType !== ResourceLabel
     ) {
       constructString = `?mainRes <${property.selectedPredicate?.iri}> ?prop${index} .`;
       whereString = constructString;
@@ -93,8 +93,8 @@ export class GravsearchService {
 
     // linked resource
     if (
-      !property.selectedPredicate?.objectRange.includes(Constants.KnoraApiV2) &&
-      property.selectedPredicate?.objectRange !== ResourceLabel
+      !property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
+      property.selectedPredicate?.objectValueType !== ResourceLabel
     ) {
       if (property.selectedOperator !== Operator.NotEquals) {
         constructString = `?mainRes <${property.selectedPredicate?.iri}> ?prop${index} .`;
@@ -162,7 +162,7 @@ export class GravsearchService {
     // if the property is a child property, a linked resource, and the operator is equals or not equals, return an empty string
     if (
       property.isChildProperty &&
-      !property.selectedPredicate?.objectRange.includes(Constants.KnoraApiV2) &&
+      !property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2) &&
       (property.selectedOperator === Operator.Equals || property.selectedOperator === Operator.NotEquals)
     )
       return '';
@@ -172,7 +172,7 @@ export class GravsearchService {
     const labelVariableName = `?label${property.id.slice(0, 8)}`;
 
     // linked resource
-    if (!property.selectedPredicate?.objectRange.includes(Constants.KnoraApiV2)) {
+    if (!property.selectedPredicate?.objectValueType.includes(Constants.KnoraApiV2)) {
       let valueString = '';
       switch (property.selectedOperator) {
         case Operator.Equals:
@@ -193,7 +193,7 @@ export class GravsearchService {
           throw new Error('Invalid operator for linked resource');
       }
     } else {
-      switch (property.selectedPredicate?.objectRange) {
+      switch (property.selectedPredicate?.objectValueType) {
         case ResourceLabel:
           switch (property.selectedOperator) {
             case Operator.Equals:

@@ -1,15 +1,26 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { INITIAL_FORMS_STATE } from '../constants';
+import { BehaviorSubject, distinctUntilChanged, map, startWith } from 'rxjs';
 import { StatementElement, OrderByItem, SearchFormsState } from '../model';
 import { Operator } from '../operators.config';
 
 @Injectable()
 export class SearchStateService {
-  private _state = new BehaviorSubject<SearchFormsState>(INITIAL_FORMS_STATE);
+  private readonly INITIAL_FORMS_STATE: SearchFormsState = {
+    selectedResourceClass: undefined,
+    statementElements: [new StatementElement()],
+    propertiesOrderBy: [],
+  } as const;
+
+  private _state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
 
   statementElements$ = this._state.pipe(
     map(state => state.statementElements),
+    startWith(this.INITIAL_FORMS_STATE.statementElements),
+    distinctUntilChanged()
+  );
+
+  nonEmptyStatementElements$ = this.statementElements$.pipe(
+    map(elements => elements.filter(prop => !!prop.selectedPredicate)),
     distinctUntilChanged()
   );
 
@@ -36,6 +47,7 @@ export class SearchStateService {
 
   patchState(partialState: Partial<SearchFormsState>): void {
     this._state.next({ ...this._state.value, ...partialState });
+    console.log('SearchStateService - new state:', this._state.value);
   }
 
   clearAllSelections() {

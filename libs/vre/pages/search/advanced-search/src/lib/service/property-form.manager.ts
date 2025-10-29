@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { map } from 'rxjs';
-import { SEARCH_ALL_RESOURCE_CLASSES_OPTION } from '../constants';
-import { StatementElement, Predicate, IriLabelPair, SearchItem, OrderByItem } from '../model';
+import { StatementElement, Predicate, IriLabelPair, SearchItem, OrderByItem, NodeValue, StringValue } from '../model';
 import { Operator } from '../operators.config';
 import { AdvancedSearchDataService } from './advanced-search-data.service';
 import { SearchStateService } from './search-state.service';
@@ -12,17 +11,15 @@ export class PropertyFormManager {
   private _dataService = inject(AdvancedSearchDataService);
 
   constructor() {
-    this.searchStateService.statementElements$
+    this.searchStateService.nonEmptyStatementElements$
       .pipe(
         map(forms => {
           const distinctFormsById = new Map(
-            forms
-              .filter(f => f.selectedPredicate)
-              .map(({ selectedPredicate }) => [selectedPredicate.iri, selectedPredicate.label])
+            forms.map(({ selectedPredicate }) => [selectedPredicate!.iri, selectedPredicate!.label])
           );
 
-          const toKeep = this.searchStateService.currentState.propertiesOrderBy.filter(i =>
-            distinctFormsById.has(i.id)
+          const toKeep = this.searchStateService.currentState.propertiesOrderBy.filter(item =>
+            distinctFormsById.has(item.id)
           );
 
           const toAdd = [...distinctFormsById]
@@ -37,19 +34,13 @@ export class PropertyFormManager {
       });
   }
 
-  updateSelectedResourceClass(resourceClass: IriLabelPair = SEARCH_ALL_RESOURCE_CLASSES_OPTION): void {
-    console.log('Updating selected resource class to', resourceClass);
+  updateSelectedResourceClass(resourceClass: IriLabelPair): void {
     this._dataService.setSelectedResourceClass(resourceClass);
     this.searchStateService.clearPropertySelections();
   }
 
   loadMoreResourcesSearchResults(searchItem: SearchItem): void {
     throw new Error('Method not implemented.');
-  }
-
-  updateSelectedOperator(form: StatementElement, operator: Operator): StatementElement {
-    form.selectedOperator = operator;
-    return form;
   }
 
   deleteStatement(statement: StatementElement): void {
@@ -76,19 +67,8 @@ export class PropertyFormManager {
     });
   }
 
-  selectObject(statementElement: StatementElement, selectedResourceClass: IriLabelPair): void {
-    console.error('not implemented yet');
-  }
-
   setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {
-    const currentState = this.searchStateService.currentState;
-    const currentPropertyFormList = currentState.statementElements;
-    const index = currentPropertyFormList.indexOf(statement);
-
-    if (index === -1) {
-      return;
-    }
-    statement.selectedObjectNode.value = searchValue;
+    statement.selectedObjectValue = searchValue;
     this.searchStateService.updateStatement(statement);
   }
 }

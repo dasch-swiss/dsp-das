@@ -16,19 +16,7 @@
     class="advanced-search-item" />
   <mat-progress-bar mode="query" *ngIf="(ontologyLoading$ | async) === true" class="advanced-search-item" />
   <div class="advanced-search-content" *ngIf="(ontologyLoading$ | async) === false">
-    <ng-container *ngFor="let propertyForm of searchState.statementElements$ | async; let isLast = last">
-      <div style="display: flex; width: 100%">
-        <app-statement-builder class="advanced-search-item" [statementElement]="propertyForm" />
-        <button
-          *ngIf="!isLast && propertyForm.selectedPredicate"
-          mat-icon-button
-          (click)="removePropertyForm(propertyForm)"
-          class="remove-property-button"
-          matTooltip="Remove search criteria">
-          <mat-icon>remove_circle</mat-icon>
-        </button>
-      </div>
-    </ng-container>
+    <app-statement-builder [statementElements]="searchState.statementElements$ | async"></app-statement-builder>
     <div class="advanced-search-bottom-selections advanced-search-item">
       <app-order-by />
       <div class="action-buttons">
