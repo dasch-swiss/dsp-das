@@ -481,6 +481,13 @@
       "incomingLinkLabel": "hat eingehenden Link",
       "standoffLinkTooltip": "Stellt einen Link in Standoff-Markup von einer Ressource zu einer anderen dar",
       "standoffLinkLabel": "hat Standoff-Link",
+      "deleteResource": {
+        "title": "Möchten Sie diese Ressource löschen?",
+        "label": "Kommentar, warum die Ressource gelöscht wird",
+        "placeholder": "z.B. Ressource wurde versehentlich erstellt...",
+        "noKeep": "Nein, behalten",
+        "yesDelete": "Ja, löschen"
+      },
       "annotationToolbar": {
         "highlightRegion": "Region hervorheben",
         "openInNewTab": "Annotation in neuem Tab öffnen",
