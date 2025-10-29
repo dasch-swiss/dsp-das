@@ -588,6 +588,14 @@
         "subtitle": "Modifier le label de la ressource",
         "label": "Label"
       },
+      "eraseResource": {
+        "title": "Voulez-vous effacer définitivement cette ressource ?",
+        "subtitle": "Effacer l'instance de ressource",
+        "warning": "ATTENTION : Cette action ne peut pas être annulée, utilisez-la avec précaution.",
+        "reason": "Raison",
+        "noKeep": "Non, la garder",
+        "yesErase": "Oui, effacer"
+      },
       "valueComponents": {
         "searchHelp": "Tapez 3 lettres pour rechercher une ressource existante."
       },

@@ -588,6 +588,14 @@
         "subtitle": "Modifica etichetta della risorsa",
         "label": "Etichetta"
       },
+      "eraseResource": {
+        "title": "Vuoi cancellare definitivamente questa risorsa?",
+        "subtitle": "Cancella istanza della risorsa",
+        "warning": "ATTENZIONE: Questa azione non può essere annullata, quindi usala con cautela.",
+        "reason": "Ragione",
+        "noKeep": "No, mantienila",
+        "yesErase": "Sì, cancella"
+      },
       "valueComponents": {
         "searchHelp": "Digita 3 lettere per cercare una risorsa esistente."
       },

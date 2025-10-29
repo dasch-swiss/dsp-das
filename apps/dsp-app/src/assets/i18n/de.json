@@ -550,6 +550,14 @@
         "subtitle": "Ressourcen-Label bearbeiten",
         "label": "Label"
       },
+      "eraseResource": {
+        "title": "Möchten Sie diese Ressource endgültig löschen?",
+        "subtitle": "Ressourceninstanz löschen",
+        "warning": "ACHTUNG: Diese Aktion kann nicht rückgängig gemacht werden, verwenden Sie sie daher mit Vorsicht.",
+        "reason": "Grund",
+        "noKeep": "Nein, behalten",
+        "yesErase": "Ja, löschen"
+      },
       "valueComponents": {
         "searchHelp": "Geben Sie 3 Buchstaben ein, um nach einer vorhandenen Ressource zu suchen."
       },
