@@ -18,26 +18,6 @@ export class AccessTokenService {
     localStorage.removeItem(LocalStorageLanguageKey);
   }
 
-  private isTokenExpired(token: JwtPayload): boolean {
-    const date = this.getTokenExpirationDate(token);
-    if (date == null) {
-      return false;
-    }
-
-    return date.getTime() < Date.now();
-  }
-
-  private getTokenExpirationDate(decoded: JwtPayload): Date | null {
-    if (decoded.exp === undefined) {
-      return null;
-    }
-
-    const date = new Date(0);
-    date.setUTCSeconds(decoded.exp);
-
-    return date;
-  }
-
   getTokenUser(): string | null {
     const token = this.getAccessToken();
     if (!token) {
@@ -61,7 +41,26 @@ export class AccessTokenService {
   }
 
   isValidToken(decoded: JwtPayload): boolean {
-    console.log('is expired', this.isTokenExpired(decoded));
-    return !this.isTokenExpired(decoded) && decoded.sub !== undefined;
+    return !this._isTokenExpired(decoded) && decoded.sub !== undefined;
+  }
+
+  private _isTokenExpired(token: JwtPayload): boolean {
+    const date = this._getTokenExpirationDate(token);
+    if (date == null) {
+      return false;
+    }
+
+    return date.getTime() < Date.now();
+  }
+
+  private _getTokenExpirationDate(decoded: JwtPayload): Date | null {
+    if (decoded.exp === undefined) {
+      return null;
+    }
+
+    const date = new Date(0);
+    date.setUTCSeconds(decoded.exp);
+
+    return date;
   }
 }
