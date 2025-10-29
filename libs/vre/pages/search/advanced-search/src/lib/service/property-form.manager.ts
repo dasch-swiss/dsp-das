@@ -59,7 +59,7 @@ export class PropertyFormManager {
     this.searchStateService.updateStatement(statement);
   }
 
-  onOperatorSelectionChanged(statement: StatementElement, selectedOperator: Operator): void {
+  setSelectedOperator(statement: StatementElement, selectedOperator: Operator): void {
     statement.selectedOperator = selectedOperator;
     this._dataService.getObjectsForProperty$(statement.selectedPredicate!.iri).subscribe(objects => {
       statement.availableObjects = objects;

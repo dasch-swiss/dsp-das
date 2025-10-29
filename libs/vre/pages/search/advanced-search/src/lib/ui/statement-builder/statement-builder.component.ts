@@ -1,18 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IriLabelPair, Predicate, StatementElement, PropertyObjectType } from '../../model';
-import { AdvancedSearchDataService } from '../../service/advanced-search-data.service';
+import { StatementElement } from '../../model';
 import { PropertyFormManager } from '../../service/property-form.manager';
-import { PropertyFormLinkValueComponent } from './property-form-link-value/property-form-link-value.component';
-import { PropertyFormListValueComponent } from './property-form-list-value/property-form-list-value.component';
-import { PropertyFormResourceComponent } from './property-form-resource/property-form-resource.component';
-import { PropertyFormValueComponent } from './property-form-value/property-form-value.component';
+import { ComparisonOperatorComponent } from './comparison-operator/comparison-operator.component';
+import { ObjectSelectComponent } from './object-select/object-select.component';
+import { PredicateSelectComponent } from './predicate-select/predicate-select.component';
 
 @Component({
   selector: 'app-statement-builder',
@@ -21,37 +16,40 @@ import { PropertyFormValueComponent } from './property-form-value/property-form-
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSelectModule,
     MatTooltipModule,
-    PropertyFormValueComponent,
-    PropertyFormLinkValueComponent,
-    PropertyFormListValueComponent,
-    PropertyFormResourceComponent,
+    PredicateSelectComponent,
+    ComparisonOperatorComponent,
+    ObjectSelectComponent,
   ],
-  templateUrl: './statement-builder.component.html',
+  template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
+    <div style="display: flex; width: 100%">
+      <div class="adv-statement-forms-container">
+        <app-predicate-select
+          [selectedPredicate]="statementElement.selectedPredicate"
+          [subjectClass]="statementElement.parentStatementObject?.value"
+          (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
+        <app-comparison-operator
+          [operators]="statementElement.operators"
+          [selectedOperator]="statementElement.selectedOperator"
+          (operatorChange)="formManager.setSelectedOperator(statementElement, $event)" />
+        <app-object-select [statementElement]="statementElement" />
+      </div>
+      @if (!isLast && !!statementElement.selectedPredicate) {
+        <button
+          mat-icon-button
+          (click)="formManager.deleteStatement(statementElement)"
+          class="remove-property-button"
+          matTooltip="Remove search criteria">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+      }
+    </div>
+  }`,
   styleUrls: ['./statement-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementBuilderComponent {
   @Input({ required: true }) statementElements: StatementElement[] = [new StatementElement()];
 
-  private _dataService = inject(AdvancedSearchDataService);
   public formManager = inject(PropertyFormManager);
-
-  getPredicateSelectionLabel(statementElement: StatementElement): string {
-    return statementElement.parentStatementObject?.value?.label
-      ? `Select a property of ${statementElement.parentStatementObject?.value?.label}`
-      : `Select property`;
-  }
-
-  properties$ = this._dataService.availableProperties$;
-
-  readonly PROPERTY_OBJECT_TYPES = PropertyObjectType;
-
-  compareObjects(object1: Predicate | IriLabelPair, object2: Predicate | IriLabelPair) {
-    return object1 && object2 && object1.iri == object2.iri;
-  }
 }
