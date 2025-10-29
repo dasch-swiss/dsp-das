@@ -1,13 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { DialogService } from '@dasch-swiss/vre/ui/ui';
-import { TranslateModule } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
 import { QueryObject, IriLabelPair } from './model';
 import { provideAdvancedSearch } from './providers';
@@ -16,8 +9,9 @@ import { GravsearchService } from './service/gravsearch.service';
 import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
+import { AdvancedSearchFooterComponent } from './ui/advanced-search-footer.component';
+import { AdvancedSearchHeaderComponent } from './ui/advanced-search-header.component';
 import { OntologyFormComponent } from './ui/ontology-form.component';
-import { OrderByComponent } from './ui/order-by/order-by.component';
 import { ResourceValueComponent } from './ui/statement-builder/object-values/resource-value/resource-value.component';
 import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
 
@@ -26,19 +20,32 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   standalone: true,
   imports: [
     CommonModule,
-    OrderByComponent,
+    AdvancedSearchHeaderComponent,
+    AdvancedSearchFooterComponent,
     OntologyFormComponent,
     StatementBuilderComponent,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatSelectModule,
-    MatTooltipModule,
-    TranslateModule,
     MatProgressBar,
     ResourceValueComponent,
   ],
-  templateUrl: './advanced-search.component.html',
+  template: `
+    <div class="advanced-search-item-width-90 advanced-search-item-max-width-100">
+      <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
+      <app-ontology-form />
+      <app-resource-value
+        [availableResources]="resourceClasses$ | async"
+        (selectedResourceChange)="formManager.updateSelectedResourceClass($event)" />
+      @if ((ontologyLoading$ | async) === true) {
+        <mat-progress-bar mode="query" />
+      }
+      @if ((ontologyLoading$ | async) === false) {
+        <app-statement-builder [statementElements]="searchState.statementElements$ | async" />
+        <app-advanced-search-footer
+          class="flex-space-between margin-top-1em"
+          (searchTriggered)="doSearch()"
+          (resetTriggered)="resetSearch()" />
+      }
+    </div>
+  `,
   styleUrls: ['./advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideAdvancedSearch()],
@@ -53,14 +60,13 @@ export class AdvancedSearchComponent implements OnInit {
   } as const;
 
   searchState: SearchStateService = inject(SearchStateService);
+  formManager: PropertyFormManager = inject(PropertyFormManager);
+
   private _dataService: AdvancedSearchDataService = inject(AdvancedSearchDataService);
-  private _dialogService: DialogService = inject(DialogService);
   private _gravsearchService: GravsearchService = inject(GravsearchService);
-  private _formManager: PropertyFormManager = inject(PropertyFormManager);
-  previousSearchService: PreviousSearchService = inject(PreviousSearchService);
+  private _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
-  ontologies$ = this._dataService.ontologies$;
 
   resourceClasses$ = this._dataService.resourceClasses$.pipe(
     map(classes => [this.SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
@@ -72,19 +78,13 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.previousSearchService.init(this.projectIri);
-    const previousOntology = this.previousSearchService.previousSearchObject.selectedOntology;
-    const previousResourceClass = this.previousSearchService.previousSearchObject.selectedResourceClass;
-    this._dataService.init(this.projectIri, previousOntology, previousResourceClass);
-  }
-
-  onSelectedResourceClassChanged(resourceClass: IriLabelPair): void {
-    this._formManager.updateSelectedResourceClass(resourceClass);
+    this._previousSearchService.init(this.projectIri);
+    this._dataService.init(this.projectIri);
   }
 
   doSearch(): void {
     const state = this.searchState.currentState;
-    this.previousSearchService.storeSearchSnapshot(
+    this._previousSearchService.storeSearchSnapshot(
       this.projectIri,
       this._dataService.selectedOntology,
       this.searchState.currentState
@@ -104,20 +104,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   resetSearch(): void {
-    this._dialogService.afterConfirmation('Are you sure you want to reset the form?').subscribe(() => {
-      this._dataService.init(this.projectIri);
-      this.searchState.clearAllSelections();
-    });
-  }
-
-  loadPreviousSearch(): void {
-    const previousSearch = this.previousSearchService.previousSearchObject;
-    this.searchState.patchState({
-      ...previousSearch,
-    });
-    this._dataService.setOntology(previousSearch.selectedOntology?.iri || '');
-    if (previousSearch.selectedResourceClass) {
-      this._dataService.setSelectedResourceClass(previousSearch.selectedResourceClass);
-    }
+    this._dataService.init(this.projectIri);
+    this.searchState.clearAllSelections();
   }
 }

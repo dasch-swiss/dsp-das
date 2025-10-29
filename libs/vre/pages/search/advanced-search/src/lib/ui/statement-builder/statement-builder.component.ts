@@ -22,7 +22,7 @@ import { PredicateSelectComponent } from './assertions/predicate-select.componen
     ObjectSelectComponent,
   ],
   template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
-    <div style="display: flex; width: 100%">
+    <div class="advanced-search-content">
       <div class="adv-statement-forms-container">
         <app-predicate-select
           [selectedPredicate]="statementElement.selectedPredicate"

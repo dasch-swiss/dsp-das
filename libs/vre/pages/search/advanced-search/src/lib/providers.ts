@@ -6,10 +6,6 @@ import { PreviousSearchService } from './service/previous-search.service';
 import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 
-/**
- * Provides all services needed for advanced search functionality as singletons
- * within the component tree where this provider is used.
- */
 export function provideAdvancedSearch(): Provider[] {
   return [
     SearchStateService,
