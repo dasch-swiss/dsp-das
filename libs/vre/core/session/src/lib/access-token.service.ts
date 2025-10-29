@@ -8,6 +8,10 @@ export class AccessTokenService {
     return localStorage.getItem(Auth.AccessToken);
   }
 
+  tokenExists(): boolean {
+    return this.getAccessToken() !== null;
+  }
+
   storeToken(token: string): void {
     localStorage.setItem(Auth.AccessToken, token);
   }
@@ -39,8 +43,21 @@ export class AccessTokenService {
     }
   }
 
-  isValidToken(decoded: JwtPayload): boolean {
-    return !this._isTokenExpired(decoded) && decoded.sub !== undefined;
+  isValidToken(): boolean {
+    return !this._isInvalidToken();
+  }
+
+  private _isInvalidToken(): boolean {
+    const encodedJWT = this.getAccessToken();
+    if (!encodedJWT) {
+      return true;
+    }
+
+    const decoded = this.decodeAccessToken(encodedJWT);
+    if (!decoded) {
+      return true;
+    }
+    return this._isTokenExpired(decoded) || decoded.sub === undefined;
   }
 
   private _isTokenExpired(token: JwtPayload): boolean {

@@ -25,17 +25,22 @@ export class AutoLoginService {
     }
     this._isInitialized = true;
 
-    const encodedJWT = this._accessTokenService.getAccessToken();
-    if (!encodedJWT) {
+    if (!this._accessTokenService.tokenExists()) {
       this.hasCheckedCredentials$.next(true);
       return;
     }
 
-    const decodedToken = this._accessTokenService.decodeAccessToken(encodedJWT);
-    if (!decodedToken || !this._accessTokenService.isValidToken(decodedToken)) {
-      this.hasCheckedCredentials$.next(true);
+    if (!this._accessTokenService.isValidToken()) {
       this._accessTokenService.removeTokens();
+      this.hasCheckedCredentials$.next(true);
       return;
+    }
+
+    const encodedJWT = this._accessTokenService.getAccessToken();
+    const userIri = this._accessTokenService.getTokenUser();
+
+    if (!encodedJWT || !userIri) {
+      throw new AppError('Access token should exist.');
     }
 
     this._dspApiConnection.v2.jsonWebToken = encodedJWT;
@@ -46,11 +51,6 @@ export class AutoLoginService {
         switchMap(isValid => {
           if (!isValid) {
             throw new AppError('Credentials not valid');
-          }
-
-          const userIri = decodedToken.sub;
-          if (!userIri) {
-            throw new AppError('Decoded user in JWT token is not valid.');
           }
 
           return this._authService.afterSuccessfulLogin$(userIri, 'iri');
