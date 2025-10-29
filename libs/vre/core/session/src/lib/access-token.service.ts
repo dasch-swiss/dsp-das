@@ -24,9 +24,7 @@ export class AccessTokenService {
       return false;
     }
 
-    // Token is expired if expiration time (minus 30s buffer) is in the past
-    const expirationWithBuffer = date.getTime() - 30 * 1000; // 30 seconds buffer
-    return expirationWithBuffer <= Date.now();
+    return date.getTime() < Date.now();
   }
 
   private getTokenExpirationDate(decoded: JwtPayload): Date | null {
@@ -63,9 +61,7 @@ export class AccessTokenService {
   }
 
   isValidToken(decoded: JwtPayload): boolean {
-    if (decoded === null) {
-      return false;
-    }
+    console.log('is expired', this.isTokenExpired(decoded));
     return !this.isTokenExpired(decoded) && decoded.sub !== undefined;
   }
 }
