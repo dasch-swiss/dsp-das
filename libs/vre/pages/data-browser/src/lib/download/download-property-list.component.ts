@@ -15,15 +15,12 @@ export interface DownloadProperty {
   template: `
     <div style="margin-bottom: 16px">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px">
-        <span style="font-weight: 500">Properties to Download</span>
-        <div style="display: flex; gap: 12px">
-          <button mat-button color="primary" (click)="selectAll()" style="font-size: 14px">Select All</button>
-          <button mat-button color="primary" (click)="selectNone()" style="font-size: 14px">Select None</button>
+        <span style="font-weight: 500">Properties</span>
+        <div style="display: flex; gap: 8px">
+          <button mat-button color="primary" (click)="selectAll()">Select All</button>
+          <button mat-button color="primary" (click)="selectNone()">Select None</button>
         </div>
       </div>
-      <p style="color: #666; margin: 0 0 12px 0; font-size: 14px">
-        Download CSV file with metadata and selected properties
-      </p>
     </div>
 
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px">

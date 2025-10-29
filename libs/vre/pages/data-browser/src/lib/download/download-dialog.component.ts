@@ -13,8 +13,7 @@ export interface DownloadDialogData {
     <app-dialog-header [title]="'Download'" />
 
     <div mat-dialog-content>
-      <div style="margin-bottom: 16px">
-        <div style="font-weight: 500; margin-bottom: 8px">Download Type</div>
+      <div style="margin-bottom: 16px; display: flex; justify-content: center">
         <app-double-chip-selector [options]="['Resources', 'Images']" [(value)]="isResourcesMode" />
       </div>
 
@@ -32,21 +31,14 @@ export interface DownloadDialogData {
     </div>
 
     <div mat-dialog-actions align="end">
-      <div style="flex: 1; color: #666; font-size: 14px">{{ data.resourceCount }} resources available</div>
+      <div style="flex: 1; color: #666; margin-right: 16px">{{ data.resourceCount }} resources available</div>
       <button mat-raised-button color="primary" (click)="downloadCsv()">
         <mat-icon>download</mat-icon>
         Download CSV
       </button>
     </div>
   `,
-  styles: [
-    `
-      ::ng-deep .mat-mdc-dialog-actions {
-        display: flex;
-        align-items: center;
-      }
-    `,
-  ],
+  styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
