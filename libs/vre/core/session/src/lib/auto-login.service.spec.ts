@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { JwtPayload } from 'jwt-decode';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 import { AutoLoginService } from './auto-login.service';
 
 // Test constants
 const TEST_CONSTANTS = {
-  JWT_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJodHRwOi8vcmRmLmRhc2NoLnN3aXNzL3VzZXJzL3Rlc3QtdXNlciIsImV4cCI6OTk5OTk5OTk5OX0.test',
+  JWT_TOKEN:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJodHRwOi8vcmRmLmRhc2NoLnN3aXNzL3VzZXJzL3Rlc3QtdXNlciIsImV4cCI6OTk5OTk5OTk5OX0.test',
   USER_IRI: 'http://rdf.dasch.swiss/users/test-user',
   INVALID_TOKEN: 'invalid-token',
 } as const;
@@ -135,7 +135,6 @@ describe('AutoLoginService', () => {
       mockAccessTokenService.getTokenUser = jest.fn().mockReturnValue(TEST_CONSTANTS.USER_IRI);
       mockAccessTokenService.decodeAccessToken = jest.fn().mockReturnValue(createValidDecodedToken());
     });
-
 
     it('should set JWT token in DSP connection', async () => {
       mockAuthService.isCredentialsValid$ = jest.fn().mockReturnValue(of(true));
