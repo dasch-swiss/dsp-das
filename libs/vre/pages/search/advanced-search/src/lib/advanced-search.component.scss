@@ -12,17 +12,27 @@
   margin-bottom: 1em;
 }
 
-.advanced-search-item-width-90 {
+.width-90-percent {
   width: 90%;
 }
 
-.advanced-search-item-max-width-100 {
+.max-width-100em {
   max-width: 100em;
 }
 
-.action-buttons-container {
+.width-100-percent {
+  width: 100%;
+}
+
+.flex {
   display: flex;
-  gap: 0.5em;
+}
+
+.flex-end {
   justify-content: flex-end;
+}
+
+.gap-05em {
+  gap: 0.5em;
 }
 

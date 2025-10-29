@@ -22,30 +22,27 @@ import { PredicateSelectComponent } from './assertions/predicate-select.componen
     ObjectSelectComponent,
   ],
   template: ` @for (statementElement of statementElements; track statementElement.id; let isLast = $last) {
-    <div class="advanced-search-content">
-      <div class="adv-statement-forms-container">
-        <app-predicate-select
-          [selectedPredicate]="statementElement.selectedPredicate"
-          [subjectClass]="statementElement.parentStatementObject?.value"
-          (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
-        <app-comparison-operator
-          [operators]="statementElement.operators"
-          [selectedOperator]="statementElement.selectedOperator"
-          (operatorChange)="formManager.setSelectedOperator(statementElement, $event)" />
-        <app-object-select [statementElement]="statementElement" />
-      </div>
+    <div class="width-100-percent flex gap-05em">
+      <app-predicate-select
+        [selectedPredicate]="statementElement.selectedPredicate"
+        [subjectClass]="statementElement.parentStatementObject?.value"
+        (selectedPredicateChange)="formManager.onPredicateSelectionChanged(statementElement, $event)" />
+      <app-comparison-operator
+        [operators]="statementElement.operators"
+        [selectedOperator]="statementElement.selectedOperator"
+        (operatorChange)="formManager.setSelectedOperator(statementElement, $event)" />
+      <app-object-select [statementElement]="statementElement" />
       @if (!isLast && !!statementElement.selectedPredicate) {
         <button
           mat-icon-button
           (click)="formManager.deleteStatement(statementElement)"
-          class="remove-property-button"
           matTooltip="Remove search criteria">
           <mat-icon>remove_circle</mat-icon>
         </button>
       }
     </div>
   }`,
-  styleUrls: ['./statement-builder.component.scss'],
+  styleUrls: ['../../advanced-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementBuilderComponent {

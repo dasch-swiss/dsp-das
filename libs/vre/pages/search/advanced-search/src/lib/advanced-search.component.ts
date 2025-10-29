@@ -28,7 +28,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
     ResourceValueComponent,
   ],
   template: `
-    <div class="advanced-search-item-width-90 advanced-search-item-max-width-100">
+    <div class="width-90-percent max-width-100em">
       <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
       <app-ontology-form />
       <app-resource-value

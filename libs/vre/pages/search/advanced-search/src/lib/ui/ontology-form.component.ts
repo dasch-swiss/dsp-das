@@ -12,7 +12,7 @@ import { SearchStateService } from '../service/search-state.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSelectModule],
   template: `
-    <mat-form-field>
+    <mat-form-field class="width-100-percent">
       <mat-label>Data model</mat-label>
       <mat-select
         (selectionChange)="onSelectedOntologyChanged($event.value)"
@@ -23,13 +23,7 @@ import { SearchStateService } from '../service/search-state.service';
       </mat-select>
     </mat-form-field>
   `,
-  styles: [
-    `
-      mat-form-field {
-        width: 100%;
-      }
-    `,
-  ],
+  styleUrl: '../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OntologyFormComponent {

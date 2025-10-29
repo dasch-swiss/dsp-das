@@ -41,7 +41,6 @@ class ValueErrorStateMatcher implements ErrorStateMatcher {
     ReactiveFormsModule,
   ],
   templateUrl: './string-value.component.html',
-  styleUrls: ['./string-value.component.scss'],
 })
 export class StringValueComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) valueType!: string;

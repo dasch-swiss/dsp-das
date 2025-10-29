@@ -7,7 +7,7 @@ import { IriLabelPair } from '../../../../model';
   standalone: true,
   imports: [MatSelectModule],
   template: `
-    <mat-form-field>
+    <mat-form-field class="width-100-percent">
       <mat-label>Resource Class</mat-label>
       <mat-select
         [value]="selectedResource"
@@ -22,13 +22,7 @@ import { IriLabelPair } from '../../../../model';
       </mat-select>
     </mat-form-field>
   `,
-  styles: [
-    `
-      mat-form-field {
-        width: 100%;
-      }
-    `,
-  ],
+  styleUrl: '../../../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceValueComponent {

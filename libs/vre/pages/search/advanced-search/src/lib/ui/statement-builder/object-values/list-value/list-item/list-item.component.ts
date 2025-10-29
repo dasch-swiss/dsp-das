@@ -7,7 +7,6 @@ import { ListNodeV2 } from '@dasch-swiss/dsp-js';
   standalone: true,
   imports: [MatMenuModule],
   templateUrl: './list-item.component.html',
-  styleUrls: ['./list-item.component.scss'],
 })
 export class ListItemComponent {
   @Input() children: ListNodeV2[] = [];

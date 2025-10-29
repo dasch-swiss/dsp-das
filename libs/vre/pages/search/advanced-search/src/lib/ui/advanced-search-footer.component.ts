@@ -11,7 +11,7 @@ import { OrderByComponent } from './order-by/order-by.component';
   imports: [CommonModule, MatButtonModule, OrderByComponent],
   template: `
     <app-order-by />
-    <div class="action-buttons-container">
+    <div class="flex flex-end gap-05em">
       <button mat-button mat-stroked-button color="primary" (click)="handleReset()">Reset</button>
       <button
         mat-button
@@ -23,7 +23,7 @@ import { OrderByComponent } from './order-by/order-by.component';
       </button>
     </div>
   `,
-  styleUrls: ['../advanced-search.component.scss'],
+  styleUrl: '../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdvancedSearchFooterComponent {
