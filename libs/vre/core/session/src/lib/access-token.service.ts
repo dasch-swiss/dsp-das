@@ -14,7 +14,6 @@ export class AccessTokenService {
 
   removeTokens(): void {
     localStorage.removeItem(Auth.AccessToken);
-    localStorage.removeItem(Auth.Refresh_token);
     localStorage.removeItem(LocalStorageLanguageKey);
   }
 
@@ -24,7 +23,7 @@ export class AccessTokenService {
       return null;
     }
 
-    const decodedToken = this.decodedAccessToken(token);
+    const decodedToken = this.decodeAccessToken(token);
     if (!decodedToken || !decodedToken.sub) {
       return null;
     }
@@ -32,7 +31,7 @@ export class AccessTokenService {
     return decodedToken.sub;
   }
 
-  decodedAccessToken(token: string): JwtPayload | null {
+  decodeAccessToken(token: string): JwtPayload | null {
     try {
       return jwt_decode<JwtPayload>(token);
     } catch (e) {

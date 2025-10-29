@@ -95,7 +95,7 @@ describe('AuthService', () => {
       storeToken: jest.fn(),
       removeTokens: jest.fn(),
       getAccessToken: jest.fn(),
-      decodedAccessToken: jest.fn(),
+      decodeAccessToken: jest.fn(),
     };
 
     mockDspApiConnection = {

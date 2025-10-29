@@ -31,7 +31,7 @@ export class AutoLoginService {
       return;
     }
 
-    const decodedToken = this._accessTokenService.decodedAccessToken(encodedJWT);
+    const decodedToken = this._accessTokenService.decodeAccessToken(encodedJWT);
     if (!decodedToken || !this._accessTokenService.isValidToken(decodedToken)) {
       this.hasCheckedCredentials$.next(true);
       this._accessTokenService.removeTokens();
