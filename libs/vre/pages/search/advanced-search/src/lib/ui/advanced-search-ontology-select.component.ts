@@ -8,7 +8,7 @@ import { AdvancedSearchDataService } from '../service/advanced-search-data.servi
 import { SearchStateService } from '../service/search-state.service';
 
 @Component({
-  selector: 'app-ontology-form',
+  selector: 'app-advanced-search-ontology-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSelectModule],
   template: `
@@ -26,7 +26,7 @@ import { SearchStateService } from '../service/search-state.service';
   styleUrl: '../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OntologyFormComponent {
+export class AdvancedSearchOntologySelectComponent {
   private dataService = inject(AdvancedSearchDataService);
   private searchStateService = inject(SearchStateService);
 

@@ -157,6 +157,14 @@ export class StatementElement {
     return this.selectedOperator !== Operator.Exists && this.selectedOperator !== Operator.NotExists;
   }
 
+  get isValidAndComplete(): boolean {
+    return (
+      this.selectedOperator === Operator.Exists ||
+      this.selectedOperator === Operator.NotExists ||
+      !!this.selectedObjectNode
+    );
+  }
+
   get objectType(): PropertyObjectType {
     // No property selected
     if (!this.selectedPredicate) {

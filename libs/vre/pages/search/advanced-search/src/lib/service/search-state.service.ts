@@ -30,9 +30,8 @@ export class SearchStateService {
   );
 
   isFormStateValid$ = this.statementElements$.pipe(
-    map(propertyFormList => {
-      const hasInvalidPropertyForms = propertyFormList.some(prop => !this.isPropertyFormItemValid(prop));
-      return !hasInvalidPropertyForms && propertyFormList.some(prop => prop.selectedPredicate);
+    map(elements => {
+      return elements.every(prop => prop.isValidAndComplete);
     }),
     distinctUntilChanged()
   );
@@ -68,13 +67,5 @@ export class SearchStateService {
 
   updateOrderBy(orderByList: OrderByItem[]): void {
     this.patchState({ propertiesOrderBy: orderByList });
-  }
-
-  isPropertyFormItemValid(prop: StatementElement): boolean {
-    return (
-      prop.selectedOperator === Operator.Exists ||
-      prop.selectedOperator === Operator.NotExists ||
-      !!prop.selectedObjectNode
-    );
   }
 }

@@ -31,7 +31,7 @@ export class ResourceValueComponent {
 
   @Output() selectedResourceChange = new EventEmitter<IriLabelPair>();
 
-  compareObjects(object1: any, object2: any) {
+  compareObjects(object1: IriLabelPair, object2: IriLabelPair) {
     return object1 && object2 && object1.iri === object2.iri;
   }
 }

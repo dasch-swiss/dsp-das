@@ -11,7 +11,7 @@ import { PropertyFormManager } from './service/property-form.manager';
 import { SearchStateService } from './service/search-state.service';
 import { AdvancedSearchFooterComponent } from './ui/advanced-search-footer.component';
 import { AdvancedSearchHeaderComponent } from './ui/advanced-search-header.component';
-import { OntologyFormComponent } from './ui/ontology-form.component';
+import { AdvancedSearchOntologySelectComponent } from './ui/advanced-search-ontology-select.component';
 import { ResourceValueComponent } from './ui/statement-builder/object-values/resource-value/resource-value.component';
 import { StatementBuilderComponent } from './ui/statement-builder/statement-builder.component';
 
@@ -22,7 +22,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
     CommonModule,
     AdvancedSearchHeaderComponent,
     AdvancedSearchFooterComponent,
-    OntologyFormComponent,
+    AdvancedSearchOntologySelectComponent,
     StatementBuilderComponent,
     MatProgressBar,
     ResourceValueComponent,
@@ -30,7 +30,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
   template: `
     <div class="width-90-percent max-width-100em">
       <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
-      <app-ontology-form />
+      <app-advanced-search-ontology-form />
       <app-resource-value
         [availableResources]="resourceClasses$ | async"
         (selectedResourceChange)="formManager.updateSelectedResourceClass($event)" />

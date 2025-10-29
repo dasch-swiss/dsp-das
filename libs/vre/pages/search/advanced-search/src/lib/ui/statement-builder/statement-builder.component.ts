@@ -42,7 +42,7 @@ import { PredicateSelectComponent } from './assertions/predicate-select.componen
       }
     </div>
   }`,
-  styleUrls: ['../../advanced-search.component.scss'],
+  styleUrl: '../../advanced-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementBuilderComponent {
