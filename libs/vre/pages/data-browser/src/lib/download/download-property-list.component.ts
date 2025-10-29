@@ -7,7 +7,6 @@ export interface DownloadProperty {
   type: string;
   required: boolean;
   selected: boolean;
-  restricted?: boolean;
 }
 
 @Component({
@@ -28,11 +27,7 @@ export interface DownloadProperty {
         <div
           style="display: flex; align-items: flex-start; padding: 12px 8px; border-bottom: 1px solid #f5f5f5"
           [style.background-color]="property.selected ? '#f0f7ff' : 'transparent'">
-          <mat-checkbox
-            [checked]="property.selected"
-            [disabled]="property.restricted"
-            (change)="toggleProperty(property)"
-            style="margin-right: 12px" />
+          <mat-checkbox [checked]="property.selected" (change)="toggleProperty(property)" style="margin-right: 12px" />
           <div style="flex: 1">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
               <span style="font-weight: 500">{{ property.label }}</span>
@@ -52,9 +47,6 @@ export interface DownloadProperty {
 
     <div style="margin-top: 8px; color: #666; font-size: 13px">
       {{ selectedCount }} of {{ properties.length }} properties selected
-      @if (restrictedCount > 0) {
-        <span> · {{ restrictedCount }} restricted</span>
-      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,32 +60,22 @@ export class DownloadPropertyListComponent {
     return this.properties.filter(p => p.selected).length;
   }
 
-  get restrictedCount(): number {
-    return this.properties.filter(p => p.restricted).length;
-  }
-
   selectAll(): void {
     this.properties.forEach(p => {
-      if (!p.restricted) {
-        p.selected = true;
-      }
+      p.selected = true;
     });
     this.propertiesChange.emit(this.properties);
   }
 
   selectNone(): void {
     this.properties.forEach(p => {
-      if (!p.restricted) {
-        p.selected = false;
-      }
+      p.selected = false;
     });
     this.propertiesChange.emit(this.properties);
   }
 
   toggleProperty(property: DownloadProperty): void {
-    if (!property.restricted) {
-      property.selected = !property.selected;
-      this.propertiesChange.emit(this.properties);
-    }
+    property.selected = !property.selected;
+    this.propertiesChange.emit(this.properties);
   }
 }

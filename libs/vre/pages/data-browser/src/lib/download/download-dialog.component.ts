@@ -10,13 +10,12 @@ export interface DownloadDialogData {
 @Component({
   selector: 'app-download-dialog',
   template: `
-    <app-dialog-header [title]="'Download'" />
+    <app-dialog-header [title]="'Download'" [subtitle]="data.resourceCount + ' resources available'" />
 
+    <div style="display: flex; justify-content: center">
+      <app-double-chip-selector [options]="['Resources', 'Images']" [(value)]="isResourcesMode" />
+    </div>
     <div mat-dialog-content>
-      <div style="margin-bottom: 16px; display: flex; justify-content: center">
-        <app-double-chip-selector [options]="['Resources', 'Images']" [(value)]="isResourcesMode" />
-      </div>
-
       <app-download-property-list [(properties)]="properties" />
 
       <div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 4px">
@@ -31,7 +30,7 @@ export interface DownloadDialogData {
     </div>
 
     <div mat-dialog-actions align="end">
-      <div style="flex: 1; color: #666; margin-right: 16px">{{ data.resourceCount }} resources available</div>
+      <button mat-button (click)="dialogRef.close()" style="margin-right: 16px">Cancel</button>
       <button mat-raised-button color="primary" (click)="downloadCsv()">
         <mat-icon>download</mat-icon>
         Download CSV
