@@ -445,7 +445,8 @@
       "addRegionFormDialog": {
         "createAnnotation": "Crea annotazione",
         "subtitle": "Aggiungi ulteriori proprietà",
-        "label": "Etichetta"
+        "label": "Etichetta",
+        "comment": "Commento"
       },
       "downloadFile": "Scarica file",
       "replaceFile": "Sostituisci file",

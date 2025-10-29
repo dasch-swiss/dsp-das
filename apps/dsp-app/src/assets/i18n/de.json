@@ -407,7 +407,8 @@
       "addRegionFormDialog": {
         "createAnnotation": "Annotation erstellen",
         "subtitle": "Weitere Eigenschaften hinzufügen",
-        "label": "Bezeichnung"
+        "label": "Bezeichnung",
+        "comment": "Kommentar"
       },
       "video": {
         "createAnnotation": "Annotation erstellen",
