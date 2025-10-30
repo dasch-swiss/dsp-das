@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { ErrorHandler, inject, NgModule, NgZone, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -35,17 +35,16 @@ import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/reso
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { CommonToMoveComponents, CommonToMoveStandaloneComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
-  HumanReadableErrorPipe,
-  StringLiteralComponents,
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
+  StringLiteralComponents,
 } from '@dasch-swiss/vre/ui/string-literal';
 import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -107,7 +106,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DateValueHandlerComponent,
     FormsModule,
     HttpClientModule,
-    HumanReadableErrorPipe,
     IMaskModule,
     MultiLanguageInputComponent,
     MultiLanguageTextareaComponent,
@@ -117,7 +115,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MatStepperModule,
     NgxSkeletonLoaderModule,
     PdfViewerModule,
-    ...CommonToMoveStandaloneComponents,
     ...UiStandaloneComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({

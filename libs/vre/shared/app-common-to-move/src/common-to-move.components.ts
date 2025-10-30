@@ -1,4 +1,3 @@
-import { DialogHeaderComponent } from '../../../ui/ui/src/lib/dialog-header.component';
 import { GlobalSearchComponent } from './lib/header/global-search.component';
 import { HeaderLogoComponent } from './lib/header/header-logo.component';
 import { HeaderUserActionsComponent } from './lib/header/header-user-actions.component';
@@ -18,5 +17,3 @@ export const CommonToMoveComponents = [
   VersionBadgeComponent,
   GlobalSearchComponent,
 ];
-
-export const CommonToMoveStandaloneComponents = [DialogHeaderComponent];
