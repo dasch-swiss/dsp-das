@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadFileValue } from '@dasch-swiss/dsp-js';
-import { AdminProjectsLegalInfoApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { AdminAPIApiService, ProjectLicenseDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { switchMap, take } from 'rxjs';
 
@@ -16,11 +16,14 @@ import { switchMap, take } from 'rxjs';
         <div style="display: flex; justify-content: space-between">
           <div>
             @if (fileValue.copyrightHolder) {
-              <div><span class="label">Copyright holder</span>{{ fileValue.copyrightHolder }}</div>
+              <div>
+                <span class="label">{{ 'resourceEditor.legal.copyrightHolder' | translate }}</span
+                >{{ fileValue.copyrightHolder }}
+              </div>
             }
             @if (fileValue.authorship.length > 0) {
               <div style="display: flex">
-                <span class="label">Authorship</span>
+                <span class="label">{{ 'resourceEditor.legal.authorship' | translate }}</span>
                 <div style="max-width: 400px">
                   @for (author of fileValue.authorship; track author; let last = $last) {
                     <span>{{ author }}{{ last ? '' : ', ' }}</span>
@@ -51,8 +54,8 @@ export class ResourceLegalComponent implements OnInit {
   }
 
   constructor(
-    private _resourceFetcher: ResourceFetcherService,
-    private _copyrightApi: AdminProjectsLegalInfoApiService
+    private readonly _adminApiService: AdminAPIApiService,
+    private readonly _resourceFetcher: ResourceFetcherService
   ) {}
 
   ngOnInit() {
@@ -63,7 +66,7 @@ export class ResourceLegalComponent implements OnInit {
     this._resourceFetcher.projectShortcode$
       .pipe(
         switchMap(projectShortcode =>
-          this._copyrightApi.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
+          this._adminApiService.getAdminProjectsShortcodeProjectshortcodeLegalInfoLicenses(projectShortcode)
         ),
         take(1)
       )

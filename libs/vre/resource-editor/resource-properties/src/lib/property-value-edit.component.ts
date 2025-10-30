@@ -22,6 +22,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
     <app-template-editor-switcher
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [resourceClassIri]="propertyValueService.editModeData.resource.type"
+      [projectIri]="propertyValueService.editModeData.resource.attachedToProject"
       [value]="readValue"
       (templateFound)="foundTemplate($event)" />
 
@@ -36,7 +37,11 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
           }
         </div>
         <div style="display: flex">
-          <button (click)="afterUndo.emit()" mat-icon-button color="primary" [matTooltip]="'undo'">
+          <button
+            (click)="afterUndo.emit()"
+            mat-icon-button
+            color="primary"
+            [matTooltip]="'resourceEditor.resourceProperties.actions.undo' | translate">
             <mat-icon>undo</mat-icon>
           </button>
           <button
@@ -45,11 +50,20 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             color="primary"
             (click)="toggleCommentValue()"
             data-cy="toggle-comment-button"
-            [matTooltip]="commentIsNotNull ? 'remove comment' : 'add comment'">
+            [matTooltip]="
+              commentIsNotNull
+                ? ('resourceEditor.resourceProperties.actions.removeComment' | translate)
+                : ('resourceEditor.resourceProperties.actions.addComment' | translate)
+            ">
             <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
           </button>
           @if (group.controls.item.value !== null) {
-            <button (click)="onSave()" [matTooltip]="'save'" mat-icon-button data-cy="save-button" color="primary">
+            <button
+              (click)="onSave()"
+              [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
+              mat-icon-button
+              data-cy="save-button"
+              color="primary">
               <mat-icon>save</mat-icon>
             </button>
           }

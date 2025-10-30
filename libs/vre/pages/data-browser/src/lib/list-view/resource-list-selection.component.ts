@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { combineLatest, map, tap } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
 
@@ -10,9 +10,16 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   template: `
     <div style="background: #336790; color: white; padding: 0 16px; display: flex; gap: 8px; align-items: center">
       <div style="flex: 1; display: flex; align-items: center; gap: 16px;">
-        <div>{{ count$ | async }} resources selected</div>
+        <div>
+          {{ 'pages.dataBrowser.resourceListSelection.resourcesSelected' | translate: { count: count$ | async } }}
+        </div>
         @if ((showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async); as selectedResources) {
-          <button mat-flat-button (click)="openCreateLinkDialog(selectedResources)">Create a link object</button>
+          <button
+            mat-flat-button
+            (click)="openCreateLinkDialog(selectedResources)"
+            [disabled]="isCreateLinkButtonDisabled$ | async">
+            {{ 'pages.dataBrowser.resourceListSelection.createLinkObject' | translate }}
+          </button>
         }
       </div>
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
@@ -26,9 +33,17 @@ export class ResourceListSelectionComponent {
     map(([count, hasProjectMemberRights]) => count > 1 && hasProjectMemberRights)
   );
 
+  isCreateLinkButtonDisabled$ = this.multipleViewerService.selectedResources$.pipe(
+    map(resources => {
+      if (resources.length === 0) return true;
+      const projectUuid = resources[0].attachedToProject;
+      return !resources.every(resource => resource.attachedToProject === projectUuid);
+    })
+  );
+
   constructor(
     public multipleViewerService: MultipleViewerService,
-    private _dialog: MatDialog
+    private readonly _dialog: MatDialog
   ) {}
 
   reset() {
