@@ -11,7 +11,7 @@ on:
     types: [opened, assigned]
 
 jobs:
-  # Job 1: Dedicated code review with predefined prompt
+  # Job 1: Dedicated code review with predefined prompt which triggers on commands: '@claude review' or '/claude-review' posted in the comments of a PR
   claude-code-review:
     if: |
       github.event.issue.pull_request &&
