@@ -5,22 +5,13 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
     commit-message:
       prefix: "chore"
       include: "scope"
     groups:
-      angular-deps:
-        applies-to: version-updates
-        patterns:
-          - "@angular*"
-          - "@ngrx/component-store"
-          - "zone.js"
-        update-types:
-          - "minor"
-          - "patch"
       eslint-deps:
         applies-to: version-updates
         patterns:
@@ -45,7 +36,7 @@ updates:
           - "jest*"
           - "ts-jest"
           - "jasmine-core"
-          - "@types/jasmine"
+          - "@types/jasmine*"
           - "@types/jest"
         update-types:
           - "minor"
@@ -58,12 +49,19 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      nx-deps:
+      openseadragon-deps:
         applies-to: version-updates
         patterns:
-          - "nx*"
-          - "@nx*"
-          - "@nrwl*"
+          - "openseadragon"
+          - "@types/openseadragon"
+        update-types:
+          - "minor"
+          - "patch"
+      uuid-deps:
+        applies-to: version-updates
+        patterns:
+          - "uuid"
+          - "@types/uuid"
         update-types:
           - "minor"
           - "patch"
@@ -81,17 +79,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      types-deps:
-        applies-to: version-updates
-        patterns:
-          - "@types/*"
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "@types/jest"
-          - "@types/jasmine*"
-          - "@types/jwt-decode"
       test-coverage-deps:
         applies-to: version-updates
         patterns:
@@ -107,20 +94,59 @@ updates:
         update-types: [ "version-update:semver-major" ]
       # we use github:dasch-swiss/ckeditor_custom_build#v2.0.0 and v2.0.1 seems to be broken
       - dependency-name: "ckeditor5-custom-build"
-      # all nx and angular dependencies are for now handled manually (also zone.js)
+      # Angular, NX, TypeScript and related deps are handled manually due to tight version coupling
       - dependency-name: "@angular/*"
       - dependency-name: "@angular-devkit/*"
-      - dependency-name: "@angular-eslint/*" #angular-eslint should match the angular version, also handled manually
+      # angular-eslint should match the angular version, also handled manually
+      - dependency-name: "@angular-eslint/*"
+      - dependency-name: "@schematics/angular"
       - dependency-name: "typescript"
       - dependency-name: "@ngrx/component-store"
       - dependency-name: "nx*"
       - dependency-name: "@nx*"
       - dependency-name: "@nrwl/*"
       - dependency-name: "zone.js"
+      # @types/node should match Node.js version from Docker
+      - dependency-name: "@types/node"
+
+  # Security-only updates for manually managed dependencies
+  # Creates PRs only for security vulnerabilities, even for ignored deps
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "security"
+      - "dependencies"
+    # Only security updates, no version updates
+    # This monitors Angular, NX, TypeScript for vulnerabilities even though handled manually
+
+  # GitHub Actions workflow dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
     ignore:
       - dependency-name: "node"
