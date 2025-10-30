@@ -15,11 +15,28 @@ updates:
       eslint-deps:
         applies-to: version-updates
         patterns:
-          - "eslint*"
+          - "eslint-config-*"
+          - "eslint-plugin-*"
         exclude-patterns:
-          - "@angular-eslint/*"
-          - "@nx/eslint/*"
-          - "@nrwl/eslint*"
+          - "eslint-config-prettier"
+          - "eslint-plugin-prettier"
+        update-types:
+          - "minor"
+          - "patch"
+      prettier-deps:
+        applies-to: version-updates
+        patterns:
+          - "prettier"
+          - "eslint-config-prettier"
+          - "eslint-plugin-prettier"
+        update-types:
+          - "minor"
+          - "patch"
+      swc-deps:
+        applies-to: version-updates
+        patterns:
+          - "@swc/*"
+          - "@swc-node/*"
         update-types:
           - "minor"
           - "patch"
@@ -106,8 +123,15 @@ updates:
       - dependency-name: "@nx*"
       - dependency-name: "@nrwl/*"
       - dependency-name: "zone.js"
+      # RxJS and ng-packagr are tightly coupled to Angular version
+      - dependency-name: "rxjs"
+      - dependency-name: "ng-packagr"
       # @types/node should match Node.js version from Docker
       - dependency-name: "@types/node"
+      # ESLint and TypeScript-ESLint are tightly coupled to TypeScript version
+      - dependency-name: "eslint"
+      - dependency-name: "@typescript-eslint/*"
+      - dependency-name: "eslint-plugin-angular"
 
   # Security-only updates for manually managed dependencies
   # Creates PRs only for security vulnerabilities, even for ignored deps
@@ -117,7 +141,7 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 3
     commit-message:
-      prefix: "chore"
+      prefix: "security"
       include: "scope"
     labels:
       - "security"
