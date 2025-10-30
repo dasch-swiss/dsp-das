@@ -40,7 +40,7 @@ import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
@@ -78,7 +78,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...HelpPageComponents,
     ...ListComponents,
     ...OntologyComponents,
-    ...ProgressIndicatorComponents,
     ...ProjectComponents,
     ...PropertiesDisplayComponents,
     ...RepresentationsComponents,
