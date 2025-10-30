@@ -20,33 +20,21 @@ updates:
         exclude-patterns:
           - "eslint-config-prettier"
           - "eslint-plugin-prettier"
-        update-types:
-          - "minor"
-          - "patch"
       prettier-deps:
         applies-to: version-updates
         patterns:
           - "prettier"
           - "eslint-config-prettier"
           - "eslint-plugin-prettier"
-        update-types:
-          - "minor"
-          - "patch"
       swc-deps:
         applies-to: version-updates
         patterns:
           - "@swc/*"
           - "@swc-node/*"
-        update-types:
-          - "minor"
-          - "patch"
       grafana-deps:
         applies-to: version-updates
         patterns:
           - "@grafana/*"
-        update-types:
-          - "minor"
-          - "patch"
       jest-jasmine-deps:
         applies-to: version-updates
         patterns:
@@ -55,47 +43,29 @@ updates:
           - "jasmine-core"
           - "@types/jasmine*"
           - "@types/jest"
-        update-types:
-          - "minor"
-          - "patch"
       jwt-decoder-deps:
         applies-to: version-updates
         patterns:
           - "jwt-decode"
           - "@types/jwt-decode"
-        update-types:
-          - "minor"
-          - "patch"
       openseadragon-deps:
         applies-to: version-updates
         patterns:
           - "openseadragon"
           - "@types/openseadragon"
-        update-types:
-          - "minor"
-          - "patch"
       uuid-deps:
         applies-to: version-updates
         patterns:
           - "uuid"
           - "@types/uuid"
-        update-types:
-          - "minor"
-          - "patch"
       postcss-deps:
         applies-to: version-updates
         patterns:
           - "postcss*"
-        update-types:
-          - "minor"
-          - "patch"
       sentry-deps:
         applies-to: version-updates
         patterns:
           - "@sentry/*"
-        update-types:
-          - "minor"
-          - "patch"
       test-coverage-deps:
         applies-to: version-updates
         patterns:
@@ -103,9 +73,6 @@ updates:
           - "@jsdevtools/coverage-istanbul-loader"
           - "istanbul-lib-coverage"
           - "ngx-build-plus"
-        update-types:
-          - "minor"
-          - "patch"
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
@@ -132,22 +99,6 @@ updates:
       - dependency-name: "eslint"
       - dependency-name: "@typescript-eslint/*"
       - dependency-name: "eslint-plugin-angular"
-
-  # Security-only updates for manually managed dependencies
-  # Creates PRs only for security vulnerabilities, even for ignored deps
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "security"
-      include: "scope"
-    labels:
-      - "security"
-      - "dependencies"
-    # Only security updates, no version updates
-    # This monitors Angular, NX, TypeScript for vulnerabilities even though handled manually
 
   # GitHub Actions workflow dependencies
   - package-ecosystem: "github-actions"

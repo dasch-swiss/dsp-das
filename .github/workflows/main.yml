@@ -207,7 +207,6 @@ jobs:
             {"type": "feat", "section": "Enhancements"},
             {"type": "fix", "section": "Bug Fixes"},
             {"type": "chore", "section": "Maintenances"},
-            {"type": "security", "section": "Maintenances"},
             {"type": "refactor", "section": "Maintenances"},
             {"type": "style", "section": "Maintenances"},
             {"type": "docs", "section": "Documentation"},
