@@ -5,7 +5,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 7
+    open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
     commit-message:
@@ -13,7 +13,6 @@ updates:
       include: "scope"
     groups:
       eslint-deps:
-        applies-to: version-updates
         patterns:
           - "eslint-config-*"
           - "eslint-plugin-*"
@@ -21,65 +20,48 @@ updates:
           - "eslint-config-prettier"
           - "eslint-plugin-prettier"
       prettier-deps:
-        applies-to: version-updates
         patterns:
           - "prettier"
           - "eslint-config-prettier"
           - "eslint-plugin-prettier"
       swc-deps:
-        applies-to: version-updates
         patterns:
           - "@swc/*"
           - "@swc-node/*"
       ngx-translate-deps:
-        applies-to: version-updates
         patterns:
           - "@ngx-translate/*"
-      angular-ui-deps:
-        applies-to: version-updates
-        patterns:
-          - "ng2-pdf-viewer"
-          - "angular-imask"
-          - "angular-split"
-          - "ngx-color-picker"
-          - "ngx-skeleton-loader"
       grafana-deps:
-        applies-to: version-updates
         patterns:
           - "@grafana/*"
-      jest-jasmine-deps:
-        applies-to: version-updates
+      jest-deps:
         patterns:
           - "jest*"
           - "ts-jest"
+          - "@types/jest"
+      jasmine-deps:
+        patterns:
           - "jasmine-core"
           - "@types/jasmine*"
-          - "@types/jest"
       jwt-decoder-deps:
-        applies-to: version-updates
         patterns:
           - "jwt-decode"
           - "@types/jwt-decode"
       openseadragon-deps:
-        applies-to: version-updates
         patterns:
           - "openseadragon"
           - "@types/openseadragon"
       uuid-deps:
-        applies-to: version-updates
         patterns:
           - "uuid"
           - "@types/uuid"
       postcss-deps:
-        applies-to: version-updates
         patterns:
           - "postcss*"
       sentry-deps:
-        applies-to: version-updates
         patterns:
           - "@sentry/*"
       test-coverage-deps:
-        applies-to: version-updates
         patterns:
           - "@cypress/code-coverage"
           - "@jsdevtools/coverage-istanbul-loader"
