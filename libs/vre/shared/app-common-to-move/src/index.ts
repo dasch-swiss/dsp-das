@@ -1,5 +1,4 @@
 export * from './common-to-move.components';
-export * from '../../../ui/ui/src/lib/dialog-header.component';
 export * from './lib/split.pipe';
 export * from './lib/search-params.interface';
 export * from './lib/header/header.component';
