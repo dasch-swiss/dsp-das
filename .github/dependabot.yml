@@ -5,7 +5,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 7
     schedule:
       interval: "weekly"
     commit-message:
@@ -31,6 +31,18 @@ updates:
         patterns:
           - "@swc/*"
           - "@swc-node/*"
+      ngx-translate-deps:
+        applies-to: version-updates
+        patterns:
+          - "@ngx-translate/*"
+      angular-ui-deps:
+        applies-to: version-updates
+        patterns:
+          - "ng2-pdf-viewer"
+          - "angular-imask"
+          - "angular-split"
+          - "ngx-color-picker"
+          - "ngx-skeleton-loader"
       grafana-deps:
         applies-to: version-updates
         patterns:
@@ -100,7 +112,6 @@ updates:
       - dependency-name: "@typescript-eslint/*"
       - dependency-name: "eslint-plugin-angular"
 
-  # GitHub Actions workflow dependencies
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
