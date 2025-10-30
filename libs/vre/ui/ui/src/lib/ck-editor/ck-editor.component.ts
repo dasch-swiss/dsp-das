@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import * as Editor from 'ckeditor5-custom-build';
 import { startWith } from 'rxjs/operators';
+import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
 import { unescapeHtml } from './unescape-html';
 

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angu
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ValidatorError } from '../validator-error.interface';
 import { TimeFormatDirective } from './time-format.directive';
 import { TimeInputErrorStateMatcher } from './time-input-error-state-matcher';

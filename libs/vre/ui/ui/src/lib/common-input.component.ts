@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/string-literal';
+import { HumanReadableErrorPipe } from './human-readable-error.pipe';
 
 @Component({
   selector: 'app-common-input',
