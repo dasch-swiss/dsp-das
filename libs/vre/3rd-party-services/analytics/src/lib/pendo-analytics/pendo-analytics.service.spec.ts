@@ -15,10 +15,7 @@ describe('PendoAnalyticsService', () => {
     (global as any).pendo = mockPendo;
 
     TestBed.configureTestingModule({
-      providers: [
-        PendoAnalyticsService,
-        { provide: DspInstrumentationToken, useValue: { environment: 'test' } },
-      ],
+      providers: [PendoAnalyticsService, { provide: DspInstrumentationToken, useValue: { environment: 'test' } }],
     });
 
     service = TestBed.inject(PendoAnalyticsService);
@@ -77,10 +74,7 @@ describe('PendoAnalyticsService', () => {
       // Create a new service instance with prod environment
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          PendoAnalyticsService,
-          { provide: DspInstrumentationToken, useValue: { environment: 'prod' } },
-        ],
+        providers: [PendoAnalyticsService, { provide: DspInstrumentationToken, useValue: { environment: 'prod' } }],
       });
       const prodService = TestBed.inject(PendoAnalyticsService);
       const userIri = 'http://rdf.dasch.swiss/users/testuser';
@@ -112,10 +106,7 @@ describe('PendoAnalyticsService', () => {
       // Create a new service instance with prod environment
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          PendoAnalyticsService,
-          { provide: DspInstrumentationToken, useValue: { environment: 'prod' } },
-        ],
+        providers: [PendoAnalyticsService, { provide: DspInstrumentationToken, useValue: { environment: 'prod' } }],
       });
       const prodService = TestBed.inject(PendoAnalyticsService);
 
