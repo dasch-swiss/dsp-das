@@ -1,5 +1,54 @@
 # Changelog
 
+## [12.1.2](https://github.com/dasch-swiss/dsp-das/compare/v12.1.1...v12.1.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* add missing translations ([#2607](https://github.com/dasch-swiss/dsp-das/issues/2607)) ([152689f](https://github.com/dasch-swiss/dsp-das/commit/152689f8d5f53a0e41ebe7e1ad5b4f033babca02))
+* disable hint in authorship ([#2606](https://github.com/dasch-swiss/dsp-das/issues/2606)) ([2489812](https://github.com/dasch-swiss/dsp-das/commit/2489812693adc44d83a48172eb67c08a18f6cfb8))
+
+## [12.1.1](https://github.com/dasch-swiss/dsp-das/compare/v12.1.0...v12.1.1) (2025-10-28)
+
+
+### Bug Fixes
+
+* add missing translations ([#2601](https://github.com/dasch-swiss/dsp-das/issues/2601)) ([eadfc53](https://github.com/dasch-swiss/dsp-das/commit/eadfc53e117fa4399767bf6e4717bf21fbd2ca35))
+* **FulltextSearch:** disallow linking resources from different projects ([#2598](https://github.com/dasch-swiss/dsp-das/issues/2598)) ([0610242](https://github.com/dasch-swiss/dsp-das/commit/0610242815678255b474bf400279819c6f8cb4fc))
+* **LinkValue:** limit to searching for only current project resources ([#2602](https://github.com/dasch-swiss/dsp-das/issues/2602)) ([f9878f1](https://github.com/dasch-swiss/dsp-das/commit/f9878f1bbe9ca83328c6ee1a8e1cb971b3ed467a))
+* translate resource class name ([#2600](https://github.com/dasch-swiss/dsp-das/issues/2600)) ([646206e](https://github.com/dasch-swiss/dsp-das/commit/646206e0409b7539e2b7d3d4dee7837f23d79996))
+
+
+### Maintenances
+
+* add Claude Code GitHub Workflow ([#2603](https://github.com/dasch-swiss/dsp-das/issues/2603)) ([4ae40c9](https://github.com/dasch-swiss/dsp-das/commit/4ae40c99bd8170c8628699258329444574fabb19))
+* remove unused console log ([#2605](https://github.com/dasch-swiss/dsp-das/issues/2605)) ([a130e72](https://github.com/dasch-swiss/dsp-das/commit/a130e722e93a31fa8ccdd7cda9dde93e951f4b18))
+
+## [12.1.0](https://github.com/dasch-swiss/dsp-das/compare/v12.0.1...v12.1.0) (2025-10-27)
+
+
+### Enhancements
+
+* translate the whole website ([#2590](https://github.com/dasch-swiss/dsp-das/issues/2590)) ([fd0696a](https://github.com/dasch-swiss/dsp-das/commit/fd0696a2243fda3cd9ba62a51a0fa207bef52862))
+
+
+### Bug Fixes
+
+* a project member can create link objects ([#2591](https://github.com/dasch-swiss/dsp-das/issues/2591)) ([1ae59a7](https://github.com/dasch-swiss/dsp-das/commit/1ae59a75365d729b2499fc4298126cd8dcbba800))
+* remove unused communication service ([#2589](https://github.com/dasch-swiss/dsp-das/issues/2589)) ([90fa9cb](https://github.com/dasch-swiss/dsp-das/commit/90fa9cb6b34f387cce0270f5b5f1f45a8122411c))
+* resource class description is translated ([#2592](https://github.com/dasch-swiss/dsp-das/issues/2592)) ([30e9eb8](https://github.com/dasch-swiss/dsp-das/commit/30e9eb8b25dafac45d331ea21ce461984c42ebe3))
+
+
+### Maintenances
+
+* **deps-dev:** bump @cypress/code-coverage from 3.14.6 to 3.14.7 in the test-coverage-deps group ([#2574](https://github.com/dasch-swiss/dsp-das/issues/2574)) ([342ef3c](https://github.com/dasch-swiss/dsp-das/commit/342ef3ca193b37d63f5f0cdc5cac6649e13fb482))
+* **deps-dev:** bump @openapitools/openapi-generator-cli from 2.24.0 to 2.25.0 ([#2586](https://github.com/dasch-swiss/dsp-das/issues/2586)) ([a1d7d5b](https://github.com/dasch-swiss/dsp-das/commit/a1d7d5bef1abc1167b48d41b22ae98beb45e3c35))
+* **deps-dev:** bump @types/node from 22.18.8 to 22.18.10 in the types-deps group ([#2573](https://github.com/dasch-swiss/dsp-das/issues/2573)) ([afaa60d](https://github.com/dasch-swiss/dsp-das/commit/afaa60db0a723659f4258bcb284476531695ecc3))
+* **deps-dev:** bump the jest-jasmine-deps group across 1 directory with 2 updates ([#2585](https://github.com/dasch-swiss/dsp-das/issues/2585)) ([eb1dce7](https://github.com/dasch-swiss/dsp-das/commit/eb1dce72e23df5912a37cd0af3763ef48835329a))
+* **deps:** bump core-js from 3.45.1 to 3.46.0 ([#2576](https://github.com/dasch-swiss/dsp-das/issues/2576)) ([2c4f25e](https://github.com/dasch-swiss/dsp-das/commit/2c4f25e968638ee4aa45767895807e5df9e120a5))
+* **deps:** bump the sentry-deps group with 2 updates ([#2572](https://github.com/dasch-swiss/dsp-das/issues/2572)) ([8f4b330](https://github.com/dasch-swiss/dsp-das/commit/8f4b330ca75554d9d4d194ee74905ead20295cae))
+* enable unit test coverage ([#2587](https://github.com/dasch-swiss/dsp-das/issues/2587)) ([84448da](https://github.com/dasch-swiss/dsp-das/commit/84448da396a6535e7bed3fbb667faebeb2544734))
+
 ## [12.0.1](https://github.com/dasch-swiss/dsp-das/compare/v12.0.0...v12.0.1) (2025-10-20)
 
 

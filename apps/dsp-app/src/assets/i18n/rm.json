@@ -276,6 +276,17 @@
         "multipleValues": "Multiple values",
         "required": "Required"
       },
+      "cardinalityDialog": {
+        "title": "Update cardinality",
+        "subtitle": "Set the cardinality for property {{group}}: {{label}}",
+        "notPossible": "Changing the cardinality is not possible.",
+        "attention": "Attention",
+        "confirmMessage": "Please note that this change may not be reversible. Do you want to change the cardinality?",
+        "multiplePropertiesError": "At least one resource of the class \"{{className}}\" has multiple \"{{propertyLabel}}\" properties in your data.",
+        "multiplePropertiesHint": "In order to set the cardinality of \"{{propertyLabel}}\" to single, every resource \"{{className}}\" must have only one \"{{propertyLabel}}\" value prior to this change.",
+        "missingPropertyError": "At least one resource of the class \"{{className}}\" does not have a \"{{propertyLabel}}\" property in your data.",
+        "missingPropertyHint": "In order to set the cardinality of \"{{propertyLabel}}\" to required every resource \"{{className}}\" needs to have a \"{{propertyLabel}}\" value prior to this change."
+      },
       "propertyItem": {
         "edit": "Edit",
         "removeFromClass": "Remove from class",
@@ -317,6 +328,9 @@
         "patternError": "This pattern is not supported",
         "labelPlaceholder": "Label",
         "commentPlaceholder": "Comment"
+      },
+      "service": {
+        "classCreated": "Successfully created the class {{classLabel}}."
       }
     },
     "search": {
@@ -431,7 +445,8 @@
       "addRegionFormDialog": {
         "createAnnotation": "Create Annotation",
         "subtitle": "Add further properties",
-        "label": "Label"
+        "label": "Label",
+        "comment": "Comment"
       },
       "downloadFile": "Download file",
       "replaceFile": "Replace file",
@@ -505,6 +520,13 @@
       "incomingLinkLabel": "has incoming link",
       "standoffLinkTooltip": "Represent a link in standoff markup from one resource to another",
       "standoffLinkLabel": "has Standoff link",
+      "deleteResource": {
+        "title": "Do you want to delete this resource?",
+        "label": "Comment why resource is being deleted",
+        "placeholder": "Ex. Resource was created by mistake...",
+        "noKeep": "No, keep it",
+        "yesDelete": "Yes, delete"
+      },
       "annotationToolbar": {
         "highlightRegion": "Highlight Region",
         "openInNewTab": "Open annotation in new tab",
@@ -566,6 +588,14 @@
         "subtitle": "Edit resource label",
         "label": "Label"
       },
+      "eraseResource": {
+        "title": "Do you want to erase this resource forever?",
+        "subtitle": "Erase resource instance",
+        "warning": "WARNING: This action cannot be undone, so use it with care.",
+        "reason": "Reason",
+        "noKeep": "No, keep it",
+        "yesErase": "Yes, erase"
+      },
       "valueComponents": {
         "searchHelp": "Type 3 letters to search for an existing resource."
       },
@@ -589,7 +619,8 @@
       },
       "authorship": {
         "label": "Authorship",
-        "placeholder": "New authorship..."
+        "placeholder": "New authorship...",
+        "pressEnterOrTab": "Press Enter or Tab to add an item."
       },
       "image": {
         "label": "Image",
@@ -600,7 +631,11 @@
         "dragAndDrop": "Drag and drop file here or click to browse",
         "fileTypesSupported": "File types supported: {{types}}",
         "processing": "Processing file on server...",
+        "processingFile": "Processing file on server...",
         "extensionNotSupported": "The extension {{extension}} is not supported."
+      },
+      "representation": {
+        "file": "File"
       }
     },
     "templateSwitcher": {
@@ -635,7 +670,9 @@
         "submit": "Submit",
         "confirm": "Confirm",
         "search": "Search",
-        "retry": "Retry"
+        "retry": "Retry",
+        "yes": "Yes",
+        "no": "No"
       },
       "fields": {
         "username": "Username",
