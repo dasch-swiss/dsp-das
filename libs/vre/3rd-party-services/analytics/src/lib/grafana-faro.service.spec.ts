@@ -198,11 +198,7 @@ describe('GrafanaFaroService', () => {
     it('should track events with name and attributes', () => {
       service.trackEvent('auth.login', { identifierType: 'email' });
 
-      expect(mockFaroInstance.api.pushEvent).toHaveBeenCalledWith(
-        'auth.login',
-        { identifierType: 'email' },
-        'custom'
-      );
+      expect(mockFaroInstance.api.pushEvent).toHaveBeenCalledWith('auth.login', { identifierType: 'email' }, 'custom');
     });
 
     it('should track events without attributes', () => {
