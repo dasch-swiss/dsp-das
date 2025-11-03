@@ -44,7 +44,7 @@ export class AuthService {
         this._grafanaFaroService.trackEvent('auth.login', {
           identifierType,
         });
-        this._grafanaFaroService.setUser(identifierOrIri);
+        this._grafanaFaroService.setUser(user.id);
       })
     );
   }
