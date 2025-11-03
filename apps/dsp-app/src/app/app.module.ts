@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { PendoAnalyticsService, GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -42,12 +42,11 @@ import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vr
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
-  HumanReadableErrorPipe,
-  StringLiteralComponents,
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
+  StringLiteralComponents,
 } from '@dasch-swiss/vre/ui/string-literal';
-import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
+import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
@@ -91,7 +90,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...StringLiteralComponents,
     ...SystemComponents,
     ...TemplateSwitcherComponents,
-    ...UiComponents,
     ...UserComponents,
   ],
   imports: [
@@ -108,7 +106,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DateValueHandlerComponent,
     FormsModule,
     HttpClientModule,
-    HumanReadableErrorPipe,
     IMaskModule,
     MultiLanguageInputComponent,
     MultiLanguageTextareaComponent,
@@ -117,8 +114,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,
-    PagerComponent,
     PdfViewerModule,
+    ...UiStandaloneComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
@@ -131,6 +128,13 @@ export function httpLoaderFactory(httpClient: HttpClient) {
   providers: [
     AppConfigService,
     PendoAnalyticsService,
+    GrafanaFaroService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (faroService: GrafanaFaroService) => () => faroService.setup(),
+      deps: [GrafanaFaroService],
+      multi: true,
+    },
     {
       provide: DspApiConfigToken,
       useFactory: (appConfigService: AppConfigService) => appConfigService.dspApiConfig,
@@ -160,7 +164,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler,
-      deps: [NotificationService, AppConfigService, NgZone],
+      deps: [NotificationService, AppConfigService, NgZone, GrafanaFaroService],
     },
     {
       provide: HTTP_INTERCEPTORS,
