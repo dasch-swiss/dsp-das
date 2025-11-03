@@ -148,7 +148,6 @@ export class DataClassPanelComponent {
           type: 'text',
           required: false,
           selected: false,
-          restricted: true,
         },
       ],
       resourceCount: 2,

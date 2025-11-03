@@ -5,6 +5,7 @@ import { DataBrowserPageComponent } from './lib/data-browser-page.component';
 import { DataClassPanelComponent } from './lib/data-class-panel.component';
 import { DataClassViewComponent } from './lib/data-class-view.component';
 import { DataOverviewComponent } from './lib/data-overview.component';
+import { DownloadDialogPropertiesTabComponent } from './lib/download/download-dialog-properties-tab.component';
 import { DownloadDialogComponent } from './lib/download/download-dialog.component';
 import { DownloadPropertyListComponent } from './lib/download/download-property-list.component';
 import { ResourceLinkDialogComponent } from './lib/list-view/resource-link-dialog.component';
@@ -34,4 +35,5 @@ export const DataBrowserComponents = [
   DataOverviewComponent,
   DownloadDialogComponent,
   DownloadPropertyListComponent,
+  DownloadDialogPropertiesTabComponent,
 ];
