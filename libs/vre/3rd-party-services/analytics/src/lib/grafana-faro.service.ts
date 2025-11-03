@@ -108,7 +108,7 @@ export class GrafanaFaroService {
    * Set user ID in Faro (hashed for privacy)
    * @param userIri The user IRI from the JWT token
    */
-  private _setUser(userIri: string): void {
+  setUser(userIri: string): void {
     if (!this._faroInstance) {
       return;
     }
@@ -127,7 +127,7 @@ export class GrafanaFaroService {
   /**
    * Remove user ID from Faro (on logout)
    */
-  private _removeUser(): void {
+  removeUser(): void {
     if (!this._faroInstance) {
       return;
     }

@@ -44,6 +44,7 @@ export class AuthService {
         this._grafanaFaroService.trackEvent('auth.login', {
           identifierType,
         });
+        this._grafanaFaroService.setUser(identifierOrIri);
       })
     );
   }
@@ -80,6 +81,7 @@ export class AuthService {
     this._dspApiConnection.v2.jsonWebToken = '';
     this._pendoAnalytics.removeActiveUser();
     this._grafanaFaroService.trackEvent('auth.logout');
+    this._grafanaFaroService.removeUser();
   }
 
   /**
