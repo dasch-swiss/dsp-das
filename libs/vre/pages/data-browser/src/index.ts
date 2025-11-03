@@ -22,5 +22,6 @@ export * from './lib/data-class-panel.component';
 export * from './lib/data-class-view.component';
 export * from './lib/data-overview.component';
 export * from './lib/download/download-dialog.component';
-export * from './lib/download/download-dialog-properties-tab.component';
+export * from './lib/download/download-dialog-resources-tab.component';
+export * from './lib/download/download-dialog-images-tab.component';
 export * from './lib/download/download-property-list.component';

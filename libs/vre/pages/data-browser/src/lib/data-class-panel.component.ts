@@ -8,7 +8,7 @@ import { filterUndefined } from '@dasch-swiss/vre/shared/app-common';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { DataBrowserPageService } from './data-browser-page.service';
-import { DownloadDialogComponent, DownloadDialogData } from './download/download-dialog.component';
+import { DownloadDialogComponent } from './download/download-dialog.component';
 
 @Component({
   selector: 'app-data-class-panel',
@@ -75,86 +75,13 @@ export class DataClassPanelComponent {
   }
 
   openDownloadDialog() {
-    const mockData: DownloadDialogData = {
-      properties: [
-        {
-          name: 'label',
-          label: 'Label',
-          description: 'The title of the story',
-          type: 'text',
-          required: true,
-          selected: true,
-        },
-        {
-          name: 'resourceIri',
-          label: 'Resource IRI',
-          description: 'Unique resource identifier',
-          type: 'text',
-          required: true,
-          selected: true,
-        },
-        {
-          name: 'assetFilename',
-          label: 'Asset Filename',
-          description: 'Associated file reference',
-          type: 'text',
-          required: false,
-          selected: true,
-        },
-        {
-          name: 'author',
-          label: 'Author',
-          description: 'The author of the story',
-          type: 'text',
-          required: true,
-          selected: true,
-        },
-        {
-          name: 'publicationDate',
-          label: 'Publication Date',
-          description: 'When the story was published',
-          type: 'date',
-          required: false,
-          selected: true,
-        },
-        {
-          name: 'description',
-          label: 'Description',
-          description: 'A detailed description of the resource',
-          type: 'text',
-          required: false,
-          selected: false,
-        },
-        {
-          name: 'keywords',
-          label: 'Keywords',
-          description: 'Keywords associated with the resource',
-          type: 'text',
-          required: false,
-          selected: false,
-        },
-        {
-          name: 'category',
-          label: 'Category',
-          description: 'Resource category classification',
-          type: 'text',
-          required: false,
-          selected: false,
-        },
-        {
-          name: 'restrictedField',
-          label: 'Restricted Field',
-          description: 'This field is restricted and cannot be modified',
-          type: 'text',
-          required: false,
-          selected: false,
-        },
-      ],
-      resourceCount: 2,
-    };
+    console.log('class', this);
 
     this._dialog
-      .open(DownloadDialogComponent, { ...DspDialogConfig.dialogDrawerConfig(mockData, true), width: '500px' })
+      .open(DownloadDialogComponent, {
+        ...DspDialogConfig.dialogDrawerConfig({ resourceCount: 2, resClass: this.classSelected.resClass }, true),
+        width: '500px',
+      })
       .afterClosed()
       .subscribe(result => {
         if (result) {

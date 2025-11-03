@@ -26,7 +26,7 @@ import { DownloadProperty } from './download-property-list.component';
     </div>
   `,
 })
-export class DownloadDialogPropertiesTabComponent {
+export class DownloadDialogResourcesTabComponent {
   @Input({ required: true }) properties: DownloadProperty[];
   @Output() afterClosed = new EventEmitter<void>();
   includeResourceIris = false;
