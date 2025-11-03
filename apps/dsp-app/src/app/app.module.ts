@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, inject, NgModule, NgZone, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { PendoAnalyticsService, GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -40,7 +40,7 @@ import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
@@ -115,6 +115,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     NgxSkeletonLoaderModule,
     PdfViewerModule,
     ...UiStandaloneComponents,
+    ...ProgressIndicatorComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
