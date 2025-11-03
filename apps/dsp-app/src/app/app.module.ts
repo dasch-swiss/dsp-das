@@ -42,12 +42,11 @@ import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vr
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
-  HumanReadableErrorPipe,
-  StringLiteralComponents,
   MultiLanguageInputComponent,
   MultiLanguageTextareaComponent,
+  StringLiteralComponents,
 } from '@dasch-swiss/vre/ui/string-literal';
-import { PagerComponent, UiComponents } from '@dasch-swiss/vre/ui/ui';
+import { UiStandaloneComponents } from '@dasch-swiss/vre/ui/ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
@@ -91,7 +90,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...StringLiteralComponents,
     ...SystemComponents,
     ...TemplateSwitcherComponents,
-    ...UiComponents,
     ...UserComponents,
   ],
   imports: [
@@ -108,7 +106,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     DateValueHandlerComponent,
     FormsModule,
     HttpClientModule,
-    HumanReadableErrorPipe,
     IMaskModule,
     MultiLanguageInputComponent,
     MultiLanguageTextareaComponent,
@@ -117,8 +114,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MatRippleModule,
     MatStepperModule,
     NgxSkeletonLoaderModule,
-    PagerComponent,
     PdfViewerModule,
+    ...UiStandaloneComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {

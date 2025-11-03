@@ -9,9 +9,17 @@ export class PendoAnalyticsService {
   private config: DspInstrumentationConfig = inject(DspInstrumentationToken);
   private environment: string = this.config.environment;
 
-  setup(): void {
+  /**
+   * Set active user for Pendo analytics
+   * @param userIri - The user IRI to track
+   */
+  setActiveUser(userIri: string): void {
     if (this.config.environment !== 'prod') {
+      return;
     }
+
+    const hashedUserId = this.hashUserIri(userIri);
+    this._setActiveUser(hashedUserId);
   }
 
   /**
@@ -60,6 +68,10 @@ export class PendoAnalyticsService {
    * remove active user
    */
   removeActiveUser(): void {
+    if (this.config.environment !== 'prod') {
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     pendo.initialize({
