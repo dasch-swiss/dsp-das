@@ -32,7 +32,7 @@
         "enabled": true,
         "disabledLevels": []
       },
-      "tracingCorsUrls": []
+      "tracingCorsUrls": ["https://api.dev.dasch.swiss", "https://ingest.dev.dasch.swiss"]
     }
   },
   "featureFlags": {
