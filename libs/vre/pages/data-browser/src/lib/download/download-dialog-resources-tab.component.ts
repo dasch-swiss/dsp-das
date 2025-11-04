@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DownloadProperty } from './download-property-list.component';
+import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-download-dialog-properties-tab',
   standalone: false,
   template: `
-    <app-download-property-list [(properties)]="properties" />
+    <app-download-property-list [propertyDefinitions]="properties" />
 
     <div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 4px">
       <mat-checkbox [(ngModel)]="includeResourceIris">
@@ -27,12 +27,12 @@ import { DownloadProperty } from './download-property-list.component';
   `,
 })
 export class DownloadDialogResourcesTabComponent {
-  @Input({ required: true }) properties: DownloadProperty[];
+  @Input({ required: true }) properties!: ResourcePropertyDefinition[];
   @Output() afterClosed = new EventEmitter<void>();
   includeResourceIris = false;
 
   downloadCsv(): void {
-    const selectedProperties = this.properties.filter(p => p.selected);
+    // const selectedProperties = this.properties.filter(p => p.selected);
     this.afterClosed.emit();
   }
 }

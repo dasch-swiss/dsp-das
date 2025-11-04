@@ -1,8 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import {
+  Constants,
+  KnoraApiConnection,
+  ResourceClassDefinitionWithAllLanguages,
+  ResourcePropertyDefinition,
+} from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { DownloadProperty } from './download-property-list.component';
+import { map, Observable } from 'rxjs';
 
 export interface DownloadDialogData {
   resClass: ResourceClassDefinitionWithAllLanguages;
@@ -23,7 +28,9 @@ export interface DownloadDialogData {
       @if (isStillImageResource && !isResourcesMode) {
         <app-download-dialog-images-tab />
       } @else {
-        <app-download-dialog-properties-tab [properties]="properties" />
+        @if (properties$ | async; as properties) {
+          <app-download-dialog-properties-tab [properties]="properties" />
+        }
       }
     </div>
   `,
@@ -34,7 +41,7 @@ export class DownloadDialogComponent {
   isStillImageResource!: boolean;
   isResourcesMode = true;
 
-  properties: DownloadProperty[] = [];
+  properties$!: Observable<ResourcePropertyDefinition[]>;
 
   constructor(
     public dialogRef: MatDialogRef<DownloadDialogComponent>,
@@ -47,6 +54,8 @@ export class DownloadDialogComponent {
       .includes(Constants.HasStillImageFileValue);
 
     console.log(this.data.resClass);
-    // this.properties = this.data.resClass.propertiesList;
+    this.properties$ = this._dspApiConnection.v2.ontologyCache
+      .getResourceClassDefinition(this.data.resClass.id)
+      .pipe(map(v => v.getAllPropertyDefinitions().filter(v => v instanceof ResourcePropertyDefinition)));
   }
 }
