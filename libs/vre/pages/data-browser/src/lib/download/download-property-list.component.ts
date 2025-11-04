@@ -54,7 +54,6 @@ export class DownloadPropertyListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('aaa', this.propertyDefinitions);
     this.properties = this.propertyDefinitions.map(p => ({
       selected: false,
       property: p,

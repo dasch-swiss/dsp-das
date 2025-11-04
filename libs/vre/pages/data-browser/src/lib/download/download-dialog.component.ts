@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   Constants,
   KnoraApiConnection,
+  PropertyDefinition,
   ResourceClassDefinitionWithAllLanguages,
   ResourcePropertyDefinition,
 } from '@dasch-swiss/dsp-js';
@@ -41,7 +42,7 @@ export class DownloadDialogComponent {
   isStillImageResource!: boolean;
   isResourcesMode = true;
 
-  properties$!: Observable<ResourcePropertyDefinition[]>;
+  properties$!: Observable<PropertyDefinition[]>;
 
   constructor(
     public dialogRef: MatDialogRef<DownloadDialogComponent>,
@@ -53,9 +54,16 @@ export class DownloadDialogComponent {
       .map(v => v.propertyIndex)
       .includes(Constants.HasStillImageFileValue);
 
-    console.log(this.data.resClass);
+    console.log(this.data.resClass, 'TODO FIX filtering resource classes');
+    const blockList = [Constants.HasStandoffLinkToValue, Constants.HasIncomingLinkValue];
     this.properties$ = this._dspApiConnection.v2.ontologyCache
       .getResourceClassDefinition(this.data.resClass.id)
-      .pipe(map(v => v.getAllPropertyDefinitions().filter(v => v instanceof ResourcePropertyDefinition)));
+      .pipe(
+        map(v =>
+          v
+            .getAllPropertyDefinitions()
+            .filter(y => y instanceof ResourcePropertyDefinition && !blockList.includes(y.id))
+        )
+      );
   }
 }

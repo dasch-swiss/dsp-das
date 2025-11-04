@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
 
 @Component({
   selector: 'app-download-dialog-properties-tab',
   standalone: false,
   template: `
-    <app-download-property-list [propertyDefinitions]="properties" />
+    <app-download-property-list [propertyDefinitions]="properties" (propertiesChange)="selectedPropertyIds = $event" />
 
     <div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 4px">
       <mat-checkbox [(ngModel)]="includeResourceIris">
@@ -26,13 +26,17 @@ import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
     </div>
   `,
 })
-export class DownloadDialogResourcesTabComponent {
-  @Input({ required: true }) properties!: ResourcePropertyDefinition[];
+export class DownloadDialogResourcesTabComponent implements OnInit {
+  @Input({ required: true }) properties!: PropertyDefinition[];
   @Output() afterClosed = new EventEmitter<void>();
   includeResourceIris = false;
 
+  selectedPropertyIds: string[] = [];
+
+  ngOnInit() {
+    console.log('prop', this.properties);
+  }
   downloadCsv(): void {
-    // const selectedProperties = this.properties.filter(p => p.selected);
-    this.afterClosed.emit();
+    // TODO download route
   }
 }
