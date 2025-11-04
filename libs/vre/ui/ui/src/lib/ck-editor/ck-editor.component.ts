@@ -42,16 +42,14 @@ export class CkEditorComponent implements OnInit, OnDestroy {
     }
     let updating = false;
 
-    this.control.valueChanges
-      .pipe(startWith(this.control.value), takeUntil(this._destroy$))
-      .subscribe(change => {
-        if (updating) {
-          return;
-        }
-        updating = true;
-        this.footnoteControl.patchValue(change === null ? null : this._parseToFootnote(change));
-        updating = false;
-      });
+    this.control.valueChanges.pipe(startWith(this.control.value), takeUntil(this._destroy$)).subscribe(change => {
+      if (updating) {
+        return;
+      }
+      updating = true;
+      this.footnoteControl.patchValue(change === null ? null : this._parseToFootnote(change));
+      updating = false;
+    });
 
     this.footnoteControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(value => {
       if (updating) {
