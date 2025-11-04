@@ -93,16 +93,22 @@ export class OsdDrawerService implements OnDestroy {
     this._osd.createdRectangle$
       .pipe(takeUntil(this._ngUnsubscribe))
       .pipe(
-        switchMap(overlay =>
-          this._dialog
+        switchMap(overlay => {
+          // Extract project shortcode from resource IRI
+          // Resource IRI format: http://rdfh.ch/[shortcode]/[uuid]
+          const resourceIriParts = this.resource.id.split('/');
+          const projectShortcode = resourceIriParts[resourceIriParts.length - 2];
+
+          return this._dialog
             .open<AddRegionFormDialogComponent, AddRegionFormDialogProps>(AddRegionFormDialogComponent, {
               data: {
                 resourceIri: this.resource.id,
+                projectShortcode,
               },
             })
             .afterClosed()
-            .pipe(map(data => ({ data, overlay })))
-        )
+            .pipe(map(data => ({ data, overlay })));
+        })
       )
       .pipe(
         switchMap(({ data, overlay }) => {

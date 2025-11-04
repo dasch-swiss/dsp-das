@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -10,6 +11,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
+import { NotificationService } from '@dasch-swiss/vre/ui/notification';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
@@ -23,6 +26,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
       [myPropertyDefinition]="propertyValueService.propertyDefinition"
       [resourceClassIri]="propertyValueService.editModeData.resource.type"
       [projectIri]="propertyValueService.editModeData.resource.attachedToProject"
+      [projectShortcode]="projectShortcode"
       [value]="readValue"
       (templateFound)="foundTemplate($event)" />
 
@@ -91,6 +95,16 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
     return this.group.controls.comment.value !== null;
   }
 
+  get projectShortcode(): string {
+    // Extract shortcode from resource IRI: http://rdfh.ch/[shortcode]/[uuid]
+    const resourceIri = this.propertyValueService.editModeData.resource.id;
+    const parts = resourceIri.split('/');
+    return parts[parts.length - 2];
+  }
+
+  private readonly _notification = inject(NotificationService);
+  private readonly _translateService = inject(TranslateService);
+
   constructor(
     public propertyValueService: PropertyValueService,
     private _cd: ChangeDetectorRef
@@ -118,7 +132,18 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    if (this.group.invalid) return;
+    // Mark control as touched to trigger validation display
+    this.group.controls.item.markAsTouched();
+
+    if (this.group.invalid) {
+      // Check for cross-project link validation error
+      const errors = this.group.controls.item.errors;
+      if (errors && errors['crossProjectLink']) {
+        const errorMessage = this._translateService.instant('ui.common.errors.crossProjectLink');
+        this._notification.openSnackBar(errorMessage, 'error');
+      }
+      return;
+    }
     this.afterEdit.emit(this.group);
   }
 

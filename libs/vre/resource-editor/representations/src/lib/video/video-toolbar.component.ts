@@ -98,16 +98,19 @@ export class VideoToolbarComponent {
   }
 
   createVideoSegment() {
-    this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
-      ...DspDialogConfig.dialogDrawerConfig(
-        {
-          type: 'VideoSegment',
-          resource: this.parentResource,
-          videoDurationSecs: this.mediaPlayer.duration(),
-        },
-        true
-      ),
-      viewContainerRef: this._viewContainerRef,
+    this.resourceFetcherService.projectShortcode$.subscribe(projectShortcode => {
+      this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
+        ...DspDialogConfig.dialogDrawerConfig(
+          {
+            type: 'VideoSegment',
+            resource: this.parentResource,
+            videoDurationSecs: this.mediaPlayer.duration(),
+            projectShortcode,
+          },
+          true
+        ),
+        viewContainerRef: this._viewContainerRef,
+      });
     });
   }
 
