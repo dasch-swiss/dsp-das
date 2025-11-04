@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
     <app-password-form-field
       [control]="confirmPasswordControl"
       [placeholder]="'pages.userSettings.passwordForm.confirmPassword' | translate"
-      [validatorErrors]="passwordConfirmValidatorErrors"
       [showToggleVisibility]="true" />
   `,
   standalone: false,
@@ -33,20 +32,23 @@ export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
       errorKey: 'pattern',
       message: 'Password must contain at least one letter and one number.',
     },
+    {
+      errorKey: 'passwordMismatch',
+      message: 'Passwords do not match.',
+    },
   ];
 
   confirmPasswordControl = this._fb.control('', [Validators.required]);
-  passwordConfirmValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match.' }];
   subscription!: Subscription;
 
   constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.passwordControl.addValidators([this._passwordMatchValidator()]);
     this.afterFormInit.emit(this.passwordControl);
-    this.confirmPasswordControl.addValidators([this._passwordMatchValidator()]);
 
-    this.subscription = this.passwordControl.valueChanges.subscribe(() => {
-      this.confirmPasswordControl.updateValueAndValidity();
+    this.subscription = this.confirmPasswordControl.valueChanges.subscribe(() => {
+      this.passwordControl.updateValueAndValidity();
     });
   }
 
@@ -56,8 +58,8 @@ export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
 
   private _passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const confirmPassword = control.value;
-      const password = this.passwordControl.value;
+      const password = control.value;
+      const confirmPassword = this.confirmPasswordControl.value;
 
       if (!confirmPassword || !password) {
         return null;
