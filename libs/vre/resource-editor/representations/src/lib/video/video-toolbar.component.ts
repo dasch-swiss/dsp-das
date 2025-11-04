@@ -9,6 +9,7 @@ import {
   CreateSegmentDialogComponent,
   CreateSegmentDialogProps,
 } from '@dasch-swiss/vre/resource-editor/segment-support';
+import { take } from 'rxjs/operators';
 import { MovingImageSidecar } from '../moving-image-sidecar';
 import { ResourceFetcherService } from '../resource-fetcher.service';
 import { MediaPlayerService } from './media-player.service';
@@ -98,7 +99,7 @@ export class VideoToolbarComponent {
   }
 
   createVideoSegment() {
-    this.resourceFetcherService.projectShortcode$.subscribe(projectShortcode => {
+    this.resourceFetcherService.projectShortcode$.pipe(take(1)).subscribe(projectShortcode => {
       this._dialog.open<CreateSegmentDialogComponent, CreateSegmentDialogProps>(CreateSegmentDialogComponent, {
         ...DspDialogConfig.dialogDrawerConfig(
           {

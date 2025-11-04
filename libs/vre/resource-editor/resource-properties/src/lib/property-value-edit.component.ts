@@ -102,13 +102,11 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
     return parts[parts.length - 2];
   }
 
+  private readonly _cd = inject(ChangeDetectorRef);
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
 
-  constructor(
-    public propertyValueService: PropertyValueService,
-    private _cd: ChangeDetectorRef
-  ) {}
+  constructor(public propertyValueService: PropertyValueService) {}
 
   protected readonly Cardinality = Cardinality;
 

@@ -33,7 +33,6 @@ export class CkEditorComponent implements OnInit {
   protected readonly ckEditor = ckEditor;
 
   ngOnInit() {
-    // Add cross-project link validator if projectShortcode is provided
     if (this.projectShortcode) {
       this.control.addValidators(crossProjectLinkValidator(this.projectShortcode));
       this.control.updateValueAndValidity();
