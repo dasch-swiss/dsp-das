@@ -21,7 +21,7 @@ export interface DownloadDialogData {
     </div>
     <div mat-dialog-content>
       @if (isStillImageResource && !isResourcesMode) {
-        IMAGE TAB
+        <app-download-dialog-images-tab />
       } @else {
         <app-download-dialog-properties-tab [properties]="properties" />
       }
