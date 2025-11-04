@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import * as Editor from 'ckeditor5-custom-build';
 import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
+import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
 import { crossProjectLinkValidator } from './cross-project-link.validator';
 import { unescapeHtml } from './unescape-html';
@@ -19,9 +20,9 @@ import { unescapeHtml } from './unescape-html';
       [editor]="editor"
       style="margin-bottom: 22px; display: block;" />
     @if (control.touched && control.errors; as errors) {
-      <mat-error>{{ crossProjectLinkError.message | translate }}</mat-error>
+      <mat-error>{{ errors | humanReadableError: [crossProjectLinkError] | translate }}</mat-error>
     }`,
-  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule],
+  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule, HumanReadableErrorPipe],
   standalone: true,
 })
 export class CkEditorComponent implements OnInit, OnDestroy {
