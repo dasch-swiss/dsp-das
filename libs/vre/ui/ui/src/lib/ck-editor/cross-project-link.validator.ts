@@ -1,6 +1,45 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
+ * Interface representing a parsed resource link
+ */
+interface ResourceLink {
+  url: string;
+  shortcode: string;
+  uuid: string;
+}
+
+/**
+ * Extracts resource links from HTML content.
+ * Matches links in the format: http://rdfh.ch/[shortcode]/[uuid]
+ * or https://rdfh.ch/[shortcode]/[uuid]
+ *
+ * @param htmlContent The HTML content to parse
+ * @returns Array of ResourceLink objects
+ */
+function extractResourceLinks(htmlContent: string): ResourceLink[] {
+  const links: ResourceLink[] = [];
+
+  // Regex to match resource links in href attributes
+  // Matches: http(s)://rdfh.ch/[shortcode]/[uuid]
+  // Shortcode format: 4 hexadecimal digits (0-9, A-F, case insensitive)
+  // UUID format: standard base64url characters
+  const linkRegex = /https?:\/\/rdfh\.ch\/([0-9A-Fa-f]{4})\/([A-Za-z0-9_-]+)/g;
+
+  let match;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = linkRegex.exec(htmlContent)) !== null) {
+    links.push({
+      url: match[0],
+      shortcode: match[1],
+      uuid: match[2],
+    });
+  }
+
+  return links;
+}
+
+/**
  * Validator factory that checks if HTML content contains links to resources from other projects.
  * Links to resources in the same project are allowed, but links to other projects are not.
  *
@@ -49,42 +88,4 @@ export function crossProjectLinkValidator(currentProjectShortcode: string | null
 
     return null;
   };
-}
-
-/**
- * Interface representing a parsed resource link
- */
-interface ResourceLink {
-  url: string;
-  shortcode: string;
-  uuid: string;
-}
-
-/**
- * Extracts resource links from HTML content.
- * Matches links in the format: http://rdfh.ch/[shortcode]/[uuid]
- * or https://rdfh.ch/[shortcode]/[uuid]
- *
- * @param htmlContent The HTML content to parse
- * @returns Array of ResourceLink objects
- */
-function extractResourceLinks(htmlContent: string): ResourceLink[] {
-  const links: ResourceLink[] = [];
-
-  // Regex to match resource links in href attributes
-  // Matches: http(s)://rdfh.ch/[shortcode]/[uuid]
-  // Shortcode format: 4 hexadecimal digits (0-9, A-F, case insensitive)
-  // UUID format: standard base64url characters
-  const linkRegex = /https?:\/\/rdfh\.ch\/([0-9A-Fa-f]{4})\/([A-Za-z0-9_-]+)/g;
-
-  let match;
-  while ((match = linkRegex.exec(htmlContent)) !== null) {
-    links.push({
-      url: match[0],
-      shortcode: match[1],
-      uuid: match[2],
-    });
-  }
-
-  return links;
 }
