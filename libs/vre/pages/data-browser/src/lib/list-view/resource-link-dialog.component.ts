@@ -91,9 +91,7 @@ export class ResourceLinkDialogComponent implements OnDestroy {
     public dialogRef: MatDialogRef<ResourceLinkDialogComponent, void>,
     @Inject(MAT_DIALOG_DATA) public data: ResourceLinkDialogProps
   ) {
-    // Extract project shortcode from project IRI
-    const projectPath = this._resourceService.getResourcePath(this.data.projectUuid);
-    this.projectShortcode = projectPath.split('/')[1];
+    this.projectShortcode = this._resourceService.getProjectShortcode(this.data.projectUuid);
   }
 
   ngOnDestroy() {

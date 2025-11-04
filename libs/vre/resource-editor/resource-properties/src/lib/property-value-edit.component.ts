@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
+import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -96,15 +97,13 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   get projectShortcode(): string {
-    // Extract shortcode from resource IRI: http://rdfh.ch/[shortcode]/[uuid]
-    const resourceIri = this.propertyValueService.editModeData.resource.id;
-    const parts = resourceIri.split('/');
-    return parts[parts.length - 2];
+    return this._resourceService.getProjectShortcode(this.propertyValueService.editModeData.resource.id);
   }
 
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
+  private readonly _resourceService = inject(ResourceService);
 
   constructor(public propertyValueService: PropertyValueService) {}
 
