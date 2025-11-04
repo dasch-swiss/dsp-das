@@ -12,7 +12,6 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
@@ -100,7 +99,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private readonly _cd = inject(ChangeDetectorRef);
-  private readonly _translateService = inject(TranslateService);
   private readonly _resourceService = inject(ResourceService);
 
   constructor(public propertyValueService: PropertyValueService) {}
@@ -127,17 +125,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    // Mark control as touched to trigger validation display
-    this.group.controls.item.markAsTouched();
-
-    if (this.group.invalid) {
-      // Check for cross-project link validation error
-      const errors = this.group.controls.item.errors;
-      if (errors && errors['crossProjectLink']) {
-        const errorMessage = this._translateService.instant('ui.common.errors.crossProjectLink');
-      }
-      return;
-    }
+    if (this.group.invalid) return;
     this.afterEdit.emit(this.group);
   }
 
