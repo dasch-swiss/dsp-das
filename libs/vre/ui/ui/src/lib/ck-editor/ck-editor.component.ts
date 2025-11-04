@@ -32,7 +32,7 @@ export class CkEditorComponent implements OnInit, OnDestroy {
 
   readonly editor = Editor;
   readonly crossProjectLinkError = {
-    errorKey: 'pattern',
+    errorKey: 'crossProjectLink',
     message: 'ui.common.errors.crossProjectLink',
   };
 
