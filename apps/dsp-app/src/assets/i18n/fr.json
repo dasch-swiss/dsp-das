@@ -660,6 +660,11 @@
       "timeViewer": {
         "at": "à"
       },
+      "timeValue": {
+        "date": "Date",
+        "datePlaceholder": "Cliquez pour sélectionner une date",
+        "time": "Heure"
+      },
       "example": "p.ex."
     }
   },
