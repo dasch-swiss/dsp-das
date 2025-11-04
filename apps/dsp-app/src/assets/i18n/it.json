@@ -657,6 +657,9 @@
         "start": "Inizio",
         "end": "Fine"
       },
+      "timeViewer": {
+        "at": "alle"
+      },
       "example": "es."
     }
   },

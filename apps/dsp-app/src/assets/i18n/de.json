@@ -657,6 +657,9 @@
         "start": "Start",
         "end": "Ende"
       },
+      "timeViewer": {
+        "at": "um"
+      },
       "example": "z.B."
     }
   },
