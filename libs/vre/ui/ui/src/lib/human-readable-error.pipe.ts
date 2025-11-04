@@ -61,10 +61,6 @@ export class HumanReadableErrorPipe implements PipeTransform {
       return 'This field should not contain whitespace';
     }
 
-    if (error.hasOwnProperty('crossProjectLink')) {
-      return 'ui.common.errors.crossProjectLink';
-    }
-
     if (params) {
       for (const { errorKey, message } of params) {
         if (error.hasOwnProperty(errorKey)) return message;

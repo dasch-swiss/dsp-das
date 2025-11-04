@@ -12,7 +12,6 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
@@ -101,7 +100,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
   }
 
   private readonly _cd = inject(ChangeDetectorRef);
-  private readonly _notification = inject(NotificationService);
   private readonly _translateService = inject(TranslateService);
   private readonly _resourceService = inject(ResourceService);
 
@@ -137,7 +135,6 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       const errors = this.group.controls.item.errors;
       if (errors && errors['crossProjectLink']) {
         const errorMessage = this._translateService.instant('ui.common.errors.crossProjectLink');
-        this._notification.openSnackBar(errorMessage, 'error');
       }
       return;
     }
