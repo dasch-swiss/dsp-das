@@ -636,6 +636,11 @@
       },
       "representation": {
         "file": "File"
+      },
+      "propertyValueCreator": {
+        "remove": "Rimuovi",
+        "addComment": "Aggiungi commento",
+        "removeComment": "Rimuovi commento"
       }
     },
     "templateSwitcher": {
