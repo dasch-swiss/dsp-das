@@ -28,9 +28,7 @@ export class ProjectPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._route.params.subscribe(params => {
-      this._projectPageService.setCurrentProjectUuid(params[RouteConstants.uuidParameter]);
-    });
+    this._projectPageService.setCurrentProjectUuid(this._route.snapshot.params[RouteConstants.uuidParameter]);
 
     this._projectPageService.currentProject$.subscribe(project => {
       this._titleService.setTitle(project.shortname);
