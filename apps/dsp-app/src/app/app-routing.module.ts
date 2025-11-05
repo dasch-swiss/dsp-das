@@ -20,6 +20,7 @@ import {
   ImageSettingsComponent,
   LegalSettingsComponent,
   ProjectPageComponent,
+  ProjectPageGuard,
   ResourceMetadataComponent,
   SettingsPageComponent,
 } from '@dasch-swiss/vre/pages/project/project';
@@ -46,6 +47,7 @@ const routes: Routes = [
   {
     path: RouteConstants.projectUuidRelative,
     component: ProjectPageComponent,
+    canActivate: [ProjectPageGuard],
     children: [
       {
         path: RouteConstants.home,

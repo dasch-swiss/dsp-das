@@ -7,7 +7,7 @@ import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common'
 import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProjectPageService {
   private _reloadProjectSubject = new BehaviorSubject<null>(null);
 
@@ -22,8 +22,8 @@ export class ProjectPageService {
     return this._currentProjectUuid;
   }
 
-  currentProject$ = this._reloadProjectSubject.pipe(
-    switchMap(() => this._projectApiService.get(this.currentProjectId)),
+  readonly currentProject$ = this._reloadProjectSubject.pipe(
+    switchMap(() => this._projectApiService.get(this._currentProjectId)),
     map(response => response.project),
     shareReplay(1)
   );
