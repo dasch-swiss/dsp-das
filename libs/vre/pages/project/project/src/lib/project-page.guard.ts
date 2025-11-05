@@ -14,18 +14,17 @@ export class ProjectPageGuard implements CanActivate {
   ) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     const projectUuid = route.params[RouteConstants.uuidParameter];
-
+    console.log('projectUUID from params', projectUuid);
     if (!projectUuid) {
       return of(this._routeTo404());
     }
 
-    console.log('passed first');
     this._projectPageService.setup(projectUuid);
 
     return this._projectPageService.currentProject$.pipe(
       take(1),
       catchError(v => of(undefined)),
-      tap(v => console.log('fetched project in guard', v)),
+      tap(v => console.log('fetched project in guard', v, this._projectPageService)),
       map(project => (project?.id === this._projectPageService.currentProjectId ? true : this._routeTo404()))
     );
   }

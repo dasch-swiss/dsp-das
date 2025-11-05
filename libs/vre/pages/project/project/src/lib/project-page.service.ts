@@ -13,6 +13,7 @@ export class ProjectPageService {
 
   private _currentProjectUuid!: string;
   private _currentProjectId!: string;
+  private _currentProjectIdSubject = new BehaviorSubject<string>('');
 
   get currentProjectId() {
     return this._currentProjectId;
@@ -22,7 +23,10 @@ export class ProjectPageService {
     return this._currentProjectUuid;
   }
 
-  readonly currentProject$ = this._reloadProjectSubject.pipe(
+  readonly currentProject$ = combineLatest([
+    this._reloadProjectSubject,
+    this._currentProjectIdSubject.asObservable(),
+  ]).pipe(
     switchMap(() => this._projectApiService.get(this._currentProjectId)),
     map(response => response.project),
     shareReplay(1)
@@ -64,6 +68,8 @@ export class ProjectPageService {
   setup(projectUuid: string): void {
     this._currentProjectUuid = projectUuid;
     this._currentProjectId = this._projectService.uuidToIri(projectUuid);
+    this._currentProjectIdSubject.next(this._currentProjectId);
+    console.log('projectID AFTER SETUP: ', this._currentProjectId);
   }
 
   reloadProject() {
