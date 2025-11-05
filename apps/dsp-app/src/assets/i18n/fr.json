@@ -636,6 +636,11 @@
       },
       "representation": {
         "file": "Fichier"
+      },
+      "propertyValueCreator": {
+        "remove": "Supprimer",
+        "addComment": "Ajouter un commentaire",
+        "removeComment": "Supprimer le commentaire"
       }
     },
     "templateSwitcher": {
@@ -651,6 +656,14 @@
       "intervalValue": {
         "start": "Début",
         "end": "Fin"
+      },
+      "timeViewer": {
+        "at": "à"
+      },
+      "timeValue": {
+        "date": "Date",
+        "datePlaceholder": "Cliquez pour sélectionner une date",
+        "time": "Heure"
       },
       "example": "p.ex."
     }
@@ -680,6 +693,9 @@
         "lastName": "Nom",
         "language": "Langue",
         "description": "Description"
+      },
+      "errors": {
+        "crossProjectLink": "Ce champ contient des liens vers des ressources d'autres projets. Seuls les liens vers des ressources du projet actuel sont autorisés."
       },
       "status": {
         "active": "Actif",
