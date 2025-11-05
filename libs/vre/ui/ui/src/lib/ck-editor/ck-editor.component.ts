@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -39,10 +39,12 @@ export class CkEditorComponent implements OnInit, OnDestroy {
   protected readonly ckEditor = ckEditor;
 
   private readonly _destroy$ = new Subject<void>();
+  private _crossProjectValidator?: ValidatorFn;
 
   ngOnInit() {
     if (this.projectShortcode) {
-      this.control.addValidators(crossProjectLinkValidator(this.projectShortcode));
+      this._crossProjectValidator = crossProjectLinkValidator(this.projectShortcode);
+      this.control.addValidators(this._crossProjectValidator);
       this.control.updateValueAndValidity();
     }
     let updating = false;
@@ -71,8 +73,8 @@ export class CkEditorComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
 
     // Remove the validator that was added in ngOnInit
-    if (this.projectShortcode) {
-      this.control.removeValidators(crossProjectLinkValidator(this.projectShortcode));
+    if (this._crossProjectValidator) {
+      this.control.removeValidators(this._crossProjectValidator);
       this.control.updateValueAndValidity();
     }
   }

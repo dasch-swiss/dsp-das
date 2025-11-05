@@ -100,8 +100,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   private readonly _cd = inject(ChangeDetectorRef);
   private readonly _resourceService = inject(ResourceService);
-
-  constructor(public propertyValueService: PropertyValueService) {}
+  public propertyValueService = inject(PropertyValueService);
 
   protected readonly Cardinality = Cardinality;
 
