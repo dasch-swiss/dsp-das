@@ -28,9 +28,12 @@ export class ProjectPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._projectPageService.setCurrentProjectUuid(this._route.snapshot.params[RouteConstants.uuidParameter]);
+    this._projectPageService.setup(this._route.snapshot.params[RouteConstants.uuidParameter]);
 
     this._projectPageService.currentProject$.subscribe(project => {
+      if (project.id !== this._projectPageService.currentProjectId) {
+        // TODO: handle project not found
+      }
       this._titleService.setTitle(project.shortname);
     });
   }

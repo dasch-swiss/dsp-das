@@ -11,10 +11,11 @@ import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap } from 
 export class ProjectPageService {
   private _reloadProjectSubject = new BehaviorSubject<null>(null);
 
-  private _currentProjectUuid = '';
+  private _currentProjectUuid!: string;
+  private _currentProjectId!: string;
 
   get currentProjectId() {
-    return this._projectService.uuidToIri(this._currentProjectUuid);
+    return this._currentProjectId;
   }
 
   get currentProjectUuid() {
@@ -60,8 +61,9 @@ export class ProjectPageService {
     private readonly _projectService: ProjectService
   ) {}
 
-  setCurrentProjectUuid(projectUuid: string): void {
+  setup(projectUuid: string): void {
     this._currentProjectUuid = projectUuid;
+    this._currentProjectId = this._projectService.uuidToIri(projectUuid);
   }
 
   reloadProject() {
