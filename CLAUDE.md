@@ -41,7 +41,6 @@ The main application is **DSP-APP** - a user interface for the Swiss National Da
 ### Building and Linting
 - `npm run build` or `nx run dsp-app:build` - Build for development
 - `npm run build-prod` or `nx run dsp-app:build:production` - Build for production
-- `npm run lint-local` or `nx run dsp-app:lint --fix` - Lint with auto-fix
 - `npm run lint-ci` or `nx run dsp-app:lint` - Lint without auto-fix
 
 ### OpenAPI Code Generation
