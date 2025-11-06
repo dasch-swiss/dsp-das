@@ -201,6 +201,7 @@ export class LinkValueComponent implements OnInit {
   private _searchApi = (searchTerm: string, offset: number, resourceClassIri: string) =>
     this._dspApiConnection.v2.search.doSearchByLabel(searchTerm, offset, {
       limitToResourceClass: resourceClassIri,
+      //   limitToProject: this.projectIri,
     });
 
   private _getRestrictToResourceClass(resource: ReadResource) {
