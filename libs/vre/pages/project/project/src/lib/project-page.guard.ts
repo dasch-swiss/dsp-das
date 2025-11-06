@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { catchError, map, Observable, of, take, tap } from 'rxjs';
+import { catchError, first, map, Observable, of, take, tap } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Injectable({
@@ -14,7 +14,6 @@ export class ProjectPageGuard implements CanActivate {
   ) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     const projectUuid = route.params[RouteConstants.uuidParameter];
-    console.log('projectUUID from params', projectUuid);
     if (!projectUuid) {
       return of(this._routeTo404());
     }
@@ -22,10 +21,9 @@ export class ProjectPageGuard implements CanActivate {
     this._projectPageService.setup(projectUuid);
 
     return this._projectPageService.currentProject$.pipe(
-      take(1),
+      first(),
       catchError(v => of(undefined)),
-      tap(v => console.log('fetched project in guard', v, this._projectPageService)),
-      map(project => (project?.id === this._projectPageService.currentProjectId ? true : this._routeTo404()))
+      map(project => (project === undefined ? this._routeTo404() : true))
     );
   }
 
