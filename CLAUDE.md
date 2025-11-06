@@ -95,14 +95,6 @@ The `libs/vre/` directory follows domain-driven design with clear separation:
 - **Reactive programming** with RxJS observables
 - **Component Store** for local state management
 
-### State Management
-The application uses **@ngrx/component-store** for local component state management:
-- Reactive state management pattern with observables
-- Component-scoped stores for feature-specific state
-- Example: `AdvancedSearchStoreService` manages search state
-- Provides `select()` for state selection and `effect()` for side effects
-- Integrates with RxJS for reactive data flow
-
 ## Environment Configurations
 
 Multiple environment configurations available:
