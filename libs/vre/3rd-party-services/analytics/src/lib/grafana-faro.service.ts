@@ -1,8 +1,3 @@
-/*
- * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { inject, Injectable } from '@angular/core';
 import { AppConfigService } from '@dasch-swiss/vre/core/config';
 import { OtlpHttpTransport } from '@grafana/faro-transport-otlp-http';
@@ -43,7 +38,7 @@ export class GrafanaFaroService {
           // Optional tracing instrumentation (increases bundle size)
           new TracingInstrumentation({
             instrumentationOptions: {
-              propagateTraceHeaderCorsUrls: faroConfig.tracingCorsUrls,
+              propagateTraceHeaderCorsUrls: faroConfig.tracingCorsUrls.map(url => new RegExp(url)),
             },
           }),
         ],
