@@ -26,7 +26,8 @@ Most common operations for daily development:
 | Start with observability | `npm run start-local-with-observability` |
 | Run tests | `npm run test-local` |
 | Run all tests (CI mode) | `npm run test-ci-all` |
-| Lint all projects with auto-fix | `npm run lint-fix-all` |
+| Lint all libs w/o auto-fix | `npm run lint-fix-all` |
+| Lint all libs with auto-fix | `npm run lint-fix-all` |
 | Open E2E tests UI | `npm run e2e-local` |
 | Run E2E tests (headless) | `npm run e2e-ci` |
 | Build for development | `npm run build` |
