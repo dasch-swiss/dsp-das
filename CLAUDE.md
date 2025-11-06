@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Making commits or pushing changes
 - **Only proceed with changes after receiving clear approval from the user.**
 - **Propose the best practices approach first instead of quick fixes.**
-  - If there is more options to consider, mark it clearly in the solutions list which is which.
+  - If there are more options to consider, mark it clearly in the solutions list which is which.
 - **While following best practices, follow conventions used in this repository and modified component too.**
   - If not sure, ask which convention should be applied.
 - **While adding tests, make sure to not over-test functionalities.**
