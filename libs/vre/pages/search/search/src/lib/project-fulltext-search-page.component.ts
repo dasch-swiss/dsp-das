@@ -69,9 +69,7 @@ export class ProjectFulltextSearchPageComponent implements AfterViewInit, OnDest
     private readonly _fb: FormBuilder,
     private readonly _overlay: Overlay,
     public readonly projectPageService: ProjectPageService
-  ) {
-    console.log('Current project ID:', this.projectId);
-  }
+  ) {}
 
   ngAfterViewInit() {
     this.searchInput.nativeElement.focus();

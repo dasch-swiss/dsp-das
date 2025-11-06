@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
+import { first } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Component({
@@ -27,6 +28,8 @@ export class ProjectPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // TODO this._titleService.setTitle(project.shortname);
+    this._projectPageService.currentProject$.pipe(first()).subscribe(project => {
+      this._titleService.setTitle(project.shortname);
+    });
   }
 }

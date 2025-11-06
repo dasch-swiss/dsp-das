@@ -69,7 +69,6 @@ export class ProjectPageService {
     this._currentProjectUuid = projectUuid;
     this._currentProjectId = this._projectService.uuidToIri(projectUuid);
     this._currentProjectIdSubject.next(this._currentProjectId);
-    console.log('projectID AFTER SETUP: ', this._currentProjectId);
   }
 
   reloadProject() {
