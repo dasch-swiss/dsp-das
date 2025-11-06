@@ -22,7 +22,7 @@ export class ProjectPageGuard implements CanActivate {
 
     return this._projectPageService.currentProject$.pipe(
       first(),
-      catchError(v => of(undefined)),
+      catchError(() => of(undefined)),
       map(project => (project === undefined ? this._routeTo404() : true))
     );
   }
