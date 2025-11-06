@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { catchError, first, map, Observable, of, take, tap } from 'rxjs';
+import { catchError, first, map, Observable, of } from 'rxjs';
 import { ProjectPageService } from './project-page.service';
 
 @Injectable({

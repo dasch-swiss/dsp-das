@@ -11,15 +11,21 @@ import { BehaviorSubject, combineLatest, map, of, shareReplay, switchMap } from 
 export class ProjectPageService {
   private _reloadProjectSubject = new BehaviorSubject<null>(null);
 
-  private _currentProjectUuid!: string;
-  private _currentProjectId!: string;
+  private _currentProjectUuid?: string;
+  private _currentProjectId?: string;
   private _currentProjectIdSubject = new BehaviorSubject<string>('');
 
-  get currentProjectId() {
+  get currentProjectId(): string {
+    if (!this._currentProjectId) {
+      throw new Error('ProjectPageService: setup() must be called before accessing currentProjectId');
+    }
     return this._currentProjectId;
   }
 
-  get currentProjectUuid() {
+  get currentProjectUuid(): string {
+    if (!this._currentProjectUuid) {
+      throw new Error('ProjectPageService: setup() must be called before accessing currentProjectUuid');
+    }
     return this._currentProjectUuid;
   }
 
@@ -27,7 +33,7 @@ export class ProjectPageService {
     this._reloadProjectSubject,
     this._currentProjectIdSubject.asObservable(),
   ]).pipe(
-    switchMap(() => this._projectApiService.get(this._currentProjectId)),
+    switchMap(([, projectId]) => this._projectApiService.get(projectId)),
     map(response => response.project),
     shareReplay(1)
   );
