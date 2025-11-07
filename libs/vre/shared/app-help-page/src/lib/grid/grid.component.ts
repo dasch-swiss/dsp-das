@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -17,7 +17,7 @@ export interface GridItem {
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
   standalone: true,
-  imports: [MatButton, MatIcon, RouterLink, RouterLinkActive, TranslateModule],
+  imports: [MatButtonModule, MatIconModule, RouterLink, RouterLinkActive, TranslateModule],
 })
 export class GridComponent {
   @Input() list: GridItem[];
