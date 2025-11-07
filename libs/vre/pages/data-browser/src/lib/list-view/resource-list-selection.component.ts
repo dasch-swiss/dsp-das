@@ -14,16 +14,17 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
           {{ 'pages.dataBrowser.resourceListSelection.resourcesSelected' | translate: { count: count$ | async } }}
         </div>
         @if ((showCreateLink$ | async) && (multipleViewerService.selectedResources$ | async); as selectedResources) {
-          @if (isCreateLinkButtonDisabled$ | async; as isDisabled) {
-            <div
-              style="display: inline-block"
-              [matTooltip]="'pages.dataBrowser.resourceListSelection.createLinkObjectTooltip' | translate"
-              [matTooltipDisabled]="!isDisabled">
-              <button mat-flat-button (click)="openCreateLinkDialog(selectedResources)" [disabled]="isDisabled">
-                {{ 'pages.dataBrowser.resourceListSelection.createLinkObject' | translate }}
-              </button>
-            </div>
-          }
+          <div
+            style="display: inline-block"
+            [matTooltip]="'pages.dataBrowser.resourceListSelection.createLinkObjectTooltip' | translate"
+            [matTooltipDisabled]="!(isCreateLinkButtonDisabled$ | async)">
+            <button
+              mat-flat-button
+              (click)="openCreateLinkDialog(selectedResources)"
+              [disabled]="isCreateLinkButtonDisabled$ | async">
+              {{ 'pages.dataBrowser.resourceListSelection.createLinkObject' | translate }}
+            </button>
+          </div>
         }
       </div>
       <button mat-icon-button (click)="reset()"><mat-icon>close</mat-icon></button>
