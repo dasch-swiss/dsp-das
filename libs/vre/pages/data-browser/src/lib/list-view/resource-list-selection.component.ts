@@ -17,7 +17,7 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
           <div
             style="display: inline-block"
             [matTooltip]="'pages.dataBrowser.resourceListSelection.createLinkObjectTooltip' | translate"
-            [matTooltipDisabled]="!(isCreateLinkButtonDisabled$ | async)">
+            [matTooltipDisabled]="(isCreateLinkButtonDisabled$ | async) === false">
             <button
               mat-flat-button
               (click)="openCreateLinkDialog(selectedResources)"
