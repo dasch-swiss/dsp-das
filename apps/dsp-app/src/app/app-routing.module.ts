@@ -202,6 +202,11 @@ const routes: Routes = [
         component: CookiePolicyComponent,
       },
       {
+        path: RouteConstants.notFound,
+        component: StatusComponent,
+        data: { status: RouteConstants.notFound },
+      },
+      {
         path: RouteConstants.notFoundWildcard,
         component: StatusComponent,
         data: { status: RouteConstants.notFound },

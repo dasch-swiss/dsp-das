@@ -28,6 +28,6 @@ export class ProjectPageGuard implements CanActivate {
   }
 
   private _routeTo404() {
-    return this._router.parseUrl('**');
+    return this._router.parseUrl(RouteConstants.notFound);
   }
 }
