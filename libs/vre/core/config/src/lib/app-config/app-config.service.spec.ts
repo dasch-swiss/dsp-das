@@ -1,8 +1,3 @@
-/*
- * Copyright © 2021 - 2023 Swiss National Data and Service Center for the Humanities and/or DaSCH Service Platform contributors.
- *  SPDX-License-Identifier: Apache-2.0
- */
-
 import { TestBed } from '@angular/core/testing';
 import { AppConfig } from './app-config';
 import { AppConfigService } from './app-config.service';
@@ -44,6 +39,7 @@ describe('AppConfigService with dev config', () => {
           enabled: true,
           disabledLevels: [],
         },
+        tracingCorsUrls: [],
       },
     },
     featureFlags: {
@@ -127,6 +123,7 @@ describe('AppConfigService with prod config', () => {
           enabled: false,
           disabledLevels: ['log', 'info'],
         },
+        tracingCorsUrls: [],
       },
     },
     featureFlags: {

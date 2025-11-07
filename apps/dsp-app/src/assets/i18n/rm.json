@@ -636,6 +636,11 @@
       },
       "representation": {
         "file": "File"
+      },
+      "propertyValueCreator": {
+        "remove": "Remove",
+        "addComment": "Add comment",
+        "removeComment": "Remove comment"
       }
     },
     "templateSwitcher": {
@@ -651,6 +656,14 @@
       "intervalValue": {
         "start": "Start",
         "end": "End"
+      },
+      "timeViewer": {
+        "at": "at"
+      },
+      "timeValue": {
+        "date": "Date",
+        "datePlaceholder": "Click to select a date",
+        "time": "Time"
       },
       "example": "e.g."
     }
@@ -680,6 +693,9 @@
         "lastName": "Last name",
         "language": "Language",
         "description": "Description"
+      },
+      "errors": {
+        "crossProjectLink": "This field contains links to resources from other projects. Only links to resources within the current project are allowed."
       },
       "status": {
         "active": "Active",
