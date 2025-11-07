@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Project } from '@dasch-swiss/dsp-js';
+import { ReadProject } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { ProjectPageGuard } from './project-page.guard';
@@ -12,9 +12,9 @@ describe('ProjectPageGuard', () => {
   let routerMock: jest.Mocked<Partial<Router>>;
   let routeSnapshot: ActivatedRouteSnapshot;
   let stateSnapshot: RouterStateSnapshot;
-  let currentProjectSubject: BehaviorSubject<Project | undefined>;
+  let currentProjectSubject: BehaviorSubject<ReadProject | undefined>;
 
-  const mockProject: Project = {
+  const mockProject: ReadProject = {
     id: 'http://rdf.dasch.swiss/projects/0001',
     shortname: 'test-project',
     longname: 'Test Project',
@@ -25,7 +25,7 @@ describe('ProjectPageGuard', () => {
     selfjoin: false,
     ontologies: [],
     shortcode: '0001',
-  } as Project;
+  } as ReadProject;
 
   const mockUrlTree: UrlTree = {
     root: {} as any,
@@ -36,12 +36,12 @@ describe('ProjectPageGuard', () => {
   };
 
   beforeEach(() => {
-    currentProjectSubject = new BehaviorSubject<Project | undefined>(mockProject);
+    currentProjectSubject = new BehaviorSubject<ReadProject | undefined>(mockProject);
 
     projectPageServiceMock = {
       setup: jest.fn(),
       get currentProject$() {
-        return currentProjectSubject.asObservable();
+        return currentProjectSubject.asObservable() as any;
       },
     };
 
