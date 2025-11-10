@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CanDoResponse } from '@dasch-swiss/dsp-js';
+import { Component, EventEmitter, Input, Output, ViewContainerRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CanDoResponse, ReadResource } from '@dasch-swiss/dsp-js';
+import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,7 +18,7 @@ import { Observable } from 'rxjs';
         "
         matTooltipPosition="above"
         [disabled]="!resourceCanBeDeleted.canDo"
-        (click)="erase.emit()">
+        (click)="eraseResource()">
         <span style="display: inline-flex; align-items: center; gap: 8px;">
           <span style="display: inline-block; width: 32px; height: 24px;">
             <mat-icon>delete_forever</mat-icon>
@@ -35,5 +37,25 @@ import { Observable } from 'rxjs';
 })
 export class EraseButtonComponent {
   @Input({ required: true }) resourceCanBeDeleted$!: Observable<CanDoResponse>;
-  @Output() erase = new EventEmitter<void>();
+  @Input({ required: true }) resource!: ReadResource;
+  @Output() erased = new EventEmitter<void>();
+
+  constructor(
+    private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef
+  ) {}
+
+  eraseResource() {
+    this._dialog
+      .open<EraseResourceDialogComponent, ReadResource, boolean>(EraseResourceDialogComponent, {
+        data: this.resource,
+        viewContainerRef: this._viewContainerRef,
+      })
+      .afterClosed()
+      .subscribe(response => {
+        if (response) {
+          this.erased.emit();
+        }
+      });
+  }
 }
