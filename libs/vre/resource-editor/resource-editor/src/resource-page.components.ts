@@ -8,6 +8,7 @@ import { CompoundViewerComponent } from './lib/compound/compound-viewer.componen
 import { IncomingResourceHeaderComponent } from './lib/incoming-resource-header.component';
 import { IncomingResourceToolbarComponent } from './lib/incoming-resource-toolbar.component';
 import { PermissionInfoComponent } from './lib/permission-info/permission-info.component';
+import { ResourceActionsComponent } from './lib/resource-actions.component';
 import { DeleteMenuItemsComponent } from './lib/resource-edit-more-menu/delete-menu-items.component';
 import { EditLabelMenuItemComponent } from './lib/resource-edit-more-menu/edit-label-menu-item.component';
 import { IncomingResourceMoreMenuComponent } from './lib/resource-edit-more-menu/incoming-resource-more-menu.component';
@@ -43,6 +44,7 @@ export const ResourcePageComponents = [
   ResourceFetcherComponent,
   ResourceRepresentationComponent,
   ResourceTabsComponent,
+  ResourceActionsComponent,
   ResourceToolbarComponent,
   IncomingResourceHeaderComponent,
   IncomingResourceToolbarComponent,
