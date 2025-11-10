@@ -2,9 +2,11 @@ import { Component, EventEmitter, Inject, inject, Input, OnInit, Output, ViewCon
 import { MatDialog } from '@angular/material/dialog';
 import { CanDoResponse, DeleteResource, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, filter, map, Observable } from 'rxjs';
 
@@ -31,7 +33,7 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
         </div>
       </button>
 
-      @if (userCanDelete()) {
+      @if (userHasProjectAdminRights$ | async) {
         <button
           data-cy="resource-more-menu-erase-button"
           mat-menu-item
@@ -66,21 +68,19 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
         </div>
       </button>
 
-      @if (userCanDelete()) {
-        <button
-          data-cy="resource-more-menu-erase-button"
-          mat-menu-item
-          [matTooltip]="'resourceEditor.moreMenu.checkingPermissionErase' | translate"
-          matTooltipPosition="above"
-          disabled>
-          <span style="display: inline-flex; align-items: center; gap: 8px;">
-            <span style="display: inline-block; width: 32px; height: 24px;">
-              <app-progress-spinner />
-            </span>
-            {{ 'resourceEditor.moreMenu.eraseResource' | translate }}
+      <button
+        data-cy="resource-more-menu-erase-button"
+        mat-menu-item
+        [matTooltip]="'resourceEditor.moreMenu.checkingPermissionErase' | translate"
+        matTooltipPosition="above"
+        disabled>
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; width: 32px; height: 24px;">
+            <app-progress-spinner />
           </span>
-        </button>
-      }
+          {{ 'resourceEditor.moreMenu.eraseResource' | translate }}
+        </span>
+      </button>
     }
   `,
   standalone: false,
@@ -92,6 +92,11 @@ export class DeleteMenuItemsComponent implements OnInit {
 
   resourceCanBeDeleted$!: Observable<CanDoResponse>;
 
+  readonly userHasProjectAdminRights$ = combineLatest([
+    this._userService.user$.pipe(filterNull()),
+    this.resourceFetcher.projectIri$,
+  ]).pipe(map(([user, projectIri]) => UserPermissions.hasProjectAdminRights(user, projectIri)));
+
   private readonly _translateService = inject(TranslateService);
 
   constructor(
@@ -99,42 +104,19 @@ export class DeleteMenuItemsComponent implements OnInit {
     private _dspApiConnection: KnoraApiConnection,
     private _dialog: MatDialog,
     public resourceFetcher: ResourceFetcherService,
+    private _userService: UserService,
     private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
-    this.resourceCanBeDeleted$ = combineLatest([
-      this.resourceFetcher.userCanDelete$,
-      this._canDeleteResource$(this.resource),
-    ]).pipe(
-      map(([userCanDelete, resourceCanBeDeleted]) => {
-        if (!userCanDelete) {
-          return {
-            canDo: false,
-            cannotDoReason: this._translateService.instant('resourceEditor.moreMenu.noPermission'),
-          } as CanDoResponse;
-        }
-
-        if (resourceCanBeDeleted instanceof CanDoResponse) {
-          return resourceCanBeDeleted.canDo
-            ? {
-                canDo: resourceCanBeDeleted?.canDo,
-              }
-            : resourceCanBeDeleted;
-        }
-
-        return {
-          canDo: true,
-        };
-      })
-    );
+    this.resourceCanBeDeleted$ = this._canDeleteResource$(this.resource);
   }
 
   userCanDelete() {
     return ResourceUtil.userCanDelete(this.resource);
   }
 
-  private _canDeleteResource$(resource: ReadResource): Observable<CanDoResponse> {
+  _canDeleteResource$(resource: ReadResource): Observable<CanDoResponse> {
     const resourceToCheck = new DeleteResource();
     resourceToCheck.id = resource.id;
     resourceToCheck.type = resource.type;
