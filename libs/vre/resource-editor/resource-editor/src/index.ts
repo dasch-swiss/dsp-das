@@ -25,7 +25,6 @@ export * from './lib/alert-info.component';
 export * from './lib/resource-edit-more-menu/resource-edit-more-menu.component';
 export * from './lib/resource-edit-more-menu/resource-more-menu.component';
 export * from './lib/resource-edit-more-menu/incoming-resource-more-menu.component';
-export * from './lib/resource-edit-more-menu/annotation-more-menu.component';
 export * from './lib/resource-edit-more-menu/edit-label-menu-item.component';
 export * from './lib/resource-edit-more-menu/delete-menu-items.component';
 export * from './lib/resource-fetcher-dialog.component';

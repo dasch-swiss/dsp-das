@@ -49,7 +49,7 @@ import { take } from 'rxjs';
         <mat-icon>share</mat-icon>
       </button>
       <app-permission-info [resource]="resource" />
-      <app-annotation-more-menu
+      <app-incoming-resource-more-menu
         [resource]="resource"
         (resourceDeleted)="onResourceDeleted()"
         (resourceErased)="onResourceDeleted()"
