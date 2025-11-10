@@ -1,7 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { Constants, ReadLinkValue, ReadResource } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
@@ -78,8 +77,7 @@ export class ResourceActionsComponent {
 
   constructor(
     protected notification: NotificationService,
-    private _resourceService: ResourceService,
-    private _resourceFetcherService: ResourceFetcherService
+    private _resourceService: ResourceService
   ) {}
 
   openResource() {

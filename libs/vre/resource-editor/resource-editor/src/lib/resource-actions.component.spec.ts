@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Constants } from '@dasch-swiss/dsp-js';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateModule } from '@ngx-translate/core';
@@ -58,7 +57,6 @@ describe('ResourceActionsComponent', () => {
       providers: [
         { provide: NotificationService, useValue: mockNotificationService },
         { provide: ResourceService, useValue: mockResourceService },
-        { provide: ResourceFetcherService, useValue: {} },
       ],
     })
       .overrideComponent(ResourceActionsComponent, {
