@@ -7,7 +7,7 @@ import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-resource-toolbar',
+  selector: 'app-incoming-resource-toolbar',
   template: `
     <span class="action">
       <button
@@ -32,7 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
       </button>
 
       <app-permission-info [resource]="resource" />
-      <app-resource-more-menu [resource]="resource" />
+      <app-incoming-resource-more-menu [resource]="resource" />
     </span>
 
     <mat-menu #share="matMenu" class="res-share-menu">
@@ -71,7 +71,7 @@ import { TranslateService } from '@ngx-translate/core';
   ],
   standalone: false,
 })
-export class ResourceToolbarComponent {
+export class IncomingResourceToolbarComponent {
   @Input({ required: true }) resource!: ReadResource;
 
   protected readonly _translateService = inject(TranslateService);
