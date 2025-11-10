@@ -9,10 +9,12 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
 @Component({
   selector: 'app-delete-menu-items',
   template: `
-    <app-delete-button
-      [resourceCanBeDeleted$]="resourceCanBeDeleted$"
-      [resource]="resource"
-      (deleted)="resourceDeleted.emit()" />
+    @if (resourceFetcher.userCanDelete$ | async) {
+      <app-delete-button
+        [resourceCanBeDeleted$]="resourceCanBeDeleted$"
+        [resource]="resource"
+        (deleted)="resourceDeleted.emit()" />
+    }
 
     @if (userHasProjectAdminRights$ | async) {
       <app-erase-button
