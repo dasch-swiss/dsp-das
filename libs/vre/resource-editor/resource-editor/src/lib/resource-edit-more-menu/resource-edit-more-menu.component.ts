@@ -148,16 +148,22 @@ export class ResourceEditMoreMenuComponent implements OnInit {
 
   ngOnInit() {
     // Check if user is system admin or project admin for this resource's project
+    // AND has delete permission on the resource itself
     this.isAdminOrProjectAdmin$ = this._userService.user$.pipe(
       map(user => {
         if (!user) {
           return false;
         }
-        // Check if user is system admin
+
+        // First check if user has delete permission on the resource
+        if (!ResourceUtil.userCanDelete(this.resource)) {
+          return false;
+        }
+
+        // Then check if user is system admin or project admin
         if (UserPermissions.hasSysAdminRights(user)) {
           return true;
         }
-        // Check if user is project admin for the resource's project
         return UserPermissions.hasProjectAdminRights(user, this.resource.attachedToProject);
       })
     );

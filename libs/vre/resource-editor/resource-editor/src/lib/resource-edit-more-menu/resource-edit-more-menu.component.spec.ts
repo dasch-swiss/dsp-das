@@ -54,6 +54,7 @@ describe('ResourceEditMoreMenuComponent', () => {
     incomingReferences: [],
     properties: {},
     attachedToProject: 'test-project-id',
+    userHasPermission: 'D', // Delete permission
   };
 
   const mockCanDeleteResource = jest.fn();
