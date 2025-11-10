@@ -58,7 +58,6 @@ export const ResourcePageComponents = [
   ResourceEditMoreMenuComponent,
   ResourceMoreMenuComponent,
   IncomingResourceMoreMenuComponent,
-  AnnotationMoreMenuComponent,
   EditLabelMenuItemComponent,
   DeleteMenuItemsComponent,
   ResourceFetcherDialogComponent,
