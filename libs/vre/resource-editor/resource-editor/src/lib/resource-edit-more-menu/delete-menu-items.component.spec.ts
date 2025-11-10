@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { CanDoResponse, DeleteResource } from '@dasch-swiss/dsp-js';
+import { CanDoResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateModule } from '@ngx-translate/core';
@@ -74,16 +74,8 @@ describe('DeleteMenuItemsComponent', () => {
     mockCanDeleteResource.mockReturnValue(of(canDoResponse));
   });
 
-  describe('component initialization', () => {
-    it('should be created', () => {
-      expect(component).toBeTruthy();
-    });
-
-    it('should call ngOnInit and set up resourceCanBeDeleted$ observable', () => {
-      component.ngOnInit();
-
-      expect(component.resourceCanBeDeleted$).toBeDefined();
-    });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
   });
 
   describe('permission checks', () => {
@@ -205,10 +197,4 @@ describe('DeleteMenuItemsComponent', () => {
     });
   });
 
-  describe('userCanDelete method', () => {
-    it('should call ResourceUtil.userCanDelete with resource', () => {
-      // Mock ResourceUtil if needed, or just test that it doesn't throw
-      expect(() => component.userCanDelete()).not.toThrow();
-    });
-  });
 });

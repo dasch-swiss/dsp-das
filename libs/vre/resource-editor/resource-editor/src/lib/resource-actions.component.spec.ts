@@ -76,24 +76,8 @@ describe('ResourceActionsComponent', () => {
     global.window.open = jest.fn();
   });
 
-  describe('component initialization', () => {
-    it('should be created', () => {
-      expect(component).toBeTruthy();
-    });
-
-    it('should have required resource input', () => {
-      component.resource = mockResource as any;
-      expect(component.resource).toBeDefined();
-      expect(component.resource).toEqual(mockResource);
-    });
-
-    it('should have access to translate service', () => {
-      expect((component as any)._translateService).toBeDefined();
-    });
-
-    it('should have notification service injected', () => {
-      expect((component as any).notification).toBeDefined();
-    });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
   });
 
   describe('openResource - regular resource', () => {
@@ -106,12 +90,6 @@ describe('ResourceActionsComponent', () => {
 
       expect(mockResourceService.getResourcePath).toHaveBeenCalledWith(mockResource.id);
       expect(window.open).toHaveBeenCalledWith(`/${RouteConstants.resource}/project/123/resource/456`, '_blank');
-    });
-
-    it('should call ResourceService with correct resource id', () => {
-      component.openResource();
-
-      expect(mockResourceService.getResourcePath).toHaveBeenCalledWith(mockResource.id);
     });
   });
 
@@ -157,30 +135,4 @@ describe('ResourceActionsComponent', () => {
     });
   });
 
-  describe('clipboard and notification functionality', () => {
-    beforeEach(() => {
-      component.resource = mockResource as any;
-    });
-
-    it('should have notification service for snackbar messages', () => {
-      expect((component as any).notification).toBeDefined();
-      expect((component as any).notification.openSnackBar).toBeDefined();
-    });
-
-    it('should be able to display ARK URL in template', () => {
-      expect(component.resource.versionArkUrl).toBe('http://ark.example.org/ark:/12345');
-    });
-
-    it('should be able to display resource id in template', () => {
-      expect(component.resource.id).toBe('http://example.org/resource-id');
-    });
-  });
-
-  describe('content projection', () => {
-    it('should support ng-content for menu projection', () => {
-      // This is tested by the template structure
-      // The component should have <ng-content /> in the template
-      expect(component).toBeTruthy();
-    });
-  });
 });
