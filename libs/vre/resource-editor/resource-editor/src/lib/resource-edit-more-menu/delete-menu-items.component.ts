@@ -13,57 +13,12 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
 @Component({
   selector: 'app-delete-menu-items',
   template: `
-    @if (resourceCanBeDeleted$ | async; as resourceCanBeDeleted) {
-      <button
-        data-cy="resource-more-menu-delete-button"
-        mat-menu-item
-        [matTooltip]="
-          resourceCanBeDeleted.canDo
-            ? ('resourceEditor.moreMenu.moveToTrash' | translate)
-            : resourceCanBeDeleted.cannotDoReason || ('resourceEditor.moreMenu.checkingPermission' | translate)
-        "
-        matTooltipPosition="above"
-        [disabled]="!resourceCanBeDeleted.canDo"
-        (click)="deleteResource()">
-        <div style="display: inline-flex; align-items: center; gap: 8px;">
-          <span style="display: inline-block; width: 32px; height: 24px;">
-            <mat-icon>delete</mat-icon>
-          </span>
-          {{ 'ui.common.actions.delete' | translate }}
-        </div>
-      </button>
+    <app-delete-button [resourceCanBeDeleted$]="resourceCanBeDeleted$" (delete)="deleteResource()" />
 
-      @if (userHasProjectAdminRights$ | async) {
-        <button
-          data-cy="resource-more-menu-erase-button"
-          mat-menu-item
-          [matTooltip]="
-            resourceCanBeDeleted.canDo
-              ? ('resourceEditor.moreMenu.eraseResourceTooltip' | translate)
-              : resourceCanBeDeleted.cannotDoReason || ('resourceEditor.moreMenu.checkingPermissionErase' | translate)
-          "
-          matTooltipPosition="above"
-          [disabled]="!resourceCanBeDeleted.canDo"
-          (click)="eraseResource()">
-          <span style="display: inline-flex; align-items: center; gap: 8px;">
-            <span style="display: inline-block; width: 32px; height: 24px;">
-              <mat-icon>delete_forever</mat-icon>
-            </span>
-            {{ 'resourceEditor.moreMenu.eraseResource' | translate }}
-          </span>
-        </button>
-      }
-    } @else {
-      <app-loading-menu-item
-        dataCy="resource-more-menu-delete-button"
-        tooltipKey="resourceEditor.moreMenu.checkingPermission"
-        labelKey="ui.common.actions.delete" />
-
-      <app-loading-menu-item
-        dataCy="resource-more-menu-erase-button"
-        tooltipKey="resourceEditor.moreMenu.checkingPermissionErase"
-        labelKey="resourceEditor.moreMenu.eraseResource" />
-    }
+    <app-erase-button
+      [resourceCanBeDeleted$]="resourceCanBeDeleted$"
+      [showButton$]="userHasProjectAdminRights$"
+      (erase)="eraseResource()" />
   `,
   standalone: false,
 })
