@@ -36,9 +36,9 @@ import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resourc
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
+import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import { StringLiteralComponents } from '@dasch-swiss/vre/ui/string-literal';
@@ -70,8 +70,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CookieBannerComponent,
     ...CommonToMoveComponents,
     ...DataBrowserComponents,
-    ...DatePickerComponents,
-    ...HelpPageComponents,
     ...ListComponents,
     ...OntologyComponents,
     ...ProjectComponents,
@@ -97,8 +95,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ClipboardModule,
     ColorPickerDirective,
     CommonModule,
-    DateValueHandlerComponent,
     FormsModule,
+    HelpPageComponent,
     HttpClientModule,
     IMaskModule,
     MaterialModule,
@@ -109,6 +107,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     PdfViewerModule,
     ...StringLiteralComponents,
     ...UiStandaloneComponents,
+    ...DatePickerComponents,
     ...ProgressIndicatorComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
