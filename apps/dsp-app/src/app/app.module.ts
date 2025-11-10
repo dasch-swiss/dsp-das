@@ -1,7 +1,7 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule, NgZone, inject, provideAppInitializer } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, inject, NgModule, NgZone, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatJDNConvertibleCalendarDateAdapterModule } from '@dasch-swiss/jdnconvertiblecalendardateadapter';
-import { PendoAnalyticsService, GrafanaFaroService } from '@dasch-swiss/vre/3rd-party-services/analytics';
+import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { BASE_PATH } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import {
   AppConfigService,
@@ -36,9 +36,9 @@ import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resourc
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
 import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
-import { HelpPageComponents } from '@dasch-swiss/vre/shared/app-help-page';
+import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { DatePickerComponents, DateValueHandlerComponent } from '@dasch-swiss/vre/ui/date-picker';
+import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { AppProgressIndicatorComponent, ProgressIndicatorComponents } from '@dasch-swiss/vre/ui/progress-indicator';
 import {
@@ -74,11 +74,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     CookieBannerComponent,
     ...CommonToMoveComponents,
     ...DataBrowserComponents,
-    ...DatePickerComponents,
-    ...HelpPageComponents,
     ...ListComponents,
     ...OntologyComponents,
-    ...ProgressIndicatorComponents,
     ...ProjectComponents,
     ...PropertiesDisplayComponents,
     ...RepresentationsComponents,
@@ -103,8 +100,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ClipboardModule,
     ColorPickerDirective,
     CommonModule,
-    DateValueHandlerComponent,
     FormsModule,
+    HelpPageComponent,
     HttpClientModule,
     IMaskModule,
     MultiLanguageInputComponent,
@@ -116,6 +113,8 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     NgxSkeletonLoaderModule,
     PdfViewerModule,
     ...UiStandaloneComponents,
+    ...DatePickerComponents,
+    ...ProgressIndicatorComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {

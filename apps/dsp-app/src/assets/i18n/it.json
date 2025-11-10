@@ -360,7 +360,8 @@
       },
       "resourceListSelection": {
         "resourcesSelected": "{{count}} risorse selezionate",
-        "createLinkObject": "Crea un oggetto di collegamento"
+        "createLinkObject": "Crea un oggetto di collegamento",
+        "createLinkObjectTooltip": "Un oggetto di collegamento può essere creato solo tra risorse appartenenti allo stesso progetto."
       },
       "resourcesList": {
         "backToSearchForm": "Torna al modulo di ricerca"
@@ -636,6 +637,11 @@
       },
       "representation": {
         "file": "File"
+      },
+      "propertyValueCreator": {
+        "remove": "Rimuovi",
+        "addComment": "Aggiungi commento",
+        "removeComment": "Rimuovi commento"
       }
     },
     "templateSwitcher": {
@@ -651,6 +657,14 @@
       "intervalValue": {
         "start": "Inizio",
         "end": "Fine"
+      },
+      "timeViewer": {
+        "at": "alle"
+      },
+      "timeValue": {
+        "date": "Data",
+        "datePlaceholder": "Clicca per selezionare una data",
+        "time": "Ora"
       },
       "example": "es."
     }
@@ -680,6 +694,9 @@
         "lastName": "Cognome",
         "language": "Lingua",
         "description": "Descrizione"
+      },
+      "errors": {
+        "crossProjectLink": "Questo campo contiene link a risorse di altri progetti. Sono consentiti solo link a risorse all'interno del progetto corrente."
       },
       "status": {
         "active": "Attivo",
