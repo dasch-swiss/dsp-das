@@ -18,6 +18,7 @@ describe('DeleteMenuItemsComponent', () => {
     lastModificationDate: '2023-01-01',
     incomingReferences: [],
     properties: {},
+    userHasPermission: 'D',
   };
 
   const mockCanDeleteResource = jest.fn();
