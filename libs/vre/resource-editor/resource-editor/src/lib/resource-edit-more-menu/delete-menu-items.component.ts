@@ -15,10 +15,9 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
   template: `
     <app-delete-button [resourceCanBeDeleted$]="resourceCanBeDeleted$" (delete)="deleteResource()" />
 
-    <app-erase-button
-      [resourceCanBeDeleted$]="resourceCanBeDeleted$"
-      [showButton$]="userHasProjectAdminRights$"
-      (erase)="eraseResource()" />
+    @if (userHasProjectAdminRights$ | async) {
+      <app-erase-button [resourceCanBeDeleted$]="resourceCanBeDeleted$" (erase)="eraseResource()" />
+    }
   `,
   standalone: false,
 })
