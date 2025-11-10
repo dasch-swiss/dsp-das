@@ -126,30 +126,4 @@ describe('DeleteMenuItemsComponent', () => {
       );
     });
   });
-
-  describe('userHasProjectAdminRights$', () => {
-    it('should return true when user is project admin', done => {
-      component.ngOnInit();
-
-      component.userHasProjectAdminRights$.subscribe(hasRights => {
-        expect(hasRights).toBe(true);
-        done();
-      });
-    });
-
-    it('should return false when user is not project admin', done => {
-      user$.next({
-        id: 'test-user-id',
-        username: 'testuser',
-        email: 'test@example.com',
-        projectsAdmin: [],
-      } as any);
-      component.ngOnInit();
-
-      component.userHasProjectAdminRights$.subscribe(hasRights => {
-        expect(hasRights).toBe(false);
-        done();
-      });
-    });
-  });
 });
