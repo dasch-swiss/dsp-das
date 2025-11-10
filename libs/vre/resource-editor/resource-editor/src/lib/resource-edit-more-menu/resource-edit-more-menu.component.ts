@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Inject, inject, Input, Output, ViewContainerRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Inject, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteResource, KnoraApiConnection, ReadResource, CanDoResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -130,15 +131,12 @@ export class ResourceEditMoreMenuComponent implements OnInit {
   @Output() resourceErased = new EventEmitter<void>();
   @Output() resourceUpdated = new EventEmitter<void>();
 
-  userCanDelete() {
-    return ResourceUtil.userCanDelete(this.resource);
-  }
-
   resourceCanBeDeleted$!: Observable<CanDoResponse>;
   isAdminOrProjectAdmin$!: Observable<boolean>;
 
   constructor(
     @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _destroyRef: DestroyRef,
     private readonly _dialog: MatDialog,
     private readonly _translateService: TranslateService,
     private readonly _userService: UserService,
@@ -165,7 +163,8 @@ export class ResourceEditMoreMenuComponent implements OnInit {
           return true;
         }
         return UserPermissions.hasProjectAdminRights(user, this.resource.attachedToProject);
-      })
+      }),
+      takeUntilDestroyed(this._destroyRef)
     );
 
     this.resourceCanBeDeleted$ = combineLatest([
@@ -183,7 +182,7 @@ export class ResourceEditMoreMenuComponent implements OnInit {
         if (resourceCanBeDeleted instanceof CanDoResponse) {
           return resourceCanBeDeleted.canDo
             ? {
-                canDo: resourceCanBeDeleted?.canDo,
+                canDo: resourceCanBeDeleted.canDo,
               }
             : resourceCanBeDeleted;
         }
@@ -191,7 +190,8 @@ export class ResourceEditMoreMenuComponent implements OnInit {
         return {
           canDo: true,
         };
-      })
+      }),
+      takeUntilDestroyed(this._destroyRef)
     );
   }
 
