@@ -1,8 +1,8 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { CanDoResponse, DeleteResource } from '@dasch-swiss/dsp-js';
+import { CanDoResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
@@ -31,16 +31,16 @@ describe('DeleteMenuItemsComponent', () => {
     },
   };
 
-  const userCanDelete$ = new BehaviorSubject(true);
-  const mockResourceFetcher = { userCanDelete$ };
+  const projectIri$ = new BehaviorSubject('http://test-project');
+  const mockResourceFetcher = { projectIri$ };
 
-  const mockDialogRef = {
-    afterClosed: jest.fn().mockReturnValue(of(false)),
-  };
-
-  const mockDialog = {
-    open: jest.fn().mockReturnValue(mockDialogRef),
-  };
+  const user$ = new BehaviorSubject({
+    id: 'test-user-id',
+    username: 'testuser',
+    email: 'test@example.com',
+    projectsAdmin: ['http://test-project'],
+  });
+  const mockUserService = { user$ };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -48,10 +48,9 @@ describe('DeleteMenuItemsComponent', () => {
       imports: [TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: MatDialog, useValue: mockDialog },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: ResourceFetcherService, useValue: mockResourceFetcher },
-        { provide: ViewContainerRef, useValue: {} },
+        { provide: UserService, useValue: mockUserService },
       ],
     })
       .overrideComponent(DeleteMenuItemsComponent, {
@@ -68,7 +67,6 @@ describe('DeleteMenuItemsComponent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    userCanDelete$.next(true);
     const canDoResponse = new CanDoResponse();
     canDoResponse.canDo = true;
     mockCanDeleteResource.mockReturnValue(of(canDoResponse));
@@ -87,22 +85,10 @@ describe('DeleteMenuItemsComponent', () => {
   });
 
   describe('permission checks', () => {
-    it('should return canDo false when user lacks delete permission', async () => {
-      userCanDelete$.next(false);
-      component.ngOnInit();
-
-      const response = await firstValueFrom(component.resourceCanBeDeleted$);
-
-      expect(response).toBeDefined();
-      expect(response.canDo).toBe(false);
-      expect(response.cannotDoReason).toBe('resourceEditor.moreMenu.noPermission');
-    });
-
-    it('should return canDo true when user has permission and resource can be deleted', async () => {
+    it('should return canDo true when resource can be deleted', async () => {
       const canDoResponse = new CanDoResponse();
       canDoResponse.canDo = true;
       mockCanDeleteResource.mockReturnValue(of(canDoResponse));
-      userCanDelete$.next(true);
       component.ngOnInit();
 
       const response = await firstValueFrom(component.resourceCanBeDeleted$);
@@ -112,12 +98,11 @@ describe('DeleteMenuItemsComponent', () => {
       expect(mockCanDeleteResource).toHaveBeenCalled();
     });
 
-    it('should return resource cannot be deleted response when API returns canDo false', async () => {
+    it('should return canDo false when resource cannot be deleted', async () => {
       const canDoResponse = new CanDoResponse();
       canDoResponse.canDo = false;
       canDoResponse.cannotDoReason = 'Resource has dependencies';
       mockCanDeleteResource.mockReturnValue(of(canDoResponse));
-      userCanDelete$.next(true);
       component.ngOnInit();
 
       const response = await firstValueFrom(component.resourceCanBeDeleted$);
@@ -128,7 +113,6 @@ describe('DeleteMenuItemsComponent', () => {
     });
 
     it('should call canDeleteResource with correct parameters', async () => {
-      userCanDelete$.next(true);
       component.ngOnInit();
 
       await firstValueFrom(component.resourceCanBeDeleted$);
@@ -143,72 +127,29 @@ describe('DeleteMenuItemsComponent', () => {
     });
   });
 
-  describe('delete functionality', () => {
-    it('should open delete dialog when deleteResource is called', () => {
-      component.deleteResource();
+  describe('userHasProjectAdminRights$', () => {
+    it('should return true when user is project admin', done => {
+      component.ngOnInit();
 
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          data: mockResource,
-        })
-      );
+      component.userHasProjectAdminRights$.subscribe(hasRights => {
+        expect(hasRights).toBe(true);
+        done();
+      });
     });
 
-    it('should emit resourceDeleted when delete dialog returns true', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(true));
-      const emitSpy = jest.spyOn(component.resourceDeleted, 'emit');
+    it('should return false when user is not project admin', done => {
+      user$.next({
+        id: 'test-user-id',
+        username: 'testuser',
+        email: 'test@example.com',
+        projectsAdmin: [],
+      } as any);
+      component.ngOnInit();
 
-      component.deleteResource();
-
-      expect(emitSpy).toHaveBeenCalled();
-    });
-
-    it('should not emit resourceDeleted when delete dialog returns false', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(false));
-      const emitSpy = jest.spyOn(component.resourceDeleted, 'emit');
-
-      component.deleteResource();
-
-      expect(emitSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('erase functionality', () => {
-    it('should open erase dialog when eraseResource is called', () => {
-      component.eraseResource();
-
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          data: mockResource,
-        })
-      );
-    });
-
-    it('should emit resourceErased when erase dialog returns true', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(true));
-      const emitSpy = jest.spyOn(component.resourceErased, 'emit');
-
-      component.eraseResource();
-
-      expect(emitSpy).toHaveBeenCalled();
-    });
-
-    it('should not emit resourceErased when erase dialog returns false', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(false));
-      const emitSpy = jest.spyOn(component.resourceErased, 'emit');
-
-      component.eraseResource();
-
-      expect(emitSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('userCanDelete method', () => {
-    it('should call ResourceUtil.userCanDelete with resource', () => {
-      // Mock ResourceUtil if needed, or just test that it doesn't throw
-      expect(() => component.userCanDelete()).not.toThrow();
+      component.userHasProjectAdminRights$.subscribe(hasRights => {
+        expect(hasRights).toBe(false);
+        done();
+      });
     });
   });
 });
