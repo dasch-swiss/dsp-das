@@ -2,12 +2,14 @@ import { Component, EventEmitter, Inject, inject, Input, Output, ViewContainerRe
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteResource, KnoraApiConnection, ReadResource, CanDoResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import {
   EditResourceLabelDialogComponent,
   EraseResourceDialogComponent,
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
+import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, filter, map, Observable } from 'rxjs';
 
@@ -58,7 +60,7 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
           </div>
         </button>
 
-        @if (userCanDelete()) {
+        @if (isAdminOrProjectAdmin$ | async) {
           <button
             data-cy="resource-more-menu-erase-button"
             mat-menu-item
@@ -93,7 +95,7 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
           </div>
         </button>
 
-        @if (userCanDelete()) {
+        @if (isAdminOrProjectAdmin$ | async) {
           <button
             data-cy="resource-more-menu-erase-button"
             mat-menu-item
@@ -133,18 +135,33 @@ export class ResourceEditMoreMenuComponent implements OnInit {
   }
 
   resourceCanBeDeleted$!: Observable<CanDoResponse>;
-
-  private readonly _translateService = inject(TranslateService);
+  isAdminOrProjectAdmin$!: Observable<boolean>;
 
   constructor(
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
-    private _dialog: MatDialog,
-    public resourceFetcher: ResourceFetcherService,
-    private _viewContainerRef: ViewContainerRef
+    @Inject(DspApiConnectionToken) private readonly _dspApiConnection: KnoraApiConnection,
+    private readonly _dialog: MatDialog,
+    private readonly _translateService: TranslateService,
+    private readonly _userService: UserService,
+    private readonly _viewContainerRef: ViewContainerRef,
+    public resourceFetcher: ResourceFetcherService
   ) {}
 
   ngOnInit() {
+    // Check if user is system admin or project admin for this resource's project
+    this.isAdminOrProjectAdmin$ = this._userService.user$.pipe(
+      map(user => {
+        if (!user) {
+          return false;
+        }
+        // Check if user is system admin
+        if (UserPermissions.hasSysAdminRights(user)) {
+          return true;
+        }
+        // Check if user is project admin for the resource's project
+        return UserPermissions.hasProjectAdminRights(user, this.resource.attachedToProject);
+      })
+    );
+
     this.resourceCanBeDeleted$ = combineLatest([
       this.resourceFetcher.userCanDelete$,
       this._canDeleteResource$(this.resource),

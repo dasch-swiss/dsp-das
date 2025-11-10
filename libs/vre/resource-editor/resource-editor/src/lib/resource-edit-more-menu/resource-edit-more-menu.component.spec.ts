@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
+import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
@@ -52,6 +53,7 @@ describe('ResourceEditMoreMenuComponent', () => {
     id: 'test-resource-id',
     incomingReferences: [],
     properties: {},
+    attachedToProject: 'test-project-id',
   };
 
   const mockCanDeleteResource = jest.fn();
@@ -82,6 +84,20 @@ describe('ResourceEditMoreMenuComponent', () => {
     open: jest.fn().mockReturnValue(mockDialogRef),
   };
 
+  const mockUser$ = new BehaviorSubject({
+    id: 'test-user-id',
+    permissions: {
+      groupsPerProject: {
+        'test-project-id': ['http://www.knora.org/ontology/knora-admin#ProjectAdmin'],
+      },
+    },
+  });
+
+  const mockUserService = {
+    user$: mockUser$,
+    isSysAdmin$: of(false),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ResourceEditMoreMenuComponent],
@@ -91,6 +107,7 @@ describe('ResourceEditMoreMenuComponent', () => {
         { provide: MatDialog, useValue: mockDialog },
         { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
         { provide: ResourceFetcherService, useValue: mockResourceFetcher },
+        { provide: UserService, useValue: mockUserService },
         { provide: ViewContainerRef, useValue: {} },
       ],
     })
