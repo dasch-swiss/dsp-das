@@ -67,24 +67,24 @@ describe('ResourceMoreMenuComponent', () => {
   });
 
   describe('menu visibility', () => {
-    it('should show menu when user can delete', (done) => {
+    it('should show menu when user can delete', done => {
       userCanDelete$.next(true);
 
       fixture.detectChanges();
 
       // Subscribe to the userCanDelete$ observable
-      mockResourceFetcher.userCanDelete$.subscribe((canDelete) => {
+      mockResourceFetcher.userCanDelete$.subscribe(canDelete => {
         expect(canDelete).toBe(true);
         done();
       });
     });
 
-    it('should hide menu when user cannot delete', (done) => {
+    it('should hide menu when user cannot delete', done => {
       userCanDelete$.next(false);
 
       fixture.detectChanges();
 
-      mockResourceFetcher.userCanDelete$.subscribe((canDelete) => {
+      mockResourceFetcher.userCanDelete$.subscribe(canDelete => {
         expect(canDelete).toBe(false);
         done();
       });

@@ -111,7 +111,7 @@ describe('IncomingResourceMoreMenuComponent', () => {
   });
 
   describe('permission changes', () => {
-    it('should react to changes in edit permission', (done) => {
+    it('should react to changes in edit permission', done => {
       userCanEdit$.next(true);
       userCanDelete$.next(false);
 
@@ -129,7 +129,7 @@ describe('IncomingResourceMoreMenuComponent', () => {
       });
     });
 
-    it('should react to changes in delete permission', (done) => {
+    it('should react to changes in delete permission', done => {
       userCanEdit$.next(false);
       userCanDelete$.next(true);
 

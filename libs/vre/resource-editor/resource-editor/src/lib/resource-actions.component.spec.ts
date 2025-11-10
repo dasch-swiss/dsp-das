@@ -107,10 +107,7 @@ describe('ResourceActionsComponent', () => {
       component.openResource();
 
       expect(mockResourceService.getResourcePath).toHaveBeenCalledWith(mockResource.id);
-      expect(window.open).toHaveBeenCalledWith(
-        `/${RouteConstants.resource}/project/123/resource/456`,
-        '_blank'
-      );
+      expect(window.open).toHaveBeenCalledWith(`/${RouteConstants.resource}/project/123/resource/456`, '_blank');
     });
 
     it('should call ResourceService with correct resource id', () => {
@@ -128,9 +125,7 @@ describe('ResourceActionsComponent', () => {
     it('should open parent resource with annotation query param', () => {
       component.openResource();
 
-      expect(mockResourceService.getResourcePath).toHaveBeenCalledWith(
-        'http://example.org/parent-resource-id'
-      );
+      expect(mockResourceService.getResourcePath).toHaveBeenCalledWith('http://example.org/parent-resource-id');
       expect(window.open).toHaveBeenCalledWith(
         expect.stringContaining(`?${RouteConstants.annotationQueryParam}=`),
         '_blank'
@@ -141,10 +136,7 @@ describe('ResourceActionsComponent', () => {
       component.openResource();
 
       const expectedAnnotationId = encodeURIComponent(mockRegionResource.id);
-      expect(window.open).toHaveBeenCalledWith(
-        expect.stringContaining(`=${expectedAnnotationId}`),
-        '_blank'
-      );
+      expect(window.open).toHaveBeenCalledWith(expect.stringContaining(`=${expectedAnnotationId}`), '_blank');
     });
 
     it('should get linked resource from IsRegionOfValue', () => {
