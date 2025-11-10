@@ -38,11 +38,21 @@ jest.mock('@dasch-swiss/vre/resource-editor/properties-display', () => ({
 
 jest.mock('@dasch-swiss/vre/resource-editor/representations', () => ({
   ResourceFetcherService: class MockResourceFetcherService {},
+  ResourceUtil: {
+    userCanDelete: jest.fn().mockReturnValue(true),
+  },
 }));
 
 jest.mock('@dasch-swiss/vre/resource-editor/resource-properties', () => ({
   EditResourceLabelDialogComponent: class MockEditResourceLabelDialogComponent {},
   EraseResourceDialogComponent: class MockEraseResourceDialogComponent {},
+}));
+
+jest.mock('@dasch-swiss/vre/shared/app-common', () => ({
+  UserPermissions: {
+    hasSysAdminRights: jest.fn().mockReturnValue(false),
+    hasProjectAdminRights: jest.fn().mockReturnValue(true),
+  },
 }));
 
 describe('ResourceEditMoreMenuComponent', () => {
@@ -239,6 +249,45 @@ describe('ResourceEditMoreMenuComponent', () => {
       // Assert
       expect(deletedSpy).not.toHaveBeenCalled();
       expect(updatedSpy).not.toHaveBeenCalled();
+    });
+
+    it('should hide erase button when user has delete permission but is not admin', async () => {
+      // Mock: user is not system admin and not project admin
+      const { UserPermissions } = jest.requireMock('@dasch-swiss/vre/shared/app-common');
+      UserPermissions.hasSysAdminRights.mockReturnValueOnce(false);
+      UserPermissions.hasProjectAdminRights.mockReturnValueOnce(false);
+
+      mockUser$.next({ id: 'user-id' } as any);
+      component.ngOnInit();
+      const result = await firstValueFrom(component.isAdminOrProjectAdmin$);
+      expect(result).toBe(false);
+    });
+
+    it('should show erase button when user is system admin with delete permission', async () => {
+      // Mock: user is system admin
+      const { UserPermissions } = jest.requireMock('@dasch-swiss/vre/shared/app-common');
+      UserPermissions.hasSysAdminRights.mockReturnValueOnce(true);
+
+      mockUser$.next({ id: 'user-id' } as any);
+      component.ngOnInit();
+      const result = await firstValueFrom(component.isAdminOrProjectAdmin$);
+      expect(result).toBe(true);
+    });
+
+    it('should hide erase button when user is admin but lacks delete permission', async () => {
+      // Mock ResourceUtil to return false for userCanDelete
+      const { ResourceUtil } = jest.requireMock('@dasch-swiss/vre/resource-editor/representations');
+      ResourceUtil.userCanDelete.mockReturnValueOnce(false);
+
+      // User is project admin but lacks delete permission
+      const { UserPermissions } = jest.requireMock('@dasch-swiss/vre/shared/app-common');
+      UserPermissions.hasSysAdminRights.mockReturnValueOnce(false);
+      UserPermissions.hasProjectAdminRights.mockReturnValueOnce(true);
+
+      mockUser$.next({ id: 'user-id' } as any);
+      component.ngOnInit();
+      const result = await firstValueFrom(component.isAdminOrProjectAdmin$);
+      expect(result).toBe(false);
     });
   });
 });

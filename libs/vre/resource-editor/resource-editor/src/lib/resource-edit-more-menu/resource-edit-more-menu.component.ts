@@ -12,7 +12,7 @@ import {
 } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, filter, map, Observable } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-resource-edit-more-menu',
@@ -162,8 +162,12 @@ export class ResourceEditMoreMenuComponent implements OnInit {
         if (UserPermissions.hasSysAdminRights(user)) {
           return true;
         }
+        if (!this.resource.attachedToProject) {
+          return false;
+        }
         return UserPermissions.hasProjectAdminRights(user, this.resource.attachedToProject);
       }),
+      distinctUntilChanged(),
       takeUntilDestroyed(this._destroyRef)
     );
 
