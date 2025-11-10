@@ -8,6 +8,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { DeleteMenuItemsComponent } from './delete-menu-items.component';
 
+// Helper function to create CanDoResponse mocks
+function createCanDoResponse(canDo: boolean, reason?: string): CanDoResponse {
+  const response = new CanDoResponse();
+  response.canDo = canDo;
+  if (reason) {
+    response.cannotDoReason = reason;
+  }
+  return response;
+}
+
 describe('DeleteMenuItemsComponent', () => {
   let component: DeleteMenuItemsComponent;
   let fixture: ComponentFixture<DeleteMenuItemsComponent>;
@@ -56,6 +66,8 @@ describe('DeleteMenuItemsComponent', () => {
     })
       .overrideComponent(DeleteMenuItemsComponent, {
         set: {
+          // Template is overridden to isolate unit test from template rendering
+          // This tests only the component logic, not UI integration
           template: '<div>Mock Template</div>',
         },
       })
@@ -69,9 +81,7 @@ describe('DeleteMenuItemsComponent', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     userCanDelete$.next(true);
-    const canDoResponse = new CanDoResponse();
-    canDoResponse.canDo = true;
-    mockCanDeleteResource.mockReturnValue(of(canDoResponse));
+    mockCanDeleteResource.mockReturnValue(of(createCanDoResponse(true)));
   });
 
   it('should be created', () => {
@@ -85,36 +95,27 @@ describe('DeleteMenuItemsComponent', () => {
 
       const response = await firstValueFrom(component.resourceCanBeDeleted$);
 
-      expect(response).toBeDefined();
       expect(response.canDo).toBe(false);
       expect(response.cannotDoReason).toBe('resourceEditor.moreMenu.noPermission');
     });
 
     it('should return canDo true when user has permission and resource can be deleted', async () => {
-      const canDoResponse = new CanDoResponse();
-      canDoResponse.canDo = true;
-      mockCanDeleteResource.mockReturnValue(of(canDoResponse));
       userCanDelete$.next(true);
       component.ngOnInit();
 
       const response = await firstValueFrom(component.resourceCanBeDeleted$);
 
-      expect(response).toBeDefined();
       expect(response.canDo).toBe(true);
       expect(mockCanDeleteResource).toHaveBeenCalled();
     });
 
     it('should return resource cannot be deleted response when API returns canDo false', async () => {
-      const canDoResponse = new CanDoResponse();
-      canDoResponse.canDo = false;
-      canDoResponse.cannotDoReason = 'Resource has dependencies';
-      mockCanDeleteResource.mockReturnValue(of(canDoResponse));
+      mockCanDeleteResource.mockReturnValue(of(createCanDoResponse(false, 'Resource has dependencies')));
       userCanDelete$.next(true);
       component.ngOnInit();
 
       const response = await firstValueFrom(component.resourceCanBeDeleted$);
 
-      expect(response).toBeDefined();
       expect(response.canDo).toBe(false);
       expect(response.cannotDoReason).toBe('Resource has dependencies');
     });
@@ -135,66 +136,38 @@ describe('DeleteMenuItemsComponent', () => {
     });
   });
 
-  describe('delete functionality', () => {
-    it('should open delete dialog when deleteResource is called', () => {
-      component.deleteResource();
+  describe('dialog interactions', () => {
+    // Helper function to test dialog behavior pattern
+    const testDialogBehavior = (
+      methodName: 'deleteResource' | 'eraseResource',
+      eventEmitter: 'resourceDeleted' | 'resourceErased'
+    ) => {
+      describe(`${methodName}`, () => {
+        it(`should open dialog with resource data and emit ${eventEmitter} when confirmed`, () => {
+          mockDialogRef.afterClosed.mockReturnValue(of(true));
+          const emitSpy = jest.spyOn(component[eventEmitter], 'emit');
 
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          data: mockResource,
-        })
-      );
-    });
+          component[methodName]();
 
-    it('should emit resourceDeleted when delete dialog returns true', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(true));
-      const emitSpy = jest.spyOn(component.resourceDeleted, 'emit');
+          expect(mockDialog.open).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ data: mockResource })
+          );
+          expect(emitSpy).toHaveBeenCalled();
+        });
 
-      component.deleteResource();
+        it(`should not emit ${eventEmitter} when dialog is cancelled`, () => {
+          mockDialogRef.afterClosed.mockReturnValue(of(false));
+          const emitSpy = jest.spyOn(component[eventEmitter], 'emit');
 
-      expect(emitSpy).toHaveBeenCalled();
-    });
+          component[methodName]();
 
-    it('should not emit resourceDeleted when delete dialog returns false', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(false));
-      const emitSpy = jest.spyOn(component.resourceDeleted, 'emit');
+          expect(emitSpy).not.toHaveBeenCalled();
+        });
+      });
+    };
 
-      component.deleteResource();
-
-      expect(emitSpy).not.toHaveBeenCalled();
-    });
+    testDialogBehavior('deleteResource', 'resourceDeleted');
+    testDialogBehavior('eraseResource', 'resourceErased');
   });
-
-  describe('erase functionality', () => {
-    it('should open erase dialog when eraseResource is called', () => {
-      component.eraseResource();
-
-      expect(mockDialog.open).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          data: mockResource,
-        })
-      );
-    });
-
-    it('should emit resourceErased when erase dialog returns true', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(true));
-      const emitSpy = jest.spyOn(component.resourceErased, 'emit');
-
-      component.eraseResource();
-
-      expect(emitSpy).toHaveBeenCalled();
-    });
-
-    it('should not emit resourceErased when erase dialog returns false', () => {
-      mockDialogRef.afterClosed.mockReturnValue(of(false));
-      const emitSpy = jest.spyOn(component.resourceErased, 'emit');
-
-      component.eraseResource();
-
-      expect(emitSpy).not.toHaveBeenCalled();
-    });
-  });
-
 });

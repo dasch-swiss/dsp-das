@@ -28,6 +28,8 @@ describe('IncomingResourceMoreMenuComponent', () => {
     })
       .overrideComponent(IncomingResourceMoreMenuComponent, {
         set: {
+          // Template is overridden to isolate unit test from template rendering
+          // This tests only the component logic, not UI integration
           template: '<div>Mock Template</div>',
         },
       })
