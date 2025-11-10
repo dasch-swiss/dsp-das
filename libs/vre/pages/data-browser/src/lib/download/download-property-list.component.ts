@@ -53,6 +53,10 @@ export class DownloadPropertyListComponent implements OnInit {
     return this.properties.filter(p => p.selected).length;
   }
 
+  emitProperties() {
+    this.propertiesChange.emit(this.properties.filter(p => p.selected).map(p => p.property.id));
+  }
+
   ngOnInit() {
     this.properties = this.propertyDefinitions.map(p => ({
       selected: false,
@@ -64,18 +68,18 @@ export class DownloadPropertyListComponent implements OnInit {
     this.properties.forEach(p => {
       p.selected = true;
     });
-    this.propertiesChange.emit(this.properties.map(v => v.property.id));
+    this.emitProperties();
   }
 
   selectNone(): void {
     this.properties.forEach(p => {
       p.selected = false;
     });
-    this.propertiesChange.emit(this.properties.map(v => v.property.id));
+    this.emitProperties();
   }
 
   toggleProperty(property: { selected: boolean; property: ResourcePropertyDefinition }): void {
     property.selected = !property.selected;
-    this.propertiesChange.emit(this.properties.map(v => v.property.id));
+    this.emitProperties();
   }
 }

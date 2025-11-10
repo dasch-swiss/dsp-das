@@ -30,7 +30,7 @@ export interface DownloadDialogData {
         <app-download-dialog-images-tab />
       } @else {
         @if (properties$ | async; as properties) {
-          <app-download-dialog-properties-tab [properties]="properties" />
+          <app-download-dialog-properties-tab [properties]="properties" [resourceClassIri]="data.resClass.id" />
         }
       }
     </div>

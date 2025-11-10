@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PropertyDefinition } from '@dasch-swiss/dsp-js';
+import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 
 @Component({
   selector: 'app-download-dialog-properties-tab',
@@ -28,15 +29,25 @@ import { PropertyDefinition, ResourcePropertyDefinition } from '@dasch-swiss/dsp
 })
 export class DownloadDialogResourcesTabComponent implements OnInit {
   @Input({ required: true }) properties!: PropertyDefinition[];
+  @Input({ required: true }) resourceClassIri!: string;
   @Output() afterClosed = new EventEmitter<void>();
   includeResourceIris = false;
 
   selectedPropertyIds: string[] = [];
 
+  constructor(private _v3: APIV3ApiService) {}
   ngOnInit() {
     console.log('prop', this.properties);
   }
   downloadCsv(): void {
-    // TODO download route
+    this._v3
+      .postV3ExportResources({
+        resourceClass: this.resourceClassIri,
+        selectedProperties: this.selectedPropertyIds,
+        language: 'en',
+      })
+      .subscribe(v => {
+        console.log('a', v);
+      });
   }
 }
