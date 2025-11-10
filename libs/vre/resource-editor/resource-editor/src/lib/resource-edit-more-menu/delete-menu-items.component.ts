@@ -4,7 +4,7 @@ import { CanDoResponse, DeleteResource, KnoraApiConnection, ReadResource } from 
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { DeleteResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/properties-display';
-import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
+import { ResourceFetcherService } from '@dasch-swiss/vre/resource-editor/representations';
 import { EraseResourceDialogComponent } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { filterNull, UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,33 +54,15 @@ import { combineLatest, filter, map, Observable } from 'rxjs';
         </button>
       }
     } @else {
-      <button
-        data-cy="resource-more-menu-delete-button"
-        mat-menu-item
-        [matTooltip]="'resourceEditor.moreMenu.checkingPermission' | translate"
-        matTooltipPosition="above"
-        disabled>
-        <div style="display: inline-flex; align-items: center; gap: 8px;">
-          <span style="display: inline-block; width: 32px; height: 24px;">
-            <app-progress-spinner />
-          </span>
-          {{ 'ui.common.actions.delete' | translate }}
-        </div>
-      </button>
+      <app-loading-menu-item
+        dataCy="resource-more-menu-delete-button"
+        tooltipKey="resourceEditor.moreMenu.checkingPermission"
+        labelKey="ui.common.actions.delete" />
 
-      <button
-        data-cy="resource-more-menu-erase-button"
-        mat-menu-item
-        [matTooltip]="'resourceEditor.moreMenu.checkingPermissionErase' | translate"
-        matTooltipPosition="above"
-        disabled>
-        <span style="display: inline-flex; align-items: center; gap: 8px;">
-          <span style="display: inline-block; width: 32px; height: 24px;">
-            <app-progress-spinner />
-          </span>
-          {{ 'resourceEditor.moreMenu.eraseResource' | translate }}
-        </span>
-      </button>
+      <app-loading-menu-item
+        dataCy="resource-more-menu-erase-button"
+        tooltipKey="resourceEditor.moreMenu.checkingPermissionErase"
+        labelKey="resourceEditor.moreMenu.eraseResource" />
     }
   `,
   standalone: false,
@@ -110,10 +92,6 @@ export class DeleteMenuItemsComponent implements OnInit {
 
   ngOnInit() {
     this.resourceCanBeDeleted$ = this._canDeleteResource$(this.resource);
-  }
-
-  userCanDelete() {
-    return ResourceUtil.userCanDelete(this.resource);
   }
 
   _canDeleteResource$(resource: ReadResource): Observable<CanDoResponse> {
