@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CanDoResponse } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
@@ -32,7 +32,11 @@ describe('DeleteMenuItemsComponent', () => {
   };
 
   const projectIri$ = new BehaviorSubject('http://test-project');
-  const mockResourceFetcher = { projectIri$ };
+  const userCanDelete$ = new BehaviorSubject(true);
+  const mockResourceFetcher = {
+    projectIri$,
+    userCanDelete$,
+  };
 
   const user$ = new BehaviorSubject({
     id: 'test-user-id',
@@ -67,6 +71,13 @@ describe('DeleteMenuItemsComponent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    userCanDelete$.next(true);
+    user$.next({
+      id: 'test-user-id',
+      username: 'testuser',
+      email: 'test@example.com',
+      projectsAdmin: ['http://test-project'],
+    } as any);
     const canDoResponse = new CanDoResponse();
     canDoResponse.canDo = true;
     mockCanDeleteResource.mockReturnValue(of(canDoResponse));
@@ -124,6 +135,52 @@ describe('DeleteMenuItemsComponent', () => {
           lastModificationDate: mockResource.lastModificationDate,
         })
       );
+    });
+  });
+
+  describe('event emission', () => {
+    it('should expose resourceDeleted output', () => {
+      expect(component.resourceDeleted).toBeDefined();
+      expect(component.resourceDeleted).toBeInstanceOf(EventEmitter);
+    });
+
+    it('should expose resourceErased output', () => {
+      expect(component.resourceErased).toBeDefined();
+      expect(component.resourceErased).toBeInstanceOf(EventEmitter);
+    });
+
+    it('should emit resourceDeleted when triggered', done => {
+      component.resourceDeleted.subscribe(() => {
+        expect(true).toBe(true);
+        done();
+      });
+
+      component.resourceDeleted.emit();
+    });
+
+    it('should emit resourceErased when triggered', done => {
+      component.resourceErased.subscribe(() => {
+        expect(true).toBe(true);
+        done();
+      });
+
+      component.resourceErased.emit();
+    });
+  });
+
+  describe('component orchestration', () => {
+    it('should have access to resourceFetcher', () => {
+      expect(component.resourceFetcher).toBeDefined();
+      expect(component.resourceFetcher.userCanDelete$).toBeDefined();
+      expect(component.resourceFetcher.projectIri$).toBeDefined();
+    });
+
+    it('should initialize resourceCanBeDeleted$ on ngOnInit', () => {
+      expect(component.resourceCanBeDeleted$).toBeUndefined();
+
+      component.ngOnInit();
+
+      expect(component.resourceCanBeDeleted$).toBeDefined();
     });
   });
 });
