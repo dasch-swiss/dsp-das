@@ -11,7 +11,6 @@ import { PermissionInfoComponent } from './lib/permission-info/permission-info.c
 import { DeleteMenuItemsComponent } from './lib/resource-edit-more-menu/delete-menu-items.component';
 import { EditLabelMenuItemComponent } from './lib/resource-edit-more-menu/edit-label-menu-item.component';
 import { IncomingResourceMoreMenuComponent } from './lib/resource-edit-more-menu/incoming-resource-more-menu.component';
-import { ResourceEditMoreMenuComponent } from './lib/resource-edit-more-menu/resource-edit-more-menu.component';
 import { ResourceMoreMenuComponent } from './lib/resource-edit-more-menu/resource-more-menu.component';
 import { ResourceExplorerButtonComponent } from './lib/resource-explorer-button.component';
 import { ResourceFetcherDialogComponent } from './lib/resource-fetcher-dialog.component';
@@ -55,7 +54,6 @@ export const ResourcePageComponents = [
   ResourceInfoBarComponent,
   AlertInfoComponent,
   ResourceLegalLicenseComponent,
-  ResourceEditMoreMenuComponent,
   ResourceMoreMenuComponent,
   IncomingResourceMoreMenuComponent,
   EditLabelMenuItemComponent,
