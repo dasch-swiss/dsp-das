@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import {
   takeUntil,
 } from 'rxjs';
 import { DataBrowserPageService } from '../data-browser-page.service';
+import { ResourceClassCountApi } from '../resource-class-count.api';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
@@ -98,11 +99,10 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _ontologyService: OntologyService,
     private _localizationService: LocalizationService,
     private _translateService: TranslateService,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _resClassCountApi: ResourceClassCountApi,
     private _dataBrowserPageService: DataBrowserPageService
   ) {}
 
@@ -134,7 +134,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
 
   private _loadData() {
     this.count$ = this._dataBrowserPageService.onNavigationReload$.pipe(
-      switchMap(() => this._getCount(this.resClass.id)),
+      switchMap(() => this._resClassCountApi.getResourceClassCount(this.resClass.id)),
       finalize(() => {
         this.loading = false;
       })
@@ -176,31 +176,5 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       default: // resource does not have a file representation
         return 'insert_drive_file';
     }
-  }
-
-  private _getCount(resClassId: string) {
-    const gravsearch = this._getGravsearch(resClassId);
-
-    return this._dspApiConnection.v2.search
-      .doExtendedSearchCountQuery(gravsearch)
-      .pipe(map(response => response.numberOfResults));
-  }
-
-  private _getGravsearch(iri: string): string {
-    return `
-        PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-        CONSTRUCT {
-
-        ?mainRes knora-api:isMainResource true .
-
-        } WHERE {
-
-        ?mainRes a knora-api:Resource .
-
-        ?mainRes a <${iri}> .
-
-        }
-
-        OFFSET 0`;
   }
 }

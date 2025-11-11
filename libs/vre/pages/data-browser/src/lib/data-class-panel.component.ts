@@ -7,11 +7,12 @@ import { ResourceFetcherDialogComponent } from '@dasch-swiss/vre/resource-editor
 import { filterUndefined, generateDspResource } from '@dasch-swiss/vre/shared/app-common';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { StringifyStringLiteralPipe } from '@dasch-swiss/vre/ui/string-literal';
-import { first } from 'rxjs';
+import { combineLatest, first } from 'rxjs';
 import { CreateResourceDialogComponent, CreateResourceDialogProps } from 'template-switcher';
 import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { DownloadDialogComponent } from './download/download-dialog.component';
+import { ResourceClassCountApi } from './resource-class-count.api';
 
 @Component({
   selector: 'app-data-class-panel',
@@ -49,7 +50,8 @@ export class DataClassPanelComponent {
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
     private _projectPageService: ProjectPageService,
-    private _multipleViewerService: MultipleViewerService,
+    private readonly _multipleViewerService: MultipleViewerService,
+    private _resClassCountApi: ResourceClassCountApi,
     private _stringifyStringLiteralPipe: StringifyStringLiteralPipe,
     private _notificationService: NotificationService,
     private _dataBrowserPageService: DataBrowserPageService
@@ -80,30 +82,28 @@ export class DataClassPanelComponent {
   }
 
   openDownloadDialog() {
-    this._multipleViewerService.selectedResources$.pipe(first()).subscribe(resources => {
-      if (resources.length === 0) {
+    combineLatest([
+      this._resClassCountApi.getResourceClassCount(this.classSelected.resClass.id),
+      this._multipleViewerService.selectedResources$.pipe(first()),
+    ]).subscribe(([resClassCount, resources]) => {
+      if (resClassCount === 0 || resources.length === 0) {
         this._notificationService.openSnackBar('There are no resources to download.');
+        return;
       }
+
+      console.log(resClassCount);
 
       const properties = generateDspResource(resources[0]).resProps.filter(
         prop => (prop.propDef as ResourcePropertyDefinition).isEditable
       );
 
-      this._dialog
-        .open(DownloadDialogComponent, {
-          ...DspDialogConfig.dialogDrawerConfig(
-            { resourceCount: 2, resClass: this.classSelected.resClass, properties },
-            true
-          ),
-          width: '500px',
-        })
-        .afterClosed()
-        .subscribe(result => {
-          if (result) {
-            console.log('Download initiated:', result);
-            // TODO: Implement actual download logic
-          }
-        });
+      this._dialog.open(DownloadDialogComponent, {
+        ...DspDialogConfig.dialogDrawerConfig(
+          { resourceCount: resClassCount, resClass: this.classSelected.resClass, properties },
+          true
+        ),
+        width: '500px',
+      });
     });
   }
 }
