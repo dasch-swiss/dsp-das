@@ -167,6 +167,21 @@ describe('PasswordConfirmFormComponent', () => {
 
       expect(component.form.hasError('passwordMismatch')).toBeTruthy();
     });
+
+    it('should set passwordMismatch error on confirmPasswordControl when passwords do not match', () => {
+      component.passwordControl.setValue('validPass123');
+      component.confirmPasswordControl.setValue('differentPass456');
+
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
+    });
+
+    it('should not set passwordMismatch error on confirmPasswordControl when passwords match', () => {
+      const password = 'validPass123';
+      component.passwordControl.setValue(password);
+      component.confirmPasswordControl.setValue(password);
+
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
+    });
   });
 
   describe('Template Integration', () => {
@@ -239,6 +254,16 @@ describe('PasswordConfirmFormComponent', () => {
     });
   });
 
+  describe('ngOnDestroy', () => {
+    it('should unsubscribe from subscription', () => {
+      component.ngOnInit();
+      jest.spyOn(component['_subscription'], 'unsubscribe');
+
+      component.ngOnDestroy();
+
+      expect(component['_subscription'].unsubscribe).toHaveBeenCalled();
+    });
+  });
 
   describe('Edge Cases', () => {
     beforeEach(() => {

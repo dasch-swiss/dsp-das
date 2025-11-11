@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-password-confirm-form',
@@ -19,7 +20,7 @@ import { CustomRegex } from '@dasch-swiss/vre/shared/app-common';
   `,
   standalone: false,
 })
-export class PasswordConfirmFormComponent implements OnInit {
+export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   @Output() afterFormInit = new EventEmitter<FormGroup>();
 
   form = this._fb.group(
@@ -29,7 +30,7 @@ export class PasswordConfirmFormComponent implements OnInit {
         Validators.minLength(8),
         Validators.pattern(CustomRegex.PASSWORD_REGEX),
       ]),
-      confirmPassword: this._fb.control('', [Validators.required]),
+      confirmPassword: this._fb.control('', [Validators.required, this._confirmPasswordValidator()]),
     },
     { validators: [this._passwordMatchValidator()] }
   );
@@ -51,10 +52,36 @@ export class PasswordConfirmFormComponent implements OnInit {
 
   passwordConfirmValidatorErrors = [{ errorKey: 'passwordMismatch', message: 'Passwords do not match.' }];
 
+  private _subscription!: Subscription;
+
   constructor(private readonly _fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.afterFormInit.emit(this.form);
+
+    // Update confirmPassword validation when password changes
+    this._subscription = this.passwordControl.valueChanges.subscribe(() => {
+      this.confirmPasswordControl.updateValueAndValidity({ onlySelf: true });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._subscription?.unsubscribe();
+  }
+
+  private _confirmPasswordValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const password = this.passwordControl?.value;
+      if (!password) {
+        return null;
+      }
+
+      return password === control.value ? null : { passwordMismatch: true };
+    };
   }
 
   private _passwordMatchValidator(): ValidatorFn {
