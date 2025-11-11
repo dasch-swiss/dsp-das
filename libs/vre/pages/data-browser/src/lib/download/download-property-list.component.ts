@@ -17,21 +17,16 @@ import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px">
       @for (property of properties; track property.property.id) {
         <div
-          style="display: flex; align-items: flex-start; padding: 12px 8px; border-bottom: 1px solid #f5f5f5"
+          style="display: flex; align-items: center; padding: 12px 8px; border-bottom: 1px solid #f5f5f5"
           [style.background-color]="property.selected ? '#f0f7ff' : 'transparent'">
           <mat-checkbox [checked]="property.selected" (change)="toggleProperty(property)" style="margin-right: 12px" />
           <div style="flex: 1">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
+            <div style="display: flex; align-items: center; gap: 8px">
               <span style="font-weight: 500">{{ property.property.label }}</span>
-              @if (true) {
-                <span
-                  style="background: #ff9800; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500">
-                  Required
-                </span>
-              }
-              <span style="color: #666; font-size: 13px">{{ 'TYPE' }}</span>
             </div>
-            <p style="margin: 0; color: #666; font-size: 13px">{{ property.property.comment }}</p>
+            @if (property.property.comment) {
+              <p style="margin: 0; color: #666; font-size: 13px">{{ property.property.comment }}</p>
+            }
           </div>
         </div>
       }
