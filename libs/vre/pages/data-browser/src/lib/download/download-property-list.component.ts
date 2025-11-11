@@ -14,7 +14,7 @@ import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
       </div>
     </div>
 
-    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 4px">
+    <div style="max-height: 700px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 4px">
       @for (property of properties; track property.property.propDef.id) {
         <div
           style="display: flex; align-items: center; padding: 12px 8px; border-bottom: 1px solid #f5f5f5"

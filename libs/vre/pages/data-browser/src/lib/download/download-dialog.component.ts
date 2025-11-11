@@ -19,11 +19,14 @@ export interface DownloadDialogData {
         <app-double-chip-selector [options]="['Resources', 'Images']" [(value)]="isResourcesMode" />
       }
     </div>
-    <div mat-dialog-content>
+    <div mat-dialog-content style="max-height: 100vh">
       @if (isStillImageResource && !isResourcesMode) {
         <app-download-dialog-images-tab />
       } @else {
-        <app-download-dialog-properties-tab [properties]="data.properties" [resourceClassIri]="data.resClass.id" />
+        <app-download-dialog-properties-tab
+          [properties]="data.properties"
+          [resourceClassIri]="data.resClass.id"
+          style="display: block; height: 100%" />
       }
     </div>
   `,
