@@ -51,8 +51,21 @@ export class DownloadDialogResourcesTabComponent implements OnInit {
         undefined,
         { httpHeaderAccept: 'text/plain' }
       )
-      .subscribe(v => {
-        console.log('a', v);
+      .subscribe(csvText => {
+        this._createBlob(csvText);
       });
+  }
+
+  private _createBlob(csvText: string) {
+    const blob = new Blob([csvText], { type: 'text/csv' });
+    const filename = `resources_export_${new Date().toISOString().split('T')[0]}.csv`;
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(link.href);
   }
 }
