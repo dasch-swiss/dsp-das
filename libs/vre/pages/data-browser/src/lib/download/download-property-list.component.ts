@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 @Component({
   selector: 'app-download-property-list',
@@ -15,17 +15,17 @@ import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
     </div>
 
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px">
-      @for (property of properties; track property.property.id) {
+      @for (property of properties; track property.property.propDef.id) {
         <div
           style="display: flex; align-items: center; padding: 12px 8px; border-bottom: 1px solid #f5f5f5"
           [style.background-color]="property.selected ? '#f0f7ff' : 'transparent'">
           <mat-checkbox [checked]="property.selected" (change)="toggleProperty(property)" style="margin-right: 12px" />
           <div style="flex: 1">
             <div style="display: flex; align-items: center; gap: 8px">
-              <span style="font-weight: 500">{{ property.property.label }}</span>
+              <span style="font-weight: 500">{{ property.property.propDef.label }}</span>
             </div>
-            @if (property.property.comment) {
-              <p style="margin: 0; color: #666; font-size: 13px">{{ property.property.comment }}</p>
+            @if (property.property.propDef.comment; as comment) {
+              <p style="margin: 0; color: #666; font-size: 13px">{{ comment }}</p>
             }
           </div>
         </div>
@@ -40,16 +40,16 @@ import { ResourcePropertyDefinition } from '@dasch-swiss/dsp-js';
   standalone: false,
 })
 export class DownloadPropertyListComponent implements OnInit {
-  @Input({ required: true }) propertyDefinitions!: ResourcePropertyDefinition[];
+  @Input({ required: true }) propertyDefinitions!: PropertyInfoValues[];
   @Output() propertiesChange = new EventEmitter<string[]>();
 
-  properties!: { selected: boolean; property: ResourcePropertyDefinition }[];
+  properties!: { selected: boolean; property: PropertyInfoValues }[];
   get selectedCount(): number {
     return this.properties.filter(p => p.selected).length;
   }
 
   emitProperties() {
-    this.propertiesChange.emit(this.properties.filter(p => p.selected).map(p => p.property.id));
+    this.propertiesChange.emit(this.properties.filter(p => p.selected).map(p => p.property.propDef.id));
   }
 
   ngOnInit() {
@@ -73,7 +73,7 @@ export class DownloadPropertyListComponent implements OnInit {
     this.emitProperties();
   }
 
-  toggleProperty(property: { selected: boolean; property: ResourcePropertyDefinition }): void {
+  toggleProperty(property: { selected: boolean; property: PropertyInfoValues }): void {
     property.selected = !property.selected;
     this.emitProperties();
   }

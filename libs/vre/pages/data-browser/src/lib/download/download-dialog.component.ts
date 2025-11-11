@@ -1,18 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  Constants,
-  KnoraApiConnection,
-  PropertyDefinition,
-  ResourceClassDefinitionWithAllLanguages,
-  ResourcePropertyDefinition,
-} from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { map, Observable } from 'rxjs';
+import { Constants, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
+import { PropertyInfoValues } from '@dasch-swiss/vre/shared/app-common';
 
 export interface DownloadDialogData {
   resClass: ResourceClassDefinitionWithAllLanguages;
   resourceCount: number;
+  properties: PropertyInfoValues[];
 }
 
 @Component({
@@ -29,9 +23,7 @@ export interface DownloadDialogData {
       @if (isStillImageResource && !isResourcesMode) {
         <app-download-dialog-images-tab />
       } @else {
-        @if (properties$ | async; as properties) {
-          <app-download-dialog-properties-tab [properties]="properties" [resourceClassIri]="data.resClass.id" />
-        }
+        <app-download-dialog-properties-tab [properties]="data.properties" [resourceClassIri]="data.resClass.id" />
       }
     </div>
   `,
@@ -42,28 +34,12 @@ export class DownloadDialogComponent {
   isStillImageResource!: boolean;
   isResourcesMode = true;
 
-  properties$!: Observable<PropertyDefinition[]>;
-
   constructor(
     public dialogRef: MatDialogRef<DownloadDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DownloadDialogData,
-    @Inject(DspApiConnectionToken)
-    private readonly _dspApiConnection: KnoraApiConnection
+    @Inject(MAT_DIALOG_DATA) public data: DownloadDialogData
   ) {
     this.isStillImageResource = this.data.resClass.propertiesList
       .map(v => v.propertyIndex)
       .includes(Constants.HasStillImageFileValue);
-
-    console.log(this.data.resClass, 'TODO FIX filtering resource classes');
-    const blockList = [Constants.HasStandoffLinkToValue, Constants.HasIncomingLinkValue];
-    this.properties$ = this._dspApiConnection.v2.ontologyCache
-      .getResourceClassDefinition(this.data.resClass.id)
-      .pipe(
-        map(v =>
-          v
-            .getAllPropertyDefinitions()
-            .filter(y => y instanceof ResourcePropertyDefinition && !blockList.includes(y.id))
-        )
-      );
   }
 }
