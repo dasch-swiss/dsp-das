@@ -73,5 +73,13 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
   }
 
   private _numberOfAllResults$ = (query: string) =>
-    this._dspApiConnection.v2.search.doFulltextSearchCountQuery(query, 0);
+    this._dspApiConnection.v2.search.doFulltextSearchCountQuery(
+      query,
+      0,
+      this.projectId
+        ? {
+            limitToProject: this.projectId,
+          }
+        : {}
+    );
 }
