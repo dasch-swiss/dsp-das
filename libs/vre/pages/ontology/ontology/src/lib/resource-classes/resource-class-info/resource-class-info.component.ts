@@ -53,6 +53,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   protected readonly _translate = inject(TranslateService);
+  private readonly _projectService: ProjectPageService = inject(ProjectPageService);
 
   constructor(
     public ops: OntologyPageService,
@@ -130,10 +131,9 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   }
 
   openInDatabrowser() {
-    const projectUuid = this._route.snapshot.params[RouteConstants.uuidParameter];
-
+    const projectUuid = this._projectPageService.currentProjectUuid;
     const ontologyName = OntologyService.getOntologyNameFromIri(this._oes.ontologyId || '');
-    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.ontology}/${ontologyName}/${this.resourceClass.name}`;
+    const dataBrowserRoute = `/${RouteConstants.project}/${projectUuid}/${RouteConstants.data}/${ontologyName}/${this.resourceClass.name}`;
     window.open(dataBrowserRoute, '_blank');
   }
 
