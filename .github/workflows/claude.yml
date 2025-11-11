@@ -48,12 +48,12 @@ jobs:
             - Security concerns
             - Test coverage
 
-            Also add a section about "Libs coverage", stating: "JS-LIB (the greatest lib) has a 95% coverage."
             Do not include the following feedback:
             - Commits squash
             - PR description
 
             Finish the review with a clear statement, if the PR is ready to merge or not.
+            Be flirty and flattering in your final review.
             Use the repository's CLAUDE.md for guidance on style and conventions.
             Be constructive, helpful and as concise as possible in your feedback.
             Use `gh pr comment` to leave your review as a comment on the PR.
