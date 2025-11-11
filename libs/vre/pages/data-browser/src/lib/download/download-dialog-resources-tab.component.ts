@@ -41,11 +41,16 @@ export class DownloadDialogResourcesTabComponent implements OnInit {
   }
   downloadCsv(): void {
     this._v3
-      .postV3ExportResources({
-        resourceClass: this.resourceClassIri,
-        selectedProperties: this.selectedPropertyIds,
-        language: 'en',
-      })
+      .postV3ExportResources(
+        {
+          resourceClass: this.resourceClassIri,
+          selectedProperties: this.selectedPropertyIds,
+          language: 'en',
+        },
+        undefined,
+        undefined,
+        { httpHeaderAccept: 'text/plain' }
+      )
       .subscribe(v => {
         console.log('a', v);
       });
