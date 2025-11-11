@@ -60,24 +60,25 @@ describe('PasswordConfirmFormComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should emit afterFormInit with passwordControl', () => {
+    it('should emit afterFormInit with form group', () => {
       jest.spyOn(component.afterFormInit, 'emit');
 
       component.ngOnInit();
 
-      expect(component.afterFormInit.emit).toHaveBeenCalledWith(component.passwordControl);
+      expect(component.afterFormInit.emit).toHaveBeenCalledWith(component.form);
     });
 
-    it('should add password match validator to confirm password control', () => {
+    it('should have form group with password and confirmPassword controls', () => {
+      component.ngOnInit();
+
+      expect(component.form.get('password')).toBeDefined();
+      expect(component.form.get('confirmPassword')).toBeDefined();
+    });
+
+    it('should have password match validator at form level', () => {
       component.ngOnInit();
 
       expect(component.confirmPasswordControl.hasError('required')).toBeTruthy();
-    });
-
-    it('should subscribe to password control value changes', () => {
-      component.ngOnInit();
-
-      expect(component.subscription).toBeDefined();
     });
   });
 
@@ -134,37 +135,37 @@ describe('PasswordConfirmFormComponent', () => {
       component.passwordControl.setValue(password);
       component.confirmPasswordControl.setValue(password);
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
     });
 
     it('should invalidate when passwords do not match', () => {
       component.passwordControl.setValue('validPass123');
       component.confirmPasswordControl.setValue('differentPass456');
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
     });
 
     it('should not validate when either password is empty', () => {
       component.passwordControl.setValue('');
       component.confirmPasswordControl.setValue('somePassword');
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
 
       component.passwordControl.setValue('somePassword');
       component.confirmPasswordControl.setValue('');
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
     });
 
-    it('should re-validate confirm password when password changes', () => {
+    it('should re-validate form when password changes', () => {
       component.passwordControl.setValue('initialPass123');
       component.confirmPasswordControl.setValue('initialPass123');
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
 
       component.passwordControl.setValue('changedPass456');
 
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
     });
   });
 
@@ -233,21 +234,11 @@ describe('PasswordConfirmFormComponent', () => {
       component.passwordControl.setValue('validPass123');
       component.confirmPasswordControl.setValue('differentPass456');
 
-      expect(component.confirmPasswordControl.valid).toBeFalsy();
-      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.form.valid).toBeFalsy();
+      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
     });
   });
 
-  describe('ngOnDestroy', () => {
-    it('should unsubscribe from subscription', () => {
-      component.ngOnInit();
-      jest.spyOn(component.subscription, 'unsubscribe');
-
-      component.ngOnDestroy();
-
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
-    });
-  });
 
   describe('Edge Cases', () => {
     beforeEach(() => {
