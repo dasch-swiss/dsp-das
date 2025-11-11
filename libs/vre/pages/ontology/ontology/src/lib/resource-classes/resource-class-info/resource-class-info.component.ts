@@ -53,7 +53,6 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
   trackByPropToDisplayFn = (index: number, item: ClassPropertyInfo) => `${index}-${item.propDef.id}`;
 
   protected readonly _translate = inject(TranslateService);
-  private readonly _projectService: ProjectPageService = inject(ProjectPageService);
 
   constructor(
     public ops: OntologyPageService,
