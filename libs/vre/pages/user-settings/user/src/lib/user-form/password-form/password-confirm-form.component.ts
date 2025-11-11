@@ -23,17 +23,14 @@ import { Subscription } from 'rxjs';
 export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
   @Output() afterFormInit = new EventEmitter<FormGroup>();
 
-  form = this._fb.group(
-    {
-      password: this._fb.nonNullable.control('', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(CustomRegex.PASSWORD_REGEX),
-      ]),
-      confirmPassword: this._fb.control('', [Validators.required, this._confirmPasswordValidator()]),
-    },
-    { validators: [this._passwordMatchValidator()] }
-  );
+  form = this._fb.group({
+    password: this._fb.nonNullable.control('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(CustomRegex.PASSWORD_REGEX),
+    ]),
+    confirmPassword: this._fb.control('', [Validators.required, this._confirmPasswordValidator()]),
+  });
 
   get passwordControl() {
     return this.form.controls.password;
@@ -81,20 +78,6 @@ export class PasswordConfirmFormComponent implements OnInit, OnDestroy {
       }
 
       return password === control.value ? null : { passwordMismatch: true };
-    };
-  }
-
-  private _passwordMatchValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const group = control as FormGroup;
-      const password = group.get('password')?.value;
-      const confirmPassword = group.get('confirmPassword')?.value;
-
-      if (!confirmPassword || !password) {
-        return null;
-      }
-
-      return password === confirmPassword ? null : { passwordMismatch: true };
     };
   }
 }

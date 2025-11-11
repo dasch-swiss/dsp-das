@@ -75,7 +75,7 @@ describe('PasswordConfirmFormComponent', () => {
       expect(component.form.get('confirmPassword')).toBeDefined();
     });
 
-    it('should have password match validator at form level', () => {
+    it('should have password match validator on confirmPassword control', () => {
       component.ngOnInit();
 
       expect(component.confirmPasswordControl.hasError('required')).toBeTruthy();
@@ -135,37 +135,37 @@ describe('PasswordConfirmFormComponent', () => {
       component.passwordControl.setValue(password);
       component.confirmPasswordControl.setValue(password);
 
-      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
     });
 
     it('should invalidate when passwords do not match', () => {
       component.passwordControl.setValue('validPass123');
       component.confirmPasswordControl.setValue('differentPass456');
 
-      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
     });
 
     it('should not validate when either password is empty', () => {
       component.passwordControl.setValue('');
       component.confirmPasswordControl.setValue('somePassword');
 
-      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
 
       component.passwordControl.setValue('somePassword');
       component.confirmPasswordControl.setValue('');
 
-      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
     });
 
-    it('should re-validate form when password changes', () => {
+    it('should re-validate when password changes', () => {
       component.passwordControl.setValue('initialPass123');
       component.confirmPasswordControl.setValue('initialPass123');
 
-      expect(component.form.hasError('passwordMismatch')).toBeFalsy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeFalsy();
 
       component.passwordControl.setValue('changedPass456');
 
-      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
     });
 
     it('should set passwordMismatch error on confirmPasswordControl when passwords do not match', () => {
@@ -250,7 +250,7 @@ describe('PasswordConfirmFormComponent', () => {
       component.confirmPasswordControl.setValue('differentPass456');
 
       expect(component.form.valid).toBeFalsy();
-      expect(component.form.hasError('passwordMismatch')).toBeTruthy();
+      expect(component.confirmPasswordControl.hasError('passwordMismatch')).toBeTruthy();
     });
   });
 
