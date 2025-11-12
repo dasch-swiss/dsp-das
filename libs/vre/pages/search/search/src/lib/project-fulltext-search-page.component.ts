@@ -34,7 +34,10 @@ import { SearchTipsComponent } from './search-tips.component';
     @if (query$ | async; as query) {
       <mat-divider />
 
-      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" />
+      <app-project-fulltext-search-result
+        [query]="query"
+        [projectId]="projectId"
+        [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
     }
   `,
   styles: [

@@ -19,7 +19,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
       } @else if (resources.length > 0) {
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
-          [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
+          [hasRightsToShowCreateLinkObject$]="hasRightsToShowCreateLinkObject$"
           [searchKeyword]="query" />
       }
     }
@@ -30,10 +30,10 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
 })
 export class ProjectFulltextSearchResultComponent implements OnChanges {
   @Input({ required: true }) query!: string;
+  @Input({ required: true }) hasRightsToShowCreateLinkObject$!: Observable<boolean>;
   @Input() projectId?: string;
   loading = true;
 
-  userIsSysAdmin$ = this._projectPageService.hasProjectMemberRights$;
   resources$!: Observable<ReadResource[]>;
 
   readonly noResultMessage = 'There are no resources to display.';
