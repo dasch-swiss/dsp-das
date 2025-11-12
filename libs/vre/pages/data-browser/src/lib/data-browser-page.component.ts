@@ -3,6 +3,11 @@ import { MultipleViewerService } from './comparison/multiple-viewer.service';
 import { DataBrowserPageService } from './data-browser-page.service';
 import { ResourceResultService } from './resource-result.service';
 
+/**
+ * Container component for the data browser page with split layout.
+ * Provides scoped service instances (MultipleViewerService, ResourceResultService, DataBrowserPageService)
+ * that are shared across child components within this page.
+ */
 @Component({
   selector: 'app-data-browser-page',
   template: `<div style="display: flex; flex-direction: column; height: 100%">

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { UserService } from '@dasch-swiss/vre/core/session';
 import { map } from 'rxjs';
 
 @Component({
@@ -14,8 +13,5 @@ import { map } from 'rxjs';
 export class FulltextSearchResultsPageComponent {
   query$ = this._route.params.pipe(map(v => v[RouteConstants.qParameter]));
 
-  constructor(
-    private readonly _route: ActivatedRoute,
-    private readonly _userService: UserService
-  ) {}
+  constructor(private readonly _route: ActivatedRoute) {}
 }
