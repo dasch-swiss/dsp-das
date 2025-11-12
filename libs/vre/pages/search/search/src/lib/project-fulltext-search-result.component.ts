@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@a
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
-import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
@@ -49,8 +48,7 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
   constructor(
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
-    private readonly _resourceResultService: ResourceResultService,
-    private readonly _projectPageService: ProjectPageService
+    private readonly _resourceResultService: ResourceResultService
   ) {}
 
   ngOnChanges() {
