@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges } from '@angular/core';
 import { IFulltextSearchParams, KnoraApiConnection, ReadResource } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
-import { UserService } from '@dasch-swiss/vre/core/session';
 import { ResourceResultService } from '@dasch-swiss/vre/pages/data-browser';
+import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
@@ -33,7 +33,7 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
   @Input() projectId?: string;
   loading = true;
 
-  userIsSysAdmin$ = this._userService.isSysAdmin$;
+  userIsSysAdmin$ = this._projectPageService.hasProjectMemberRights$;
   resources$!: Observable<ReadResource[]>;
 
   readonly noResultMessage = 'There are no resources to display.';
@@ -50,7 +50,7 @@ export class ProjectFulltextSearchResultComponent implements OnChanges {
     @Inject(DspApiConnectionToken)
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _resourceResultService: ResourceResultService,
-    private readonly _userService: UserService
+    private readonly _projectPageService: ProjectPageService
   ) {}
 
   ngOnChanges() {
