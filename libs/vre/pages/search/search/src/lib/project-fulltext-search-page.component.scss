@@ -1,7 +1,8 @@
 @use '../../../../../../../apps/dsp-app/src/styles/config' as *;
 
+$search-height: 89px; // computed search tab height
 .whole-height {
-  height: calc(100vh - $header-height - 89px);
+  height: calc(100vh - $header-height - $search-height);
 }
 
 :host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
