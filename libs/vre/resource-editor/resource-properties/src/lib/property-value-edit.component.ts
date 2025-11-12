@@ -61,7 +61,7 @@ import { propertiesTypeMapping } from './resource-payloads-mapping';
             <mat-icon>{{ commentIsNotNull ? 'speaker_notes_off' : 'add_comment' }}</mat-icon>
           </button>
           <button
-            [disabled]="(this.hasValidValue$ | async) !== true"
+            [disabled]="(hasValidValue$ | async) !== true"
             (click)="onSave()"
             [matTooltip]="'resourceEditor.resourceProperties.actions.save' | translate"
             mat-icon-button
