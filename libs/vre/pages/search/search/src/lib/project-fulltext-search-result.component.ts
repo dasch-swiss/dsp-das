@@ -16,10 +16,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
           <app-no-results-found [message]="noResultMessage" />
         </app-centered-box>
       } @else if (resources.length > 0) {
-        <app-resource-browser
-          [data]="{ resources: resources, selectFirstResource: true }"
-          [hasRightsToShowCreateLinkObject$]="hasRightsToShowCreateLinkObject$"
-          [searchKeyword]="query" />
+        <app-resource-browser [data]="{ resources: resources, selectFirstResource: true }" [searchKeyword]="query" />
       }
     }
   `,
@@ -29,7 +26,6 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
 })
 export class ProjectFulltextSearchResultComponent implements OnChanges {
   @Input({ required: true }) query!: string;
-  @Input({ required: true }) hasRightsToShowCreateLinkObject$!: Observable<boolean>;
   @Input() projectId?: string;
   loading = true;
 
