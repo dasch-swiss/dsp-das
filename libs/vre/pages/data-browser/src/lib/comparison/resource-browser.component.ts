@@ -15,7 +15,6 @@ import { MultipleViewerService } from './multiple-viewer.service';
       </as-split-area>
     </as-split>
   `,
-  styleUrls: ['./resource-browser.component.scss'],
   providers: [MultipleViewerService],
   standalone: false,
 })
