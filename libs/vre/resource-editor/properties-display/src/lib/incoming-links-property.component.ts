@@ -9,12 +9,12 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
 @Component({
   selector: 'app-incoming-links-property',
   template: `
-    <app-property-row
-      [tooltip]="'resourceEditor.propertiesDisplay.incomingLinkTooltip' | translate"
-      [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
-      [borderBottom]="true"
-      [isEmptyRow]="(incomingLinks$ | async)?.length === 0">
-      @if (incomingLinks$ | async; as links) {
+    @if (incomingLinks$ | async; as links) {
+      <app-property-row
+        [tooltip]="'resourceEditor.propertiesDisplay.incomingLinkTooltip' | translate"
+        [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
+        [borderBottom]="true"
+        [isEmptyRow]="links.length === 0">
         @if (links.length > 0) {
           <app-incoming-standoff-link-value
             [links]="links | slice: pageIndex * pageSize : (pageIndex + 1) * pageSize" />
@@ -26,10 +26,16 @@ import { IncomingOrStandoffLink } from './incoming-link.interface';
               (pageChanged)="pageChanged($event)" />
           }
         }
-      } @else {
+      </app-property-row>
+    } @else {
+      <app-property-row
+        [tooltip]="'resourceEditor.propertiesDisplay.incomingLinkTooltip' | translate"
+        [label]="'resourceEditor.propertiesDisplay.incomingLinkLabel' | translate"
+        [borderBottom]="true"
+        [isEmptyRow]="true">
         <app-progress-indicator />
-      }
-    </app-property-row>
+      </app-property-row>
+    }
   `,
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
