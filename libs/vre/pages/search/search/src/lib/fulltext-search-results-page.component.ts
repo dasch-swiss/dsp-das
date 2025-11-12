@@ -7,14 +7,16 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-fulltext-search-results-page',
   template: `@if (query$ | async; as query) {
-    <app-project-fulltext-search-result [query]="query" [hasRightsToShowCreateLinkObject$]="userService.isSysAdmin$" />
+    <app-project-fulltext-search-result [query]="query" [hasRightsToShowCreateLinkObject$]="hasRightsToShowCreateLinkObject$" />
   } `,
   standalone: false,
 })
 export class FulltextSearchResultsPageComponent {
   query$ = this._route.params.pipe(map(v => v[RouteConstants.qParameter]));
+  hasRightsToShowCreateLinkObject$ = this._userService.isSysAdmin$;
+
   constructor(
     private readonly _route: ActivatedRoute,
-    public readonly userService: UserService
+    private readonly _userService: UserService
   ) {}
 }
