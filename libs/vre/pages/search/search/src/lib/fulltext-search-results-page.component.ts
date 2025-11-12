@@ -13,7 +13,6 @@ import { map } from 'rxjs';
 })
 export class FulltextSearchResultsPageComponent {
   query$ = this._route.params.pipe(map(v => v[RouteConstants.qParameter]));
-  hasRightsToShowCreateLinkObject$ = this._userService.isSysAdmin$;
 
   constructor(
     private readonly _route: ActivatedRoute,
