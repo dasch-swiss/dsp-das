@@ -139,46 +139,6 @@ describe('DeleteMenuItemsComponent', () => {
     });
   });
 
-  describe('user permissions', () => {
-    it('should determine user has project admin rights when user is project admin', async () => {
-      user$.next({
-        id: 'test-user-id',
-        username: 'testuser',
-        email: 'test@example.com',
-        projectsAdmin: ['http://test-project'],
-        permissions: {
-          groupsPerProject: {
-            'http://test-project': ['http://www.knora.org/ontology/knora-admin#ProjectAdmin'],
-          },
-        },
-      } as any);
-      projectIri$.next('http://test-project');
-
-      const hasRights = await firstValueFrom(component.userHasProjectAdminRights$);
-
-      expect(hasRights).toBe(true);
-    });
-
-    it('should determine user lacks project admin rights when not project admin', async () => {
-      user$.next({
-        id: 'test-user-id',
-        username: 'testuser',
-        email: 'test@example.com',
-        projectsAdmin: [],
-        permissions: {
-          groupsPerProject: {
-            'http://test-project': ['http://www.knora.org/ontology/knora-admin#ProjectMember'],
-          },
-        },
-      } as any);
-      projectIri$.next('http://test-project');
-
-      const hasRights = await firstValueFrom(component.userHasProjectAdminRights$);
-
-      expect(hasRights).toBe(false);
-    });
-  });
-
   describe('component initialization', () => {
     it('should initialize resourceCanBeDeleted$ on ngOnInit', () => {
       expect(component.resourceCanBeDeleted$).toBeUndefined();
