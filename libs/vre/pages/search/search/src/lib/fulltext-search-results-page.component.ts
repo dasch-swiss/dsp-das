@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-fulltext-search-results-page',
   template: `@if (query$ | async; as query) {
-    <app-project-fulltext-search-result [query]="query" [hasRightsToShowCreateLinkObject$]="hasRightsToShowCreateLinkObject$" />
+    <app-project-fulltext-search-result [query]="query" />
   } `,
   standalone: false,
 })
