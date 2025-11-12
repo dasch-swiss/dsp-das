@@ -39,14 +39,16 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   standalone: false,
 })
 export class ResourceListSelectionComponent {
+  count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
   showCreateLink$ = combineLatest([
+    this.count$,
     this.multipleViewerService.selectedResources$,
     this._userService.user$,
     this._userService.isSysAdmin$,
   ]).pipe(
-    map(([resources, user, isSysAdmin]) => {
+    map(([count, resources, user, isSysAdmin]) => {
       // Must have more than 1 resource selected
-      if (resources.length <= 1) return false;
+      if (count <= 1) return false;
 
       // Must have user
       if (!user) return false;
