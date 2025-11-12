@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
-import { ProjectService } from '@dasch-swiss/vre/shared/app-helper-services';
+import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
@@ -39,14 +39,31 @@ import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource
   standalone: false,
 })
 export class ResourceListSelectionComponent {
-  count$ = this.multipleViewerService.selectedResources$.pipe(map(resources => resources.length));
-  showCreateLink$ = this.count$.pipe(map(count => count > 1));
-
-  isCreateLinkButtonDisabled$ = combineLatest([
+  showCreateLink$ = combineLatest([
     this.multipleViewerService.selectedResources$,
     this._userService.user$,
+    this._userService.isSysAdmin$,
   ]).pipe(
-    map(([resources, user]) => {
+    map(([resources, user, isSysAdmin]) => {
+      // Must have more than 1 resource selected
+      if (resources.length <= 1) return false;
+
+      // Must have user
+      if (!user) return false;
+
+      // System Admin can always see the button
+      if (isSysAdmin) return true;
+
+      // Get unique project UUIDs from all selected resources
+      const projectUuids = [...new Set(resources.map(r => r.attachedToProject))];
+
+      // Check if user has Project Member OR Project Admin rights on ANY of the projects
+      return projectUuids.some(projectUuid => UserPermissions.hasProjectMemberRights(user, projectUuid));
+    })
+  );
+
+  isCreateLinkButtonDisabled$ = this.multipleViewerService.selectedResources$.pipe(
+    map(resources => {
       if (resources.length === 0) {
         return { disabled: true, reason: 'No resources selected' };
       }
@@ -56,15 +73,6 @@ export class ResourceListSelectionComponent {
 
       if (!allSameProject) {
         return { disabled: true, reason: 'Resources must be from the same project' };
-      }
-
-      if (!user) {
-        return { disabled: true, reason: 'User not authenticated' };
-      }
-
-      const hasProjectMemberRights = ProjectService.HasProjectMemberRights(user, projectUuid);
-      if (!hasProjectMemberRights) {
-        return { disabled: true, reason: 'You do not have project member rights' };
       }
 
       return { disabled: false };
