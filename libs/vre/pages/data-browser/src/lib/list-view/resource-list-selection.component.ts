@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { UserService } from '@dasch-swiss/vre/core/session';
 import { UserPermissions } from '@dasch-swiss/vre/shared/app-common';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceLinkDialogComponent, ResourceLinkDialogProps } from './resource-link-dialog.component';
@@ -68,14 +69,20 @@ export class ResourceListSelectionComponent {
   isCreateLinkButtonDisabled$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
       if (resources.length === 0) {
-        return { disabled: true, reason: 'No resources selected' };
+        return {
+          disabled: true,
+          reason: this._translateService.instant('pages.dataBrowser.resourceListSelection.noResourcesSelected'),
+        };
       }
 
       const projectUuid = resources[0].attachedToProject;
       const allSameProject = resources.every(resource => resource.attachedToProject === projectUuid);
 
       if (!allSameProject) {
-        return { disabled: true, reason: 'Resources must be from the same project' };
+        return {
+          disabled: true,
+          reason: this._translateService.instant('pages.dataBrowser.resourceListSelection.resourcesMustBeSameProject'),
+        };
       }
 
       return { disabled: false };
@@ -85,6 +92,7 @@ export class ResourceListSelectionComponent {
   constructor(
     public multipleViewerService: MultipleViewerService,
     private readonly _userService: UserService,
+    private readonly _translateService: TranslateService,
     private readonly _dialog: MatDialog
   ) {}
 
