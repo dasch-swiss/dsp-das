@@ -12,7 +12,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { ApiResponseError, CanDoResponse, IHasProperty, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, DspDialogConfig, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
@@ -65,8 +64,7 @@ export class ResourceClassInfoComponent implements OnInit, OnDestroy {
     private _projectPageService: ProjectPageService,
     @Inject(DspApiConnectionToken)
     private _dspApiConnection: KnoraApiConnection,
-    private _viewContainerRef: ViewContainerRef,
-    private _route: ActivatedRoute
+    private _viewContainerRef: ViewContainerRef
   ) {}
 
   ngOnInit() {
