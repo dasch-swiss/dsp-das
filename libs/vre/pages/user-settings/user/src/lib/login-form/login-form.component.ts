@@ -1,6 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { finalize, Subscription } from 'rxjs';
 
@@ -12,7 +11,13 @@ import { finalize, Subscription } from 'rxjs';
 
       <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
 
-      <button mat-raised-button appLoadingButton [isLoading]="loading" type="submit" data-cy="submit-button">
+      <button
+        mat-raised-button
+        color="primary"
+        appLoadingButton
+        [isLoading]="loading"
+        type="submit"
+        data-cy="submit-button">
         {{ 'pages.userSettings.loginForm.login' | translate }}
       </button>
     </form>
@@ -30,7 +35,7 @@ import { finalize, Subscription } from 'rxjs';
 })
 export class LoginFormComponent implements OnDestroy {
   loading = false;
-  form = this._fb.nonNullable.group({
+  readonly form = this._fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
@@ -39,7 +44,6 @@ export class LoginFormComponent implements OnDestroy {
 
   constructor(
     private _fb: FormBuilder,
-    private router: Router,
     private _authService: AuthService
   ) {}
 
