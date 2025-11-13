@@ -63,7 +63,9 @@ export class CkEditorComponent implements OnInit, OnDestroy {
         return;
       }
       updating = true;
+      this.control.markAsTouched();
       this.control.patchValue(value ? this._parseFromFootnote(value) : '');
+      this.control.updateValueAndValidity();
       updating = false;
     });
   }
