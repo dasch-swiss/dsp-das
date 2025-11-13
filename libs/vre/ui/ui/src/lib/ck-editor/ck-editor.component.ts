@@ -5,7 +5,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import * as Editor from 'ckeditor5-custom-build';
 import { Subject } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { debounceTime, startWith, takeUntil } from 'rxjs/operators';
 import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
 import { crossProjectLinkValidator } from './cross-project-link.validator';
@@ -18,6 +18,7 @@ import { unescapeHtml } from './unescape-html';
       [formControl]="footnoteControl"
       [config]="ckEditor.config"
       [editor]="editor"
+      (blur)="onBlur()"
       style="margin-bottom: 22px; display: block;" />
     @if (control.touched && control.errors; as errors) {
       <mat-error>{{ errors | humanReadableError: [crossProjectLinkError] | translate }}</mat-error>
@@ -58,7 +59,7 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       updating = false;
     });
 
-    this.footnoteControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(value => {
+    this.footnoteControl.valueChanges.pipe(debounceTime(300), takeUntil(this._destroy$)).subscribe(value => {
       if (updating) {
         return;
       }
@@ -79,6 +80,12 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       this.control.removeValidators(this._crossProjectValidator);
       this.control.updateValueAndValidity();
     }
+  }
+
+  onBlur() {
+    // Mark control as touched and trigger validation when editor loses focus
+    this.control.markAsTouched();
+    this.control.updateValueAndValidity();
   }
 
   private _parseToFootnote(rawHtml: string) {
