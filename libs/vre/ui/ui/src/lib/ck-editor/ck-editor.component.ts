@@ -5,7 +5,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import * as Editor from 'ckeditor5-custom-build';
 import { Subject } from 'rxjs';
-import { debounceTime, startWith, takeUntil } from 'rxjs/operators';
+import { startWith, takeUntil } from 'rxjs/operators';
 import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
 import { crossProjectLinkValidator } from './cross-project-link.validator';
@@ -59,14 +59,12 @@ export class CkEditorComponent implements OnInit, OnDestroy {
       updating = false;
     });
 
-    this.footnoteControl.valueChanges.pipe(debounceTime(300), takeUntil(this._destroy$)).subscribe(value => {
+    this.footnoteControl.valueChanges.pipe(takeUntil(this._destroy$)).subscribe(value => {
       if (updating) {
         return;
       }
       updating = true;
-      this.control.markAsTouched();
       this.control.patchValue(value ? this._parseFromFootnote(value) : '');
-      this.control.updateValueAndValidity();
       updating = false;
     });
   }
