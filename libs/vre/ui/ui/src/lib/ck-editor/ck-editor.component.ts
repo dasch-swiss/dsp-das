@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import * as Editor from 'ckeditor5-custom-build';
 import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
-import { HumanReadableErrorPipe } from '../human-readable-error.pipe';
 import { ckEditor } from './ck-editor';
 import { crossProjectLinkValidator } from './cross-project-link.validator';
 import { unescapeHtml } from './unescape-html';
@@ -20,10 +19,22 @@ import { unescapeHtml } from './unescape-html';
       [editor]="editor"
       (blur)="onBlur()"
       style="margin-bottom: 22px; display: block;" />
-    @if (control.touched && control.errors; as errors) {
-      <mat-error>{{ errors | humanReadableError: [crossProjectLinkError] | translate }}</mat-error>
+    @if (control.touched && control.errors?.['crossProjectLink']; as error) {
+      <mat-error>
+        <div>{{ crossProjectLinkError.message | translate }}</div>
+        @if (error.invalidLinks && error.invalidLinks.length > 0) {
+          <div style="margin-top: 8px;">
+            <strong>{{ badLinksError.message | translate }}</strong>
+            <ul style="margin: 4px 0; padding-left: 20px;">
+              @for (link of error.invalidLinks; track link.url) {
+                <li>{{ link.url }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </mat-error>
     }`,
-  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule, HumanReadableErrorPipe],
+  imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule],
   standalone: true,
 })
 export class CkEditorComponent implements OnInit, OnDestroy {
@@ -35,6 +46,10 @@ export class CkEditorComponent implements OnInit, OnDestroy {
   readonly crossProjectLinkError = {
     errorKey: 'crossProjectLink',
     message: 'ui.common.errors.crossProjectLink',
+  };
+  readonly badLinksError = {
+    errorKey: 'badLinks',
+    message: 'ui.common.errors.badLinks',
   };
 
   protected readonly ckEditor = ckEditor;
