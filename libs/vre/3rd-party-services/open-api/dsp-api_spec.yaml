@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DSP-API
-  version: v32.7.0-5-ge0abdce
+  version: v32.7.0-11-g803d5b3
   summary: DSP-API is part of the DaSCH Service Platform, a repository for the long-term
     preservation and reuse of data in the humanities.
   contact:
@@ -94,18 +94,21 @@ paths:
                 - id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -180,10 +183,12 @@ paths:
             example:
               name: NewGroup
               descriptions:
-              - value: NewGroup description in English
-                language: en
-              - value: NewGroup Beschreibung auf Deutsch
-                language: de
+              - LanguageTaggedStringLiteralV2:
+                  value: NewGroup description in English
+                  language: en
+              - LanguageTaggedStringLiteralV2:
+                  value: NewGroup Beschreibung auf Deutsch
+                  language: de
               project: http://rdfh.ch/projects/0042
               status: true
               selfjoin: false
@@ -200,18 +205,21 @@ paths:
                   id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -295,18 +303,21 @@ paths:
                   id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -387,10 +398,12 @@ paths:
             example:
               name: NewGroupNewName
               descriptions:
-              - value: NewGroupNewName description in English
-                language: en
-              - value: NewGroupNewName Beschreibung auf Deutsch
-                language: de
+              - LanguageTaggedStringLiteralV2:
+                  value: NewGroupNewName description in English
+                  language: en
+              - LanguageTaggedStringLiteralV2:
+                  value: NewGroupNewName Beschreibung auf Deutsch
+                  language: de
               status: false
               selfjoin: true
         required: true
@@ -406,18 +419,21 @@ paths:
                   id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -505,18 +521,21 @@ paths:
                   id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -613,18 +632,21 @@ paths:
                   - id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                     name: NewGroup
                     descriptions:
-                    - value: NewGroup description in English
-                      language: en
-                    - value: NewGroup Beschreibung auf Deutsch
-                      language: de
+                    - LanguageTaggedStringLiteralV2:
+                        value: NewGroup description in English
+                        language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: NewGroup Beschreibung auf Deutsch
+                        language: de
                     project:
                       id: http://rdfh.ch/projects/0042
                       shortname: example
                       shortcode: '0001'
                       longname: Example Project
                       description:
-                      - value: An example project
-                        language: en
+                      - LanguageTaggedStringLiteralV2:
+                          value: An example project
+                          language: en
                       keywords:
                       - example
                       - project
@@ -655,8 +677,9 @@ paths:
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -752,18 +775,21 @@ paths:
                   id: http://rdfh.ch/groups/0042/a95UWs71KUklnFOe1rcw1w
                   name: NewGroup
                   descriptions:
-                  - value: NewGroup description in English
-                    language: en
-                  - value: NewGroup Beschreibung auf Deutsch
-                    language: de
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup description in English
+                      language: en
+                  - LanguageTaggedStringLiteralV2:
+                      value: NewGroup Beschreibung auf Deutsch
+                      language: de
                   project:
                     id: http://rdfh.ch/projects/0042
                     shortname: example
                     shortcode: '0001'
                     longname: Example Project
                     description:
-                    - value: An example project
-                      language: en
+                    - LanguageTaggedStringLiteralV2:
+                        value: An example project
+                        language: en
                     keywords:
                     - example
                     - project
@@ -4708,7 +4734,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       responses:
         '200':
           description: ''
@@ -4760,7 +4786,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       responses:
         '200':
           description: ''
@@ -4812,7 +4838,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       responses:
         '200':
           description: ''
@@ -4977,7 +5003,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       responses:
         '200':
           description: ''
@@ -5035,7 +5061,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       responses:
         '200':
           description: ''
@@ -5213,7 +5239,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5278,7 +5304,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5344,7 +5370,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5409,7 +5435,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: projectIri
         in: path
         description: The IRI of a project. Must be URL-encoded.
@@ -5475,7 +5501,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -5540,7 +5566,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       - name: groupIri
         in: path
         description: The IRI of a group. Must be URL-encoded.
@@ -5606,7 +5632,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       requestBody:
         content:
           application/json:
@@ -5671,7 +5697,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       requestBody:
         content:
           application/json:
@@ -5736,7 +5762,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       requestBody:
         content:
           application/json:
@@ -5801,7 +5827,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/users/yUkvXWKSQneTWcsQzQu4mw
+        example: http://rdfh.ch/users/5mjQl8H2QnS3t-EQBPC5yA
       requestBody:
         content:
           application/json:
@@ -6124,7 +6150,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/W0QFpZ-wTZOQBGNxJ2D1yw
+        example: http://rdfh.ch/lists/0001/hj4OeEY9QgCxm5MJ-SFWuw
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -6236,7 +6262,7 @@ paths:
         required: true
         schema:
           type: string
-        example: http://rdfh.ch/lists/0001/W0QFpZ-wTZOQBGNxJ2D1yw
+        example: http://rdfh.ch/lists/0001/hj4OeEY9QgCxm5MJ-SFWuw
       - name: x-knora-accept-schema
         in: header
         description: |-
@@ -13158,9 +13184,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionResponse'
               example:
-                webapi: v32.7.0-5-ge0abdce
-                buildCommit: e0abdce39
-                buildTime: '2025-11-12T13:02:07.536281951Z'
+                webapi: v32.7.0-11-g803d5b3
+                buildCommit: 803d5b3d2
+                buildTime: '2025-11-14T11:02:19.126501916Z'
                 fuseki: 5.5.0-2
                 scala: 3.3.7
                 sipi: v3.16.3
@@ -13968,6 +13994,17 @@ components:
           type: string
         language:
           type: string
+    LanguageTaggedStringLiteralV2:
+      title: LanguageTaggedStringLiteralV2
+      type: object
+      required:
+      - value
+      - language
+      properties:
+        value:
+          type: string
+        language:
+          type: string
     ListADM:
       title: ListADM
       type: object
@@ -14561,6 +14598,14 @@ components:
           uniqueItems: true
           items:
             $ref: '#/components/schemas/PermissionInfoADM'
+    PlainStringLiteralV2:
+      title: PlainStringLiteralV2
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
     Position:
       title: Position
       type: object
@@ -14941,14 +14986,9 @@ components:
             $ref: '#/components/schemas/StringLiteralV2'
     StringLiteralV2:
       title: StringLiteralV2
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-        language:
-          type: string
+      oneOf:
+      - $ref: '#/components/schemas/LanguageTaggedStringLiteralV2'
+      - $ref: '#/components/schemas/PlainStringLiteralV2'
     SystemAdmin:
       title: SystemAdmin
       type: object
