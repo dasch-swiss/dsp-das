@@ -3,7 +3,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { catchError, finalize, map, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, map, of, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { UserService } from './user.service';
 
@@ -30,10 +30,14 @@ export class AuthService {
 
   /**
    * Complete authentication by loading user and setting language preferences
+   * @param encodedJWT
    * @param identifierOrIri can be email, username, or user IRI
    * @param identifierType type of identifier: 'email', 'username', or 'iri'
    */
-  afterSuccessfulLogin$(identifierOrIri: string, identifierType: 'email' | 'username' | 'iri') {
+  afterSuccessfulLogin$(encodedJWT: string, identifierOrIri: string, identifierType: 'email' | 'username' | 'iri') {
+    this._dspApiConnection.v2.jsonWebToken = encodedJWT;
+    this._accessTokenService.storeToken(encodedJWT);
+
     return this._userService.loadUser(identifierOrIri, identifierType).pipe(
       tap(user => {
         this._localizationsService.setLanguage(user.lang);
@@ -43,23 +47,6 @@ export class AuthService {
         });
         this._grafanaFaroService.setUser(user.id);
       })
-    );
-  }
-
-  /**
-   * Login user
-   * @param identifier can be the email or the username
-   * @param password the password of the user
-   */
-  login$(identifier: string, password: string) {
-    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
-    return this._dspApiConnection.v2.auth.login(identifierType, identifier, password).pipe(
-      tap(response => {
-        const encodedJWT = response.body.token;
-        this._accessTokenService.storeToken(encodedJWT);
-        this._dspApiConnection.v2.jsonWebToken = encodedJWT;
-      }),
-      switchMap(() => this.afterSuccessfulLogin$(identifier, identifierType))
     );
   }
 

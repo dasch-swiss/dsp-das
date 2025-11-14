@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ApiResponseError } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -60,7 +61,9 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    @Inject(DspApiConnectionToken)
+    private readonly _dspApiConnection: KnoraApiConnection
   ) {}
 
   ngOnInit(): void {
@@ -83,8 +86,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.loginError = null;
 
-    this.loginSubscription = this._authService
-      .login$(this.form.controls.username.value, this.form.controls.password.value)
+    this.loginSubscription = this.login$(this.form.controls.username.value, this.form.controls.password.value)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -97,5 +99,19 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           }
         },
       });
+  }
+
+  /**
+   * Login user
+   * @param identifier can be the email or the username
+   * @param password the password of the user
+   */
+  login$(identifier: string, password: string) {
+    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
+    return this._dspApiConnection.v2.auth
+      .login(identifierType, identifier, password)
+      .pipe(
+        switchMap(response => this._authService.afterSuccessfulLogin$(response.body.token, identifier, identifierType))
+      );
   }
 }

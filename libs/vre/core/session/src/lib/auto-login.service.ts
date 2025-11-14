@@ -53,7 +53,7 @@ export class AutoLoginService {
             throw new AppError('Credentials not valid');
           }
 
-          return this._authService.afterSuccessfulLogin$(userIri, 'iri');
+          return this._authService.afterSuccessfulLogin$(encodedJWT, userIri, 'iri');
         }),
         finalize(() => this.hasCheckedCredentials$.next(true))
       )
