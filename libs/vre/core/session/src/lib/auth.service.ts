@@ -3,7 +3,7 @@ import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { GrafanaFaroService, PendoAnalyticsService } from '@dasch-swiss/vre/3rd-party-services/analytics';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { catchError, finalize, map, of, tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { UserService } from './user.service';
 
@@ -18,15 +18,6 @@ export class AuthService {
     private readonly _localizationsService: LocalizationService,
     private readonly _pendoAnalytics: PendoAnalyticsService
   ) {}
-
-  isCredentialsValid$() {
-    return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-      map(() => true),
-      catchError(() => {
-        return of(false);
-      })
-    );
-  }
 
   /**
    * Complete authentication by loading user and setting language preferences

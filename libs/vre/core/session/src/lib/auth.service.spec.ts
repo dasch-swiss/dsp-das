@@ -137,27 +137,6 @@ describe('AuthService', () => {
     });
   });
 
-  describe('isCredentialsValid$()', () => {
-    it('should return true when credentials are valid', async () => {
-      mockDspApiConnection.v2!.auth!.checkCredentials = jest.fn().mockReturnValue(of({}));
-
-      const result = await firstValueFrom(service.isCredentialsValid$());
-
-      expect(result).toBe(true);
-      expect(mockDspApiConnection.v2!.auth!.checkCredentials).toHaveBeenCalled();
-    });
-
-    it('should return false when credentials check fails', async () => {
-      mockDspApiConnection.v2!.auth!.checkCredentials = jest
-        .fn()
-        .mockReturnValue(throwError(() => new Error('Invalid credentials')));
-
-      const result = await firstValueFrom(service.isCredentialsValid$());
-
-      expect(result).toBe(false);
-    });
-  });
-
   describe('afterSuccessfulLogin$()', () => {
     it('should store token and set JWT on connection', async () => {
       mockUserService.loadUser = jest.fn().mockReturnValue(of(mockUser));

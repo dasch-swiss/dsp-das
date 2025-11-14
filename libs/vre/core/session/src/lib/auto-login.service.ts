@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
-import { BehaviorSubject, finalize, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, of, switchMap } from 'rxjs';
 import { AccessTokenService } from './access-token.service';
 import { AuthService } from './auth.service';
 
@@ -17,6 +17,15 @@ export class AutoLoginService {
     private readonly _dspApiConnection: KnoraApiConnection,
     private readonly _authService: AuthService
   ) {}
+
+  private isCredentialsValid$() {
+    return this._dspApiConnection.v2.auth.checkCredentials().pipe(
+      map(() => true),
+      catchError(() => {
+        return of(false);
+      })
+    );
+  }
 
   setup(): void {
     if (this._isInitialized) {
@@ -45,8 +54,7 @@ export class AutoLoginService {
 
     this._dspApiConnection.v2.jsonWebToken = encodedJWT;
 
-    this._authService
-      .isCredentialsValid$()
+    this.isCredentialsValid$()
       .pipe(
         switchMap(isValid => {
           if (!isValid) {
