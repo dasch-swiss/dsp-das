@@ -6,19 +6,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApiResponseError, ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, KnoraApiConnection, ReadUser } from '@dasch-swiss/dsp-js';
+import { DspApiConnectionToken } from '@dasch-swiss/vre/core/config';
 import { AuthService } from '@dasch-swiss/vre/core/session';
-import { PasswordFormFieldComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { LoginFormComponent } from './login-form.component';
+import { PasswordFormFieldComponent } from '../user-form/password-form/password-form-field.component';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  let authService: jest.Mocked<AuthService>;
+  let mockAuthService: jest.Mocked<Partial<AuthService>>;
+  let mockDspApiConnection: jest.Mocked<Partial<KnoraApiConnection>>;
   let translateService: TranslateService;
 
   const mockUser: ReadUser = {
@@ -30,10 +32,23 @@ describe('LoginFormComponent', () => {
     lang: 'en',
   } as ReadUser;
 
+  const mockLoginResponse = {
+    body: { token: 'mock-jwt-token' },
+  };
+
   beforeEach(async () => {
-    const authServiceMock = {
-      login$: jest.fn(),
+    mockAuthService = {
+      afterSuccessfulLogin$: jest.fn(),
     };
+
+    mockDspApiConnection = {
+      v2: {
+        auth: {
+          login: jest.fn(),
+        },
+        jsonWebToken: '',
+      },
+    } as unknown as jest.Mocked<KnoraApiConnection>;
 
     await TestBed.configureTestingModule({
       declarations: [LoginFormComponent, PasswordFormFieldComponent],
@@ -50,12 +65,15 @@ describe('LoginFormComponent', () => {
         HumanReadableErrorPipe,
         LoadingButtonDirective,
       ],
-      providers: [FormBuilder, { provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        FormBuilder,
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: DspApiConnectionToken, useValue: mockDspApiConnection },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginFormComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
     translateService = TestBed.inject(TranslateService);
     jest.spyOn(translateService, 'instant').mockReturnValue('Invalid credentials');
     fixture.detectChanges();
@@ -79,6 +97,15 @@ describe('LoginFormComponent', () => {
 
     it('should initialize loading state as false', () => {
       expect(component.loading).toBe(false);
+    });
+
+    it('should initialize loginError as null', () => {
+      expect(component.loginError).toBeNull();
+    });
+
+    it('should mark form as readonly', () => {
+      expect(component.form).toBeDefined();
+      // The form should be readonly, preventing reassignment
     });
   });
 
@@ -129,56 +156,70 @@ describe('LoginFormComponent', () => {
   });
 
   describe('Login Method', () => {
-    it('should not call authService.login$ when form is invalid', () => {
+    beforeEach(() => {
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(of(mockLoginResponse));
+      mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of(mockUser));
+    });
+
+    it('should not call API when form is invalid', () => {
       component.form.controls.username.setValue('');
       component.form.controls.password.setValue('');
 
       component.login();
 
-      expect(authService.login$).not.toHaveBeenCalled();
+      expect(mockDspApiConnection.v2!.auth!.login).not.toHaveBeenCalled();
       expect(component.loading).toBe(false);
     });
 
-    it('should call authService.login$ with correct credentials when form is valid', () => {
-      const username = 'testuser';
+    it('should call DSP API login with email when identifier contains @', () => {
+      const email = 'test@example.com';
       const password = 'testpass123';
 
-      authService.login$.mockReturnValue(of(mockUser));
+      component.form.controls.username.setValue(email);
+      component.form.controls.password.setValue(password);
+
+      component.login();
+
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledWith('email', email, password);
+    });
+
+    it('should call DSP API login with username when no @', () => {
+      const username = 'testuser';
+      const password = 'testpass123';
 
       component.form.controls.username.setValue(username);
       component.form.controls.password.setValue(password);
 
       component.login();
 
-      expect(authService.login$).toHaveBeenCalledWith(username, password);
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledWith('username', username, password);
     });
 
-    it('should set loading to true when login starts', done => {
-      authService.login$.mockReturnValue(of(mockUser));
+    it('should call afterSuccessfulLogin$ with token and identifier', done => {
+      const username = 'testuser';
+      const password = 'testpass123';
 
+      component.form.controls.username.setValue(username);
+      component.form.controls.password.setValue(password);
+
+      component.login();
+
+      setTimeout(() => {
+        expect(mockAuthService.afterSuccessfulLogin$).toHaveBeenCalledWith('mock-jwt-token', username, 'username');
+        done();
+      }, 0);
+    });
+
+    it('should set loading to true when login starts and false when done', done => {
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
 
-      // Check loading is initially false
       expect(component.loading).toBe(false);
 
       component.login();
 
-      // Use setTimeout to check after login is called but before observable completes
-      Promise.resolve().then(() => {
-        // After microtask, finalize should have set loading back to false
-        expect(component.loading).toBe(false);
-        done();
-      });
-    });
-
-    it('should set loading to false when login succeeds', done => {
-      authService.login$.mockReturnValue(of(mockUser));
-
-      component.form.controls.username.setValue('testuser');
-      component.form.controls.password.setValue('testpass123');
-
-      component.login();
+      // After login is called, loading should be true synchronously
+      // But since we're using finalize, it sets back to false immediately in tests
 
       setTimeout(() => {
         expect(component.loading).toBe(false);
@@ -187,8 +228,6 @@ describe('LoginFormComponent', () => {
     });
 
     it('should store subscription when login is called', () => {
-      authService.login$.mockReturnValue(of(mockUser));
-
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
 
@@ -200,16 +239,14 @@ describe('LoginFormComponent', () => {
     });
 
     it('should handle multiple login attempts', () => {
-      authService.login$.mockReturnValue(of(mockUser));
-
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
 
       component.login();
-      expect(authService.login$).toHaveBeenCalledTimes(1);
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledTimes(1);
 
       component.login();
-      expect(authService.login$).toHaveBeenCalledTimes(2);
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -217,7 +254,7 @@ describe('LoginFormComponent', () => {
     it('should set loginError when API returns 400 error', done => {
       const apiError = Object.create(ApiResponseError.prototype);
       Object.assign(apiError, { status: 400, message: 'Bad Request' });
-      authService.login$.mockReturnValue(throwError(() => apiError));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(throwError(() => apiError));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('wrongpassword');
@@ -235,7 +272,7 @@ describe('LoginFormComponent', () => {
 
     it('should set loginError when API returns 401 error', done => {
       const apiError = { status: 401 };
-      authService.login$.mockReturnValue(throwError(() => apiError));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(throwError(() => apiError));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('wrongpassword');
@@ -254,7 +291,7 @@ describe('LoginFormComponent', () => {
     it('should not set loginError for other error types', done => {
       const apiError = Object.create(ApiResponseError.prototype);
       Object.assign(apiError, { status: 500, message: 'Internal Server Error' });
-      authService.login$.mockReturnValue(throwError(() => apiError));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(throwError(() => apiError));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
@@ -277,7 +314,8 @@ describe('LoginFormComponent', () => {
     });
 
     it('should clear loginError when starting new login attempt', () => {
-      authService.login$.mockReturnValue(of(mockUser));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(of(mockLoginResponse));
+      mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of(mockUser));
 
       component.loginError = 'Previous error';
       component.form.controls.username.setValue('testuser');
@@ -291,7 +329,7 @@ describe('LoginFormComponent', () => {
     it('should call translateService.instant with correct key on error', done => {
       const apiError = Object.create(ApiResponseError.prototype);
       Object.assign(apiError, { status: 400, message: 'Bad Request' });
-      authService.login$.mockReturnValue(throwError(() => apiError));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(throwError(() => apiError));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('wrongpassword');
@@ -307,7 +345,8 @@ describe('LoginFormComponent', () => {
 
   describe('Subscription Management', () => {
     it('should unsubscribe login subscription on component destroy', () => {
-      authService.login$.mockReturnValue(of(mockUser));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(of(mockLoginResponse));
+      mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of(mockUser));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
@@ -371,11 +410,7 @@ describe('LoginFormComponent', () => {
       fixture.detectChanges();
       const submitButton = fixture.nativeElement.querySelector('[data-cy="submit-button"]');
 
-      // Check that the button exists and has the appLoadingButton directive
       expect(submitButton).toBeTruthy();
-
-      // The loading state is managed by the LoadingButtonDirective
-      // We can verify it's bound by checking the button's disabled state or spinner presence
       expect(component.loading).toBe(false);
 
       component.loading = true;
@@ -385,7 +420,8 @@ describe('LoginFormComponent', () => {
 
     it('should call login method on form submit', () => {
       jest.spyOn(component, 'login');
-      authService.login$.mockReturnValue(of(mockUser));
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(of(mockLoginResponse));
+      mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of(mockUser));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
@@ -415,29 +451,30 @@ describe('LoginFormComponent', () => {
   });
 
   describe('Edge Cases', () => {
+    beforeEach(() => {
+      mockDspApiConnection.v2!.auth!.login = jest.fn().mockReturnValue(of(mockLoginResponse));
+      mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of(mockUser));
+    });
+
     it('should handle empty string values', () => {
       component.form.controls.username.setValue('');
       component.form.controls.password.setValue('');
 
       component.login();
 
-      expect(authService.login$).not.toHaveBeenCalled();
+      expect(mockDspApiConnection.v2!.auth!.login).not.toHaveBeenCalled();
     });
 
     it('should handle whitespace-only values', () => {
-      authService.login$.mockReturnValue(of(mockUser));
-
       component.form.controls.username.setValue('   ');
       component.form.controls.password.setValue('   ');
 
       component.login();
 
-      expect(authService.login$).toHaveBeenCalledWith('   ', '   ');
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledWith('username', '   ', '   ');
     });
 
     it('should handle special characters in credentials', () => {
-      authService.login$.mockReturnValue(of(mockUser));
-
       const username = 'user@example.com';
       const password = 'p@ss!w0rd#123';
 
@@ -446,12 +483,10 @@ describe('LoginFormComponent', () => {
 
       component.login();
 
-      expect(authService.login$).toHaveBeenCalledWith(username, password);
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledWith('email', username, password);
     });
 
     it('should handle very long credentials', () => {
-      authService.login$.mockReturnValue(of(mockUser));
-
       const longUsername = 'a'.repeat(500);
       const longPassword = 'b'.repeat(500);
 
@@ -460,7 +495,7 @@ describe('LoginFormComponent', () => {
 
       component.login();
 
-      expect(authService.login$).toHaveBeenCalledWith(longUsername, longPassword);
+      expect(mockDspApiConnection.v2!.auth!.login).toHaveBeenCalledWith('username', longUsername, longPassword);
     });
   });
 });

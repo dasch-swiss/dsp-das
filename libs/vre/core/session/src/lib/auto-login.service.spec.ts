@@ -156,14 +156,14 @@ describe('AutoLoginService', () => {
       expect(mockAuthService.isCredentialsValid$).toHaveBeenCalled();
     });
 
-    it('should call afterSuccessfulLogin$ with user IRI when credentials are valid', async () => {
+    it('should call afterSuccessfulLogin$ with JWT token and user IRI when credentials are valid', async () => {
       mockAuthService.isCredentialsValid$ = jest.fn().mockReturnValue(of(true));
       mockAuthService.afterSuccessfulLogin$ = jest.fn().mockReturnValue(of({}));
 
       service.setup();
       await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async
 
-      expect(mockAuthService.afterSuccessfulLogin$).toHaveBeenCalledWith(TEST_CONSTANTS.USER_IRI, 'iri');
+      expect(mockAuthService.afterSuccessfulLogin$).toHaveBeenCalledWith(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.USER_IRI, 'iri');
     });
 
     it('should set hasCheckedCredentials$ to true after successful login', async () => {
