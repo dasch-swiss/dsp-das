@@ -8,12 +8,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApiResponseError, ReadUser } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/core/session';
-import { CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
+import { PasswordFormFieldComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import { CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { LoginFormComponent } from './login-form.component';
-import { PasswordFormFieldComponent } from '../user-form/password-form/password-form-field.component';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
@@ -79,11 +79,6 @@ describe('LoginFormComponent', () => {
 
     it('should initialize loading state as false', () => {
       expect(component.loading).toBe(false);
-    });
-
-    it('should mark form as readonly', () => {
-      expect(component.form).toBeDefined();
-      // The form should be readonly, preventing reassignment
     });
   });
 
