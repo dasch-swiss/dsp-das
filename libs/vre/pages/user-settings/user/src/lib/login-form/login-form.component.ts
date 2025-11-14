@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, finalize, Subscription, throwError } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -86,17 +86,16 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.loginSubscription = this._authService
       .login$(this.form.controls.username.value, this.form.controls.password.value)
       .pipe(
-        catchError(error => {
-          if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
-            this.loginError = this._translateService.instant('core.auth.invalidCredentials');
-            return throwError(() => error);
-          }
-          return throwError(() => error);
-        }),
         finalize(() => {
           this.loading = false;
         })
       )
-      .subscribe();
+      .subscribe({
+        error: error => {
+          if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
+            this.loginError = this._translateService.instant('core.auth.invalidCredentials');
+          }
+        },
+      });
   }
 }
