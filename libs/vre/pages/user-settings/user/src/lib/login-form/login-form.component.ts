@@ -37,7 +37,7 @@ import { finalize, Subscription } from 'rxjs';
       }
 
       .login-error {
-        color: #f44336;
+        color: #e11d48;
         font-size: 12px;
         margin-top: 4px;
         margin-bottom: 8px;

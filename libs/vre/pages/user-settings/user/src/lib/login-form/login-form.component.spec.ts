@@ -6,11 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReadUser } from '@dasch-swiss/dsp-js';
+import { ApiResponseError, ReadUser } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/core/session';
 import { CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { LoginFormComponent } from './login-form.component';
 import { PasswordFormFieldComponent } from '../user-form/password-form/password-form-field.component';
@@ -19,6 +19,7 @@ describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
   let authService: jest.Mocked<AuthService>;
+  let translateService: TranslateService;
 
   const mockUser: ReadUser = {
     id: 'http://rdfh.ch/users/test-user-id',
@@ -55,6 +56,8 @@ describe('LoginFormComponent', () => {
     fixture = TestBed.createComponent(LoginFormComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
+    translateService = TestBed.inject(TranslateService);
+    jest.spyOn(translateService, 'instant').mockReturnValue('Invalid credentials');
     fixture.detectChanges();
   });
 
@@ -188,22 +191,17 @@ describe('LoginFormComponent', () => {
       }, 0);
     });
 
-    // Note: Error handling test is skipped because the component doesn't implement
-    // error handling in the subscription. In production, errors from authService.login$
-    // would bubble up unhandled. This is intentional as the AuthService handles
-    // error transformation and the errors are caught by global error handlers.
-
     it('should store subscription when login is called', () => {
       authService.login$.mockReturnValue(of(mockUser));
 
       component.form.controls.username.setValue('testuser');
       component.form.controls.password.setValue('testpass123');
 
-      expect(component['subscription']).toBeUndefined();
+      expect(component['loginSubscription']).toBeUndefined();
 
       component.login();
 
-      expect(component['subscription']).toBeDefined();
+      expect(component['loginSubscription']).toBeDefined();
     });
 
     it('should handle multiple login attempts', () => {
@@ -220,8 +218,100 @@ describe('LoginFormComponent', () => {
     });
   });
 
+  describe('Error Handling', () => {
+    it('should set loginError when API returns 400 error', done => {
+      const apiError = Object.create(ApiResponseError.prototype);
+      Object.assign(apiError, { status: 400, message: 'Bad Request' });
+      authService.login$.mockReturnValue(throwError(() => apiError));
+
+      component.form.controls.username.setValue('testuser');
+      component.form.controls.password.setValue('wrongpassword');
+
+      expect(component.loginError).toBeNull();
+
+      component.login();
+
+      setTimeout(() => {
+        expect(component.loginError).toBe('Invalid credentials');
+        expect(component.loading).toBe(false);
+        done();
+      }, 0);
+    });
+
+    it('should set loginError when API returns 401 error', done => {
+      const apiError = { status: 401 };
+      authService.login$.mockReturnValue(throwError(() => apiError));
+
+      component.form.controls.username.setValue('testuser');
+      component.form.controls.password.setValue('wrongpassword');
+
+      expect(component.loginError).toBeNull();
+
+      component.login();
+
+      setTimeout(() => {
+        expect(component.loginError).toBe('Invalid credentials');
+        expect(component.loading).toBe(false);
+        done();
+      }, 0);
+    });
+
+    it('should not set loginError for other error types', done => {
+      const apiError = Object.create(ApiResponseError.prototype);
+      Object.assign(apiError, { status: 500, message: 'Internal Server Error' });
+      authService.login$.mockReturnValue(throwError(() => apiError));
+
+      component.form.controls.username.setValue('testuser');
+      component.form.controls.password.setValue('testpass123');
+
+      component.login();
+
+      setTimeout(() => {
+        expect(component.loginError).toBeNull();
+        expect(component.loading).toBe(false);
+        done();
+      }, 0);
+    });
+
+    it('should clear loginError when user starts typing', () => {
+      component.loginError = 'Previous error';
+
+      component.form.controls.username.setValue('n');
+
+      expect(component.loginError).toBeNull();
+    });
+
+    it('should clear loginError when starting new login attempt', () => {
+      authService.login$.mockReturnValue(of(mockUser));
+
+      component.loginError = 'Previous error';
+      component.form.controls.username.setValue('testuser');
+      component.form.controls.password.setValue('testpass123');
+
+      component.login();
+
+      expect(component.loginError).toBeNull();
+    });
+
+    it('should call translateService.instant with correct key on error', done => {
+      const apiError = Object.create(ApiResponseError.prototype);
+      Object.assign(apiError, { status: 400, message: 'Bad Request' });
+      authService.login$.mockReturnValue(throwError(() => apiError));
+
+      component.form.controls.username.setValue('testuser');
+      component.form.controls.password.setValue('wrongpassword');
+
+      component.login();
+
+      setTimeout(() => {
+        expect(translateService.instant).toHaveBeenCalledWith('core.auth.invalidCredentials');
+        done();
+      }, 0);
+    });
+  });
+
   describe('Subscription Management', () => {
-    it('should unsubscribe on component destroy', () => {
+    it('should unsubscribe login subscription on component destroy', () => {
       authService.login$.mockReturnValue(of(mockUser));
 
       component.form.controls.username.setValue('testuser');
@@ -229,7 +319,7 @@ describe('LoginFormComponent', () => {
 
       component.login();
 
-      const subscription = component['subscription'];
+      const subscription = component['loginSubscription'];
       expect(subscription).toBeDefined();
 
       jest.spyOn(subscription!, 'unsubscribe');
@@ -239,8 +329,19 @@ describe('LoginFormComponent', () => {
       expect(subscription!.unsubscribe).toHaveBeenCalled();
     });
 
-    it('should handle ngOnDestroy when subscription is undefined', () => {
-      expect(component['subscription']).toBeUndefined();
+    it('should unsubscribe form subscription on component destroy', () => {
+      const formSubscription = component['formSubscription'];
+      expect(formSubscription).toBeDefined();
+
+      jest.spyOn(formSubscription!, 'unsubscribe');
+
+      component.ngOnDestroy();
+
+      expect(formSubscription!.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('should handle ngOnDestroy when login subscription is undefined', () => {
+      expect(component['loginSubscription']).toBeUndefined();
 
       // Should not throw error
       expect(() => component.ngOnDestroy()).not.toThrow();
@@ -298,6 +399,23 @@ describe('LoginFormComponent', () => {
       formElement.dispatchEvent(new Event('submit'));
 
       expect(component.login).toHaveBeenCalled();
+    });
+
+    it('should not display error message when loginError is null', () => {
+      component.loginError = null;
+      fixture.detectChanges();
+
+      const errorElement = fixture.nativeElement.querySelector('.login-error');
+      expect(errorElement).toBeFalsy();
+    });
+
+    it('should display error message when loginError is set', () => {
+      component.loginError = 'Invalid credentials';
+      fixture.detectChanges();
+
+      const errorElement = fixture.nativeElement.querySelector('.login-error');
+      expect(errorElement).toBeTruthy();
+      expect(errorElement.textContent.trim()).toBe('Invalid credentials');
     });
   });
 
