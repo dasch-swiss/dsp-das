@@ -18,15 +18,6 @@ export class AutoLoginService {
     private readonly _authService: AuthService
   ) {}
 
-  private isCredentialsValid$() {
-    return this._dspApiConnection.v2.auth.checkCredentials().pipe(
-      map(() => true),
-      catchError(() => {
-        return of(false);
-      })
-    );
-  }
-
   setup(): void {
     if (this._isInitialized) {
       console.warn('AutoLoginService.setup() has already been called. Ignoring duplicate call.');
@@ -70,5 +61,14 @@ export class AutoLoginService {
           this._authService.afterLogout();
         },
       });
+  }
+
+  private isCredentialsValid$() {
+    return this._dspApiConnection.v2.auth.checkCredentials().pipe(
+      map(() => true),
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 }
