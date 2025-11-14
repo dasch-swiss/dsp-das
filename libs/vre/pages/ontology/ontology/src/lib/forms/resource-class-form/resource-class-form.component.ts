@@ -60,11 +60,9 @@ export class ResourceClassFormComponent implements OnInit {
         asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
         nonNullable: true,
       }),
-      labels: DEFAULT_MULTILANGUAGE_FORM(
-        ensureLanguageTaggedLiterals(this.formData.labels),
-        this.labelsValidators,
-        [atLeastOneStringRequired('value')]
-      ),
+      labels: DEFAULT_MULTILANGUAGE_FORM(ensureLanguageTaggedLiterals(this.formData.labels), this.labelsValidators, [
+        atLeastOneStringRequired('value'),
+      ]),
       comments: DEFAULT_MULTILANGUAGE_FORM(
         ensureLanguageTaggedLiterals(this.formData.comments),
         this.commentsValidators,
