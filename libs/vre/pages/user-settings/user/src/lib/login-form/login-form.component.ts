@@ -86,8 +86,13 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.loginError = null;
 
-    this.loginSubscription = this.login$(this.form.controls.username.value, this.form.controls.password.value)
+    const identifier = this.form.controls.username.value;
+    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
+
+    this._dspApiConnection.v2.auth
+      .login(identifierType, identifier, this.form.controls.password.value)
       .pipe(
+        switchMap(response => this._authService.afterSuccessfulLogin$(response.body.token, identifier, identifierType)),
         finalize(() => {
           this.loading = false;
         })
@@ -99,19 +104,5 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           }
         },
       });
-  }
-
-  /**
-   * Login user
-   * @param identifier can be the email or the username
-   * @param password the password of the user
-   */
-  login$(identifier: string, password: string) {
-    const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
-    return this._dspApiConnection.v2.auth
-      .login(identifierType, identifier, password)
-      .pipe(
-        switchMap(response => this._authService.afterSuccessfulLogin$(response.body.token, identifier, identifierType))
-      );
   }
 }
