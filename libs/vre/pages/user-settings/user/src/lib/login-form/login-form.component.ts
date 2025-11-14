@@ -1,7 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ApiResponseError } from '@dasch-swiss/dsp-js';
 import { AuthService } from '@dasch-swiss/vre/core/session';
-import { finalize, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, finalize, Subscription, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -10,6 +12,10 @@ import { finalize, Subscription } from 'rxjs';
       <app-common-input [control]="form.controls.username" label="Username" data-cy="username-input" />
 
       <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
+
+      @if (loginError) {
+        <div class="login-error">{{ loginError }}</div>
+      }
 
       <button
         mat-raised-button
@@ -29,26 +35,44 @@ import { finalize, Subscription } from 'rxjs';
         flex-direction: column;
         padding: 16px;
       }
+
+      .login-error {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 8px;
+      }
     `,
   ],
   standalone: false,
 })
-export class LoginFormComponent implements OnDestroy {
+export class LoginFormComponent implements OnInit, OnDestroy {
   loading = false;
+  loginError: string | null = null;
   readonly form = this._fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
 
-  private subscription?: Subscription;
+  private loginSubscription?: Subscription;
+  private formSubscription?: Subscription;
 
   constructor(
     private _fb: FormBuilder,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _translateService: TranslateService
   ) {}
 
+  ngOnInit(): void {
+    // Clear error when user starts typing
+    this.formSubscription = this.form.valueChanges.subscribe(() => {
+      this.loginError = null;
+    });
+  }
+
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
+    this.formSubscription?.unsubscribe();
   }
 
   login() {
@@ -57,10 +81,18 @@ export class LoginFormComponent implements OnDestroy {
     }
 
     this.loading = true;
+    this.loginError = null;
 
-    this.subscription = this._authService
+    this.loginSubscription = this._authService
       .login$(this.form.controls.username.value, this.form.controls.password.value)
       .pipe(
+        catchError(error => {
+          if ((error instanceof ApiResponseError && error.status === 400) || error.status === 401) {
+            this.loginError = this._translateService.instant('core.auth.invalidCredentials');
+            return throwError(() => error);
+          }
+          return throwError(() => error);
+        }),
         finalize(() => {
           this.loading = false;
         })
