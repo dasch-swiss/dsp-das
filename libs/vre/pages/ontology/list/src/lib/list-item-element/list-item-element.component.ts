@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ListNode } from '@dasch-swiss/dsp-js';
+import { ensureLanguageTaggedLiterals } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss/vre/ui/string-literal';
 
 @Component({
@@ -50,7 +51,7 @@ export class ListItemElementComponent implements OnChanges {
   }
 
   private buildForm() {
-    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(this.node.labels);
+    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(ensureLanguageTaggedLiterals(this.node.labels));
   }
 
   mouseEnter() {

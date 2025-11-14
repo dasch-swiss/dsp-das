@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ensureLanguageTaggedLiterals } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
@@ -59,12 +60,16 @@ export class ResourceClassFormComponent implements OnInit {
         asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
         nonNullable: true,
       }),
-      labels: DEFAULT_MULTILANGUAGE_FORM(this.formData.labels, this.labelsValidators, [
-        atLeastOneStringRequired('value'),
-      ]),
-      comments: DEFAULT_MULTILANGUAGE_FORM(this.formData.comments, this.commentsValidators, [
-        atLeastOneStringRequired('value'),
-      ]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(
+        ensureLanguageTaggedLiterals(this.formData.labels),
+        this.labelsValidators,
+        [atLeastOneStringRequired('value')]
+      ),
+      comments: DEFAULT_MULTILANGUAGE_FORM(
+        ensureLanguageTaggedLiterals(this.formData.comments),
+        this.commentsValidators,
+        [atLeastOneStringRequired('value')]
+      ),
     });
 
     this.afterFormInit.emit(this.form);
