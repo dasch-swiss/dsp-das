@@ -36,7 +36,7 @@ import { unescapeHtml } from './unescape-html';
         }
       </mat-error>
     } @else if (control.touched && control.errors; as errors) {
-      <mat-error>{{ errors | humanReadableError }}</mat-error>
+      <mat-error>{{ errors | humanReadableError | translate }}</mat-error>
     }
   `,
   imports: [CKEditorModule, MatFormFieldModule, ReactiveFormsModule, TranslateModule, HumanReadableErrorPipe],
