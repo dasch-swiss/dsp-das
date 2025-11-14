@@ -13,8 +13,8 @@ import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent, HumanReadableErrorPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
-import { LoginFormComponent } from './login-form.component';
 import { PasswordFormFieldComponent } from '../user-form/password-form/password-form-field.component';
+import { LoginFormComponent } from './login-form.component';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;

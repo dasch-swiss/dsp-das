@@ -162,7 +162,11 @@ describe('AutoLoginService', () => {
       service.setup();
       await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async
 
-      expect(mockAuthService.afterSuccessfulLogin$).toHaveBeenCalledWith(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.USER_IRI, 'iri');
+      expect(mockAuthService.afterSuccessfulLogin$).toHaveBeenCalledWith(
+        TEST_CONSTANTS.JWT_TOKEN,
+        TEST_CONSTANTS.USER_IRI,
+        'iri'
+      );
     });
 
     it('should set hasCheckedCredentials$ to true after successful login', async () => {
@@ -176,7 +180,9 @@ describe('AutoLoginService', () => {
     });
 
     it('should throw error when credentials are not valid', async () => {
-      mockDspApiConnection.v2!.auth!.checkCredentials = jest.fn().mockReturnValue(throwError(() => new Error('Invalid')));
+      mockDspApiConnection.v2!.auth!.checkCredentials = jest
+        .fn()
+        .mockReturnValue(throwError(() => new Error('Invalid')));
 
       service.setup();
       await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async
@@ -185,7 +191,9 @@ describe('AutoLoginService', () => {
     });
 
     it('should call afterLogout on error', async () => {
-      mockDspApiConnection.v2!.auth!.checkCredentials = jest.fn().mockReturnValue(throwError(() => new Error('Invalid')));
+      mockDspApiConnection.v2!.auth!.checkCredentials = jest
+        .fn()
+        .mockReturnValue(throwError(() => new Error('Invalid')));
 
       service.setup();
       await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async

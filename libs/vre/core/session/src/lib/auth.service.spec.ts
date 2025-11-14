@@ -62,7 +62,6 @@ function mockWindowReload(): { reloadMock: jest.Mock; restore: () => void } {
   };
 }
 
-
 describe('AuthService', () => {
   let service: AuthService;
   let mockUserService: jest.Mocked<Partial<UserService>>;
@@ -141,9 +140,7 @@ describe('AuthService', () => {
     it('should store token and set JWT on connection', async () => {
       mockUserService.loadUser = jest.fn().mockReturnValue(of(mockUser));
 
-      await firstValueFrom(
-        service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email')
-      );
+      await firstValueFrom(service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email'));
 
       expect(mockDspApiConnection.v2!.jsonWebToken).toBe(TEST_CONSTANTS.JWT_TOKEN);
       expect(mockAccessTokenService.storeToken).toHaveBeenCalledWith(TEST_CONSTANTS.JWT_TOKEN);
@@ -164,9 +161,7 @@ describe('AuthService', () => {
     it('should call Pendo analytics with user ID', async () => {
       mockUserService.loadUser = jest.fn().mockReturnValue(of(mockUser));
 
-      await firstValueFrom(
-        service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email')
-      );
+      await firstValueFrom(service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email'));
 
       expect(mockPendoAnalytics.setActiveUser).toHaveBeenCalledWith(TEST_CONSTANTS.USER_IRI);
     });
@@ -174,9 +169,7 @@ describe('AuthService', () => {
     it('should call Grafana Faro to track login event', async () => {
       mockUserService.loadUser = jest.fn().mockReturnValue(of(mockUser));
 
-      await firstValueFrom(
-        service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email')
-      );
+      await firstValueFrom(service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email'));
 
       expect(mockGrafanaFaro.trackEvent).toHaveBeenCalledWith('auth.login', { identifierType: 'email' });
       expect(mockGrafanaFaro.setUser).toHaveBeenCalledWith(TEST_CONSTANTS.USER_IRI);
@@ -208,9 +201,7 @@ describe('AuthService', () => {
       const germanUser = createMockUser({ lang: 'de' });
       mockUserService.loadUser = jest.fn().mockReturnValue(of(germanUser));
 
-      await firstValueFrom(
-        service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email')
-      );
+      await firstValueFrom(service.afterSuccessfulLogin$(TEST_CONSTANTS.JWT_TOKEN, TEST_CONSTANTS.EMAIL, 'email'));
 
       expect(mockLocalizationService.setLanguage).toHaveBeenCalledWith('de');
     });
