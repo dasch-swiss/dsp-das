@@ -144,6 +144,8 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
         } else if (status === 'VALID') {
           this.group.controls.comment.enable();
         }
+
+        this._cd.detectChanges();
       });
   }
 }
