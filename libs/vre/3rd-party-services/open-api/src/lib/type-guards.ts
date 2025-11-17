@@ -5,9 +5,7 @@ import { LanguageTaggedStringLiteralV2, StringLiteralV2 } from '../generated';
  * @param literal - The string literal to check
  * @returns true if the literal has a language property
  */
-export function isLanguageTaggedStringLiteral(
-  literal: StringLiteralV2
-): literal is LanguageTaggedStringLiteralV2 {
+export function isLanguageTaggedStringLiteral(literal: StringLiteralV2): literal is LanguageTaggedStringLiteralV2 {
   return 'language' in literal && typeof literal.language === 'string';
 }
 
@@ -16,9 +14,7 @@ export function isLanguageTaggedStringLiteral(
  * @param literals - Array of string literals that may or may not have language tags
  * @returns Array of only language-tagged string literals
  */
-export function filterLanguageTaggedLiterals(
-  literals: StringLiteralV2[]
-): LanguageTaggedStringLiteralV2[] {
+export function filterLanguageTaggedLiterals(literals: StringLiteralV2[]): LanguageTaggedStringLiteralV2[] {
   return literals.filter(isLanguageTaggedStringLiteral);
 }
 
