@@ -12,7 +12,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { Cardinality, ReadValue } from '@dasch-swiss/dsp-js';
 import { ResourceService } from '@dasch-swiss/vre/shared/app-common';
-import { Observable, of, Subscription, switchMap } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { startWith, takeWhile } from 'rxjs/operators';
 import { FormValueGroup } from './form-value-array.type';
 import { PropertyValueService } from './property-value.service';
@@ -89,7 +89,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
 
   group!: FormValueGroup;
 
-  hasValidValue$?: Observable<boolean>;
+  hasValidValue$!: Observable<boolean>;
 
   get commentIsNotNull() {
     return this.group.controls.comment.value !== null;
@@ -111,9 +111,7 @@ export class PropertyValueEditComponent implements OnInit, OnDestroy {
       item: propertyType.control(this.readValue ?? propertyType.newValue),
       comment: new FormControl(this.readValue?.valueHasComment || null),
     });
-    this.hasValidValue$ = this.group.controls.item.valueChanges.pipe(
-      switchMap(() => of(this.group.controls.item.valid && !!this.group.controls.item.value))
-    );
+    this.hasValidValue$ = this.group.controls.item.statusChanges.pipe(map(status => status === 'VALID'));
 
     this._watchAndSetupCommentStatus();
   }
