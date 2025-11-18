@@ -89,6 +89,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     const identifier = this.form.controls.username.value;
     const identifierType = identifier.indexOf('@') > -1 ? 'email' : 'username';
 
+    this.loginSubscription?.unsubscribe();
     this.loginSubscription = this._dspApiConnection.v2.auth
       .login(identifierType, identifier, this.form.controls.password.value)
       .pipe(
