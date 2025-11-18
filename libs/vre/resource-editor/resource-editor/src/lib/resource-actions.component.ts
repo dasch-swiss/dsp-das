@@ -89,7 +89,8 @@ export class ResourceActionsComponent {
       resourceId = linkedResource?.linkedResourceIri || resourceId;
     }
     const resPath = this._resourceService.getResourcePath(resourceId);
-    return ['/', RouteConstants.resource, ...resPath.split('/').filter(segment => segment)];
+    const resourcePath = resPath.split('/').filter(segment => segment);
+    return ['/', RouteConstants.resource, ...resourcePath];
   }
 
   getResourceQueryParams(): Record<string, string> | null {
