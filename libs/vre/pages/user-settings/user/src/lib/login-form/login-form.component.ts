@@ -15,7 +15,7 @@ import { finalize, Subscription, switchMap } from 'rxjs';
       <app-password-form-field [control]="form.controls.password" [placeholder]="'Password'" data-cy="password-input" />
 
       @if (loginError) {
-        <div class="login-error">{{ loginError }}</div>
+        <div class="login-error" data-cy="login-error">{{ loginError }}</div>
       }
 
       <button
