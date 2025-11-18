@@ -1,6 +1,6 @@
 {
   "name": "dsp-app",
-  "version": "12.2.0",
+  "version": "12.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/dasch-swiss/dsp-app.git"
@@ -59,8 +59,8 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "7.0.0",
     "@nx/angular": "21.5.1",
-    "@sentry/angular": "^10.22.0",
-    "@sentry/cli": "^2.57.0",
+    "@sentry/angular": "^10.24.0",
+    "@sentry/cli": "^2.58.0",
     "angular-imask": "^7.5.0",
     "angular-split": "^14.0.0",
     "ckeditor5-custom-build": "github:dasch-swiss/ckeditor_custom_build#v2.1.5",
@@ -102,7 +102,7 @@
     "@openapitools/openapi-generator-cli": "^2.25.0",
     "@schematics/angular": "20.2.2",
     "@swc-node/register": "1.11.1",
-    "@swc/core": "1.14.0",
+    "@swc/core": "1.15.1",
     "@swc/helpers": "0.5.17",
     "@types/jasmine": "~4.6.5",
     "@types/jest": "29.5.14",
