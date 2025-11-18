@@ -44,10 +44,11 @@ export class DownloadDialogResourcesTabComponent {
           resourceClass: this.resourceClassIri,
           selectedProperties: this.selectedPropertyIds,
           language: 'en',
+          includeResourceIri: this.includeResourceIris,
         },
         undefined,
         undefined,
-        { httpHeaderAccept: 'text/plain' }
+        { httpHeaderAccept: 'text/csv' }
       )
       .subscribe(csvText => {
         this._createBlob(csvText);
