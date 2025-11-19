@@ -3,6 +3,7 @@ import {
   StringLiteralWithLanguage,
   filterWithLanguage,
   ensureLanguageTaggedLiterals,
+  ensureWithDefaultLanguage,
 } from './type-guards';
 
 describe('Type Guards', () => {
@@ -34,10 +35,7 @@ describe('Type Guards', () => {
     });
 
     it('should return empty array when no items have language', () => {
-      const items: StringLiteralV2[] = [
-        { value: 'Plain text 1' },
-        { value: 'Plain text 2' },
-      ];
+      const items: StringLiteralV2[] = [{ value: 'Plain text 1' }, { value: 'Plain text 2' }];
 
       const result = filterWithLanguage(items);
 
@@ -124,11 +122,7 @@ describe('Type Guards', () => {
     });
 
     it('should filter out objects with empty language string', () => {
-      const items = [
-        { value: 'Hello', language: 'en' },
-        { value: 'Empty', language: '' },
-        { value: 'Plain' },
-      ];
+      const items = [{ value: 'Hello', language: 'en' }, { value: 'Empty', language: '' }, { value: 'Plain' }];
 
       const result = ensureLanguageTaggedLiterals(items);
 
@@ -164,16 +158,7 @@ describe('Type Guards', () => {
     });
 
     it('should handle edge cases', () => {
-      const items = [
-        { value: 'Valid', language: 'en' },
-        null,
-        undefined,
-        'string',
-        123,
-        true,
-        [],
-        {},
-      ];
+      const items = [{ value: 'Valid', language: 'en' }, null, undefined, 'string', 123, true, [], {}];
 
       const result = ensureLanguageTaggedLiterals(items);
 
@@ -207,9 +192,7 @@ describe('Type Guards', () => {
     });
 
     it('should preserve additional properties', () => {
-      const items = [
-        { value: 'Hello', language: 'en', extraProp: 'extra' },
-      ];
+      const items = [{ value: 'Hello', language: 'en', extraProp: 'extra' }];
 
       const result = ensureLanguageTaggedLiterals(items);
 
@@ -219,6 +202,80 @@ describe('Type Guards', () => {
         language: 'en',
       });
       // Additional properties may or may not be preserved (not guaranteed)
+    });
+  });
+
+  describe('ensureWithDefaultLanguage', () => {
+    it('should preserve items with language tags', () => {
+      const items: StringLiteralV2[] = [
+        { value: 'Hello', language: 'en' },
+        { value: 'Bonjour', language: 'fr' },
+      ];
+
+      const result = ensureWithDefaultLanguage(items);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Hello', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Bonjour', language: 'fr' });
+    });
+
+    it('should assign default language to plain items', () => {
+      const items: StringLiteralV2[] = [
+        { value: 'Hello', language: 'en' },
+        { value: 'Plain text' }, // PlainStringLiteralV2
+      ];
+
+      const result = ensureWithDefaultLanguage(items);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Hello', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Plain text', language: 'en' });
+    });
+
+    it('should use custom default language', () => {
+      const items: StringLiteralV2[] = [{ value: 'Plain text' }, { value: 'Another plain' }];
+
+      const result = ensureWithDefaultLanguage(items, 'de');
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Plain text', language: 'de' });
+      expect(result[1]).toEqual({ value: 'Another plain', language: 'de' });
+    });
+
+    it('should filter out items with empty language string', () => {
+      const items: StringLiteralV2[] = [
+        { value: 'Hello', language: 'en' },
+        { value: 'Empty lang', language: '' },
+      ];
+
+      const result = ensureWithDefaultLanguage(items);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Hello', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Empty lang', language: 'en' });
+    });
+
+    it('should handle empty array', () => {
+      const result = ensureWithDefaultLanguage([]);
+
+      expect(result).toHaveLength(0);
+    });
+
+    it('should prevent data loss for mixed items', () => {
+      const items: StringLiteralV2[] = [
+        { value: 'Tagged 1', language: 'en' },
+        { value: 'Plain 1' },
+        { value: 'Tagged 2', language: 'fr' },
+        { value: 'Plain 2' },
+      ];
+
+      const result = ensureWithDefaultLanguage(items, 'de');
+
+      expect(result).toHaveLength(4);
+      expect(result[0]).toEqual({ value: 'Tagged 1', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Plain 1', language: 'de' });
+      expect(result[2]).toEqual({ value: 'Tagged 2', language: 'fr' });
+      expect(result[3]).toEqual({ value: 'Plain 2', language: 'de' });
     });
   });
 

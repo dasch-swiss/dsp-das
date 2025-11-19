@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ensureLanguageTaggedLiterals } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { atLeastOneStringRequired, CustomRegex } from '@dasch-swiss/vre/shared/app-common';
+import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { OntologyEditService } from '../../services/ontology-edit.service';
 import { ResourceClassForm, ResourceClassFormData } from './resource-class-form.type';
@@ -50,7 +51,8 @@ export class ResourceClassFormComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _oes: OntologyEditService
+    private _oes: OntologyEditService,
+    private _localizationService: LocalizationService
   ) {}
 
   ngOnInit() {
@@ -60,11 +62,13 @@ export class ResourceClassFormComponent implements OnInit {
         asyncValidators: [existingNamesAsyncValidator(this._oes.currentOntologyEntityNames$, true)],
         nonNullable: true,
       }),
-      labels: DEFAULT_MULTILANGUAGE_FORM(ensureLanguageTaggedLiterals(this.formData.labels), this.labelsValidators, [
-        atLeastOneStringRequired('value'),
-      ]),
+      labels: DEFAULT_MULTILANGUAGE_FORM(
+        ensureWithDefaultLanguage(this.formData.labels, this._localizationService.getCurrentLanguage()),
+        this.labelsValidators,
+        [atLeastOneStringRequired('value')]
+      ),
       comments: DEFAULT_MULTILANGUAGE_FORM(
-        ensureLanguageTaggedLiterals(this.formData.comments),
+        ensureWithDefaultLanguage(this.formData.comments, this._localizationService.getCurrentLanguage()),
         this.commentsValidators,
         [atLeastOneStringRequired('value')]
       ),

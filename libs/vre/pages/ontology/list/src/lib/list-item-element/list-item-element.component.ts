@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ListNode } from '@dasch-swiss/dsp-js';
-import { ensureLanguageTaggedLiterals } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DEFAULT_MULTILANGUAGE_FORM, MultiLanguageFormArray } from '@dasch-swiss/vre/ui/string-literal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-list-item-element',
@@ -46,12 +47,16 @@ export class ListItemElementComponent implements OnChanges {
 
   readOnlyFormArray: MultiLanguageFormArray = DEFAULT_MULTILANGUAGE_FORM([]);
 
+  constructor(private _translate: TranslateService) {}
+
   ngOnChanges() {
     this.buildForm();
   }
 
   private buildForm() {
-    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(ensureLanguageTaggedLiterals(this.node.labels));
+    this.readOnlyFormArray = DEFAULT_MULTILANGUAGE_FORM(
+      ensureWithDefaultLanguage(this.node.labels, this._translate.currentLang)
+    );
   }
 
   mouseEnter() {
