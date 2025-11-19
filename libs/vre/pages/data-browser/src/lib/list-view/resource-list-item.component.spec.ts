@@ -13,33 +13,36 @@ describe('ResourceListItemComponent', () => {
   let mockMultipleViewerService: jest.Mocked<MultipleViewerService>;
   let selectedResourcesSubject: BehaviorSubject<ReadResource[]>;
 
-  const mockResource: ReadResource = {
-    id: 'http://example.org/resource-1',
-    label: 'Test Resource Label',
-    properties: {
-      'http://example.org/property-1': [
-        {
-          strval: 'Test property value',
-          propertyLabel: 'Test Property',
-        } as any,
-      ],
-      'http://example.org/property-2': [
-        {
-          strval: 'Another value',
-          propertyLabel: 'Another Property',
-        } as any,
-      ],
-    },
-  } as ReadResource;
-
-  const mockResource2: ReadResource = {
-    id: 'http://example.org/resource-2',
-    label: 'Second Resource',
-    properties: {},
-  } as ReadResource;
+  let mockResource: ReadResource;
+  let mockResource2: ReadResource;
 
   beforeEach(async () => {
     selectedResourcesSubject = new BehaviorSubject<ReadResource[]>([]);
+
+    mockResource = {
+      id: 'http://example.org/resource-1',
+      label: 'Test Resource Label',
+      properties: {
+        'http://example.org/property-1': [
+          {
+            strval: 'Test property value',
+            propertyLabel: 'Test Property',
+          } as any,
+        ],
+        'http://example.org/property-2': [
+          {
+            strval: 'Another value',
+            propertyLabel: 'Another Property',
+          } as any,
+        ],
+      },
+    } as unknown as ReadResource;
+
+    mockResource2 = {
+      id: 'http://example.org/resource-2',
+      label: 'Second Resource',
+      properties: {},
+    } as unknown as ReadResource;
 
     mockMultipleViewerService = {
       selectedResources$: selectedResourcesSubject.asObservable(),
@@ -140,7 +143,7 @@ describe('ResourceListItemComponent', () => {
             { strval: 'match again', propertyLabel: 'Same Property' } as any,
           ],
         },
-      };
+      } as unknown as ReadResource;
       component.resource = resourceWithDuplicates;
       mockMultipleViewerService.searchKeyword = 'match';
 
@@ -156,7 +159,7 @@ describe('ResourceListItemComponent', () => {
         properties: {
           'http://example.org/property-1': [{ strval: undefined, propertyLabel: 'Empty Property' } as any],
         },
-      };
+      } as unknown as ReadResource;
       component.resource = resourceWithEmptyStrval;
       mockMultipleViewerService.searchKeyword = 'anything';
 
@@ -281,26 +284,29 @@ describe('ResourceListItemComponent', () => {
   });
 
   describe('Observable updates', () => {
-    it('should emit updates when selected resources change', done => {
-      const emittedHighlightedValues: boolean[] = [];
+    it('should reactively update highlight state when selected resources change', done => {
+      const emittedValues: boolean[] = [];
+      let emissionCount = 0;
 
       mockMultipleViewerService.selectMode = false;
 
       component.isHighlighted$.subscribe(highlighted => {
-        emittedHighlightedValues.push(highlighted);
+        emittedValues.push(highlighted);
+        emissionCount++;
 
-        if (emittedHighlightedValues.length === 3) {
-          expect(emittedHighlightedValues).toEqual([false, true, false]);
+        // After 3 emissions, verify the sequence
+        if (emissionCount === 3) {
+          // 1st emission: initial BehaviorSubject value (empty array) = false
+          // 2nd emission: mockResource selected = true
+          // 3rd emission: mockResource2 selected (different resource) = false
+          expect(emittedValues).toEqual([false, true, false]);
           done();
         }
       });
 
-      // Initial empty state
-      selectedResourcesSubject.next([]);
-      // Select this resource
-      selectedResourcesSubject.next([mockResource]);
-      // Select different resource
-      selectedResourcesSubject.next([mockResource2]);
+      // Trigger emissions by changing selected resources
+      selectedResourcesSubject.next([mockResource]); // Should emit true
+      selectedResourcesSubject.next([mockResource2]); // Should emit false
     });
   });
 });
