@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
 import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
-import { map, shareReplay, switchMap } from 'rxjs';
+import { map, Observable, shareReplay } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 
 @Component({
@@ -75,6 +75,7 @@ export class ResourceListItemComponent implements OnInit {
 
   showCheckbox = false;
   foundIn: string[] = [];
+  projectShortcode$!: Observable<string>;
 
   isHighlighted$ = this.multipleViewerService.selectedResources$.pipe(
     map(resources => {
@@ -90,19 +91,17 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  projectShortcode$ = this._adminApiService
-    .getAdminProjectsIriProjectiri(this.resource.attachedToProject)
-    .pipe(
-      map(response => response.project.shortcode as unknown as string),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
   constructor(
     public readonly multipleViewerService: MultipleViewerService,
     private readonly _adminApiService: AdminAPIApiService
   ) {}
 
   ngOnInit() {
+    this.projectShortcode$ = this._adminApiService.getAdminProjectsIriProjectiri(this.resource.attachedToProject).pipe(
+      map(response => response.project.shortcode as unknown as string),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
     const searchKeyword = this.multipleViewerService.searchKeyword;
     if (searchKeyword) {
       this._searchInResourceLabel(searchKeyword);

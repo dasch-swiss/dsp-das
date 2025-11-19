@@ -2,8 +2,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 import { ResourceListItemComponent } from './resource-list-item.component';
 
@@ -11,6 +12,7 @@ describe('ResourceListItemComponent', () => {
   let component: ResourceListItemComponent;
   let fixture: ComponentFixture<ResourceListItemComponent>;
   let mockMultipleViewerService: jest.Mocked<MultipleViewerService>;
+  let mockAdminApiService: jest.Mocked<AdminAPIApiService>;
   let selectedResourcesSubject: BehaviorSubject<ReadResource[]>;
 
   let mockResource: ReadResource;
@@ -22,6 +24,7 @@ describe('ResourceListItemComponent', () => {
     mockResource = {
       id: 'http://example.org/resource-1',
       label: 'Test Resource Label',
+      attachedToProject: 'http://example.org/project-1',
       properties: {
         'http://example.org/property-1': [
           {
@@ -41,8 +44,19 @@ describe('ResourceListItemComponent', () => {
     mockResource2 = {
       id: 'http://example.org/resource-2',
       label: 'Second Resource',
+      attachedToProject: 'http://example.org/project-2',
       properties: {},
     } as unknown as ReadResource;
+
+    mockAdminApiService = {
+      getAdminProjectsIriProjectiri: jest.fn().mockReturnValue(
+        of({
+          project: {
+            shortcode: '0001',
+          },
+        })
+      ),
+    } as any;
 
     mockMultipleViewerService = {
       selectedResources$: selectedResourcesSubject.asObservable(),
@@ -57,7 +71,10 @@ describe('ResourceListItemComponent', () => {
       declarations: [ResourceListItemComponent],
       imports: [TranslateModule.forRoot()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [{ provide: MultipleViewerService, useValue: mockMultipleViewerService }],
+      providers: [
+        { provide: MultipleViewerService, useValue: mockMultipleViewerService },
+        { provide: AdminAPIApiService, useValue: mockAdminApiService },
+      ],
     })
       .overrideComponent(ResourceListItemComponent, {
         set: {
