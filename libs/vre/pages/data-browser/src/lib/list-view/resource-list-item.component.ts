@@ -113,12 +113,16 @@ export class ResourceListItemComponent implements OnInit {
   private _searchInResourceProperty(keyword: string) {
     Object.values(this.resource.properties).forEach(values => {
       values.forEach(value => {
+        if (!value.propertyLabel) {
+          return;
+        }
+
         if (
           value.strval &&
           value.strval.toLowerCase().includes(keyword.toLowerCase()) &&
-          !this.foundIn.includes(value.propertyLabel!)
+          !this.foundIn.includes(value.propertyLabel)
         ) {
-          this.foundIn.push(value.propertyLabel!);
+          this.foundIn.push(value.propertyLabel);
         }
       });
     });
