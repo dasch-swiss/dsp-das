@@ -86,6 +86,56 @@ describe('Type Guards', () => {
       expect(result[2]).toEqual({ value: 'Tagged 2', language: 'fr' });
       expect(result[3]).toEqual({ value: 'Plain 2', language: 'de' });
     });
+
+    it('should work with unknown[] (DSP-JS StringLiteral types)', () => {
+      const items: unknown[] = [{ value: 'DSP-JS tagged', language: 'en' }, { value: 'DSP-JS plain' }];
+
+      const result = ensureWithDefaultLanguage(items, 'fr');
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'DSP-JS tagged', language: 'en' });
+      expect(result[1]).toEqual({ value: 'DSP-JS plain', language: 'fr' });
+    });
+
+    it('should filter out items without value property', () => {
+      const items: unknown[] = [
+        { value: 'Valid', language: 'en' },
+        { language: 'en' }, // No value
+        { value: 123 }, // Non-string value
+        { value: 'Another valid' },
+      ];
+
+      const result = ensureWithDefaultLanguage(items);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Valid', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Another valid', language: 'en' });
+    });
+
+    it('should handle null and undefined items', () => {
+      const items = [{ value: 'Valid', language: 'en' }, null, undefined, { value: 'Another valid' }] as unknown[];
+
+      const result = ensureWithDefaultLanguage(items);
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ value: 'Valid', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Another valid', language: 'en' });
+    });
+
+    it('should handle items with non-string language property', () => {
+      const items: unknown[] = [
+        { value: 'Valid', language: 'en' },
+        { value: 'Invalid lang', language: 123 },
+        { value: 'Another valid', language: 'de' },
+      ];
+
+      const result = ensureWithDefaultLanguage(items, 'fr');
+
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({ value: 'Valid', language: 'en' });
+      expect(result[1]).toEqual({ value: 'Invalid lang', language: 'fr' });
+      expect(result[2]).toEqual({ value: 'Another valid', language: 'de' });
+    });
   });
 
   describe('Type compatibility', () => {
