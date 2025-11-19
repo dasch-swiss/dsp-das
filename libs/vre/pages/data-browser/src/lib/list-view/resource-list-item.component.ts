@@ -18,8 +18,10 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           <div style="color: black">
-            @if (projectShortcode$ | async; as shortcode) {
-              <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
+            @if (showProjectShortcode) {
+              @if (projectShortcode$ | async; as shortcode) {
+                <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
+              }
             }
             {{ resource.label }}
           </div>
@@ -72,6 +74,7 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 })
 export class ResourceListItemComponent implements OnInit {
   @Input({ required: true }) resource!: ReadResource;
+  @Input({ required: true }) showProjectShortcode!: boolean;
 
   showCheckbox = false;
   foundIn: string[] = [];

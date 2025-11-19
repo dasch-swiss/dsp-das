@@ -34,7 +34,7 @@ import { SearchTipsComponent } from './search-tips.component';
     @if (query$ | async; as query) {
       <mat-divider />
 
-      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" [showProjectShortcode]="true" />
+      <app-project-fulltext-search-result [query]="query" [projectId]="projectId" [showProjectShortcode]="false" />
     }
   `,
   styles: [

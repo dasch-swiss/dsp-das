@@ -15,7 +15,10 @@ import { ResourceResultService } from '../resource-result.service';
     @if (data$ | async; as data) {
       @if (userCanViewResources) {
         @if (data.resources.length > 0) {
-          <app-resources-list [resources]="data.resources" [showBackToFormButton]="false" />
+          <app-resources-list
+            [resources]="data.resources"
+            [showBackToFormButton]="false"
+            [showProjectShortcode]="false" />
         } @else {
           <app-centered-message [message]="'pages.dataBrowser.resourcesListFetcher.noResourcesFound' | translate" />
         }
