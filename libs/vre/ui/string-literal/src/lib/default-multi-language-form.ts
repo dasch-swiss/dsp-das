@@ -9,7 +9,7 @@ export const DEFAULT_MULTILANGUAGE_FORM = (
   arrayValidators?: ValidatorFn[]
 ) => {
   return new FormArray(
-    data.map(
+    (data as unknown as LanguageTaggedStringLiteralV2[]).map(
       item =>
         new FormGroup({
           language: new FormControl<DaschLanguage>(item.language as DaschLanguage, { nonNullable: true }),

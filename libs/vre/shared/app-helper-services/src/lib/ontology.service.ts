@@ -37,7 +37,11 @@ export class OntologyService {
 
   getInPreferedLanguage(labels: LanguageTaggedStringLiteralV2[]): string | undefined {
     const language = this._localizationService.getCurrentLanguage();
-    return labels.find(l => l.language === language)?.value;
+    if ((labels as { language?: string }[])[0]['language']) {
+      return (labels as unknown as LanguageTaggedStringLiteralV2[]).find(l => l.language === language)?.value;
+    } else {
+      return (labels as unknown as PlainStringLiteralV2[])[0].value;
+    }
   }
 
   /**
