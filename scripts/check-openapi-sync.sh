@@ -6,7 +6,7 @@ set -e
 
 # Default values
 LOCAL_SPEC="libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml"
-REMOTE_URL="https://api.stage.dasch.swiss/api/docs/docs.yaml"
+REMOTE_URL="https://api.dev.dasch.swiss/api/docs/docs.yaml"
 VERBOSE=false
 
 # Colors for output

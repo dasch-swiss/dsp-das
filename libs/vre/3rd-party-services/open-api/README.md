@@ -30,7 +30,7 @@ npm run update-openapi
 
 # Or manual steps:
 # 1. Update the spec file
-curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.stage.dasch.swiss/api/docs/docs.yaml
+curl -o libs/vre/3rd-party-services/open-api/dsp-api_spec.yaml https://api.dev.dasch.swiss/api/docs/docs.yaml
 
 # 2. Generate new client code (if needed for local testing)
 npm run generate-openapi-module
@@ -49,7 +49,7 @@ git commit -m "update OpenAPI spec for DSP-API changes"
 ### CI Integration
 
 The GitHub Actions workflow includes a `check-openapi-sync` job that:
-- Downloads the latest API spec from `https://api.stage.dasch.swiss/api/docs/docs.yaml`
+- Downloads the latest API spec from `https://api.dev.dasch.swiss/api/docs/docs.yaml`
 - Uses smart diff that ignores metadata (versions, descriptions, examples, tags)
 - Only fails CI on meaningful changes (endpoints, schemas, parameters)
 - Provides clear instructions on how to update when changes are detected
