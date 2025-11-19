@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Constants } from '@dasch-swiss/dsp-js';
-import { filterLanguageTaggedLiterals } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { filterWithLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { existingNamesAsyncValidator } from '@dasch-swiss/vre/pages/user-settings/user';
 import { DefaultProperties, LocalizationService, PropertyCategory } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
@@ -118,11 +118,11 @@ export class PropertyFormComponent implements OnInit {
         }
       ),
       labels: DEFAULT_MULTILANGUAGE_FORM(
-        this.propertyData.label ? filterLanguageTaggedLiterals(this.propertyData.label) : defaultData,
+        this.propertyData.label ? filterWithLanguage(this.propertyData.label) : defaultData,
         [Validators.required]
       ),
       comments: DEFAULT_MULTILANGUAGE_FORM(
-        this.propertyData.comment ? filterLanguageTaggedLiterals(this.propertyData.comment) : defaultData,
+        this.propertyData.comment ? filterWithLanguage(this.propertyData.comment) : defaultData,
         [Validators.required]
       ),
       guiAttr: this._fb.control<string>(

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, KnoraApiConfig, ResourcePropertyDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { LanguageTaggedStringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { filterWithLanguage, StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConfigToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { DefaultProperties, DefaultProperty, PropertyCategory } from './default-data/default-properties';
 import { LocalizationService } from './localization.service';
@@ -35,13 +35,17 @@ export class OntologyService {
     return array[1];
   }
 
-  getInPreferedLanguage(labels: LanguageTaggedStringLiteralV2[]): string | undefined {
+  getInPreferedLanguage(labels: StringLiteralV2[]): string | undefined {
     const language = this._localizationService.getCurrentLanguage();
-    if ((labels as { language?: string }[])[0]['language']) {
-      return (labels as unknown as LanguageTaggedStringLiteralV2[]).find(l => l.language === language)?.value;
-    } else {
-      return (labels as unknown as PlainStringLiteralV2[])[0].value;
+    const withLanguage = filterWithLanguage(labels);
+
+    if (withLanguage.length === 0) {
+      // Fallback to first label if no language-tagged items
+      return labels[0]?.value;
     }
+
+    // Find label matching current language, or fallback to first available
+    return withLanguage.find(l => l.language === language)?.value ?? withLanguage[0].value;
   }
 
   /**

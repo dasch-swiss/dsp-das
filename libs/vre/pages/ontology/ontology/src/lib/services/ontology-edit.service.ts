@@ -21,7 +21,7 @@ import {
   UpdateResourcePropertyLabel,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { filterLanguageTaggedLiterals, StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { StringLiteralV2 } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService, SortingHelper } from '@dasch-swiss/vre/shared/app-helper-services';
@@ -241,8 +241,7 @@ export class OntologyEditService {
       tap(resClass => {
         this.lastModificationDate = resClass.lastModificationDate;
         this._loadOntology(this.ontologyId, resClass.id);
-        const classLabel =
-          this._ontologyService.getInPreferedLanguage(filterLanguageTaggedLiterals(resClass.labels)) || resClass.label;
+        const classLabel = this._ontologyService.getInPreferedLanguage(resClass.labels) || resClass.label;
         this._notification.openSnackBar(this._translate.instant('pages.ontology.service.classCreated', { classLabel }));
       })
     );
