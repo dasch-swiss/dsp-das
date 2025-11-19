@@ -90,7 +90,17 @@ export class ResourceListItemComponent implements OnInit {
     map(resources => resources.map(r => r.id).includes(this.resource.id) && this.multipleViewerService.selectMode)
   );
 
-  constructor(public readonly multipleViewerService: MultipleViewerService) {}
+  projectShortcode$ = this._adminApiService
+    .getAdminProjectsIriProjectiri(this.resource.attachedToProject)
+    .pipe(
+      map(response => response.project.shortcode as unknown as string),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+  constructor(
+    public readonly multipleViewerService: MultipleViewerService,
+    private readonly _adminApiService: AdminAPIApiService
+  ) {}
 
   ngOnInit() {
     const searchKeyword = this.multipleViewerService.searchKeyword;
