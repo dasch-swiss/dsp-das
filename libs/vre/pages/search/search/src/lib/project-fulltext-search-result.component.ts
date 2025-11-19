@@ -20,6 +20,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
           [hasRightsToShowCreateLinkObject$]="userIsSysAdmin$"
+          [showProjectShortcode]="showProjectShortcode"
           [searchKeyword]="query" />
       }
     }
@@ -30,6 +31,7 @@ import { combineLatest, map, Observable, switchMap } from 'rxjs';
 })
 export class ProjectFulltextSearchResultComponent implements OnChanges {
   @Input({ required: true }) query!: string;
+  @Input({ required: true }) showProjectShortcode!: boolean;
   @Input() projectId?: string;
   loading = true;
 

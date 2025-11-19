@@ -20,6 +20,7 @@ import { combineLatest, map, switchMap } from 'rxjs';
         <app-resource-browser
           [data]="{ resources: resources, selectFirstResource: true }"
           [showBackToFormButton]="true"
+          [showProjectShortcode]="false"
           [hasRightsToShowCreateLinkObject$]="projectPageService.hasProjectMemberRights$" />
       }
     }

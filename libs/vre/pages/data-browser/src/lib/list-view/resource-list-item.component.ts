@@ -98,7 +98,7 @@ export class ResourceListItemComponent implements OnInit {
 
   ngOnInit() {
     this.projectShortcode$ = this._adminApiService.getAdminProjectsIriProjectiri(this.resource.attachedToProject).pipe(
-      map(response => response.project.shortcode as unknown as string),
+      map(response => response.project.shortname as unknown as string),
       shareReplay({ bufferSize: 1, refCount: true })
     );
 
