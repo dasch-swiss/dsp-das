@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReadResource } from '@dasch-swiss/dsp-js';
-import { map } from 'rxjs';
+import { AdminAPIApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { map, shareReplay, switchMap } from 'rxjs';
 import { MultipleViewerService } from '../comparison/multiple-viewer.service';
 
 @Component({
@@ -17,6 +18,9 @@ import { MultipleViewerService } from '../comparison/multiple-viewer.service';
       <div style="display: flex; align-items: center; min-height: 40px">
         <div style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           <div style="color: black">
+            @if (projectShortcode$ | async; as shortcode) {
+              <span style="font-weight: 500; color: #555;">[{{ shortcode }}]</span>
+            }
             {{ resource.label }}
           </div>
           @if (foundIn.length > 0) {
