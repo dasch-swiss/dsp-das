@@ -89,8 +89,10 @@ export class ResourceListItemComponent implements OnInit {
   constructor(public readonly multipleViewerService: MultipleViewerService) {}
 
   ngOnInit() {
-    if (this.multipleViewerService.searchKeyword) {
-      this._searchInResource(this.multipleViewerService.searchKeyword);
+    const searchKeyword = this.multipleViewerService.searchKeyword;
+    if (searchKeyword) {
+      this._searchInResourceLabel(searchKeyword);
+      this._searchInResourceProperty(searchKeyword);
     }
   }
 
@@ -102,7 +104,13 @@ export class ResourceListItemComponent implements OnInit {
     }
   }
 
-  private _searchInResource(keyword: string) {
+  private _searchInResourceLabel(keyword: string) {
+    if (this.resource.label.toLowerCase().includes(keyword.toLowerCase())) {
+      this.foundIn.push('Label');
+    }
+  }
+
+  private _searchInResourceProperty(keyword: string) {
     Object.values(this.resource.properties).forEach(values => {
       values.forEach(value => {
         if (
