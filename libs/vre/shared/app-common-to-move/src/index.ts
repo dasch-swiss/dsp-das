@@ -3,7 +3,6 @@ export * from './lib/split.pipe';
 export * from './lib/search-params.interface';
 export * from './lib/header/header.component';
 export * from './lib/status/status.component';
-export * from './lib/header/project-navigation-tabs.component';
 export * from './lib/header/header-user-actions.component';
 export * from './lib/header/header-logo.component';
 export * from './lib/header/version-badge.component';
