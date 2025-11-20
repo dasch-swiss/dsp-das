@@ -1,31 +1,17 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Constants, KnoraApiConnection, ResourceClassDefinitionWithAllLanguages } from '@dasch-swiss/dsp-js';
-import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
+import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  combineLatest,
-  filter,
-  finalize,
-  first,
-  map,
-  Observable,
-  of,
-  startWith,
-  Subject,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
-import { DataBrowserPageService } from '../data-browser-page.service';
+import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-resource-class-sidenav-item',
   template: `
     <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected$ | async }">
       <span style="flex: 1">
-        {{ ontologiesLabel }}
+        {{ label }}
       </span>
       <div
         style="
@@ -34,7 +20,7 @@ import { DataBrowserPageService } from '../data-browser-page.service';
     align-items: center;
     color: #b9b9b9;
     margin-right: 0;">
-        <span>{{ count$ | async }}</span>
+        <span>{{ count }}</span>
         <mat-icon style="margin-left: 8px">{{ icon }}</mat-icon>
       </div>
     </div>
@@ -60,13 +46,33 @@ import { DataBrowserPageService } from '../data-browser-page.service';
   standalone: false,
 })
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) resClass!: ResourceClassDefinitionWithAllLanguages;
+  @Input({ required: true }) iri!: string;
+  @Input({ required: true }) count!: number;
+  @Input({ required: true }) label!: string;
+
+  get icon(): string {
+    return 'audio_file';
+    /*
+    switch (this.resClass.subClassOf[0]) {
+      case Constants.AudioRepresentation:
+        return 'audio_file';
+      case Constants.ArchiveRepresentation:
+        return 'folder_zip';
+      case Constants.DocumentRepresentation:
+        return 'description';
+      case Constants.MovingImageRepresentation:
+        return 'video_file';
+      case Constants.StillImageRepresentation:
+        return 'image';
+      case Constants.TextRepresentation:
+        return 'text_snippet';
+      default: // resource does not have a file representation
+        return 'insert_drive_file';
+    }
+     */
+  }
 
   destroyed = new Subject<void>();
-  icon!: string;
-  ontologiesLabel!: string;
-  ontologiesDescription!: string;
-  count$!: Observable<number>;
   loading = true;
 
   ontologyLabel!: string;
@@ -87,7 +93,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
             params[RouteConstants.ontologyParameter],
             params[RouteConstants.classParameter]
           );
-          return this.resClass.id === selectedResClassId;
+          return this.iri === selectedResClassId;
         })
       );
     })
@@ -98,12 +104,9 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     private _ontologyService: OntologyService,
     private _localizationService: LocalizationService,
     private _translateService: TranslateService,
-    @Inject(DspApiConnectionToken)
-    private _dspApiConnection: KnoraApiConnection,
     private _projectPageService: ProjectPageService,
     private _router: Router,
-    private _route: ActivatedRoute,
-    private _dataBrowserPageService: DataBrowserPageService
+    private _route: ActivatedRoute
   ) {}
 
   selectResourceClass() {
@@ -111,20 +114,17 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.icon = this._getIcon();
-
+    /*
     this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
       this.getOntologiesLabelsInPreferredLanguage();
       this.getOntologiesDescriptionInPreferredLanguage();
     });
-
-    const [ontologyIri, className] = this.resClass.id.split('#');
+*/
+    const [ontologyIri, className] = this.iri.split('#');
     const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
     this.ontologyLabel = ontologyName;
     this.classLabel = className;
-
-    this._loadData();
   }
 
   ngOnDestroy(): void {
@@ -132,15 +132,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     this.destroyed.complete();
   }
 
-  private _loadData() {
-    this.count$ = this._dataBrowserPageService.onNavigationReload$.pipe(
-      switchMap(() => this._getCount(this.resClass.id)),
-      finalize(() => {
-        this.loading = false;
-      })
-    );
-  }
-
+  /*
   private getOntologiesLabelsInPreferredLanguage(): void {
     if (this.resClass.labels) {
       const label = this.resClass.labels.find(l => l.language === this._localizationService.getCurrentLanguage());
@@ -158,49 +150,5 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
       this._cd.detectChanges();
     }
   }
-
-  private _getIcon(): string {
-    switch (this.resClass.subClassOf[0]) {
-      case Constants.AudioRepresentation:
-        return 'audio_file';
-      case Constants.ArchiveRepresentation:
-        return 'folder_zip';
-      case Constants.DocumentRepresentation:
-        return 'description';
-      case Constants.MovingImageRepresentation:
-        return 'video_file';
-      case Constants.StillImageRepresentation:
-        return 'image';
-      case Constants.TextRepresentation:
-        return 'text_snippet';
-      default: // resource does not have a file representation
-        return 'insert_drive_file';
-    }
-  }
-
-  private _getCount(resClassId: string) {
-    const gravsearch = this._getGravsearch(resClassId);
-
-    return this._dspApiConnection.v2.search
-      .doExtendedSearchCountQuery(gravsearch)
-      .pipe(map(response => response.numberOfResults));
-  }
-
-  private _getGravsearch(iri: string): string {
-    return `
-        PREFIX knora-api: <http://api.knora.org/ontology/knora-api/v2#>
-        CONSTRUCT {
-
-        ?mainRes knora-api:isMainResource true .
-
-        } WHERE {
-
-        ?mainRes a knora-api:Resource .
-
-        ?mainRes a <${iri}> .
-
-        }
-
-        OFFSET 0`;
-  }
+  */
 }

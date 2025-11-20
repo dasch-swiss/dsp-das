@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { APIV3ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { combineLatest, first, shareReplay } from 'rxjs';
+import { combineLatest, first } from 'rxjs';
 import { ProjectPageService } from '../project-page.service';
 
 @Component({
@@ -20,15 +21,15 @@ import { ProjectPageService } from '../project-page.service';
               [togglePosition]="'before'"
               style="box-shadow: none"
               data-cy="sidenav-ontology"
-              [expanded]="shouldExpand(onto.id, projectOntologies.length === 1 && first)">
+              [expanded]="shouldExpand(onto.ontology.iri, projectOntologies.length === 1 && first)">
               <mat-expansion-panel-header>
                 <mat-panel-title
                   #ontoTitle
-                  matTooltip="{{ onto.label }}"
+                  matTooltip="{{ onto.ontology.label }}"
                   matTooltipShowDelay="500"
                   matTooltipPosition="right"
                   [matTooltipDisabled]="compareElementHeights(ontoTitle)">
-                  {{ onto.label }}
+                  {{ onto.ontology.label }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <app-resource-class-sidenav [ontology]="onto" style="display: block; margin-left: 40px" />
@@ -50,13 +51,14 @@ import { ProjectPageService } from '../project-page.service';
   standalone: false,
 })
 export class ProjectSidenavOntologiesComponent implements OnInit {
-  projectOntologies$ = this._projectPageService.ontologies$.pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  projectOntologies$ = this._v3.getV3ProjectsProjectiriResourcesperontology(this._projectPageService.currentProject.id);
   initialExpandIri?: string;
 
   constructor(
     private readonly _projectPageService: ProjectPageService,
     private readonly _route: ActivatedRoute,
-    private readonly _ontologyService: OntologyService
+    private readonly _ontologyService: OntologyService,
+    private _v3: APIV3ApiService
   ) {}
 
   ngOnInit() {
