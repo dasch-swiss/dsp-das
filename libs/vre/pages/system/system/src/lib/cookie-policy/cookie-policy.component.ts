@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   selector: 'app-cookie-policy',
   templateUrl: './cookie-policy.component.html',
   styleUrls: ['./cookie-policy.component.scss'],
-  standalone: false,
+  standalone: true,
 })
 export class CookiePolicyComponent {
   constructor(private readonly _location: Location) {}
