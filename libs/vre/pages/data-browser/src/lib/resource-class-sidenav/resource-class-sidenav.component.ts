@@ -7,7 +7,7 @@ import { OntologyAndResourceClasses } from '@dasch-swiss/vre/3rd-party-services/
     @for (classToDisplay of ontology.classesAndCount; track $index) {
       <app-resource-class-sidenav-item
         [count]="classToDisplay.itemCount"
-        [label]="classToDisplay.resourceClass.label![0].value"
+        [label]="classToDisplay.resourceClass.label"
         [iri]="classToDisplay.resourceClass.iri" />
     }
   `,

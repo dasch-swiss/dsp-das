@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { LanguageStringDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
-import { LocalizationService, OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
-import { TranslateService } from '@ngx-translate/core';
+import { OntologyService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } 
   template: `
     <div (click)="selectResourceClass()" class="item" [ngClass]="{ selected: isSelected$ | async }">
       <span style="flex: 1">
-        {{ label }}
+        {{ label | appStringifyStringLiteral }}
       </span>
       <div
         style="
@@ -48,7 +48,7 @@ import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } 
 export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   @Input({ required: true }) iri!: string;
   @Input({ required: true }) count!: number;
-  @Input({ required: true }) label!: string;
+  @Input({ required: true }) label!: LanguageStringDto[];
 
   get icon(): string {
     return 'audio_file';
@@ -100,10 +100,7 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    private _cd: ChangeDetectorRef,
     private _ontologyService: OntologyService,
-    private _localizationService: LocalizationService,
-    private _translateService: TranslateService,
     private _projectPageService: ProjectPageService,
     private _router: Router,
     private _route: ActivatedRoute
@@ -114,12 +111,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    /*
-    this._translateService.onLangChange.pipe(startWith(null), takeUntil(this.destroyed)).subscribe(() => {
-      this.getOntologiesLabelsInPreferredLanguage();
-      this.getOntologiesDescriptionInPreferredLanguage();
-    });
-*/
     const [ontologyIri, className] = this.iri.split('#');
     const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
@@ -131,24 +122,4 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
     this.destroyed.next();
     this.destroyed.complete();
   }
-
-  /*
-  private getOntologiesLabelsInPreferredLanguage(): void {
-    if (this.resClass.labels) {
-      const label = this.resClass.labels.find(l => l.language === this._localizationService.getCurrentLanguage());
-      this.ontologiesLabel = label ? label.value : this.resClass.labels[0].value;
-      this._cd.markForCheck();
-    }
-  }
-
-  private getOntologiesDescriptionInPreferredLanguage(): void {
-    if (this.resClass.comments) {
-      const description = this.resClass.comments.find(
-        l => l.language === this._localizationService.getCurrentLanguage()
-      );
-      this.ontologiesDescription = description ? description.value : this.resClass.comments[0]?.value;
-      this._cd.detectChanges();
-    }
-  }
-  */
 }
