@@ -1,15 +1,15 @@
 import { CommonModule, UpperCasePipe } from '@angular/common';
 import { Component, Inject, inject, Input, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ApiResponseData, HealthResponse, KnoraApiConnection } from '@dasch-swiss/dsp-js';
 import { DspApiConnectionToken, RouteConstants } from '@dasch-swiss/vre/core/config';
 import { HttpStatusMsg } from '@dasch-swiss/vre/shared/assets/status-msg';
+import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 import { LinkifyPipe } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
 
 export interface StatusMsg {
   status: number;
