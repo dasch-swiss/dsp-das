@@ -75,7 +75,7 @@
         "editProjectDescription": "Modifica descrizione del progetto"
       },
       "settingsPage": {
-        "image": "Immagine"
+        "image": "Parametri dell'immagine"
       },
       "imageSettings": {
         "off": "Spento",
