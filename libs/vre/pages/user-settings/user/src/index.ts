@@ -10,7 +10,6 @@ export * from './lib/user-form/user-form.component';
 export * from './lib/user-form/password-form/password-confirm-form.component';
 export * from './lib/menu-item';
 export * from './lib/existing-names.validator';
-export * from './lib/login-form/login-form.component';
 export * from './lib/user-form/user-form.type';
 export * from './lib/project-image-cover.component';
 export * from './lib/project-overview/all-projects.service';

@@ -8,7 +8,9 @@ import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { CommonInputComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { finalize, Subscription, takeLast, tap } from 'rxjs';
-import { PasswordFormFieldComponent } from '../user-form/password-form/password-form-field.component';
+import {
+  PasswordFormFieldComponent
+} from '../../../../../../pages/user-settings/user/src/lib/user-form/password-form/password-form-field.component';
 
 @Component({
   selector: 'app-login-form',
