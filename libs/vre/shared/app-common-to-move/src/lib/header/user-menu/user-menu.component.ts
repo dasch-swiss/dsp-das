@@ -6,9 +6,9 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
 import { AuthService, UserService } from '@dasch-swiss/vre/core/session';
-import { LoginFormComponent } from '@dasch-swiss/vre/pages/user-settings/user';
 import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoginFormComponent } from '../login-form/login-form.component';
 
 @Component({
   selector: 'app-user-menu',

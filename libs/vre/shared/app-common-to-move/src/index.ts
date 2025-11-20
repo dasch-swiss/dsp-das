@@ -8,3 +8,6 @@ export * from './lib/header/header-logo.component';
 export * from './lib/header/version-badge.component';
 export * from './lib/header/global-search.component';
 export * from './lib/header/user-menu/user-menu.component';
+export * from './lib/header/login-form/login-form.component';
+export * from './lib/header/password-form/password-form-field.component';
+export * from './lib/header/password-form/password-confirm-form.component';
