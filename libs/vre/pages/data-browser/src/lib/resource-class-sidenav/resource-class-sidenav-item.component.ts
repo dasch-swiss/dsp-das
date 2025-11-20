@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LanguageStringDto } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
@@ -45,7 +45,7 @@ import { combineLatest, filter, first, map, of, startWith, Subject, switchMap } 
   ],
   standalone: false,
 })
-export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
+export class ResourceClassSidenavItemComponent implements OnDestroy {
   @Input({ required: true }) iri!: string;
   @Input({ required: true }) count!: number;
   @Input({ required: true }) label!: LanguageStringDto[];
@@ -74,9 +74,6 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
 
   destroyed = new Subject<void>();
   loading = true;
-
-  ontologyLabel!: string;
-  classLabel!: string;
 
   isSelected$ = this._router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -107,15 +104,10 @@ export class ResourceClassSidenavItemComponent implements OnInit, OnDestroy {
   ) {}
 
   selectResourceClass() {
-    this._router.navigate([this.ontologyLabel, this.classLabel], { relativeTo: this._route });
-  }
-
-  ngOnInit(): void {
     const [ontologyIri, className] = this.iri.split('#');
     const ontologyName = OntologyService.getOntologyNameFromIri(ontologyIri);
 
-    this.ontologyLabel = ontologyName;
-    this.classLabel = className;
+    this._router.navigate([ontologyName, className], { relativeTo: this._route });
   }
 
   ngOnDestroy(): void {
