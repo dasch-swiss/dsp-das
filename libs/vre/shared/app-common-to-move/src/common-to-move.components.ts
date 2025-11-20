@@ -1,3 +1,17 @@
-// All components are now standalone. This file is kept for backwards compatibility
-// but should be removed in a future refactoring.
-export const CommonToMoveComponents = [];
+import { GlobalSearchComponent } from './lib/header/global-search.component';
+import { HeaderLogoComponent } from './lib/header/header-logo.component';
+import { HeaderUserActionsComponent } from './lib/header/header-user-actions.component';
+import { HeaderComponent } from './lib/header/header.component';
+import { VersionBadgeComponent } from './lib/header/version-badge.component';
+import { SplitPipe } from './lib/split.pipe';
+import { StatusComponent } from './lib/status/status.component';
+
+export const CommonToMoveComponents = [
+  SplitPipe,
+  HeaderComponent,
+  StatusComponent,
+  HeaderUserActionsComponent,
+  HeaderLogoComponent,
+  VersionBadgeComponent,
+  GlobalSearchComponent,
+];

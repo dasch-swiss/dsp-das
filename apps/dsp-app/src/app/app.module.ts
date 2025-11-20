@@ -35,7 +35,7 @@ import { ResourceCreatorComponents } from '@dasch-swiss/vre/resource-editor/reso
 import { ResourcePageComponents } from '@dasch-swiss/vre/resource-editor/resource-editor';
 import { ResourcePropertiesComponents } from '@dasch-swiss/vre/resource-editor/resource-properties';
 import { SegmentSupportComponents } from '@dasch-swiss/vre/resource-editor/segment-support';
-import { HeaderComponent, SplitPipe } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { CommonToMoveComponents } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { HelpPageComponent } from '@dasch-swiss/vre/shared/app-help-page';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { DatePickerComponents } from '@dasch-swiss/vre/ui/date-picker';
@@ -95,7 +95,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ColorPickerDirective,
     CommonModule,
     FormsModule,
-    HeaderComponent,
     HelpPageComponent,
     HttpClientModule,
     IMaskModule,
@@ -105,11 +104,11 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     MatStepperModule,
     NgxSkeletonLoaderModule,
     PdfViewerModule,
-    SplitPipe,
     ...StringLiteralComponents,
     ...UiStandaloneComponents,
     ...DatePickerComponents,
     ...ProgressIndicatorComponents,
+    ...CommonToMoveComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
