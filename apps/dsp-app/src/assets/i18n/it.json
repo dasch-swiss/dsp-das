@@ -552,8 +552,8 @@
       "tooltip": "Permessi della risorsa",
       "projectAdmin": "Amministratore del progetto",
       "projectMember": "Membro del progetto",
-      "knownUser": "Utente conosciuto",
-      "unknownUser": "Utente sconosciuto",
+      "knownUser": "Connesso",
+      "unknownUser": "Disconnesso",
       "usersPermissions": "I tuoi permessi",
       "interactions": {
         "restrictedView": "Permesso di visualizzazione limitata (RV)",
