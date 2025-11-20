@@ -9,7 +9,6 @@ import { ProjectOverviewComponent } from './lib/project-overview/project-overvie
 import { PasswordConfirmFormComponent } from './lib/user-form/password-form/password-confirm-form.component';
 import { PasswordFormFieldComponent } from './lib/user-form/password-form/password-form-field.component';
 import { UserFormComponent } from './lib/user-form/user-form.component';
-import { UserMenuComponent } from './lib/user-menu/user-menu.component';
 import { UserComponent } from './lib/user.component';
 
 export const UserComponents = [
@@ -18,7 +17,6 @@ export const UserComponents = [
   ProjectOverviewComponent,
   ProfileComponent,
   UserFormComponent,
-  UserMenuComponent,
   UserComponent,
   PasswordConfirmFormComponent,
   PasswordFormFieldComponent,
