@@ -1,5 +1,19 @@
 # Changelog
 
+## [12.2.2](https://github.com/dasch-swiss/dsp-das/compare/v12.2.1...v12.2.2) (2025-11-21)
+
+
+### Bug Fixes
+
+* add type guards for language-tagged string literals ([#2671](https://github.com/dasch-swiss/dsp-das/issues/2671)) ([b0520fa](https://github.com/dasch-swiss/dsp-das/commit/b0520faadc86f11fc96036e94c18273313a30ceb))
+* the save button value updates visibility on control state change ([#2664](https://github.com/dasch-swiss/dsp-das/issues/2664)) ([9b84418](https://github.com/dasch-swiss/dsp-das/commit/9b844181c74cc21b73df61a183f596dcf712ca83))
+* unsubscribe and not request inexisting ontologies ([#2680](https://github.com/dasch-swiss/dsp-das/issues/2680)) ([7f444e1](https://github.com/dasch-swiss/dsp-das/commit/7f444e10f76219dbfae97eec472b364568b6470e))
+
+
+### Maintenances
+
+* Improve translations (DEV-4899) ([#2683](https://github.com/dasch-swiss/dsp-das/issues/2683)) ([1d11b53](https://github.com/dasch-swiss/dsp-das/commit/1d11b534075c9aadce70ba12923326a66bd7a05e))
+
 ## [12.2.1](https://github.com/dasch-swiss/dsp-das/compare/v12.2.0...v12.2.1) (2025-11-17)
 
 
