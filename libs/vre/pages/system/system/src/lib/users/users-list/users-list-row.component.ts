@@ -36,7 +36,15 @@ import { UsersListRowMenuComponent } from './users-list-row-menu.component';
     `,
   ],
   standalone: true,
-  imports: [MatChip, MatChipAvatar, MatChipSet, MatIcon, TranslateModule, UserDescriptionComponent, UsersListRowMenuComponent],
+  imports: [
+    MatChip,
+    MatChipAvatar,
+    MatChipSet,
+    MatIcon,
+    TranslateModule,
+    UserDescriptionComponent,
+    UsersListRowMenuComponent,
+  ],
 })
 export class UsersListRowComponent {
   @Input({ required: true }) user!: ReadUser;

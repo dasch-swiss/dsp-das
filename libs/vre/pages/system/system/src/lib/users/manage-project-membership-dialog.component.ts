@@ -1,8 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { DialogHeaderComponent } from '@dasch-swiss/vre/shared/app-common';
+import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { MembershipComponent } from '../membership/membership.component';
 
@@ -20,7 +26,15 @@ export interface ManageProjectMembershipDialogProps {
       <button mat-button color="primary" matDialogClose>{{ 'ui.common.actions.close' | translate }}</button>
     </mat-dialog-actions>`,
   standalone: true,
-  imports: [DialogHeaderComponent, MatButton, MatDialogActions, MatDialogClose, MatDialogContent, MembershipComponent, TranslateModule],
+  imports: [
+    DialogHeaderComponent,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MembershipComponent,
+    TranslateModule,
+  ],
 })
 export class ManageProjectMembershipDialogComponent {
   constructor(
