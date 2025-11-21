@@ -6,8 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { RouteConstants } from '@dasch-swiss/vre/core/config';
-import { SearchTipsComponent } from '@dasch-swiss/vre/pages/search/search';
 import { TranslateModule } from '@ngx-translate/core';
+import { SearchTipsComponent } from './search-tips.component';
 
 @Component({
   selector: 'app-global-search',
