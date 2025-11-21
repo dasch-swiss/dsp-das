@@ -79,7 +79,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePropertiesComponents,
     ...SearchComponents,
     ...SegmentSupportComponents,
-    ...SystemComponents,
     ...TemplateSwitcherComponents,
     ...UserComponents,
   ],
@@ -109,6 +108,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...DatePickerComponents,
     ...ProgressIndicatorComponents,
     ...CommonToMoveComponents,
+    ...SystemComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
