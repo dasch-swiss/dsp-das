@@ -80,7 +80,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...SearchComponents,
     ...SegmentSupportComponents,
     ...TemplateSwitcherComponents,
-    ...UserComponents,
   ],
   imports: [
     AdvancedSearchComponent,
@@ -109,6 +108,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ProgressIndicatorComponents,
     ...CommonToMoveComponents,
     ...SystemComponents,
+    ...UserComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
