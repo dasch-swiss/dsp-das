@@ -5,8 +5,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { User } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
-import { UserForm, UserFormComponent } from '@dasch-swiss/vre/pages/user-settings/user';
-import { PasswordConfirmFormComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
+import { PasswordConfirmFormComponent, UserForm, UserFormComponent } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
 import { DialogHeaderComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateModule } from '@ngx-translate/core';

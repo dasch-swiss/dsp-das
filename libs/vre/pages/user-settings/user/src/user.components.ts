@@ -5,7 +5,6 @@ import { ProfileComponent } from './lib/profile/profile.component';
 import { ProjectImageCoverComponent } from './lib/project-image-cover.component';
 import { ProjectCardComponent } from './lib/project-overview/project-card.component';
 import { ProjectOverviewComponent } from './lib/project-overview/project-overview.component';
-import { UserFormComponent } from './lib/user-form/user-form.component';
 import { UserComponent } from './lib/user.component';
 
 export const UserComponents = [
@@ -13,7 +12,6 @@ export const UserComponents = [
   EditUserDialogComponent,
   ProjectOverviewComponent,
   ProfileComponent,
-  UserFormComponent,
   UserComponent,
   ProjectCardComponent,
   ProjectImageCoverComponent,

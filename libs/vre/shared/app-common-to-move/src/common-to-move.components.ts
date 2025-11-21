@@ -10,6 +10,7 @@ import { UserMenuComponent } from './lib/header/user-menu/user-menu.component';
 import { VersionBadgeComponent } from './lib/header/version-badge.component';
 import { SplitPipe } from './lib/split.pipe';
 import { StatusComponent } from './lib/status/status.component';
+import { UserFormComponent } from './lib/user-form/user-form.component';
 
 export const CommonToMoveComponents = [
   SplitPipe,
@@ -24,4 +25,5 @@ export const CommonToMoveComponents = [
   VersionBadgeComponent,
   GlobalSearchComponent,
   SearchTipsComponent,
+  UserFormComponent,
 ];

@@ -12,3 +12,5 @@ export * from './lib/header/login-form/login-form.component';
 export * from './lib/header/password-form/password-form-field.component';
 export * from './lib/header/password-form/password-confirm-form.component';
 export * from './lib/header/search-tips.component';
+export * from './lib/user-form/user-form.component';
+export * from './lib/user-form/user-form.type';

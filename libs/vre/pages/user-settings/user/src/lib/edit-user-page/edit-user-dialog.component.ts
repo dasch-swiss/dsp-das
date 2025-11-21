@@ -3,10 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReadUser, UpdateUserRequest } from '@dasch-swiss/dsp-js';
 import { UserApiService } from '@dasch-swiss/vre/3rd-party-services/api';
 import { UserService } from '@dasch-swiss/vre/core/session';
+import { UserForm } from '@dasch-swiss/vre/shared/app-common-to-move';
 import { LocalizationService } from '@dasch-swiss/vre/shared/app-helper-services';
 import { NotificationService } from '@dasch-swiss/vre/ui/notification';
 import { TranslateService } from '@ngx-translate/core';
-import { UserForm } from '../user-form/user-form.type';
 
 export interface EditUserDialogProps {
   user: ReadUser;
