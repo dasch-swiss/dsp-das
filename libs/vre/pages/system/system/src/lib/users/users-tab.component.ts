@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DoubleChipSelectorComponent, ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/shared/app-common';
+import { ProgressIndicatorOverlayComponent } from '@dasch-swiss/vre/ui/progress-indicator';
+import { DoubleChipSelectorComponent } from '@dasch-swiss/vre/ui/ui';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 import { UsersListComponent } from './users-list/users-list.component';

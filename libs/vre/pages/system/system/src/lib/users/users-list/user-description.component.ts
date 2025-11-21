@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReadUser } from '@dasch-swiss/dsp-js';
-import { AdminImageDirective } from '@dasch-swiss/vre/shared/app-common';
+import { AdminImageDirective } from '@dasch-swiss/vre/ui/ui';
 
 @Component({
   selector: 'app-user-description',
