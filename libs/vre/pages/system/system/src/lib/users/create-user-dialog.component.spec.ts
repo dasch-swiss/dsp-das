@@ -34,9 +34,9 @@ describe('CreateUserDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [CreateUserDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [
+        CreateUserDialogComponent,
         ReactiveFormsModule,
         MatButtonModule,
         MatDialogModule,
