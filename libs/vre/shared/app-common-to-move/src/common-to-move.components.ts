@@ -5,6 +5,7 @@ import { HeaderComponent } from './lib/header/header.component';
 import { LoginFormComponent } from './lib/header/login-form/login-form.component';
 import { PasswordConfirmFormComponent } from './lib/header/password-form/password-confirm-form.component';
 import { PasswordFormFieldComponent } from './lib/header/password-form/password-form-field.component';
+import { SearchTipsComponent } from './lib/header/search-tips.component';
 import { UserMenuComponent } from './lib/header/user-menu/user-menu.component';
 import { VersionBadgeComponent } from './lib/header/version-badge.component';
 import { SplitPipe } from './lib/split.pipe';
@@ -22,4 +23,5 @@ export const CommonToMoveComponents = [
   HeaderLogoComponent,
   VersionBadgeComponent,
   GlobalSearchComponent,
+  SearchTipsComponent,
 ];
