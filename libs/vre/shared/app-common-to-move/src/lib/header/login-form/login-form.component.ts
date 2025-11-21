@@ -57,10 +57,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
-  isLoginError: boolean;
-  returnUrl: string;
+  isLoginError = false;
+  returnUrl!: string;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(
     private _fb: FormBuilder,
@@ -87,7 +87,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.isLoginError = false;
 
     this.subscription = this._authService
-      .login$(this.form.get('username').value, this.form.get('password').value)
+      .login$(this.form.controls.username.getRawValue()!, this.form.controls.password.getRawValue()!)
       .pipe(
         takeLast(1),
         tap({
