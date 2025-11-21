@@ -1,8 +1,18 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ReadResource } from '@dasch-swiss/dsp-js';
+import { LoadingButtonDirective } from '@dasch-swiss/vre/ui/progress-indicator';
+import {
+  ChipListInputComponent,
+  CkEditorControlComponent,
+  CommonInputComponent,
+  DialogHeaderComponent,
+  TimeInputComponent,
+} from '@dasch-swiss/vre/ui/ui';
+import { TranslateModule } from '@ngx-translate/core';
 import { SegmentApiService } from './segment-api.service';
 import { SegmentsService } from './segments.service';
 
@@ -59,7 +69,19 @@ export interface CreateSegmentDialogProps {
         {{ 'ui.common.actions.submit' | translate }}
       </button>
     </div>`,
-  standalone: false,
+  standalone: true,
+  imports: [
+    DialogHeaderComponent,
+    CommonInputComponent,
+    TimeInputComponent,
+    ChipListInputComponent,
+    CkEditorControlComponent,
+    MatDialogModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    LoadingButtonDirective,
+  ],
 })
 export class CreateSegmentDialogComponent {
   loading = false;

@@ -78,7 +78,6 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...ResourcePageComponents,
     ...ResourcePropertiesComponents,
     ...SearchComponents,
-    ...SegmentSupportComponents,
     ...TemplateSwitcherComponents,
   ],
   imports: [
@@ -109,6 +108,7 @@ export function httpLoaderFactory(httpClient: HttpClient) {
     ...CommonToMoveComponents,
     ...SystemComponents,
     ...UserComponents,
+    ...SegmentSupportComponents,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       loader: {
