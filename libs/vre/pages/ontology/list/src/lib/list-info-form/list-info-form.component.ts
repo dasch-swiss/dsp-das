@@ -9,11 +9,11 @@ import {
   UpdateListInfoRequest,
 } from '@dasch-swiss/dsp-js';
 import { ListApiService } from '@dasch-swiss/vre/3rd-party-services/api';
+import { ensureWithDefaultLanguage } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { ProjectPageService } from '@dasch-swiss/vre/pages/project/project';
 import { atLeastOneStringRequired } from '@dasch-swiss/vre/shared/app-common';
 import { DEFAULT_MULTILANGUAGE_FORM } from '@dasch-swiss/vre/ui/string-literal';
 import { TranslateService } from '@ngx-translate/core';
-import { switchMap } from 'rxjs';
 import { ListInfoForm } from './list-info-form.type';
 
 @Component({
@@ -78,12 +78,12 @@ export class ListInfoFormComponent implements OnInit {
   _buildForm() {
     this.form = this._fb.group({
       labels: DEFAULT_MULTILANGUAGE_FORM(
-        this.data ? this.data.labels : [],
+        this.data ? ensureWithDefaultLanguage(this.data.labels, this._translate.currentLang) : [],
         [Validators.maxLength(2000)],
         [atLeastOneStringRequired('value')]
       ),
       comments: DEFAULT_MULTILANGUAGE_FORM(
-        this.data ? this.data.comments : [],
+        this.data ? ensureWithDefaultLanguage(this.data.comments, this._translate.currentLang) : [],
         [Validators.maxLength(2000)],
         [atLeastOneStringRequired('value')]
       ),
@@ -102,7 +102,7 @@ export class ListInfoFormComponent implements OnInit {
   submitCreateList() {
     this._listApiService
       .create({
-        projectIri: this._projectPageService.currentProjectId,
+        projectIri: this._projectPageService.currentProject.id,
         labels: this.form.value.labels as StringLiteral[],
         comments: this.form.value.comments as StringLiteral[],
       })
