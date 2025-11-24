@@ -76,15 +76,6 @@ beforeEach(() => {
         username: users.systemAdmin_username_root,
         password: users.systemAdmin_password_root,
       });
-
-      // Automatically add Authorization header to all requests in system-admin tests
-      cy.intercept({ url: `${Cypress.env('apiUrl')}/**` }, req => {
-        const token = localStorage.getItem('ACCESS_TOKEN');
-        console.log('TOKEN ADDED', token);
-        if (token) {
-          req.headers['Authorization'] = `Bearer ${token}`;
-        }
-      });
     }
   });
 });
