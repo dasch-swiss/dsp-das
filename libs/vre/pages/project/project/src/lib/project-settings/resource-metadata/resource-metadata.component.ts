@@ -52,21 +52,11 @@ export class ResourceMetadataComponent implements OnDestroy {
 
     const mimeType = this._getMimeType(format);
     const classIris: string[] | undefined = undefined;
-    const authToken = this._ats.getAccessToken() ?? undefined;
 
     this._v2ApiService
-      .getV2MetadataProjectsProjectshortcodeResources(
-        shortcode,
-        authToken,
-        format,
-        classIris,
-        'body',
-        'response',
-        false,
-        {
-          httpHeaderAccept: 'text/plain',
-        }
-      )
+      .getV2MetadataProjectsProjectshortcodeResources(shortcode, format, classIris, undefined, false, {
+        httpHeaderAccept: 'text/plain',
+      })
       .pipe(
         takeUntil(this._destroy$),
         finalize(() => {
