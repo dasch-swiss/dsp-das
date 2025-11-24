@@ -18,7 +18,8 @@ Cypress.on('uncaught:exception', err => {
 beforeEach(() => {
   // Skip database cleanup for remote environments or when explicitly disabled
   const baseUrl = Cypress.config('baseUrl');
-  const isRemote = baseUrl && (baseUrl.includes('dasch.swiss') || baseUrl.includes('stage') || baseUrl.includes('dev-'));
+  const isRemote =
+    baseUrl && (baseUrl.includes('dasch.swiss') || baseUrl.includes('stage') || baseUrl.includes('dev-'));
 
   if (Cypress.env('skipDatabaseCleanup') || isRemote) {
     return; // Skip cleanup
@@ -74,6 +75,15 @@ beforeEach(() => {
       cy.login({
         username: users.systemAdmin_username_root,
         password: users.systemAdmin_password_root,
+      });
+
+      // Automatically add Authorization header to all requests in system-admin tests
+      cy.intercept({ url: `${Cypress.env('apiUrl')}/**` }, req => {
+        const token = localStorage.getItem('ACCESS_TOKEN');
+        console.log('TOKEN ADDED', token);
+        if (token) {
+          req.headers['Authorization'] = `Bearer ${token}`;
+        }
       });
     }
   });
