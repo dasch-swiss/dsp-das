@@ -1,7 +1,6 @@
-import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ExportFormat, APIV2ApiService } from '@dasch-swiss/vre/3rd-party-services/open-api';
+import { APIV2ApiService, ExportFormat } from '@dasch-swiss/vre/3rd-party-services/open-api';
 import { AppError } from '@dasch-swiss/vre/core/error-handler';
 import { AccessTokenService } from '@dasch-swiss/vre/core/session';
 import { TranslateService } from '@ngx-translate/core';
@@ -67,19 +66,13 @@ export class ResourceMetadataComponent implements OnDestroy {
         })
       )
       .subscribe(
-        (response: HttpResponse<string>) => {
-          if (response.status === 200) {
-            this._showSuccess(
-              this._translateService.instant('pages.project.resourceMetadata.downloadSuccess', { shortcode })
-            );
-            setTimeout(() => {
-              this._handleDownload(response, shortcode, mimeType);
-            }, 1000);
-          } else {
-            this._showError(
-              this._translateService.instant('pages.project.resourceMetadata.downloadError', { shortcode })
-            );
-          }
+        response => {
+          this._showSuccess(
+            this._translateService.instant('pages.project.resourceMetadata.downloadSuccess', { shortcode })
+          );
+          setTimeout(() => {
+            this._handleDownload(response, shortcode, mimeType);
+          }, 1000);
         },
         error => {
           this._showError(
@@ -92,8 +85,8 @@ export class ResourceMetadataComponent implements OnDestroy {
       );
   }
 
-  private _handleDownload(response: HttpResponse<string>, shortcode: string, mimeType: string): void {
-    const blob = new Blob([response.body!], { type: mimeType });
+  private _handleDownload(response: string, shortcode: string, mimeType: string): void {
+    const blob = new Blob([response], { type: mimeType });
     const filename = `project_${shortcode}_metadata`;
 
     const link = document.createElement('a');
