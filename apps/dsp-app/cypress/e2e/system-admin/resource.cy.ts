@@ -14,11 +14,12 @@ describe('Resource', () => {
   beforeEach(() => {
     po = new AddResourceInstancePage();
 
-    cy.request(
-      'POST',
-      `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
-      project00FFPayloads.createClassPayload('datamodelclass')
-    ).then(response => {
+    cy.request({
+      method: 'POST',
+      url: `${Cypress.env('apiUrl')}/v2/ontologies/classes`,
+      headers: { Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}` },
+      body: project00FFPayloads.createClassPayload('datamodelclass'),
+    }).then(response => {
       finalLastModificationDate = ResponseUtil.lastModificationDate(response);
     });
   });
