@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -62,7 +63,7 @@ import { PropertyValueService } from './property-value.service';
   standalone: false,
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input({ required: true }) disableDeleteButton!: boolean;
+  @Input({ required: true }) index!: number;
   @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
@@ -75,6 +76,12 @@ export class PropertyValueActionBubbleComponent implements OnInit {
     private _resourceFetcherService: ResourceFetcherService,
     private _propertyValueService: PropertyValueService
   ) {}
+
+  get disableDeleteButton(): boolean {
+    const isRequired = [Cardinality._1, Cardinality._1_n].includes(this._propertyValueService.cardinality);
+    const isOnlyValue = this._propertyValueService.editModeData.values.length === 1;
+    return isRequired && this.index === 0 && isOnlyValue;
+  }
 
   ngOnInit() {
     this.infoTooltip$ = this._getInfoToolTip();

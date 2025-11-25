@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Cardinality } from '@dasch-swiss/dsp-js';
 import { DeleteValueDialogComponent, DeleteValueDialogProps } from './delete-value-dialog.component';
 import { PropertyValueService } from './property-value.service';
 
@@ -27,11 +26,7 @@ import { PropertyValueService } from './property-value.service';
       @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
-          [disableDeleteButton]="
-            [Cardinality._1, Cardinality._1_n].includes(propertyValueService.cardinality) &&
-            index === 0 &&
-            propertyValueService.editModeData.values.length === 1
-          "
+          [index]="index"
           (editAction)="propertyValueService.toggleOpenedValue(index)"
           (deleteAction)="askToDelete()" />
       }
@@ -75,8 +70,6 @@ export class PropertyValueDisplayComponent implements OnInit {
     this.template = template;
     this._cd.detectChanges();
   }
-
-  protected readonly Cardinality = Cardinality;
 
   askToDelete() {
     this._dialog.open<DeleteValueDialogComponent, DeleteValueDialogProps>(DeleteValueDialogComponent, {
