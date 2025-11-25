@@ -33,14 +33,15 @@ import { PropertyValueService } from './property-value.service';
 
         <span
           [matTooltip]="
-            showDelete
-              ? ('resourceEditor.resourceProperties.actions.delete' | translate)
-              : ('resourceEditor.resourceProperties.actions.cannotDeleteRequired' | translate)
+            disableDeleteButton
+              ? ('resourceEditor.resourceProperties.actions.cannotDeleteRequired' | translate)
+              : ('resourceEditor.resourceProperties.actions.delete' | translate)
           ">
           @if (userHasPermission('delete')) {
             <button
               mat-button
               class="delete"
+              [disabled]="disableDeleteButton"
               data-cy="delete-button"
               (click)="$event.stopPropagation(); deleteAction.emit()">
               <mat-icon>delete</mat-icon>
@@ -61,7 +62,7 @@ import { PropertyValueService } from './property-value.service';
   standalone: false,
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input({ required: true }) showDelete!: boolean;
+  @Input({ required: true }) disableDeleteButton!: boolean;
   @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();

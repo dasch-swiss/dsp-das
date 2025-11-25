@@ -27,7 +27,9 @@ import { PropertyValueService } from './property-value.service';
       @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
-          [showDelete]="index > 0 || [Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)"
+          [disableDeleteButton]="
+            index === 0 && ![Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)
+          "
           (editAction)="propertyValueService.toggleOpenedValue(index)"
           (deleteAction)="askToDelete()" />
       }
