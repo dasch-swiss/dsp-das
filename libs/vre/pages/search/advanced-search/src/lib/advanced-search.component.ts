@@ -33,6 +33,7 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
       <app-advanced-search-ontology-form />
       <app-resource-value
         [availableResources]="resourceClasses$ | async"
+        [selectedResource]="searchState.currentState.selectedResourceClass"
         (selectedResourceChange)="formManager.updateSelectedResourceClass($event)" />
       @if ((ontologyLoading$ | async) === true) {
         <mat-progress-bar mode="query" />

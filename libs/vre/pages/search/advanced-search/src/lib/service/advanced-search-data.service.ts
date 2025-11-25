@@ -29,9 +29,6 @@ export class AdvancedSearchDataService {
   private _ontologyLoading = new BehaviorSubject<boolean>(true);
   ontologyLoading$ = this._ontologyLoading.asObservable();
 
-  private _selectedResourceClass = new BehaviorSubject<IriLabelPair | undefined>(undefined);
-  selectedResourceClass$ = this._selectedResourceClass.asObservable();
-
   private _availableProperties = new BehaviorSubject<Predicate[]>([]);
   availableProperties$ = this._availableProperties.asObservable();
 
@@ -67,7 +64,6 @@ export class AdvancedSearchDataService {
   }
 
   setSelectedResourceClass(resourceClass?: IriLabelPair) {
-    this._selectedResourceClass.next(resourceClass);
     this._setAvailableProperties(resourceClass?.iri);
   }
 
@@ -130,13 +126,13 @@ export class AdvancedSearchDataService {
         ? this._propertyDefinitions$.pipe(
             map(props => [this.ResourceLabelPropertyData, ...props.map(this._createPropertyData)])
           )
-        : this._getPropertiesOfResourceClass$(classIri);
+        : this.getPropertiesOfResourceClass$(classIri);
     props$.subscribe(props => {
       this._availableProperties.next(props);
     });
   }
 
-  private _getPropertiesOfResourceClass$ = (classIri: string): Observable<Predicate[]> =>
+  getPropertiesOfResourceClass$ = (classIri: string): Observable<Predicate[]> =>
     combineLatest([this._getPropertyIrisForClass$(classIri), this._propertyDefinitions$]).pipe(
       // tap(([c, p]) => console.log('class properties', c, p)),
       map(([resProps, props]) => props.filter(p => resProps.includes(p.id)).map(this._createPropertyData))

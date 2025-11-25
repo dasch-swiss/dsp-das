@@ -96,14 +96,13 @@ export interface GravsearchStatement {
 
 export class StatementElement {
   readonly id = uuidv4();
-  private _selectedPredicate: Predicate | undefined;
-  private _selectedOperator: Operator = Operator.Equals;
+  private _selectedPredicate?: Predicate;
+  private _selectedOperator?: Operator;
   private _selectedObjectNode?: NodeValue | StringValue;
   listObject?: ListNodeV2;
   availableObjects?: IriLabelPair[] = []; // Todo: Set those
   statementLevel = 0;
   parentStatementObject?: NodeValue;
-  subjectNode?: NodeValue;
 
   get selectedPredicate(): Predicate | undefined {
     return this._selectedPredicate;
@@ -153,10 +152,6 @@ export class StatementElement {
     this.listObject = undefined;
   }
 
-  get operatorRequiresValueInput(): boolean {
-    return this.selectedOperator !== Operator.Exists && this.selectedOperator !== Operator.NotExists;
-  }
-
   get isValidAndComplete(): boolean {
     return (
       this.selectedOperator === Operator.Exists ||
@@ -166,55 +161,28 @@ export class StatementElement {
   }
 
   get objectType(): PropertyObjectType {
-    // No property selected
-    if (!this.selectedPredicate) {
-      return PropertyObjectType.None;
-    }
-
-    // Existence operators don't need value input
-    if (this.selectedOperator === Operator.Exists || this.selectedOperator === Operator.NotExists) {
-      return PropertyObjectType.None;
-    }
-
-    // Resource class selector for Matches operator (non-Knora types)
     if (
-      !this.selectedPredicate.objectValueType?.includes(Constants.KnoraApiV2) &&
+      !this.selectedOperator ||
+      this.selectedOperator === Operator.Exists ||
+      this.selectedOperator === Operator.NotExists
+    ) {
+      return PropertyObjectType.None;
+    }
+    if (
+      !this.selectedPredicate?.objectValueType?.includes(Constants.KnoraApiV2) &&
       this.selectedOperator === Operator.Matches
     ) {
       return PropertyObjectType.ResourceObject;
     }
 
-    // Link Match Property - when Matches operator with link and resource class selected
-    /*
-    if (
-      this.selectedPredicate.isLinkProperty &&
-      this.selectedPredicate.  objectValueType !== Constants.Label &&
-      this.selectedOperator === Operator.Matches &&
-      this.selectedObject
-    ) {
-      return PropertyObjectType.LinkMatchProperty;
-    } */
-
-    // Link Value - link properties (not Label, not Matches)
-    if (
-      this.selectedPredicate.isLinkProperty &&
-      this.selectedPredicate.objectValueType !== Constants.Label &&
-      this.selectedOperator !== Operator.Matches
-    ) {
+    if (this.selectedPredicate?.isLinkProperty && this.selectedOperator !== Operator.Matches) {
       return PropertyObjectType.LinkValueObject;
     }
 
-    // List Value
-    if (this.selectedPredicate.objectValueType === Constants.ListValue) {
+    if (this.selectedPredicate?.objectValueType === Constants.ListValue) {
       return PropertyObjectType.ListValueObject;
     }
-
-    // Default: simple value object (text, int, decimal, date, etc.)
-    if (!this.selectedPredicate.isLinkProperty) {
-      return PropertyObjectType.ValueObject;
-    }
-
-    return PropertyObjectType.None;
+    return PropertyObjectType.ValueObject;
   }
 }
 

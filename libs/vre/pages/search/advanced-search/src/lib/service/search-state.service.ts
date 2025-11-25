@@ -13,6 +13,11 @@ export class SearchStateService {
 
   private _state = new BehaviorSubject<SearchFormsState>(this.INITIAL_FORMS_STATE);
 
+  selectedResourceClass$ = this._state.pipe(
+    map(state => state.selectedResourceClass),
+    distinctUntilChanged()
+  );
+
   statementElements$ = this._state.pipe(
     map(state => state.statementElements),
     startWith(this.INITIAL_FORMS_STATE.statementElements),
