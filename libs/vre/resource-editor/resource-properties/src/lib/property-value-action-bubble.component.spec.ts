@@ -58,7 +58,6 @@ describe('PropertyValueActionBubbleComponent', () => {
 
     fixture = TestBed.createComponent(PropertyValueActionBubbleComponent);
     component = fixture.componentInstance;
-    component.index = 0;
     component.date = '2023-01-01';
   });
 
@@ -72,7 +71,6 @@ describe('PropertyValueActionBubbleComponent', () => {
     });
 
     it('should have required inputs', () => {
-      expect(component.index).toBeDefined();
       expect(component.date).toBeDefined();
     });
   });
@@ -87,8 +85,7 @@ describe('PropertyValueActionBubbleComponent', () => {
         };
       });
 
-      it('should return false when there is only one value at index 0', () => {
-        component.index = 0;
+      it('should return false when there is only one value', () => {
         expect(component.disableDeleteButton).toBe(false);
       });
     });
@@ -102,8 +99,7 @@ describe('PropertyValueActionBubbleComponent', () => {
         };
       });
 
-      it('should return false when there is only one value at index 0', () => {
-        component.index = 0;
+      it('should return false when there is only one value', () => {
         expect(component.disableDeleteButton).toBe(false);
       });
 
@@ -112,7 +108,6 @@ describe('PropertyValueActionBubbleComponent', () => {
           resource: {} as any,
           values: [mockValue, mockValue],
         };
-        component.index = 0;
         expect(component.disableDeleteButton).toBe(false);
       });
     });
@@ -122,30 +117,19 @@ describe('PropertyValueActionBubbleComponent', () => {
         mockPropertyValueService.cardinality = Cardinality._1;
       });
 
-      it('should return true when there is only one value at index 0', () => {
+      it('should return true when there is only one value', () => {
         mockPropertyValueService.editModeData = {
           resource: {} as any,
           values: [mockValue],
         };
-        component.index = 0;
         expect(component.disableDeleteButton).toBe(true);
       });
 
-      it('should return false when there are multiple values at index 0', () => {
+      it('should return false when there are multiple values', () => {
         mockPropertyValueService.editModeData = {
           resource: {} as any,
           values: [mockValue, mockValue],
         };
-        component.index = 0;
-        expect(component.disableDeleteButton).toBe(false);
-      });
-
-      it('should return false when index is not 0 even with single value', () => {
-        mockPropertyValueService.editModeData = {
-          resource: {} as any,
-          values: [mockValue],
-        };
-        component.index = 1;
         expect(component.disableDeleteButton).toBe(false);
       });
     });
@@ -155,39 +139,19 @@ describe('PropertyValueActionBubbleComponent', () => {
         mockPropertyValueService.cardinality = Cardinality._1_n;
       });
 
-      it('should return true when there is only one value at index 0', () => {
+      it('should return true when there is only one value', () => {
         mockPropertyValueService.editModeData = {
           resource: {} as any,
           values: [mockValue],
         };
-        component.index = 0;
         expect(component.disableDeleteButton).toBe(true);
       });
 
-      it('should return false when there are multiple values at index 0', () => {
+      it('should return false when there are multiple values', () => {
         mockPropertyValueService.editModeData = {
           resource: {} as any,
           values: [mockValue, mockValue],
         };
-        component.index = 0;
-        expect(component.disableDeleteButton).toBe(false);
-      });
-
-      it('should return false when there are multiple values at index 1', () => {
-        mockPropertyValueService.editModeData = {
-          resource: {} as any,
-          values: [mockValue, mockValue],
-        };
-        component.index = 1;
-        expect(component.disableDeleteButton).toBe(false);
-      });
-
-      it('should return false when index is not 0 even with single value', () => {
-        mockPropertyValueService.editModeData = {
-          resource: {} as any,
-          values: [mockValue],
-        };
-        component.index = 1;
         expect(component.disableDeleteButton).toBe(false);
       });
     });
@@ -199,7 +163,6 @@ describe('PropertyValueActionBubbleComponent', () => {
           resource: {} as any,
           values: [mockValue],
         };
-        component.index = 0;
         expect(component.disableDeleteButton).toBe(true);
       });
 
@@ -209,7 +172,6 @@ describe('PropertyValueActionBubbleComponent', () => {
           resource: {} as any,
           values: [],
         };
-        component.index = 0;
         expect(component.disableDeleteButton).toBe(false);
       });
     });

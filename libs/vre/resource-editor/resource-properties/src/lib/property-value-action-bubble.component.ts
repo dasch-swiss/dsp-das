@@ -54,7 +54,6 @@ import { PropertyValueService } from './property-value.service';
   standalone: false,
 })
 export class PropertyValueActionBubbleComponent implements OnInit {
-  @Input({ required: true }) index!: number;
   @Input({ required: true }) date!: string;
   @Output() editAction = new EventEmitter();
   @Output() deleteAction = new EventEmitter();
@@ -64,13 +63,13 @@ export class PropertyValueActionBubbleComponent implements OnInit {
   constructor(
     private _resourceFetcherService: ResourceFetcherService,
     private _propertyValueService: PropertyValueService,
-    private readonly _translateService: TranslateService
+    private _translateService: TranslateService
   ) {}
 
   get disableDeleteButton(): boolean {
     const isRequired = [Cardinality._1, Cardinality._1_n].includes(this._propertyValueService.cardinality);
     const isOnlyValue = this._propertyValueService.editModeData.values.length === 1;
-    return isRequired && this.index === 0 && isOnlyValue;
+    return isRequired && isOnlyValue;
   }
 
   ngOnInit() {
