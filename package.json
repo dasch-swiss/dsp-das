@@ -58,7 +58,7 @@
     "@ngrx/component-store": "^20.0.0",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "7.0.0",
-    "@nx/angular": "21.5.1",
+    "@nx/angular": "22.1.1",
     "@sentry/angular": "^10.27.0",
     "@sentry/cli": "^2.58.2",
     "angular-imask": "^7.5.0",
