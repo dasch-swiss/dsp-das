@@ -20,6 +20,11 @@ export class AdvancedSearchDataService {
     isLinkProperty: false,
   } as const;
 
+  private readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
+    iri: 'all-resource-classes',
+    label: 'All resource classes',
+  } as const;
+
   private _ontologies = new BehaviorSubject<IriLabelPair[]>([]);
   ontologies$ = this._ontologies.asObservable();
 
@@ -87,8 +92,14 @@ export class AdvancedSearchDataService {
     )
   );
 
-  getObjectsForProperty$ = (propertyIri: string): Observable<IriLabelPair[]> =>
-    combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
+  getResourceClassObjectsForProperty$(propertyIri?: string): Observable<IriLabelPair[]> {
+    if (!propertyIri) {
+      return this.resourceClasses$.pipe(
+        map(classes => [this.SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
+        startWith([this.SEARCH_ALL_RESOURCE_CLASSES_OPTION])
+      );
+    }
+    return combineLatest(this.resourceClasses$, this._propertyDefinitions$).pipe(
       map(([resClasses, propDefs]) => {
         const propDef = propDefs.find(p => p.id === propertyIri);
         if (!propDef) {
@@ -101,6 +112,7 @@ export class AdvancedSearchDataService {
         return resClasses.filter(rc => rc.iri === objectType);
       })
     );
+  }
 
   getSubclassesOfResourceClass$ = (classIri: string): Observable<IriLabelPair[]> =>
     this._resourceClassDefinitions$.pipe(

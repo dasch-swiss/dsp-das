@@ -37,10 +37,6 @@ export class PropertyFormManager {
     this.searchStateService.clearStatements();
   }
 
-  loadMoreResourcesSearchResults(searchItem: SearchItem): void {
-    throw new Error('Method not implemented.');
-  }
-
   deleteStatement(statement: StatementElement): void {
     const currentState = this.searchStateService.currentState;
     const updatedPropertyFormList = currentState.statementElements.filter(item => item !== statement);
@@ -59,10 +55,7 @@ export class PropertyFormManager {
 
   setSelectedOperator(statement: StatementElement, selectedOperator: Operator): void {
     statement.selectedOperator = selectedOperator;
-    this._dataService.getObjectsForProperty$(statement.selectedPredicate!.iri).subscribe(objects => {
-      statement.availableObjects = objects;
-      this.searchStateService.updateStatement(statement);
-    });
+    this.searchStateService.updateStatement(statement);
   }
 
   setObjectValue(statement: StatementElement, searchValue: string | IriLabelPair): void {

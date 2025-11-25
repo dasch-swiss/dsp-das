@@ -40,7 +40,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
       @switch (statementElement.objectType) {
         @case (PROPERTY_OBJECT_TYPES.ResourceObject) {
           <app-resource-value
-            [availableResources]="statementElement.availableObjects"
+            [selectedPredicate]="statementElement.selectedPredicate"
             [selectedResource]="statementElement.selectedObjectNode?.value"
             (selectedResourceChange)="formManager.setObjectValue(statementElement, $event)" />
         }
@@ -58,7 +58,7 @@ import { StringValueComponent } from './object-values/string-value/string-value.
         }
         @case (PROPERTY_OBJECT_TYPES.LinkValueObject) {
           <app-link-value
-            [resourceClass]="statementElement.objectType"
+            [resourceClass]="statementElement.selectedPredicate?.objectValueType"
             (emitResourceSelected)="formManager.setObjectValue(statementElement, $event)" />
         }
         @case (PROPERTY_OBJECT_TYPES.None) {

@@ -32,7 +32,6 @@ import { StatementBuilderComponent } from './ui/statement-builder/statement-buil
       <app-advanced-search-header class="flex-space-between margin-bottom-1em" />
       <app-advanced-search-ontology-form />
       <app-resource-value
-        [availableResources]="resourceClasses$ | async"
         [selectedResource]="searchState.currentState.selectedResourceClass"
         (selectedResourceChange)="formManager.updateSelectedResourceClass($event)" />
       @if ((ontologyLoading$ | async) === true) {
@@ -55,11 +54,6 @@ export class AdvancedSearchComponent implements OnInit {
   @Input({ required: true }) projectUuid!: string;
   @Output() gravesearchQuery = new EventEmitter<QueryObject>();
 
-  private readonly SEARCH_ALL_RESOURCE_CLASSES_OPTION: IriLabelPair = {
-    iri: 'all-resource-classes',
-    label: 'All resource classes',
-  } as const;
-
   searchState: SearchStateService = inject(SearchStateService);
   formManager: PropertyFormManager = inject(PropertyFormManager);
 
@@ -68,11 +62,6 @@ export class AdvancedSearchComponent implements OnInit {
   private _previousSearchService: PreviousSearchService = inject(PreviousSearchService);
 
   ontologyLoading$ = this._dataService.ontologyLoading$;
-
-  resourceClasses$ = this._dataService.resourceClasses$.pipe(
-    map(classes => [this.SEARCH_ALL_RESOURCE_CLASSES_OPTION, ...classes]),
-    startWith([this.SEARCH_ALL_RESOURCE_CLASSES_OPTION])
-  );
 
   get projectIri() {
     return `http://rdfh.ch/projects/${this.projectUuid}`;

@@ -21,7 +21,6 @@ import { Operator } from '../../../operators.config';
       </mat-select>
     </mat-form-field>
   `,
-  styleUrls: ['../statement-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComparisonOperatorComponent {

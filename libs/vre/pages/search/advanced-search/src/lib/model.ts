@@ -100,7 +100,6 @@ export class StatementElement {
   private _selectedOperator?: Operator;
   private _selectedObjectNode?: NodeValue | StringValue;
   listObject?: ListNodeV2;
-  availableObjects?: IriLabelPair[] = []; // Todo: Set those
   statementLevel = 0;
   parentStatementObject?: NodeValue;
 
@@ -148,7 +147,6 @@ export class StatementElement {
   set selectedOperator(operator: Operator) {
     this._selectedOperator = operator;
     this.selectedObjectNode = undefined;
-    this.availableObjects = undefined;
     this.listObject = undefined;
   }
 

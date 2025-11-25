@@ -6,6 +6,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -14,9 +15,23 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteOptionsScrollDirective } from '@dasch-swiss/vre/shared/app-common';
 import { AppProgressIndicatorComponent } from '@dasch-swiss/vre/ui/progress-indicator';
-import { debounceTime, distinctUntilChanged, of, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  finalize,
+  map,
+  of,
+  Subject,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { IriLabelPair } from '../../../../model';
-import { PropertyFormManager } from '../../../../service/property-form.manager';
+import { DynamicFormsDataService } from '../../../../service/dynamic-forms-data.service';
 
 @Component({
   selector: 'app-link-value',
@@ -30,68 +45,141 @@ import { PropertyFormManager } from '../../../../service/property-form.manager';
     MatAutocompleteOptionsScrollDirective,
     AppProgressIndicatorComponent,
   ],
-  templateUrl: './link-value.component.html',
+  template: `
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Search for a resource"
+        aria-label="Search for a resource by name"
+        [matAutocomplete]="auto"
+        [formControl]="inputControl" />
+      <mat-autocomplete
+        #autoComplete
+        #auto="matAutocomplete"
+        [displayWith]="displayLabel"
+        (optionsScroll)="onScroll()"
+        (optionSelected)="onResourceSelected($event)">
+        @let linkObjects = linkValueObjects$ | async;
+        @let loading = loading$ | async;
+        @let lastSearch = lastSearchString$ | async;
+
+        @if (!linkObjects?.length && !loading) {
+          @if (lastSearch && lastSearch.length > 2) {
+            <mat-option [disabled]="true">No resources found for "{{ lastSearch }}"</mat-option>
+          } @else {
+            <mat-option [disabled]="true">Type at least 3 characters to search</mat-option>
+          }
+        }
+        @if (linkObjects?.length && !loading) {
+          <mat-option [disabled]="true"> {{ linkObjects.length }} results found </mat-option>
+        }
+        @for (obj of linkObjects; track obj.iri ?? obj) {
+          <mat-option [value]="obj">{{ obj?.label }}</mat-option>
+        }
+        @if (loading) {
+          <mat-option class="loader" [disabled]="true">
+            <div class="loading-container">
+              <app-progress-indicator />
+              <span class="loading-text">Loading resources...</span>
+            </div>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkValueComponent implements OnInit, AfterViewInit {
-  private _formsManager = inject(PropertyFormManager);
+export class LinkValueComponent implements OnInit, AfterViewInit, OnDestroy {
+  private _dataService = inject(DynamicFormsDataService);
+  private destroy$ = new Subject<void>();
 
-  @Input({ required: true }) resourceClass!: string;
+  @Input() resourceClass?: string;
   @Input() selectedResource?: IriLabelPair;
 
   @Output() emitResourceSelected = new EventEmitter<IriLabelPair>();
 
-  // Get search-related data directly from service instead of prop-drilling
-  resourcesSearchResultsLoading$ = of(true);
-  resourcesSearchResultsCount$ = of(true);
-  resourcesSearchResults$ = of(true);
-  resourcesSearchNoResults$ = of(true);
+  linkValueObjects$ = new BehaviorSubject<IriLabelPair[]>([]);
+  loading$ = new BehaviorSubject<boolean>(false);
+  lastSearchString$ = new BehaviorSubject<string | null>(null);
 
-  inputControl = new FormControl();
+  inputControl = new FormControl<string | null>(null);
 
   ngOnInit() {
-    this.inputControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
-      console.error('do sth with', { value, objectType: this.selectedResource });
-      throw new Error('Method not implemented.');
-    });
+    if (!this.resourceClass) {
+      return;
+    }
+
+    this.inputControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(searchString => this.lastSearchString$.next(searchString)),
+        filter(searchString => searchString !== null && searchString.length > 2),
+        tap(() => this.loading$.next(true)),
+        switchMap(searchString =>
+          this._dataService.searchResourcesByLabel$(searchString!, this.resourceClass!, 0).pipe(
+            catchError(error => {
+              console.error('LinkValue search error:', error);
+              return of([]);
+            })
+          )
+        ),
+        tap(() => this.loading$.next(false)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(results => {
+        this.linkValueObjects$.next(results);
+      });
   }
 
   ngAfterViewInit(): void {
     if (this.selectedResource) {
-      this.inputControl.setValue(this.selectedResource);
+      this.inputControl.setValue(this.selectedResource.label, { emitEvent: false });
     }
   }
 
   onResourceSelected(event: MatAutocompleteSelectedEvent) {
     const data = event.option.value as IriLabelPair;
+    // Set the label in the input (string only)
+    this.inputControl.setValue(data.label, { emitEvent: false });
+    // Emit the full object to parent
     this.emitResourceSelected.emit(data);
   }
 
-  onInputFocused() {}
-
   onScroll() {
-    // Check the observable value directly
-    this.resourcesSearchResultsLoading$.pipe(take(1)).subscribe(loading => {
-      if (!loading && this.inputControl.value) {
-        this._formsManager.loadMoreResourcesSearchResults({
-          value: this.inputControl.value,
-          objectType: this.resourceClass,
-        });
-      }
-    });
+    const lastSearch = this.lastSearchString$.value;
+    const currentLoading = this.loading$.value;
+    const currentResults = this.linkValueObjects$.value;
+
+    if (currentLoading || !lastSearch || lastSearch.length <= 2 || currentResults.length < 25) {
+      return;
+    }
+
+    this.loading$.next(true);
+    const offset = Math.ceil(currentResults.length / 25) - 1;
+
+    this._dataService
+      .searchResourcesByLabel$(lastSearch, this.resourceClass!, offset)
+      .pipe(
+        take(1),
+        finalize(() => this.loading$.next(false))
+      )
+      .subscribe(results => {
+        this.linkValueObjects$.next([...currentResults, ...results]);
+      });
   }
 
   /**
-   * used in the template to display the label of the selected resource
-   * because the value we want to display is different than the value we want to emit
-   *
-   * @param resource the resource containing the label to be displayed (or no selection yet).
+   * Display function for MatAutocomplete to show the label.
+   * Since we store only strings in FormControl, this just returns the value.
    */
-  displayResource(resource: IriLabelPair | null): string {
-    // null is the initial value (no selection yet)
-    if (resource !== null) {
-      return resource.label;
-    }
-    return '';
+  displayLabel = (value: string | null): string => value ?? '';
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.loading$.complete();
+    this.linkValueObjects$.complete();
+    this.lastSearchString$.complete();
   }
 }

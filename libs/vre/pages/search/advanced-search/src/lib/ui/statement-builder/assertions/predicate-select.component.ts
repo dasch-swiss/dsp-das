@@ -23,7 +23,6 @@ import { AdvancedSearchDataService } from '../../../service/advanced-search-data
       </mat-select>
     </mat-form-field>
   `,
-  styleUrls: ['../statement-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PredicateSelectComponent {
