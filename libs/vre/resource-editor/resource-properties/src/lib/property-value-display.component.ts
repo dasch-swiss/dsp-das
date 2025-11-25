@@ -25,6 +25,7 @@ import { PropertyValueService } from './property-value.service';
       (mouseleave)="showBubble = false">
       @if (showBubble && (propertyValueService.lastOpenedItem$ | async) !== index) {
         <app-property-value-action-bubble
+          [index]="index"
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
           (editAction)="propertyValueService.toggleOpenedValue(index)"
           (deleteAction)="askToDelete()" />
