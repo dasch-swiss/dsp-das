@@ -48,7 +48,7 @@ import { take } from 'rxjs';
         [matMenuTriggerFor]="share">
         <mat-icon>share</mat-icon>
       </button>
-      <app-permission-info [resource]="resource" />
+      <app-permission-info [resourceOrValue]="resource" />
       <app-incoming-resource-more-menu
         [resource]="resource"
         (resourceDeleted)="onResourceDeleted()"

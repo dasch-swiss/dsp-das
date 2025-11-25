@@ -30,7 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
         <mat-icon>share</mat-icon>
       </button>
 
-      <app-permission-info [resource]="resource" />
+      <app-permission-info [resourceOrValue]="resource" />
       <ng-content />
     </span>
 
