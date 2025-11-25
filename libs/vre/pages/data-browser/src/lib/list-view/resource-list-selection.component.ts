@@ -62,6 +62,7 @@ export class ResourceListSelectionComponent {
       const projectUuids = [...new Set(resources.map(r => r.attachedToProject))];
 
       // Check if user has Project Member OR Project Admin rights on ANY of the projects
+      // This allows the button to show (possibly disabled) to provide feedback
       return projectUuids.some(projectUuid => UserPermissions.hasProjectMemberRights(user, projectUuid));
     })
   );
