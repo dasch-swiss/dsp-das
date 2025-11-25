@@ -28,7 +28,9 @@ import { PropertyValueService } from './property-value.service';
         <app-property-value-action-bubble
           [date]="propertyValueService.editModeData.values[index].valueCreationDate"
           [disableDeleteButton]="
-            index === 0 && ![Cardinality._0_1, Cardinality._0_n].includes(propertyValueService.cardinality)
+            [Cardinality._1, Cardinality._1_n].includes(propertyValueService.cardinality) &&
+            index === 0 &&
+            propertyValueService.editModeData.values.length === 1
           "
           (editAction)="propertyValueService.toggleOpenedValue(index)"
           (deleteAction)="askToDelete()" />
