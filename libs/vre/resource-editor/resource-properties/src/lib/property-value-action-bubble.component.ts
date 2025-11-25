@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Cardinality } from '@dasch-swiss/dsp-js';
 import { ResourceFetcherService, ResourceUtil } from '@dasch-swiss/vre/resource-editor/representations';
@@ -52,13 +51,6 @@ import { PropertyValueService } from './property-value.service';
       </div>
     </div>
   `,
-  animations: [
-    trigger('simpleFadeAnimation', [
-      state('in', style({ opacity: 1 })),
-      transition(':enter', [style({ opacity: 0 }), animate(150)]),
-      transition(':leave', animate(150, style({ opacity: 0 }))),
-    ]),
-  ],
   styleUrls: ['./property-value-action-bubble.component.scss'],
   standalone: false,
 })
