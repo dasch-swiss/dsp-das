@@ -23,34 +23,32 @@ describe('ResourceListSelectionComponent', () => {
   let isSysAdminSubject: BehaviorSubject<boolean>;
 
   // Mock resources
-  const createMockResource = (id: string, projectUuid: string): ReadResource => ({
-    id,
-    attachedToProject: projectUuid,
-    type: 'http://api.knora.org/ontology/knora-api/v2#Resource',
-    label: `Resource ${id}`,
-  }) as ReadResource;
+  const createMockResource = (id: string, projectUuid: string): ReadResource =>
+    ({
+      id,
+      attachedToProject: projectUuid,
+      type: 'http://api.knora.org/ontology/knora-api/v2#Resource',
+      label: `Resource ${id}`,
+    }) as ReadResource;
 
   const mockResource1 = createMockResource('resource-1', 'project-uuid-1');
   const mockResource2 = createMockResource('resource-2', 'project-uuid-1');
   const mockResource3 = createMockResource('resource-3', 'project-uuid-2');
 
   // Mock user
-  const createMockUser = (
-    id: string,
-    isSysAdmin: boolean,
-    projectMemberships: string[] = []
-  ): ReadUser => ({
-    id,
-    permissions: {
-      groupsPerProject: projectMemberships.reduce(
-        (acc, projectIri) => ({
-          ...acc,
-          [projectIri]: [`http://www.knora.org/ontology/knora-admin#ProjectMember`],
-        }),
-        {}
-      ),
-    },
-  }) as ReadUser;
+  const createMockUser = (id: string, isSysAdmin: boolean, projectMemberships: string[] = []): ReadUser =>
+    ({
+      id,
+      permissions: {
+        groupsPerProject: projectMemberships.reduce(
+          (acc, projectIri) => ({
+            ...acc,
+            [projectIri]: [`http://www.knora.org/ontology/knora-admin#ProjectMember`],
+          }),
+          {}
+        ),
+      },
+    }) as ReadUser;
 
   beforeEach(async () => {
     // Initialize subjects
@@ -77,7 +75,8 @@ describe('ResourceListSelectionComponent', () => {
       instant: jest.fn((key: string) => {
         const translations: Record<string, string> = {
           'pages.dataBrowser.resourceListSelection.noResourcesSelected': 'No resources selected',
-          'pages.dataBrowser.resourceListSelection.resourcesMustBeSameProject': 'Resources must be from the same project',
+          'pages.dataBrowser.resourceListSelection.resourcesMustBeSameProject':
+            'Resources must be from the same project',
           'pages.dataBrowser.resourceListSelection.createLinkObjectTooltip':
             'A link object can be created only between resources belonging to the same project.',
         };
