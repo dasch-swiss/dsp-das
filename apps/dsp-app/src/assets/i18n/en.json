@@ -552,8 +552,8 @@
       "tooltip": "Resource permissions",
       "projectAdmin": "Project Admin",
       "projectMember": "Project Member",
-      "knownUser": "Known User",
-      "unknownUser": "Unknown User",
+      "knownUser": "Logged in",
+      "unknownUser": "Logged out",
       "usersPermissions": "Your permissions",
       "interactions": {
         "restrictedView": "Restricted view permission (RV)",
@@ -699,7 +699,8 @@
         "description": "Description"
       },
       "errors": {
-        "crossProjectLink": "This field contains links to resources from other projects. Only links to resources within the current project are allowed."
+        "crossProjectLink": "This field contains links to resources from other projects. Only links to resources within the current project are allowed.",
+        "badLinks": "Bad links:"
       },
       "status": {
         "active": "Active",
